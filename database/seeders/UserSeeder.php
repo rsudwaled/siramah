@@ -29,8 +29,8 @@ class UserSeeder extends Seeder
             "username" => "marwan",
             "phone" => "089529909036",
             'password' => bcrypt('qweqwe123'),
-            'user_verify' => 1,
-            'email_verified_at' => now()
+            // 'user_verify' => 1,
+            // 'email_verified_at' => now()
         ]);
         $user->assignRole('Admin Super');
     }

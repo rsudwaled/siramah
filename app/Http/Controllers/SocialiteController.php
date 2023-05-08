@@ -32,7 +32,7 @@ class SocialiteController extends Controller
             //jika user tidak ada maka simpan ke database
             else {
                 //$user_google menyimpan data google account seperti email, foto, dsb
-                $create = User::Create([
+                $user = User::Create([
                     'email' => $user_google->email,
                     'name' => $user_google->name,
                     'password' => Hash::make('password'),
@@ -40,8 +40,8 @@ class SocialiteController extends Controller
                     'avatar' => $user_google->avatar,
                     'avatar_original' => $user_google->avatar_original,
                 ]);
-                $create->assignRole('Pasien');
-                auth()->login($create, true);
+                $user->assignRole('Pasien');
+                auth()->login($user, true);
             }
             return redirect()->route('home');
         } catch (\Exception $e) {
