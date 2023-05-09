@@ -25,7 +25,9 @@
                                         ada
                                     @endif
                                 </td>
-                                <td></td>
+                                <td>
+
+                                </td>
                             </tr>
                         @endforeach
                     @endif
