@@ -431,6 +431,108 @@ return [
 
             ],
         ],
+        // VCLAIM BPJS
+        [
+            'text'    => 'Integrasi VClaim BPJS',
+            'icon'    => 'fas fa-project-diagram',
+            'can' => 'bpjs',
+            'submenu' => [
+                [
+                    'text' => 'Lembar Pengajuan Klaim',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/lpk',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Monitoring',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'submenu' => [
+                        [
+                            'text' => 'Data Kunjungan',
+                            'icon'    => 'fas fa-chart-bar',
+                            'url'  => 'bpjs/vclaim/monitoring_data_kunjungan',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                        [
+                            'text' => 'Data Klaim',
+                            'icon'    => 'fas fa-chart-pie',
+                            'url'  => 'bpjs/vclaim/monitoring_data_klaim',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                        [
+                            'text' => 'Monitoring Pelayanan Peserta',
+                            'icon'    => 'fas fa-id-card',
+                            'url'  => 'bpjs/vclaim/monitoring_pelayanan_peserta',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                        [
+                            'text' => 'Data Klaim Jasa Raharja',
+                            'icon'    => 'fas fa-chart-area',
+                            'url'  => 'bpjs/vclaim/monitoring_klaim_jasaraharja',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                    ]
+
+                ],
+                [
+                    'text' => 'PRB',
+                    'icon'    => 'fas fa-first-aid',
+                    'url'  => 'vclaim/prb',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Referensi',
+                    'icon'    => 'fas fa-info-circle',
+                    'url'  => 'bpjs/vclaim/referensi',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Surat Kontrol & SPRI',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'bpjs/vclaim/surat_kontrol',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'Rujukan',
+                    'icon'    => 'fas fa-id-card',
+                    'url'  => 'vclaim/rujukan',
+                    'shift'   => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
+                    'text' => 'SEP',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'submenu' => [
+                        [
+                            'text' => 'Data SEP',
+                            'icon'    => 'fas fa-id-card',
+                            'url'  => 'vclaim/sep_internal',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                        [
+                            'text' => 'SEP Internal',
+                            'icon'    => 'fas fa-id-card',
+                            'url'  => 'vclaim/sep_internal',
+                            'shift'   => 'ml-3',
+                            'can' => 'bpjs',
+                        ],
+                    ]
+
+                ],
+
+            ],
+        ],
         // USER ACCESS CONTROLL
         [
             'text'    => 'User Access Control',

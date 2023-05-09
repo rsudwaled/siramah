@@ -10,6 +10,9 @@
                 <form action="" method="get">
                     <x-adminlte-select2 name="diagnosa" label="Diagnosa BPJS ICD-10" data-placeholder="Pilih beberapa diagnosa..." multiple>
                     </x-adminlte-select2>
+                    <x-adminlte-select2 name="poliklinik" label="Poliklinik BPJS">
+                        <option selected disabled>Cari Poliklinik</option>
+                    </x-adminlte-select2>
                     <x-adminlte-select name="jenisfaskes" label="Jenis Faskes BPJS">
                         <option value="1">Faskes Tingkat 1</option>
                         <option value="2">Faskes / RS</option>
@@ -32,9 +35,7 @@
                         <option value="1">Rawat Inap</option>
                         <option value="2">Rawat Jalan</option>
                     </x-adminlte-select>
-                    <x-adminlte-select2 name="poliklinik" label="Poliklinik BPJS">
-                        <option selected disabled>Cari Poliklinik</option>
-                    </x-adminlte-select2>
+
                     <x-adminlte-select2 name="dokter" label="Dokter DPJP">
                         <option selected disabled>Cari Dokter DPJP</option>
                     </x-adminlte-select2>

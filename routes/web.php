@@ -11,7 +11,9 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\SuratKontrolController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VclaimController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,8 +34,13 @@ Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun']
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// layanan umum
+Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
+Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
+Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
 
 Route::middleware('permission:admin')->group(function () {
     Route::resource('user', UserController::class);
@@ -71,15 +78,15 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::get('monitoring_data_klaim', [MonitoringController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
         Route::get('monitoring_pelayanan_peserta', [MonitoringController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
         Route::get('monitoring_klaim_jasaraharja', [MonitoringController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
-        Route::get('referensi', [VclaimVclaimController::class, 'referensi_index'])->name('referensi');
-        Route::get('ref_diagnosa_api', [VclaimVclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
-        Route::get('ref_poliklinik_api', [VclaimVclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
-        Route::get('ref_faskes_api', [VclaimVclaimController::class, 'ref_faskes_api'])->name('ref_faskes_api');
-        Route::get('ref_dpjp_api', [VclaimVclaimController::class, 'ref_dpjp_api'])->name('ref_dpjp_api');
-        Route::get('ref_provinsi_api', [VclaimVclaimController::class, 'ref_provinsi_api'])->name('ref_provinsi_api');
-        Route::get('ref_kabupaten_api', [VclaimVclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
-        Route::get('ref_kecamatan_api', [VclaimVclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
-        Route::get('surat_kontrol', [VclaimVclaimController::class, 'surat_kontrol_index'])->name('surat_kontrol');
+        Route::get('referensi', [VclaimController::class, 'referensi_index'])->name('referensi');
+        Route::get('ref_diagnosa_api', [VclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
+        Route::get('ref_poliklinik_api', [VclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
+        Route::get('ref_faskes_api', [VclaimController::class, 'ref_faskes_api'])->name('ref_faskes_api');
+        Route::get('ref_dpjp_api', [VclaimController::class, 'ref_dpjp_api'])->name('ref_dpjp_api');
+        Route::get('ref_provinsi_api', [VclaimController::class, 'ref_provinsi_api'])->name('ref_provinsi_api');
+        Route::get('ref_kabupaten_api', [VclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
+        Route::get('ref_kecamatan_api', [VclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
+        Route::get('surat_kontrol', [SuratKontrolController::class, 'surat_kontrol_index'])->name('surat_kontrol');
         Route::post('surat_kontrol_store', [SuratKontrolController::class, 'store'])->name('surat_kontrol_store');
         Route::put('surat_kontrol_update', [SuratKontrolController::class, 'update'])->name('surat_kontrol_update');
         Route::delete('surat_kontrol_delete', [SuratKontrolController::class, 'destroy'])->name('surat_kontrol_delete');

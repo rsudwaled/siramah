@@ -122,7 +122,7 @@
                             <a data-bs-toggle="collapse" data-bs-target="#faq-list-{{ $i }}" class="collapsed"
                                 aria-expanded="false">
                                 <b>
-                                    {{ $jadwal->where('hari', $i)->first()->namahari }}
+                                    {{ $jadwal->where('hari', $i)->first() ? $jadwal->where('hari', $i)->first()->namahari : '-' }}
                                 </b><i class="bx bx-chevron-down icon-show"></i><i
                                     class="bx bx-chevron-up icon-close"></i></a>
                             <div id="faq-list-{{ $i }}" class="collapse" data-bs-parent=".faq-list">
