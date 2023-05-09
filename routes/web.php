@@ -40,6 +40,7 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
     Route::resource('poliklinik', PoliklinikController::class);
+    Route::resource('dokter', DokterController::class);
     Route::resource('jadwaldokter', JadwalDokterController::class);
     Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
     Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');

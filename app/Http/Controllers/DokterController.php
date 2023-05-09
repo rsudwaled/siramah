@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Dokter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DokterController extends Controller
@@ -24,5 +25,19 @@ class DokterController extends Controller
             'dokters',
             'dokter_jkn_simrs',
         ]));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kodedokter' => 'required',
+            'namadokter' => 'required',
+        ]);
+        Dokter::firstOrCreate([
+            'kodedokter' => $request->kodedokter,
+            'namadokter' => $request->namadokter,
+            'user_by' => Auth::user()->name,
+        ]);
+        Alert::success('Success', 'Dokter Telah Ditambahkan');
+        return redirect()->back();
     }
 }
