@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Token;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class AntrianController extends Controller
+class AntrianController extends APIController
 {
     // VIEW SIMRS
     public function statusTokenAntrian()
@@ -148,8 +151,9 @@ class AntrianController extends Controller
         else if ($response->json('metadata.code') == 204)
             $code = 404;
         else {
-            $code = 400;
+            $code = 200;
         }
+        // dd($response->failed());
         if ($response->failed()) {
             return $this->sendError($response->reason(),  $response->json('response'), $code);
         } else {

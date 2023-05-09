@@ -2,8 +2,13 @@
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\JadwalDokterController;
+use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\UserController;
@@ -34,6 +39,7 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
+    Route::resource('poliklinik', PoliklinikController::class);
     Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
     Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 });
@@ -43,15 +49,15 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
     // antrian
     Route::prefix('antrian')->name('antrian.')->group(function () {
         Route::get('status', [AntrianController::class, 'statusTokenAntrian'])->name('status');
-        Route::get('poli', [SIMRSPoliklinikController::class, 'poliklik_antrian_bpjs'])->name('poli');
-        Route::get('dokter', [SIMRSDokterController::class, 'dokter_antrian_bpjs'])->name('dokter');
-        Route::get('jadwal_dokter', [SIMRSJadwalDokterController::class, 'jadwal_dokter_bpjs'])->name('jadwal_dokter');
-        Route::get('fingerprint_peserta', [PasienController::class, 'fingerprint_peserta'])->name('fingerprint_peserta');
+        Route::get('poli', [PoliklinikController::class, 'poliklikAntrianBpjs'])->name('poli');
+        Route::get('dokter', [DokterController::class, 'dokterAntrianBpjs'])->name('dokter');
+        Route::get('jadwal_dokter', [JadwalDokterController::class, 'jadwalDokterBpjs'])->name('jadwal_dokter');
+        Route::get('fingerprint_peserta', [PasienController::class, 'fingerprintPeserta'])->name('fingerprint_peserta');
         Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
-        Route::get('list_task', [AntrianAntrianController::class, 'list_task'])->name('list_task');
-        Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
-        Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
-        Route::get('jadwal_operasi', [SIMRSJadwalOperasiController::class, 'index'])->name('jadwal_operasi');
+        Route::get('list_task', [AntrianController::class, 'list_task'])->name('list_task');
+        Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
+        Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
+        Route::get('jadwal_operasi', [JadwalOperasiController::class, 'index'])->name('jadwal_operasi');
         Route::get('antrian_per_tanggal', [SIMRSAntrianController::class, 'antrian_per_tanggal'])->name('antrian_per_tanggal');
         Route::get('antrian_per_kodebooking', [SIMRSAntrianController::class, 'antrian_per_kodebooking'])->name('antrian_per_kodebooking');
         Route::get('antrian_belum_dilayani', [SIMRSAntrianController::class, 'antrian_belum_dilayani'])->name('antrian_belum_dilayani');

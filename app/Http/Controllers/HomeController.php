@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -31,9 +32,16 @@ class HomeController extends Controller
             Auth::logout();
             return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
             // return redirect()->route('login');
-
         } else {
             return view('home');
         }
+    }
+    public function landingpage()
+    {
+        $jadwal = JadwalDokter::get();
+        // dd($jadwal->groupBy('hari')->first());
+        return view('vendor.medilab.landingpage', compact([
+            'jadwal'
+        ]));
     }
 }
