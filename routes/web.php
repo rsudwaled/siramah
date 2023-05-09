@@ -56,14 +56,14 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::get('jadwal_dokter', [JadwalDokterController::class, 'jadwalDokterBpjs'])->name('jadwal_dokter');
         Route::get('fingerprint_peserta', [PasienController::class, 'fingerprintPeserta'])->name('fingerprint_peserta');
         Route::get('antrian', [AntrianAntrianController::class, 'antrian'])->name('antrian');
-        Route::get('list_task', [AntrianController::class, 'list_task'])->name('list_task');
-        Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal_index'])->name('dashboard_tanggal');
-        Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan_index'])->name('dashboard_bulan');
+        Route::get('list_task', [AntrianController::class, 'listTaskID'])->name('list_task');
+        Route::get('dashboard_tanggal', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboard_tanggal');
+        Route::get('dashboard_bulan', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboard_bulan');
         Route::get('jadwal_operasi', [JadwalOperasiController::class, 'index'])->name('jadwal_operasi');
-        Route::get('antrian_per_tanggal', [SIMRSAntrianController::class, 'antrian_per_tanggal'])->name('antrian_per_tanggal');
-        Route::get('antrian_per_kodebooking', [SIMRSAntrianController::class, 'antrian_per_kodebooking'])->name('antrian_per_kodebooking');
-        Route::get('antrian_belum_dilayani', [SIMRSAntrianController::class, 'antrian_belum_dilayani'])->name('antrian_belum_dilayani');
-        Route::get('antrian_per_dokter', [SIMRSAntrianController::class, 'antrian_per_dokter'])->name('antrian_per_dokter');
+        Route::get('antrian_per_tanggal', [AntrianController::class, 'antrianPerTanggal'])->name('antrian_per_tanggal');
+        Route::get('antrian_per_kodebooking', [AntrianController::class, 'antrianPerKodebooking'])->name('antrian_per_kodebooking');
+        Route::get('antrian_belum_dilayani', [AntrianController::class, 'antrianBelumDilayani'])->name('antrian_belum_dilayani');
+        Route::get('antrian_per_dokter', [AntrianController::class, 'antrianPerDokter'])->name('antrian_per_dokter');
     });
     // vclaim
     Route::prefix('vclaim')->name('vclaim.')->group(function () {

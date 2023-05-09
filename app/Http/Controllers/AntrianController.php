@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JadwalDokter;
 use App\Models\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -42,7 +43,7 @@ class AntrianController extends APIController
             'antrians',
         ]));
     }
-    public function list_task(Request $request)
+    public function listTaskID(Request $request)
     {
         // get antrian
         $taskid = null;
@@ -58,7 +59,7 @@ class AntrianController extends APIController
             'taskid',
         ]));
     }
-    public function dashboard_tanggal_index(Request $request)
+    public function dashboardTanggalAntrian(Request $request)
     {
         $antrians = null;
         if (isset($request->waktu)) {
@@ -75,7 +76,7 @@ class AntrianController extends APIController
             'antrians',
         ]));
     }
-    public function dashboard_bulan_index(Request $request)
+    public function dashboardBulanAntrian(Request $request)
     {
         $antrians = null;
         if (isset($request->tanggal)) {
@@ -94,6 +95,73 @@ class AntrianController extends APIController
             'request',
             'antrians',
         ]));
+    }
+    public function antrianPerTanggal(Request $request)
+    {
+        $antrians = null;
+        if (isset($request->tanggal)) {
+            $response = $this->antrian_tanggal($request);
+            if ($response->status() == 200) {
+                $antrians = $response->getData()->response;
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                return redirect()->route('bpjs.antrian.antrian_per_tanggal');
+            }
+        }
+        return view('bpjs.antrian.antrian_per_tanggal', compact(['request', 'antrians']));
+    }
+    public function antrianPerKodebooking(Request $request)
+    {
+        $antrian = null;
+        if ($request->kodebooking) {
+            $request['kodeBooking'] = $request->kodebooking;
+            $response = $this->antrian_kodebooking($request);
+            if ($response->status() == 200) {
+                $antrian = $response->getData()->response[0];
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                return redirect()->route('bpjs.antrian.antrian_per_tanggal');
+            }
+        }
+        return view('bpjs.antrian.antrian_per_kodebooking', compact([
+            'request', 'antrian'
+        ]));
+    }
+    public function antrianBelumDilayani(Request $request)
+    {
+        $request['tanggal'] = now()->format('Y-m-d');
+        $response = $this->antrian_belum_dilayani($request);
+        if ($response->status() == 200) {
+            $antrians = $response->getData()->response;
+        } else {
+            $antrians = null;
+            Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+            return redirect()->route('antrian.laporan_tanggal');
+        }
+        return view('bpjs.antrian.antrian_belum_dilayani', compact(['request', 'antrians']));
+    }
+    public function antrianPerDokter(Request $request)
+    {
+        $antrians = null;
+        $jadwaldokter = JadwalDokter::orderBy('hari', 'ASC')->get();
+        if (isset($request->jadwaldokter)) {
+            $jadwal = JadwalDokter::find($request->jadwaldokter);
+            $request['kodePoli'] = $jadwal->kodesubspesialis;
+            $request['kodeDokter'] = $jadwal->kodedokter;
+            $request['hari'] = $jadwal->hari;
+            $request['jamPraktek'] = $jadwal->jadwal;
+            $response = $this->antrian_poliklinik($request);
+            if ($response->status() == 200) {
+                $antrians = $response->getData()->response;
+            } else {
+                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+            }
+        }
+        return view('bpjs.antrian.antrian_per_dokter', [
+            'antrians' => $antrians,
+            'jadwaldokter' => $jadwaldokter,
+            'request' => $request,
+        ]);
     }
     // API FUNCTION
     public function signature()
