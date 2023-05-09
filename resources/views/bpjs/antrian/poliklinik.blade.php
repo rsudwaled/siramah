@@ -19,10 +19,19 @@
                                 <td>{{ $poliklinik->nmpoli }}</td>
                                 <td>{{ $poliklinik->kdpoli }}</td>
                                 <td>
-                                    @if ($poli_jkn_simrs->where('kodesubspesialis', $poliklinik->kdsubspesialis)->first() == null)
-                                        Tidak ada
+                                    @if ($poliklinik_save->where('kodesubspesialis', $poliklinik->kdsubspesialis)->first())
+                                        <button class="btn btn-secondary btn-xs">Sudah Ada</button>
                                     @else
-                                        ada
+                                        <form action="{{ route('poliklinik.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="kodepoli" value="{{ $poliklinik->kdpoli }}">
+                                            <input type="hidden" name="namapoli" value="{{ $poliklinik->nmpoli }}">
+                                            <input type="hidden" name="kodesubspesialis"
+                                                value="{{ $poliklinik->kdsubspesialis }}">
+                                            <input type="hidden" name="namasubspesialis"
+                                                value="{{ $poliklinik->nmsubspesialis }}">
+                                            <button type="submit" class="btn btn-success btn-xs">Tambah</button>
+                                        </form>
                                     @endif
                                 </td>
                                 <td>

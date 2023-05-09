@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Poliklinik;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PoliklinikController extends Controller
@@ -11,6 +12,8 @@ class PoliklinikController extends Controller
     public function poliklikAntrianBpjs()
     {
         $controller = new AntrianController();
+        $poliklinik_save = Poliklinik::get();
+
         $response = $controller->ref_poli();
         if ($response->status() == 200) {
             $polikliniks = $response->getData()->response;
@@ -27,11 +30,29 @@ class PoliklinikController extends Controller
             $fingerprint = null;
             Alert::error($response->getData()->metadata->message . ' ' . $response->status(),  'Poliklinik Fingerprint Antrian BPJS');
         }
-        $poli_jkn_simrs = Poliklinik::get();
         return view('bpjs.antrian.poliklinik', compact([
             'polikliniks',
             'fingerprint',
-            'poli_jkn_simrs',
+            'poliklinik_save',
         ]));
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kodepoli' => 'required',
+            'namapoli' => 'required',
+            'kodesubspesialis' => 'required',
+            'namasubspesialis' => 'required',
+        ]);
+        Poliklinik::firstOrCreate([
+            'kodepoli' => $request->kodepoli,
+            'kodesubspesialis' => $request->kodesubspesialis,
+        ], [
+            'namapoli' => $request->namapoli,
+            'namasubspesialis' => $request->namasubspesialis,
+            'user_by' => Auth::user()->name,
+        ]);
+        Alert::success('Success', 'Jadwal Dokter Telah Ditambahkan');
+        return redirect()->back();
     }
 }

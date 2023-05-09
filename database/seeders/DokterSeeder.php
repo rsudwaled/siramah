@@ -22,6 +22,7 @@ class DokterSeeder extends Seeder
                 Dokter::firstOrCreate([
                     'kodedokter' => $value->kodedokter,
                     'namadokter' => $value->namadokter,
+                    'user_by' => 'Migration',
                 ]);
             }
         } else {

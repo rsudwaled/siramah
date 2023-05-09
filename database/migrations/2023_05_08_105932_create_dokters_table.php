@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('kodedokter');
             $table->string('namadokter');
             $table->string('status')->default(1);
+            $table->string('user_by');
             $table->timestamps();
         });
     }

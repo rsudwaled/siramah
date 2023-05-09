@@ -178,13 +178,13 @@ class AntrianController extends APIController
     public function ref_jadwal_dokter(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            "kodePoli" => "required",
+            "kodepoli" => "required",
             "tanggal" =>  "required|date",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), $validator->errors(), 201);
         }
-        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodePoli . "/tanggal/" . $request->tanggal;
+        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);

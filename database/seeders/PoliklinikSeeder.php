@@ -24,6 +24,7 @@ class PoliklinikSeeder extends Seeder
                     'namapoli' => $value->nmpoli,
                     'kodesubspesialis' => $value->kdsubspesialis,
                     'namasubspesialis' => $value->nmsubspesialis,
+                    'user_by' => 'Migration',
                 ]);
             }
         } else {
