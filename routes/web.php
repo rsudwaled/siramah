@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\BukuTamuController;
+use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JadwalDokterController;
@@ -12,6 +14,7 @@ use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SuratKontrolController;
+use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use Illuminate\Support\Facades\Route;
@@ -40,7 +43,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
-Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
+// Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
 
 Route::middleware('permission:admin')->group(function () {
     Route::resource('user', UserController::class);
@@ -49,6 +52,9 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('poliklinik', PoliklinikController::class);
     Route::resource('dokter', DokterController::class);
     Route::resource('jadwaldokter', JadwalDokterController::class);
+    Route::resource('suratmasuk', SuratMasukController::class);
+    Route::resource('suratlampiran', SuratLampiranController::class);
+    Route::resource('disposisi', DisposisiController::class);
     Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
     Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 });

@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'AdminLTE 3',
+    'title' => 'SIRAMAH-RS Waled',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo' => '<b>SIRAMAH-RS Waled</b>',
+    'logo_img' => 'vendor/adminlte/dist/img/rswaledico.png',
+    'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'SIRAMAH-RS Waled',
 
     /*
     |--------------------------------------------------------------------------
@@ -186,7 +186,7 @@ return [
     |
     */
 
-    'classes_body' => '',
+    'classes_body' => 'text-sm',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -217,7 +217,7 @@ return [
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
-    'sidebar_nav_accordion' => true,
+    'sidebar_nav_accordion' => false,
     'sidebar_nav_animation_speed' => 300,
 
     /*
@@ -259,7 +259,7 @@ return [
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
-    'profile_url' => false,
+    'profile_url' => 'profile',
 
     /*
     |--------------------------------------------------------------------------
@@ -316,6 +316,57 @@ return [
             'text'        => 'Dashboard',
             'url'         => 'home',
             'icon'        => 'fas fa-home',
+        ],
+        // BAGIAN UMUM
+        [
+            'text'    => 'Bagian Umum',
+            'icon'    => 'fas fa-hospital',
+            'can' => ['bagian-umum', 'direktur'],
+            'submenu' => [
+                [
+                    'text' => 'Surat Masuk',
+                    'icon'    => 'fas fa-envelope',
+                    'url'  => 'suratmasuk',
+                    'shift'   => 'ml-2',
+                    'can' => 'bagian-umum',
+                ],
+                [
+                    'text' => 'Disposisi',
+                    'icon'    => 'fas fa-file-signature',
+                    'url'  => 'disposisi',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bagian-umum', 'direktur'],
+                ],
+                [
+                    'text' => 'Surat Keluar',
+                    'icon'    => 'fas fa-envelope',
+                    'url'  => 'suratkeluar',
+                    'shift'   => 'ml-2',
+                    'can' => 'bagian-umum',
+                ],
+            ],
+        ],
+        // BUKU TAMU
+        [
+            'text'    => 'Aplikasi Buku Tamu',
+            'icon'    => 'fas fa-user-tie',
+            'can' => ['admin'],
+            'submenu' => [
+                [
+                    'text' => 'Buku Tamu',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'bukutamu',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Data Tamu',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'bukutamu',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ]
         ],
         // ANTRIAN BPJS
         [
