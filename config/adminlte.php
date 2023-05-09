@@ -317,6 +317,293 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
+        // PENDAFTARAN
+        [
+            'text'    => 'Aplikasi Pendaftaran',
+            'icon'    => 'fas fa-user-plus',
+            'can' => 'pendaftaran',
+            'submenu' => [
+                [
+                    'text' => 'Console Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'antrian/console',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                // [
+                //     'text' => 'Antrian Pendaftaran',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian/pendaftaran',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran',
+                // ],
+                [
+                    'text' => 'Antrian Pendaftaran',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'pendaftaran/antrian_pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Capaian Antrian',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'pendaftaran/antrian_capaian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+            ],
+        ],
+        // KASIR
+        [
+            'text'    => 'Aplikasi Kasir',
+            'icon'    => 'fas fa-cash-register',
+            'can' => 'kasir',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Pembayaran',
+                    'icon'    => 'fas fa-hand-holding-usd',
+                    'url'  => 'antrian/pembayaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'kasir',
+                ],
+            ],
+        ],
+        // POLIKLINIK
+        [
+            'text'    => 'Aplikasi Poliklinik',
+            'icon'    => 'fas fa-clinic-medical',
+            'can' => 'poliklinik',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'poliklinik/antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Surat Kontrol Poliklinik',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'poliklinik/suratkontrol_poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Jadwal Dokter Poliklinik',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'poliklinik/jadwaldokter',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Data Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'poliklinik/pasien',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'poliklinik/laporan_kunjungan_poliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Laporan Antrian',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'poliklinik/laporan_antrian_poliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Dashboard Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'poliklinik/dashboard_antrian_tanggal',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Dashboard Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'poliklinik/dashboard_antrian_bulan',
+                    'can' => 'poliklinik',
+                ],
+            ],
+        ],
+        // FARMASI
+        [
+            'text'    => 'Aplikasi Farmasi',
+            'icon'    => 'fas fa-prescription-bottle-alt',
+            'can' => 'farmasi',
+            'submenu' => [
+                [
+                    'text' => 'Antrian Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'farmasi/antrian_farmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'farmasi/obat',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'E-KPO Rawat Jalan',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+            ],
+        ],
+        // YANMED
+        [
+            'text'    => 'Pelayanan Medis',
+            'icon'    => 'fas fa-briefcase-medical',
+            'can' => 'pelayanan-medis',
+            'submenu' => [
+                [
+                    'text' => 'Dokter',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'pelayananmedis/dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Poliklinik',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'pelayananmedis/poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Tarif Layanan',
+                    'icon'    => 'fas fa-hand-holding-medical',
+                    'url'  => 'pelayananmedis/tarif_layanan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+
+                ],
+                [
+                    'text' => 'Poliklinik Antrian BPJS',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'pelayananmedis/poliklinik_antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Dokter Antrian BPJS',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'pelayananmedis/dokter_antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Jadwal Antrian BPJS',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'pelayananmedis/jadwaldokter',
+                    'can' => 'pelayanan-medis',
+                ],
+            ],
+        ],
+        // REKAM MEDIS
+        [
+            'text'    => 'Rekam Medis',
+            'icon'    => 'fas fa-file-medical',
+            'can' => 'rekam-medis',
+            'submenu' => [
+                [
+                    'text' => 'Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'rekammedis/pasien',
+                    'shift'   => 'ml-2',
+                    'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'rekammedis/kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Demografi Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasien_daerah',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Laporan Index',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                    'submenu' => [
+                        [
+                            'text' => 'Index Penyakit Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'index_penyakit_rajal',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Dokter',
+                            'icon'    => 'fas fa-user-md',
+                            'url'  => 'index_dokter',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Daerah',
+                            'icon'    => 'fas fa-maps',
+                            'url'  => 'index_daerah',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                    ]
+                ],
+                [
+                    'text' => 'Laporan Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-disease',
+                    'url'  => 'rekammedis/kunjungan_poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Diagnosa ICD-10',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'icd10',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'E-File Rekam Medis',
+                    'icon'    => 'fas fa-diagnoses',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                    'url'  => 'efilerm',
+                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
+                    'active'  => ['efilerm', 'efilerm/create'],
+
+                ],
+                [
+                    'text' => 'Tindankan Prosedur',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'tindakan',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+
+
+            ],
+        ],
         // BAGIAN UMUM
         [
             'text'    => 'Bagian Umum',
@@ -348,7 +635,7 @@ return [
         ],
         // BUKU TAMU
         [
-            'text'    => 'Aplikasi Buku Tamu',
+            'text'    => 'Buku Tamu',
             'icon'    => 'fas fa-user-tie',
             'can' => ['admin'],
             'submenu' => [
@@ -584,6 +871,42 @@ return [
 
             ],
         ],
+                // MODUL TESTING
+                [
+                    'text'    => 'Pengaturan & Testing',
+                    'icon'    => 'fas fa-cogs',
+                    'can' => 'admin',
+                    'submenu' => [
+                        [
+                            'text' => 'Bar & QR Code Scanner',
+                            'icon'    => 'fas fa-qrcode',
+                            'url'  => 'bar_qr_scanner',
+                            'shift'   => 'ml-2',
+                            'can' => 'admin',
+                        ],
+                        [
+                            'text' => 'Thermal Printer',
+                            'icon'    => 'fas fa-print',
+                            'url'  => 'thermal_printer',
+                            'shift'   => 'ml-2',
+                            'can' => 'admin',
+                        ],
+                        [
+                            'text' => 'WhatsApp API',
+                            'icon'    => 'fas fa-phone',
+                            'url'  => 'whatsapp',
+                            'shift'   => 'ml-2',
+                            'can' => 'admin',
+                        ],
+                        [
+                            'text'        => 'Log Viewer',
+                            'url'         => 'log-viewer',
+                            'icon'        => 'fas fa-info-circle',
+                            'shift'   => 'ml-2',
+                            'can' => 'admin',
+                        ],
+                    ],
+                ],
         // USER ACCESS CONTROLL
         [
             'text'    => 'User Access Control',
