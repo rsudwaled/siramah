@@ -1,32 +1,39 @@
 @extends('adminlte::page')
 
-@section('title', 'Referensi Dokter')
+@section('title', 'Referensi Paramedis')
 
 @section('content_header')
-    <h1>Referensi Dokter</h1>
+    <h1>Referensi Paramedis</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Data Dokter" theme="info" icon="fas fa-info-circle" collapsible maximizable>
+            <x-adminlte-card title="Data Paramedis" theme="secondary" collapsible>
                 @php
-                    $heads = ['Kode BPJS', 'Kode SIMRS', 'Nama Dokter', 'SIP', 'Status', 'Action'];
+                    $heads = ['Kode SIMRS', 'Kode BPJS', 'Nama', 'SIP', 'Status', 'Action'];
+                    $config['paging'] = false;
+                    $config['info'] = false;
+                    $config['scrollY'] = '400px';
+                    $config['scrollCollapse'] = true;
+                    $config['scrollX'] = true;
                 @endphp
-                <x-adminlte-datatable id="table2" :heads="$heads" bordered hoverable compressed>
-                    @foreach ($dokter as $item)
+                <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered compressed>
+                    @foreach ($paramedis as $item)
                         <tr>
-                            <td>{{ $item->kodedokter }}</td>
-                            <td>{{ $item->paramedis ? $item->paramedis->kode_paramedis : '-' }}</td>
-                            <td>{{ $item->namadokter }}</td>
-                            <td>{{ $item->paramedis ? $item->paramedis->sip_dr : '-' }}</td>
+                            <td>{{ $item->kode_paramedis }}</td>
+                            <td>{{ $item->kode_dokter_jkn }}</td>
+                            <td>{{ $item->nama_paramedis }}</td>
+                            <td>{{ $item->sip_dr }}</td>
                             <td>
-                                @if ($item->paramedis)
-                                    <a href="#" class="btn btn-xs btn-secondary">Sudah
-                                        Ada</a>
-                                @else
-                                    <a href="#" class="btn btn-xs btn-danger">Belum
-                                        Ada</a>
+                                @if ($item->kode_dokter_jkn)
+                                    @if ($dokter_bpjs->where('kodedokter', $item->kode_dokter_jkn)->first())
+                                        <a href="#" class="btn btn-xs btn-success disabled"
+                                            aria-disabled="true">Aktif</a>
+                                    @else
+                                        <a href="#" class="btn btn-xs btn-danger disabled" aria-disabled="true">Belum
+                                            Aktif</a>
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -37,7 +44,6 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('dokter.create') }}" class="btn btn-success">Refresh User Dokter</a>
             </x-adminlte-card>
         </div>
     </div>

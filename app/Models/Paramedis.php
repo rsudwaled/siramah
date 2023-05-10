@@ -10,7 +10,5 @@ class Paramedis extends Model
     use HasFactory;
     protected $connection = 'mysql2';
     protected $table = 'mt_paramedis';
-    protected $fillable = [
-
-    ];
+    protected $guarded = ['id'];
 }

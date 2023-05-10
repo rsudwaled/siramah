@@ -12,27 +12,12 @@ class DokterController extends Controller
 {
     public function index(Request $request)
     {
-        $paramedis = Paramedis::get(['kode_paramedis', 'kode_dokter_jkn', 'nama_paramedis', 'sip_dr']);
-        $paramedis_total = Paramedis::count();
-        $total_paramedis = Paramedis::count();
-
-        // get dokter vclaim bpjs
-        $controller = new AntrianController();
-        $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokter_bpjs = collect($response->getData()->response);
-        } else {
-            $dokter_bpjs = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
-        }
-
-        // $paramedis->where('kode_dokter_jkn', )
+        $paramedis = Paramedis::get();
+        $dokter = Dokter::all();
         return view('simrs.dokter_index', compact([
             'request',
-            'dokter_bpjs',
+            'dokter',
             'paramedis',
-            'paramedis_total',
-            'total_paramedis',
         ]));
     }
     public function show($id)
