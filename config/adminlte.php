@@ -470,21 +470,35 @@ return [
                 [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
-                    'url'  => 'pelayananmedis/dokter',
+                    'url'  => 'dokter',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Paramedis',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'paramedis',
                     'shift'   => 'ml-2',
                     'can' => 'pelayanan-medis',
                 ],
                 [
                     'text' => 'Poliklinik',
                     'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'pelayananmedis/poliklinik',
+                    'url'  => 'poliklinik',
+                    'shift'   => 'ml-2',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
+                    'text' => 'Unit',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'unit',
                     'shift'   => 'ml-2',
                     'can' => 'pelayanan-medis',
                 ],
                 [
                     'text' => 'Tarif Layanan',
                     'icon'    => 'fas fa-hand-holding-medical',
-                    'url'  => 'pelayananmedis/tarif_layanan',
+                    'url'  => 'tarif_layanan',
                     'shift'   => 'ml-2',
                     'can' => 'pelayanan-medis',
 
@@ -521,7 +535,7 @@ return [
                 [
                     'text' => 'Pasien',
                     'icon'    => 'fas fa-user-injured',
-                    'url'  => 'rekammedis/pasien',
+                    'url'  => 'pasien',
                     'shift'   => 'ml-2',
                     'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
@@ -529,9 +543,20 @@ return [
                 [
                     'text' => 'Kunjungan',
                     'icon'    => 'fas fa-hospital-user',
-                    'url'  => 'rekammedis/kunjungan',
+                    'url'  => 'kunjungan',
+                    'shift'   => 'ml-2',
+                    'active'  => ['kunjungan', 'kunjungan/create', 'regex:@^kunjungan(\/[0-9]+)?+$@', 'regex:@^kunjungan(\/[0-9]+)?\/edit+$@',],
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'E-File Rekam Medis',
+                    'icon'    => 'fas fa-diagnoses',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
+                    'url'  => 'efilerm',
+                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
+                    'active'  => ['efilerm', 'efilerm/create'],
+
                 ],
                 [
                     'text' => 'Demografi Pasien',
@@ -582,16 +607,6 @@ return [
                     'url'  => 'icd10',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'E-File Rekam Medis',
-                    'icon'    => 'fas fa-diagnoses',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'url'  => 'efilerm',
-                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
-                    'active'  => ['efilerm', 'efilerm/create'],
-
                 ],
                 [
                     'text' => 'Tindankan Prosedur',
@@ -871,42 +886,42 @@ return [
 
             ],
         ],
-                // MODUL TESTING
+        // MODUL TESTING
+        [
+            'text'    => 'Pengaturan & Testing',
+            'icon'    => 'fas fa-cogs',
+            'can' => 'admin',
+            'submenu' => [
                 [
-                    'text'    => 'Pengaturan & Testing',
-                    'icon'    => 'fas fa-cogs',
+                    'text' => 'Bar & QR Code Scanner',
+                    'icon'    => 'fas fa-qrcode',
+                    'url'  => 'bar_qr_scanner',
+                    'shift'   => 'ml-2',
                     'can' => 'admin',
-                    'submenu' => [
-                        [
-                            'text' => 'Bar & QR Code Scanner',
-                            'icon'    => 'fas fa-qrcode',
-                            'url'  => 'bar_qr_scanner',
-                            'shift'   => 'ml-2',
-                            'can' => 'admin',
-                        ],
-                        [
-                            'text' => 'Thermal Printer',
-                            'icon'    => 'fas fa-print',
-                            'url'  => 'thermal_printer',
-                            'shift'   => 'ml-2',
-                            'can' => 'admin',
-                        ],
-                        [
-                            'text' => 'WhatsApp API',
-                            'icon'    => 'fas fa-phone',
-                            'url'  => 'whatsapp',
-                            'shift'   => 'ml-2',
-                            'can' => 'admin',
-                        ],
-                        [
-                            'text'        => 'Log Viewer',
-                            'url'         => 'log-viewer',
-                            'icon'        => 'fas fa-info-circle',
-                            'shift'   => 'ml-2',
-                            'can' => 'admin',
-                        ],
-                    ],
                 ],
+                [
+                    'text' => 'Thermal Printer',
+                    'icon'    => 'fas fa-print',
+                    'url'  => 'thermal_printer',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'WhatsApp API',
+                    'icon'    => 'fas fa-phone',
+                    'url'  => 'whatsapp',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text'        => 'Log Viewer',
+                    'url'         => 'log-viewer',
+                    'icon'        => 'fas fa-info-circle',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+            ],
+        ],
         // USER ACCESS CONTROLL
         [
             'text'    => 'User Access Control',

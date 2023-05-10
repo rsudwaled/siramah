@@ -21,7 +21,7 @@
                         </div>
                         <div class="col-md-4">
                             <form action="#" method="get">
-                                <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
+                                <x-adminlte-input name="search" placeholder="Pencarian No RM" igroup-size="sm"
                                     value="{{ $request->search }}">
                                     <x-slot name="appendSlot">
                                         <x-adminlte-button type="submit" theme="outline-primary" label="Go!" />
@@ -66,7 +66,7 @@
                                         <td>{{ $status_kunjungan[$item->status_kunjungan] }}</td>
                                         <td>
                                             <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                                onclick="window.location='{{ route('rekammedis.kunjungan.edit', $item->kode_kunjungan) }}'" />
+                                                onclick="window.location='{{ route('kunjungan.edit', $item->kode_kunjungan) }}'" />
                                             </form>
                                         </td>
                                     </tr>

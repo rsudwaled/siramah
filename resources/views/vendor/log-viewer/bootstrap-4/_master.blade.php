@@ -210,7 +210,7 @@
         .badge.badge-env {
             background-color: #6A1B9A;
         }
-        
+
         #entries {
             overflow-wrap: anywhere;
         }
@@ -218,8 +218,8 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark sticky-top bg-dark p-0">
-        <a href="{{ route('log-viewer::dashboard') }}" class="navbar-brand mr-0">
-            <i class="fa fa-fw fa-book"></i> LogViewer
+        <a href="{{ route('home') }}" class="navbar-brand mr-0">
+            <i class="fa fa-fw fa-home"></i> SIMRS Waled
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
             <span class="navbar-toggler-icon"></span>
@@ -253,7 +253,7 @@
                 LogViewer - <span class="badge badge-info">version {{ log_viewer()->version() }}</span>
             </p>
             <p class="text-muted pull-right">
-                Created with <i class="fa fa-heart"></i> by ARCANEDEV <sup>&copy;</sup>
+                Created with <i class="fa fa-heart"></i> by Marwan Dhiaur Rahman <sup>&copy;</sup>
             </p>
         </div>
     </footer>

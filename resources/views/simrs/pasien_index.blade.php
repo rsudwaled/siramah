@@ -27,7 +27,7 @@
                             icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
                     </div>
                     <div class="col-md-4">
-                        <form action="{{ route('poliklinik.pasien.index') }}" method="get">
+                        <form action="{{ route('pasien.index') }}" method="get">
                             <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
                                 value="{{ $request->search }}">
                                 <x-slot name="appendSlot">
@@ -64,14 +64,14 @@
                             <td>{{ $item->alamat }}</td>
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>
-                                <form action="{{ route('poliklinik.pasien.destroy', $item->no_rm) }}" method="POST">
-                                    <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                        onclick="window.location='{{ route('poliklinik.pasien.edit', $item->no_rm) }}'" />
+                                <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                onclick="window.location='{{ route('pasien.edit', $item->no_rm) }}'" />
+                                {{-- <form action="{{ route('pasien.destroy', $item->no_rm) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-trash-alt" type="submit"
                                         onclick="return confirm('Apakah anda akan menghapus {{ $item->no_rm }} ?')" />
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                     @endforeach

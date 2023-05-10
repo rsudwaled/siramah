@@ -6,9 +6,12 @@ use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\FileRekamMedisController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\ParamedisController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PoliklinikController;
@@ -61,12 +64,22 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('user', UserController::class);
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
+
     Route::resource('poliklinik', PoliklinikController::class);
     Route::resource('dokter', DokterController::class);
     Route::resource('jadwaldokter', JadwalDokterController::class);
     Route::resource('suratmasuk', SuratMasukController::class);
     Route::resource('suratlampiran', SuratLampiranController::class);
     Route::resource('disposisi', DisposisiController::class);
+
+    Route::resource('pasien', PasienController::class);
+    Route::resource('kunjungan', KunjunganController::class);
+    Route::resource('efilerm', FileRekamMedisController::class);
+
+    Route::resource('paramedis', ParamedisController::class);
+
+
+
     Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
     Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 });

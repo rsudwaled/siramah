@@ -17,7 +17,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Edit Data Pasien" theme="warning" collapsible>
-                <form action="{{ route('simrs.pasien.update', $pasien) }}" id="myform" method="POST">
+                <form action="{{ route('pasien.update', $pasien) }}" id="myform" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -30,6 +30,8 @@
                                 placeholder="Nomor Induk Kependudukan" enable-old-support required />
                             <x-adminlte-input value="{{ $pasien->nama_px }}" name="nama" label="Nama"
                                 placeholder="Nama Lengkap" enable-old-support required />
+                            <x-adminlte-input value="{{ $pasien->no_hp }}" name="no_hp" label="Nomor HP"
+                                placeholder="Nomor HP" enable-old-support required />
                             <x-adminlte-input value="{{ $pasien->tempat_lahir }}" name="tempat_lahir" label="Tempat Lahir"
                                 placeholder="Tempat Lahir" enable-old-support required />
                             @php
@@ -41,7 +43,7 @@
                         </div>
                         <div class="col-md-6">
                             <x-adminlte-select name="gender" label="Jenis Kelamin" enable-old-support>
-                                <x-adminlte-options :options="['L', 'P']" selected="{{ $pasien->jenis_kelamin }}"
+                                <x-adminlte-options :options="['L' => 'Laki-Laki', 'P' => 'Perempuan']" selected="{{ $pasien->jenis_kelamin }}"
                                     placeholder="Jenis Kelamin" />
                             </x-adminlte-select>
                             <x-adminlte-select name="Agama" label="Agama" enable-old-support>
@@ -61,7 +63,7 @@
                     </div>
                 </form>
             </x-adminlte-card>
-            <x-adminlte-button theme="danger" label="Kembali" class="mr-1" data-dismiss="modal" />
+            <a href="{{ route('pasien.index') }}" class="btn btn-danger mr-1">Kembali</a>
             <x-adminlte-button form="myform" type="submit" theme="success" label="Simpan" />
         </div>
     </div>

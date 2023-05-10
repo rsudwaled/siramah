@@ -18,7 +18,6 @@
                             <div class="box-icon">
                                 {!! log_styler()->icon($level) !!}
                             </div>
-
                             <div class="box-content">
                                 <span class="box-text">{{ $item['name'] }}</span>
                                 <span class="box-number">

@@ -66,7 +66,7 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('pelayananmedis.dokter.create') }}" class="btn btn-success">Refresh User Dokter</a>
+                <a href="{{ route('dokter.create') }}" class="btn btn-success">Refresh User Dokter</a>
             </x-adminlte-card>
         </div>
     </div>
@@ -107,7 +107,7 @@
             $('.btnEdit').click(function() {
                 var id = $(this).data('id');
                 $.LoadingOverlay("show");
-                var url = "{{ route('pelayananmedis.dokter.index') }}/" + id;
+                var url = "{{ route('dokter.index') }}/" + id;
                 $.get(url, function(data) {
                     console.log(data);
                     $('#kode_paramedis').val(data.kode_paramedis);

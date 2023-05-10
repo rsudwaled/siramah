@@ -33,12 +33,12 @@
                             <td>{{ $item->lantaipendaftaran }}</td>
                             <td>
                                 @if ($item->status == 1)
-                                    <a href="{{ route('poli.edit', $item->id) }}">
+                                    <a href="{{ route('poliklinik.edit', $item->id) }}">
                                         <x-adminlte-button class="btn-xs" type="button" label="aktif" theme="success"
                                             title="Klik untuk non-aktifkan" />
                                     </a>
                                 @else
-                                    <a href="{{ route('poli.edit', $item->id) }}">
+                                    <a href="{{ route('poliklinik.edit', $item->id) }}">
                                         <x-adminlte-button class="btn-xs" type="button" label="nonaktif" theme="danger"
                                             data-toggle="tooltip" title="Klik untuk aktifkan" />
                                     </a>
@@ -70,12 +70,12 @@
                             </td>
                             <td>
                                 @if ($item->status == 1)
-                                    <a href="{{ route('poli.edit', $item->id) }}">
+                                    <a href="{{ route('poliklinik.edit', $item->id) }}">
                                         <x-adminlte-button class="btn-xs" type="button" label="aktif" theme="success"
                                             title="Klik untuk non-aktifkan" />
                                     </a>
                                 @else
-                                    <a href="{{ route('poli.edit', $item->id) }}">
+                                    <a href="{{ route('poliklinik.edit', $item->id) }}">
                                         <x-adminlte-button class="btn-xs" type="button" label="nonaktif" theme="danger"
                                             data-toggle="tooltop" title="Klik untuk aktifkan" />
                                     </a>
@@ -84,14 +84,14 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('poli.create') }}" class="btn btn-success">Create Poliklinik</a>
+                <a href="{{ route('poliklinik.create') }}" class="btn btn-success">Create Poliklinik</a>
             </x-adminlte-card>
         </div>
     </div>
     {{-- modal poliklinik --}}
     <x-adminlte-modal id="modalPoli" name="modalPoli" title="Poliklinik" theme="warning"
         icon="fas fa-prescription-bottle-alt" static-backdrop>
-        <form name="formUpdatePoli" id="formUpdatePoli" action="{{ route('poli.store') }}" method="POST">
+        <form name="formUpdatePoli" id="formUpdatePoli" action="{{ route('poliklinik.store') }}" method="POST">
             @csrf
             <input type="hidden" name="method" value="UPDATE">
             <input type="hidden" name="idpoli" id="idpoli">
@@ -150,7 +150,7 @@
                 var idpoli = $(this).data('id');
                 $('#modalPoli').modal('show');
                 $.LoadingOverlay("show");
-                $.get("{{ route('poli.index') }}" + '/' + idpoli, function(data) {
+                $.get("{{ route('poliklinik.index') }}" + '/' + idpoli, function(data) {
                     console.log(data);
                     $('#idpoli').val(idpoli);
                     $('#kodepoli').val(data.kodepoli);
