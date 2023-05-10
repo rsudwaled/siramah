@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('kodesubspesialis');
             $table->string('namasubspesialis');
             $table->string('fingerprint')->default(0);
+            $table->string('status')->default(0);
             $table->string('user_by');
             $table->timestamps();
         });

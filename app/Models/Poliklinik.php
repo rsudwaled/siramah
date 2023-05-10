@@ -9,4 +9,9 @@ class Poliklinik extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function unit()
+    {
+        return $this->hasOne(Unit::class, 'KDPOLI', 'kodesubspesialis');
+    }
 }

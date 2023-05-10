@@ -23,10 +23,10 @@
                             {{-- <td>{{ $item->namapoli }}</td> --}}
                             <td>{{ $item->kodesubspesialis }} - {{ $item->namasubspesialis }}</td>
                             <td>
-                                @if ($item->subspesialis)
-                                    Ya <i class="fas fa-check-circle text-success"></i>
+                                @if ($item->kodesubspesialis == $item->kodepoli)
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Bukan</span>
                                 @else
-                                    Bukan <i class="fas fa-times-circle text-danger"></i>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Ya</span>
                                 @endif
                             </td>
                             <td>{{ $item->lokasi }}</td>
@@ -54,18 +54,19 @@
         <div class="col-md-6">
             <x-adminlte-card title="Data Semua Poliklinik" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
-                    $heads = ['Kode Poli', 'Nama Poli', 'Spesialis', 'Status'];
+                    $heads = ['Kode Poli', 'Kode Unit', 'Nama Poli', 'Spesialis', 'Status'];
                 @endphp
                 <x-adminlte-datatable id="table3" :heads="$heads" striped bordered hoverable compressed>
                     @foreach ($polis as $item)
                         <tr>
                             <td>{{ $item->kodesubspesialis }}</td>
+                            <td>{{ $item->unit ? $item->unit->KDPOLI : '-' }}</td>
                             <td>{{ $item->namasubspesialis }}</td>
                             <td>
-                                @if ($item->subspesialis)
-                                    Ya <i class="fas fa-check-circle text-success"></i>
+                                @if ($item->kodesubspesialis == $item->kodepoli)
+                                    <span class="badge badge-danger"><i class="fas fa-times-circle"></i> Bukan</span>
                                 @else
-                                    Bukan <i class="fas fa-times-circle text-danger"></i>
+                                    <span class="badge badge-success"><i class="fas fa-check-circle"></i> Ya</span>
                                 @endif
                             </td>
                             <td>

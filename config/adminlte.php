@@ -496,6 +496,13 @@ return [
                     'can' => 'pelayanan-medis',
                 ],
                 [
+                    'text' => 'Jadwal Dokter',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwaldokter',
+                    'can' => 'pelayanan-medis',
+                ],
+                [
                     'text' => 'Tarif Layanan',
                     'icon'    => 'fas fa-hand-holding-medical',
                     'url'  => 'tarif_layanan',
@@ -503,27 +510,7 @@ return [
                     'can' => 'pelayanan-medis',
 
                 ],
-                [
-                    'text' => 'Poliklinik Antrian BPJS',
-                    'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'pelayananmedis/poliklinik_antrian',
-                    'shift'   => 'ml-2',
-                    'can' => 'pelayanan-medis',
-                ],
-                [
-                    'text' => 'Dokter Antrian BPJS',
-                    'icon'    => 'fas fa-user-md',
-                    'url'  => 'pelayananmedis/dokter_antrian',
-                    'shift'   => 'ml-2',
-                    'can' => 'pelayanan-medis',
-                ],
-                [
-                    'text' => 'Jadwal Antrian BPJS',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'pelayananmedis/jadwaldokter',
-                    'can' => 'pelayanan-medis',
-                ],
+
             ],
         ],
         // REKAM MEDIS

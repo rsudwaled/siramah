@@ -9,6 +9,13 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PoliklinikController extends Controller
 {
+    public function index()
+    {
+        $polis = Poliklinik::get();
+        return view('simrs.poli_index', [
+            'polis' => $polis
+        ]);
+    }
     public function poliklikAntrianBpjs()
     {
         $controller = new AntrianController();
@@ -82,13 +89,7 @@ class PoliklinikController extends Controller
             'polikliniks'
         ]));
     }
-    public function index()
-    {
-        $polis = Poliklinik::get();
-        return view('simrs.poli_index', [
-            'polis' => $polis
-        ]);
-    }
+
     public function create()
     {
         $api = new AntrianBPJSController();
@@ -161,7 +162,7 @@ class PoliklinikController extends Controller
             'status' => $status,
         ]);
         Alert::success('Success', 'Poliklinik ' . $poli->namasubspesialis . ' Telah Di ' . $keterangan);
-        return redirect()->route('poli.index');
+        return redirect()->route('poliklinik.index');
     }
     public function show($id)
     {

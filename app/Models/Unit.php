@@ -32,10 +32,10 @@ class Unit extends Model
     }
     public function lokasi()
     {
-        return $this->hasOne(LokasiUnitDB::class, 'kode_unit', 'kode_unit');
+        return $this->hasOne(LokasiUnit::class, 'kode_unit', 'kode_unit');
     }
     public function poliklinik()
     {
-        return $this->hasOne(PoliklinikDB::class, 'kodesubspesialis', 'KDPOLI');
+        return $this->hasOne(Poliklinik::class, 'kodesubspesialis', 'KDPOLI');
     }
 }

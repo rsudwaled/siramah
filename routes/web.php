@@ -20,6 +20,7 @@ use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SuratKontrolController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\ThermalPrintController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
@@ -66,8 +67,11 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('permission', PermissionController::class);
 
     Route::resource('poliklinik', PoliklinikController::class);
+    Route::resource('unit', UnitController::class);
     Route::resource('dokter', DokterController::class);
+    Route::resource('paramedis', ParamedisController::class);
     Route::resource('jadwaldokter', JadwalDokterController::class);
+
     Route::resource('suratmasuk', SuratMasukController::class);
     Route::resource('suratlampiran', SuratLampiranController::class);
     Route::resource('disposisi', DisposisiController::class);
@@ -76,7 +80,6 @@ Route::middleware('permission:admin')->group(function () {
     Route::resource('kunjungan', KunjunganController::class);
     Route::resource('efilerm', FileRekamMedisController::class);
 
-    Route::resource('paramedis', ParamedisController::class);
 
 
 
