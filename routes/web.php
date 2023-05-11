@@ -24,6 +24,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
+use App\Models\JadwalDokter;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,13 +88,11 @@ Route::prefix('antrian')->name('antrian.')->group(function () {
     Route::get('panggil_ulang_poliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggil_ulang_poliklinik');
     Route::get('lanjut_farmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjut_farmasi');
     Route::get('lanjut_farmasi_racikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjut_farmasi_racikan');
-
-
-    Route::get('jadwaldokter_poli', [SIMRSJadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
-    Route::get('daftar_pasien_bpjs_offline', [SIMRSAntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
-    Route::get('daftar_pasien_umum_offline', [SIMRSAntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
+    Route::get('jadwaldokter_poli', [JadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
+    Route::get('daftar_pasien_bpjs_offline', [AntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
+    Route::get('daftar_pasien_umum_offline', [AntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
     Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
-    Route::get('checkin_update', [SIMRSAntrianController::class, 'checkin_update'])->name('checkin_update');
+    Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
 });
 
 Route::resource('antrian', AntrianController::class);
@@ -102,7 +101,7 @@ Route::resource('antrian', AntrianController::class);
 // pendaftaran
 Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
     Route::get('antrian_pendaftaran', [AntrianController::class, 'antrianPendaftaran'])->name('antrian_pendaftaran');
-    Route::get('antrian_capaian', [SIMRSAntrianController::class, 'antrian_capaian'])->name('antrian_capaian');
+    Route::get('antrian_capaian', [AntrianController::class, 'antrian_capaian'])->name('antrian_capaian');
     Route::get('panggil_pendaftaran/{kodebooking}/{loket}/{lantai}', [SIMRSAntrianController::class, 'panggil_pendaftaran'])->name('panggil_pendaftaran')->middleware('permission:pendaftaran');
     Route::get('selesai_pendaftaran/{kodebooking}', [SIMRSAntrianController::class, 'selesai_pendaftaran'])->name('selesai_pendaftaran')->middleware('permission:pendaftaran');
 });

@@ -168,7 +168,7 @@ class JadwalDokterController extends Controller
     }
     public function jadwaldokter_poli(Request $request)
     {
-        $jadwals = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+        $jadwals = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
             ->where('hari', $request->hari)
             ->where('libur', 0)
             ->get();

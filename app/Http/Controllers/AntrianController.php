@@ -36,6 +36,39 @@ class AntrianController extends APIController
             'token'
         ]));
     }
+    public function checkin_update(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "kodebooking" => "required",
+            "waktu" => "required|numeric",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metadata' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return $response;
+        }
+        // cari antrian
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        if (isset($antrian)) {
+            $api = new AntrianAntrianController();
+            $response = $api->checkin_antrian($request)->getData();
+            return $response;
+        }
+        // jika antrian tidak ditemukan
+        else {
+            return $response = [
+                'metadata' => [
+                    'code' => 400,
+                    'message' => "Antrian tidak ditemukan",
+                ],
+            ];
+        }
+    }
     public function antrian(Request $request)
     {
         // get poli
@@ -74,6 +107,91 @@ class AntrianController extends APIController
         return view('bpjs.antrian.list_task', compact([
             'request',
             'taskid',
+        ]));
+    }
+    public function antrian_capaian(Request $request)
+    {
+        $antrians_total = Antrian::select(
+            DB::raw("count(*) as total"),
+            DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+        )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $tanggal_awal = Antrian::orderBy('tanggalperiksa', 'ASC')->first()->tanggalperiksa;
+        $kunjungans = Kunjungan::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::now()->endOfDay()])
+            ->where('kode_unit', "!=", null)
+            ->where('kode_unit', 'LIKE', '10%')
+            ->where('kode_unit', '!=', 1002)
+            ->where('kode_unit', "!=", 1023)
+            ->where('kode_unit', "!=", 1015)
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(tgl_masuk, '%Y-%m')) as bulan")
+            )
+            ->orderBy('tgl_masuk')
+            ->groupBy(DB::raw("DATE_FORMAT(tgl_masuk, '%Y-%m')"))
+            ->get();
+        $antrian_nobatal = Antrian::where('taskid', '!=', 99)
+            ->where('method', '!=', 'Offline')
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_selesai = Antrian::whereIn('taskid',  [5, 7])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_whatsapp = Antrian::where('taskid', '!=', 99)
+            ->whereIn('method', ['Whatsapp', 'ON'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+
+        $antrian_jkn = Antrian::where('taskid', '!=', 99)
+            ->whereIn('method', ['JKN Mobile'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        $antrian_lainnya = Antrian::where('taskid', '!=', 99)
+            ->whereNotIn('method', ['JKN Mobile', 'Whatsapp', 'ON', 'OFF', 'Offline'])
+            ->select(
+                DB::raw("count(*) as total"),
+                DB::raw("(DATE_FORMAT(created_at, '%Y-%m')) as bulan")
+            )
+            ->orderBy('created_at')
+            ->groupBy(DB::raw("DATE_FORMAT(created_at, '%Y-%m')"))
+            ->get();
+
+        return view('simrs.pendaftaran.capaian_antrian', compact([
+            // 'antrians_total',
+            'antrian_nobatal',
+            'antrian_selesai',
+            'antrian_whatsapp',
+            'antrian_jkn',
+            'antrian_lainnya',
+            'kunjungans',
+            'request',
         ]));
     }
     public function dashboardTanggalAntrian(Request $request)
@@ -523,7 +641,7 @@ class AntrianController extends APIController
             return redirect()->route('antrian.console');
         }
         // get jadwal
-        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+        $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
             ->where('kodedokter', $request->kodedokter)
             ->where('hari', now()->dayOfWeek)->first();
         if ($jadwal == null) {
@@ -534,7 +652,7 @@ class AntrianController extends APIController
         $request['jenispasien'] = 'JKN';
         $request['method'] = 'Offline';
         // ambil antrian offline
-        $antrian_api = new AntrianAntrianController();
+        $antrian_api = new AntrianController();
         $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->status() == 200) {
             // cek printer
@@ -567,7 +685,7 @@ class AntrianController extends APIController
             return redirect()->route('antrian.console');
         }
         // get jadwal
-        $jadwal = JadwalDokterAntrian::where('kodesubspesialis', $request->kodesubspesialis)
+        $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
             ->where('kodedokter', $request->kodedokter)
             ->where('hari', now()->dayOfWeek)->first();
         if ($jadwal == null) {
@@ -578,7 +696,7 @@ class AntrianController extends APIController
         $request['jenispasien'] = 'NON-JKN';
         $request['method'] = 'Offline';
         // ambil antrian offline
-        $antrian_api = new AntrianAntrianController();
+        $antrian_api = new AntrianController();
         $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->status() == 200) {
             // cek printer
@@ -1511,7 +1629,7 @@ class AntrianController extends APIController
         if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
             return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 400);
         }
-        $poli = PoliklinikDB::where('kodesubspesialis', $request->kodepoli)->first();
+        $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
         $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
         $request['lokasi'] = $poli->lantaipendaftaran;
         if ($request->jenispasien == "NON-JKN") {
@@ -1680,6 +1798,7 @@ class AntrianController extends APIController
             return $this->sendError('Antrian tidak ditemukan',  201);
         }
     }
+
     public function checkin_antrian(Request $request) #checkin antrian api
     {
         // cek printer
@@ -2762,5 +2881,56 @@ class AntrianController extends APIController
             return  $this->sendError($response->getData()->metadata->message, 400);
         }
         return  $this->sendResponse("Print Ulang Berhasil", null, 201);
+    }
+    function print_karcis_offline(Request $request, $antrian)
+    {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
+        $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+        $printer = new Printer($connector);
+        $printer->setEmphasis(true);
+        $printer->text("ANTRIAN RAWAT JALAN\n");
+        $printer->text("RSUD WALED KAB. CIREBON\n");
+        $printer->setEmphasis(false);
+        $printer->text("================================================\n");
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->text("Angka Antrian Pendaftaran :\n");
+        $printer->setTextSize(3, 3);
+        $printer->text($antrian->angkaantrean . "\n");
+        $printer->setTextSize(1, 1);
+        $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
+        $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
+        $printer->text("================================================\n");
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->text("Jenis Kunj. : " . $request->method . ' ' . $request->jenispasien . "\n");
+        $printer->text("No. Antrian Poli : " . $antrian->nomorantrean . "\n");
+        $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
+        $printer->text("Dokter : " . $antrian->namadokter . "\n");
+        $printer->text("Jam, Tanggal : " . $request->jampraktek . ', ' . Carbon::parse($request->tanggalperiksa)->format('d M Y') . "\n");
+        $printer->text("================================================\n");
+        $printer->text("Keterangan : \n" . $antrian->keterangan . "\n");
+        $printer->text("================================================\n");
+        $printer->text("Cetakan 1 : " . $now . "\n");
+        $printer->cut();
+        $printer->close();
+    }
+    public function cek_printer()
+    {
+        try {
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+            $printer = new Printer($connector);
+            $printer->text("Connector Printer :\n");
+            $printer->text(env('PRINTER_CHECKIN') . "\n");
+            $printer->text("Test Printer Berhasil.\n");
+            $printer->cut();
+            $printer->close();
+            Alert::success('Success', 'Mesin menyala dan siap digunakan.');
+            return redirect()->route('antrian.console');
+        } catch (\Throwable $th) {
+            // throw $th;
+            Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
+            return redirect()->route('antrian.console');
+        }
     }
 }
