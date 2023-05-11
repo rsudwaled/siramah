@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\VclaimController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,17 +39,17 @@ Route::prefix('antrian')->group(function () {
 //
 Route::get('token', [AntrianAntrianController::class, 'token']);
 Route::prefix('wsrs')->group(function () {
-    Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian']);
-    Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian']);
-    Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian']);
-    Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian']);
-    Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian']);
-    Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru']);
-    Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
-    Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
-    Route::post('ambil_antrean_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
-    Route::post('status_antrean_farmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
-    Route::post('update_antrean_pendaftaran', [AntrianAntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
+    Route::post('status_antrian', [AntrianController::class, 'status_antrian']);
+    Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian']);
+    Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian']);
+    Route::post('batal_antrian', [AntrianController::class, 'batal_antrian']);
+    Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian']);
+    Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru']);
+    Route::post('jadwal_operasi_rs', [AntrianController::class, 'jadwal_operasi_rs']);
+    Route::post('jadwal_operasi_pasien', [AntrianController::class, 'jadwal_operasi_pasien']);
+    Route::post('ambil_antrean_farmasi', [AntrianController::class, 'ambil_antrian_farmasi']);
+    Route::post('status_antrean_farmasi', [AntrianController::class, 'status_antrian_farmasi']);
+    Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
 });
 Route::prefix('vclaim')->group(function () {
     // ref
@@ -109,75 +112,75 @@ Route::prefix('bpjs')->name('api.bpjs.')->group(function () {
     // ANTRIAN
     Route::prefix('antrian')->name('antrian.')->group(function () {
         // API BPJS
-        Route::get('ref_poli', [AntrianAntrianController::class, 'ref_poli'])->name('ref_poli');
-        Route::get('ref_dokter', [AntrianAntrianController::class, 'ref_dokter'])->name('ref_dokter');
-        Route::get('ref_jadwal_dokter', [AntrianAntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
-        Route::get('ref_poli_fingerprint', [AntrianAntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
-        Route::get('ref_pasien_fingerprint', [AntrianAntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
-        Route::post('update_jadwal_dokter', [AntrianAntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
-        Route::post('tambah_antrean', [AntrianAntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
-        Route::post('tambah_antrean_farmasi', [AntrianAntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
-        Route::post('update_antrean', [AntrianAntrianController::class, 'update_antrean'])->name('update_antrean');
-        Route::post('batal_antrean', [AntrianAntrianController::class, 'batal_antrean'])->name('batal_antrean');
-        Route::post('taskid_antrean', [AntrianAntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
-        Route::get('dashboard_tanggal', [AntrianAntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
-        Route::get('dashboard_bulan', [AntrianAntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
-        Route::get('antrian_tanggal', [AntrianAntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
-        Route::get('antrian_kodebooking', [AntrianAntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
-        Route::get('antrian_pendaftaran', [AntrianAntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
-        Route::get('antrian_poliklinik', [AntrianAntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
+        Route::get('ref_poli', [AntrianController::class, 'ref_poli'])->name('ref_poli');
+        Route::get('ref_dokter', [AntrianController::class, 'ref_dokter'])->name('ref_dokter');
+        Route::get('ref_jadwal_dokter', [AntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+        Route::get('ref_poli_fingerprint', [AntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
+        Route::get('ref_pasien_fingerprint', [AntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
+        Route::post('update_jadwal_dokter', [AntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
+        Route::post('tambah_antrean', [AntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
+        Route::post('tambah_antrean_farmasi', [AntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
+        Route::post('update_antrean', [AntrianController::class, 'update_antrean'])->name('update_antrean');
+        Route::post('batal_antrean', [AntrianController::class, 'batal_antrean'])->name('batal_antrean');
+        Route::post('taskid_antrean', [AntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
+        Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
+        Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
+        Route::get('antrian_tanggal', [AntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
+        Route::get('antrian_kodebooking', [AntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
+        Route::get('antrian_pendaftaran', [AntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
+        Route::get('antrian_poliklinik', [AntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
         // API SIMRS
-        Route::get('token', [AntrianAntrianController::class, 'token'])->name('token');
-        Route::post('status_antrian', [AntrianAntrianController::class, 'status_antrian'])->name('status_antrian');
-        Route::post('ambil_antrian', [AntrianAntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
-        Route::post('sisa_antrian', [AntrianAntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
-        Route::post('batal_antrian', [AntrianAntrianController::class, 'batal_antrian'])->name('batal_antrian');
-        Route::post('checkin_antrian', [AntrianAntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
-        Route::post('ambil_antrian_farmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
-        Route::post('status_antrian_farmasi', [AntrianAntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
-        Route::post('info_pasien_baru', [AntrianAntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
-        Route::post('jadwal_operasi_rs', [AntrianAntrianController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
-        Route::post('jadwal_operasi_pasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
+        Route::get('token', [AntrianController::class, 'token'])->name('token');
+        Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
+        Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
+        Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
+        Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
+        Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
+        Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
+        Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
+        Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
+        Route::post('jadwal_operasi_rs', [JadwalOperasiController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
+        Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
     // VCLAIM
     Route::prefix('vclaim')->name('vclaim.')->group(function () {
         // MONITORING
-        Route::get('monitoring_data_kunjungan', [VclaimVclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
-        Route::get('monitoring_data_klaim', [VclaimVclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
-        Route::get('monitoring_pelayanan_peserta', [VclaimVclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
-        Route::get('monitoring_klaim_jasaraharja', [VclaimVclaimController::class, 'monitoring_klaim_jasaraharja'])->name('monitoring_klaim_jasaraharja');
+        Route::get('monitoring_data_kunjungan', [VclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
+        Route::get('monitoring_data_klaim', [VclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
+        Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
+        Route::get('monitoring_klaim_jasaraharja', [VclaimController::class, 'monitoring_klaim_jasaraharja'])->name('monitoring_klaim_jasaraharja');
         // PESERTA
-        Route::get('peserta_nomorkartu', [VclaimVclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
-        Route::get('peserta_nik', [VclaimVclaimController::class, 'peserta_nik'])->name('peserta_nik');
+        Route::get('peserta_nomorkartu', [VclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
+        Route::get('peserta_nik', [VclaimController::class, 'peserta_nik'])->name('peserta_nik');
         // REFERENSI
-        Route::get('ref_diagnosa', [VclaimVclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
-        Route::get('ref_poliklinik', [VclaimVclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
-        Route::get('ref_faskes', [VclaimVclaimController::class, 'ref_faskes'])->name('ref_faskes');
-        Route::get('ref_dpjp', [VclaimVclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
-        Route::get('ref_provinsi', [VclaimVclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
-        Route::get('ref_kabupaten', [VclaimVclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
-        Route::get('ref_kecamatan', [VclaimVclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
+        Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
+        Route::get('ref_poliklinik', [VclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
+        Route::get('ref_faskes', [VclaimController::class, 'ref_faskes'])->name('ref_faskes');
+        Route::get('ref_dpjp', [VclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
+        Route::get('ref_provinsi', [VclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
+        Route::get('ref_kabupaten', [VclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
+        Route::get('ref_kecamatan', [VclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
         // RENCANA KONTROL
-        Route::post('suratkontrol_insert', [VclaimVclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
-        // Route::put('suratkontrol_update', [VclaimVclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
-        Route::delete('suratkontrol_delete', [VclaimVclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
-        // Route::post('spri_insert', [VclaimVclaimController::class, 'spri_insert'])->name('spri_insert');
-        // Route::put('spri_update', [VclaimVclaimController::class, 'spri_update'])->name('spri_update');
-        // Route::get('suratkontrol_sep', [VclaimVclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
-        Route::get('suratkontrol_nomor', [VclaimVclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
-        Route::get('suratkontrol_peserta', [VclaimVclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
-        Route::get('suratkontrol_tanggal', [VclaimVclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
-        Route::get('suratkontrol_poli', [VclaimVclaimController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
-        Route::get('suratkontrol_dokter', [VclaimVclaimController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
+        Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
+        // Route::put('suratkontrol_update', [VclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
+        Route::delete('suratkontrol_delete', [VclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+        // Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
+        // Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
+        // Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
+        Route::get('suratkontrol_nomor', [VclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
+        Route::get('suratkontrol_peserta', [VclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
+        Route::get('suratkontrol_tanggal', [VclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
+        Route::get('suratkontrol_poli', [VclaimController::class, 'suratkontrol_poli'])->name('suratkontrol_poli');
+        Route::get('suratkontrol_dokter', [VclaimController::class, 'suratkontrol_dokter'])->name('suratkontrol_dokter');
         // RUJUKAN
-        Route::get('rujukan_nomor', [VclaimVclaimController::class, 'rujukan_nomor'])->name('rujukan_nomor');
-        Route::get('rujukan_peserta', [VclaimVclaimController::class, 'rujukan_peserta'])->name('rujukan_peserta');
-        Route::get('rujukan_rs_nomor', [VclaimVclaimController::class, 'rujukan_rs_nomor'])->name('rujukan_rs_nomor');
-        Route::get('rujukan_rs_peserta', [VclaimVclaimController::class, 'rujukan_rs_peserta'])->name('rujukan_rs_peserta');
-        Route::get('rujukan_jumlah_sep', [VclaimVclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
+        Route::get('rujukan_nomor', [VclaimController::class, 'rujukan_nomor'])->name('rujukan_nomor');
+        Route::get('rujukan_peserta', [VclaimController::class, 'rujukan_peserta'])->name('rujukan_peserta');
+        Route::get('rujukan_rs_nomor', [VclaimController::class, 'rujukan_rs_nomor'])->name('rujukan_rs_nomor');
+        Route::get('rujukan_rs_peserta', [VclaimController::class, 'rujukan_rs_peserta'])->name('rujukan_rs_peserta');
+        Route::get('rujukan_jumlah_sep', [VclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
         // SEP
-        Route::get('sep_nomor', [VclaimVclaimController::class, 'sep_nomor'])->name('sep_nomor');
-        Route::delete('sep_delete', [VclaimVclaimController::class, 'sep_delete'])->name('sep_delete');
+        Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
+        Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
     });
 });
 // API SATU SEHAT

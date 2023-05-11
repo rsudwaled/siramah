@@ -30,5 +30,14 @@ class PoliklinikSeeder extends Seeder
         } else {
             return $response->getData()->metadata->message;
         }
+
+        $polikliniks = Poliklinik::all();
+        foreach ($polikliniks as  $value) {
+            if ($value->unit) {
+                $value->update([
+                    'status' => 1
+                ]);
+            }
+        }
     }
 }

@@ -375,9 +375,9 @@ return [
             'can' => 'poliklinik',
             'submenu' => [
                 [
-                    'text' => 'Antrian Pasien',
+                    'text' => 'Antrian Poliklinik',
                     'icon'    => 'fas fa-user-injured',
-                    'url'  => 'poliklinik/antrian',
+                    'url'  => 'antrian/poliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],

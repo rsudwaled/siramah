@@ -181,7 +181,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $item) }}'" />
+                                                onclick="window.location='{{ route('antrian.batal', $item) }}'" />
                                         </td>
                                         {{-- <td>
                                             @isset($item->nomorsep)
@@ -311,7 +311,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $antrian) }}'" />
+                                                onclick="window.location='{{ route('antrian.batal', $antrian) }}'" />
                                         </td>
 
                                         {{-- <td>
@@ -406,16 +406,16 @@
                                             <br>
                                             @if ($item->taskid == 3)
                                                 @if ($item->status_api == 1)
-                                                    <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
+                                                    {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                         theme="warning" icon="fas fa-volume-down" data-toggle="tooltip"
                                                         title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                        onclick="window.location='{{ route('poliklinik.antrian_panggil', $item) }}'" />
+                                                        onclick="window.location='{{ route('poliklinik.antrian_panggil', $item) }}'" /> --}}
                                                 @endif
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('poliklinik.antrian_batal', $item) }}'" />
+                                                onclick="window.location='{{ route('antrian.batal', $item) }}'" />
                                         </td>
 
                                         <td>

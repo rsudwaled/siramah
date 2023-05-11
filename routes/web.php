@@ -61,30 +61,50 @@ Route::get('thermal_printer', [ThermalPrintController::class, 'thermal_printer']
 Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->name('thermal_print');
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
 
-Route::middleware('permission:admin')->group(function () {
-    Route::resource('user', UserController::class);
-    Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
+Route::resource('user', UserController::class);
+Route::resource('role', RoleController::class);
+Route::resource('permission', PermissionController::class);
+Route::resource('poliklinik', PoliklinikController::class);
+Route::resource('unit', UnitController::class);
+Route::resource('dokter', DokterController::class);
+Route::resource('paramedis', ParamedisController::class);
+Route::resource('jadwaldokter', JadwalDokterController::class);
+Route::resource('suratmasuk', SuratMasukController::class);
+Route::resource('suratlampiran', SuratLampiranController::class);
+Route::resource('disposisi', DisposisiController::class);
+Route::resource('pasien', PasienController::class);
+Route::resource('kunjungan', KunjunganController::class);
+Route::resource('efilerm', FileRekamMedisController::class);
+Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
+Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 
-    Route::resource('poliklinik', PoliklinikController::class);
-    Route::resource('unit', UnitController::class);
-    Route::resource('dokter', DokterController::class);
-    Route::resource('paramedis', ParamedisController::class);
-    Route::resource('jadwaldokter', JadwalDokterController::class);
-
-    Route::resource('suratmasuk', SuratMasukController::class);
-    Route::resource('suratlampiran', SuratLampiranController::class);
-    Route::resource('disposisi', DisposisiController::class);
-
-    Route::resource('pasien', PasienController::class);
-    Route::resource('kunjungan', KunjunganController::class);
-    Route::resource('efilerm', FileRekamMedisController::class);
+// antrian routes (bagian antrian daftar dimesin antrian)
+Route::prefix('antrian')->name('antrian.')->group(function () {
+    Route::get('console', [AntrianController::class, 'console'])->name('console');
+    Route::get('batal/{antrian}', [AntrianController::class, 'batalAntrian'])->name('batal');
+    Route::get('poliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('poliklinik');
+    Route::get('panggil_poliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggil_poliklinik');
+    Route::get('panggil_ulang_poliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggil_ulang_poliklinik');
+    Route::get('lanjut_farmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjut_farmasi');
+    Route::get('lanjut_farmasi_racikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjut_farmasi_racikan');
 
 
+    Route::get('jadwaldokter_poli', [SIMRSJadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
+    Route::get('daftar_pasien_bpjs_offline', [SIMRSAntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
+    Route::get('daftar_pasien_umum_offline', [SIMRSAntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
+    Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
+    Route::get('checkin_update', [SIMRSAntrianController::class, 'checkin_update'])->name('checkin_update');
+});
+
+Route::resource('antrian', AntrianController::class);
 
 
-    Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
-    Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
+// pendaftaran
+Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
+    Route::get('antrian_pendaftaran', [AntrianController::class, 'antrianPendaftaran'])->name('antrian_pendaftaran');
+    Route::get('antrian_capaian', [SIMRSAntrianController::class, 'antrian_capaian'])->name('antrian_capaian');
+    Route::get('panggil_pendaftaran/{kodebooking}/{loket}/{lantai}', [SIMRSAntrianController::class, 'panggil_pendaftaran'])->name('panggil_pendaftaran')->middleware('permission:pendaftaran');
+    Route::get('selesai_pendaftaran/{kodebooking}', [SIMRSAntrianController::class, 'selesai_pendaftaran'])->name('selesai_pendaftaran')->middleware('permission:pendaftaran');
 });
 
 // bpjs
@@ -108,10 +128,10 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
     });
     // vclaim
     Route::prefix('vclaim')->name('vclaim.')->group(function () {
-        Route::get('monitoring_data_kunjungan', [MonitoringController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
-        Route::get('monitoring_data_klaim', [MonitoringController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
-        Route::get('monitoring_pelayanan_peserta', [MonitoringController::class, 'monitoring_pelayanan_peserta_index'])->name('monitoring_pelayanan_peserta');
-        Route::get('monitoring_klaim_jasaraharja', [MonitoringController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
+        Route::get('monitoring_data_kunjungan', [VclaimController::class, 'monitoring_data_kunjungan_index'])->name('monitoring_data_kunjungan');
+        Route::get('monitoring_data_klaim', [VclaimController::class, 'monitoring_data_klaim_index'])->name('monitoring_data_klaim');
+        Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoringPelayananPesertaIndex'])->name('monitoring_pelayanan_peserta');
+        Route::get('monitoring_klaim_jasaraharja', [VclaimController::class, 'monitoring_klaim_jasaraharja_index'])->name('monitoring_klaim_jasaraharja');
         Route::get('referensi', [VclaimController::class, 'referensi_index'])->name('referensi');
         Route::get('ref_diagnosa_api', [VclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
         Route::get('ref_poliklinik_api', [VclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');

@@ -14,4 +14,12 @@ class Poliklinik extends Model
     {
         return $this->hasOne(Unit::class, 'KDPOLI', 'kodesubspesialis');
     }
+    public function antrians()
+    {
+        return $this->hasMany(Antrian::class,  'kodepoli', 'kodesubspesialis');
+    }
+    public function jadwals()
+    {
+        return $this->hasMany(JadwalDokter::class,  'kodepoli', 'kodepoli');
+    }
 }
