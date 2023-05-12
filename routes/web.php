@@ -43,6 +43,8 @@ Auth::routes(['verify' => true]);
 Route::get('profile', [UserController::class, 'profile'])->name('profile');
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
+Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
+Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -51,7 +53,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
-Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
 
 // settingan umum
 Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
@@ -76,37 +77,35 @@ Route::resource('disposisi', DisposisiController::class);
 Route::resource('pasien', PasienController::class);
 Route::resource('kunjungan', KunjunganController::class);
 Route::resource('efilerm', FileRekamMedisController::class);
-Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
-Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
-
-// antrian routes (bagian antrian daftar dimesin antrian)
-Route::prefix('antrian')->name('antrian.')->group(function () {
-    Route::get('console', [AntrianController::class, 'console'])->name('console');
-    Route::get('batal/{antrian}', [AntrianController::class, 'batalAntrian'])->name('batal');
-    Route::get('poliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('poliklinik');
-    Route::get('panggil_poliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggil_poliklinik');
-    Route::get('panggil_ulang_poliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggil_ulang_poliklinik');
-    Route::get('lanjut_farmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjut_farmasi');
-    Route::get('lanjut_farmasi_racikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjut_farmasi_racikan');
-    Route::get('jadwaldokter_poli', [JadwalDokterController::class, 'jadwaldokter_poli'])->name('jadwaldokter_poli');
-    Route::get('daftar_pasien_bpjs_offline', [AntrianController::class, 'daftar_pasien_bpjs_offline'])->name('daftar_pasien_bpjs_offline');
-    Route::get('daftar_pasien_umum_offline', [AntrianController::class, 'daftar_pasien_umum_offline'])->name('daftar_pasien_umum_offline');
-    Route::get('cek_printer', [AntrianController::class, 'cek_printer'])->name('cek_printer');
-    Route::get('checkin_update', [AntrianController::class, 'checkin_update'])->name('checkin_update');
-});
-
 Route::resource('antrian', AntrianController::class);
 
 
+Route::get('daftarOnline', [SIMRSAntrianController::class, 'daftar_online'])->name('daftarOnline');
+// mesin antrian
+Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
+Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
+Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
+Route::get('daftarUmumOffline', [AntrianController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
+Route::get('cekPrinter', [AntrianController::class, 'cekPrinter'])->name('cekPrinter');
+Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
 // pendaftaran
-Route::middleware('permission:pendaftaran')->prefix('pendaftaran')->name('pendaftaran.')->group(function () {
-    Route::get('antrian_pendaftaran', [AntrianController::class, 'antrianPendaftaran'])->name('antrian_pendaftaran');
-    Route::get('antrian_capaian', [AntrianController::class, 'antrian_capaian'])->name('antrian_capaian');
-    Route::get('panggil_pendaftaran/{kodebooking}/{loket}/{lantai}', [SIMRSAntrianController::class, 'panggil_pendaftaran'])->name('panggil_pendaftaran')->middleware('permission:pendaftaran');
-    Route::get('selesai_pendaftaran/{kodebooking}', [SIMRSAntrianController::class, 'selesai_pendaftaran'])->name('selesai_pendaftaran')->middleware('permission:pendaftaran');
-});
+Route::get('antrianPendaftaran', [AntrianController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+Route::get('panggilPendaftaran/{kodebooking}/{loket}/{lantai}', [AntrianController::class, 'panggilPendaftaran'])->name('panggilPendaftaran');
+Route::get('selesaiPendaftaran/{kodebooking}', [AntrianController::class, 'selesaiPendaftaran'])->name('selesaiPendaftaran');
+Route::get('antrianCapaian', [AntrianController::class, 'antrianCapaian'])->name('antrianCapaian');
+// antrian poliklinik
+Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
+Route::get('batalAntrian/{antrian}', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
+Route::get('panggilPoliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
+Route::get('panggilUlangPoliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggilUlangPoliklinik');
+Route::get('lanjutFarmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjutFarmasi');
+Route::get('lanjutFarmasiRacikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
+Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
+
 
 // bpjs
+Route::get('vclaim', [VclaimController::class, 'vclaim.index'])->name('vclaim.index');
+
 Route::prefix('bpjs')->name('bpjs.')->group(function () {
     // antrian
     Route::prefix('antrian')->name('antrian.')->group(function () {

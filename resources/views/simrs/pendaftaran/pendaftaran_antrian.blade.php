@@ -176,12 +176,12 @@
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                     theme="success" icon="fas fa-volume-down" data-toggle="tooltip"
                                                     title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('pendaftaran.panggil_pendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
+                                                    onclick="window.location='{{ route('panggilPendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $item) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
                                         </td>
                                         {{-- <td>
                                             @isset($item->nomorsep)
@@ -306,12 +306,12 @@
                                                 <x-adminlte-button class="btn-xs mt-1" label="Panggil" theme="primary"
                                                     icon="fas fa-volume-down" data-toggle="tooltip"
                                                     title="Panggil Antrian {{ $antrian->nomorantrean }}"
-                                                    onclick="window.location='{{ route('pendaftaran.panggil_pendaftaran', [$antrian->kodebooking, $request->loket, $request->lantai]) }}'" />
+                                                    onclick="window.location='{{ route('panggilPendaftaran', [$antrian->kodebooking, $request->loket, $request->lantai]) }}'" />
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $antrian) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian', $antrian) }}'" />
                                         </td>
 
                                         {{-- <td>
@@ -415,7 +415,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $item) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
                                         </td>
 
                                         <td>
@@ -596,7 +596,7 @@
                     // $('#kodepoli_suratkontrol').val(data.kodepoli);
                     // $('#namapoli_suratkontrol').val(data.namapoli);
                     var urlLanjutFarmasi = "{{ route('landingpage') }}" +
-                        "/pendaftaran/selesai_pendaftaran/" + data
+                        "/selesaiPendaftaran/" + data
                         .kodebooking;
                     $("#lanjutFarmasi").attr("href", urlLanjutFarmasi);
                     // var urlSelesaiPoliklinik = "{{ route('landingpage') }}" +

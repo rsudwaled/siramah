@@ -28,6 +28,11 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianController extends APIController
 {
+    public function edit($id)
+    {
+        $antrian = Antrian::find($id);
+        return response()->json($antrian);
+    }
     // VIEW SIMRS
     public function statusTokenAntrian()
     {
@@ -36,7 +41,7 @@ class AntrianController extends APIController
             'token'
         ]));
     }
-    public function checkin_update(Request $request)
+    public function checkinUpdate(Request $request)
     {
         // checking request
         $validator = Validator::make(request()->all(), [
@@ -55,7 +60,7 @@ class AntrianController extends APIController
         // cari antrian
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
-            $api = new AntrianAntrianController();
+            $api = new AntrianController();
             $response = $api->checkin_antrian($request)->getData();
             return $response;
         }
@@ -109,7 +114,7 @@ class AntrianController extends APIController
             'taskid',
         ]));
     }
-    public function antrian_capaian(Request $request)
+    public function antrianCapaian(Request $request)
     {
         $antrians_total = Antrian::select(
             DB::raw("count(*) as total"),
@@ -377,11 +382,6 @@ class AntrianController extends APIController
         }
         return redirect()->back();
     }
-    public function edit($id)
-    {
-        $antrian = Antrian::find($id);
-        return response()->json($antrian);
-    }
     public function panggilUlangPoliklinik(Antrian $antrian, Request $request)
     {
         $request['kodebooking'] = $antrian->kodebooking;
@@ -477,6 +477,25 @@ class AntrianController extends APIController
         return redirect()->back();
     }
     // pendaftaran
+    public function antrianConsole()
+    {
+        $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
+        $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
+        $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
+        $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
+        $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
+        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
+        return view('simrs.antrian_console', compact(
+            [
+                'poliklinik',
+                'jadwal',
+                'antrian_terakhir1',
+                'antrian_terakhir2',
+                'antrian_terakhir3',
+                'antrian_terakhir4',
+            ]
+        ));
+    }
     public function antrianPendaftaran(Request $request)
     {
         $antrians = null;
@@ -497,7 +516,7 @@ class AntrianController extends APIController
             'polis',
         ]));
     }
-    public function panggil_pendaftaran($kodebooking, $loket, $lantai, Request $request)
+    public function panggilPendaftaran($kodebooking, $loket, $lantai, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         if ($antrian) {
@@ -571,7 +590,7 @@ class AntrianController extends APIController
             return redirect()->back();
         }
     }
-    public function selesai_pendaftaran($kodebooking, Request $request)
+    public function selesaiPendaftaran($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
@@ -609,26 +628,57 @@ class AntrianController extends APIController
         Alert::success('Success', 'Pasien diteruskan ke poliklinik');
         return redirect()->back();
     }
-    public function console()
+
+    public function kunjunganPoliklinik(Request $request)
     {
-        $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
-        $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
-        $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
-        $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
-        $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
-        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
-        return view('simrs.antrian_console', compact(
-            [
-                'poliklinik',
-                'jadwal',
-                'antrian_terakhir1',
-                'antrian_terakhir2',
-                'antrian_terakhir3',
-                'antrian_terakhir4',
-            ]
-        ));
+        $kunjungans = null;
+        $surat_kontrols = null;
+        if ($request->tanggal) {
+            $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
+            $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+                ->where('status_kunjungan', "!=", 8)
+                ->where('kode_unit', "!=", null)
+                ->where('kode_unit', 'LIKE', '10%')
+                ->where('kode_unit', "!=", 1002)
+                ->where('kode_unit', "!=", 1023)
+                ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
+                ->get();
+            if ($request->kodepoli != null) {
+                $poli = Unit::where('KDPOLI', $request->kodepoli)->first();
+                $kunjungans = $kunjungans->where('kode_unit', $poli->kode_unit);
+                $surat_kontrols = $surat_kontrols->where('poliTujuan', $request->kodepoli);
+            }
+            if ($request->kodedokter != null) {
+                $dokter = Paramedis::where('kode_dokter_jkn', $request->kodedokter)->first();
+                $kunjungans = $kunjungans->where('kode_paramedis', $dokter->kode_paramedis);
+            }
+        }
+        if ($request->kodepoli == null) {
+            $unit = Unit::where('KDPOLI', "!=", null)
+                ->where('KDPOLI', "!=", "")
+                ->get();
+            $dokters = Paramedis::where('kode_dokter_jkn', "!=", null)
+                ->where('unit', "!=", null)
+                ->get();
+        } else {
+            $unit = Unit::where('KDPOLI', "!=", null)
+                ->where('KDPOLI', "!=", "")
+                ->get();
+            $poli =   Unit::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = Paramedis::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
+        return view('simrs.poliklinik.poliklinik_suratkontrol', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'unit' => $unit,
+            'dokters' => $dokters,
+            'surat_kontrols' => $surat_kontrols,
+        ]);
     }
-    public function daftar_pasien_bpjs_offline(Request $request)
+
+    public function daftarBpjsOffline(Request $request)
     {
         $request['tanggalperiksa'] = now()->format('Y-m-d');
         $request['kodepoli'] = $request->kodesubspesialis;
@@ -638,7 +688,7 @@ class AntrianController extends APIController
         ]);
         if ($validator->fails()) {
             Alert::error('Error', $validator->errors()->first());
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
         // get jadwal
         $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
@@ -646,7 +696,7 @@ class AntrianController extends APIController
             ->where('hari', now()->dayOfWeek)->first();
         if ($jadwal == null) {
             Alert::error('Error',  "Jadwal tidak ditemukan");
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'JKN';
@@ -666,13 +716,13 @@ class AntrianController extends APIController
             $antrian = $response->getData()->response;
             $this->print_karcis_offline($request, $antrian);
             Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         } else {
             Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
     }
-    public function daftar_pasien_umum_offline(Request $request)
+    public function daftarUmumOffline(Request $request)
     {
         $request['tanggalperiksa'] = now()->format('Y-m-d');
         $request['kodepoli'] = $request->kodesubspesialis;
@@ -682,7 +732,7 @@ class AntrianController extends APIController
         ]);
         if ($validator->fails()) {
             Alert::error('Error', $validator->errors()->first());
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
         // get jadwal
         $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
@@ -690,7 +740,7 @@ class AntrianController extends APIController
             ->where('hari', now()->dayOfWeek)->first();
         if ($jadwal == null) {
             Alert::error('Error',  "Jadwal tidak ditemukan");
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
         $request['jampraktek'] = $jadwal->jadwal;
         $request['jenispasien'] = 'NON-JKN';
@@ -710,10 +760,10 @@ class AntrianController extends APIController
             $antrian = $response->getData()->response;
             $this->print_karcis_offline($request, $antrian);
             Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         } else {
             Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
     }
     // API FUNCTION
@@ -774,7 +824,6 @@ class AntrianController extends APIController
         else {
             $code = 200;
         }
-        // dd($response->failed());
         if ($response->failed()) {
             return $this->sendError($response->reason(),  $response->json('response'), $code);
         } else {
@@ -1422,6 +1471,7 @@ class AntrianController extends APIController
         if (isset($request->nomorreferensi)) {
             $request['jenispasien'] = 'JKN';
             $vclaim = new VclaimController();
+
             // kunjungan kontrol
             if ($request->jeniskunjungan == 3) {
                 $request['noSuratKontrol'] = $request->nomorreferensi;
@@ -1438,7 +1488,7 @@ class AntrianController extends APIController
                         return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
                     }
                 } else {
-                    return $this->sendError($response->getData()->metadata->message, null, $response->status());
+                    return $this->sendError($response->getData()->metadata->message,  $response->status());
                 }
             }
             // kunjungan rujukan
@@ -1464,10 +1514,10 @@ class AntrianController extends APIController
                             return $this->sendError("Rujukan anda telah digunakan untuk berobat. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dibuat di Poliklinik.", 400);
                         }
                     } else {
-                        return $this->sendError($jumlah_sep->getData()->metadata->message, null, $jumlah_sep->status());
+                        return $this->sendError($jumlah_sep->getData()->metadata->message,  $jumlah_sep->status());
                     }
                 } else {
-                    return $this->sendError($response->getData()->metadata->message, null, $response->status());
+                    return $this->sendError($response->getData()->metadata->message,  $response->status());
                 }
             }
         }
@@ -1798,7 +1848,6 @@ class AntrianController extends APIController
             return $this->sendError('Antrian tidak ditemukan',  201);
         }
     }
-
     public function checkin_antrian(Request $request) #checkin antrian api
     {
         // cek printer
@@ -1827,7 +1876,6 @@ class AntrianController extends APIController
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
-
             if ($antrian->taskid == 99) {
                 return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
             }
@@ -1852,9 +1900,11 @@ class AntrianController extends APIController
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {
                     $request['nomorreferensi'] = $antrian->nomorsuratkontrol;
+                    $request['noSuratKontrol'] = $antrian->nomorsuratkontrol;
                     $request['noTelp'] = $antrian->nohp;
                     $request['user'] = "Mesin Antrian";
                     $suratkontrol = $vclaim->suratkontrol_nomor($request);
+                    dd($suratkontrol);
                     // berhasil get surat kontrol
                     if ($suratkontrol->status() == 200) {
                         $suratkontrol = $suratkontrol->getData();
@@ -1863,6 +1913,7 @@ class AntrianController extends APIController
                             $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
                             $request['jeniskunjungan_print'] = 'KONTROL';
                             $request['nomorreferensi'] = $antrian->nomorrujukan;
+
                             $data = $vclaim->rujukan_nomor($request);
                             if ($data->status() != 200) {
                                 $data = $vclaim->rujukan_rs_nomor($request);
@@ -2067,7 +2118,12 @@ class AntrianController extends APIController
                 $tagihanpribadi_adm = $tarifadm->TOTAL_TARIF_NEW;
                 $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
             }
-
+            dd($antrian->taskid);
+            if ($antrian->taskid == 3) {
+                $this->print_ulang($request);
+                dd('asd');
+                return $this->sendError("Printer Ulang",  201);
+            }
             // update antrian bpjs
             $response = $this->update_antrean($request);
             // jika antrian berhasil diupdate di bpjs
@@ -2251,6 +2307,7 @@ class AntrianController extends APIController
                     return $this->sendError("Error Update Antrian : " . $th->getMessage(), 201);
                 }
             } else {
+
                 if ($antrian->kode_kunjungan == null) {
                     // insert simrs create kunjungan
                     try {
@@ -2430,10 +2487,6 @@ class AntrianController extends APIController
                     } catch (\Throwable $th) {
                         return $this->sendError("Error Update Antrian : " . $th->getMessage(), 201);
                     }
-                }
-                if ($antrian->taskid == 3) {
-                    $this->print_ulang($request);
-                    return $this->sendError("Printer Ulang",  201);
                 }
             }
             return $response;
@@ -2915,7 +2968,7 @@ class AntrianController extends APIController
         $printer->cut();
         $printer->close();
     }
-    public function cek_printer()
+    public function cekPrinter()
     {
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
@@ -2926,11 +2979,11 @@ class AntrianController extends APIController
             $printer->cut();
             $printer->close();
             Alert::success('Success', 'Mesin menyala dan siap digunakan.');
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         } catch (\Throwable $th) {
             // throw $th;
             Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
-            return redirect()->route('antrian.console');
+            return redirect()->route('antrianConsole');
         }
     }
 }

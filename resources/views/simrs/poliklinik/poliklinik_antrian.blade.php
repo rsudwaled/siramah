@@ -122,7 +122,9 @@
                                             RM : {{ $item->norm }}<br>
                                             <b>{{ $item->nama }}</b>
                                             @isset($item->nomorkartu)
-                                                <br>{{ $item->nomorkartu }}
+                                                <br>
+                                                <a
+                                                    href="{{ route('bpjs.vclaim.monitoring_pelayanan_peserta') }}?tanggal=2023-05-12&nomorkartu={{ $item->nomorkartu }}" target="blank">{{ $item->nomorkartu }}</a>
                                             @endisset
                                         </td>
                                         <td>
@@ -170,13 +172,13 @@
                                                     <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                         theme="warning" icon="fas fa-volume-down" data-toggle="tooltip"
                                                         title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                        onclick="window.location='{{ route('antrian.panggil_poliklinik', $item) }}'" />
+                                                        onclick="window.location='{{ route('panggilPoliklinik', $item) }}'" />
                                                 @endif
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $item) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
                                         </td>
                                         <td>
                                             @isset($item->nomorsep)
@@ -298,7 +300,7 @@
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                     theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
                                                     title="Panggil Antrian {{ $antrian->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.panggil_ulang_poliklinik', $antrian) }}'" />
+                                                    onclick="window.location='{{ route('panggilUlangPoliklinik', $antrian) }}'" />
 
                                                 <x-adminlte-button class="btn-xs mt-1 btnLayani" label="Layani"
                                                     theme="success" icon="fas fa-hand-holding-medical"
@@ -309,7 +311,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $antrian) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian', $antrian) }}'" />
                                         </td>
                                         <td>
                                             @isset($antrian->nomorsep)
@@ -432,7 +434,7 @@
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                     theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
                                                     title="Panggil Antrian {{ $antrian->nomorantrean }}"
-                                                    onclick="window.location='{{ route('antrian.panggil_ulang_poliklinik', $antrian) }}'" />
+                                                    onclick="window.location='{{ route('panggilUlangPoliklinik', $antrian) }}'" />
 
                                                 <x-adminlte-button class="btn-xs mt-1 btnLayani" label="Layani"
                                                     theme="success" icon="fas fa-hand-holding-medical"
@@ -443,7 +445,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('antrian.batal', $antrian) }}'" /> --}}
+                                                onclick="window.location='{{ route('batalAntrian', $antrian) }}'" /> --}}
                                         </td>
                                         <td>
                                             @isset($antrian->nomorsep)

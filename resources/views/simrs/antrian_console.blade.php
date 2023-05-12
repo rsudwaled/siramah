@@ -84,7 +84,7 @@
                 </x-adminlte-card>
                 <div class="col-md-6">
                     <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                    <a href="{{ route('antrian.cek_printer') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
+                    <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
                         Printer</a>
                 </div>
             </div>
@@ -210,7 +210,7 @@
                     $.LoadingOverlay("show", {
                         text: "Printing..."
                     });
-                    var url = "{{ route('antrian.checkin_update') }}";
+                    var url = "{{ route('checkinUpdate') }}";
                     var formData = {
                         kodebooking: sCode,
                         waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
@@ -263,7 +263,7 @@
                 $.LoadingOverlay("show", {
                     text: "Printing..."
                 });
-                var url = "{{ route('antrian.checkin_update') }}";
+                var url = "{{ route('checkinUpdate') }}";
                 var formData = {
                     kodebooking: kodebooking,
                     waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
@@ -343,7 +343,7 @@
                 var id = $(this).data('id');
                 var hari = "{{ now()->dayOfWeek }}"
                 $.LoadingOverlay("show");
-                var url = "{{ route('antrian.jadwaldokter_poli') }}/?kodesubspesialis=" + id + "&hari=" +
+                var url = "{{ route('jadwaldokterPoli') }}/?kodesubspesialis=" + id + "&hari=" +
                     hari;
                 $.get(url, function(data) {
                     $('#daftarDokter').show();
@@ -369,14 +369,14 @@
             $('#btnDaftarPoliBPJS').click(function() {
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
-                var url = "{{ route('antrian.daftar_pasien_bpjs_offline') }}" + "?kodesubspesialis=" +
+                var url = "{{ route('daftarBpjsOffline') }}" + "?kodesubspesialis=" +
                     kodesubspesialis + "&kodedokter=" + kodedokter;
                 window.location.href = url;
             });
             $('#btnDaftarPoliUmum').click(function() {
                 var kodesubspesialis = $("input[name=kodesubspesialis]:checked").val();
                 var kodedokter = $("input[name=kodedokter]:checked").val();
-                var url = "{{ route('antrian.daftar_pasien_umum_offline') }}" + "?kodesubspesialis=" +
+                var url = "{{ route('daftarUmumOffline') }}" + "?kodesubspesialis=" +
                     kodesubspesialis + "&kodedokter=" + kodedokter;
                 window.location.href = url;
             });
