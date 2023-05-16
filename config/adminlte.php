@@ -109,11 +109,11 @@ return [
     'preloader' => [
         'enabled' => true,
         'img' => [
-            'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+            'path' => 'vendor/adminlte/dist/img/rswaledico.png',
             'alt' => 'AdminLTE Preloader Image',
             'effect' => 'animation__shake',
-            'width' => 60,
-            'height' => 60,
+            'width' => 'auto',
+            'height' => 'auto',
         ],
     ],
 
@@ -449,6 +449,13 @@ return [
                     'text' => 'E-KPO Rawat Jalan',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                        [
+                    'text' => 'Tracer Order Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'tracerOrderObat',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

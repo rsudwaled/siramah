@@ -24,7 +24,6 @@
                     <li class="nav-item">
                         <b class="nav-link">Email <b class="float-right ">{{ $user->email }}</b></b>
                     </li>
-
                     <li class="nav-item">
                         <b class="nav-link">Role <b class="float-right ">
                                 @foreach ($user->roles as $role)

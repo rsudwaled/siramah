@@ -25,9 +25,6 @@ class APIController extends Controller
                 'code' => $code,
             ],
         ];
-        // if (!empty($errorMessages)) {
-        //     $response['response'] = $errorMessages;
-        // }
         return response()->json($response, $code);
     }
 }

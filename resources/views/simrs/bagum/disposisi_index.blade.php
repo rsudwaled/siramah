@@ -8,81 +8,40 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Disposisi">
-                <div class="row">
-                    <div class="col-md-8">
-                        {{-- <x-adminlte-button theme="success" label="Tambah Disposisi Surat" class=" btn-sm mb-2" id="tambahSurat" />
-                        <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm mb-2" id="cetakBlanko" />
-                        <x-adminlte-button label="Refresh" class="btn-sm mb-2" theme="warning" title="Refresh User"
-                            icon="fas fa-sync" onclick="window.location='{{ route('disposisi.index') }}'" /> --}}
-                    </div>
-                    <div class="col-md-4">
-                        <form action="" method="get">
-                            <x-adminlte-input name="search" placeholder="Pencarian Asal / Perihal Surat" igroup-size="sm"
-                                value="{{ $request->search }}">
-                                <x-slot name="appendSlot" class="mb-2">
-                                    <x-adminlte-button type="submit" theme="primary" label="Cari!" />
-                                </x-slot>
-                                <x-slot name="prependSlot" class="mb-2">
-                                    <div class="input-group-text text-primary">
-                                        <i class="fas fa-search"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input>
-                        </form>
-                    </div>
-                </div>
-                @php
-                    $heads = ['Action', 'ID / No / Kode', 'No Surat / Tgl', 'Asal', 'Perihal', 'Pengolah', 'Disposisi', 'Penerima'];
-                    $config['scrollX'] = true;
-                    $config['paging'] = false;
-                    $config['searching'] = false;
-                    $config['info'] = false;
-                    $config['order'] = ['1', 'desc'];
-                @endphp
-                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered hoverable
-                    compressed>
+                <ul class="products-list product-list-in-card pl-2 pr-2">
                     @foreach ($surats as $item)
-                        <tr>
-                            <td>
-                                @if ($item->lampiran)
-                                    <x-adminlte-button class="btn-xs mb-1 lihatLampiran" theme="success" icon="fas fa-eye"
-                                        title="Lihat Lampiran Surat" data-id="{{ $item->id_surat_masuk }}"
-                                        data-url="{{ $item->lampiran->fileurl }}" />
-                                @else
-                                    <x-adminlte-button class="btn-xs mb-1 uploadLampiran" theme="primary"
-                                        icon="fas fa-upload" title="Upload Surat" data-id="{{ $item->id_surat_masuk }}" />
-                                @endif
-                                <x-adminlte-button class="btn-xs mb-1 cetakDisposisi" theme="warning" icon="fas fa-print"
-                                    title="Cetak Disposisi" data-id="{{ $item->id_surat_masuk }}" />
-                                {{-- <x-adminlte-button class="btn-xs mb-1 editSuratMasuk" theme="warning" icon="fas fa-edit"
-                                    title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
+                        <li class="item">
+                            <div class="product-img">
+                                <img src="{{ asset('rsudwaled_icon_qrcode.png') }}" alt="Product Image" class="img-size-50">
+                            </div>
+                            <div class="product-info">
+                                <a href="javascript:void(0)" class="product-title">{{ $item->asal_surat }}
+                                    @if ($item->disposisi)
+                                        @if ($item->tanda_terima)
+                                            <span class="badge badge-success float-right">{{ $item->tanda_terima }}</span>
+                                        @else
+                                            <span class="badge badge-warning float-right">Disposisi</span>
+                                        @endif
+                                    @else
+                                        <span class="badge badge-danger float-right">Belum</span>
+                                    @endif
 
-                            </td>
-                            <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
-                                data-id="{{ $item->id_surat_masuk }}">
-                                {{ $item->id_surat_masuk }}/{{ $item->no_urut }}/{{ $item->kode }} <br>
-                                {{ $item->tgl_disposisi }}
-                            </td>
-                            <td>
-                                {{ $item->no_surat }} <br>
-                                {{ $item->tgl_surat }}
-                            </td>
-                            <td>{{ $item->asal_surat }}</td>
-                            <td> {{ $item->perihal }}</td>
-                            <td>{{ $item->pengolah }}</td>
-                            <td> {{ $item->disposisi }}</td>
-                            {{-- <td>{{ $item->tgl_diteruskan }}</td> --}}
-                            <td>{{ $item->tanda_terima }}</td>
-                        </tr>
+                                </a>
+                                <span class="product-description">
+
+                                    Perihal : {{ $item->perihal }}
+                                    @if ($item->disposisi)
+                                        <br>
+                                        Ditujukan : {{ $item->pengolah }}
+                                    @endif
+                                    <br>
+                                    Tgl Input : {{ $item->tgl_surat }}
+
+                                </span>
+                            </div>
+                        </li>
                     @endforeach
-                </x-adminlte-datatable>
-                <br>
-                <div class="text float-left ">
-                    Data yang ditampilkan {{ $surats->count() }} dari total {{ $surat_total }}
-                </div>
-                <div class="float-right pagination-sm">
-                    {{ $surats->appends(request()->input())->links() }}
-                </div>
+                </ul>
             </x-adminlte-card>
         </div>
     </div>
@@ -98,7 +57,8 @@
                             <x-adminlte-input name="no_urut" label="No Urut" igroup-size="sm" enable-old-support readonly />
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support readonly/>
+                            <x-adminlte-input name="kode" label="Kode Surat" igroup-size="sm" enable-old-support
+                                readonly />
                         </div>
                     </div>
                     <div class="row">
@@ -112,15 +72,17 @@
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="tgl_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Surat"
-                                igroup-size="sm" :config="$config" enable-old-support required disabled  />
+                                igroup-size="sm" :config="$config" enable-old-support required disabled />
                         </div>
                     </div>
-                    <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required readonly/>
-                    <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required readonly/>
+                    <x-adminlte-input name="asal_surat" label="Asal Surat" igroup-size="sm" enable-old-support required
+                        readonly />
+                    <x-adminlte-textarea name="perihal" rows=5 placeholder="Perihal" label="Perihal" required readonly />
                     <div class="row">
                         <div class="col-md-6">
                             <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
-                                label="Tgl Disposisi" igroup-size="sm" :config="$config" enable-old-support required disabled />
+                                label="Tgl Disposisi" igroup-size="sm" :config="$config" enable-old-support required
+                                disabled />
                         </div>
                         <div class="col-md-6">
                             <x-adminlte-select name="sifat" label="Sifat Surat" readonly>
@@ -131,16 +93,18 @@
                             </x-adminlte-select>
                         </div>
                     </div>
-                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support readonly />
-                     <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
-                                label="Tgl Terima Disposisi" igroup-size="sm" :config="$config" enable-old-support required readonly />
+                    <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support
+                        readonly />
+                    <x-adminlte-input-date name="tgl_disposisi" value="{{ now()->format('Y-m-d') }}"
+                        label="Tgl Terima Disposisi" igroup-size="sm" :config="$config" enable-old-support required
+                        readonly />
                     {{-- <x-adminlte-input-date name="tgl_terima_surat" value="{{ now()->format('Y-m-d') }}" label="Tgl Terima Disposisi" igroup-size="sm"
                         :config="$config" enable-old-support /> --}}
                 </div>
                 <div class="col-md-6">
 
-                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
-                        :config="$config" enable-old-support />
+                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm" :config="$config"
+                        enable-old-support />
                     <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
                     {{-- <x-adminlte-select name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support>
                         <option value="1">Wakil Direktur Umum Dan Keuangan</option>

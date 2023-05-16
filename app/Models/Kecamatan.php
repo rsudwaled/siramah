@@ -13,4 +13,7 @@ class Kecamatan extends Model
     protected $primaryKey = 'kode_kecamatan';
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $guarded = ["id"];
+
+
 }

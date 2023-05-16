@@ -16,11 +16,16 @@ class Pasien extends Model
     // const UPDATED_AT = 'last_update';
 
     protected $guarded = ["id"];
+
+    public function kunjungans()
+    {
+        return $this->hasMany(Kunjungan::class, 'no_rm', 'no_rm');
+    }
     public function kecamatans()
     {
         return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
     }
-    public function kabupaten()
+    public function kabupatens()
     {
         return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
     }

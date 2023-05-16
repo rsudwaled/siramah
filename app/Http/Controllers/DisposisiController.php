@@ -14,7 +14,7 @@ class DisposisiController extends Controller
             ->where(function ($query) use ($request) {
                 $query->where('asal_surat', "like", "%" . $request->search . "%")
                     ->orWhere('perihal', "like", "%" . $request->search . "%");
-            })->paginate(25);
+            })->simplePaginate(25);
         $surat_total = SuratMasuk::count();
         return view('simrs.bagum.disposisi_index', compact([
             'request',
