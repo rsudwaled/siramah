@@ -3,6 +3,7 @@
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\VclaimController;
+use App\Http\Controllers\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -52,8 +53,9 @@ Route::prefix('wsrs')->group(function () {
     Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
 });
 Route::prefix('wa')->group(function () {
-    Route::get('test', [AdminWhatsappController::class, 'test']);
-    Route::post('callback', [AdminWhatsappController::class, 'callback']);
+    Route::get('test', [WhatsappController::class, 'test']);
+    Route::post('callback', [WhatsappController::class, 'callback']);
+    Route::post('send_message', [WhatsappController::class, 'send_message'])->name('send_message');
 });
 // APP.RSUDWALED.ID
 Route::get('token', [AntrianAntrianController::class, 'token']);
@@ -207,7 +209,4 @@ Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::post('grouper', [InacbgController::class, 'grouper'])->name('grouper');
     Route::post('get_claim_data', [InacbgController::class, 'get_claim_data'])->name('get_claim_data');
     Route::post('get_claim_status', [InacbgController::class, 'get_claim_status'])->name('get_claim_status');
-
-
-
 });

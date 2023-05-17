@@ -23,7 +23,7 @@
                             </x-adminlte-input-date>
                         </div>
                         <div class="col-6">
-                            <x-adminlte-input name="nomorkartu" label="Nomor Kartu" value="{{ $request->nomorKartu }}"
+                            <x-adminlte-input name="nomorkartu" label="Nomor Kartu" value="{{ $request->nomorkartu }}"
                                 placeholder="Pencarian Berdasarkan Nomor Kartu BPJS">
                                 <x-slot name="appendSlot">
                                     <x-adminlte-button theme="success" class="withLoad" type="submit" label="Cari!" />

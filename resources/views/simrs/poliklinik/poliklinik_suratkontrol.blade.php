@@ -9,7 +9,7 @@
             <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
@@ -22,26 +22,16 @@
                                 </x-slot>
                             </x-adminlte-input-date>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                <option value="">SEMUA POLIKLINIK (-)</option>
                                 @foreach ($unit as $item)
                                     <option value="{{ $item->KDPOLI }}"
                                         {{ $item->KDPOLI == $request->kodepoli ? 'selected' : null }}>
                                         {{ $item->nama_unit }} ({{ $item->KDPOLI }})
                                     </option>
                                 @endforeach
-                            </x-adminlte-select2>
-                        </div>
-                        <div class="col-md-4">
-                            <x-adminlte-select2 name="kodedokter" label="Dokter">
-                                <option value="">SEMUA DOKTER (-)</option>
-                                @foreach ($dokters as $item)
-                                    <option value="{{ $item->kode_dokter_jkn }}"
-                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
-                                        {{ $item->nama_paramedis }} ({{ $item->kode_dokter_jkn }} )
-                                    </option>
-                                @endforeach
+                                <option value="" {{ $request->kodepoli ? '' : 'selected' }}>SEMUA POLIKLINIK (-)
+                                </option>
                             </x-adminlte-select2>
                         </div>
                     </div>
@@ -221,7 +211,7 @@
                 $('#btnStore').hide();
                 $('#btnUpdate').show();
                 var nomorsuratkontrol = $(this).data('id');
-                var url = "{{ route('vclaim.index') }}" + "/edit_surat_kontrol/" + nomorsuratkontrol;
+                var url = "{{ route('suratkontrol.index') }}/" + nomorsuratkontrol + "/edit";
                 $.LoadingOverlay("show");
                 $.get(url, function(data) {
                     $('#nama_suratkontrol').val(data.nama);
@@ -238,14 +228,14 @@
                 $('#btnStore').show();
                 $('#btnUpdate').hide();
                 var kodekunjungan = $(this).data('id');
-                var url = "{{ route('landingpage') }}" + "/kunjungan/show/" + kodekunjungan;
+                var url = "{{ route('kunjungan.index') }}/" + kodekunjungan + "/edit";
                 $.LoadingOverlay("show");
                 $.get(url, function(data) {
                     $('#formSuratKontrol').trigger("reset");
-                    $('#nama_suratkontrol').val(data.data.namaPasien);
-                    $('#nomorsep_suratkontrol').val(data.data.noSEP);
-                    $('#kodepoli_suratkontrol').val(data.data.kodePoli).trigger('change');
-                    $('#kodedokter_suratkontrol').val(data.data.kodeDokter).trigger('change');
+                    $('#nama_suratkontrol').val(data.namaPasien);
+                    $('#nomorsep_suratkontrol').val(data.noSEP);
+                    $('#kodepoli_suratkontrol').val(data.kodePoli).trigger('change');
+                    $('#kodedokter_suratkontrol').val(data.kodeDokter).trigger('change');
                     $('#modalSuratKontrol').modal('show');
                     $.LoadingOverlay("hide", true);
                 });

@@ -51,7 +51,6 @@ class LoginController extends Controller
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $user = User::where('username', $request->email)
             ->orWhere('email', $request->email)->first();
-
         if (isset($user)) {
             if (empty($user->email_verified_at)) {
                 return view('vendor.adminlte.auth.verify', compact(['request', 'user']));

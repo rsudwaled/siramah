@@ -26,6 +26,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
 use App\Models\JadwalDokter;
+use App\Models\Pasien;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,16 +40,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // route default
-Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
-Auth::routes(['verify' => true]);
-Route::get('profile', [UserController::class, 'profile'])->name('profile');
+Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
+Auth::routes(); #ok
+Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
 Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
 // layanan umum
 Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
@@ -57,9 +58,9 @@ Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_st
 Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
 Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
 Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
-Route::get('bar_qr_scanner', [BarcodeController::class, 'scanner'])->name('bar_qr_scanner');
-Route::get('thermal_printer', [ThermalPrintController::class, 'thermal_printer'])->name('thermal_printer');
-Route::get('thermal_print', [ThermalPrintController::class, 'thermal_print'])->name('thermal_print');
+Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
+Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
+Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
 Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
 // route resource
 Route::resource('user', UserController::class);
@@ -77,8 +78,9 @@ Route::resource('pasien', PasienController::class);
 Route::resource('kunjungan', KunjunganController::class);
 Route::resource('efilerm', FileRekamMedisController::class);
 Route::resource('antrian', AntrianController::class);
+Route::resource('suratkontrol', SuratKontrolController::class);
 // mesin antrian
-Route::get('daftar_online', [SIMRSAntrianController::class, 'daftar_online'])->name('daftar_online');
+Route::get('daftarOnline', [SIMRSAntrianController::class, 'daftarOnline'])->name('daftarOnline');
 Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
 Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
@@ -99,10 +101,19 @@ Route::get('panggilUlangPoliklinik/{antrian}', [AntrianController::class, 'pangg
 Route::get('lanjutFarmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjutFarmasi');
 Route::get('lanjutFarmasiRacikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
 Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
+Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
+Route::get('pasienPoliklinik', [PasienController::class, 'index'])->name('pasienPoliklinik');
+Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntrianPoliklinik'])->name('laporanAntrianPoliklinik');
+Route::get('laporanKunjunganPoliklinik', [KunjunganController::class, 'laporanKunjunganPoliklinik'])->name('laporanKunjunganPoliklinik');
+Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
+Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
+
 // farmasi
 Route::get('tracerOrderObat', [FarmasiController::class, 'tracerOrderObat'])->name('tracerOrderObat');
 Route::get('getOrderObat', [FarmasiController::class, 'getOrderObat'])->name('getOrderObat');
 Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
+
+Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 
 
 // bpjs

@@ -16,13 +16,16 @@ class WhatsappController extends Controller
     }
     public function whatsapp(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "send-message";
-        $response = Http::post($url, [
-            'number' => '089529909036',
-            'message' => 'Test',
-        ]);
-        $response = json_decode($response->getBody());
-        return $response;
+        // $url = env('WHATASAPP_URL') . "send-message";
+        // $response = Http::post($url, [
+        //     'number' => '089529909036',
+        //     'message' => 'Test',
+        // ]);
+        // $response = json_decode($response->getBody());
+        $request['number'] = "089529909036";
+        $request['message'] = "Test ke marwan";
+        return view('admin.whatsapp', compact(['request']));
+        // return $response;
     }
     public function send_message(Request $request)
     {

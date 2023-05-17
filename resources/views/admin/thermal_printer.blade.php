@@ -12,7 +12,7 @@
                 <a href="https://github.com/mike42/escpos-php" target="_blank">https://github.com/mike42/escpos-php</a>
                 <br>
                 <br>
-                <form action="{{ route('thermal_print') }}" method="GET">
+                <form action="{{ route('testThermalPrinter') }}" method="GET">
                     <x-adminlte-input name="printer_connector" value="{{ $request->printer_connector }}"
                         label="Printer Connector" placeholder="Printer Connector" enable-old-support />
                     <x-adminlte-button icon="fas fa-print" type="submit" theme="success" label="Test Print" />

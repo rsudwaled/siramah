@@ -12,6 +12,7 @@ use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Penjamin;
 use App\Models\Poliklinik;
+use App\Models\SuratKontrol;
 use App\Models\TarifLayananDetail;
 use App\Models\Token;
 use App\Models\Tracer;
@@ -41,6 +42,33 @@ class AntrianController extends APIController
         return view('bpjs.antrian.status', compact([
             'token'
         ]));
+    }
+    public function laporanAntrianPoliklinik(Request $request)
+    {
+        if ($request->tanggal == null) {
+            $tanggal_awal = now()->startOfDay()->format('Y-m-d');
+            $tanggal_akhir = now()->endOfDay()->format('Y-m-d');
+        } else {
+            $tanggal = explode(' - ', $request->tanggal);
+            $tanggal_awal = Carbon::parse($tanggal[0])->format('Y-m-d');
+            $tanggal_akhir = Carbon::parse($tanggal[1])->format('Y-m-d');
+        }
+        $antrians = Antrian::whereBetween('tanggalperiksa', [$tanggal_awal, $tanggal_akhir])
+            ->get();
+        $kunjungans = Kunjungan::whereBetween('tgl_masuk', [Carbon::parse($tanggal_awal)->startOfDay(), Carbon::parse($tanggal_akhir)->endOfDay()])
+            ->where('kode_unit', "!=", null)
+            ->where('kode_unit', 'LIKE', '10%')
+            ->where('kode_unit', '!=', 1002)
+            ->where('kode_unit', "!=", 1023)
+            ->where('kode_unit', "!=", 1015)
+            ->get();
+        $units = Unit::where('KDPOLI', '!=', null)->get();
+        return view('simrs.laporan_kunjungan', [
+            'antrians' => $antrians,
+            'request' => $request,
+            'kunjungans' => $kunjungans,
+            'units' => $units,
+        ]);
     }
     public function checkinUpdate(Request $request)
     {

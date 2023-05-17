@@ -43,7 +43,7 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="{{ route('daftar_online') }}" class="appointment-btn scrollto">
+        <a href="{{ route('daftarOnline') }}" class="appointment-btn scrollto">
             Daftar
         </a>
     </div>

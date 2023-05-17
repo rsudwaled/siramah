@@ -9,7 +9,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ThermalPrintController extends Controller
 {
-    public function thermal_printer(Request $request)
+    public function cekThermalPrinter(Request $request)
     {
         if (empty($request->printer_connector)) {
             $request['printer_connector'] = "EPSON TM-T82X Receipt";
@@ -18,7 +18,7 @@ class ThermalPrintController extends Controller
             'request',
         ]));
     }
-    public function thermal_print(Request $request)
+    public function testThermalPrinter(Request $request)
     {
         try {
             $connector = new WindowsPrintConnector($request->printer_connector);
@@ -53,7 +53,7 @@ class ThermalPrintController extends Controller
         } catch (Exception $e) {
             Alert::error('Error', 'Test Printer Error ' . $e->getMessage());
         }
-        return redirect()->route('thermal_printer');
+        return redirect()->route('cekThermalPrinter');
     }
 }
 

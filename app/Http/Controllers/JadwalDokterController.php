@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\JadwalLibur;
 use App\Models\Poliklinik;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -32,6 +34,28 @@ class JadwalDokterController extends Controller
             'polikliniks',
             'jadwals',
             'jadwal_save',
+        ]));
+    }
+    public function jadwalDokterPoliklinik(Request $request)
+    {
+        $jadwaldokter = null;
+        $jadwallibur = null;
+        if (isset($request->kodepoli)) {
+            $jadwaldokter = JadwalDokter::where('kodesubspesialis', $request->kodepoli)->get();
+            $jadwallibur = JadwalLibur::with(['unit', 'unit.antrians'])
+                ->latest()
+                ->paginate();
+        }
+        $dokters = Dokter::get();
+        $unit = Unit::where('KDPOLI', "!=", null)
+        ->where('KDPOLI', "!=", "")
+        ->get();
+        return view('simrs.poliklinik.poliklinik_jadwaldokter', compact([
+            'request',
+            'unit',
+            'dokters',
+            'jadwallibur',
+            'jadwaldokter',
         ]));
     }
     public function store(Request $request)

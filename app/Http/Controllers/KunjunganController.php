@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\AlasanMasuk;
 use App\Models\AlasanPulang;
+use App\Models\Antrian;
 use App\Models\Kunjungan;
+use App\Models\PenjaminSimrs;
 use App\Models\StatusKunjungan;
+use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KunjunganController extends Controller
 {
@@ -45,6 +50,10 @@ class KunjunganController extends Controller
     public function edit($kodekunjungan)
     {
         $kunjungan = Kunjungan::with(['pasien'])->firstWhere('kode_kunjungan', $kodekunjungan);
+        $kunjungan['namaPasien'] = $kunjungan->pasien->nama_px;
+        $kunjungan['kodePoli'] = $kunjungan->unit->KDPOLI;
+        $kunjungan['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
+        $kunjungan['noSEP'] = $kunjungan->no_sep;
         return response()->json($kunjungan);
     }
     public function kunjungan_tanggal($tanggal)
@@ -67,4 +76,29 @@ class KunjunganController extends Controller
             'kunjungans',
         ]));
     }
+    public function laporanKunjunganPoliklinik(Request $request)
+    {
+        $response = null;
+        $kunjungans = null;
+        if (isset($request->tanggal) && isset($request->kodepoli)) {
+            $poli = Unit::where('KDPOLI', $request->kodepoli)->first();
+            $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+                ->where('kode_unit', $poli->kode_unit)
+                ->where('status_kunjungan',  "<=", 2)
+                ->with(['dokter', 'unit', 'pasien', 'diagnosapoli', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
+                ->get();
+            $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
+        }
+        $unit = Unit::where('KDPOLI', "!=", null)->where('KDPOLI', "!=", "")->get();
+        $penjaminrs = PenjaminSimrs::get();
+        $response = collect($response);
+        return view('simrs.poliklinik.poliklinik_laporan_kunjungan', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            'response' => $response,
+            'penjaminrs' => $penjaminrs,
+            'unit' => $unit,
+        ]);
+    }
+
 }

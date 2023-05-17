@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BukuTamu;
 use Illuminate\Http\Request;
 
 class BukuTamuController extends Controller

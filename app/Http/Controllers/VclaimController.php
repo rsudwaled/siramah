@@ -171,7 +171,6 @@ class VclaimController extends APIController
         $rujukan_rs = null;
         $surat_kontrol = null;
         $vclaim = new VclaimController();
-
         // get  peserta
         if ($request->tanggal) {
             if ($request->nik && $request->tanggal) {
@@ -195,6 +194,8 @@ class VclaimController extends APIController
         } else {
             $request['tanggal'] = now()->format('Y-m-d');
         }
+        // dd($request->all(), $response);
+
         // get data
         if (isset($peserta)) {
             $request['tanggalAkhir'] = Carbon::parse($request->tanggal)->format('Y-m-d');

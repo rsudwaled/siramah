@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Antrian Pasien Poliklinik')
+@section('title', 'Antrian Poliklinik')
 @section('content_header')
-    <h1>Antrian Pasien Poliklinik</h1>
+    <h1>Antrian Poliklinik </h1>
 @stop
 
 @section('content')
@@ -25,14 +25,15 @@
                         </div>
                         <div class="col-md-6">
                             <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                <option value="">SEMUA POLIKLINIK (-)</option>
                                 @foreach ($polis as $item)
                                     <option value="{{ $item->kodesubspesialis }}"
                                         {{ $item->kodesubspesialis == $request->kodepoli ? 'selected' : null }}>
                                         {{ $item->namasubspesialis }} ({{ $item->kodesubspesialis }})
                                     </option>
                                 @endforeach
+                                <option value="">SEMUA POLIKLINIK (-)</option>
                             </x-adminlte-select2>
+
                         </div>
                         {{-- <div class="col-md-4">
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
@@ -123,8 +124,8 @@
                                             <b>{{ $item->nama }}</b>
                                             @isset($item->nomorkartu)
                                                 <br>
-                                                <a
-                                                    href="{{ route('bpjs.vclaim.monitoring_pelayanan_peserta') }}?tanggal=2023-05-12&nomorkartu={{ $item->nomorkartu }}" target="blank">{{ $item->nomorkartu }}</a>
+                                                <a href="{{ route('bpjs.vclaim.monitoring_pelayanan_peserta') }}?tanggal={{ now()->format('Y-m-d') }}&nomorkartu={{ $item->nomorkartu }}"
+                                                    target="blank">{{ $item->nomorkartu }}</a>
                                             @endisset
                                         </td>
                                         <td>
