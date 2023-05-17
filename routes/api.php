@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;

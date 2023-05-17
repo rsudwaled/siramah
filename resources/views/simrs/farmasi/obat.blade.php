@@ -217,7 +217,7 @@
         $(function() {
             $('.btnEdit').click(function() {
                 var kode = $(this).data('id');
-                var url = "{{ route('farmasi.obat.index') }}/" + kode;
+                var url = "{{ route('obat.index') }}/" + kode;
                 $.LoadingOverlay("show");
                 $.get(url, function(data) {
                     console.log(data);

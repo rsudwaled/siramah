@@ -11,7 +11,9 @@ use App\Http\Controllers\FileRekamMedisController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\KPOController;
 use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\ObatController;
 use App\Http\Controllers\ParamedisController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PermissionController;
@@ -79,6 +81,7 @@ Route::resource('kunjungan', KunjunganController::class);
 Route::resource('efilerm', FileRekamMedisController::class);
 Route::resource('antrian', AntrianController::class);
 Route::resource('suratkontrol', SuratKontrolController::class);
+Route::resource('obat', ObatController::class);
 // mesin antrian
 Route::get('daftarOnline', [SIMRSAntrianController::class, 'daftarOnline'])->name('daftarOnline');
 Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
@@ -112,11 +115,11 @@ Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashbo
 Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
 Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
 Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');
-
-
 Route::get('tracerOrderObat', [FarmasiController::class, 'tracerOrderObat'])->name('tracerOrderObat');
 Route::get('getOrderObat', [FarmasiController::class, 'getOrderObat'])->name('getOrderObat');
 Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
+Route::resource('kpo', KPOController::class);
+Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
 
 Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 

@@ -441,7 +441,7 @@ return [
                 [
                     'text' => 'Obat',
                     'icon'    => 'fas fa-pills',
-                    'url'  => 'farmasi/obat',
+                    'url'  => 'obat',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
