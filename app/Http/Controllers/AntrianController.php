@@ -35,6 +35,91 @@ class AntrianController extends APIController
         $antrian = Antrian::find($id);
         return response()->json($antrian);
     }
+    public function antrianFarmasi(Request $request)
+    {
+        $antrians = null;
+        if ($request->tanggal) {
+            $request['tanggal'] = Carbon::now()->format('Y-m-d');
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
+                ->where('taskid', '>=', 3)->get();
+        }
+        // $polis = PoliklinikDB::where('status', 1)->get();
+        // $dokters = Dokter::get();
+        return view('simrs.antrian_farmasi', [
+            'antrians' => $antrians,
+            'request' => $request,
+            // 'polis' => $polis,
+            // 'dokters' => $dokters,
+        ]);
+    }
+    public function racikFarmasi($kodebooking, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        if ($antrian) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 6;
+            $request['keterangan'] = "Proses peracikan obat";
+            $request['waktu'] = Carbon::now()->timestamp * 1000;
+
+            $api = new AntrianController();
+            $response = $api->update_antrean($request);
+            if ($response->status() == 200) {
+                $antrian->update([
+                    'taskid' => $request->taskid,
+                    'status_api' => 1,
+                    'keterangan' => $request->keterangan,
+                    'user' => Auth::user()->name,
+                ]);
+                // try {
+                //     // notif wa
+                //     $wa = new WhatsappController();
+                //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
+                //     $request['number'] = $antrian->nohp;
+                //     $wa->send_message($request);
+                // } catch (\Throwable $th) {
+                //     //throw $th;
+                // }
+                Alert::success('Success', 'Resep Obat Pasien Diterima Farmasi');
+            } else {
+                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            }
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'Kodebooking tidak ditemukan');
+            return redirect()->back();
+        }
+    }
+    public function selesaiFarmasi($kodebooking, Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 7;
+        $request['keterangan'] = "Selesai peracikan obat";
+        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $api = new AntrianController();
+        $response = $api->update_antrean($request);
+        if ($response->status() == 200) {
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                'user' => Auth::user()->name,
+            ]);
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
+            Alert::success('Success', 'Selesai Peracikan Obat.');
+        } else {
+            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        }
+        return redirect()->back();
+    }
     // VIEW SIMRS
     public function statusTokenAntrian()
     {

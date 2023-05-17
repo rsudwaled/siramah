@@ -93,7 +93,7 @@ Route::get('selanjutnyaPendaftaran/{loket}/{lantai}/{jenispasien}/{tanggal}', [A
 Route::get('panggilPendaftaran/{kodebooking}/{loket}/{lantai}', [AntrianController::class, 'panggilPendaftaran'])->name('panggilPendaftaran');
 Route::get('selesaiPendaftaran/{kodebooking}', [AntrianController::class, 'selesaiPendaftaran'])->name('selesaiPendaftaran');
 Route::get('antrianCapaian', [AntrianController::class, 'antrianCapaian'])->name('antrianCapaian');
-// antrian poliklinik
+// poliklinik
 Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
 Route::get('batalAntrian/{antrian}', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
 Route::get('panggilPoliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
@@ -107,8 +107,13 @@ Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntria
 Route::get('laporanKunjunganPoliklinik', [KunjunganController::class, 'laporanKunjunganPoliklinik'])->name('laporanKunjunganPoliklinik');
 Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
 Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
-
 // farmasi
+// antrian_farmasi
+Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
+Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
+Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');
+
+
 Route::get('tracerOrderObat', [FarmasiController::class, 'tracerOrderObat'])->name('tracerOrderObat');
 Route::get('getOrderObat', [FarmasiController::class, 'getOrderObat'])->name('getOrderObat');
 Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');

@@ -52,7 +52,7 @@
                         <x-adminlte-small-box
                             title="{{ $antrians->where('taskid', 5)->where('status_api', 0)->first()->angkaantrean ?? '0' }}"
                             text="Antrian Selanjutnya" theme="success" icon="fas fa-sign-in-alt"
-                            url="{{ route('farmasi.racik_farmasi',$antrians->where('taskid', 5)->where('status_api', 0)->first()->kodebooking ?? '0') }}"
+                            url="{{ route('racikFarmasi',$antrians->where('taskid', 5)->where('status_api', 0)->first()->kodebooking ?? '0') }}"
                             url-text="Panggil Antrian Selanjutnya" />
                     </div>
                     <div class="col-md-3">
@@ -140,13 +140,13 @@
                                                 <x-adminlte-button class="btn-xs" label="Racik Obat" theme="success"
                                                     icon="fas fa-prescription-bottle-alt" data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('farmasi.racik_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('racikFarmasi', $item->kodebooking) }}'" />
                                             @endif
                                             @if ($item->taskid == 6)
                                                 <x-adminlte-button class="btn-xs" label="Selesai Racik" theme="success"
                                                     icon="fas fa-prescription-bottle-alt" data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('farmasi.selesai_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('selesaiFarmasi', $item->kodebooking) }}'" />
                                             @endif
                                         </td>
                                     </tr>
@@ -228,14 +228,14 @@
                                                     theme="success" icon="fas fa-prescription-bottle-alt"
                                                     data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('farmasi.racik_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('racikFarmasi', $item->kodebooking) }}'" />
                                             @endif
                                             @if ($item->taskid == 6)
                                                 <x-adminlte-button class="btn-xs withLoad" label="Selesai"
                                                     theme="success" icon="fas fa-prescription-bottle-alt"
                                                     data-toggle="tooltip"
                                                     title="Racik Obat Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('farmasi.selesai_farmasi', $item->kodebooking) }}'" />
+                                                    onclick="window.location='{{ route('selesaiFarmasi', $item->kodebooking) }}'" />
                                             @endif
                                         </td>
                                     </tr>

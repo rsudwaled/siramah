@@ -432,9 +432,9 @@ return [
             'can' => 'farmasi',
             'submenu' => [
                 [
-                    'text' => 'Antrian Obat',
+                    'text' => 'Antrian Farmasi',
                     'icon'    => 'fas fa-pills',
-                    'url'  => 'farmasi/antrian_farmasi',
+                    'url'  => 'antrianFarmasi',
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
                 ],
