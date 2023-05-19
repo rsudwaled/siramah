@@ -31,7 +31,8 @@
                                         {{ $item->namasubspesialis }} ({{ $item->kodesubspesialis }})
                                     </option>
                                 @endforeach
-                                <option value="">SEMUA POLIKLINIK (-)</option>
+                                <option value="" {{ $request->kodepoli ? '' : 'selected' }}>SEMUA POLIKLINIK (-)
+                                </option>
                             </x-adminlte-select2>
 
                         </div>

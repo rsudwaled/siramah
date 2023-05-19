@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>SIRAMAH-RS Waled</b>',
+    'logo' => 'RSUD Waled',
     'logo_img' => 'vendor/adminlte/dist/img/rswaledico.png',
     'logo_img_class' => 'brand-image',
     'logo_img_xl' => null,
@@ -186,7 +186,7 @@ return [
     |
     */
 
-    'classes_body' => 'text-sm',
+    'classes_body' => 'text-xs',
     'classes_brand' => '',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
@@ -1016,7 +1016,7 @@ return [
             ],
         ],
         'DatatablesPlugins' => [
-            'active' => true,
+            'active' => false,
             'files' => [
                 [
                     'type' => 'js',

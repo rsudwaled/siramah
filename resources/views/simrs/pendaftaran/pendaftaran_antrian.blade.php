@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Antrian Pendaftaran')
 @section('content_header')
-    <h1>Antrian Pendaftaran {{ $request->loket ? 'Loket ' . $request->loket . ' Lantai ' . $request->lantai : '' }}</h1>
+    <h1>Antrian Pendaftarans {{ $request->loket ? 'Loket ' . $request->loket . ' Lantai ' . $request->lantai : '' }}</h1>
 @stop
 
 @section('content')

@@ -112,7 +112,7 @@
 
                                 <td>{{ $item->noSuratKontrol }}
                                     <br>
-                                    <a href="{{ route('bpjs.vclaim.surat_kontrol_print', $item->noSuratKontrol) }}"
+                                    <a href="{{ route('suratKontrolPrint', $item->noSuratKontrol) }}"
                                         target="_blank" class="btn btn-xs btn-success" data-toggle="tooltip"
                                         title="Print Surat Kontrol {{ $item->kode_kunjungan }}"> <i
                                             class="fas fa-print"></i> Print</a>

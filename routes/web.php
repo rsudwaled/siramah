@@ -53,9 +53,10 @@ Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->m
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
 // layanan umum
-Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+
+Route::middleware('auth')->group(function () {
 // settingan umum
 Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
 Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
@@ -82,6 +83,7 @@ Route::resource('efilerm', FileRekamMedisController::class);
 Route::resource('antrian', AntrianController::class);
 Route::resource('suratkontrol', SuratKontrolController::class);
 Route::resource('obat', ObatController::class);
+Route::resource('kpo', KPOController::class);
 // mesin antrian
 Route::get('daftarOnline', [SIMRSAntrianController::class, 'daftarOnline'])->name('daftarOnline');
 Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
@@ -110,18 +112,16 @@ Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntria
 Route::get('laporanKunjunganPoliklinik', [KunjunganController::class, 'laporanKunjunganPoliklinik'])->name('laporanKunjunganPoliklinik');
 Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
 Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
+Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
+
 // farmasi
-// antrian_farmasi
 Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
 Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
 Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');
 Route::get('tracerOrderObat', [FarmasiController::class, 'tracerOrderObat'])->name('tracerOrderObat');
 Route::get('getOrderObat', [FarmasiController::class, 'getOrderObat'])->name('getOrderObat');
 Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
-Route::resource('kpo', KPOController::class);
 Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
-
-Route::get('bpjs/vclaim/surat_kontrol_print/{suratkontrol}', [SuratKontrolController::class, 'print'])->name('bpjs.vclaim.surat_kontrol_print');
 
 
 // bpjs
@@ -163,4 +163,6 @@ Route::prefix('bpjs')->name('bpjs.')->group(function () {
         Route::put('surat_kontrol_update', [SuratKontrolController::class, 'update'])->name('surat_kontrol_update');
         Route::delete('surat_kontrol_delete', [SuratKontrolController::class, 'destroy'])->name('surat_kontrol_delete');
     });
+});
+
 });

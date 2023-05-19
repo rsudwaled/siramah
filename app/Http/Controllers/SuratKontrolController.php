@@ -132,7 +132,7 @@ class SuratKontrolController extends Controller
         }
         return $response;
     }
-    public function print($nomorsuratkontrol, Request $request)
+    public function suratKontrolPrint($nomorsuratkontrol, Request $request)
     {
         $request['noSuratKontrol'] = $nomorsuratkontrol;
         $vclaim = new VclaimController();
