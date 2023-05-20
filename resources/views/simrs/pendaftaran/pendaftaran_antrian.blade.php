@@ -359,11 +359,28 @@
                     <div class="col-md-12">
                         <x-adminlte-card title="Pencarian Pasien" theme="warning" icon="fas fa-user-injured"
                             collapsible="{{ $request->norm ? 'collapsed' : '' }}">
+                            <form action="" method="get">
+                                <input type="hidden" name="kodebooking" value="{{ $request->kodebooking }}">
+                                <input type="hidden" name="lantai" value="{{ $request->lantai }}">
+                                <input type="hidden" name="loket" value="{{ $request->loket }}">
+                                <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
+                                    value="{{ $request->search }}">
+                                    <x-slot name="appendSlot">
+                                        <x-adminlte-button type="submit" theme="outline-primary" label="Cari" />
+                                    </x-slot>
+                                    <x-slot name="prependSlot">
+                                        <div class="input-group-text text-primary">
+                                            <i class="fas fa-search"></i>
+                                        </div>
+                                    </x-slot>
+                                </x-adminlte-input>
+                            </form>
                             @php
                                 $heads = ['Tgl Entry', 'No RM', 'NIK', 'No BPJS', 'Nama', 'Alamat', 'No HP', 'Action'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
+                                $config['searching'] = false;
                                 $config['scrollY'] = '400px';
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
@@ -437,12 +454,12 @@
                                         {{ $peserta->provUmum->kdProvider ?? 'Belum Terdaftar BPJS' }}
                                     </dd>
                                 </dl>
-                                <x-adminlte-button icon="fas fa-file-medical" theme="primary" class="mr-auto"
+                                <x-adminlte-button icon="fas fa-file-medical" theme="primary" class="mr-auto mb-1"
                                     label="Riwayat Kunjungan ({{ $pasien->kunjungans->count() }})" data-toggle="modal"
                                     data-target="#riwayatKunjungan" />
                                 <x-adminlte-modal id="riwayatKunjungan" title="Riwayat Kunjungan" theme="warning"
                                     icon="fas fa-file-medical" size='xl'>
-                                    <table class="table table-sm table-bordered table-hover">
+                                    <table id="tableKunjungan" class="table table-sm table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Tgl Masuk</th>
@@ -450,9 +467,9 @@
                                                 <th>Penjamin</th>
                                                 <th>Unit</th>
                                                 <th>Dokter</th>
+                                                <th>Catatan</th>
                                                 <th>SEP</th>
                                                 <th>Rujukan</th>
-                                                <th>Catatan</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -461,84 +478,54 @@
                                                 <tr>
                                                     <td>{{ $kunjungan->tgl_masuk }}</td>
                                                     <td>{{ $kunjungan->tgl_keluar }}</td>
-                                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
+                                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin ?? $kunjungan->kode_penjamin }}
+                                                    </td>
                                                     <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                                    <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
+                                                    <td>{{ $kunjungan->dokter->nama_paramedis ?? $kunjungan->dokter }}</td>
                                                     <td>{{ $kunjungan->no_sep }}</td>
                                                     <td>{{ $kunjungan->no_rujukan }}</td>
-                                                    <td>{{ $kunjungan->catatan }}</td>
+                                                    <td>{{ $kunjungan->status->status_kunjungan ?? '-' }}</td>
                                                     <td>-</td>
                                                 </tr>
                                             @endforeach
+                                        </tbody>
                                     </table>
                                 </x-adminlte-modal>
-                                <x-adminlte-button icon="fas fa-file-medical" class="mr-auto" theme="primary"
-                                    label="Riwayat Rujukan" id="btnRiwayatRujukan" />
+                                <x-adminlte-button id="btnRiwayatRujukan" icon="fas fa-file-medical" class="mr-auto mb-1"
+                                    theme="primary" label="Riwayat Rujukan" />
                                 <x-adminlte-modal id="riwayatRujukan" title="Riwayat Rujukan" theme="warning"
                                     icon="fas fa-file-medical" size='xl'>
-                                    <table class="table table-sm table-bordered table-hover">
+                                    <table id="tableRujukan" class="table table-sm table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Tgl Masuk</th>
-                                                <th>Tgl Keluar</th>
-                                                <th>Penjamin</th>
-                                                <th>Unit</th>
-                                                <th>Dokter</th>
-                                                <th>Catatan</th>
-                                                <th>SEP</th>
-                                                <th>Rujukan</th>
+                                                <th>No</th>
+                                                <th>Tgl</th>
+                                                <th>No Rujukan</th>
+                                                <th>Pelayanan</th>
+                                                <th>Tujuan</th>
+                                                <th>Diagnosa</th>
+                                                <th>Pasien</th>
+                                                <th>Provider</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pasien->kunjungans as $kunjungan)
-                                                <tr>
-                                                    <td>{{ $kunjungan->tgl_masuk }}</td>
-                                                    <td>{{ $kunjungan->tgl_keluar }}</td>
-                                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
-                                                    <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                                    <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
-                                                    <td>{{ $kunjungan->catatan }}</td>
-                                                    <td>{{ $kunjungan->no_sep }}</td>
-                                                    <td>{{ $kunjungan->no_rujukan }}</td>
-                                                    <td>-</td>
-                                                </tr>
-                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </x-adminlte-modal>
-                                <x-adminlte-button icon="fas fa-file-medical" theme="primary"
-                                    label="Riwayat Surat Kontrol" data-toggle="modal" class="mr-auto"
-                                    data-target="#riwayatSuratKontrol" />
-                                <x-adminlte-modal id="riwayatSuratKontrol" title="Riwayat Rujukan" theme="warning"
+                                <x-adminlte-button id="btnRiwayatSuratKontrol" icon="fas fa-file-medical" theme="primary"
+                                    label="Riwayat Surat Kontrol" class="mr-auto mb-1" />
+                                <x-adminlte-modal id="riwayatSuratKontrol" title="Riwayat Surat Kontrol" theme="warning"
                                     icon="fas fa-file-medical" size='xl'>
-                                    <table class="table table-sm table-bordered table-hover">
+                                    <table id="tableSuratKontrol" class="table table-sm table-bordered table-hover">
                                         <thead>
                                             <tr>
-                                                <th>Tgl Masuk</th>
-                                                <th>Tgl Keluar</th>
-                                                <th>Penjamin</th>
-                                                <th>Unit</th>
-                                                <th>Dokter</th>
-                                                <th>Catatan</th>
-                                                <th>SEP</th>
-                                                <th>Rujukan</th>
+                                                <th>Tgl Kontrol</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pasien->kunjungans as $kunjungan)
-                                                <tr>
-                                                    <td>{{ $kunjungan->tgl_masuk }}</td>
-                                                    <td>{{ $kunjungan->tgl_keluar }}</td>
-                                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
-                                                    <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                                    <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
-                                                    <td>{{ $kunjungan->catatan }}</td>
-                                                    <td>{{ $kunjungan->no_sep }}</td>
-                                                    <td>{{ $kunjungan->no_rujukan }}</td>
-                                                    <td>-</td>
-                                                </tr>
-                                            @endforeach
+                                        </tbody>
                                     </table>
                                 </x-adminlte-modal>
                             </x-adminlte-profile-widget>
@@ -616,6 +603,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $('#tableKunjungan').DataTable();
+
             $('#btnRiwayatRujukan').click(function() {
                 var nomorkartu = $('#nomorkartu').val();
                 $.LoadingOverlay("show");
@@ -623,13 +612,76 @@
                 $.get(url, function(data) {
                     console.log(data);
                     if (data.metadata.code == 200) {
-                        alert('ok')
+                        var table = $('#tableRujukan').DataTable();
+                        table.rows().remove().draw();
+                        var rujukans = data.response.rujukan;
+                        $.each(rujukans, function(key, value) {
+                            table.row.add([
+                                key + 1,
+                                value.tglKunjungan,
+                                value.noKunjungan,
+                                value.pelayanan.nama,
+                                value.poliRujukan.nama,
+                                value.diagnosa.kode + ' ' + value.diagnosa.nama,
+                                value.peserta.nama,
+                                value.provPerujuk.nama,
+                                "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
+                                value.noKunjungan +
+                                ">Pilih</button>",
+                            ]).draw(false);
+                        })
                     } else {
                         alert('no')
                     }
                     $('#riwayatRujukan').modal('show');
                     $.LoadingOverlay("hide", true);
-                })
+                });
+            });
+            $('#btnRiwayatSuratKontrol').click(function() {
+                $.LoadingOverlay("show");
+                var nomorkartu = $('#nomorkartu').val();
+                var bulan = "{{ now()->month }}";
+                var tahun = "{{ now()->year }}";
+                var data = {
+                    nomorkartu: nomorkartu,
+                    bulan: bulan,
+                    formatfilter: 2,
+                    tahun: tahun,
+                }
+                var url = "{{ route('vclaim.suratkontrol_peserta') }}";
+                $.ajax({
+                    data: data,
+                    url: url,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        var table = $('#tableSuratKontrol').DataTable();
+                        table.rows().remove().draw();
+                        var suratkontrols = data.response.list;
+                        $.each(suratkontrols, function(key, value) {
+                            table.row.add([,
+                                value.tglRencanaKontrol,
+                                "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
+                                value.noKunjungan +
+                                ">Pilih</button>",
+                            ]).draw(false);
+                        })
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            data.statusText + ' ' + data.status,
+                            data.responseJSON.data,
+                            'error'
+                        );
+                        var table = $('#tableSuratKontrol').DataTable();
+                        table.rows().remove().draw();
+                    },
+                    complete: function(data) {
+                        $('#riwayatSuratKontrol').modal('show');
+                        $.LoadingOverlay("hide");
+                    }
+                });
             });
         });
     </script>

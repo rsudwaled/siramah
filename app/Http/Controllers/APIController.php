@@ -19,6 +19,7 @@ class APIController extends Controller
     }
     public function sendError($error,  $code = 404)
     {
+        $code = $code ?? 404;
         $response = [
             'metadata' => [
                 'message' => $error,

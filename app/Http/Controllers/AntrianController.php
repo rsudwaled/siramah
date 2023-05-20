@@ -634,8 +634,13 @@ class AntrianController extends APIController
         if ($request->kodebooking) {
             $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
             $dokters = Dokter::where('status', 1)->get();
-            $pasiens = Pasien::with(['kecamatans'])->orderBy('tgl_entry', 'DESC')->limit(10)->get();
-
+            $pasiens = Pasien::with(['kecamatans'])
+                ->where('no_rm', 'LIKE', "%{$request->search}%")
+                ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
+                ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
+                ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
+                ->orderBy('tgl_entry', 'DESC')->limit(10)->get();
+            // pilih pasien
             if ($request->norm) {
                 $pasien = Pasien::with(['kunjungans'])->firstWhere('no_rm', $request->norm);
                 $request['nomorkartu'] = $pasien->no_Bpjs;
