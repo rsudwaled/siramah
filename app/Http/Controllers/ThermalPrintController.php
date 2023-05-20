@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -53,7 +54,8 @@ class ThermalPrintController extends Controller
         } catch (Exception $e) {
             Alert::error('Error', 'Test Printer Error ' . $e->getMessage());
         }
+
+
         return redirect()->route('cekThermalPrinter');
     }
 }
-
