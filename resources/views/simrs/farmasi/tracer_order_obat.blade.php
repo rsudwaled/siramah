@@ -69,7 +69,7 @@
                         theme="{{ $request->tracer == 'OFF' ? 'success' : 'secondary' }}" label="OFF" />
 
                     @php
-                        $heads = ['Id', 'Tgl Entry', 'No Order', 'No RM', 'Nama', 'Poliklinik', 'Penjamin', 'Tracer', 'Action'];
+                        $heads = ['Id', 'Tgl Entry', 'No Order', 'No RM', 'Nama', 'Poliklinik', 'Penjamin', 'Tracer', 'SEP', 'Action'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -88,6 +88,7 @@
                                 <td>{{ $order->pasien->nama_px }}</td>
                                 <td>{{ $order->unit->nama_unit }}</td>
                                 <td>{{ $order->penjamin_simrs->nama_penjamin }}</td>
+                                <td>{{ $order->kunjungan->no_sep ?? '-' }}</td>
                                 <td>
                                     @if ($order->status_order == 1)
                                         <span class="badge badge-danger"> Belum Cetak</span>

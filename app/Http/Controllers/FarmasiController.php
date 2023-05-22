@@ -13,7 +13,6 @@ class FarmasiController extends APIController
     public function tracerOrderObat(Request $request)
     {
         // $orders = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_01 ("2023-05-15","4008")'));
-
         $orders = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
             ->where('status_order', '!=', 0)
             ->where('kode_unit', 4008)
@@ -33,10 +32,7 @@ class FarmasiController extends APIController
             ->where('kode_unit', 4008)
             ->first();
         $i = 1;
-
-
         // dd($order->detail->first()->barang);
-
         if ($order) {
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
@@ -51,7 +47,8 @@ class FarmasiController extends APIController
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
                 $printer->text("No RM : " . $order->no_rm . " \n");
-                $printer->text("Pasien : " . $order->pasien->nama_px . " \n\n");
+                $printer->text("Pasien : " . $order->pasien->nama_px . " \n");
+                $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
                 $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
                 $printer->text("Tgl Order : " . $order->tgl_entry . " \n");
@@ -87,7 +84,6 @@ class FarmasiController extends APIController
         $order->update([
             'status_order' => 1
         ]);
-
         return redirect()->back();
     }
 }

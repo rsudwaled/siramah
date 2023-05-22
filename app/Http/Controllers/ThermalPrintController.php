@@ -22,7 +22,9 @@ class ThermalPrintController extends Controller
     public function testThermalPrinter(Request $request)
     {
         try {
-            $connector = new WindowsPrintConnector($request->printer_connector);
+            // $connector = new WindowsPrintConnector($request->printer_connector);
+            // $connector = new WindowsPrintConnector("EPSON TM-T82X Receipt");
+            $connector = new NetworkPrintConnector("192.168.2.201", 9100);
             $printer = new Printer($connector);
             $printer->text("Test Printer\n");
             $printer->text("Printer Connector : " . $request->printer_connector . "\n");

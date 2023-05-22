@@ -33,6 +33,10 @@ class OrderObatHeader extends Model
     {
         return $this->hasOne(Penjamin::class, 'kode_penjamin_simrs', 'kode_penjaminx');
     }
+    public function kunjungan()
+    {
+        return $this->hasOne(Kunjungan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function penjamin_simrs()
     {
         return $this->hasOne(PenjaminSimrs::class, 'kode_penjamin', 'kode_penjaminx');
