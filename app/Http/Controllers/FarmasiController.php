@@ -43,7 +43,7 @@ class FarmasiController extends APIController
         $i = 1;
         if ($order) {
             try {
-                $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+                $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 // $printer->setEmphasis(true);
@@ -86,7 +86,7 @@ class FarmasiController extends APIController
                 Alert::error('Error', $th->getMessage());
             }
             try {
-                $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+                $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled\n");
@@ -142,7 +142,7 @@ class FarmasiController extends APIController
         // dd($order->detail->first()->barang);
         if ($order) {
             try {
-                $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+                $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->setEmphasis(true);
