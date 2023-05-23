@@ -439,6 +439,13 @@ return [
                     'can' => 'farmasi',
                 ],
                 [
+                    'text' => 'Order Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'orderFarmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Obat',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'obat',
