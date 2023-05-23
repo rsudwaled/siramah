@@ -121,7 +121,7 @@ class AntrianController extends APIController
         return redirect()->back();
     }
     // VIEW SIMRS
-    public function statusTokenAntrian()
+    public function statusAntrianBpjs()
     {
         $token = Token::latest()->first();
         return view('bpjs.antrian.status', compact([
@@ -589,6 +589,30 @@ class AntrianController extends APIController
         //     Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
         // }
         return redirect()->back();
+    }
+    public function antrianBpjs(Request $request)
+    {
+        // get poli
+        $response = $this->ref_poli();
+        if ($response->status() == 200) {
+            $polikliniks = $response->getData()->response;
+        } else {
+            $polikliniks = null;
+        }
+        // get antrian
+        $antrians = null;
+        if (isset($request->kodepoli)) {
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->get();
+            if ($request->kodepoli != '000') {
+                $antrians = $antrians->where('kodepoli', $request->kodepoli);
+            }
+            Alert::success('OK', 'Antrian BPJS Total : ' . $antrians->count());
+        }
+        return view('bpjs.antrian.antrian', compact([
+            'request',
+            'polikliniks',
+            'antrians',
+        ]));
     }
     // pendaftaran
     public function antrianConsole()

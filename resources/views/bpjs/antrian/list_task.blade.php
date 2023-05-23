@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Pencarian Task ID Antrian" theme="secondary" icon="fas fa-info-circle" collapsible>
-                <form action="{{ route('bpjs.antrian.list_task') }}">
+                <form action="">
                     <x-adminlte-input name="kodebooking" label="Kodebooking Antrian" value="{{ $request->kodebooking }}" placeholder="Silahkan Masukan Kodebooking" />
                     <x-adminlte-button label="Cari Antrian" class="mr-auto withLoad" type="submit" theme="success"
                         icon="fas fa-search" />

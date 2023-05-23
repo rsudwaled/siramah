@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Pencarian Jadwal Dokter" theme="secondary" icon="fas fa-info-circle" collapsible>
-                <form action="{{ route('bpjs.antrian.jadwal_dokter') }}">
+                <form action="">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp

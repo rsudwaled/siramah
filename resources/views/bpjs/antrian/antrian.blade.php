@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Pencarian Bridging Antrian BPJS" theme="secondary" icon="fas fa-info-circle" collapsible>
-                <form action="{{ route('bpjs.antrian.antrian') }}">
+                <form action="">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp

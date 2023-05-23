@@ -13,7 +13,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalDokterController extends Controller
 {
-    public function jadwalDokterBpjs(Request $request)
+    public function jadwalDokterAntrianBpjs(Request $request)
     {
         $polikliniks = Poliklinik::all();
         $jadwal_save = JadwalDokter::all();

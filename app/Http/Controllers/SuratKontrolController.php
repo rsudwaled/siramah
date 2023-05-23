@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\SuratKontrol;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratKontrolController extends Controller
 {
-    public function surat_kontrol_index(Request $request)
+    public function suratKontrolBpjs(Request $request)
     {
         $suratkontrol = null;
         if ($request->tanggal && $request->formatFilter) {
             $tanggal = explode('-', $request->tanggal);
             $request['tanggalMulai'] = Carbon::parse($tanggal[0])->format('Y-m-d');
             $request['tanggalAkhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
-            $response =  $this->suratkontrol_tanggal($request);
+            $vclaim = new VclaimController();
+            $response =  $vclaim->suratkontrol_tanggal($request);
             if ($response->status() == 200) {
                 $suratkontrol = $response->getData()->response->list;
                 Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');

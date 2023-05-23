@@ -10,7 +10,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class VclaimController extends APIController
 {
-    public function referensi_index(Request $request)
+    public function referensiVclaim(Request $request)
     {
         return view('bpjs.vclaim.referensi_index', compact([
             'request',
@@ -129,7 +129,7 @@ class VclaimController extends APIController
         }
         return response()->json($data);
     }
-    public function monitoring_data_kunjungan_index(Request $request)
+    public function monitoringDataKunjungan(Request $request)
     {
         $sep = null;
         $vclaim = new VclaimController();
@@ -146,7 +146,7 @@ class VclaimController extends APIController
             'request', 'sep'
         ]));
     }
-    public function monitoring_data_klaim_index(Request $request)
+    public function monitoringDataKlaim(Request $request)
     {
         $klaim = null;
         $vclaim = new VclaimController();
@@ -163,7 +163,7 @@ class VclaimController extends APIController
             'request', 'klaim'
         ]));
     }
-    public function monitoringPelayananPesertaIndex(Request $request)
+    public function monitoringPelayananPeserta(Request $request)
     {
         $peserta = null;
         $sep = null;
@@ -194,7 +194,6 @@ class VclaimController extends APIController
         } else {
             $request['tanggal'] = now()->format('Y-m-d');
         }
-        // dd($request->all(), $response);
 
         // get data
         if (isset($peserta)) {
@@ -238,7 +237,7 @@ class VclaimController extends APIController
             'surat_kontrol',
         ]));
     }
-    public function monitoring_klaim_jasaraharja_index(Request $request)
+    public function monitoringKlaimJasaraharja(Request $request)
     {
         $klaim = null;
         $vclaim = new VclaimController();
@@ -304,11 +303,7 @@ class VclaimController extends APIController
             if ($response->json('metaData.code') == 1 || $response->json('metaData.code') == 0) {
                 $code = 200;
             } else {
-                if ($response->json('metaData.code') == 200) {
-                    $code = $response->json('metaData.code');
-                } else {
-                    $code = 400;
-                }
+                $code = $response->json('metaData.code');
             }
             return $this->sendResponse($response->json('metaData.message'), $data, $code);
         }
@@ -675,7 +670,7 @@ class VclaimController extends APIController
             "nomorkartu" => "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), 201);
+            return $this->sendError($validator->errors()->first(), 400);
         }
         $url = env('VCLAIM_URL') . "Rujukan/List/Peserta/" . $request->nomorkartu;
         $signature = $this->signature();

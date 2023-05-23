@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Antrian Pendaftaran')
 @section('content_header')
-    <h1>Antrian Pendaftarans {{ $request->loket ? 'Loket ' . $request->loket . ' Lantai ' . $request->lantai : '' }}</h1>
+    <h1>Antrian Pendaftaran {{ $request->loket ? 'Loket ' . $request->loket . ' Lantai ' . $request->lantai : '' }}</h1>
 @stop
 
 @section('content')
@@ -604,37 +604,61 @@
                 }
             });
             $('#tableKunjungan').DataTable();
-
             $('#btnRiwayatRujukan').click(function() {
+                // $.LoadingOverlay("show");
+                var url = "{{ route('vclaim.rujukan_peserta') }}";
                 var nomorkartu = $('#nomorkartu').val();
-                $.LoadingOverlay("show");
-                var url = "{{ route('vclaim.rujukan_peserta') }}" + '?nomorkartu=' + nomorkartu;
-                $.get(url, function(data) {
-                    console.log(data);
-                    if (data.metadata.code == 200) {
+                var data = {
+                    nomorkartu: nomorkartu,
+                }
+                $.ajax({
+                    data: data,
+                    url: url,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Success ' + data.metadata.code,
+                            data.metadata.message,
+                            'success'
+                        );
                         var table = $('#tableRujukan').DataTable();
+                        if (data.response) {
+                            table.rows().remove().draw();
+                            var rujukans = data.response.rujukan;
+                            $.each(rujukans, function(key, value) {
+                                table.row.add([
+                                    key + 1,
+                                    value.tglKunjungan,
+                                    value.noKunjungan,
+                                    value.pelayanan.nama,
+                                    value.poliRujukan.nama,
+                                    value.diagnosa.kode + ' ' + value.diagnosa
+                                    .nama,
+                                    value.peserta.nama,
+                                    value.provPerujuk.nama,
+                                    "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
+                                    value.noKunjungan +
+                                    ">Pilih</button>",
+                                ]).draw(false);
+                            })
+                        }
+                    },
+                    error: function(data) {
+                        console.log(data.metadata);
+                        // swal.fire(
+                        //     'Error ' + data.metadata.code,
+                        //     data.metadata.message,
+                        //     'error'
+                        // );
+                        var table = $('#tableSuratKontrol').DataTable();
                         table.rows().remove().draw();
-                        var rujukans = data.response.rujukan;
-                        $.each(rujukans, function(key, value) {
-                            table.row.add([
-                                key + 1,
-                                value.tglKunjungan,
-                                value.noKunjungan,
-                                value.pelayanan.nama,
-                                value.poliRujukan.nama,
-                                value.diagnosa.kode + ' ' + value.diagnosa.nama,
-                                value.peserta.nama,
-                                value.provPerujuk.nama,
-                                "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
-                                value.noKunjungan +
-                                ">Pilih</button>",
-                            ]).draw(false);
-                        })
-                    } else {
-                        alert('no')
+                    },
+                    complete: function(data) {
+                        $('#riwayatRujukan').modal('show');
+                        $.LoadingOverlay("hide", true);
                     }
-                    $('#riwayatRujukan').modal('show');
-                    $.LoadingOverlay("hide", true);
                 });
             });
             $('#btnRiwayatSuratKontrol').click(function() {

@@ -5,7 +5,7 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-6">
+        <div class="col-md-6">
             <x-adminlte-card title="Refefensi Vclaim BPJS" theme="secondary" collapsible>
                 <form action="" method="get">
                     <x-adminlte-select2 name="diagnosa" label="Diagnosa BPJS ICD-10" data-placeholder="Pilih beberapa diagnosa..." multiple>
@@ -69,7 +69,7 @@
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_diagnosa_api') }}",
+                    url: "{{ route('vclaim.ref_diagnosa_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -89,7 +89,7 @@
             $("#poliklinik").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_poliklinik_api') }}",
+                    url: "{{ route('vclaim.ref_poliklinik_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -109,7 +109,7 @@
             $("#faskes").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_faskes_api') }}",
+                    url: "{{ route('vclaim.ref_faskes_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -130,7 +130,7 @@
             $("#dokter").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_dpjp_api') }}",
+                    url: "{{ route('vclaim.ref_dpjp_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -153,7 +153,7 @@
             $("#provinsi").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_provinsi_api') }}",
+                    url: "{{ route('vclaim.ref_provinsi_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -173,7 +173,7 @@
             $("#kabupaten").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_kabupaten_api') }}",
+                    url: "{{ route('vclaim.ref_kabupaten_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
@@ -194,7 +194,7 @@
             $("#kecamatan").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('bpjs.vclaim.ref_kecamatan_api') }}",
+                    url: "{{ route('vclaim.ref_kecamatan_api') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,

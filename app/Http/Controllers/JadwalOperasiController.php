@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 class JadwalOperasiController extends APIController
 {
-    public function index()
+    public function jadwalOperasi()
     {
         $dokters = Dokter::get();
         $poli = Poliklinik::get();

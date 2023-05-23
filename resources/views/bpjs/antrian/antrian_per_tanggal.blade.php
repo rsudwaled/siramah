@@ -42,7 +42,7 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>
                                     <a
-                                        href="{{ route('bpjs.antrian.antrian_per_kodebooking') }}?kodebooking={{ $item->kodebooking }}">
+                                        href="{{ route('antrianPerKodebooking') }}?kodebooking={{ $item->kodebooking }}" target="_blank">
                                         {{ $item->kodebooking }}
                                     </a>
                                     <br>
