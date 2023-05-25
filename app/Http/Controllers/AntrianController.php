@@ -457,8 +457,7 @@ class AntrianController extends APIController
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 99;
         $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . Auth::user()->name;
-        $vclaim = new AntrianAntrianController();
-        $response = $vclaim->batal_antrian($request);
+        $response = $this->batal_antrian($request);
         if ($response->status() == 200) {
             Alert::success('Success', "Antrian berhasil dibatalkan");
         } else {
@@ -675,8 +674,9 @@ class AntrianController extends APIController
                     if ($response->status() == 200) {
                         $peserta = $response->getData()->response->peserta;
                         $request['nik'] = $peserta->nik;
+                        toast('Pasien terdaftar di BPJS', 'success');
                     } else {
-                        Alert::error('Error', $response->getData()->metadata->message);
+                        toast($response->getData()->metadata->message, 'error');
                     }
                 }
             }
@@ -695,13 +695,23 @@ class AntrianController extends APIController
     }
     public function daftarBridgingAntrian(Request $request)
     {
+        // dd($request->all());
         $res =  $this->ambil_antrian($request);
         if ($res->status() == 200) {
             dd($res->getData());
+        } else
+        if ($res->status() == 201) {
+            Alert::error('Error', $res->getData()->metadata->message);
+            return redirect()->back()->withErrors($res->getData()->metadata->message);
         } else {
             Alert::error('Error', $res->getData()->metadata->message);
         }
-        return redirect()->back();
+        return redirect()->route('antrianPendaftaran', [
+            'loket' => $request->loket,
+            'lantai' => $request->lantai,
+            'tanggal' => $request->tanggalperiksa,
+            'jenispasien' => $request->jenispasien,
+        ]);
     }
     public function selanjutnyaPendaftaran($loket, $lantai, $jenispasien, $tanggal, Request $request)
     {
@@ -2086,22 +2096,20 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             $response = $this->batal_antrean($request);
-            if ($response->status() == 200) {
-                // kirim notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
-                // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena perubahan jadwal.";;
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
-                $antrian->update([
-                    "taskid" => 99,
-                    "status_api" => 1,
-                    "keterangan" => $request->keterangan,
-                ]);
-                return $this->sendResponse("Ok", null, 200);
-            } else {
-                return $this->sendError($response->getData()->metadata->message,  201);
-            }
+            // if ($response->status() == 200) {
+            // kirim notif wa
+            // $wa = new WhatsappController();
+            // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
+            // // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan karena perubahan jadwal.";;
+            // $request['number'] = $antrian->nohp;
+            // $wa->send_message($request);
+            $antrian->update([
+                "taskid" => 99,
+                "status_api" => 1,
+                "keterangan" => $request->keterangan,
+            ]);
+            dd($antrian);
+            return $this->sendResponse($response->getData()->metadata->message, null, 200);
         }
         // antrian tidak ditemukan
         else {

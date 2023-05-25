@@ -21,6 +21,10 @@ class Pasien extends Model
     {
         return $this->hasMany(Kunjungan::class, 'no_rm', 'no_rm');
     }
+    public function antrians()
+    {
+        return $this->hasMany(Antrian::class, 'norm', 'no_rm');
+    }
     public function kecamatans()
     {
         return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');

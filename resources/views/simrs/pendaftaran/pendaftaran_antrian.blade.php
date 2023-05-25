@@ -414,6 +414,15 @@
                     </div>
                     @if ($pasien)
                         <div class="col-md-5">
+                            @if ($errors->any())
+                                <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </x-adminlte-alert>
+                            @endif
                             <x-adminlte-profile-widget name="{{ $pasien->nama_px }}"
                                 desc="{{ $pasien->no_rm }} | {{ $pasien->no_Bpjs }} " theme="primary"
                                 img="https://picsum.photos/id/1/100" layout-type="classic">
@@ -529,13 +538,31 @@
                                     </table>
                                 </x-adminlte-modal>
                             </x-adminlte-profile-widget>
+                            @if ($pasien->antrians)
+                                @foreach ($pasien->antrians->where('taskid', '<', 5)->where('tanggalperiksa', now()->format('Y-m-d')) as $antrianaktif)
+                                    <x-adminlte-alert title="Pasien Memiliki Antrian Aktif" theme="danger">
+                                        Status : {{ $antrianaktif->taskid }}
+                                        <br>
+                                        Kode booking : {{ $antrianaktif->kodebooking }}
+                                        <br>
+                                        Tanggal Periksa : {{ $antrianaktif->tanggalperiksa }}
+                                        <br>
+                                        Method : {{ $antrianaktif->method }}
+                                        <br>
+                                        <a href="{{ route('batalAntrian', $antrianaktif->kodebooking) }}"
+                                            class="btn btn-xs ">Batalkan Antrian</a>
+                                    </x-adminlte-alert>
+                                @endforeach
+                            @endif
+
                         </div>
                         <div class="col-md-7">
                             <x-adminlte-card title="Pendaftaran Pasien" theme="success" icon="fas fa-user-plus"
                                 collapsible>
                                 <form action="{{ route('daftarBridgingAntrian') }}" method="POST">
                                     @csrf
-                                    @method('POST')
+                                    <input type="hidden" name="loket" value="{{ $request->loket }}">
+                                    <input type="hidden" name="lantai" value="{{ $request->lantai }}">
                                     <x-adminlte-input name="kodebooking" label="Kodebooking"
                                         value="{{ $antrian->kodebooking }}" readonly />
                                     <x-adminlte-input name="nomorantrean" label="Nomor Antri"
@@ -614,7 +641,7 @@
             });
             $('#tableKunjungan').DataTable();
             $('#btnRiwayatRujukan').click(function() {
-                // $.LoadingOverlay("show");
+                $.LoadingOverlay("show");
                 var url = "{{ route('vclaim.rujukan_peserta') }}";
                 var nomorkartu = $('#nomorkartu').val();
                 var data = {
