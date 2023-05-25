@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class WhatsappController extends Controller
 {
@@ -23,7 +24,14 @@ class WhatsappController extends Controller
         // ]);
         // $response = json_decode($response->getBody());
         $request['number'] = "089529909036";
-        $request['message'] = "Test ke marwan";
+        if ($request->message) {
+            $res = $this->send_message($request);
+            if ($res) {
+                Alert::success('Success','Pesan testing terkirim');
+            } else {
+                Alert::error('Error','Pesan testing gagal terkirim');
+            }
+        }
         return view('admin.whatsapp', compact(['request']));
         // return $response;
     }

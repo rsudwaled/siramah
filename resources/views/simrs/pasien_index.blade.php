@@ -53,7 +53,15 @@
                 <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" hoverable bordered compressed>
                     @foreach ($pasiens as $item)
                         <tr>
-                            <td>{{ $item->no_rm }}</td>
+                            <td>
+                                <a href="{{ route('kunjungan.index') }}?search={{ $item->no_rm }}" target="_blank"
+                                    class="text-dark">
+                                    <b>
+                                        {{ $item->no_rm }}
+                                    </b>
+                                </a>
+                            </td>
+
                             <td>{{ $item->no_Bpjs }}</td>
                             <td>{{ $item->nik_bpjs }}</td>
                             <td>{{ $item->nama_px }} ({{ $item->jenis_kelamin }})</td>
@@ -65,7 +73,7 @@
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>
                                 <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                onclick="window.location='{{ route('pasien.edit', $item->no_rm) }}'" />
+                                    onclick="window.location='{{ route('pasien.edit', $item->no_rm) }}'" />
                                 {{-- <form action="{{ route('pasien.destroy', $item->no_rm) }}" method="POST">
                                     @csrf
                                     @method('DELETE')

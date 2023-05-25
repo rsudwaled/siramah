@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Referensi Dokter')
+@section('title', 'Data Dokter')
 
 @section('content_header')
-    <h1>Referensi Dokter</h1>
+    <h1>Data Dokter</h1>
 @stop
 
 @section('content')
@@ -12,8 +12,13 @@
             <x-adminlte-card title="Data Dokter" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
                     $heads = ['Kode BPJS', 'Kode SIMRS', 'Nama Dokter', 'SIP', 'Status', 'Action'];
+                    $config['paging'] = false;
+                    $config['info'] = false;
+                    $config['searching'] = false;
+                    $config['scrollY'] = '500px';
+                    $config['scrollCollapse'] = true;
                 @endphp
-                <x-adminlte-datatable id="table2" :heads="$heads" bordered hoverable compressed>
+                <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" bordered hoverable compressed>
                     @foreach ($dokter as $item)
                         <tr>
                             <td>{{ $item->kodedokter }}</td>
@@ -32,32 +37,25 @@
                             <td>
                                 <x-adminlte-button class="btn-xs btnEdit" label="Edit" theme="warning" icon="fas fa-edit"
                                     data-toggle="tooltip" title="Edit Dokter {{ $item->nama_paramedis }}"
-                                    data-id="{{ $item->kode_paramedis }}" />
+                                    data-id="{{ $item->kodedokter }}" />
                             </td>
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
-                <a href="{{ route('dokter.create') }}" class="btn btn-success">Refresh User Dokter</a>
             </x-adminlte-card>
         </div>
     </div>
     <x-adminlte-modal id="modalEdit" title="Edit Dokter" theme="warning" icon="fas fa-user-plus">
-        <form name="formInput" id="formInput" action="" method="post">
+        <form name="formInput" id="formInput" method="POST">
             @csrf
-            <input type="hidden" name="antrianid" id="antrianid" value="">
+            @method('PATCH')
+            <input type="hidden" name="id" id="id" value="">
+            <x-adminlte-input name="kodedokter" placeholder="Kode BPJS" label="Kode BPJS" readonly />
             <x-adminlte-input name="kode_paramedis" placeholder="Kode Dokter" label="Kode Dokter" readonly />
-            <x-adminlte-input name="kode_dokter_jkn" placeholder="Kode BPJS" label="Kode BPJS" />
-            <x-adminlte-input name="nama_paramedis" placeholder="Nama Dokter" label="Nama Dokter" />
+            <x-adminlte-input name="namadokter" placeholder="Nama Dokter" label="Nama Dokter" />
             <x-adminlte-input name="sip_dr" placeholder="SIP" label="SIP" />
             <x-slot name="footerSlot">
-                {{-- <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
-                    icon="fas fa-prescription-bottle-alt" />
-                <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
-                        class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
-                <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
-                        class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
-                <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i class="fas fa-check"></i>
-                    Selesai</a> --}}
+                <x-adminlte-button class="mr-auto" type="submit" form="formInput" label="Update" theme="success" icon="fas fa-save" />
                 <x-adminlte-button theme="danger " label="Tutup" icon="fas fa-times" data-dismiss="modal" />
             </x-slot>
         </form>
@@ -80,11 +78,12 @@
                 $.LoadingOverlay("show");
                 var url = "{{ route('dokter.index') }}/" + id;
                 $.get(url, function(data) {
-                    console.log(data);
-                    $('#kode_paramedis').val(data.kode_paramedis);
-                    $('#kode_dokter_jkn').val(data.kode_dokter_jkn);
-                    $('#nama_paramedis').val(data.nama_paramedis);
-                    $('#sip_dr').val(data.sip_dr);
+                    var urlAction = "{{ route('dokter.index') }}/" + id ;
+                    $('#formInput').attr('action', urlAction);
+                    $('#kodedokter').val(data.kodedokter);
+                    $('#namadokter').val(data.namadokter);
+                    $('#kode_paramedis').val(data.paramedis.kode_paramedis);
+                    $('#sip_dr').val(data.paramedis.sip_dr);
                     $('#modalEdit').modal('show');
                 })
                 $.LoadingOverlay("hide", true);

@@ -12,7 +12,11 @@
             <x-adminlte-card title="Data Unit" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
                     $heads = ['Kode Unit', 'Kode JKN', 'Nama Unit', 'Kelas', 'Lokasi', 'Daftar', 'Status'];
-                    $config['paging'] = true;
+                    $config['paging'] = false;
+                    $config['info'] = false;
+                    $config['scrollY'] = '500px';
+                    $config['scrollCollapse'] = true;
+                    $config['scrollX'] = true;
                 @endphp
                 <x-adminlte-datatable id="table1" :heads="$heads" :config="$config"  bordered hoverable
                     compressed>

@@ -9,7 +9,7 @@ class UnitController extends Controller
 {
     public function index()
     {
-        $unit = Unit::get();
+        $unit = Unit::with(['lokasi'])->get();
         return view('simrs.unit_index', compact(['unit']));
     }
 }

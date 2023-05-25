@@ -11,7 +11,7 @@ class PoliklinikController extends Controller
 {
     public function index()
     {
-        $polis = Poliklinik::get();
+        $polis = Poliklinik::with(['unit'])->get();
         return view('simrs.poli_index', [
             'polis' => $polis
         ]);

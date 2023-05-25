@@ -666,7 +666,7 @@ class AntrianController extends APIController
                 ->orderBy('tgl_entry', 'DESC')->limit(10)->get();
             // pilih pasien
             if ($request->norm) {
-                $pasien = Pasien::with(['kunjungans'])->firstWhere('no_rm', $request->norm);
+                $pasien = Pasien::with(['kunjungans', 'kunjungans.penjamin_simrs', 'kunjungans.unit', 'kunjungans.dokter', 'kunjungans.status'])->firstWhere('no_rm', $request->norm);
                 $request['nomorkartu'] = $pasien->no_Bpjs;
                 $request['tanggal'] = $antrian->tanggalperiksa;
                 if ($request->nomorkartu && $request->tanggal) {
@@ -675,7 +675,6 @@ class AntrianController extends APIController
                     if ($response->status() == 200) {
                         $peserta = $response->getData()->response->peserta;
                         $request['nik'] = $peserta->nik;
-                        Alert::success('OK', 'Peserta Ditemukan');
                     } else {
                         Alert::error('Error', $response->getData()->metadata->message);
                     }
@@ -693,6 +692,16 @@ class AntrianController extends APIController
             'pasien',
             'peserta',
         ]));
+    }
+    public function daftarBridgingAntrian(Request $request)
+    {
+        $res =  $this->ambil_antrian($request);
+        if ($res->status() == 200) {
+            dd($res->getData());
+        } else {
+            Alert::error('Error', $res->getData()->metadata->message);
+        }
+        return redirect()->back();
     }
     public function selanjutnyaPendaftaran($loket, $lantai, $jenispasien, $tanggal, Request $request)
     {

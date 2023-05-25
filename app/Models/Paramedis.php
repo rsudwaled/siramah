@@ -11,4 +11,11 @@ class Paramedis extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_paramedis';
     protected $guarded = ['id'];
+    public $timestamps = false;
+
+    public function dokter()
+    {
+        return $this->hasOne(Dokter::class, 'kodedokter', 'kode_dokter_jkn');
+    }
+
 }

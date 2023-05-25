@@ -13,6 +13,107 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalDokterController extends Controller
 {
+    public function index(Request $request)
+    {
+        $polikliniks = Poliklinik::with(['jadwals'])->get();
+        $dokters = Dokter::where('status', 1)->get();
+        $jadwal_antrian = JadwalDokter::get();
+        $request['tanggal'] = $request->tanggal ? $request->tanggal : now()->format('Y-m-d');
+        // get jadwal
+        $jadwals = null;
+        if (isset($request->kodepoli)) {
+            $controller = new AntrianController();
+            $response = $controller->ref_jadwal_dokter($request);
+            if ($response->status() == 200) {
+                $jadwals = $response->getData()->response;
+                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+            } else {
+                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            }
+        }
+        return view('simrs.pelyananmedis.jadwal_dokter', compact([
+            'request',
+            'polikliniks',
+            'jadwals',
+            'dokters',
+            'jadwal_antrian',
+        ]));
+    }
+    public function show($id)
+    {
+        $jadwal = JadwalDokter::find($id);
+        return response()->json($jadwal);
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kodesubspesialis' => 'required',
+            'kodedokter' => 'required',
+            'hari' => 'required',
+            'jadwal' => 'required',
+            'kapasitaspasien' => 'required',
+        ]);
+        if ($request->libur == "true") {
+            $libur = 1;
+        } else {
+            $libur = 0;
+        }
+        JadwalDokter::updateOrCreate([
+            'kodesubspesialis' => $request->kodesubspesialis,
+            'kodedokter' => $request->kodedokter,
+            'hari' => $request->hari,
+        ], [
+            'kodepoli' => $request->kodepoli,
+            'namapoli' => $request->namapoli,
+            'namasubspesialis' => $request->namasubspesialis,
+            'namadokter' => $request->namadokter,
+            'namahari' => $request->namahari,
+            'jadwal' => $request->jadwal,
+            'kapasitaspasien' => $request->kapasitaspasien,
+            'libur' => $libur,
+            // 'user_by' => Auth::user()->name,
+        ]);
+        Alert::success('Ok', 'Jadwal Dokter Diperbaharui');
+        return redirect()->back();
+    }
+    public function update($id, Request $request)
+    {
+        $request->validate([
+            'jadwal' => 'required',
+            'kapasitaspasien' => 'required',
+        ]);
+        if ($request->libur == "true") {
+            $libur = 1;
+        } else {
+            $libur = 0;
+        }
+        $jadwal = JadwalDokter::find($id);
+        $dokter = Dokter::firstWhere('kodedokter', $request->kodedokter);
+        $poli = Poliklinik::firstWhere('kodesubspesialis', $request->kodesubspesialis);
+        $hari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+        $jadwal->update([
+            'kodesubspesialis' =>  $poli->kodesubspesialis,
+            'namasubspesialis' =>  $poli->namasubspesialis,
+            'kodepoli' =>  $poli->kodepoli,
+            'namapoli' =>  $poli->namapoli,
+            'kodedokter' =>  $dokter->kodedokter,
+            'namadokter' =>  $dokter->namadokter,
+            'hari' =>  $request->hari,
+            'namahari' =>  $hari[$request->hari],
+            'jadwal' => $request->jadwal,
+            'kapasitaspasien' => $request->kapasitaspasien,
+            'libur' => $libur,
+        ]);
+        Alert::success('Success', 'Jadwal Dokter Telah Diupdate');
+        return redirect()->back();
+    }
+    public function destroy($id, Request $request)
+    {
+        $jadwal = JadwalDokter::find($id);
+        $jadwal->delete();
+        Alert::success('Success', 'Jadwal Telah Dihapus');
+        return back();
+    }
     public function jadwalDokterAntrianBpjs(Request $request)
     {
         $polikliniks = Poliklinik::all();
@@ -48,8 +149,8 @@ class JadwalDokterController extends Controller
         }
         $dokters = Dokter::get();
         $unit = Unit::where('KDPOLI', "!=", null)
-        ->where('KDPOLI', "!=", "")
-        ->get();
+            ->where('KDPOLI', "!=", "")
+            ->get();
         return view('simrs.poliklinik.poliklinik_jadwaldokter', compact([
             'request',
             'unit',
@@ -58,41 +159,9 @@ class JadwalDokterController extends Controller
             'jadwaldokter',
         ]));
     }
-    public function store(Request $request)
-    {
-        $request->validate([
-            'kodepoli' => 'required',
-            'namapoli' => 'required',
-            'kodesubspesialis' => 'required',
-            'namasubspesialis' => 'required',
-            'kodedokter' => 'required',
-            'namadokter' => 'required',
-            'hari' => 'required',
-            'namahari' => 'required',
-            'jadwal' => 'required',
-            'kapasitaspasien' => 'required',
-            'libur' => 'required',
-        ]);
-        JadwalDokter::firstOrCreate([
-            'kodepoli' => $request->kodepoli,
-            'kodesubspesialis' => $request->kodesubspesialis,
-            'kodedokter' => $request->kodedokter,
-            'hari' => $request->hari,
-        ], [
-            'namapoli' => $request->namapoli,
-            'namasubspesialis' => $request->namasubspesialis,
-            'namadokter' => $request->namadokter,
-            'namahari' => $request->namahari,
-            'jadwal' => $request->jadwal,
-            'kapasitaspasien' => $request->kapasitaspasien,
-            'libur' => $request->libur,
-            'user_by' => Auth::user()->name,
-        ]);
-        Alert::success('Success', 'Jadwal Dokter Telah Ditambahkan');
-        return redirect()->back();
-    }
     public function jadwal_dokter_bpjs(Request $request)
     {
+        dd('jadwal_dokter_bpjs');
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
         if ($response->status() == 200) {
@@ -125,36 +194,9 @@ class JadwalDokterController extends Controller
             'jadwals',
         ]));
     }
-    public function index(Request $request)
-    {
-        $polikliniks = Poliklinik::get();
-        $dokters = Dokter::get();
-        $jadwal_antrian = JadwalDokter::get();
-        $request['tanggal'] = $request->tanggal ? $request->tanggal : now()->format('Y-m-d');
-
-        // get jadwal
-        $jadwals = null;
-        if (isset($request->kodepoli)) {
-            $controller = new AntrianController();
-            $response = $controller->ref_jadwal_dokter($request);
-            if ($response->status() == 200) {
-                $jadwals = $response->getData()->response;
-                // Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
-            } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
-            }
-        }
-
-        return view('simrs.pelyananmedis.jadwal_dokter', compact([
-            'request',
-            'polikliniks',
-            'jadwals',
-            'dokters',
-            'jadwal_antrian',
-        ]));
-    }
     public function jadwaldokter_add(Request $request)
     {
+        dd('jadwaldokter_add');
         $request->validate([
             'kodePoli' => 'required',
             'namaPoli' => 'required',
@@ -185,11 +227,7 @@ class JadwalDokterController extends Controller
         Alert::success('Success', 'Jadwal Dokter Telah Ditambahkan');
         return redirect()->back();
     }
-    public function show($id)
-    {
-        $jadwal = JadwalDokter::find($id);
-        return response()->json($jadwal);
-    }
+
     public function jadwaldokterPoli(Request $request)
     {
         $jadwals = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
@@ -197,26 +235,6 @@ class JadwalDokterController extends Controller
             ->where('libur', 0)
             ->get();
         return response()->json($jadwals);
-    }
-    public function update(Request $request)
-    {
-        $request->validate([
-            'jadwal' => 'required',
-            'kapasitaspasien' => 'required',
-        ]);
-        if ($request->libur == "true") {
-            $libur = 1;
-        } else {
-            $libur = 0;
-        }
-        $jadwal = JadwalDokterAntrian::find($request->idjadwal);
-        $jadwal->update([
-            'jadwal' => $request->jadwal,
-            'kapasitaspasien' => $request->kapasitaspasien,
-            'libur' => $libur,
-        ]);
-        Alert::success('Success', 'Jadwal Dokter Telah Diupdate');
-        return redirect()->back();
     }
     public function jadwaldokter_delete(Request $request)
     {

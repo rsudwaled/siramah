@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Jadwal Dokter')
+@section('title', 'Jadwal Dokter Poliklinik')
 @section('content_header')
-    <h1>Jadwal Dokter</h1>
+    <h1>Jadwal Dokter Poliklinik</h1>
 @stop
 @section('content')
     <div class="row">
@@ -28,7 +28,6 @@
                             <x-adminlte-button label="Tambah Jadwal" class="mr-auto" id="createJadwal" theme="success"
                                 icon="fas fa-plus" />
                         </form>
-
                     </div>
                     <div class="col-md-8">
                         @php
@@ -47,28 +46,35 @@
                                         <td>{{ $jadwal->namadokter }} ({{ $jadwal->kodedokter }})</td>
                                         <td>{{ $jadwal->kapasitaspasien }}</td>
                                         <td>
-                                            @if ($jadwal_antrian->where('kodesubspesialis', $jadwal->kodesubspesialis)->where('kodedokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->first())
-                                                <button class="btn btn-secondary btn-xs">Sudah Ada</button>
-                                            @else
-                                                <form action="{{ route('jadwaldokter.store') }}" method="POST">
-                                                    @csrf
-                                                    <input type="hidden" name="kodepoli" value="{{ $jadwal->kodepoli }}">
-                                                    <input type="hidden" name="namapoli" value="{{ $jadwal->namapoli }}">
-                                                    <input type="hidden" name="kodesubspesialis"
-                                                        value="{{ $jadwal->kodesubspesialis }}">
-                                                    <input type="hidden" name="namasubspesialis"
-                                                        value="{{ $jadwal->namasubspesialis }}">
-                                                    <input type="hidden" name="kodedokter" value="{{ $jadwal->kodedokter }}">
-                                                    <input type="hidden" name="namadokter" value="{{ $jadwal->namadokter }}">
-                                                    <input type="hidden" name="hari" value="{{ $jadwal->hari }}">
-                                                    <input type="hidden" name="namahari" value="{{ $jadwal->namahari }}">
-                                                    <input type="hidden" name="jadwal" value="{{ $jadwal->jadwal }}">
-                                                    <input type="hidden" name="kapasitaspasien"
-                                                        value="{{ $jadwal->kapasitaspasien }}">
-                                                    <input type="hidden" name="libur" value="{{ $jadwal->libur }}">
+
+                                            <form action="{{ route('jadwaldokter.store') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="kodepoli" value="{{ $jadwal->kodepoli }}">
+                                                <input type="hidden" name="namapoli" value="{{ $jadwal->namapoli }}">
+                                                <input type="hidden" name="kodesubspesialis"
+                                                    value="{{ $jadwal->kodesubspesialis }}">
+                                                <input type="hidden" name="namasubspesialis"
+                                                    value="{{ $jadwal->namasubspesialis }}">
+                                                <input type="hidden" name="kodedokter" value="{{ $jadwal->kodedokter }}">
+                                                <input type="hidden" name="namadokter" value="{{ $jadwal->namadokter }}">
+                                                <input type="hidden" name="hari" value="{{ $jadwal->hari }}">
+                                                <input type="hidden" name="namahari" value="{{ $jadwal->namahari }}">
+                                                <input type="hidden" name="jadwal" value="{{ $jadwal->jadwal }}">
+                                                <input type="hidden" name="kapasitaspasien"
+                                                    value="{{ $jadwal->kapasitaspasien }}">
+                                                <input type="hidden" name="libur" value="{{ $jadwal->libur }}">
+
+                                                @if ($jadwal_antrian->where('kodesubspesialis', $jadwal->kodesubspesialis)->where('kodedokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->first())
+                                                    @if ($jadwal_antrian->where('kodesubspesialis', $jadwal->kodesubspesialis)->where('kodedokter', $jadwal->kodedokter)->where('hari', $jadwal->hari)->where('kapasitaspasien', $jadwal->kapasitaspasien)->first())
+                                                        <button class="btn btn-secondary btn-xs">Sudah Ada</button>
+                                                    @else
+                                                        <button type="submit" class="btn btn-warning btn-xs">Update</button>
+                                                    @endif
+                                                @else
                                                     <button type="submit" class="btn btn-success btn-xs">Tambah</button>
-                                                </form>
-                                            @endif
+                                                @endif
+
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -76,19 +82,45 @@
                         </x-adminlte-datatable>
                     </div>
                 </div>
-
-
             </x-adminlte-card>
         </div>
         <div class="col-12">
-            <x-adminlte-card title="Data Jadwal Dokter SIMRS" theme="success" icon="fas fa-calendar-alt" collapsible>
+            <x-adminlte-card title="Jadwal Dokter Polilinik" theme="success" icon="fas fa-calendar-alt" collapsible>
                 @php
                     $heads = ['Nama Poliklinik Subspesialis', 'Dokter', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
                     $config['paging'] = false;
                 @endphp
                 <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped
                     bordered hoverable compressed>
-                    @foreach ($jadwal_antrian->groupby('kodedokter') as $item)
+                    @foreach ($polikliniks->where('subspesialis', 0)->where('status', 1) as $poli)
+                        @foreach ($poli->jadwals->groupby('kodedokter') as $jadwals)
+                            <tr>
+                                <td>{{ $polikliniks->firstWhere('kodesubspesialis', $jadwals->first()->kodesubspesialis)->namasubspesialis }}
+                                </td>
+                                <td>{{ $jadwals->first()->namadokter }} </td>
+                                @for ($i = 1; $i <= 6; $i++)
+                                    <td>
+                                        @foreach ($jadwals as $jadwal)
+                                            @if ($jadwal->hari == $i)
+                                                @if ($jadwal->libur == 1)
+                                                    <x-adminlte-button
+                                                        label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitaspasien }}"
+                                                        class="btn-xs mb-1 btnJadwal" theme="danger" data-toggle="tooltip"
+                                                        title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
+                                                @else
+                                                    <x-adminlte-button
+                                                        label="{{ $jadwal->jadwal }} / {{ $jadwal->kapasitaspasien }}"
+                                                        class="btn-xs mb-1 btnJadwal" theme="warning" data-toggle="tooltip"
+                                                        title="Jadwal Dokter" data-id="{{ $jadwal->id }}" />
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                @endfor
+                            </tr>
+                        @endforeach
+                    @endforeach
+                    {{-- @foreach ($jadwal_antrian->groupby('kodedokter') as $item)
                         <tr>
                             <td>
                                 {{ strtoupper($item->first()->namasubspesialis) }}
@@ -115,19 +147,27 @@
                                 </td>
                             @endfor
                         </tr>
-                    @endforeach
+                    @endforeach --}}
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
     </div>
     <x-adminlte-modal id="modalJadwal" title="Jadwal Praktek" theme="warning" icon="fas fa-calendar-alt">
+        @if ($errors->any())
+            <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </x-adminlte-alert>
+        @endif
         <form name="formUpdateJadwal" id="formUpdateJadwal" method="POST">
             @csrf
-            @method('PUT')
-            <input type="hidden" name="method" value="UPDATE">
+            <input type="hidden" name="_method" id="_method">
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
             <x-adminlte-select2 name="kodesubspesialis" label="Poliklinik">
-                @foreach ($polikliniks->where('status', 1) as $poli)
+                @foreach ($polikliniks as $poli)
                     <option value="{{ $poli->kodesubspesialis }}"
                         {{ $request->kodepoli == $poli->kodesubspesialis ? 'selected' : null }}>
                         {{ $poli->namasubspesialis }} ({{ $poli->kodesubspesialis }})</option>
@@ -151,17 +191,7 @@
                     </x-adminlte-select>
                 </div>
                 <div class="col-md-6">
-                    @php
-                        $config = [
-                            'showDropdowns' => true,
-                            'timePicker' => true,
-                            'timePicker24Hour' => true,
-                            'timePickerSeconds' => true,
-                            'cancelButtonClasses' => 'btn-danger',
-                            'locale' => ['format' => 'HH:mm'],
-                        ];
-                    @endphp
-                    <x-adminlte-date-range name="jadwal" label="Jadwal Praktek" :config="$config" />
+                    <x-adminlte-input name="jadwal" label="Jam Praktek" placeholder="Jam Praktek" enable-old-support />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-input name="kapasitaspasien" label="Kapasitas Pasien" placeholder="Kapasitas Pasien"
@@ -200,27 +230,6 @@
                 $.LoadingOverlay("show");
                 $('#modalJadwal').modal('show');
                 $.LoadingOverlay("hide");
-
-
-                // $.get("{{ route('jadwaldokter.index') }}" + '/' + jadwalid,
-                //     function(data) {
-                //         console.log(data);
-                //         $('#namasubspesialis').val(data.namasubspesialis);
-                //         $('#namadokter').val(data.namadokter);
-                //         $('#namahari').val(data.namahari);
-                //         $('#kapasitaspasien').val(data.kapasitaspasien);
-                //         $('#jadwal').val(data.jadwal);
-                //         $('#labeljadwal').html("Jadwal ID : " + data.id);
-                //         $('.idjadwal').val(data.id);
-                //         if (data.libur == 1) {
-                //             $('#libur').prop('checked', true).trigger('change');
-                //         } else {
-                //             $('#libur').prop('checked', false).trigger('change');
-                //         }
-                //         $.LoadingOverlay("hide", true);
-                //         $('#modalJadwal').modal('show');
-                //     })
-
             });
 
             $('.btnJadwal').click(function() {
@@ -229,9 +238,18 @@
                 $.get("{{ route('jadwaldokter.index') }}" + '/' + jadwalid,
                     function(data) {
                         console.log(data);
-                        $('#namasubspesialis').val(data.namasubspesialis);
-                        $('#namadokter').val(data.namadokter);
-                        $('#namahari').val(data.namahari);
+                        // delete form
+                        var urlDelete = "{{ route('jadwaldokter.index') }}/" + jadwalid;
+                        $('#formDeleteJadwal').attr('action', urlDelete);
+
+                        var urlUpdate = "{{ route('jadwaldokter.index') }}/" + jadwalid;
+                        $('#formUpdateJadwal').attr('action', urlUpdate);
+                        $('#_method').val('PUT');
+
+
+                        $('#kodesubspesialis').val(data.kodesubspesialis).change();
+                        $('#kodedokter').val(data.kodedokter).change();
+                        $('#hari').val(data.hari).change();
                         $('#kapasitaspasien').val(data.kapasitaspasien);
                         $('#jadwal').val(data.jadwal);
                         $('#labeljadwal').html("Jadwal ID : " + data.id);

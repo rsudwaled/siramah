@@ -20,11 +20,11 @@
                                 icon="fas fa-print" />
                         </div>
                         <div class="col-md-4">
-                            <form action="#" method="get">
-                                <x-adminlte-input name="search" placeholder="Pencarian No RM" igroup-size="sm"
+                            <form action="" id="cari" name="cari" method="GET">
+                                <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan No RM" igroup-size="sm"
                                     value="{{ $request->search }}">
                                     <x-slot name="appendSlot">
-                                        <x-adminlte-button type="submit" theme="outline-primary" label="Go!" />
+                                        <x-adminlte-button type="submit" form="cari" theme="primary" label="Cari!" />
                                     </x-slot>
                                     <x-slot name="prependSlot">
                                         <div class="input-group-text text-primary">
@@ -34,11 +34,9 @@
                                 </x-adminlte-input>
                             </form>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Counter', 'Tgl Masuk', 'Tgl Keluar', 'Kode Kunjungan', 'RM Pasien', 'Unit / Dokter', 'Penjamin', 'Alasan Masuk', 'Status', 'Action'];
+                                $heads = ['Counter', 'Tgl Masuk', 'Tgl Keluar', 'No RM', 'Pasien', 'Unit', 'Dokter', 'Penjamin', 'Alasan Masuk', 'Status', 'Action'];
                                 $config['paging'] = false;
                                 $config['lengthMenu'] = false;
                                 $config['searching'] = false;
@@ -49,21 +47,39 @@
                                 hoverable bordered compressed>
                                 @foreach ($kunjungans as $item)
                                     <tr>
-                                        <td>{{ $item->counter }}</td>
+                                        <td>{{ $item->counter }} / {{ $item->kode_kunjungan }}</td>
                                         <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->tgl_keluar }}</td>
-                                        <td>{{ $item->kode_kunjungan }}</td>
                                         <td>
-                                            {{ $item->no_rm }} <br>
-                                            {{ $item->pasien->nama_px ?? '-' }}
+                                            <a href="{{ route('kunjungan.index') }}?search={{ $item->no_rm }}"
+                                                class="text-dark">
+                                                <b>
+                                                    {{ $item->no_rm }}
+                                                </b>
+                                            </a>
                                         </td>
                                         <td>
-                                            {{ $item->unit->nama_unit ?? '-' }} <br>
+                                            <a href="{{ route('pasien.index') }}?search={{ $item->no_rm }}"
+                                                target="_blank" class="text-dark">
+                                                <b>
+                                                    {{ $item->pasien->nama_px ?? '-' }}
+                                                </b>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ $item->unit->nama_unit ?? '-' }}
+                                        </td>
+                                        <td>
                                             {{ $item->dokter->nama_paramedis ?? '-' }}
                                         </td>
                                         <td>{{ $item->penjamin_simrs->nama_penjamin ?? '-' }}</td>
-                                        <td>{{ $alasan_masuk[$item->id_alasan_masuk] ?? '-' }}</td>
-                                        <td>{{ $status_kunjungan[$item->status_kunjungan] }}</td>
+                                        <td>{{ $item->alasan_masuk->alasan_masuk ?? '-' }}</td>
+                                        <td>
+                                            <span
+                                                class="badge badge-{{ $item->status_kunjungan == 1 ? 'success' : 'danger' }}">
+                                                {{ $item->status->status_kunjungan ?? '-' }}
+                                            </span>
+                                        </td>
                                         <td>
                                             <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
                                                 onclick="window.location='{{ route('kunjungan.edit', $item->kode_kunjungan) }}'" />
@@ -73,8 +89,6 @@
                                 @endforeach
                             </x-adminlte-datatable>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-5">
                             <div class="dataTables_info">
                                 Tampil {{ $kunjungans->firstItem() }} s/d {{ $kunjungans->lastItem() }} dari total
@@ -83,7 +97,7 @@
                         </div>
                         <div class="col-md-7">
                             <div class="dataTables_paginate pagination-sm">
-                                {{ $kunjungans->appends(['periode' => $request->periode])->links() }}
+                                {{ $kunjungans->appends(['search' => $request->search])->links() }}
                             </div>
                         </div>
                     </div>

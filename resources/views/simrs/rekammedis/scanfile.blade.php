@@ -26,7 +26,6 @@
                         <div class="col-md-6">
                             <x-adminlte-input fgroup-class="norm" name="norm" label="No RM" type="number">
                                 <x-slot name="appendSlot">
-
                                     <x-adminlte-button onclick="cekPasien();" theme="success" label="Cek" />
                                 </x-slot>
                             </x-adminlte-input>
@@ -116,7 +115,6 @@
     <link rel="stylesheet" href="{{ asset('vendor/scannerjs/scanner.css') }}">
 @endsection
 @section('js')
-    {{-- <script src="https://cdn.asprise.com/scannerjs/scanner.js" type="text/javascript"></script> --}}
     <script src="{{ asset('vendor/scannerjs/scanner.js') }} " type="text/javascript"></script>
     <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     {{-- localhost --}}
@@ -132,6 +130,7 @@
                 }]
             });
         }
+
         function displayResponseOnPage(successful, mesg, response) {
             if (!successful) { // On error
                 document.getElementById('response').innerHTML = 'Failed: ' + mesg;
@@ -233,33 +232,21 @@
         // cek pasien
         function cekPasien() {
             var norm = $('#norm').val();
-            var url = "{{ route('api.caripasien') }}";
+            var url = "{{ route('pasien.index') }}/" + norm;
             $.LoadingOverlay("show");
-            var formData = {
-                norm: norm,
-            };
-            $.get(url, formData, function(data) {
-                if (jQuery.isEmptyObject(data)) {
-                    $.LoadingOverlay("hide");
-                    swal.fire(
-                        'Error',
-                        "Pasien Nomor RM " + norm + " Tidak Ditemukan",
-                        'error'
-                    );
-                } else {
-                    console.log(data);
-                    $('#nik').val(data.nik_bpjs);
-                    $('#nomorkartu').val(data.no_Bpjs);
-                    $('#nama').val(data.nama_px);
-                    $('#tanggallahir').val(data.tgl_lahir);
-                    $('#nohp').val(data.no_hp);
-                    $.LoadingOverlay("hide");
-                    swal.fire(
-                        'Success',
-                        "Pasien Nomor RM " + norm + " Ditemukan.",
-                        'success'
-                    );
-                }
+            $.get(url, function(data) {
+                console.log(data);
+                $('#nik').val(data.nik_bpjs);
+                $('#nomorkartu').val(data.no_Bpjs);
+                $('#nama').val(data.nama_px);
+                $('#tanggallahir').val(data.tgl_lahir);
+                $('#nohp').val(data.no_hp);
+                $.LoadingOverlay("hide");
+                swal.fire(
+                    'Success',
+                    "Pasien Nomor RM " + norm + " Ditemukan.",
+                    'success'
+                );
             }).fail(function(error) {
                 swal.fire(
                     'Error',
@@ -294,24 +281,55 @@
                 tanggalscan: tanggalscan,
                 fileurl: fileurl,
             };
-            $.post(url, formData, function(data) {
-                // console.log(data.metadata.code == 200);
-                if (data.metadata.code == 200) {
-                    $.LoadingOverlay("hide");
+            $.ajax({
+                data: formData,
+                url: url,
+                type: "POST",
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
                     swal.fire(
                         'Success',
-                        "Data Berhasil Disimpan dengan Nomor RM " + norm + ".",
+                        "Berhasil disimpan",
                         'success'
-                    );
-                } else {
-                    $.LoadingOverlay("hide");
+                    ).then((result) => {
+                        var link = "{{ route('efilerm.index') }}";
+                        // location.href = 'http://google.it';
+                        window.location = link;
+                    });
+
+                },
+                error: function(data) {
+                    console.log(data);
                     swal.fire(
                         'Error',
-                        data.metadata.message,
+                        data.responseText,
                         'error'
                     );
+                },
+                complete: function(data) {
+                    $.LoadingOverlay("hide");
                 }
             });
+
+            // $.post(url, formData, function(data) {
+            //     console.log(data);
+            //     // if (data.metadata.code == 200) {
+            //     //     $.LoadingOverlay("hide");
+            //     //     swal.fire(
+            //     //         'Success',
+            //     //         "Data Berhasil Disimpan dengan Nomor RM " + norm + ".",
+            //     //         'success'
+            //     //     );
+            //     // } else {
+            //     //     $.LoadingOverlay("hide");
+            //     //     swal.fire(
+            //     //         'Error',
+            //     //         data.metadata.message,
+            //     //         'error'
+            //     //     );
+            //     // }
+            // });
         }
     </script>
     {{-- csrf --}}
@@ -324,7 +342,6 @@
             });
         });
     </script>
-
     <script>
         $(function() {
             $(document).on('click', '[data-toggle="lightbox"]', function(event) {

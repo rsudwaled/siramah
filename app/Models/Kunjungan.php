@@ -66,6 +66,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(SuratKontrol::class, 'noSepAsalKontrol', 'no_sep');
     }
+    public function alasan_masuk()
+    {
+        return $this->hasOne(AlasanMasuk::class, 'id', 'id_alasan_masuk');
+    }
 
     protected $appends = ['nama_pasien'];
     public function getNamaPasienAttribute()

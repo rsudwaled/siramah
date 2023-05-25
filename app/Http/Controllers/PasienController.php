@@ -73,7 +73,11 @@ class PasienController extends Controller
         Alert::success('Success', 'Data Pasien Telah Disimpan');
         return redirect()->route('pasien.index');
     }
-
+    public function show($no_rm)
+    {
+        $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
+        return response()->json($pasien);
+    }
     public function caripasien(Request $request)
     {
         $pasien = PasienDB::firstWhere('no_rm', $request->norm);

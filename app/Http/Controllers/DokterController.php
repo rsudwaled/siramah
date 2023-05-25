@@ -13,7 +13,7 @@ class DokterController extends Controller
     public function index(Request $request)
     {
         $paramedis = Paramedis::get();
-        $dokter = Dokter::all();
+        $dokter = Dokter::get();
         return view('simrs.dokter_index', compact([
             'request',
             'dokter',
@@ -22,7 +22,7 @@ class DokterController extends Controller
     }
     public function show($id)
     {
-        $dokter = Paramedis::where('kode_paramedis', $id)->first();
+        $dokter = Dokter::with(['paramedis'])->where('kodedokter', $id)->first();
         return response()->json($dokter);
     }
     public function create()
@@ -64,6 +64,22 @@ class DokterController extends Controller
             'user_by' => Auth::user()->name,
         ]);
         Alert::success('Success', 'Dokter Telah Ditambahkan');
+        return redirect()->back();
+    }
+    public function update($id, Request $request)
+    {
+        $request->validate([
+            'namadokter' => 'required',
+        ]);
+        $dokter = Dokter::firstWhere('kodedokter', $id);
+        $dokter->update([
+            'namadokter' => $request->namadokter
+        ]);
+        $paramedis = Paramedis::firstWhere('kode_paramedis', $request->kode_paramedis);
+        $paramedis->update([
+            'sip_dr' => $request->sip_dr
+        ]);
+        Alert::success('Success', 'Data Dokter telah diperbarui');
         return redirect()->back();
     }
     public function dokter_antrian_bpjs()

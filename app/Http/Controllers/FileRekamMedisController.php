@@ -4,17 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\FileRekamMedis;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class FileRekamMedisController extends Controller
+class FileRekamMedisController extends APIController
 {
-    public function index()
+    public function index(Request $request)
     {
-        $filerm = FileRekamMedis::latest()->limit(100)->get();
-        return view('simrs.rekammedis.efile_index', [
-            'filerm' => $filerm,
-        ]);
+        if (empty($request->search)) {
+            $filerm = FileRekamMedis::latest()->paginate(20);
+        } else {
+            $filerm = FileRekamMedis::latest()
+                ->where('norm', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('nama', 'LIKE', "%{$request->search}%")
+                ->paginate(20);
+        }
+        return view('simrs.rekammedis.efile_index', compact([
+            'filerm',
+            'request',
+        ]));
     }
-
     public function create()
     {
         // $file = "2022-10-11_15-57-18.884.tif";
@@ -25,10 +34,8 @@ class FileRekamMedisController extends Controller
         // $im_blob =  $im->getImagesBlob();
         // dd($im_blob);
         // echo '<img src="data:image/jpg;base64,' . base64_encode($im_blob) . '" />';
-
         return view('simrs.rekammedis.scanfile');
     }
-
     public function store(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -44,33 +51,26 @@ class FileRekamMedisController extends Controller
             "fileurl" => "required",
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'metadata' => [
-                    'code' => 201,
-                    'message' => $validator->errors()->first(),
-                ],
-            ]);
+            return response($validator->errors()->first(), 400);
         }
-
-        FileRekamMedis::create([
-            'norm' => $request->norm,
-            'nama' => $request->nama,
-            'nomorkartu' => $request->nomorkartu,
-            'nik' => $request->nik,
-            'nohp' => $request->nohp,
-            'tanggallahir' => $request->tanggallahir,
-            'jenisberkas' => $request->jenisberkas,
-            'namafile' => $request->namafile,
-            'tanggalscan' => $request->tanggalscan,
-            'fileurl' => $request->fileurl,
-        ]);
-
-        return response()->json([
-            'metadata' => [
-                'code' => 200,
-                'message' => "E-File RM sudah tersimpan.",
-            ],
-        ]);
+        try {
+            FileRekamMedis::create([
+                'norm' => $request->norm,
+                'nama' => $request->nama,
+                'nomorkartu' => $request->nomorkartu,
+                'nik' => $request->nik,
+                'nohp' => $request->nohp,
+                'tanggallahir' => $request->tanggallahir,
+                'jenisberkas' => $request->jenisberkas,
+                'namafile' => $request->namafile,
+                'tanggalscan' => $request->tanggalscan,
+                'fileurl' => $request->fileurl,
+            ]);
+        } catch (\Throwable $th) {
+            return response($th->getMessage(), 400);
+        }
+        // return redirect()->route('efilerm.index');
+        return response()->json('Ok', 200);
     }
 
     public function show($id)
@@ -91,6 +91,9 @@ class FileRekamMedisController extends Controller
 
     public function destroy($id)
     {
-        //
+        $filerm = FileRekamMedis::find($id);
+        $filerm->delete();
+        Alert::success('Ok', 'File berhasil dihapus');
+        return back();
     }
 }

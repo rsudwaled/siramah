@@ -15,7 +15,7 @@
                 <a href="http://{{ env('WHATASAPP_URL') }}" target="_blank">http://{{ env('WHATASAPP_URL') }}</a>
                 <br>
                 <br>
-                <form action="{{ route('send_message') }}" method="POST">
+                <form action="">
                     <x-adminlte-input name="number" value="{{ $request->number }}" label="Send To Number" />
                     <x-adminlte-textarea name="message" label="Message" placeholder="Message Body" enable-old-support>
                         {{ $request->message }}

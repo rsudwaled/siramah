@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Paramedis;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ParamedisController extends Controller
 {
@@ -31,5 +32,21 @@ class ParamedisController extends Controller
             'paramedis_total',
             'total_paramedis',
         ]));
+    }
+    public function show($id)
+    {
+        $paramedis = Paramedis::with(['dokter'])->where('kode_paramedis', $id)->first();
+        return response()->json($paramedis);
+    }
+    public function update($id, Request $request)
+    {
+        $paramedis = Paramedis::firstWhere('kode_paramedis', $id);
+        $paramedis->update([
+            'nama_paramedis' => $request->nama_paramedis,
+            'sip_dr' => $request->sip_dr,
+            'kode_dokter_jkn' => $request->kodedokter,
+        ]);
+        Alert::success('Success', 'Data Dokter telah diperbarui');
+        return redirect()->back();
     }
 }

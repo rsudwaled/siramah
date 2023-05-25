@@ -42,6 +42,12 @@ class FarmasiController extends APIController
         $order = OrderObatHeader::where('kode_layanan_header', $request->kode)->first();
         $i = 1;
         if ($order) {
+            $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))->get()->count();
+            $order->update([
+                'status_order' => 2,
+                'updated_at' => now(),
+                'no_antrian' => $no_antrian + 1,
+            ]);
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
@@ -52,7 +58,7 @@ class FarmasiController extends APIController
                 $printer->text("================================================\n");
                 // $printer->setEmphasis(false);
                 $printer->setTextSize(3, 3);
-                $printer->text('002' . "\n");
+                $printer->text($no_antrian . "\n");
                 $printer->setTextSize(1, 1);
                 $printer->text($order->kode_layanan_header . "\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -78,9 +84,6 @@ class FarmasiController extends APIController
                 }
                 $printer->cut();
                 $printer->close();
-                $order->update([
-                    'status_order' => 2
-                ]);
             } catch (\Throwable $th) {
                 // throw $th;
                 Alert::error('Error', $th->getMessage());
@@ -93,7 +96,7 @@ class FarmasiController extends APIController
                 $printer->text("Antrian Resep Farmasi\n");
                 $printer->text("================================================\n");
                 $printer->setTextSize(3, 3);
-                $printer->text('002' . "\n");
+                $printer->text($no_antrian . "\n");
                 $printer->setTextSize(1, 1);
                 $printer->text($order->kode_layanan_header . "\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);

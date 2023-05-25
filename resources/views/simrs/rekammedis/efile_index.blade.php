@@ -8,70 +8,85 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12">
-            <x-adminlte-card title="Data E-File Rekam Medis" theme="warning" collapsible>
-                <a class="btn btn-success mb-1" href="{{ route('efilerm.create') }}">Scan E-File RM</a>
-                @php
-                    $heads = ['No.', 'No RM', ' Nama', 'Tgl Lahir', 'Nama Berkas', 'Tgl Scan', 'Jenis', 'Action'];
-                    $config = [
-                        'scrollY' => '500px',
-                        'scrollCollapse' => true,
-                        'paging' => false,
-                        'order' => [0, 'desc'],
-                        'buttons' => [
-                            [
-                                'extend' => 'colvis',
-                                'className' => 'btn-info',
-                            ],
-                            [
-                                'extend' => 'print',
-                                'className' => 'btn-info',
-                            ],
-                            [
-                                'extend' => 'pdf',
-                                'className' => 'btn-info',
-                            ],
-                        ],
-                    ];
-                @endphp
-                <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
-                    hoverable compressed>
-                    @foreach ($filerm as $item)
-                        <tr>
-                            <td>{{ $item->id }}</td>
-                            <td>{{ $item->norm }}</td>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ \Carbon\Carbon::parse($item->tanggallahir)->format('Y-m-d') }}</td>
-                            <td>{{ $item->namafile }}</td>
-                            <td>{{ $item->tanggalscan }}</td>
-                            <td>
-                                @if ($item->jenisberkas == 1)
-                                    Rawat Inap
-                                @endif
-                                @if ($item->jenisberkas == 2)
-                                    Rawat Jalan
-                                @endif
-                                @if ($item->jenisberkas == 3)
-                                    Penunjang
-                                @endif
-                                @if ($item->jenisberkas == 4)
-                                    Berkas Pasien
-                                @endif
-                                @if ($item->jenisberkas == 5)
-                                    IGD
-                                @endif
-                            </td>
-                            <td>
-                                <a href="{{ $item->fileurl }}" target="_blank" class="btn btn-primary btn-xs"><i
-                                        class=" fas fa-download"></i></a>
-                                <x-adminlte-button icon="fas fa-eye" theme="warning" class="btn-xs btnLihat" label="Lihat"
-                                    data-id="{{ $item->id }}" />
-                            </td>
-                        </tr>
-                    @endforeach
-                </x-adminlte-datatable>
-            </x-adminlte-card>
-        </div>
+        <x-adminlte-card title="Data E-File Rekam Medis" theme="warning" collapsible>
+            <div class="row">
+                <div class="col-md-8">
+                    <a class="btn btn-success mb-1" href="{{ route('efilerm.create') }}">Scan E-File RM</a>
+                </div>
+                <div class="col-md-4">
+                    <form action="" id="cari" name="cari" method="GET">
+                        <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan No RM" igroup-size="sm"
+                            value="{{ $request->search }}">
+                            <x-slot name="appendSlot">
+                                <x-adminlte-button type="submit" form="cari" theme="primary" label="Cari!" />
+                            </x-slot>
+                            <x-slot name="prependSlot">
+                                <div class="input-group-text text-primary">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </x-slot>
+                        </x-adminlte-input>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    @php
+                        $heads = ['Tgl Scan', 'No.', 'No RM', ' Nama', 'Tgl Lahir', 'Nama Berkas', 'Jenis', 'Action'];
+                        $config['paging'] = false;
+                        $config['lengthMenu'] = false;
+                        $config['searching'] = false;
+                        $config['info'] = false;
+                        $config['order'] = ['0', 'desc'];
+                    @endphp
+                    <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" :config="$config" striped bordered
+                        hoverable compressed>
+                        @foreach ($filerm as $item)
+                            <tr>
+                                <td>{{ $item->tanggalscan }}</td>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->norm }}</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->tanggallahir)->format('Y-m-d') }}</td>
+                                <td>{{ $item->namafile }}</td>
+                                <td>
+                                    @if ($item->jenisberkas == 1)
+                                        Rawat Inap
+                                    @endif
+                                    @if ($item->jenisberkas == 2)
+                                        Rawat Jalan
+                                    @endif
+                                    @if ($item->jenisberkas == 3)
+                                        Penunjang
+                                    @endif
+                                    @if ($item->jenisberkas == 4)
+                                        Berkas Pasien
+                                    @endif
+                                    @if ($item->jenisberkas == 5)
+                                        IGD
+                                    @endif
+                                </td>
+                                <td>
+                                    <a href="{{ $item->fileurl }}" target="_blank" class="btn btn-primary btn-xs"><i
+                                            class=" fas fa-download"></i></a>
+                                    <x-adminlte-button icon="fas fa-eye" theme="warning" class="btn-xs btnLihat"
+                                        label="Lihat" data-id="{{ $item->id }}" />
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-adminlte-datatable>
+                </div>
+                <div class="col-md-5">
+                    <div class="dataTables_info">
+                        Tampil {{ $filerm->firstItem() }} s/d {{ $filerm->lastItem() }} dari total
+                        {{ $filerm->total() }}
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="dataTables_paginate pagination-sm float-right">
+                        {{ $filerm->appends(['search' => $request->search])->links() }}
+                    </div>
+                </div>
+            </div>
+        </x-adminlte-card>
     </div>
     <x-adminlte-modal id="modalFile" size="lg" theme="warning" title="E-File Rekam Medis">
         <div class="row">
@@ -95,8 +110,18 @@
                 </div>
             </div>
         </div>
-        <iframe id="fileurl" src="" width="100%" height="500px">
+        <iframe id="fileurl" src="" width="100%" height="600px">
         </iframe>
+
+        <form name="formDeleteJadwal" id="formDeleteJadwal" method="POST">
+            @csrf
+            @method('DELETE')
+        </form>
+        <x-slot name="footerSlot">
+            <x-adminlte-button label="Hapus" form="formDeleteJadwal" class="withLoad" type="submit" theme="danger"
+                icon="fas fa-trash-alt" />
+            <x-adminlte-button theme="danger" icon="fas fa-times" label="Close" data-dismiss="modal" />
+        </x-slot>
     </x-adminlte-modal>
 @stop
 
@@ -118,6 +143,10 @@
                 $.LoadingOverlay("show");
                 var url = "{{ route('efilerm.index') }}" + '/' + id;
                 $.get(url, function(data) {
+                    // delete form
+                    var urlDelete = "{{ route('efilerm.index') }}/" + id;
+                    $('#formDeleteJadwal').attr('action', urlDelete);
+
                     $('#norm').html(data.norm);
                     $('#nama').html(data.nama);
                     $('#nik').html(data.nik);

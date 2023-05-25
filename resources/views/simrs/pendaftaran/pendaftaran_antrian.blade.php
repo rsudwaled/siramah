@@ -533,55 +533,64 @@
                         <div class="col-md-7">
                             <x-adminlte-card title="Pendaftaran Pasien" theme="success" icon="fas fa-user-plus"
                                 collapsible>
-                                <x-adminlte-input name="kodebooking" label="Kodebooking"
-                                    value="{{ $antrian->kodebooking }}" readonly />
-                                <x-adminlte-input name="nomorantrean" label="Nomor Antri"
-                                    value="{{ $antrian->nomorantrean }}" readonly />
-                                <x-adminlte-input name="angkaantrean" label="Angka Antri"
-                                    value="{{ $antrian->angkaantrean }}" readonly />
-                                <x-adminlte-input name="tanggalperiksa" label="Tanggal Periksa"
-                                    value="{{ $antrian->tanggalperiksa }}" readonly />
-                                <x-adminlte-select name="jenispasien" label="Jenis Pasien">
-                                    <x-adminlte-options :options="[
-                                        'JKN' => 'JKN',
-                                        'NON-JKN' => 'NON-JKN',
-                                    ]" :selected="$antrian->jenispasien" />
-                                </x-adminlte-select>
-                                <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                    @foreach ($polikliniks as $item)
-                                        <option value="{{ $item->kodesubspesialis }}"
-                                            {{ $item->kodesubspesialis == $antrian->kodepoli ? 'selected' : '' }}>
-                                            {{ $item->namasubspesialis }}
-                                        </option>
-                                    @endforeach
-                                </x-adminlte-select2>
-                                <x-adminlte-select2 name="kodedokter" label="Dokter">
-                                    @foreach ($dokters as $item)
-                                        <option value="{{ $item->kodedokter }}"
-                                            {{ $item->kodedokter == $antrian->kodedokter ? 'selected' : '' }}>
-                                            {{ $item->namadokter }}
-                                        </option>
-                                    @endforeach
-                                </x-adminlte-select2>
-                                <x-adminlte-input name="norm" label="No RM" value="{{ $pasien->no_rm }}"
-                                    readonly />
-                                <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $pasien->nama_px }}"
-                                    readonly />
-                                <x-adminlte-input name="nomorkartu" label="No BPJS" value="{{ $pasien->no_Bpjs }}" />
-                                <x-adminlte-input name="nik" label="NIK" value="{{ $pasien->nik_bpjs }}"
-                                    required />
-                                <x-adminlte-input name="nohp" label="No HP" value="{{ $pasien->no_hp }}"
-                                    required />
-
-                                <x-adminlte-select name="jeniskunjungan" label="Jenis Pasien">
-                                    <x-adminlte-options :options="[
-                                        1 => 'RUJUKAN FKTP',
-                                        2 => 'RUJUKAN INTERNAL',
-                                        3 => 'SURAT KONTROL',
-                                        4 => 'RUJUKAN ANTAR-RS',
-                                    ]" :selected="$antrian->jeniskunjungan" />
-                                </x-adminlte-select>
-                                <x-adminlte-input name="nomorreferensi" label="No Referensi (Rujukan / Surat Kontrol)" />
+                                <form action="{{ route('daftarBridgingAntrian') }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-adminlte-input name="kodebooking" label="Kodebooking"
+                                        value="{{ $antrian->kodebooking }}" readonly />
+                                    <x-adminlte-input name="nomorantrean" label="Nomor Antri"
+                                        value="{{ $antrian->nomorantrean }}" readonly />
+                                    <x-adminlte-input name="angkaantrean" label="Angka Antri"
+                                        value="{{ $antrian->angkaantrean }}" readonly />
+                                    <x-adminlte-input name="jampraktek" label="Jam Praktek"
+                                        value="{{ $antrian->jampraktek }}" readonly />
+                                    <x-adminlte-input name="tanggalperiksa" label="Tanggal Periksa"
+                                        value="{{ $antrian->tanggalperiksa }}" readonly />
+                                    <x-adminlte-select name="jenispasien" label="Jenis Pasien">
+                                        <x-adminlte-options :options="[
+                                            'JKN' => 'JKN',
+                                            'NON-JKN' => 'NON-JKN',
+                                        ]" :selected="$antrian->jenispasien" />
+                                    </x-adminlte-select>
+                                    <x-adminlte-select2 name="kodepoli" label="Poliklinik">
+                                        @foreach ($polikliniks as $item)
+                                            <option value="{{ $item->kodesubspesialis }}"
+                                                {{ $item->kodesubspesialis == $antrian->kodepoli ? 'selected' : '' }}>
+                                                {{ $item->namasubspesialis }}
+                                            </option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="kodedokter" label="Dokter">
+                                        @foreach ($dokters as $item)
+                                            <option value="{{ $item->kodedokter }}"
+                                                {{ $item->kodedokter == $antrian->kodedokter ? 'selected' : '' }}>
+                                                {{ $item->namadokter }}
+                                            </option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                    <x-adminlte-input name="norm" label="No RM" value="{{ $pasien->no_rm }}"
+                                        readonly />
+                                    <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $pasien->nama_px }}"
+                                        readonly />
+                                    <x-adminlte-input name="nomorkartu" label="No BPJS"
+                                        value="{{ $pasien->no_Bpjs }}" />
+                                    <x-adminlte-input name="nik" label="NIK" value="{{ $pasien->nik_bpjs }}"
+                                        required />
+                                    <x-adminlte-input name="nohp" label="No HP" value="{{ $pasien->no_hp }}"
+                                        required />
+                                    <x-adminlte-select name="jeniskunjungan" label="Jenis Pasien">
+                                        <x-adminlte-options :options="[
+                                            1 => 'RUJUKAN FKTP',
+                                            2 => 'RUJUKAN INTERNAL',
+                                            3 => 'SURAT KONTROL',
+                                            4 => 'RUJUKAN ANTAR-RS',
+                                        ]" :selected="$antrian->jeniskunjungan" />
+                                    </x-adminlte-select>
+                                    <x-adminlte-input name="nomorreferensi"
+                                        label="No Referensi (Rujukan / Surat Kontrol)" />
+                                    <x-adminlte-button type="submit" icon="fas fa-user-add" theme="success"
+                                        label="Daftar" class="mr-auto mb-1" />
+                                </form>
                             </x-adminlte-card>
                         </div>
                     @endif
@@ -638,10 +647,17 @@
                                     .nama,
                                     value.peserta.nama,
                                     value.provPerujuk.nama,
-                                    "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
+                                    "<button class='btn btn-warning btn-xs btnPilihRujukan' data-id=" +
                                     value.noKunjungan +
                                     ">Pilih</button>",
                                 ]).draw(false);
+                                $('.btnPilihRujukan').click(function() {
+                                    nomorrujukan = $(this).data("id");
+                                    $('#nomorreferensi').val(nomorrujukan);
+                                    $('#riwayatRujukan').modal('hide');
+                                    // alert(nomorrujukan);
+
+                                });
                             })
                         }
                     },
@@ -680,17 +696,24 @@
                     dataType: 'json',
                     success: function(data) {
                         console.log(data);
+                        swal.fire(
+                            'Success ' + data.metadata.code,
+                            data.metadata.message,
+                            'success'
+                        );
                         var table = $('#tableSuratKontrol').DataTable();
                         table.rows().remove().draw();
-                        var suratkontrols = data.response.list;
-                        $.each(suratkontrols, function(key, value) {
-                            table.row.add([,
-                                value.tglRencanaKontrol,
-                                "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
-                                value.noKunjungan +
-                                ">Pilih</button>",
-                            ]).draw(false);
-                        })
+                        if (data.response) {
+                            var suratkontrols = data.response.list;
+                            $.each(suratkontrols, function(key, value) {
+                                table.row.add([,
+                                    value.tglRencanaKontrol,
+                                    "<button class='btn btn-warning btn-xs pilihRujukan' data-id=" +
+                                    value.noKunjungan +
+                                    ">Pilih</button>",
+                                ]).draw(false);
+                            })
+                        }
                     },
                     error: function(data) {
                         swal.fire(
@@ -707,6 +730,7 @@
                     }
                 });
             });
+
         });
     </script>
 @endsection

@@ -18,24 +18,18 @@ class KunjunganController extends Controller
     public function index(Request $request)
     {
         if (empty($request->search)) {
-            $kunjungans = Kunjungan::with(['pasien', 'unit', 'penjamin'])
+            $kunjungans = Kunjungan::with(['pasien', 'unit', 'penjamin_simrs', 'alasan_masuk', 'dokter', 'status'])
                 ->orderByDesc('tgl_masuk')
                 ->paginate();
         } else {
-            $kunjungans = Kunjungan::with(['pasien', 'unit', 'penjamin'])
-                ->where('no_rm',  $request->search)
+            $kunjungans = Kunjungan::with(['pasien', 'unit', 'penjamin_simrs', 'alasan_masuk', 'dokter', 'status'])
+                ->where('no_rm', 'LIKE', '%' . $request->search . '%')
                 ->orderByDesc('tgl_masuk')
                 ->paginate();
         }
-        $status_kunjungan = StatusKunjungan::pluck('status_kunjungan', 'id');
-        $alasan_masuk = AlasanMasuk::pluck('alasan_masuk', 'id');
-        $alasan_pulang = AlasanPulang::pluck('alasan_pulang', 'kode');
         return view('simrs.kunjungan_index', [
             'request' => $request,
             'kunjungans' => $kunjungans,
-            'status_kunjungan' => $status_kunjungan,
-            'alasan_masuk' => $alasan_masuk,
-            'alasan_pulang' => $alasan_pulang,
         ]);
     }
     public function show($kodekunjungan)
@@ -100,5 +94,4 @@ class KunjunganController extends Controller
             'unit' => $unit,
         ]);
     }
-
 }

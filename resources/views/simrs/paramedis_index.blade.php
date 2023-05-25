@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Referensi Paramedis')
+@section('title', 'Data Paramedis')
 
 @section('content_header')
-    <h1>Referensi Paramedis</h1>
+    <h1>Data Paramedis</h1>
 @stop
 
 @section('content')
@@ -14,7 +14,7 @@
                     $heads = ['Kode SIMRS', 'Kode BPJS', 'Nama', 'SIP', 'Status', 'Action'];
                     $config['paging'] = false;
                     $config['info'] = false;
-                    $config['scrollY'] = '400px';
+                    $config['scrollY'] = '500px';
                     $config['scrollCollapse'] = true;
                     $config['scrollX'] = true;
                 @endphp
@@ -50,20 +50,14 @@
     <x-adminlte-modal id="modalEdit" title="Edit Dokter" theme="warning" icon="fas fa-user-plus">
         <form name="formInput" id="formInput" action="" method="post">
             @csrf
-            <input type="hidden" name="antrianid" id="antrianid" value="">
+            @method('PATCH')
+            <input type="hidden" name="id" id="id" value="">
             <x-adminlte-input name="kode_paramedis" placeholder="Kode Dokter" label="Kode Dokter" readonly />
-            <x-adminlte-input name="kode_dokter_jkn" placeholder="Kode BPJS" label="Kode BPJS" />
+            <x-adminlte-input name="kodedokter" placeholder="Kode BPJS" label="Kode BPJS" />
             <x-adminlte-input name="nama_paramedis" placeholder="Nama Dokter" label="Nama Dokter" />
             <x-adminlte-input name="sip_dr" placeholder="SIP" label="SIP" />
             <x-slot name="footerSlot">
-                {{-- <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
-                    icon="fas fa-prescription-bottle-alt" />
-                <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
-                        class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
-                <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
-                        class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
-                <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i class="fas fa-check"></i>
-                    Selesai</a> --}}
+                <x-adminlte-button class="mr-auto" type="submit" form="formInput" label="Update" theme="success" icon="fas fa-save" />
                 <x-adminlte-button theme="danger " label="Tutup" icon="fas fa-times" data-dismiss="modal" />
             </x-slot>
         </form>
@@ -84,12 +78,14 @@
             $('.btnEdit').click(function() {
                 var id = $(this).data('id');
                 $.LoadingOverlay("show");
-                var url = "{{ route('dokter.index') }}/" + id;
+                var url = "{{ route('paramedis.index') }}/" + id;
                 $.get(url, function(data) {
                     console.log(data);
-                    $('#kode_paramedis').val(data.kode_paramedis);
-                    $('#kode_dokter_jkn').val(data.kode_dokter_jkn);
+                    var urlAction = "{{ route('paramedis.index') }}/" + id;
+                    $('#formInput').attr('action', urlAction);
+                    $('#kodedokter').val(data.kode_dokter_jkn);
                     $('#nama_paramedis').val(data.nama_paramedis);
+                    $('#kode_paramedis').val(data.kode_paramedis);
                     $('#sip_dr').val(data.sip_dr);
                     $('#modalEdit').modal('show');
                 })
