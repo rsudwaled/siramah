@@ -55,7 +55,7 @@ Route::prefix('wsrs')->group(function () {
 });
 Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'test']);
-    Route::post('callback', [WhatsappController::class, 'callback']);
+    Route::post('webhook', [WhatsappController::class, 'webhook']);
     Route::post('send_message', [WhatsappController::class, 'send_message'])->name('send_message');
 });
 // APP.RSUDWALED.ID

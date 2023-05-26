@@ -45,19 +45,19 @@ use Illuminate\Support\Facades\Route;
 // route default
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
 Auth::routes(); #ok
-Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
 Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
 // layanan umum
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
 
 Route::middleware('auth')->group(function () {
+    Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
+    Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
     // settingan umum
     Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
