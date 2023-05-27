@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'User Access')
+@section('title', 'User Management')
 
 @section('content_header')
-    <h1>User Access</h1>
+    <h1>User Management</h1>
 @stop
 
 @section('content')
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['ID', 'Name', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Created_at','Action'];
+                    $heads = ['Id', 'Nama', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Created_at', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -60,6 +60,17 @@
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->username }}</td>
                             <td>
+                                {{ $item->phone }}
+                            </td>
+                            <td>
+                                {{ $item->email }}
+                            </td>
+                            <td>
+                                @foreach ($item->roles as $role)
+                                    <span class="badge bg-success">{{ $role->name }}</span>
+                                @endforeach
+                            </td>
+                            <td>
                                 @if ($item->email_verified_at == null)
                                     <i class="fas fa-user-times text-danger" data-toggle="tooltip"
                                         title="Email User Belum Terverifikasi"></i>
@@ -67,15 +78,6 @@
                                     <i class="fas fa-user-check text-success" data-toggle="tooltip"
                                         title="Email User Terverifikasi"></i>
                                 @endif
-                                {{ $item->email }}
-                            </td>
-                            <td>{{ $item->phone }}</td>
-                            <td>
-                                @foreach ($item->roles as $role)
-                                    <span class="badge bg-success">{{ $role->name }}</span>
-                                @endforeach
-                            </td>
-                            <td>
                                 @isset($item->verificator)
                                     {{ $item->verificator->name }}
                                 @endisset

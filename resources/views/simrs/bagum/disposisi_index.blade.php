@@ -6,39 +6,64 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Disposisi">
+                <div class="row">
+                    <div class="col-md-8 mb-1">
+                        <x-adminlte-button label="Refresh" class="btn-sm" theme="warning" title="Refresh User"
+                            icon="fas fa-sync" onclick="window.location='{{ route('disposisi.index') }}'" />
+                    </div>
+                    <div class="col-md-4 mb-1">
+                        <form action="" method="get">
+                            <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / Perihal" igroup-size="sm"
+                                value="{{ $request->search }}">
+                                <x-slot name="appendSlot">
+                                    <x-adminlte-button type="submit" theme="primary" label="Cari!" />
+                                </x-slot>
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text text-primary">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input>
+                        </form>
+                    </div>
+                </div>
+            </x-adminlte-card>
+            <x-adminlte-card  >
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     @foreach ($surats as $item)
                         <li class="item">
-                            <div class="product-img">
-                                <img src="{{ asset('rsudwaled_icon_qrcode.png') }}" alt="Product Image" class="img-size-50">
-                            </div>
-                            <div class="product-info">
-                                <a href="javascript:void(0)" class="product-title">{{ $item->asal_surat }}
-                                    @if ($item->disposisi)
-                                        @if ($item->tanda_terima)
-                                            <span class="badge badge-success float-right">{{ $item->tanda_terima }}</span>
+                            <a href="{{ route('disposisi.edit', $item->id_surat_masuk) }}">
+                                <div class="product-img">
+                                    <img src="{{ asset('rsudwaled_icon_qrcode.png') }}" alt="Product Image"
+                                        class="img-size-50">
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-title">
+                                        {{ $item->asal_surat }}
+                                        @if ($item->disposisi)
+                                            @if ($item->tanda_terima)
+                                                <span
+                                                    class="badge badge-success float-right">{{ $item->tanda_terima }}</span>
+                                            @else
+                                                <span class="badge badge-warning float-right">Disposisi</span>
+                                            @endif
                                         @else
-                                            <span class="badge badge-warning float-right">Disposisi</span>
+                                            <span class="badge badge-danger float-right">Belum</span>
                                         @endif
-                                    @else
-                                        <span class="badge badge-danger float-right">Belum</span>
-                                    @endif
-
-                                </a>
-                                <span class="product-description">
-
-                                    Perihal : {{ $item->perihal }}
-                                    @if ($item->disposisi)
+                                    </div>
+                                    <span class="product-description">
+                                        Perihal : {{ $item->perihal }}
+                                        @if ($item->disposisi)
+                                            <br>
+                                            Ditujukan : {{ $item->pengolah }}
+                                        @endif
                                         <br>
-                                        Ditujukan : {{ $item->pengolah }}
-                                    @endif
-                                    <br>
-                                    Tgl Input : {{ $item->tgl_surat }}
-
-                                </span>
-                            </div>
+                                        Tgl Input : {{ $item->tgl_surat }}
+                                    </span>
+                                </div>
+                            </a>
                         </li>
                     @endforeach
                 </ul>
@@ -103,8 +128,8 @@
                 </div>
                 <div class="col-md-6">
 
-                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm" :config="$config"
-                        enable-old-support />
+                    <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
+                        :config="$config" enable-old-support />
                     <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
                     {{-- <x-adminlte-select name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support>
                         <option value="1">Wakil Direktur Umum Dan Keuangan</option>

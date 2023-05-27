@@ -12,8 +12,8 @@ class DisposisiController extends Controller
     {
         $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
             ->where(function ($query) use ($request) {
-                $query->where('asal_surat', "like", "%" . $request->search . "%")
-                    ->orWhere('perihal', "like", "%" . $request->search . "%");
+                $query->where('asal_surat', "LIKE", "%" . $request->search . "%")
+                    ->orWhere('perihal', "LIKE", "%" . $request->search . "%");
             })->simplePaginate(25);
         $surat_total = SuratMasuk::count();
         return view('simrs.bagum.disposisi_index', compact([
@@ -72,21 +72,19 @@ class DisposisiController extends Controller
         $pernyataan_direktur = null;
         $pernyataan_penerima = null;
         $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
-
         if (isset($surat->ttd_direktur)) {
             $pernyataan_direktur = "E-Disposisi dengan nomor " . $nomor . " telah ditandatangani oleh Direktur RSUD Waled pada tanggal ";
         }
         if ($surat->tgl_terima_surat && $surat->tanda_terima) {
             $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y');
         }
-
-
-
         return view('simrs.bagum.disposisi_print', compact(['surat', 'pernyataan_direktur', 'pernyataan_penerima']));
     }
     public function edit($id)
     {
-        //
+        $surat = SuratMasuk::find($id);
+        return view('simrs.bagum.disposisi_edit', compact(['surat']));
+
     }
     public function update(Request $request, $id)
     {
