@@ -26,8 +26,7 @@ class WhatsappController extends Controller
         $request['number'] = "089529909036";
         if ($request->message) {
             $res = $this->send_message($request);
-            dd($res);
-            if ($res) {
+            if ($res->status == "true") {
                 Alert::success('Success', 'Pesan testing terkirim');
             } else {
                 Alert::error('Error', 'Pesan testing gagal terkirim');
