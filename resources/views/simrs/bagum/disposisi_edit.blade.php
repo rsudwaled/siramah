@@ -14,15 +14,34 @@
                             <dt class="col-sm-4">No Urut</dt>
                             <dd class="col-sm-8">{{ $surat->no_urut }}</dd>
                             <dt class="col-sm-4">Kode Surat</dt>
-                            <dd class="col-sm-8">{{ $surat->kode_surat ?? '-' }}</dd>
+                            <dd class="col-sm-8">{{ $surat->kode ?? '-' }}</dd>
                             <dt class="col-sm-4">Nomor Surat</dt>
-                            <dd class="col-sm-8">{{ $surat->nomor_surat ?? '-' }}</dd>
+                            <dd class="col-sm-8">{{ $surat->no_surat ?? '-' }}</dd>
                             <dt class="col-sm-4">Tanggal Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_surat }}</dd>
                             <dt class="col-sm-4">Asal </dt>
-                            <dd class="col-sm-8">{{ $surat->asal_surat }}</dd>
+                            <dd class="col-sm-8 h6 text-secondary" >{{ $surat->asal_surat }}</dd>
                             <dt class="col-sm-4">Perihal Surat</dt>
-                            <dd class="col-sm-8">{{ $surat->perihal }}</dd>
+                            <dd class="col-sm-8 h6 text-secondary">{{ $surat->perihal }}</dd>
+                            <dt class="col-sm-4">Tgl Disposisi</dt>
+                            <dd class="col-sm-8">{{ $surat->tgl_disposisi }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Tgl Diteruskan</dt>
+                            <dd class="col-sm-8">{{ $surat->tgl_diteruskan ?? '-' }}</dd>
+                            <dt class="col-sm-4">Pengolah</dt>
+                            <dd class="col-sm-8 h6 text-secondary">{{ $surat->pengolah ?? '-' }}</dd>
+                            <dt class="col-sm-4">Disposisi</dt>
+                            <dd class="col-sm-8 h6 text-secondary">{{ $surat->disposisi ?? '-' }}</dd>
+                            <br>
+                            <br>
+                            <dt class="col-sm-4">Tgl Terima</dt>
+                            <dd class="col-sm-8">{{ $surat->tgl_terima_surat ?? '-' }}</dd>
+                            <dt class="col-sm-4">Disposisi</dt>
+                            <dd class="col-sm-8">{{ $surat->tanda_terima }}</dd>
+
                         </dl>
                     </div>
                 </div>

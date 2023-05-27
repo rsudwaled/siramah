@@ -46,6 +46,10 @@ class WhatsappController extends Controller
     }
     public function send_message_group(Request $request)
     {
+        $request->validate([
+            'message' => 'required',
+            'number' => 'required',
+        ]);
         $url = env('WHATASAPP_URL') . "send-message-group";
         $response = Http::post($url, [
             'number' => $request->number,

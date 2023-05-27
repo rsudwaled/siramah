@@ -15,8 +15,8 @@
                     </div>
                     <div class="col-md-4 mb-1">
                         <form action="" method="get">
-                            <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / Perihal" igroup-size="sm"
-                                value="{{ $request->search }}">
+                            <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / Perihal"
+                                igroup-size="sm" value="{{ $request->search }}">
                                 <x-slot name="appendSlot">
                                     <x-adminlte-button type="submit" theme="primary" label="Cari!" />
                                 </x-slot>
@@ -30,15 +30,26 @@
                     </div>
                 </div>
             </x-adminlte-card>
-            <x-adminlte-card  >
+            <x-adminlte-card>
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     @foreach ($surats as $item)
                         <li class="item">
                             <a href="{{ route('disposisi.edit', $item->id_surat_masuk) }}">
-                                <div class="product-img">
-                                    <img src="{{ asset('rsudwaled_icon_qrcode.png') }}" alt="Product Image"
-                                        class="img-size-50">
-                                </div>
+                                @if ($item->disposisi)
+                                    @if ($item->tanda_terima)
+                                        <div class="product-img rounded-circle bg-success">
+                                            <i class="fas fa-clipboard-check fa-xl m-2 d-flex p-2 "></i>
+                                        </div>
+                                    @else
+                                        <div class="product-img rounded-circle bg-warning">
+                                            <i class="fas fa-envelope-open-text fa-xl m-2 d-flex p-2 "></i>
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="product-img rounded-circle bg-danger">
+                                        <i class="fas fa-envelope fa-xl m-2 d-flex p-2 "></i>
+                                    </div>
+                                @endif
                                 <div class="product-info">
                                     <div class="product-title">
                                         {{ $item->asal_surat }}
@@ -67,6 +78,13 @@
                         </li>
                     @endforeach
                 </ul>
+                <br>
+                <div class="text float-left ">
+                    Data yang ditampilkan {{ $surats->count() }} dari total {{ $surat_total }}
+                </div>
+                <div class="float-right pagination-sm">
+                    {{ $surats->appends(request()->input())->links() }}
+                </div>
             </x-adminlte-card>
         </div>
     </div>
