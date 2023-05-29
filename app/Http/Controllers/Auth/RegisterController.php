@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\WhatsappController;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -51,8 +53,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string',  'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
     }
 
@@ -64,10 +68,20 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user =  User::create([
             'name' => $data['name'],
+            'username' => $data['username'],
+            'phone' => $data['phone'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        $request = new Request();
+        $wa = new WhatsappController();
+        $request['message'] = "*Registrasi Akun SIRAMAH-RS WALED* \nAnda telah registrasi akun SIRAMAH-RS Waled dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan menunggu Administrator atau Kepegawaian untuk memverifikasi anda.";
+        $request['number'] = $user->phone;
+        $wa->send_message($request);
+        $request['notif'] = "*Registrasi Akun SIRAMAH-RS WALED* \nTelah registrasi akun baru dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nMohon segera lakukan verifikasi registrasi tersebut.\nsiramah.rsudwaled.id";
+        $wa->send_notif($request);
+        return  $user->assignRole('Pasien');
     }
 }

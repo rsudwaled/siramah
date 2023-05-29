@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
     Route::get('antrianCapaian', [AntrianController::class, 'antrianCapaian'])->name('antrianCapaian');
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
-    Route::get('batalAntrian/{antrian}', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
+    Route::get('batalAntrian', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
     Route::get('panggilPoliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
     Route::get('panggilUlangPoliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggilUlangPoliklinik');
     Route::get('lanjutFarmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjutFarmasi');

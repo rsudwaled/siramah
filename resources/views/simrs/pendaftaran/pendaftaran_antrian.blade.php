@@ -353,7 +353,6 @@
                     </form>
                 </x-adminlte-modal>
             @endif
-
             @if ($antrian)
                 <div class="row">
                     <div class="col-md-12">
@@ -394,7 +393,8 @@
                                         <td>{{ $pasienx->nik_bpjs }}</td>
                                         <td>{{ $pasienx->no_Bpjs }}</td>
                                         <td>{{ $pasienx->nama_px }}</td>
-                                        <td>{{ $pasienx->kecamatans->nama_kecamatan }}</td>
+                                        <td>{{ $pasienx->kecamatans->nama_kecamatan ?? '' }} ,
+                                            {{ $pasienx->desa->nama_kecamatan ?? '' }} </td>
                                         <td>{{ $pasienx->no_hp ?? $pasienx->no_tlp }}</td>
                                         <td>
                                             <form action="" method="GET">
@@ -410,6 +410,10 @@
                                     </tr>
                                 @endforeach
                             </x-adminlte-datatable>
+                            <br>
+                            <div class="float-right pagination-sm">
+                                {{ $pasiens->appends(request()->input())->links() }}
+                            </div>
                         </x-adminlte-card>
                     </div>
                     @if ($pasien)
@@ -428,44 +432,26 @@
                                 img="https://picsum.photos/id/1/100" layout-type="classic">
                                 <dl class="row">
                                     <dt class="col-sm-4">NIK</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->nik ?? $pasien->nik_bpjs }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->nik_bpjs }}</dd>
                                     <dt class="col-sm-4">No Kartu</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->noKartu ?? $pasien->no_Bpjs }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->no_Bpjs }}</dd>
                                     <dt class="col-sm-4">No RM</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->mr->noMR ?? $pasien->no_rm }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->no_rm }}</dd>
                                     <dt class="col-sm-4">No HP</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->mr->noTelepon ?? $pasien->no_hp }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->no_hp }}</dd>
                                     <dt class="col-sm-4">Nama</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->nama ?? $pasien->nama_px }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->nama_px }}</dd>
                                     <dt class="col-sm-4">Jenis Kelamin</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->sex ?? $pasien->jenis_kelamin }}</dd>
+                                    <dd class="col-sm-8">: {{ $pasien->jenis_kelamin }}</dd>
                                     <dt class="col-sm-4">Tanggal Lahir</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->tglLahir ?? $pasien->tgl_lahir }}</dd>
-                                    <dt class="col-sm-4">Umur</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->umur->umurSekarang ?? 'Belum Terdaftar BPJS' }}
-                                    </dd>
-                                    <dt class="col-sm-4">Pisa</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->pisa ?? 'Belum Terdaftar BPJS' }}</dd>
-
-                                    <dt class="col-sm-4">Status Peserta</dt>
-                                    <dd class="col-sm-8">:
-                                        {{ $peserta->statusPeserta->keterangan ?? 'Belum Terdaftar BPJS' }}
-                                    </dd>
-                                    <dt class="col-sm-4">Hak Kelas</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->hakKelas->keterangan ?? 'Belum Terdaftar BPJS' }}
-                                    </dd>
-                                    <dt class="col-sm-4">Jenis Peserta</dt>
-                                    <dd class="col-sm-8">:
-                                        {{ $peserta->jenisPeserta->keterangan ?? 'Belum Terdaftar BPJS' }}
-                                    </dd>
-                                    <dt class="col-sm-4">Faskes 1</dt>
-                                    <dd class="col-sm-8">: {{ $peserta->provUmum->nmProvider ?? '' }}
-                                        {{ $peserta->provUmum->kdProvider ?? 'Belum Terdaftar BPJS' }}
-                                    </dd>
+                                    <dd class="col-sm-8">: {{ $pasien->tgl_lahir }}</dd>
+                                    <dt class="col-sm-4">
+                                        <x-adminlte-button id="btnInfoPeserta" icon="fas fa-user-injured"
+                                            class="mr-auto mb-1" theme="warning" label="Info Peserta BPJS" />
+                                    </dt>
                                 </dl>
                                 <x-adminlte-button icon="fas fa-file-medical" theme="primary" class="mr-auto mb-1"
-                                    label="Riwayat Kunjungan ({{ $pasien->kunjungans->count() }})" data-toggle="modal"
-                                    data-target="#riwayatKunjungan" />
+                                    label="Riwayat Kunjungan" data-toggle="modal" data-target="#riwayatKunjungan" />
                                 <x-adminlte-modal id="riwayatKunjungan" title="Riwayat Kunjungan" theme="warning"
                                     icon="fas fa-file-medical" size='xl'>
                                     <table id="tableKunjungan" class="table table-sm table-bordered table-hover">
@@ -483,20 +469,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($pasien->kunjungans as $kunjungan)
-                                                <tr>
-                                                    <td>{{ $kunjungan->tgl_masuk }}</td>
-                                                    <td>{{ $kunjungan->tgl_keluar }}</td>
-                                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin ?? $kunjungan->kode_penjamin }}
-                                                    </td>
-                                                    <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                                    <td>{{ $kunjungan->dokter->nama_paramedis ?? $kunjungan->dokter }}</td>
-                                                    <td>{{ $kunjungan->no_sep }}</td>
-                                                    <td>{{ $kunjungan->no_rujukan }}</td>
-                                                    <td>{{ $kunjungan->status->status_kunjungan ?? '-' }}</td>
-                                                    <td>-</td>
-                                                </tr>
-                                            @endforeach
                                         </tbody>
                                     </table>
                                 </x-adminlte-modal>
@@ -513,7 +485,6 @@
                                                 <th>Pelayanan</th>
                                                 <th>Tujuan</th>
                                                 <th>Diagnosa</th>
-                                                <th>Pasien</th>
                                                 <th>Provider</th>
                                                 <th>Action</th>
                                             </tr>
@@ -549,12 +520,12 @@
                                         <br>
                                         Method : {{ $antrianaktif->method }}
                                         <br>
-                                        <a href="{{ route('batalAntrian', $antrianaktif->kodebooking) }}"
-                                            class="btn btn-xs ">Batalkan Antrian</a>
+                                        <a href="{{ route('batalAntrian') }}?kodebooking={{ $antrianaktif->kodebooking }}"
+                                            class="btn btn-xs ">Batalkan
+                                            Antrian</a>
                                     </x-adminlte-alert>
                                 @endforeach
                             @endif
-
                         </div>
                         <div class="col-md-7">
                             <x-adminlte-card title="Pendaftaran Pasien" theme="success" icon="fas fa-user-plus"
@@ -563,8 +534,6 @@
                                     @csrf
                                     <input type="hidden" name="loket" value="{{ $request->loket }}">
                                     <input type="hidden" name="lantai" value="{{ $request->lantai }}">
-                                    <x-adminlte-input name="kodebooking" label="Kodebooking"
-                                        value="{{ $antrian->kodebooking }}" readonly />
                                     <x-adminlte-input name="nomorantrean" label="Nomor Antri"
                                         value="{{ $antrian->nomorantrean }}" readonly />
                                     <x-adminlte-input name="angkaantrean" label="Angka Antri"
@@ -573,12 +542,6 @@
                                         value="{{ $antrian->jampraktek }}" readonly />
                                     <x-adminlte-input name="tanggalperiksa" label="Tanggal Periksa"
                                         value="{{ $antrian->tanggalperiksa }}" readonly />
-                                    <x-adminlte-select name="jenispasien" label="Jenis Pasien">
-                                        <x-adminlte-options :options="[
-                                            'JKN' => 'JKN',
-                                            'NON-JKN' => 'NON-JKN',
-                                        ]" :selected="$antrian->jenispasien" />
-                                    </x-adminlte-select>
                                     <x-adminlte-select2 name="kodepoli" label="Poliklinik">
                                         @foreach ($polikliniks as $item)
                                             <option value="{{ $item->kodesubspesialis }}"
@@ -595,6 +558,12 @@
                                             </option>
                                         @endforeach
                                     </x-adminlte-select2>
+                                    <x-adminlte-select name="jenispasien" label="Jenis Pasien">
+                                        <x-adminlte-options :options="[
+                                            'JKN' => 'JKN',
+                                            'NON-JKN' => 'NON-JKN',
+                                        ]" :selected="$antrian->jenispasien" />
+                                    </x-adminlte-select>
                                     <x-adminlte-input name="norm" label="No RM" value="{{ $pasien->no_rm }}"
                                         readonly />
                                     <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $pasien->nama_px }}"
@@ -672,7 +641,6 @@
                                     value.poliRujukan.nama,
                                     value.diagnosa.kode + ' ' + value.diagnosa
                                     .nama,
-                                    value.peserta.nama,
                                     value.provPerujuk.nama,
                                     "<button class='btn btn-warning btn-xs btnPilihRujukan' data-id=" +
                                     value.noKunjungan +

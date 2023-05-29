@@ -21,7 +21,7 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
-            <x-adminlte-card title="Tabel Data User" theme="secondary" collapsible>
+            <x-adminlte-card title="Data User" theme="secondary" collapsible>
                 <div class="row">
                     <div class="col-md-8">
                         <x-adminlte-button label="Tambah" class="btn-sm" theme="success" title="Tambah User"
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Id', 'Nama', 'Username', 'Email', 'Phone', 'Role', 'Verify', 'Created_at', 'Action'];
+                    $heads = ['Id', 'Nama', 'Username',  'Phone','Email', 'Role', 'Verify', 'Created_at', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
