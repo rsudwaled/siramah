@@ -46,7 +46,6 @@
                                         <td>{{ $jadwal->namadokter }} ({{ $jadwal->kodedokter }})</td>
                                         <td>{{ $jadwal->kapasitaspasien }}</td>
                                         <td>
-
                                             <form action="{{ route('jadwaldokter.store') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="kodepoli" value="{{ $jadwal->kodepoli }}">
@@ -209,8 +208,10 @@
             <input type="hidden" class="idjadwal" name="idjadwal" id="idjadwal">
         </form>
         <x-slot name="footerSlot">
-            <x-adminlte-button label="Update" form="formUpdateJadwal" class="mr-auto withLoad" type="submit"
-                theme="success" icon="fas fa-edit" />
+            <x-adminlte-button label="Tambah" id="btnCreate" form="formUpdateJadwal" class="mr-auto withLoad"
+                type="submit" theme="success" icon="fas fa-edit" />
+            <x-adminlte-button label="Update" id="btnUpdate" form="formUpdateJadwal" class="mr-auto withLoad"
+                type="submit" theme="success" icon="fas fa-edit" />
             <x-adminlte-button label="Hapus" form="formDeleteJadwal" class="withLoad" type="submit" theme="danger"
                 icon="fas fa-trash-alt" />
             <x-adminlte-button theme="danger" icon="fas fa-times" label="Close" data-dismiss="modal" />
@@ -228,25 +229,31 @@
         $(function() {
             $('#createJadwal').click(function() {
                 $.LoadingOverlay("show");
+                $("formUpdateJadwal").trigger("reset");
+                $("formDeleteJadwal").trigger("reset");
+                $('#btnUpdate').hide();
+                $('#btnCreate').show();
+                var urlUpdate = "{{ route('jadwaldokter.store') }}";
+                $('#formUpdateJadwal').attr('action', urlUpdate);
+                $('#_method').hide();
                 $('#modalJadwal').modal('show');
                 $.LoadingOverlay("hide");
             });
-
             $('.btnJadwal').click(function() {
                 var jadwalid = $(this).data('id');
                 $.LoadingOverlay("show");
+                $('#btnUpdate').show();
+                $('#btnCreate').hide();
+                $('#_method').show();
                 $.get("{{ route('jadwaldokter.index') }}" + '/' + jadwalid,
                     function(data) {
                         console.log(data);
                         // delete form
                         var urlDelete = "{{ route('jadwaldokter.index') }}/" + jadwalid;
                         $('#formDeleteJadwal').attr('action', urlDelete);
-
                         var urlUpdate = "{{ route('jadwaldokter.index') }}/" + jadwalid;
                         $('#formUpdateJadwal').attr('action', urlUpdate);
                         $('#_method').val('PUT');
-
-
                         $('#kodesubspesialis').val(data.kodesubspesialis).change();
                         $('#kodedokter').val(data.kodedokter).change();
                         $('#hari').val(data.hari).change();
@@ -262,7 +269,6 @@
                         $.LoadingOverlay("hide", true);
                         $('#modalJadwal').modal('show');
                     })
-
             });
         });
     </script>

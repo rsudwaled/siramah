@@ -349,6 +349,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran',
                 ],
+                [
+                    'text' => 'Jadwal Dokter',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'jadwalDokterAntrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
             ],
         ],
         // KASIR

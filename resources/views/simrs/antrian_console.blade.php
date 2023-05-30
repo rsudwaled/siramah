@@ -86,6 +86,9 @@
                     <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
                     <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
                         Printer</a>
+                    <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
+                            class="fas fa-calendar-alt"></i> Jadwal
+                        Dokter</a>
                 </div>
             </div>
             {{-- ambil antrian offline --}}
@@ -97,7 +100,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             @php
-                                $heads = ['Poliklinik', 'Dokter', 'Jadwal',  'Kuota', 'Antrian'];
+                                $heads = ['Poliklinik', 'Dokter', 'Jadwal', 'Kuota', 'Antrian'];
                                 $config['order'] = ['5', 'asc'];
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"

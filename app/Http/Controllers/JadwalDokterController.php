@@ -58,6 +58,18 @@ class JadwalDokterController extends Controller
         } else {
             $libur = 0;
         }
+        if (empty($request->namasubspesialis)) {
+            $poli = Poliklinik::firstWhere('kodesubspesialis', $request->kodesubspesialis);
+            $request['kodepoli'] = $poli->kodepoli;
+            $request['namapoli'] = $poli->namapoli;
+            $request['namasubspesialis'] = $poli->namasubspesialis;
+        }
+        if (empty($request->namadokter)) {
+            $dokter = Dokter::firstWhere('kodedokter', $request->kodedokter);
+            $request['namadokter'] = $dokter->namadokter;
+        }
+        $hari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
+
         JadwalDokter::updateOrCreate([
             'kodesubspesialis' => $request->kodesubspesialis,
             'kodedokter' => $request->kodedokter,
@@ -67,7 +79,7 @@ class JadwalDokterController extends Controller
             'namapoli' => $request->namapoli,
             'namasubspesialis' => $request->namasubspesialis,
             'namadokter' => $request->namadokter,
-            'namahari' => $request->namahari,
+            'namahari' => $hari[$request->hari],
             'jadwal' => $request->jadwal,
             'kapasitaspasien' => $request->kapasitaspasien,
             'libur' => $libur,
