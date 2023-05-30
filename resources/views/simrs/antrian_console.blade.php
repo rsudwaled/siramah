@@ -82,7 +82,7 @@
                         </div>
                     </div>
                 </x-adminlte-card>
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
                     <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
                         Printer</a>
