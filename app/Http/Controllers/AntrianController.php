@@ -121,6 +121,35 @@ class AntrianController extends APIController
         return redirect()->back();
     }
     // VIEW SIMRS
+    public function daftarOnline(Request $request)
+    {
+        $rujukans = null;
+
+        if ($request->nik && $request->nomorkartu) {
+            $vclaim = new VclaimController();
+            switch ($request->jeniskunjungan) {
+                case '1':
+                    $res = $vclaim->rujukan_peserta($request);
+                    if ($res->status() == 200) {
+                        $rujukans = $res->getData()->response->rujukan;
+                        Alert::success('Success', 'Ok');
+                    } else {
+                        Alert::error('Error', 'Error');
+                    }
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+
+        return view('simrs.daftar_online', compact([
+            'request',
+            'rujukans',
+        ]));
+    }
     public function statusAntrianBpjs()
     {
         $token = Token::latest()->first();
@@ -458,18 +487,18 @@ class AntrianController extends APIController
         $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . Auth::user()->name;
         $response = $this->batal_antrian($request);
         if ($response->status() == 200) {
-            Alert::success('Success', "Antrian berhasil dibatalkan");
+            Alert::success('Success ' . $response->status(), $response->getData()->metadata->message);
         } else {
             Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
         }
         return redirect()->back();
     }
-    public function panggilPoliklinik(Antrian $antrian, Request $request)
+    public function panggilPoliklinik(Request $request)
     {
-        $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 4;
         $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $request['waktu'] = now()->timestamp * 1000;
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $vclaim = new AntrianController();
         $response = $vclaim->update_antrean($request);
         if ($response->status() == 200) {
@@ -494,12 +523,11 @@ class AntrianController extends APIController
         }
         return redirect()->back();
     }
-    public function panggilUlangPoliklinik(Antrian $antrian, Request $request)
+    public function panggilUlangPoliklinik(Request $request)
     {
-        $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 4;
         $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $request['waktu'] = now()->timestamp * 1000;
         // try {
         //     // notif wa
         //     $wa = new WhatsappController();
@@ -512,11 +540,11 @@ class AntrianController extends APIController
         Alert::success('Success', 'Panggil Pasien Berhasil');
         return redirect()->back();
     }
-    public function lanjutFarmasi($kodebooking, Request $request)
+    public function lanjutFarmasi(Request $request)
     {
-        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
-        $request['jenisresep'] = 'non Racikan';
+        $request['jenisresep'] = 'Non Racikan';
         $request['taskid'] = 5;
         $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
@@ -550,9 +578,9 @@ class AntrianController extends APIController
         // }
         return redirect()->back();
     }
-    public function lanjutFarmasiRacikan($kodebooking, Request $request)
+    public function lanjutFarmasiRacikan(Request $request)
     {
-        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'racikan';
         $request['taskid'] = 5;
@@ -1255,7 +1283,7 @@ class AntrianController extends APIController
             "waktu" =>  "required",
         ]);
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), $validator->errors(), 201);
+            return $this->sendError($validator->errors()->first(), 400);
         }
         $url = env('ANTRIAN_URL') . "antrean/updatewaktu";
         $signature = $this->signature();
@@ -2882,6 +2910,7 @@ class AntrianController extends APIController
     {
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
+            "jenisresep" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
@@ -2892,9 +2921,6 @@ class AntrianController extends APIController
         }
         $request['nomorantrean'] = $antrian->angkaantrean;
         $request['keterangan'] = "resep sistem antrian";
-        if ($antrian->jenisresep == null) {
-            $request['jenisresep'] = "racikan";
-        }
         $api = $this->tambah_antrean_farmasi($request);
         return response()->json($api->getData(), $api->status());
     }

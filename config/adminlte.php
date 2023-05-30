@@ -313,6 +313,11 @@ return [
             'icon'        => 'fas fa-home',
         ],
         [
+            'text'        => 'Daftar Online',
+            'url'         => 'daftarOnline',
+            'icon'        => 'fas fa-home',
+        ],
+        [
             'text'        => 'Dashboard',
             'url'         => 'home',
             'icon'        => 'fas fa-home',

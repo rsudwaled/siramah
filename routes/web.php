@@ -89,7 +89,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('vclaim', VclaimController::class);
     // mesin antrian
-    Route::get('daftarOnline', [SIMRSAntrianController::class, 'daftarOnline'])->name('daftarOnline');
+    Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
     Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
     Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
     Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
@@ -106,10 +106,11 @@ Route::middleware('auth')->group(function () {
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
     Route::get('batalAntrian', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
-    Route::get('panggilPoliklinik/{antrian}', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
-    Route::get('panggilUlangPoliklinik/{antrian}', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggilUlangPoliklinik');
-    Route::get('lanjutFarmasi/{antrian}', [AntrianController::class, 'lanjutFarmasi'])->name('lanjutFarmasi');
-    Route::get('lanjutFarmasiRacikan/{antrian}', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
+    Route::get('panggilPoliklinik', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
+    Route::get('panggilUlangPoliklinik', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggilUlangPoliklinik');
+    Route::get('lanjutFarmasi', [AntrianController::class, 'lanjutFarmasi'])->name('lanjutFarmasi');
+    Route::get('lanjutFarmasiRacikan', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
+    Route::get('selesaiPoliklinik', [AntrianController::class, 'selesaiPoliklinik'])->name('selesaiPoliklinik');
     Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
     Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
     Route::get('pasienPoliklinik', [PasienController::class, 'index'])->name('pasienPoliklinik');

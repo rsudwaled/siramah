@@ -1,7 +1,7 @@
 @extends('adminlte::print')
-@section('title', 'Print Surat Kontrol')
+@section('title', 'Surat Kontrol ' . $peserta->nama )
 @section('content_header')
-    <h1>Print Surat Kontrol</h1>
+    <h1>Surat Kontrol {{ $peserta->nama }}</h1>
 @stop
 @section('content')
     <div class="row">

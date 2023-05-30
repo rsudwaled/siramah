@@ -243,7 +243,7 @@
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('bpjs.vclaim.surat_kontrol_store') }}";
+                var url = "{{ route('suratkontrol.store') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
@@ -283,7 +283,7 @@
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('bpjs.vclaim.surat_kontrol_update') }}";
+                // var url = "{{ route('suratkontrol.index') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
@@ -318,7 +318,7 @@
             $('#btnDelete').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('bpjs.vclaim.surat_kontrol_delete') }}";
+                // var url = "{{ route('suratkontrol.index') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,

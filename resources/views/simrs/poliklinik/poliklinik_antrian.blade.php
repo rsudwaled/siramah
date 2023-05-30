@@ -125,7 +125,7 @@
                                             <b>{{ $item->nama }}</b>
                                             @isset($item->nomorkartu)
                                                 <br>
-                                                <a href="{{ route('bpjs.vclaim.monitoring_pelayanan_peserta') }}?tanggal={{ now()->format('Y-m-d') }}&nomorkartu={{ $item->nomorkartu }}"
+                                                <a href="{{ route('monitoringPelayananPeserta') }}?tanggal={{ now()->format('Y-m-d') }}&nomorkartu={{ $item->nomorkartu }}"
                                                     target="blank">{{ $item->nomorkartu }}</a>
                                             @endisset
                                         </td>
@@ -174,13 +174,13 @@
                                                     <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                         theme="warning" icon="fas fa-volume-down" data-toggle="tooltip"
                                                         title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                        onclick="window.location='{{ route('panggilPoliklinik', $item) }}'" />
+                                                        onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
                                                 @endif
                                             @endif
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $item->kodebooking }}'" />
                                         </td>
                                         <td>
                                             @isset($item->nomorsep)
@@ -302,8 +302,7 @@
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
                                                     theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
                                                     title="Panggil Antrian {{ $antrian->nomorantrean }}"
-                                                    onclick="window.location='{{ route('panggilUlangPoliklinik', $antrian) }}'" />
-
+                                                    onclick="window.location='{{ route('panggilUlangPoliklinik') }}?kodebooking={{ $antrian->kodebooking }}'" />
                                                 <x-adminlte-button class="btn-xs mt-1 btnLayani" label="Layani"
                                                     theme="success" icon="fas fa-hand-holding-medical"
                                                     data-toggle="tooltop"
@@ -313,7 +312,7 @@
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('batalAntrian', $antrian) }}'" />
+                                                onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $antrian->kodebooking }}'" />
                                         </td>
                                         <td>
                                             @isset($antrian->nomorsep)
@@ -432,22 +431,6 @@
                                                 <span class="badge bg-danger">{{ $antrian->taskid }}. Batal</span>
                                             @endif
                                             <br>
-                                            {{-- @if ($antrian->taskid == 4)
-                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
-                                                    theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
-                                                    title="Panggil Antrian {{ $antrian->nomorantrean }}"
-                                                    onclick="window.location='{{ route('panggilUlangPoliklinik', $antrian) }}'" />
-
-                                                <x-adminlte-button class="btn-xs mt-1 btnLayani" label="Layani"
-                                                    theme="success" icon="fas fa-hand-holding-medical"
-                                                    data-toggle="tooltop"
-                                                    title="Layani Pasien {{ $antrian->nomorantrean }}"
-                                                    data-id="{{ $antrian->id }}" />
-                                            @endif
-                                            <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
-                                                icon="fas fa-times" data-toggle="tooltop"
-                                                title="Batal Antrian {{ $antrian->nomorantrean }}"
-                                                onclick="window.location='{{ route('batalAntrian', $antrian) }}'" /> --}}
                                         </td>
                                         <td>
                                             @isset($antrian->nomorsep)
@@ -649,18 +632,17 @@
                     $('#nomorsep_suratkontrol').val(data.nomorsep);
                     $('#kodepoli_suratkontrol').val(data.kodepoli);
                     $('#namapoli_suratkontrol').val(data.namapoli);
-                    var urlLanjutFarmasi = "{{ route('landingpage') }}" +
-                        "/antrian/lanjut_farmasi/" + data
+                    var urlLanjutFarmasi = "{{ route('lanjutFarmasi') }}?kodebooking=" + data
                         .kodebooking;
                     $("#lanjutFarmasi").attr("href", urlLanjutFarmasi);
 
-                    var urlLanjutFarmasiRacikan = "{{ route('landingpage') }}" +
-                        "/antrian/lanjut_farmasi_racikan/" + data
+                    var urlLanjutFarmasiRacikan =
+                        "{{ route('lanjutFarmasiRacikan') }}?kodebooking=" + data
                         .kodebooking;
                     $("#lanjutFarmasiRacikan").attr("href", urlLanjutFarmasiRacikan);
 
-                    var urlSelesaiPoliklinik = "{{ route('landingpage') }}" +
-                        "/antrian/selesai_poliklinik/" + data
+                    var urlSelesaiPoliklinik = "{{ route('selesaiPoliklinik') }}?kodebooking=" +
+                        data
                         .kodebooking;
                     $("#selesaiPoliklinik").attr("href", urlSelesaiPoliklinik);
                     $('#modalPelayanan').modal('show');
