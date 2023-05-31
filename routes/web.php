@@ -90,6 +90,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('vclaim', VclaimController::class);
     // mesin antrian
     Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
+    Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
     Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
     Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
     Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');

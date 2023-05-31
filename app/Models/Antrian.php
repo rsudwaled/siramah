@@ -13,6 +13,6 @@ class Antrian extends Model
     protected $guarded = ["id"];
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class, 'nik', 'nik');
+        return $this->belongsTo(Pasien::class, 'nik', 'nik_bpjs');
     }
 }

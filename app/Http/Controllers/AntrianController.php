@@ -124,15 +124,43 @@ class AntrianController extends APIController
     public function daftarOnline(Request $request)
     {
         $rujukans = null;
-
+        $poli = null;
+        $jadwals = null;
+        $pasien = null;
         if ($request->nik && $request->nomorkartu) {
             $vclaim = new VclaimController();
             switch ($request->jeniskunjungan) {
                 case '1':
                     $res = $vclaim->rujukan_peserta($request);
                     if ($res->status() == 200) {
-                        $rujukans = $res->getData()->response->rujukan;
-                        Alert::success('Success', 'Ok');
+                        if ($request->nomorreferensi) {
+                            $request['nomorrujukan'] = $request->nomorreferensi;
+                            $poli = Poliklinik::firstWhere('kodesubspesialis', $request->kodepoli);
+                            $hari = Carbon::parse($request->tanggalperiksa)->dayOfWeek;
+                            $jadwals = JadwalDokter::where('hari', $hari)->where('kodesubspesialis', $request->kodepoli)->get();
+                            if ($request->kodedokter) {
+                                $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)
+                                    ->orWhere('nik_bpjs', $request->nik)
+                                    ->first();
+                                $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
+                                $request['norm'] = $pasien->no_rm;
+                                $request['jampraktek'] = $jadwal->jadwal;
+                                $request['method'] = 'Whatsapp';
+                                $antrian = $this->ambil_antrian($request);
+                                if ($antrian->status() == 200) {
+                                    $antrian =  $antrian->getData()->response;
+                                    Alert::success('Success', 'Telah berhasil didaftarkan dengan kodebooking ' . $antrian->kodebooking);
+                                } else {
+                                    Alert::error('Error', $antrian->getData()->metadata->message);
+                                }
+                            } else {
+
+                                Alert::success('Success', 'Telah dipilih Nomor Rujukan ' . $request->nomorrujukan);
+                            }
+                        } else {
+                            $rujukans = $res->getData()->response->rujukan;
+                            Alert::success('Success', 'Ok');
+                        }
                     } else {
                         Alert::error('Error', 'Error');
                     }
@@ -143,13 +171,26 @@ class AntrianController extends APIController
                     break;
             }
         }
-
-
         return view('simrs.daftar_online', compact([
             'request',
             'rujukans',
+            'poli',
+            'jadwals',
+            'pasien'
         ]));
     }
+    public function checkAntrian(Request $request)
+    {
+        $antrian = null;
+        if ($request->kodebooking) {
+            $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        }
+        return view('simrs.check_antrian', compact([
+            'request',
+            'antrian',
+        ]));
+    }
+
     public function statusAntrianBpjs()
     {
         $token = Token::latest()->first();
@@ -1654,9 +1695,9 @@ class AntrianController extends APIController
             ->where('nik', $request->nik)
             ->where('kodepoli', $request->kodepoli)
             ->where('taskid', '<=', 4)
-            ->count();
+            ->first();
         if ($antrian_nik) {
-            return $this->sendError("Terdapat antrian dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
+            return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
         }
         // cek pasien baru
         $request['pasienbaru'] = 0;
