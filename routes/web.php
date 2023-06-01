@@ -28,6 +28,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
+use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,9 @@ Route::get('login/google/callback', [SocialiteController::class, 'callback'])->m
 // layanan umum
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+// daftar online
+Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
+Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
 
 Route::middleware('auth')->group(function () {
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
@@ -67,7 +71,7 @@ Route::middleware('auth')->group(function () {
     Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
     Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
     // route resource
-    Route::resource('user', UserController::class);
+    Route::get('user', Users::class);
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
     Route::resource('poliklinik', PoliklinikController::class);
@@ -89,8 +93,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('vclaim', VclaimController::class);
     // mesin antrian
-    Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
-    Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
+
     Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
     Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
     Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
