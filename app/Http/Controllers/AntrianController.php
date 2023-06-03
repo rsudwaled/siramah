@@ -124,59 +124,169 @@ class AntrianController extends APIController
     public function daftarOnline(Request $request)
     {
         $rujukans = null;
-        $poli = null;
+        $suratkontrols = null;
+        $polikliniks = Poliklinik::where('status', 1)->orderBy('namasubspesialis', 'asc')->get();
         $jadwals = null;
         $pasien = null;
-        if ($request->nik && $request->nomorkartu) {
-            $vclaim = new VclaimController();
-            switch ($request->jeniskunjungan) {
-                case '1':
-                    $res = $vclaim->rujukan_peserta($request);
-                    if ($res->status() == 200) {
-                        if ($request->nomorreferensi) {
-                            $request['nomorrujukan'] = $request->nomorreferensi;
-                            $poli = Poliklinik::firstWhere('kodesubspesialis', $request->kodepoli);
-                            $hari = Carbon::parse($request->tanggalperiksa)->dayOfWeek;
-                            $jadwals = JadwalDokter::where('hari', $hari)->where('kodesubspesialis', $request->kodepoli)->get();
-                            if ($request->kodedokter) {
-                                $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)
-                                    ->orWhere('nik_bpjs', $request->nik)
-                                    ->first();
-                                $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
-                                $request['norm'] = $pasien->no_rm;
-                                $request['jampraktek'] = $jadwal->jadwal;
-                                $request['method'] = 'Whatsapp';
-                                $antrian = $this->ambil_antrian($request);
-                                if ($antrian->status() == 200) {
-                                    $antrian =  $antrian->getData()->response;
-                                    Alert::success('Success', 'Telah berhasil didaftarkan dengan kodebooking ' . $antrian->kodebooking);
-                                } else {
-                                    Alert::error('Error', $antrian->getData()->metadata->message);
-                                }
-                            } else {
-
-                                Alert::success('Success', 'Telah dipilih Nomor Rujukan ' . $request->nomorrujukan);
-                            }
-                        } else {
-                            $rujukans = $res->getData()->response->rujukan;
-                            Alert::success('Success', 'Ok');
-                        }
-                    } else {
-                        Alert::error('Error', 'Error');
-                    }
-                    break;
-
-                default:
-                    # code...
-                    break;
+        $vclaim = new VclaimController();
+        $request['method'] = 'Whatsapp';
+        if ($request->nik) {
+            $pasien = Pasien::firstWhere('nik_bpjs', $request->nik);
+            if ($pasien) {
+                $pasien['no_hp'] = $request->nohp;
+                // $pasien->update([]);
+                Alert::success('Success', 'Data pasien ditemukan');
+            } else {
+                Alert::error('Maaf', 'Data pasien tidak ditemukan, silahkan daftar offline untuk pasien baru');
             }
         }
+        if ($request->norm && $request->kodepoli && $request->tanggalperiksa && $request->jenispasien) {
+            $hari = Carbon::parse($request->tanggalperiksa)->dayOfWeek;
+            $jadwals = JadwalDokter::where('kodesubspesialis', $request->kodepoli)
+                ->where('hari', $hari)->get();
+            if ($jadwals->count() != 0) {
+                Alert::success('Success', 'Tersedia jadwal dokter poliklinik dihari tsb.');
+            } else {
+                $jadwals = null;
+                Alert::error('Maaf', 'Data jadwal poliklinik tidak tersedia dihari tsb.');
+            }
+            // pasien umum
+            if ($request->jenispasien == "NON-JKN" && $request->kodedokter) {
+                // dd($request->all());
+                if ($jadwals) {
+                    $jadwal = $jadwals->firstWhere('kodedokter', $request->kodedokter);
+                    $request['jampraktek'] = $jadwal->jadwal;
+                    $request['jeniskunjungan'] = 3;
+                    $res = $this->ambil_antrian($request);
+                    if ($res->status() == 200) {
+                        $kodebooking = $res->getData()->response->kodebooking;
+                        Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
+                        return redirect()->route('checkAntrian', [
+                            'kodebooking' => $kodebooking
+                        ]);
+                    } else {
+                        Alert::error('Maaf', $res->getData()->metadata->message);
+                    }
+                } else {
+                    Alert::error('Maaf', 'Data jadwal poliklinik tidak tersedia dihari tsb.');
+                }
+            }
+            // pasien bpjs
+            if ($request->jenispasien == "JKN" && $request->jeniskunjungan) {
+                switch ($request->jeniskunjungan) {
+                    case '1':
+                        $res = $vclaim->rujukan_peserta($request);
+                        if ($res->status() == 200) {
+                            $rujukansx = $res->getData()->response->rujukan;
+                            foreach ($rujukansx as  $rujukan) {
+                                $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
+                                if ($hari < 90) {
+                                    $rujukans[] = $rujukan;
+                                }
+                            }
+                            Alert::success('Success', 'Ditemukan surat rujukan');
+                        }
+                        break;
+
+                    case '3':
+                        $request['bulan'] = Carbon::parse($request->tanggalperiksa)->month;
+                        $request['tahun'] = Carbon::parse($request->tanggalperiksa)->year;
+                        $request['formatfilter'] = 2;
+                        $res = $vclaim->suratkontrol_peserta($request);
+                        if ($res->status() == 200) {
+                            $rujukansx = $res->getData()->response->list;
+                            foreach ($rujukansx as  $rujukan) {
+                                // $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
+                                if ($rujukan->terbitSEP == 'Belum') {
+                                    $suratkontrols[] = $rujukan;
+                                }
+                            }
+                            Alert::success('Success', 'Ditemukan surat kontrol');
+                        }
+                        break;
+
+                    case '4':
+                        $res = $vclaim->rujukan_rs_peserta($request);
+                        if ($res->status() == 200) {
+                            $rujukansx = $res->getData()->response->rujukan;
+                            foreach ($rujukansx as  $rujukan) {
+                                $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
+                                if ($hari < 90) {
+                                    $rujukans[] = $rujukan;
+                                }
+                            }
+                            Alert::success('Success', 'Ditemukan surat rujukan');
+                        }
+                        break;
+
+                    default:
+                        Alert::error('Maaf', 'Silahkan pilih jenis kunjungan.');
+                        break;
+                }
+                // rujukan
+                if ($jadwals && $request->jeniskunjungan == 1  &&  $request->nomorreferensi && $request->kodedokter || $jadwals && $request->jeniskunjungan == 5  &&  $request->nomorreferensi && $request->kodedokter) {
+                    $jadwal = $jadwals->firstWhere('kodedokter', $request->kodedokter);
+                    $rujukan = collect($rujukans)->where('noKunjungan', $request->nomorreferensi)->first();
+                    if ($jadwal->kodesubspesialis == $rujukan->poliRujukan->kode) {
+                        $request['jampraktek'] = $jadwal->jadwal;
+                        $res = $this->ambil_antrian($request);
+                        if ($res->status() == 200) {
+                            $kodebooking = $res->getData()->response->kodebooking;
+                            Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
+                            return redirect()->route('checkAntrian', [
+                                'kodebooking' => $kodebooking
+                            ]);
+                        } else {
+                            Alert::error('Maaf', $res->getData()->metadata->message);
+                        }
+                    } else {
+                        Alert::error('Maaf', 'Poliklinik rujukan anda berbeda dengan poliklinik pilihan anda.');
+                    }
+                }
+                // surat kontrol
+                else if ($jadwals && $request->jeniskunjungan == 3 &&  $request->nomorreferensi && $request->kodedokter) {
+                    $jadwal = $jadwals->firstWhere('kodedokter', $request->kodedokter);
+                    if ($jadwal) {
+                        $suratkontrol = collect($suratkontrols)->where('noSuratKontrol', $request->nomorreferensi)->first();
+                        if ($suratkontrol->tglRencanaKontrol == $request->tanggalperiksa) {
+                            if ($jadwal->kodesubspesialis == $suratkontrol->poliTujuan) {
+                                $request['jampraktek'] = $jadwal->jadwal;
+                                $res = $this->ambil_antrian($request);
+                                if ($res->status() == 200) {
+                                    $kodebooking = $res->getData()->response->kodebooking;
+                                    Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
+                                    return redirect()->route('checkAntrian', [
+                                        'kodebooking' => $kodebooking
+                                    ]);
+                                } else {
+                                    Alert::error('Maaf', $res->getData()->metadata->message);
+                                }
+                            } else {
+                                Alert::error('Maaf', 'Poliklinik rujukan anda berbeda dengan poliklinik pilihan anda.');
+                            }
+                        } else {
+                            Alert::error('Maaf', 'Tanggal kunjungan surat kontrol (' . $suratkontrol->tglRencanaKontrol . ') berbeda dengan tanggal periksa pilihan anda. Silahkan rubah tanggal kontrol anda jika telah terlewati waktunya.');
+                        }
+                    } else {
+                        Alert::error('Maaf', 'Jadwal dokter tidak tersedia.');
+                    }
+                } else {
+                    Alert::error('Maaf', 'Silahkan pilih nomor referensi dan jadwal dokter.');
+                }
+            }
+        } else {
+            if ($request->tanggalperiksa && $request->kodepoli == null ||  $request->tanggalperiksa && $request->jenispasien == null) {
+                Alert::error('Maaf', 'Silahkan pilih jenis pasien dan poliklinik');
+            }
+        }
+
         return view('simrs.daftar_online', compact([
             'request',
             'rujukans',
-            'poli',
+            'polikliniks',
             'jadwals',
-            'pasien'
+            'pasien',
+            'suratkontrols'
         ]));
     }
     public function checkAntrian(Request $request)
@@ -534,6 +644,19 @@ class AntrianController extends APIController
         }
         return redirect()->back();
     }
+    public function batalPendaftaran(Request $request)
+    {
+        $request['taskid'] = 99;
+        $request['keterangan'] = "Antrian dibatalkan oleh pasien";
+        $response = $this->batal_antrian($request);
+        if ($response->status() == 200) {
+            Alert::success('Success ' . $response->status(), $response->getData()->metadata->message);
+        } else {
+            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        }
+        return redirect()->back();
+    }
+
     public function panggilPoliklinik(Request $request)
     {
         $request['taskid'] = 4;

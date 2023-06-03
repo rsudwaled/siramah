@@ -9,7 +9,6 @@
         <div class="col-12">
             <x-adminlte-card title="Keterangan Pendaftaran" theme="secondary" collapsible>
                 <form action="" method="get">
-
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp

@@ -13,6 +13,7 @@ class PasienController extends Controller
         $pasiens = Pasien::with(['kecamatans'])->latest()
             ->where('no_rm', 'LIKE', "%{$request->search}%")
             ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
+            ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
             ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
             ->simplePaginate(20);
         $total_pasien = Pasien::count();

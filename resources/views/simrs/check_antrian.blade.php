@@ -57,7 +57,6 @@
                             <dd class="col-sm-7">{{ $antrian->namadokter }}</dd>
                             <dt class="col-sm-5">Status</dt>
                             <dd class="col-sm-7">
-
                                 @switch($antrian->taskid)
                                     @case(0)
                                         Belum Checkin
@@ -73,10 +72,12 @@
                                     @default
                                 @endswitch
                             </dd>
+                            <dt class="col-sm-5">Keterangan</dt>
+                            <dd class="col-sm-7">{{ $antrian->keterangan }}</dd>
                         </dl>
                         <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger" icon="fas fa-times"
                             data-toggle="tooltop" label="Batalkan Antrian" title="Batal Antrian {{ $antrian->kodebooking }}"
-                            onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $antrian->kodebooking }}'" />
+                            onclick="window.location='{{ route('batalPendaftaran') }}?kodebooking={{ $antrian->kodebooking }}'" />
                     </div>
                 @endif
 

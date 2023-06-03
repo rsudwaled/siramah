@@ -58,6 +58,8 @@ Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_st
 // daftar online
 Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
 Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
+Route::get('batalPendaftaran', [AntrianController::class, 'batalPendaftaran'])->name('batalPendaftaran');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
