@@ -79,7 +79,7 @@ Route::get('cekJadwalPoli', [JadwalDokterController::class, 'cekJadwalPoli'])->n
 Route::get('ambilAntrianWeb', [AntrianController::class, 'ambilAntrianWeb'])->name('api.ambilAntrianWeb');
 
 Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
-
+Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 
 
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
