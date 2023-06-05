@@ -289,6 +289,27 @@ class AntrianController extends APIController
             'suratkontrols'
         ]));
     }
+    public function ambilAntrianWeb(Request $request)
+    {
+        if ($request->jenispasien == 'NON-JKN') {
+            $request['jeniskunjungan'] = 3;
+        }
+        $hari = Carbon::parse($request->tanggalperiksa)->dayOfWeek;
+        $jadwal = JadwalDokter::where('hari', $hari)
+            ->where('kodesubspesialis', $request->kodepoli)
+            ->where('kodedokter', $request->kodedokter)
+            ->first();
+        $request['jampraktek'] = $jadwal->jadwal;
+        $res =  $this->ambil_antrian($request);
+
+        $base = new BaseController();
+        if ($res->status() == 200) {
+            return $base->sendResponse($res->getData()->response, 200);
+        } else {
+            return $base->sendError($res->getData()->metadata->message, 400);
+        }
+    }
+
     public function checkAntrian(Request $request)
     {
         $antrian = null;

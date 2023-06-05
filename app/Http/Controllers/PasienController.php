@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasien;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PasienController extends Controller
+class PasienController extends BaseController
 {
     public function index(Request $request)
     {
@@ -83,6 +84,21 @@ class PasienController extends Controller
     {
         $pasien = PasienDB::firstWhere('no_rm', $request->norm);
         return response()->json($pasien);
+    }
+    public function cekPasien(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "nik" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $pasien = Pasien::firstWhere('nik_bpjs', $request->nik);
+        if ($pasien) {
+            return $this->sendResponse($pasien, 200);
+        } else {
+            return $this->sendError('Pasien tidak ditemukan', 404);
+        }
     }
     public function destroy($no_rm)
     {

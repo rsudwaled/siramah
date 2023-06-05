@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\InacbgController;
+use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\PasienController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
+use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -71,6 +74,14 @@ Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_ope
 Route::post('ambilantreanfarmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
 Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
 // API SIMRS
+Route::get('cekPasien', [PasienController::class, 'cekPasien'])->name('api.cekPasien');
+Route::get('cekJadwalPoli', [JadwalDokterController::class, 'cekJadwalPoli'])->name('api.cekJadwalPoli');
+Route::get('ambilAntrianWeb', [AntrianController::class, 'ambilAntrianWeb'])->name('api.ambilAntrianWeb');
+
+Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
+
+
+
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
