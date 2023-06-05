@@ -274,6 +274,7 @@
             });
             // jkn
             $("#cekNomorReferensi").on("click", function() {
+                $("body").append("<div id='preloader'></div>");
                 var jeniskunjungan = $('#jeniskunjungan').val();
                 var tanggal = $('#tanggalperiksa').val();
                 var nomorkartu = $('#nomorkartu').val();
@@ -285,7 +286,6 @@
                         };
                         var urlData = "{{ route('api.cekRujukanPeserta') }}?" + data;
                         console.log(urlData);
-
                         $.ajax({
                             url: "{{ route('api.cekRujukanPeserta') }}",
                             data: {
@@ -312,10 +312,13 @@
                                 } else {
                                     alert(data.metadata.message);
                                 }
+                                $("#preloader").remove();
                             },
                             error: function(data) {
                                 console.log(data);
                                 alert('Error');
+                                $("#preloader").remove();
+
                             },
                         });
                         break;
@@ -354,16 +357,19 @@
                                 } else {
                                     alert(data.metadata.message);
                                 }
+                                $("#preloader").remove();
                             },
                             error: function(data) {
                                 console.log(data);
                                 alert('Error');
+                                $("#preloader").remove();
                             },
                         });
                         break;
 
                     default:
                         alert('Silahkan pilih jenis kunjungan');
+                        $("#preloader").remove();
                         break;
                 }
             });
