@@ -7,11 +7,13 @@ use App\Models\JadwalDokter;
 use App\Models\JadwalLibur;
 use App\Models\Poliklinik;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class JadwalDokterController extends Controller
+class JadwalDokterController extends BaseController
 {
     public function index(Request $request)
     {
@@ -239,7 +241,6 @@ class JadwalDokterController extends Controller
         Alert::success('Success', 'Jadwal Dokter Telah Ditambahkan');
         return redirect()->back();
     }
-
     public function jadwaldokterPoli(Request $request)
     {
         $jadwals = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
@@ -257,5 +258,24 @@ class JadwalDokterController extends Controller
         $jadwal->delete();
         Alert::success('Success', 'Jadwal Dokter Telah Dihapus');
         return redirect()->back();
+    }
+    // API
+    public function cekJadwalPoli(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'kodepoli' => 'required',
+            'tanggal' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+        $jadwal = JadwalDokter::where('hari', $hari)
+            ->where('kodesubspesialis', $request->kodepoli)->get();
+        if ($jadwal) {
+            return $this->sendResponse($jadwal, 200);
+        } else {
+            return $this->sendError('Jadwal tidak tersedia', 404);
+        }
     }
 }
