@@ -25,8 +25,7 @@ class VclaimController extends APIController
                 }
                 if ($rujukans) {
                     // dd($res, $value->tglKunjungan, $rujukans);
-                   return $base->sendResponse($rujukans, 200);
-
+                    return $base->sendResponse($rujukans, 200);
                 } else {
                     return $base->sendError('Rujukan telah kadaluarsa semua', 404);
                 }
@@ -35,6 +34,30 @@ class VclaimController extends APIController
             return $base->sendError($res->getData()->metadata->message, 400);
         }
     }
+    public function cekRujukanRSPeserta(Request $request)
+    {
+        $rujukans = null;
+        $base = new BaseController();
+
+        $res =  $this->rujukan_rs_peserta($request);
+        if ($res->status() == 200) {
+            $rujukanx = $res->getData()->response->rujukan;
+            foreach ($rujukanx as  $value) {
+                if (Carbon::parse($value->tglKunjungan)->diffInDays(now()) < 90) {
+                    $rujukans[] = $value;
+                }
+                if ($rujukans) {
+                    // dd($res, $value->tglKunjungan, $rujukans);
+                    return $base->sendResponse($rujukans, 200);
+                } else {
+                    return $base->sendError('Rujukan telah kadaluarsa semua', 404);
+                }
+            }
+        } else {
+            return $base->sendError($res->getData()->metadata->message, 400);
+        }
+    }
+
 
     public function referensiVclaim(Request $request)
     {

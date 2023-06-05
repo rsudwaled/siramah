@@ -138,7 +138,7 @@
 @endsection
 
 @section('css')
-    {{-- <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> --}}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     {{-- <link rel="stylesheet" href="/resources/demos/style.css"> --}}
 @endsection
 
@@ -150,28 +150,6 @@
             $("#tanggalperiksa").datepicker({
                 dateFormat: "yy-mm-dd"
             });
-            $("#jenispasien").on("change", function() {
-                var jenispasien = $(this).val();
-                if (jenispasien == 'JKN') {
-                    $(".formPoliklinik").hide()
-                    $(".formTanggalPeriksa").show()
-                    $(".formJenisKunjungan").show();
-                    $("#cekJadwalPoli").hide();
-                    $("#cekNomorReferensi").show();
-                } else {
-                    $(".formPoliklinik").show()
-                    $(".formTanggalPeriksa").show()
-                    $(".formJenisKunjungan").hide();
-                    $("#cekJadwalPoli").show();
-                    $("#cekNomorReferensi").hide();
-                }
-            });
-            $("#nomorreferensi").change(function() {
-                var kodepoli = $(this).find(':selected').attr('data-kodepoli');
-                $(".formPoliklinik").show();
-                $("#kodepoli").val(kodepoli).change();
-                $("#cekJadwalPoli").show();
-            });
             $("#formPasien").hide();
             $(".formJenispasien").hide();
             $(".formPoliklinik").hide();
@@ -181,10 +159,10 @@
             $(".formNomorReferensi").hide();
             $("#cekJadwalPoli").hide();
             $("#cekNomorReferensi").hide();
-
-
             $("#btnDaftar").hide();
+
             $("#cekPasien").on("click", function() {
+                $("body").append("<div id='preloader'></div>");
                 var nik = $('#nik').val();
                 var url = "{{ route('api.cekPasien') }}?nik=" + nik;
                 $.ajax({
@@ -204,12 +182,33 @@
                         } else {
                             alert(data.metadata.message);
                         }
+                        $("#preloader").remove();
                     },
                     error: function(data) {
                         alert('Error');
+                        $("#preloader").remove();
                     },
                 });
             });
+            $("#jenispasien").on("change", function() {
+                $("body").append("<div id='preloader'></div>");
+                var jenispasien = $(this).val();
+                if (jenispasien == 'JKN') {
+                    $(".formPoliklinik").hide()
+                    $(".formTanggalPeriksa").show()
+                    $(".formJenisKunjungan").show();
+                    $("#cekJadwalPoli").hide();
+                    $("#cekNomorReferensi").show();
+                } else {
+                    $(".formPoliklinik").show()
+                    $(".formTanggalPeriksa").show()
+                    $(".formJenisKunjungan").hide();
+                    $("#cekJadwalPoli").show();
+                    $("#cekNomorReferensi").hide();
+                }
+                $("#preloader").remove();
+            });
+            // umum
             $("#cekJadwalPoli").on("click", function() {
                 var kodepoli = $('#kodepoli').val();
                 var tanggal = $('#tanggalperiksa').val();
@@ -245,6 +244,7 @@
                     },
                 });
             });
+            // jkn
             $("#cekNomorReferensi").on("click", function() {
                 var jeniskunjungan = $('#jeniskunjungan').val();
                 var tanggal = $('#tanggalperiksa').val();
@@ -292,18 +292,59 @@
                         });
                         break;
 
+                    case '4':
+                        var data = {
+                            nomorkartu: nomorkartu,
+                            tanggal: tanggal,
+                        };
+                        var urlData = "{{ route('api.cekRujukanPeserta') }}?" + data;
+                        console.log(urlData);
+
+                        $.ajax({
+                            url: "{{ route('api.cekRujukanRSPeserta') }}",
+                            data: {
+                                nomorkartu: nomorkartu,
+                                tanggal: tanggal,
+                            },
+                            type: "GET",
+                            dataType: 'json',
+                            success: function(data) {
+                                console.log(data);
+                                if (data.metadata.code == 200) {
+                                    var rujukans = data.response;
+                                    rujukans.forEach(element => {
+                                        console.log(element);
+                                        $('#nomorreferensi').append('<option value="' +
+                                            element.noKunjungan +
+                                            '" data-kodepoli="' + element
+                                            .poliRujukan.kode + '" >' + element
+                                            .noKunjungan + ' POLI ' + element
+                                            .poliRujukan.nama + '</option>');
+                                    });
+                                    $(".formNomorReferensi").show();
+                                    $("#cekNomorReferensi").hide();
+                                } else {
+                                    alert(data.metadata.message);
+                                }
+                            },
+                            error: function(data) {
+                                console.log(data);
+                                alert('Error');
+                            },
+                        });
+                        break;
+
                     default:
-                        alert('Silahkan pilih jenis kunjunganf');
+                        alert('Silahkan pilih jenis kunjungan');
                         break;
                 }
-                // var url = "{{ route('api.cekJadwalPoli') }}";
-                // var data = {
-                //     kodepoli: kodepoli,
-                //     tanggal: tanggal,
-                // };
-
             });
-
+            $("#nomorreferensi").change(function() {
+                var kodepoli = $(this).find(':selected').attr('data-kodepoli');
+                $(".formPoliklinik").show();
+                $("#kodepoli").val(kodepoli).change();
+                $("#cekJadwalPoli").show();
+            });
 
             $("#btnDaftar").on("click", function() {
                 var url = "{{ route('api.ambilAntrianWeb') }}";
