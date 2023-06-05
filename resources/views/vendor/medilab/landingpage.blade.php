@@ -7,7 +7,7 @@
         <div class="container">
             <h1>SIRAMAH-RS Waled</h1>
             <h2>Sistem Informasi Manajemen Kesehatan Terintegrasi RS Waled</h2>
-            <a href="#about" class="btn-get-started scrollto">Daftar Online</a>
+            <a href="{{ route('daftarOnline') }}" class="btn-get-started scrollto">Daftar Online</a>
         </div>
     </section>
     <section id="why-us" class="why-us">

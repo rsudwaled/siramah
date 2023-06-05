@@ -291,6 +291,20 @@ class AntrianController extends APIController
     }
     public function ambilAntrianWeb(Request $request)
     {
+        $base = new BaseController();
+        $validator = Validator::make(request()->all(), [
+            "nomorkartu" => "required|numeric|digits:13",
+            "nik" => "required|numeric|digits:16",
+            "nohp" => "required",
+            "kodepoli" => "required",
+            "norm" => "required",
+            "tanggalperiksa" => "required",
+            "kodedokter" => "required",
+            // "nomorreferensi" => "numeric",
+        ]);
+        if ($validator->fails()) {
+            return $base->sendError($validator->errors()->first(), 400);
+        }
         if ($request->jenispasien == 'NON-JKN') {
             $request['jeniskunjungan'] = 3;
         }
@@ -302,11 +316,10 @@ class AntrianController extends APIController
         $request['jampraktek'] = $jadwal->jadwal;
         $res =  $this->ambil_antrian($request);
 
-        $base = new BaseController();
         if ($res->status() == 200) {
             return $base->sendResponse($res->getData()->response, 200);
         } else {
-            return $base->sendError($res->getData()->metadata->message, 400);
+            return $base->sendError($res->getData()->metadata->message, $res->getData()->metadata->code);
         }
     }
 
@@ -1841,7 +1854,7 @@ class AntrianController extends APIController
             ->where('taskid', '<=', 4)
             ->first();
         if ($antrian_nik) {
-            return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
+            return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  409);
         }
         // cek pasien baru
         $request['pasienbaru'] = 0;
@@ -2033,13 +2046,6 @@ class AntrianController extends APIController
             $wa = new WhatsappController();
             $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
             $wa->send_notif($request);
-            // kirim qr code
-            // $qr = QrCode::backgroundColor(255, 255, 51)->format('png')->generate($request->kodebooking, "public/storage/antrian/" . $request->kodebooking . ".png");
-            // $wa = new WhatsappController();
-            // $request['fileurl'] = asset("storage/antrian/" . $request->kodebooking . ".png");
-            // $request['caption'] = "Kode booking : " . $request->kodebooking . "\nSilahkan gunakan *QR Code* ini untuk checkin di mesin antrian rawat jalan.";
-            // $request['number'] = $request->nohp;
-            // $wa->send_image($request);
             $response = [
                 "nomorantrean" => $request->nomorantrean,
                 "angkaantrean" => $request->angkaantrean,

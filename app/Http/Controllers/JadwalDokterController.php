@@ -272,7 +272,7 @@ class JadwalDokterController extends BaseController
         $hari = Carbon::parse($request->tanggal)->dayOfWeek;
         $jadwal = JadwalDokter::where('hari', $hari)
             ->where('kodesubspesialis', $request->kodepoli)->get();
-        if ($jadwal) {
+        if ($jadwal->count() != 0) {
             return $this->sendResponse($jadwal, 200);
         } else {
             return $this->sendError('Jadwal tidak tersedia', 404);

@@ -5,9 +5,11 @@
             <i class="bi bi-phone"></i>0898 3311 118
         </div>
         <div class="d-none d-lg-flex social-links align-items-center">
-            <a href="#" class="facebook"><i class="bi bi-whatsapp"></i></a>
-            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="youtube"><i class="bi bi-youtube"></i></i></a>
+            <a href="#" class="facebook" target="_blank"><i class="bi bi-whatsapp"></i></a>
+            <a href="https://www.instagram.com/brsudwaled/" target="_blank" class="instagram"><i
+                    class="bi bi-instagram"></i></a>
+            <a href="https://www.youtube.com/@rsudwaledkab.cirebon2139" target="_blank" class="youtube"><i
+                    class="bi bi-youtube"></i></i></a>
         </div>
     </div>
 </div>

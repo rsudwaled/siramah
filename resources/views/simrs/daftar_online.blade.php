@@ -77,7 +77,7 @@
                                     <label for="tanggalperiksa"><b>Tanggal Periksa</b></label>
                                     <div class="input-group date">
                                         <input type="text" id="tanggalperiksa" name="tanggalperiksa"
-                                            value="{{ $request->tanggalperiksa }}" class="form-control datetimepicker"
+                                            value="{{ now()->format('Y-m-d') }}" class="form-control datetimepicker"
                                             required>
 
                                     </div>
@@ -139,12 +139,13 @@
 
 @section('css')
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    {{-- <link rel="stylesheet" href="/resources/demos/style.css"> --}}
+    <link rel="stylesheet" href="{{ asset('vendor/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
 @endsection
 
 @section('js')
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="{{ asset('vendor/sweetalert2/sweetalert2.all.min.js') }}"></script>
     <script>
         $(function() {
             $("#tanggalperiksa").datepicker({
@@ -160,7 +161,6 @@
             $("#cekJadwalPoli").hide();
             $("#cekNomorReferensi").hide();
             $("#btnDaftar").hide();
-
             $("#cekPasien").on("click", function() {
                 $("body").append("<div id='preloader'></div>");
                 var nik = $('#nik').val();
@@ -179,8 +179,20 @@
                             $("#namapasien").val(pasien.nama_px);
                             $("#nohp").val(pasien.no_hp);
                             $("#cekPasien").hide();
+                            Swal.fire({
+                                title: 'Berhasil',
+                                text: 'Data pasien ditemukan atas nama ' + pasien
+                                    .nama_px,
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            });
                         } else {
-                            alert(data.metadata.message);
+                            Swal.fire({
+                                title: 'Maaf',
+                                text: data.metadata.message,
+                                icon: 'error',
+                                confirmButtonText: 'Tutup'
+                            });
                         }
                         $("#preloader").remove();
                     },
@@ -191,7 +203,6 @@
                 });
             });
             $("#jenispasien").on("change", function() {
-                $("body").append("<div id='preloader'></div>");
                 var jenispasien = $(this).val();
                 if (jenispasien == 'JKN') {
                     $(".formPoliklinik").hide()
@@ -206,10 +217,10 @@
                     $("#cekJadwalPoli").show();
                     $("#cekNomorReferensi").hide();
                 }
-                $("#preloader").remove();
             });
             // umum
             $("#cekJadwalPoli").on("click", function() {
+                $("body").append("<div id='preloader'></div>");
                 var kodepoli = $('#kodepoli').val();
                 var tanggal = $('#tanggalperiksa').val();
                 var url = "{{ route('api.cekJadwalPoli') }}";
@@ -217,6 +228,9 @@
                     kodepoli: kodepoli,
                     tanggal: tanggal,
                 };
+                $('#kodedokter')
+                    .empty()
+                    .append('<option selected disabled>Pilih Jadwal Dokter</option>');
                 $.ajax({
                     url: url,
                     data: data,
@@ -227,20 +241,34 @@
                             var jadwal = data.response;
                             $(".formDokter").show();
                             $("#btnDaftar").show();
-                            $("#cekJadwalPoli").hide();
                             jadwal.forEach(element => {
                                 $('#kodedokter').append($('<option>', {
                                     value: element.kodedokter,
                                     text: element.namadokter
                                 }));
                             });
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Jadwal dokter poliklinik ditemukan ada ' + data
+                                    .response.length + ' dokter',
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            });
                         } else {
-                            alert(data.metadata.message);
+                            Swal.fire({
+                                title: 'Maaf',
+                                text: data.metadata.message,
+                                icon: 'error',
+                                confirmButtonText: 'Tutup'
+                            });
                         }
+                        $("#preloader").remove();
+
                     },
                     error: function(data) {
                         console.log(data);
                         alert('Error');
+                        $("#preloader").remove();
                     },
                 });
             });
@@ -345,12 +373,11 @@
                 $("#kodepoli").val(kodepoli).change();
                 $("#cekJadwalPoli").show();
             });
-
             $("#btnDaftar").on("click", function() {
+                $("body").append("<div id='preloader'></div>");
                 var url = "{{ route('api.ambilAntrianWeb') }}";
                 var data = $('#formDaftarWeb').serialize();
                 var urlData = "{{ route('api.ambilAntrianWeb') }}" + data;
-                console.log(urlData);
                 $.ajax({
                     url: url,
                     data: data,
@@ -359,14 +386,38 @@
                     success: function(data) {
                         console.log(data);
                         if (data.metadata.code == 200) {
-                            alert(data.metadata.message);
+                            console.log(data);
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Berhasil booking pendaftaran online',
+                                icon: 'success',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                window.location.href =
+                                    "{{ route('checkAntrian') }}?kodebooking=" + data
+                                    .response.kodebooking;
+                            })
+                        } else if (data.metadata.code == 409) {
+                            Swal.fire({
+                                title: 'Maaf',
+                                text: data.metadata.message,
+                                icon: 'error',
+                                confirmButtonText: 'Tutup'
+                            });
                         } else {
-                            alert(data.metadata.message);
+                            Swal.fire({
+                                title: 'Maaf',
+                                text: data.metadata.message,
+                                icon: 'error',
+                                confirmButtonText: 'Tutup'
+                            });
                         }
+                        $("#preloader").remove();
                     },
                     error: function(data) {
                         console.log(data);
                         alert('Error');
+                        $("#preloader").remove();
                     },
                 });
             });
