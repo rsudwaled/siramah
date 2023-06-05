@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderObatHeader;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -48,30 +49,32 @@ class FarmasiController extends APIController
                 'updated_at' => now(),
                 'no_antrian' => $no_antrian + 1,
             ]);
+            // dd($order->pasien->desas);
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
-                // $printer->setEmphasis(true);
-                $printer->text("RSUD Waled\n");
+                $printer->text("RSUD Waled Kab. Cirebon\n");
                 $printer->text("Order Resep Farmasi\n");
-                $printer->text("================================================\n");
-                // $printer->setEmphasis(false);
-                $printer->setTextSize(3, 3);
-                $printer->text($no_antrian . "\n");
-                $printer->setTextSize(1, 1);
-                $printer->text($order->kode_layanan_header . "\n");
+                // $printer->text("================================================\n");
+                // $printer->setTextSize(3, 3);
+                // $printer->text($no_antrian . "\n");
+                // $printer->setTextSize(1, 1);
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
                 $printer->setEmphasis(true);
                 $printer->text("No RM : " . $order->no_rm . " \n");
-                $printer->text("Pasien : " . $order->pasien->nama_px . " \n");
-                $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
+                $printer->text("Nama Pasien : " . $order->pasien->nama_px . " \n");
                 $printer->setEmphasis(false);
+                $printer->text("Tgl Lahir : " . Carbon::parse($order->pasien->tgl_lahir)->format('d M Y')  . " \n");
+                $printer->text("Alamat : " . $order->pasien->desas->nama_desa_kelurahan . ', ' . $order->pasien->kecamatans->nama_kecamatan . " \n");
+                $printer->text("Berat Badan : "  . " \n");
+                $printer->text("Kode Layanan : " . $order->kode_layanan_header   . " \n");
+                $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
                 $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
-                $printer->text("Tgl Order : " . $order->tgl_entry . " \n");
-                $printer->text("Tgl Cetak : " . now() . " \n");
+                $printer->text("SIP Dokter : " . $order->dokter->no_sip . " \n\n");
+
                 $printer->text("================================================\n");
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -82,6 +85,15 @@ class FarmasiController extends APIController
                     $printer->text('   ' . $value->aturan_pakai . "\n\n");
                     // $printer->setJustification(Printer::JUSTIFY_LEFT);
                 }
+                $printer->text("================================================\n");
+                $printer->text("Input By : " . $order->tgl_entry . " \n");
+                $printer->text("Tgl Input : " . $order->tgl_entry . " \n");
+                $printer->text("Tgl Cetak : " . now() . " \n\n");
+                $printer->text("Serah terima obat \n");
+                $printer->text("Nama Penerima : \n");
+                $printer->text("No HP : \n");
+                $printer->text("Ttd Penerima, \n");
+                $printer->text("\n\n\n..............................\n");
                 $printer->cut();
                 $printer->close();
             } catch (\Throwable $th) {
@@ -94,11 +106,11 @@ class FarmasiController extends APIController
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled\n");
                 $printer->text("Antrian Resep Farmasi\n");
-                $printer->text("================================================\n");
-                $printer->setTextSize(3, 3);
-                $printer->text($no_antrian . "\n");
-                $printer->setTextSize(1, 1);
-                $printer->text($order->kode_layanan_header . "\n");
+                // $printer->text("================================================\n");
+                // $printer->setTextSize(3, 3);
+                // $printer->text($no_antrian . "\n");
+                // $printer->setTextSize(1, 1);
+                // $printer->text($order->kode_layanan_header . "\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
                 $printer->setEmphasis(true);

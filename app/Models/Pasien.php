@@ -25,9 +25,9 @@ class Pasien extends Model
     {
         return $this->hasMany(Antrian::class, 'norm', 'no_rm');
     }
-    public function desa()
+    public function desas()
     {
-        return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
+        return $this->hasOne(Desa::class,'kode_desa_kelurahan','kode_desa');
     }
     public function kecamatans()
     {

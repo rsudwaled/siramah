@@ -57,8 +57,6 @@ class VclaimController extends APIController
             return $base->sendError($res->getData()->metadata->message, 400);
         }
     }
-
-
     public function referensiVclaim(Request $request)
     {
         return view('bpjs.vclaim.referensi_index', compact([
