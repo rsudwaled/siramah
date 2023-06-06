@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PoliklinikController extends Controller
+class PoliklinikController extends BaseController
 {
     public function index()
     {
@@ -89,7 +89,6 @@ class PoliklinikController extends Controller
             'polikliniks'
         ]));
     }
-
     public function create()
     {
         $api = new AntrianBPJSController();
@@ -168,5 +167,10 @@ class PoliklinikController extends Controller
     {
         $poli = Poliklinik::find($id);
         return response()->json($poli);
+    }
+    public function poliklinik_aktif()
+    {
+        $poli = Poliklinik::all();
+        return $this->sendResponse($poli,200);
     }
 }

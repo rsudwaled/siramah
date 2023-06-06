@@ -5,6 +5,7 @@ use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
 use App\Models\JadwalDokter;
@@ -80,6 +81,10 @@ Route::get('ambilAntrianWeb', [AntrianController::class, 'ambilAntrianWeb'])->na
 
 Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
+
+Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
+
+
 
 
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
