@@ -170,7 +170,7 @@ class PoliklinikController extends BaseController
     }
     public function poliklinik_aktif()
     {
-        $poli = Poliklinik::all();
+        $poli = Poliklinik::where('status',1)->get();
         return $this->sendResponse($poli,200);
     }
 }
