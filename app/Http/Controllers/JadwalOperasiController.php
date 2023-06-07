@@ -83,7 +83,7 @@ class JadwalOperasiController extends APIController
         $response = [
             "list" => $jadwals
         ];
-        return $this->sendResponse("OK", $response, 200);
+        return $this->sendResponse($response, 200);
     }
     public function jadwal_operasi_pasien(Request $request)
     {
@@ -115,7 +115,7 @@ class JadwalOperasiController extends APIController
         $response = [
             "list" => $jadwals
         ];
-        return $this->sendResponse("OK", $response, 200);
+        return $this->sendResponse($response, 200);
     }
 
     public function create()

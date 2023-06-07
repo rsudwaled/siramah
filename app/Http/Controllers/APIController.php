@@ -6,16 +6,16 @@ use Illuminate\Http\Request;
 
 class APIController extends Controller
 {
-    public function sendResponse($message, $data, $code = 200)
+    public function sendResponse($data, $code = 200)
     {
         $response = [
             'response' => $data,
             'metadata' => [
-                'message' => $message,
+                'message' => 'OK',
                 'code' => $code,
             ],
         ];
-        return response()->json($response, $code);
+        return json_decode(json_encode($response));
     }
     public function sendError($error,  $code = 404)
     {
@@ -26,6 +26,6 @@ class APIController extends Controller
                 'code' => $code,
             ],
         ];
-        return response()->json($response, $code);
+        return json_decode(json_encode($response));
     }
 }

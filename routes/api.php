@@ -26,22 +26,38 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('vclaim')->group(function () {
     Route::get('caripasien', [SIMRSPasienController::class, 'caripasien'])->name('api.caripasien');
 });
-// tanda tanya
 Route::prefix('antrian')->group(function () {
-    Route::get('signature', [AntrianBPJSController::class, 'signature']);
-    Route::get('ref_poli', [AntrianBPJSController::class, 'ref_poli']);
-    Route::get('ref_dokter', [AntrianBPJSController::class, 'ref_dokter']);
-    Route::get('ref_jadwal', [AntrianBPJSController::class, 'ref_jadwal_dokter']);
-    Route::post('ref_updatejadwal', [AntrianBPJSController::class, 'update_jadwal_dokter']);
-    Route::post('tambah', [AntrianBPJSController::class, 'tambah_antrian']);
-    Route::post('update', [AntrianBPJSController::class, 'update_antrian']);
-    Route::post('batal', [AntrianBPJSController::class, 'batal_antrian_bpjs']);
-    Route::post('listtask', [AntrianBPJSController::class, 'list_waktu_task']);
-    Route::get('dashboard_tanggal', [AntrianBPJSController::class, 'dashboard_tanggal']);
-    Route::get('dashboard_bulan', [AntrianBPJSController::class, 'dashboard_bulan']);
-    Route::get('status_antrean', [AntrianBPJSController::class, 'status_antrean'])->name('api.status_antrean');
-    Route::post('ambil_antrean', [AntrianBPJSController::class, 'ambil_antrean'])->name('api.ambil_antrean');
-});
+    // API BPJS
+    Route::get('ref_poli', [AntrianController::class, 'ref_poli'])->name('ref_poli');
+    Route::get('ref_dokter', [AntrianController::class, 'ref_dokter'])->name('ref_dokter');
+    Route::get('ref_jadwal_dokter', [AntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+    Route::get('ref_poli_fingerprint', [AntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
+    Route::get('ref_pasien_fingerprint', [AntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
+    Route::post('update_jadwal_dokter', [AntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
+    Route::post('tambah_antrean', [AntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
+    Route::post('tambah_antrean_farmasi', [AntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
+    Route::post('update_antrean', [AntrianController::class, 'update_antrean'])->name('update_antrean');
+    Route::post('batal_antrean', [AntrianController::class, 'batal_antrean'])->name('batal_antrean');
+    Route::post('taskid_antrean', [AntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
+    Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
+    Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
+    Route::get('antrian_tanggal', [AntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
+    Route::get('antrian_kodebooking', [AntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
+    Route::get('antrian_pendaftaran', [AntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
+    Route::get('antrian_poliklinik', [AntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
+    // API SIMRS
+    Route::get('token', [AntrianController::class, 'token'])->name('token');
+    Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
+    Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
+    Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
+    Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
+    Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
+    Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
+    Route::post('jadwal_operasi_rs', [JadwalOperasiController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
+    Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
+    Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
+    Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
+}); #sudah di test
 //
 Route::get('token', [AntrianAntrianController::class, 'token']);
 Route::prefix('wsrs')->group(function () {
@@ -95,36 +111,6 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 Route::prefix('bpjs')->group(function () {
     // ANTRIAN
     Route::prefix('antrian')->name('antrian.')->group(function () {
-        // API BPJS
-        Route::get('ref_poli', [AntrianController::class, 'ref_poli'])->name('ref_poli');
-        Route::get('ref_dokter', [AntrianController::class, 'ref_dokter'])->name('ref_dokter');
-        Route::get('ref_jadwal_dokter', [AntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
-        Route::get('ref_poli_fingerprint', [AntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
-        Route::get('ref_pasien_fingerprint', [AntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
-        Route::post('update_jadwal_dokter', [AntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
-        Route::post('tambah_antrean', [AntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
-        Route::post('tambah_antrean_farmasi', [AntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
-        Route::post('update_antrean', [AntrianController::class, 'update_antrean'])->name('update_antrean');
-        Route::post('batal_antrean', [AntrianController::class, 'batal_antrean'])->name('batal_antrean');
-        Route::post('taskid_antrean', [AntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
-        Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
-        Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
-        Route::get('antrian_tanggal', [AntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
-        Route::get('antrian_kodebooking', [AntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
-        Route::get('antrian_pendaftaran', [AntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
-        Route::get('antrian_poliklinik', [AntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
-        // API SIMRS
-        Route::get('token', [AntrianController::class, 'token'])->name('token');
-        Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
-        Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
-        Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
-        Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
-        Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
-        Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
-        Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
-        Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
-        Route::post('jadwal_operasi_rs', [JadwalOperasiController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
-        Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     });
     // VCLAIM
     Route::prefix('vclaim')->name('vclaim.')->group(function () {
