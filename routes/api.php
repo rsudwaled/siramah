@@ -78,7 +78,6 @@ Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_an
 Route::get('cekPasien', [PasienController::class, 'cekPasien'])->name('api.cekPasien');
 Route::get('cekJadwalPoli', [JadwalDokterController::class, 'cekJadwalPoli'])->name('api.cekJadwalPoli');
 Route::get('ambilAntrianWeb', [AntrianController::class, 'ambilAntrianWeb'])->name('api.ambilAntrianWeb');
-
 Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 
