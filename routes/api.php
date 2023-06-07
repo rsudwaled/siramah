@@ -80,11 +80,10 @@ Route::get('cekJadwalPoli', [JadwalDokterController::class, 'cekJadwalPoli'])->n
 Route::get('ambilAntrianWeb', [AntrianController::class, 'ambilAntrianWeb'])->name('api.ambilAntrianWeb');
 Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
+Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
+Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
 
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-
-
-
 
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');

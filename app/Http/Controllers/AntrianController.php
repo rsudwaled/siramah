@@ -308,6 +308,7 @@ class AntrianController extends APIController
         if ($request->jenispasien == 'NON-JKN') {
             $request['jeniskunjungan'] = 3;
         }
+        $request['method'] = 'Web';
         $hari = Carbon::parse($request->tanggalperiksa)->dayOfWeek;
         $jadwal = JadwalDokter::where('hari', $hari)
             ->where('kodesubspesialis', $request->kodepoli)
@@ -322,7 +323,38 @@ class AntrianController extends APIController
             return $base->sendError($res->getData()->metadata->message, $res->getData()->metadata->code);
         }
     }
-
+    public function cekKodebooking(Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        $base = new BaseController();
+        if ($antrian) {
+            $taskid= [
+                'Belum Checkin',
+                'Menunggu Pendaftaran',
+                'Proses Pendaftaran',
+                'Menunggu Poliklinik',
+                'Proses Poliklinik',
+                'Menunggu Farmasi',
+                'Proses Farmasi',
+                'Selesai',
+            ];
+            $response = [
+                "nomorantrean" => $antrian->nomorantrean,
+                "angkaantrean" => $antrian->angkaantrean,
+                "kodebooking" => $antrian->kodebooking,
+                "norm" =>  substr($antrian->norm, 2),
+                "namapasien" => $antrian->nama,
+                "status" => $taskid[$antrian->taskid],
+                "namapoli" => $antrian->namapoli,
+                "namadokter" => $antrian->namadokter,
+                "estimasidilayani" => $antrian->estimasidilayani,
+                "keterangan" => $antrian->keterangan,
+            ];
+            return $base->sendResponse($response, 200);
+        } else {
+            return $base->sendError('Kodebooking tidak ditemukan', 404);
+        }
+    }
     public function checkAntrian(Request $request)
     {
         $antrian = null;

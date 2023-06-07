@@ -34,6 +34,7 @@ class VclaimController extends APIController
             return $base->sendError($res->getData()->metadata->message, 400);
         }
     }
+
     public function cekRujukanRSPeserta(Request $request)
     {
         $rujukans = null;
@@ -53,6 +54,22 @@ class VclaimController extends APIController
                     return $base->sendError('Rujukan telah kadaluarsa semua', 404);
                 }
             }
+        } else {
+            return $base->sendError($res->getData()->metadata->message, 400);
+        }
+    }
+    public function cekSuratKontrolPeserta(Request $request)
+    {
+        $rujukans = null;
+        $base = new BaseController();
+
+        $request['bulan'] = Carbon::parse($request->tanggal)->month;
+        $request['tahun'] = Carbon::parse($request->tanggal)->year;
+        $request['formatfilter'] = 2;
+        $res =  $this->suratkontrol_peserta($request);
+        if ($res->status() == 200) {
+            $suratkontrols = $res->getData()->response->list;
+            return $base->sendResponse($suratkontrols, 200);
         } else {
             return $base->sendError($res->getData()->metadata->message, 400);
         }
