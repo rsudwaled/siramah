@@ -369,13 +369,21 @@ class VclaimController extends APIController
                 $code = 200;
             return $this->sendResponse($data, $code);
         } else {
-            $response = json_decode($response);
-            return json_decode(json_encode($response));
+            return $this->sendError($message,$code);
         }
     }
     public function response_no_decrypt($response)
     {
-        $response = json_decode($response);
+        $code = json_decode($response->body())->metaData->code;
+        $message = json_decode($response->body())->metaData->message;
+        $response = json_decode($response->body())->metaData->response;
+        $response = [
+            'response' => $response,
+            'metadata' => [
+                'message' => $message,
+                'code' => $code,
+            ],
+        ];
         return json_decode(json_encode($response));
     }
     // MONITORING
@@ -653,6 +661,11 @@ class VclaimController extends APIController
     }
     public function suratkontrol_peserta(Request $request)
     {
+        if ($request->tanggal) {
+            $request['bulan'] = Carbon::parse($request->tanggal)->month;
+            $request['tahun'] = Carbon::parse($request->tanggal)->year;
+            $request['formatfilter'] =2;
+        }
         $validator = Validator::make(request()->all(), [
             "bulan" => "required",
             "tahun" => "required",
