@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PasienController extends BaseController
+class PasienController extends APIController
 {
     public function index(Request $request)
     {
@@ -80,10 +80,25 @@ class PasienController extends BaseController
         $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
         return response()->json($pasien);
     }
-    public function caripasien(Request $request)
+    public function cari_pasien(Request $request)
     {
-        $pasien = PasienDB::firstWhere('no_rm', $request->norm);
-        return response()->json($pasien);
+        $validator = Validator::make(request()->all(), [
+            "search" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(),  400);
+        }
+        $pasien = Pasien::where('no_rm', $request->search)
+            ->orWhere('nik_bpjs', $request->search)
+            ->orWhere('no_Bpjs', $request->search)
+            ->orWhere('nama_px', $request->search)
+            ->first();
+
+        if ($pasien) {
+            return $this->sendResponse($pasien, 200);
+        } else {
+            return $this->sendError('Pasien tidak ditemukan', 404);
+        }
     }
     public function cekPasien(Request $request)
     {

@@ -260,7 +260,7 @@ class JadwalDokterController extends BaseController
         return redirect()->back();
     }
     // API
-    public function cekJadwalPoli(Request $request)
+    public function cari_jadwal_dokter(Request $request)
     {
         $validator = Validator::make(request()->all(), [
             'kodepoli' => 'required',
@@ -275,7 +275,7 @@ class JadwalDokterController extends BaseController
         if ($jadwal->count() != 0) {
             return $this->sendResponse($jadwal, 200);
         } else {
-            return $this->sendError('Jadwal tidak tersedia', 404);
+            return $this->sendError('Jadwal dokter tidak tersedia', 404);
         }
     }
 }

@@ -11,11 +11,11 @@ class BaseController extends Controller
         $response = [
             'response' => $data,
             'metadata' => [
-                'message' => 'Success',
+                'message' => 'OK',
                 'code' => $code,
             ],
         ];
-        return response()->json($response, 200);
+        return json_decode(json_encode($response));
     }
     public function sendError($error,  $code = 404)
     {
@@ -26,6 +26,6 @@ class BaseController extends Controller
                 'code' => $code,
             ],
         ];
-        return response()->json($response, 200);
+        return json_decode(json_encode($response));
     }
 }

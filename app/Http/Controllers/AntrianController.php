@@ -152,13 +152,12 @@ class AntrianController extends APIController
             }
             // pasien umum
             if ($request->jenispasien == "NON-JKN" && $request->kodedokter) {
-                // dd($request->all());
                 if ($jadwals) {
                     $jadwal = $jadwals->firstWhere('kodedokter', $request->kodedokter);
                     $request['jampraktek'] = $jadwal->jadwal;
                     $request['jeniskunjungan'] = 3;
                     $res = $this->ambil_antrian($request);
-                    if ($res->status() == 200) {
+                    if ($res->metadata->code == 200) {
                         $kodebooking = $res->getData()->response->kodebooking;
                         Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
                         return redirect()->route('checkAntrian', [
@@ -337,6 +336,7 @@ class AntrianController extends APIController
                 'Menunggu Farmasi',
                 'Proses Farmasi',
                 'Selesai',
+                99 => 'Batal'
             ];
             $response = [
                 "nomorantrean" => $antrian->nomorantrean,
@@ -1906,8 +1906,8 @@ class AntrianController extends APIController
             if ($request->jeniskunjungan == 3) {
                 $request['noSuratKontrol'] = $request->nomorreferensi;
                 $response =  $vclaim->suratkontrol_nomor($request);
-                if ($response->status() == 200) {
-                    $suratkontrol = $response->getData()->response;
+                if ($response->metadata->code == 200) {
+                    $suratkontrol = $response->response;
                     $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
                     // cek surat kontrol orang lain
                     if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
@@ -1918,7 +1918,7 @@ class AntrianController extends APIController
                         return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
                     }
                 } else {
-                    return $this->sendError($response->getData()->metadata->message,  $response->status());
+                    return $this->sendError($response->metadata->message,  $response->metadata->code);
                 }
             }
             // kunjungan rujukan
@@ -1934,20 +1934,20 @@ class AntrianController extends APIController
                     $request['jenisRujukan'] = 2;
                     $response =  $vclaim->rujukan_rs_nomor($request);
                 }
-                if ($response->status() == 200) {
-                    $rujukan  =  $response->getData()->response->rujukan;
+                if ($response->metadata->code == 200) {
+                    $rujukan  =  $response->response->rujukan;
                     $jumlah_sep  = $vclaim->rujukan_jumlah_sep($request);
-                    if ($jumlah_sep->status() == 200) {
+                    if ($jumlah_sep->metadata->code == 200) {
                         // cek rujukan telah digunakan atau tidak
-                        $jumlah_sep =  $jumlah_sep->getData()->response->jumlahSEP;
+                        $jumlah_sep =  $jumlah_sep->response->jumlahSEP;
                         if ($jumlah_sep != 0) {
                             return $this->sendError("Rujukan anda telah digunakan untuk berobat. Untuk kunjungan selanjutnya silahkan gunakan Surat Kontrol yang dibuat di Poliklinik.", 400);
                         }
                     } else {
-                        return $this->sendError($jumlah_sep->getData()->metadata->message,  $jumlah_sep->status());
+                        return $this->sendError($jumlah_sep->metadata->message,  $jumlah_sep->metadata->code);
                     }
                 } else {
-                    return $this->sendError($response->getData()->metadata->message,  $response->status());
+                    return $this->sendError($response->metadata->message,  $response->metadata->code);
                 }
             }
         }
