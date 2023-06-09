@@ -23,7 +23,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// VCLAIM
 Route::prefix('vclaim')->group(function () {
+    // MONITORING
+    Route::get('monitoring_data_kunjungan', [VclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
+    Route::get('monitoring_data_klaim', [VclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
+    Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
+    Route::get('monitoring_klaim_jasaraharja', [VclaimController::class, 'monitoring_klaim_jasaraharja'])->name('monitoring_klaim_jasaraharja');
+    // PESERTA
+    Route::get('peserta_nomorkartu', [VclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
+    Route::get('peserta_nik', [VclaimController::class, 'peserta_nik'])->name('peserta_nik');
+    // REFERENSI
+    Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
+    Route::get('ref_poliklinik', [VclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
+    Route::get('ref_faskes', [VclaimController::class, 'ref_faskes'])->name('ref_faskes');
+    Route::get('ref_dpjp', [VclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
+    Route::get('ref_provinsi', [VclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
+    Route::get('ref_kabupaten', [VclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
+    Route::get('ref_kecamatan', [VclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
+    Route::get('ref_diagnosa_prb', [VclaimController::class, 'ref_diagnosa_prb'])->name('ref_diagnosa_prb');
+    Route::get('ref_obat_prb', [VclaimController::class, 'ref_obat_prb'])->name('ref_obat_prb');
+    Route::get('ref_tindakan', [VclaimController::class, 'ref_tindakan'])->name('ref_tindakan');
+    Route::get('ref_kelas_rawat', [VclaimController::class, 'ref_kelas_rawat'])->name('ref_kelas_rawat');
+    Route::get('ref_dokter', [VclaimController::class, 'ref_dokter'])->name('ref_dokter');
+    Route::get('ref_spesialistik', [VclaimController::class, 'ref_spesialistik'])->name('ref_spesialistik');
+    Route::get('ref_ruang_rawat', [VclaimController::class, 'ref_ruang_rawat'])->name('ref_ruang_rawat');
+    Route::get('ref_cara_keluar', [VclaimController::class, 'ref_cara_keluar'])->name('ref_cara_keluar');
+    Route::get('ref_pasca_pulang', [VclaimController::class, 'ref_pasca_pulang'])->name('ref_pasca_pulang');
+    // RENCANA KONTROL
+    Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
+    Route::put('suratkontrol_update', [VclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
+    Route::delete('suratkontrol_delete', [VclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+    Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
+    Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
+    Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
     Route::get('suratkontrol_nomor', [VclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
     Route::get('suratkontrol_peserta', [VclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
     Route::get('suratkontrol_tanggal', [VclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
@@ -35,7 +68,14 @@ Route::prefix('vclaim')->group(function () {
     Route::get('rujukan_rs_nomor', [VclaimController::class, 'rujukan_rs_nomor'])->name('rujukan_rs_nomor');
     Route::get('rujukan_rs_peserta', [VclaimController::class, 'rujukan_rs_peserta'])->name('rujukan_rs_peserta');
     Route::get('rujukan_jumlah_sep', [VclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
+    // SEP
+    Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
+    Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
+    // FINGERPRINT
+    Route::get('fingerprint_peserta', [VclaimController::class, 'fingerprint_peserta'])->name('fingerprint_peserta');
+    Route::get('fingerprint_sep', [VclaimController::class, 'fingerprint_sep'])->name('fingerprint_sep');
 });
+// ANTRIAN
 Route::prefix('antrian')->group(function () {
     // API BPJS
     Route::get('ref_poli', [AntrianController::class, 'ref_poli'])->name('ref_poli');
@@ -67,19 +107,16 @@ Route::prefix('antrian')->group(function () {
     Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
     Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
-}); #sudah di test
-//
+});
+// API SIMRS
 Route::get('cari_pasien', [PasienController::class, 'cari_pasien'])->name('cari_pasien');
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('poliklinik_aktif');
 Route::get('cari_jadwal_dokter', [JadwalDokterController::class, 'cari_jadwal_dokter'])->name('cari_jadwal_dokter');
 Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
-
-Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
+// Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 // Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
 
-// API SIMRS
-Route::get('token', [AntrianAntrianController::class, 'token']);
 Route::prefix('wsrs')->group(function () {
     Route::post('status_antrian', [AntrianController::class, 'status_antrian']);
     Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian']);
@@ -111,64 +148,11 @@ Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_ope
 Route::post('ambilantreanfarmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
 Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
 
-
-Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
     Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
     Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
-});
-// API BPJS
-Route::prefix('bpjs')->group(function () {
-    // VCLAIM
-    Route::prefix('vclaim')->name('vclaim.')->group(function () {
-        // MONITORING
-        Route::get('monitoring_data_kunjungan', [VclaimController::class, 'monitoring_data_kunjungan'])->name('monitoring_data_kunjungan');
-        Route::get('monitoring_data_klaim', [VclaimController::class, 'monitoring_data_klaim'])->name('monitoring_data_klaim');
-        Route::get('monitoring_pelayanan_peserta', [VclaimController::class, 'monitoring_pelayanan_peserta'])->name('monitoring_pelayanan_peserta');
-        Route::get('monitoring_klaim_jasaraharja', [VclaimController::class, 'monitoring_klaim_jasaraharja'])->name('monitoring_klaim_jasaraharja');
-        // PESERTA
-        Route::get('peserta_nomorkartu', [VclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
-        Route::get('peserta_nik', [VclaimController::class, 'peserta_nik'])->name('peserta_nik');
-        // REFERENSI
-        Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
-        Route::get('ref_poliklinik', [VclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
-        Route::get('ref_faskes', [VclaimController::class, 'ref_faskes'])->name('ref_faskes');
-        Route::get('ref_dpjp', [VclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
-        Route::get('ref_provinsi', [VclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
-        Route::get('ref_kabupaten', [VclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
-        Route::get('ref_kecamatan', [VclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
-        // RENCANA KONTROL
-        Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
-        // Route::put('suratkontrol_update', [VclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
-        Route::delete('suratkontrol_delete', [VclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
-        // Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
-        // Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
-        // Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
-        // SEP
-        Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
-        Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
-    });
-});
-// VCLAIM
-Route::prefix('vclaim')->name('vclaim.')->group(function () {
-    Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
-    Route::get('ref_poliklinik', [VclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
-    Route::get('ref_faskes', [VclaimController::class, 'ref_faskes'])->name('ref_faskes');
-    Route::get('ref_dpjp', [VclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
-    Route::get('ref_provinsi', [VclaimController::class, 'ref_provinsi'])->name('ref_provinsi');
-    Route::get('ref_kabupaten', [VclaimController::class, 'ref_kabupaten'])->name('ref_kabupaten');
-    Route::get('ref_kecamatan', [VclaimController::class, 'ref_kecamatan'])->name('ref_kecamatan');
-    // ref konverter
-    Route::get('ref_diagnosa_api', [VclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
-    Route::get('ref_poliklinik_api', [VclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
-    Route::get('ref_faskes_api', [VclaimController::class, 'ref_faskes_api'])->name('ref_faskes_api');
-    Route::get('ref_dpjp_api', [VclaimController::class, 'ref_dpjp_api'])->name('ref_dpjp_api');
-    Route::get('ref_provinsi_api', [VclaimController::class, 'ref_provinsi_api'])->name('ref_provinsi_api');
-    Route::get('ref_kabupaten_api', [VclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
-    Route::get('ref_kecamatan_api', [VclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
 });
 // API SATU SEHAT
 Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
