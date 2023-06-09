@@ -62,7 +62,7 @@ Route::get('batalPendaftaran', [AntrianController::class, 'batalPendaftaran'])->
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('home', [App\Http\Controllers\HomeController::class, 'index'])->name('home'); #ok
+    Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
     Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
     // settingan umum
     Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
