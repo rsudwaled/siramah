@@ -1120,7 +1120,6 @@ class AntrianController extends APIController
             $request['keterangan'] = "Silahkan lakukan pembayaran di Loket Pembayaran, setelah itu dapat menunggu dipoliklinik";
             $request['status_api'] = 0;
         }
-        // $vclaim = new AntrianAntrianController();
         // $response = $vclaim->update_antrean($request);
         // if ($response->status() == 200) {
         // } else {

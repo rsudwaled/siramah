@@ -79,39 +79,25 @@ Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])-
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
 
 // API SIMRS
-Route::get('token', [AntrianAntrianController::class, 'token']);
-Route::prefix('wsrs')->group(function () {
-    Route::post('status_antrian', [AntrianController::class, 'status_antrian']);
-    Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian']);
-    Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian']);
-    Route::post('batal_antrian', [AntrianController::class, 'batal_antrian']);
-    Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian']);
-    Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru']);
-    Route::post('jadwal_operasi_rs', [AntrianController::class, 'jadwal_operasi_rs']);
-    Route::post('jadwal_operasi_pasien', [AntrianController::class, 'jadwal_operasi_pasien']);
-    Route::post('ambil_antrean_farmasi', [AntrianController::class, 'ambil_antrian_farmasi']);
-    Route::post('status_antrean_farmasi', [AntrianController::class, 'status_antrian_farmasi']);
-    Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
-});
+// Route::prefix('wsrs')->group(function () {
+//     Route::post('status_antrian', [AntrianController::class, 'status_antrian']);
+//     Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian']);
+//     Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian']);
+//     Route::post('batal_antrian', [AntrianController::class, 'batal_antrian']);
+//     Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian']);
+//     Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru']);
+//     Route::post('jadwal_operasi_rs', [AntrianController::class, 'jadwal_operasi_rs']);
+//     Route::post('jadwal_operasi_pasien', [AntrianController::class, 'jadwal_operasi_pasien']);
+//     Route::post('ambil_antrean_farmasi', [AntrianController::class, 'ambil_antrian_farmasi']);
+//     Route::post('status_antrean_farmasi', [AntrianController::class, 'status_antrian_farmasi']);
+//     Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
+// });
 Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'test']);
     Route::post('webhook', [WhatsappController::class, 'webhook']);
     Route::post('send_message', [WhatsappController::class, 'send_message'])->name('send_message');
 });
 // APP.RSUDWALED.ID
-Route::get('token', [AntrianAntrianController::class, 'token']);
-Route::post('statusantrean', [AntrianAntrianController::class, 'status_antrian']);
-Route::post('ambilantrean', [AntrianAntrianController::class, 'ambil_antrian']);
-Route::post('sisaantrean', [AntrianAntrianController::class, 'sisa_antrian']);
-Route::post('batalantrean', [AntrianAntrianController::class, 'batal_antrian']);
-Route::post('checkin', [AntrianAntrianController::class, 'checkin_antrian']);
-Route::post('infopasienbaru', [AntrianAntrianController::class, 'infoPasienBaru']);
-Route::post('jadwaloperasi', [AntrianAntrianController::class, 'jadwal_operasi_rs']);
-Route::post('jadwaloperasipasien', [AntrianAntrianController::class, 'jadwal_operasi_pasien']);
-Route::post('ambilantreanfarmasi', [AntrianAntrianController::class, 'ambil_antrian_farmasi']);
-Route::post('statusantreanfarmasi', [AntrianAntrianController::class, 'status_antrian_farmasi']);
-
-
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
 
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
