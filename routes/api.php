@@ -45,7 +45,7 @@ Route::prefix('vclaim')->group(function () {
     Route::get('ref_obat_prb', [VclaimController::class, 'ref_obat_prb'])->name('ref_obat_prb');
     Route::get('ref_tindakan', [VclaimController::class, 'ref_tindakan'])->name('ref_tindakan');
     Route::get('ref_kelas_rawat', [VclaimController::class, 'ref_kelas_rawat'])->name('ref_kelas_rawat');
-    Route::get('ref_dokter', [VclaimController::class, 'ref_dokter'])->name('ref_dokter');
+    Route::get('ref_dokter_dpjp', [VclaimController::class, 'ref_dokter'])->name('ref_dokter_dpjp');
     Route::get('ref_spesialistik', [VclaimController::class, 'ref_spesialistik'])->name('ref_spesialistik');
     Route::get('ref_ruang_rawat', [VclaimController::class, 'ref_ruang_rawat'])->name('ref_ruang_rawat');
     Route::get('ref_cara_keluar', [VclaimController::class, 'ref_cara_keluar'])->name('ref_cara_keluar');

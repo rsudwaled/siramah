@@ -56,10 +56,17 @@ Route::get('login/google/callback', [SocialiteController::class, 'callback'])->m
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
 // daftar online
-Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
-Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
-Route::get('batalPendaftaran', [AntrianController::class, 'batalPendaftaran'])->name('batalPendaftaran');
+// Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
+// Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');
+// Route::get('batalPendaftaran', [AntrianController::class, 'batalPendaftaran'])->name('batalPendaftaran');
 
+// mesin antrian
+Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
+Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
+Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
+Route::get('daftarUmumOffline', [AntrianController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
+Route::get('cekPrinter', [AntrianController::class, 'cekPrinter'])->name('cekPrinter');
+Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
 
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
@@ -94,14 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('kpo', KPOController::class);
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('vclaim', VclaimController::class);
-    // mesin antrian
 
-    Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name('antrianConsole');
-    Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
-    Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
-    Route::get('daftarUmumOffline', [AntrianController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
-    Route::get('cekPrinter', [AntrianController::class, 'cekPrinter'])->name('cekPrinter');
-    Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
     // pendaftaran
     Route::get('antrianPendaftaran', [AntrianController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
