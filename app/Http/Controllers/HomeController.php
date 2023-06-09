@@ -26,12 +26,11 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth()->user()->email_verified_at == null) {
+        $user = Auth::user();
+        if ($user->email_verified_at == null) {
             Alert::error('Success', 'Akun SIMRS Waled anda belum diverifikasi, silahkan masukan nomor telepon anda untuk meminta verifikasi.');
-            $user = Auth::user();
             Auth::logout();
             return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
-            // return redirect()->route('login');
         } else {
             return view('home');
         }
@@ -39,7 +38,6 @@ class HomeController extends Controller
     public function landingpage()
     {
         $jadwal = JadwalDokter::get();
-        // dd($jadwal->groupBy('hari')->first());
         return view('vendor.medilab.landingpage', compact([
             'jadwal'
         ]));

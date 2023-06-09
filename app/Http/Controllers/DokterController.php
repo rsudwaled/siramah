@@ -28,7 +28,7 @@ class DokterController extends Controller
     public function create()
     {
         $api = new AntrianController();
-        $dokters = $api->ref_dokter()->getData()->response;
+        $dokters = $api->ref_dokter()->response;
         foreach ($dokters as $value) {
             Dokter::updateOrCreate(
                 [
@@ -86,12 +86,12 @@ class DokterController extends Controller
     {
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
-            Alert::success($response->statusText(), 'Dokter Antrian BPJS Total : ' . count($dokters));
+        if ($response->metadata->code == 200) {
+            $dokters = $response->response;
+            Alert::success($response->metadata->message, 'Dokter Antrian BPJS Total : ' . count($dokters));
         } else {
             $dokters = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         $dokter_jkn_simrs = Dokter::get();
         return view('bpjs.antrian.dokter', compact([
@@ -103,17 +103,17 @@ class DokterController extends Controller
     {
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $dokters = $response->response;
             foreach ($dokters as $value) {
                 DokterAntrian::firstOrCreate([
                     'kodeDokter' => $value->kodedokter,
                     'namaDokter' => $value->namadokter,
                 ]);
             }
-            Alert::success($response->statusText(), 'Refresh Dokter Antrian BPJS Total : ' . count($dokters));
+            Alert::success($response->metadata->message, 'Refresh Dokter Antrian BPJS Total : ' . count($dokters));
         } else {
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         return redirect()->route('pelayanan-medis.dokter_antrian');
     }
@@ -128,12 +128,12 @@ class DokterController extends Controller
     {
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
-            Alert::success($response->statusText(), 'Dokter Antrian BPJS Total : ' . count($dokters));
+        if ($response->metadata->code == 200) {
+            $dokters = $response->response;
+            Alert::success($response->metadata->message, 'Dokter Antrian BPJS Total : ' . count($dokters));
         } else {
             $dokters = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         $dokter_jkn_simrs = Dokter::get();
         return view('bpjs.antrian.dokter', compact([

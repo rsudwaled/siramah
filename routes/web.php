@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
     Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
     // route resource
-    Route::get('user', Users::class);
+    Route::resource('user', UserController::class);
     Route::resource('role', RoleController::class);
     Route::resource('permission', PermissionController::class);
     Route::resource('poliklinik', PoliklinikController::class);

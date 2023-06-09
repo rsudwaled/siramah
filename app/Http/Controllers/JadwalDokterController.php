@@ -26,11 +26,11 @@ class JadwalDokterController extends BaseController
         if (isset($request->kodepoli)) {
             $controller = new AntrianController();
             $response = $controller->ref_jadwal_dokter($request);
-            if ($response->status() == 200) {
-                $jadwals = $response->getData()->response;
-                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+            if ($response->metadata->code == 200) {
+                $jadwals = $response->response;
+                Alert::success($response->metadata->message, 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
             } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+                Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
         return view('simrs.pelyananmedis.jadwal_dokter', compact([
@@ -137,11 +137,11 @@ class JadwalDokterController extends BaseController
         if (isset($request->kodepoli)) {
             $api = new AntrianController();
             $response = $api->ref_jadwal_dokter($request);
-            if ($response->status() == 200) {
-                $jadwals = $response->getData()->response;
-                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+            if ($response->metadata->code == 200) {
+                $jadwals = $response->response;
+                Alert::success($response->metadata->message, 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
             } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+                Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
         return view('bpjs.antrian.jadwal_dokter', compact([
@@ -178,15 +178,15 @@ class JadwalDokterController extends BaseController
         dd('jadwal_dokter_bpjs');
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokters = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $dokters = $response->response;
         } else {
             $dokters = null;
         }
         // get poli
         $response = $controller->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $polikliniks = $response->response;
         } else {
             $polikliniks = null;
         }
@@ -194,11 +194,11 @@ class JadwalDokterController extends BaseController
         $jadwals = null;
         if (isset($request->kodePoli)) {
             $response = $controller->ref_jadwal_dokter($request);
-            if ($response->status() == 200) {
-                $jadwals = $response->getData()->response;
-                Alert::success($response->statusText(), 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
+            if ($response->metadata->code == 200) {
+                $jadwals = $response->response;
+                Alert::success($response->metadata->message, 'Jadwal Dokter Antrian BPJS Total : ' . count($jadwals));
             } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+                Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
         return view('bpjs.antrian.jadwal_dokter', compact([

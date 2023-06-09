@@ -63,7 +63,7 @@ class AntrianController extends APIController
 
             $api = new AntrianController();
             $response = $api->update_antrean($request);
-            if ($response->status() == 200) {
+            if ($response->metadata->code == 200) {
                 $antrian->update([
                     'taskid' => $request->taskid,
                     'status_api' => 1,
@@ -81,7 +81,7 @@ class AntrianController extends APIController
                 // }
                 Alert::success('Success', 'Resep Obat Pasien Diterima Farmasi');
             } else {
-                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
             }
             return redirect()->back();
         } else {
@@ -98,7 +98,7 @@ class AntrianController extends APIController
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $api = new AntrianController();
         $response = $api->update_antrean($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             $antrian->update([
                 'taskid' => $request->taskid,
                 'status_api' => 1,
@@ -116,7 +116,7 @@ class AntrianController extends APIController
             // }
             Alert::success('Success', 'Selesai Peracikan Obat.');
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         return redirect()->back();
     }
@@ -158,13 +158,13 @@ class AntrianController extends APIController
                     $request['jeniskunjungan'] = 3;
                     $res = $this->ambil_antrian($request);
                     if ($res->metadata->code == 200) {
-                        $kodebooking = $res->getData()->response->kodebooking;
+                        $kodebooking = $res->response->kodebooking;
                         Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
                         return redirect()->route('checkAntrian', [
                             'kodebooking' => $kodebooking
                         ]);
                     } else {
-                        Alert::error('Maaf', $res->getData()->metadata->message);
+                        Alert::error('Maaf', $res->metadata->message);
                     }
                 } else {
                     Alert::error('Maaf', 'Data jadwal poliklinik tidak tersedia dihari tsb.');
@@ -175,8 +175,8 @@ class AntrianController extends APIController
                 switch ($request->jeniskunjungan) {
                     case '1':
                         $res = $vclaim->rujukan_peserta($request);
-                        if ($res->status() == 200) {
-                            $rujukansx = $res->getData()->response->rujukan;
+                        if ($res->metadata->code == 200) {
+                            $rujukansx = $res->response->rujukan;
                             foreach ($rujukansx as  $rujukan) {
                                 $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
                                 if ($hari < 90) {
@@ -192,8 +192,8 @@ class AntrianController extends APIController
                         $request['tahun'] = Carbon::parse($request->tanggalperiksa)->year;
                         $request['formatfilter'] = 2;
                         $res = $vclaim->suratkontrol_peserta($request);
-                        if ($res->status() == 200) {
-                            $rujukansx = $res->getData()->response->list;
+                        if ($res->metadata->code == 200) {
+                            $rujukansx = $res->response->list;
                             foreach ($rujukansx as  $rujukan) {
                                 // $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
                                 if ($rujukan->terbitSEP == 'Belum') {
@@ -206,8 +206,8 @@ class AntrianController extends APIController
 
                     case '4':
                         $res = $vclaim->rujukan_rs_peserta($request);
-                        if ($res->status() == 200) {
-                            $rujukansx = $res->getData()->response->rujukan;
+                        if ($res->metadata->code == 200) {
+                            $rujukansx = $res->response->rujukan;
                             foreach ($rujukansx as  $rujukan) {
                                 $hari = Carbon::parse($rujukan->tglKunjungan)->diffInDays(now());
                                 if ($hari < 90) {
@@ -229,14 +229,14 @@ class AntrianController extends APIController
                     if ($jadwal->kodesubspesialis == $rujukan->poliRujukan->kode) {
                         $request['jampraktek'] = $jadwal->jadwal;
                         $res = $this->ambil_antrian($request);
-                        if ($res->status() == 200) {
-                            $kodebooking = $res->getData()->response->kodebooking;
+                        if ($res->metadata->code == 200) {
+                            $kodebooking = $res->response->kodebooking;
                             Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
                             return redirect()->route('checkAntrian', [
                                 'kodebooking' => $kodebooking
                             ]);
                         } else {
-                            Alert::error('Maaf', $res->getData()->metadata->message);
+                            Alert::error('Maaf', $res->metadata->message);
                         }
                     } else {
                         Alert::error('Maaf', 'Poliklinik rujukan anda berbeda dengan poliklinik pilihan anda.');
@@ -251,14 +251,14 @@ class AntrianController extends APIController
                             if ($jadwal->kodesubspesialis == $suratkontrol->poliTujuan) {
                                 $request['jampraktek'] = $jadwal->jadwal;
                                 $res = $this->ambil_antrian($request);
-                                if ($res->status() == 200) {
-                                    $kodebooking = $res->getData()->response->kodebooking;
+                                if ($res->metadata->code == 200) {
+                                    $kodebooking = $res->response->kodebooking;
                                     Alert::success('Berhasil', 'Anda berhasil daftar rawat jalan dengan kodebooking ' . $kodebooking);
                                     return redirect()->route('checkAntrian', [
                                         'kodebooking' => $kodebooking
                                     ]);
                                 } else {
-                                    Alert::error('Maaf', $res->getData()->metadata->message);
+                                    Alert::error('Maaf', $res->metadata->message);
                                 }
                             } else {
                                 Alert::error('Maaf', 'Poliklinik rujukan anda berbeda dengan poliklinik pilihan anda.');
@@ -316,10 +316,10 @@ class AntrianController extends APIController
         $request['jampraktek'] = $jadwal->jadwal;
         $res =  $this->ambil_antrian($request);
 
-        if ($res->status() == 200) {
-            return $base->sendResponse($res->getData()->response, 200);
+        if ($res->metadata->code == 200) {
+            return $base->sendResponse($res->response, 200);
         } else {
-            return $base->sendError($res->getData()->metadata->message, $res->getData()->metadata->code);
+            return $base->sendError($res->metadata->message, $res->metadata->code);
         }
     }
     public function cekKodebooking(Request $request)
@@ -421,7 +421,7 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             $api = new AntrianController();
-            $response = $api->checkin_antrian($request)->getData();
+            $response = $api->checkin_antrian($request);
             return $response;
         }
         // jika antrian tidak ditemukan
@@ -438,8 +438,8 @@ class AntrianController extends APIController
     {
         // get poli
         $response = $this->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $polikliniks = $response->response;
         } else {
             $polikliniks = null;
         }
@@ -464,10 +464,10 @@ class AntrianController extends APIController
         $taskid = null;
         if (isset($request->kodebooking)) {
             $response =  $this->taskid_antrean($request);
-            if ($response->status() == 200) {
-                $taskid = $response->getData()->response;
+            if ($response->metadata->code == 200) {
+                $taskid = $response->response;
             }
-            Alert::success($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::success($response->metadata->message . ' ' . $response->metadata->code);
         }
         return view('bpjs.antrian.list_task', compact([
             'request',
@@ -564,11 +564,11 @@ class AntrianController extends APIController
         $antrians = null;
         if (isset($request->waktu)) {
             $response =  $this->dashboard_tanggal($request);
-            if ($response->status() == 200) {
-                $antrians = $response->getData()->response->list;
-                Alert::success($response->getData()->metadata->message . ' ' . $response->status());
+            if ($response->metadata->code == 200) {
+                $antrians = $response->response->list;
+                Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+                Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
         return view('bpjs.antrian.dashboard_tanggal_index', compact([
@@ -584,11 +584,11 @@ class AntrianController extends APIController
             $request['tahun'] = $tanggal[0];
             $request['bulan'] = $tanggal[1];
             $response =  $this->dashboard_bulan($request);
-            if ($response->status() == 200) {
-                $antrians = $response->getData()->response->list;
-                Alert::success($response->getData()->metadata->message . ' ' . $response->status());
+            if ($response->metadata->code == 200) {
+                $antrians = $response->response->list;
+                Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
-                Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+                Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
         return view('bpjs.antrian.dashboard_bulan_index', compact([
@@ -601,10 +601,10 @@ class AntrianController extends APIController
         $antrians = null;
         if (isset($request->tanggal)) {
             $response = $this->antrian_tanggal($request);
-            if ($response->status() == 200) {
-                $antrians = $response->getData()->response;
+            if ($response->metadata->code == 200) {
+                $antrians = $response->response;
             } else {
-                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
                 return redirect()->route('bpjs.antrian.antrian_per_tanggal');
             }
         }
@@ -616,10 +616,10 @@ class AntrianController extends APIController
         if ($request->kodebooking) {
             $request['kodeBooking'] = $request->kodebooking;
             $response = $this->antrian_kodebooking($request);
-            if ($response->status() == 200) {
-                $antrian = $response->getData()->response[0];
+            if ($response->metadata->code == 200) {
+                $antrian = $response->response[0];
             } else {
-                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
                 return redirect()->route('bpjs.antrian.antrian_per_tanggal');
             }
         }
@@ -631,11 +631,11 @@ class AntrianController extends APIController
     {
         $request['tanggal'] = now()->format('Y-m-d');
         $response = $this->antrian_belum_dilayani($request);
-        if ($response->status() == 200) {
-            $antrians = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $antrians = $response->response;
         } else {
             $antrians = null;
-            Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
             return redirect()->route('antrian.laporan_tanggal');
         }
         return view('bpjs.antrian.antrian_belum_dilayani', compact(['request', 'antrians']));
@@ -651,10 +651,10 @@ class AntrianController extends APIController
             $request['hari'] = $jadwal->hari;
             $request['jamPraktek'] = $jadwal->jadwal;
             $response = $this->antrian_poliklinik($request);
-            if ($response->status() == 200) {
-                $antrians = $response->getData()->response;
+            if ($response->metadata->code == 200) {
+                $antrians = $response->response;
             } else {
-                Alert::error('Error ' . $response->status(),  $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
             }
         }
         return view('bpjs.antrian.antrian_per_dokter', [
@@ -703,10 +703,10 @@ class AntrianController extends APIController
         $request['taskid'] = 99;
         $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . Auth::user()->name;
         $response = $this->batal_antrian($request);
-        if ($response->status() == 200) {
-            Alert::success('Success ' . $response->status(), $response->getData()->metadata->message);
+        if ($response->metadata->code == 200) {
+            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         return redirect()->back();
     }
@@ -715,10 +715,10 @@ class AntrianController extends APIController
         $request['taskid'] = 99;
         $request['keterangan'] = "Antrian dibatalkan oleh pasien";
         $response = $this->batal_antrian($request);
-        if ($response->status() == 200) {
-            Alert::success('Success ' . $response->status(), $response->getData()->metadata->message);
+        if ($response->metadata->code == 200) {
+            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         return redirect()->back();
     }
@@ -731,7 +731,7 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $vclaim = new AntrianController();
         $response = $vclaim->update_antrean($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             // try {
             //     // notif wa
             //     $wa = new WhatsappController();
@@ -749,7 +749,7 @@ class AntrianController extends APIController
             ]);
             Alert::success('Success', 'Panggil Pasien Berhasil');
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         return redirect()->back();
     }
@@ -780,7 +780,7 @@ class AntrianController extends APIController
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $api = new AntrianController();
         $response = $api->update_antrean($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             $antrian->update([
                 'taskid' => $request->taskid,
                 'status_api' => 0,
@@ -798,13 +798,13 @@ class AntrianController extends APIController
             // }
             Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         $response = $api->ambil_antrian_farmasi($request);
-        // if ($response->status() == 200) {
+        // if ($response->metadata->code == 200) {
         //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         // } else {
-        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
+        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->metadata->code, $response->metadata->message);
         // }
         return redirect()->back();
     }
@@ -818,7 +818,7 @@ class AntrianController extends APIController
         $request['waktu'] = Carbon::now()->timestamp * 1000;
         $api = new AntrianController();
         $response = $api->update_antrean($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             $antrian->update([
                 'taskid' => $request->taskid,
                 'status_api' => 0,
@@ -836,13 +836,13 @@ class AntrianController extends APIController
             // }
             Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         } else {
-            Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         }
         $response = $api->ambil_antrian_farmasi($request);
-        // if ($response->status() == 200) {
+        // if ($response->metadata->code == 200) {
         //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         // } else {
-        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->status(), $response->getData()->metadata->message);
+        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->metadata->code, $response->metadata->message);
         // }
         return redirect()->back();
     }
@@ -850,8 +850,8 @@ class AntrianController extends APIController
     {
         // get poli
         $response = $this->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $polikliniks = $response->response;
         } else {
             $polikliniks = null;
         }
@@ -942,7 +942,7 @@ class AntrianController extends APIController
     {
         $request['method'] = 'Bridging';
         $res =  $this->ambil_antrian($request);
-        if ($res->status() == 200) {
+        if ($res->metadata->code == 200) {
             $request['taskid'] = 3;
             $request['waktu'] = now()->timestamp * 1000;
             $res = $this->update_antrean_pendaftaran($request);
@@ -953,8 +953,8 @@ class AntrianController extends APIController
                 'jenispasien' => $request->jenispasien,
             ]);
         } else {
-            Alert::error('Error', $res->getData()->metadata->message);
-            return redirect()->back()->withErrors($res->getData()->metadata->message);
+            Alert::error('Error', $res->metadata->message);
+            return redirect()->back()->withErrors($res->metadata->message);
         }
     }
     public function selanjutnyaPendaftaran($loket, $lantai, $jenispasien, $tanggal, Request $request)
@@ -1121,9 +1121,9 @@ class AntrianController extends APIController
             $request['status_api'] = 0;
         }
         // $response = $vclaim->update_antrean($request);
-        // if ($response->status() == 200) {
+        // if ($response->metadata->code == 200) {
         // } else {
-        //     Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+        //     Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
         // }
         $antrian->update([
             'taskid' => $request->taskid,
@@ -1217,7 +1217,7 @@ class AntrianController extends APIController
         // ambil antrian offline
         $antrian_api = new AntrianController();
         $response = $antrian_api->ambil_antrian($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             // cek printer
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
@@ -1226,12 +1226,12 @@ class AntrianController extends APIController
             } catch (\Throwable $th) {
                 return $this->sendError('Printer Mesin Antrian Tidak Menyala',  201);
             }
-            $antrian = $response->getData()->response;
+            $antrian = $response->response;
             $this->print_karcis_offline($request, $antrian);
             Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
             return redirect()->route('antrianConsole');
         } else {
-            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
             return redirect()->route('antrianConsole');
         }
     }
@@ -1261,7 +1261,7 @@ class AntrianController extends APIController
         // ambil antrian offline
         $antrian_api = new AntrianController();
         $response = $antrian_api->ambil_antrian_offline($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             // cek printer
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
@@ -1270,12 +1270,12 @@ class AntrianController extends APIController
             } catch (\Throwable $th) {
                 return $this->sendError('Printer Mesin Antrian Tidak Menyala',  201);
             }
-            $antrian = $response->getData()->response;
+            $antrian = $response->response;
             $this->print_karcis_offline($request, $antrian);
             Alert::success('Success', 'Anda berhasil mendaftar dengan antrian ' . $antrian->angkaantrean . " / " . $antrian->nomorantrean);
             return redirect()->route('antrianConsole');
         } else {
-            Alert::error('Error ' . $response->getData()->metadata->code,  $response->getData()->metadata->message);
+            Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
             return redirect()->route('antrianConsole');
         }
     }
@@ -1526,7 +1526,7 @@ class AntrianController extends APIController
             return $this->sendError($validator->errors()->first(), 400);
         }
         $response = $this->update_antrean($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
             $antrian->update([
                 'taskid' => $request->taskid,
@@ -2080,7 +2080,7 @@ class AntrianController extends APIController
             ];
             return $this->sendResponse($response, 200);
         } else {
-            return $this->sendError($response->getData()->metadata->message, 400);
+            return $this->sendError($response->metadata->message, 400);
         }
     }
     // public function ambil_antrian_offline(Request $request) #ambil antrian mesin antrian
@@ -2110,12 +2110,12 @@ class AntrianController extends APIController
     //     }
     //     // cek jadwal
     //     $jadwal = $this->status_antrian($request);
-    //     if ($jadwal->status() == 200) {
-    //         $jadwal = $jadwal->getData()->response;
+    //     if ($jadwal->metadata->code == 200) {
+    //         $jadwal = $jadwal->response;
     //         $request['namapoli'] = $jadwal->namapoli;
     //         $request['namadokter'] = $jadwal->namadokter;
     //     } else {
-    //         $message = $jadwal->getData()->metadata->message;
+    //         $message = $jadwal->metadata->message;
     //         // kirim notif
     //         $wa = new WhatsappController();
     //         $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
@@ -2249,7 +2249,7 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             $response = $this->batal_antrean($request);
-            // if ($response->status() == 200) {
+            // if ($response->metadata->code == 200) {
             // kirim notif wa
             // $wa = new WhatsappController();
             // $request['message'] = "Kode antrian " . $antrian->kodebooking . " telah dibatakan\n" . $request->keterangan;
@@ -2325,8 +2325,8 @@ class AntrianController extends APIController
                     $request['user'] = "Mesin Antrian";
                     $suratkontrol = $vclaim->suratkontrol_nomor($request);
                     // berhasil get surat kontrol
-                    if ($suratkontrol->status() == 200) {
-                        $suratkontrol = $suratkontrol->getData();
+                    if ($suratkontrol->metadata->code == 200) {
+                        $suratkontrol = $suratkontrol;
                         $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
                         if ($suratkontrol->response->sep->jnsPelayanan == "Rawat Jalan") {
                             $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
@@ -2334,12 +2334,12 @@ class AntrianController extends APIController
                             $request['nomorreferensi'] = $antrian->nomorrujukan;
 
                             $data = $vclaim->rujukan_nomor($request);
-                            if ($data->status() != 200) {
+                            if ($data->metadata->code != 200) {
                                 $data = $vclaim->rujukan_rs_nomor($request);
                             }
                             // berhasil get rujukan
-                            if ($data->status() == 200) {
-                                $data = $data->getData();
+                            if ($data->metadata->code == 200) {
+                                $data = $data;
                                 $rujukan = $data->response->rujukan;
                                 $peserta = $rujukan->peserta;
                                 $diganosa = $rujukan->diagnosa;
@@ -2378,14 +2378,14 @@ class AntrianController extends APIController
                             }
                             // gagal get rujukan
                             else {
-                                return $this->sendError($data->getData()->metadata->message,  400);
+                                return $this->sendError($data->metadata->message,  400);
                             }
                         } else {
                             $request['nomorkartu'] = $antrian->nomorkartu;
                             $data = $vclaim->peserta_nomorkartu($request);
                             // berhasil get rujukan
-                            if ($data->status() == 200) {
-                                $data = $data->getData();
+                            if ($data->metadata->code == 200) {
+                                $data = $data;
                                 $peserta = $data->response->peserta;
                                 $diagnosa = $suratkontrol->response->sep->diagnosa;
                                 $asalRujukan = $suratkontrol->response->sep->provPerujuk->asalRujukan;
@@ -2427,7 +2427,7 @@ class AntrianController extends APIController
                     }
                     // gagal get surat kontrol
                     else {
-                        return $this->sendError($suratkontrol->getData()->metadata->message,  400);
+                        return $this->sendError($suratkontrol->metadata->message,  400);
                     }
                 }
                 // daftar pake rujukan
@@ -2442,8 +2442,8 @@ class AntrianController extends APIController
                         $data = $vclaim->rujukan_nomor($request);
                     }
                     // berhasil get rujukan
-                    if ($data->status() == 200) {
-                        $data = $data->getData();
+                    if ($data->metadata->code == 200) {
+                        $data = $data;
                         $rujukan = $data->response->rujukan;
                         $peserta = $rujukan->peserta;
                         $diganosa = $rujukan->diagnosa;
@@ -2483,11 +2483,11 @@ class AntrianController extends APIController
                     }
                     // gagal get rujukan
                     else {
-                        return $this->sendError($data->getData()->metadata->message,  400);
+                        return $this->sendError($data->metadata->message,  400);
                     }
                 }
                 // create sep
-                $sep = $vclaim->sep_insert($request)->getData();
+                $sep = $vclaim->sep_insert($request);
                 // berhasil buat sep
                 if ($sep->metadata->code == 200) {
                     // update antrian sep
@@ -3345,11 +3345,11 @@ class AntrianController extends APIController
             $api = new VclaimController();
             $request['noSep'] = $antrian->nomorsep;
             $response = $api->sep_nomor($request);
-            if ($response->status() == 200) {
-                $sep =  $response->getData()->response;
+            if ($response->metadata->code == 200) {
+                $sep =  $response->response;
                 $this->print_sep($request, $sep);
             } else {
-                return  $this->sendError($response->getData()->metadata->message, 400);
+                return  $this->sendError($response->metadata->message, 400);
             }
         }
         return  $this->sendResponse("Print Ulang Berhasil", null, 201);

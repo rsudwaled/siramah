@@ -22,20 +22,20 @@ class PoliklinikController extends BaseController
         $poliklinik_save = Poliklinik::get();
 
         $response = $controller->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
-            Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
+        if ($response->metadata->code == 200) {
+            $polikliniks = $response->response;
+            Alert::success($response->metadata->message, 'Poliklinik Antrian BPJS');
         } else {
             $polikliniks = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         $response = $controller->ref_poli_fingerprint();
-        if ($response->status() == 200) {
-            $fingerprint = $response->getData()->response;
-            Alert::success($response->statusText(), 'Poliklinik Antrian BPJS');
+        if ($response->metadata->code == 200) {
+            $fingerprint = $response->response;
+            Alert::success($response->metadata->message, 'Poliklinik Antrian BPJS');
         } else {
             $fingerprint = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status(),  'Poliklinik Fingerprint Antrian BPJS');
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code,  'Poliklinik Fingerprint Antrian BPJS');
         }
         return view('bpjs.antrian.poliklinik', compact([
             'polikliniks',
@@ -66,8 +66,8 @@ class PoliklinikController extends BaseController
     {
         $controller = new AntrianController();
         $response = $controller->ref_poli();
-        if ($response->status() == 200) {
-            $polikliniks = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $polikliniks = $response->response;
             foreach ($polikliniks as $value) {
                 PoliklinikAntrian::firstOrCreate([
                     'kodePoli' => $value->kdpoli,
@@ -76,9 +76,9 @@ class PoliklinikController extends BaseController
                     'namaSubspesialis' => $value->nmsubspesialis,
                 ]);
             }
-            Alert::success($response->statusText(), 'Refresh Poliklinik Antrian BPJS Total : ' . count($polikliniks));
+            Alert::success($response->metadata->message, 'Refresh Poliklinik Antrian BPJS Total : ' . count($polikliniks));
         } else {
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         return redirect()->route('pelayanan-medis.poliklinik_antrian');
     }
