@@ -30,14 +30,6 @@
                         {{-- <li><a href="{{ route('jadwaloperasi_info') }}">Jadwal Operasi</a></li> --}}
                     </ul>
                 </li>
-                <li class="dropdown"><a href="#"><span>Antrian</span> <i class="bi bi-chevron-down"></i></a>
-                    <ul>
-                        <li><a class="nav-link scrollto" href="{{ route('daftarOnline') }}">Daftar Rawat Jalan</a></li>
-                        <li><a class="nav-link scrollto" href="{{ route('checkAntrian') }}">Check Status Antrian</a>
-                        </li>
-
-                    </ul>
-                </li>
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
                 <li><a class="nav-link scrollto" href="#doctors">Bed Monitoring</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
@@ -52,7 +44,7 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="{{ route('daftarOnline') }}" class="appointment-btn scrollto">
+        <a href="#" class="appointment-btn scrollto">
             Daftar
         </a>
     </div>

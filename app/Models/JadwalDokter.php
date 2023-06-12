@@ -12,4 +12,9 @@ class JadwalDokter extends Model
     protected $table = 'jkn_jadwal_dokter';
     protected $guarded = ['id'];
 
+    public function antrians()
+    {
+        return $this->hasMany(Antrian::class,  'kodepoli', 'kodesubspesialis');
+    }
+
 }

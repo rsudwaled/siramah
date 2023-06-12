@@ -873,16 +873,16 @@ class AntrianController extends APIController
     // pendaftaran
     public function antrianConsole()
     {
-        $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
-        $jadwal = JadwalDokter::where('hari',  now()->dayOfWeek)->get();
+        // $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
+        $jadwals = JadwalDokter::with(['antrians'])->where('hari',  now()->dayOfWeek)
+            ->orderBy('namasubspesialis', 'asc')->get();
         $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
         $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
         $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
         $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
         return view('simrs.antrian_console', compact(
             [
-                'poliklinik',
-                'jadwal',
+                'jadwals',
                 'antrian_terakhir1',
                 'antrian_terakhir2',
                 'antrian_terakhir3',
@@ -2083,118 +2083,118 @@ class AntrianController extends APIController
             return $this->sendError($response->metadata->message, 400);
         }
     }
-    // public function ambil_antrian_offline(Request $request) #ambil antrian mesin antrian
-    // {
-    //     $validator = Validator::make(request()->all(), [
-    //         "kodepoli" => "required",
-    //         "tanggalperiksa" => "required",
-    //         "kodedokter" => "required",
-    //         "jampraktek" => "required",
-    //         "jenispasien" => "required",
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return $this->sendError($validator->errors()->first(), 400);
-    //     }
-    //     // check tanggal
-    //     if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
-    //         return $this->sendError("Tanggal periksa sudah terlewat", 400);
-    //     }
-    //     if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
-    //         return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 400);
-    //     }
-    //     $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
-    //     $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
-    //     $request['lokasi'] = $poli->lantaipendaftaran;
-    //     if ($request->jenispasien == "NON-JKN") {
-    //         $request['lantaipendaftaran'] = 1;
-    //     }
-    //     // cek jadwal
-    //     $jadwal = $this->status_antrian($request);
-    //     if ($jadwal->metadata->code == 200) {
-    //         $jadwal = $jadwal->response;
-    //         $request['namapoli'] = $jadwal->namapoli;
-    //         $request['namadokter'] = $jadwal->namadokter;
-    //     } else {
-    //         $message = $jadwal->metadata->message;
-    //         // kirim notif
-    //         $wa = new WhatsappController();
-    //         $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
-    //         $wa->send_notif($request);
-    //         return $this->sendError('Mohon maaf , ' . $message, 400);
-    //     }
-    //     $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-    //         ->where('kodepoli', $request->kodepoli)
-    //         ->count();
-    //     $antrian_lantai = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-    //         ->where('method', $request->method)
-    //         ->where('lantaipendaftaran', $request->lantaipendaftaran)
-    //         ->where('jenispasien', $request->jenispasien)
-    //         ->count();
-    //     $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
-    //     $request['angkaantrean'] = $antrian_lantai + 1;
-    //     $request['kodebooking'] = strtoupper(uniqid());
-    //     // estimasi
-    //     $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
-    //     $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
-    //     $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
-    //     $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
-    //     $request['kuotajkn'] = $jadwal->kuotajkn;
-    //     $request['sisakuotanonjkn'] = $jadwal->sisakuotanonjkn - 1;
-    //     $request['kuotanonjkn'] = $jadwal->kuotanonjkn;
-    //     $request['keterangan'] = "Silahkan menunggu panggilan di loket Pendaftaran Lantai " . $request->lantaipendaftaran;
-    //     // tambah antrian database
-    //     $antrian = Antrian::create([
-    //         "kodebooking" => $request->kodebooking,
-    //         "nomorkartu" => $request->nomorkartu,
-    //         "nik" => $request->nik,
-    //         "nohp" => $request->nohp,
-    //         "kodepoli" => $request->kodepoli,
-    //         "norm" => $request->norm,
-    //         "pasienbaru" => $request->pasienbaru,
-    //         "tanggalperiksa" => $request->tanggalperiksa,
-    //         "kodedokter" => $request->kodedokter,
-    //         "jampraktek" => $request->jampraktek,
-    //         "jeniskunjungan" => 0,
-    //         "nomorreferensi" => $request->nomorreferensi,
-    //         "method" => $request->method,
-    //         "nomorrujukan" => $request->nomorRujukan,
-    //         "nomorsuratkontrol" => $request->noSuratKontrol,
-    //         'nomorsep' => $request->nomorsep,
-    //         "kode_kunjungan" => $request->kode_kunjungan,
-    //         "jenispasien" => $request->jenispasien,
-    //         "namapoli" => $request->namapoli,
-    //         "namadokter" => $request->namadokter,
-    //         "nomorantrean" => $request->nomorantrean,
-    //         "angkaantrean" => $request->angkaantrean,
-    //         "estimasidilayani" => $request->estimasidilayani,
-    //         "sisakuotajkn" => $request->sisakuotajkn,
-    //         "kuotajkn" => $request->kuotajkn,
-    //         "sisakuotanonjkn" => $request->sisakuotanonjkn,
-    //         "kuotanonjkn" => $request->kuotanonjkn,
-    //         "keterangan" => $request->keterangan,
-    //         "lokasi" => $request->lokasi,
-    //         "lantaipendaftaran" => $request->lantaipendaftaran,
-    //         "status_api" => 1,
-    //         "taskid" => 0,
-    //         "user" => "System Antrian",
-    //         "nama" => $request->nama,
-    //     ]);
-    //     $response = [
-    //         "nomorantrean" => $request->nomorantrean,
-    //         "angkaantrean" => $request->angkaantrean,
-    //         "kodebooking" => $request->kodebooking,
-    //         "norm" => $request->norm,
-    //         "namapoli" => $request->namapoli,
-    //         "namadokter" => $request->namadokter,
-    //         "estimasidilayani" => $request->estimasidilayani,
-    //         "sisakuotajkn" => $request->sisakuotajkn,
-    //         "kuotajkn" => $request->kuotajkn,
-    //         "sisakuotanonjkn" => $request->sisakuotanonjkn,
-    //         "kuotanonjkn" => $request->kuotanonjkn,
-    //         "keterangan" => $request->keterangan,
-    //     ];
-    //     return $this->sendResponse("OK", $response);
-    // }
+    public function ambil_antrian_offline(Request $request) #ambil antrian mesin antrian
+    {
+        $validator = Validator::make(request()->all(), [
+            "kodepoli" => "required",
+            "tanggalperiksa" => "required",
+            "kodedokter" => "required",
+            "jampraktek" => "required",
+            "jenispasien" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        // check tanggal
+        if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
+            return $this->sendError("Tanggal periksa sudah terlewat", 400);
+        }
+        if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
+            return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 400);
+        }
+        $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
+        $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
+        $request['lokasi'] = $poli->lantaipendaftaran;
+        if ($request->jenispasien == "NON-JKN") {
+            $request['lantaipendaftaran'] = 1;
+        }
+        // cek jadwal
+        $jadwal = $this->status_antrian($request);
+        if ($jadwal->metadata->code == 200) {
+            $jadwal = $jadwal->response;
+            $request['namapoli'] = $jadwal->namapoli;
+            $request['namadokter'] = $jadwal->namadokter;
+        } else {
+            $message = $jadwal->metadata->message;
+            // kirim notif
+            $wa = new WhatsappController();
+            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
+            $wa->send_notif($request);
+            return $this->sendError('Mohon maaf , ' . $message, 400);
+        }
+        $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('kodepoli', $request->kodepoli)
+            ->count();
+        $antrian_lantai = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+            ->where('method', $request->method)
+            ->where('lantaipendaftaran', $request->lantaipendaftaran)
+            ->where('jenispasien', $request->jenispasien)
+            ->count();
+        $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
+        $request['angkaantrean'] = $antrian_lantai + 1;
+        $request['kodebooking'] = strtoupper(uniqid());
+        // estimasi
+        $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
+        $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
+        $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
+        $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
+        $request['kuotajkn'] = $jadwal->kuotajkn;
+        $request['sisakuotanonjkn'] = $jadwal->sisakuotanonjkn - 1;
+        $request['kuotanonjkn'] = $jadwal->kuotanonjkn;
+        $request['keterangan'] = "Silahkan menunggu panggilan di loket Pendaftaran Lantai " . $request->lantaipendaftaran;
+        // tambah antrian database
+        $antrian = Antrian::create([
+            "kodebooking" => $request->kodebooking,
+            "nomorkartu" => $request->nomorkartu,
+            "nik" => $request->nik,
+            "nohp" => $request->nohp,
+            "kodepoli" => $request->kodepoli,
+            "norm" => $request->norm,
+            "pasienbaru" => $request->pasienbaru,
+            "tanggalperiksa" => $request->tanggalperiksa,
+            "kodedokter" => $request->kodedokter,
+            "jampraktek" => $request->jampraktek,
+            "jeniskunjungan" => 0,
+            "nomorreferensi" => $request->nomorreferensi,
+            "method" => $request->method,
+            "nomorrujukan" => $request->nomorRujukan,
+            "nomorsuratkontrol" => $request->noSuratKontrol,
+            'nomorsep' => $request->nomorsep,
+            "kode_kunjungan" => $request->kode_kunjungan,
+            "jenispasien" => $request->jenispasien,
+            "namapoli" => $request->namapoli,
+            "namadokter" => $request->namadokter,
+            "nomorantrean" => $request->nomorantrean,
+            "angkaantrean" => $request->angkaantrean,
+            "estimasidilayani" => $request->estimasidilayani,
+            "sisakuotajkn" => $request->sisakuotajkn,
+            "kuotajkn" => $request->kuotajkn,
+            "sisakuotanonjkn" => $request->sisakuotanonjkn,
+            "kuotanonjkn" => $request->kuotanonjkn,
+            "keterangan" => $request->keterangan,
+            "lokasi" => $request->lokasi,
+            "lantaipendaftaran" => $request->lantaipendaftaran,
+            "status_api" => 1,
+            "taskid" => 0,
+            "user" => "System Antrian",
+            "nama" => $request->nama,
+        ]);
+        $response = [
+            "nomorantrean" => $request->nomorantrean,
+            "angkaantrean" => $request->angkaantrean,
+            "kodebooking" => $request->kodebooking,
+            "norm" => $request->norm,
+            "namapoli" => $request->namapoli,
+            "namadokter" => $request->namadokter,
+            "estimasidilayani" => $request->estimasidilayani,
+            "sisakuotajkn" => $request->sisakuotajkn,
+            "kuotajkn" => $request->kuotajkn,
+            "sisakuotanonjkn" => $request->sisakuotanonjkn,
+            "kuotanonjkn" => $request->kuotanonjkn,
+            "keterangan" => $request->keterangan,
+        ];
+        return $this->sendResponse($response, 200);
+    }
     public function sisa_antrian(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -2328,15 +2328,17 @@ class AntrianController extends APIController
                     if ($suratkontrol->metadata->code == 200) {
                         $suratkontrol = $suratkontrol;
                         $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+
                         if ($suratkontrol->response->sep->jnsPelayanan == "Rawat Jalan") {
                             $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
                             $request['jeniskunjungan_print'] = 'KONTROL';
                             $request['nomorreferensi'] = $antrian->nomorrujukan;
-
                             $data = $vclaim->rujukan_nomor($request);
+
                             if ($data->metadata->code != 200) {
                                 $data = $vclaim->rujukan_rs_nomor($request);
                             }
+
                             // berhasil get rujukan
                             if ($data->metadata->code == 200) {
                                 $data = $data;
@@ -2348,6 +2350,7 @@ class AntrianController extends APIController
                                 // $request['kodepenjamin'] = 'P13';
                                 $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
                                 // tujuan rujukan
+                                // ppkPelayanan
                                 $request['ppkPelayanan'] = "1018R001";
                                 $request['jnsPelayanan'] = "2";
                                 // peserta
@@ -2382,6 +2385,7 @@ class AntrianController extends APIController
                             }
                         } else {
                             $request['nomorkartu'] = $antrian->nomorkartu;
+                            $request['tanggal'] = $antrian->tanggalperiksa;
                             $data = $vclaim->peserta_nomorkartu($request);
                             // berhasil get rujukan
                             if ($data->metadata->code == 200) {
@@ -2422,6 +2426,7 @@ class AntrianController extends APIController
                                 $request['noSurat'] = $request->nomorsuratkontrol; // get antrian
                                 $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
                                 $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
+                                // dd($request->all(), $suratkontrol->response->sep->jnsPelayanan, $data);
                             }
                         }
                     }
@@ -2488,6 +2493,7 @@ class AntrianController extends APIController
                 }
                 // create sep
                 $sep = $vclaim->sep_insert($request);
+                // dd($request->all(), $sep);
                 // berhasil buat sep
                 if ($sep->metadata->code == 200) {
                     // update antrian sep

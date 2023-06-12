@@ -150,7 +150,7 @@
                                         {{ $item->diagnosa }}
                                     </td>
                                     <td>
-                                        <form action="{{ route('vclaim.sep_delete') }}" method="POST">
+                                        <form action="{{ route('sep_delete') }}" method="POST">
                                             {{-- <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check"
                                                 title="Edit User {{ $item->name }}"
                                                 onclick="window.location='{{ route('user_verifikasi', $item) }}'" />
@@ -285,7 +285,7 @@
                                         {{ $suratkontrol->terbitSEP }}
                                     </td>
                                     <td>
-                                        <form action="{{ route('vclaim.suratkontrol_delete') }}" method="POST">
+                                        <form action="{{ route('suratkontrol_delete') }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="noSuratKontrol"
