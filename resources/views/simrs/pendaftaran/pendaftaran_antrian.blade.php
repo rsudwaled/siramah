@@ -611,7 +611,7 @@
             $('#tableKunjungan').DataTable();
             $('#btnRiwayatRujukan').click(function() {
                 $.LoadingOverlay("show");
-                var url = "{{ route('vclaim.rujukan_peserta') }}";
+                var url = "{{ route('rujukan_peserta') }}";
                 var nomorkartu = $('#nomorkartu').val();
                 var data = {
                     nomorkartu: nomorkartu,
@@ -683,7 +683,7 @@
                     formatfilter: 2,
                     tahun: tahun,
                 }
-                var url = "{{ route('vclaim.suratkontrol_peserta') }}";
+                var url = "{{ route('suratkontrol_peserta') }}";
                 $.ajax({
                     data: data,
                     url: url,
