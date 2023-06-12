@@ -565,7 +565,7 @@ class AntrianController extends APIController
         if (isset($request->waktu)) {
             $response =  $this->dashboard_tanggal($request);
             if ($response->metadata->code == 200) {
-                $antrians = $response->response->list;
+                $antrians = collect($response->response->list);
                 Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
                 Alert::error($response->metadata->message . ' ' . $response->metadata->code);
@@ -585,7 +585,7 @@ class AntrianController extends APIController
             $request['bulan'] = $tanggal[1];
             $response =  $this->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
-                $antrians = $response->response->list;
+                $antrians = collect($response->response->list);
                 Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
                 Alert::error($response->metadata->message . ' ' . $response->metadata->code);
@@ -3086,7 +3086,7 @@ class AntrianController extends APIController
         $response = [
             "list" => $jadwals
         ];
-        return $this->sendResponse("OK", $response, 200);
+        return $this->sendResponse("OK", 200);
     }
     public function jadwal_operasi_pasien(Request $request)
     {
@@ -3118,7 +3118,7 @@ class AntrianController extends APIController
         $response = [
             "list" => $jadwals
         ];
-        return $this->sendResponse("OK", $response, 200);
+        return $this->sendResponse("OK", 200);
     }
     public function ambil_antrian_farmasi(Request $request)
     {
@@ -3358,7 +3358,7 @@ class AntrianController extends APIController
                 return  $this->sendError($response->metadata->message, 400);
             }
         }
-        return  $this->sendResponse("Print Ulang Berhasil", null, 201);
+        return  $this->sendResponse("Print Ulang Berhasil", 201);
     }
     function print_karcis_offline(Request $request, $antrian)
     {

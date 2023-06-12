@@ -24,12 +24,24 @@
             </x-adminlte-card>
             <x-adminlte-card title="Data Task ID Antrian" theme="secondary" collapsible>
                 @php
-                    $heads = ['Poliklinik', '1', '2', '3', '4', '5', '6', 'Total', 'Input'];
+                    $heads = ['Poliklinik', 'Total Antrian', '1', '2', '3', '4', '5', '6', '7'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @isset($antrians)
-                        @foreach ($antrians as $key => $item)
+                        @foreach ($antrians->groupBy('namapoli') as $key => $item)
+
                             <tr>
+                                <td>{{ $key }}</td>
+                                <td>{{ $item->sum('jumlah_antrean') }}</td>
+                                <td>{{ round($item->sum('avg_waktu_task1') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task2') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task3') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task4') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task5') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task6') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($item->sum('avg_waktu_task7') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
+                            </tr>
+                            {{-- <tr>
                                 <td>
                                     {{ $item->namapoli }} ({{ $item->kodepoli }})
                                     <br>
@@ -67,7 +79,7 @@
                                 </td>
                                 <td>{{ $item->jumlah_antrean }}</td>
                                 <td>{{ $item->tanggal }}</td>
-                            </tr>
+                            </tr> --}}
                         @endforeach
                     @endisset
                 </x-adminlte-datatable>

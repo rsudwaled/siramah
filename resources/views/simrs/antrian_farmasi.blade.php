@@ -65,7 +65,6 @@
                             icon="fas fa-sign-in-alt" />
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         {{-- belum dilayani --}}
@@ -246,7 +245,7 @@
                 </div>
                 {{-- selesai dilayani --}}
                 <x-adminlte-card
-                    title="Antrian Sudah Pelayanan Farmasi ({{ $antrians->where('taskid', '>=', 5)->where('status_api', 1)->count() }} Orang)"
+                    title="Antrian Sudah Pelayanan Farmasi ({{ $antrians->count() }} Orang)"
                     theme="success" icon="fas fa-info-circle" collapsible="collapsed">
                     @php
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status'];
@@ -254,7 +253,7 @@
                     @endphp
                     <x-adminlte-datatable id="table3" class="nowrap" :heads="$heads" :config="$config" striped
                         bordered hoverable compressed>
-                        @foreach ($antrians->where('taskid', '>=', 5)->where('status_api', 1) as $item)
+                        @foreach ($antrians as $item)
                             <tr>
                                 <td>{{ $item->angkaantrean }}</td>
                                 <td>{{ $item->kodebooking }}<br>
@@ -287,16 +286,37 @@
                                 <td>{{ $item->namapoli }} {{ $item->jampraktek }}<br>{{ $item->namadokter }}
                                 </td>
                                 <td>
+                                    @if ($item->taskid == 0)
+                                        <span class="badge bg-secondary">Belum Checkin</span>
+                                    @endif
+                                    @if ($item->taskid == 1)
+                                        <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
+                                    @endif
+                                    @if ($item->taskid == 2)
+                                        <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
+                                    @endif
+                                    @if ($item->taskid == 3)
+                                        @if ($item->status_api == 0)
+                                            <span class="badge bg-warning">{{ $item->taskid }}. Belum
+                                                Pembayaran</span>
+                                        @else
+                                            <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+                                        @endif
+                                    @endif
+                                    @if ($item->taskid == 4)
+                                        <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+                                    @endif
                                     @if ($item->taskid == 5)
                                         @if ($item->status_api == 0)
-                                            <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Farmasi</span>
+                                            <span class="badge bg-success">{{ $item->taskid }}. Tunggu
+                                                Farmasi</span>
                                         @endif
                                         @if ($item->status_api == 1)
                                             <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
                                         @endif
                                     @endif
                                     @if ($item->taskid == 6)
-                                        <span class="badge bg-warning">{{ $item->taskid }}. Proses Racik</span>
+                                        <span class="badge bg-success">{{ $item->taskid }}. Racik Obat</span>
                                     @endif
                                     @if ($item->taskid == 7)
                                         <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>

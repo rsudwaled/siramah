@@ -80,7 +80,8 @@
                 </x-adminlte-card>
             </div>
         </div>
-    @stop
-    @section('plugins.Datatables', true)
-    @section('plugins.TempusDominusBs4', true)
-    @section('plugins.Select2', true)
+    </div>
+@stop
+@section('plugins.Datatables', true)
+@section('plugins.TempusDominusBs4', true)
+@section('plugins.Select2', true)
