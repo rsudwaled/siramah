@@ -98,7 +98,7 @@ class FarmasiController extends APIController
                 $printer->close();
             } catch (\Throwable $th) {
                 // throw $th;
-                Alert::error('Error', $th->getMessage());
+                Alert::error($th->getMessage(), 200);
             }
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
@@ -125,6 +125,7 @@ class FarmasiController extends APIController
                 $printer->text("Silahkan tunggu resep anda sedang diproses oleh farmasi\n");
                 $printer->cut();
                 $printer->close();
+                Alert::success('Success', 'Order Resep Telah Dicetak');
             } catch (\Throwable $th) {
                 // throw $th;
                 Alert::error('Error', $th->getMessage());
@@ -190,13 +191,12 @@ class FarmasiController extends APIController
                 // throw $th;
                 return $this->sendError($th->getMessage(), 500);
             }
-
             $order->update([
                 'status_order' => 2
             ]);
-            return $this->sendResponse('Ok', null, 200);
+            return $this->sendError('Ok', 200);
         } else {
-            return $this->sendResponse('Tidak ada order', null, 200);
+            return $this->sendError('Tidak ada order',  200);
         }
     }
     public function cetakUlangOrderObat(Request $request)

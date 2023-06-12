@@ -368,7 +368,7 @@ class VclaimController extends APIController
                 $code = 200;
             return $this->sendResponse($data, $code);
         } else {
-            return $this->sendError($message,$code);
+            return $this->sendError($message, $code);
         }
     }
     public function response_no_decrypt($response)
@@ -600,7 +600,7 @@ class VclaimController extends APIController
     }
     public function ref_kelas_rawat(Request $request)
     {
-        $url = env('VCLAIM_URL') . "referensi/kelasrawat" ;
+        $url = env('VCLAIM_URL') . "referensi/kelasrawat";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -620,7 +620,7 @@ class VclaimController extends APIController
     }
     public function ref_spesialistik(Request $request)
     {
-        $url = env('VCLAIM_URL') . "referensi/spesialistik" ;
+        $url = env('VCLAIM_URL') . "referensi/spesialistik";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -744,7 +744,7 @@ class VclaimController extends APIController
         if ($request->tanggal) {
             $request['bulan'] = Carbon::parse($request->tanggal)->month;
             $request['tahun'] = Carbon::parse($request->tanggal)->year;
-            $request['formatfilter'] =2;
+            $request['formatfilter'] = 2;
         }
         $validator = Validator::make(request()->all(), [
             "bulan" => "required",
