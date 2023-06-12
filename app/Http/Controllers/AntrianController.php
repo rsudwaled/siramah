@@ -1995,7 +1995,7 @@ class AntrianController extends APIController
             $request['keterangan'] = "Silahkan menunggu panggilan di loket pendaftaran.";
         }
         // keterangan jika bridging
-        else if ($request->method == 'Whatsapp') {
+        else if ($request->method == 'Web') {
             $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
         }
         // keterangan jika bridging

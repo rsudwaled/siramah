@@ -113,6 +113,8 @@ Route::get('cari_pasien', [PasienController::class, 'cari_pasien'])->name('cari_
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('poliklinik_aktif');
 Route::get('cari_jadwal_dokter', [JadwalDokterController::class, 'cari_jadwal_dokter'])->name('cari_jadwal_dokter');
 Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
+Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
+
 // Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 // Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
