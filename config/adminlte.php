@@ -455,14 +455,14 @@ return [
                     'icon'    => 'fas fa-pills',
                     'url'  => 'orderFarmasi',
                     'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
+                    'can' => 'farmasi',
                 ],
                 [
                     'text' => 'Obat',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'obat',
                     'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
+                    'can' => 'farmasi',
                 ],
                 [
                     'text' => 'E-KPO Rawat Jalan',
