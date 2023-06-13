@@ -453,6 +453,13 @@ return [
                     'can' => 'farmasi',
                 ],
                 [
+                    'text' => 'Tracer Order Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'tracerOrderObat',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
                     'text' => 'Obat',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'obat',
@@ -466,13 +473,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                [
-                    'text' => 'Tracer Order Obat',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'tracerOrderObat',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
+
             ],
         ],
         // YANMED

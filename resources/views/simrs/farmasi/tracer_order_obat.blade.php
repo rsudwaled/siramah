@@ -10,7 +10,7 @@
             <x-adminlte-card title="Filter Antrian Offline Pasien" theme="secondary" collapsible="">
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
@@ -23,26 +23,11 @@
                                 </x-slot>
                             </x-adminlte-input-date>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <x-adminlte-select name="depo" label="Depo Farmasi">
                                 <x-adminlte-options :options="[
-                                    1 => 'Farmasi Depo 1',
-                                    2 => 'Farmasi Depo 2',
-                                    3 => 'Farmasi Depo 3',
-                                    4 => 'Farmasi Depo 4',
-                                    5 => 'Farmasi Depo 5',
+                                    4008 => 'FARMASI DEPO 2',
                                 ]" :selected="$request->depo ?? 1" />
-                            </x-adminlte-select>
-                        </div>
-                        <div class="col-md-4">
-                            <x-adminlte-select name="lantai" label="Lantai">
-                                <x-adminlte-options :options="[
-                                    1 => 'Lantai 1',
-                                    2 => 'Lantai 2',
-                                    3 => 'Lantai 3',
-                                    4 => 'Lantai 4',
-                                    5 => 'Lantai 5',
-                                ]" :selected="$request->lantai ?? 1" />
                             </x-adminlte-select>
                         </div>
                     </div>
@@ -124,9 +109,6 @@
             url = "{{ route('getOrderObat') }}";
             const element = document.getElementById("demo");
             var tracer = "{{ $request->tracer }}";
-
-
-
             if (tracer === "ON") {
                 setInterval(function() {
                     var dt = new Date($.now());
@@ -134,8 +116,8 @@
                         ":" + dt
                         .getSeconds();
                     $.get(url, {
-                            // name: "John",
-                            // time: "2pm"
+                            tanggal: "{{ $request->tanggal }}",
+                            depo: "{{ $request->depo }}"
                         })
                         .done(function(data) {
                             console.log(data);
