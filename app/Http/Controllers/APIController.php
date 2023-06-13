@@ -11,7 +11,7 @@ class APIController extends Controller
         $response = [
             'response' => $data,
             'metadata' => [
-                'message' => 'OK',
+                'message' => 'Ok',
                 'code' =>  $code,
             ],
         ];

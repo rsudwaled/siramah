@@ -863,12 +863,12 @@ class VclaimController extends APIController
         // checking request
         $validator = Validator::make(request()->all(), [
             "jenisRujukan" => "required",
-            "nomorrujukan" => "required",
+            "nomorRujukan" => "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('VCLAIM_URL') . "Rujukan/JumlahSEP/" . $request->jenisRujukan . "/" . $request->nomorrujukan;
+        $url = env('VCLAIM_URL') . "Rujukan/JumlahSEP/" . $request->jenisRujukan . "/" . $request->nomorRujukan;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
