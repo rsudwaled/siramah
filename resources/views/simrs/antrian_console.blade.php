@@ -105,22 +105,6 @@
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
                                 striped bordered hoverable compressed>
-                                {{-- @foreach ($poliklinik as $poli)
-                                    @foreach ($poli->jadwals->where('hari', \Carbon\Carbon::now()->dayOfWeek)->where('kodesubspesialis', $poli->kodesubspesialis) as $jadwal)
-                                        <tr
-                                            class="text-left
-                                            {{ $jadwal->libur == 1 ||$poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('taskid', '!=', 99)->where('kodedokter', $jadwal->kodedokter)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
-                                           ">
-                                            <td> {{ strtoupper($jadwal->namasubspesialis) }}</td>
-                                            <td> {{ $jadwal->namadokter }} {{ $jadwal->libur ? '(TUTUP)' : '' }}</td>
-                                            <td> {{ $jadwal->jadwal }}</td>
-                                            <td> {{ $jadwal->kapasitaspasien }}</td>
-                                            <td> {{ $poli->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('kodedokter', $jadwal->kodedokter)->where('taskid', '!=', 99)->count() }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endforeach --}}
-
                                 @foreach ($jadwals as $jadwal)
                                     <tr
                                         class="text-left
@@ -140,6 +124,36 @@
             </div>
         </div>
     </div>
+    <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien" theme="success" icon="fas fa-user-plus">
+        <div class="form-group">
+            <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
+            <div class="row">
+                @foreach ($poliklinik as $item)
+                    <div class="col-md-4">
+                        <div class="custom-control custom-radio " style="scale: 100%">
+                            <input class="custom-control-input btnPoliBPJS" type="radio"
+                                data-id="{{ $item->kodesubspesialis }}" id="{{ $item->namasubspesialis }}"
+                                value="{{ $item->kodesubspesialis }}" name="kodesubspesialis">
+                            <label for="{{ $item->namasubspesialis }}" class="custom-control-label"
+                                data-id="{{ $item->kodesubspesialis }}">{{ $item->namasubspesialis }} </label>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+        <br>
+        <div class="form-group" id="daftarDokter">
+            <label>Silahkan pilih dokter poliklinik di bawah ini</label>
+            <div id="rowDokter"></div>
+        </div>
+        <x-slot name="footerSlot">
+            <x-adminlte-button class="mr-auto withLoad" type="submit" theme="success" id="btnDaftarPoliBPJS"
+                icon="fas fa-user-plus" label="Daftar BPJS" />
+            <x-adminlte-button class="mr-auto withLoad" type="submit" theme="success" id="btnDaftarPoliUmum"
+                icon="fas fa-user-plus" label="Daftar Umum" />
+            <x-adminlte-button theme="secondary" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)*

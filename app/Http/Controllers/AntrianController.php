@@ -873,7 +873,7 @@ class AntrianController extends APIController
     // pendaftaran
     public function antrianConsole()
     {
-        // $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
+        $poliklinik = Poliklinik::with(['antrians', 'jadwals'])->where('status', 1)->get();
         $jadwals = JadwalDokter::with(['antrians'])->where('hari',  now()->dayOfWeek)
             ->orderBy('namasubspesialis', 'asc')->get();
         $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
@@ -882,6 +882,7 @@ class AntrianController extends APIController
         $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
         return view('simrs.antrian_console', compact(
             [
+                'poliklinik',
                 'jadwals',
                 'antrian_terakhir1',
                 'antrian_terakhir2',
@@ -1216,7 +1217,7 @@ class AntrianController extends APIController
         $request['method'] = 'Offline';
         // ambil antrian offline
         $antrian_api = new AntrianController();
-        $response = $antrian_api->ambil_antrian($request);
+        $response = $antrian_api->ambil_antrian_offline($request);
         if ($response->metadata->code == 200) {
             // cek printer
             try {
