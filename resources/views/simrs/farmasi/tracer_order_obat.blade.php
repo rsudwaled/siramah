@@ -52,11 +52,9 @@
                         theme="{{ $request->tracer == 'ON' ? 'success' : 'secondary' }}" label="ON" />
                     <x-adminlte-button type="submit" form="formOffTracer" class="withLoad mr-2"
                         theme="{{ $request->tracer == 'OFF' ? 'success' : 'secondary' }}" label="OFF" />
-
                     <a href="" class="btn btn-warning"> <i class="fas fa-sync"></i> Refresh</a>
-
                     @php
-                        $heads = ['Id', 'Tgl Entry', 'No Order', 'No RM', 'Nama', 'Poliklinik', 'Penjamin', 'Tracer', 'SEP', 'Action'];
+                        $heads = ['Id', 'Tgl Entry', 'No Order', 'Pasien (RM)', 'Poliklinik', 'Dokter', 'Penjamin', 'SEP', 'Tracer', 'Action'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -71,9 +69,9 @@
                                 <td>{{ $order->id }}</td>
                                 <td>{{ $order->tgl_entry }}</td>
                                 <td>{{ $order->kode_layanan_header }}</td>
-                                <td>{{ $order->no_rm }}</td>
-                                <td>{{ $order->pasien->nama_px }}</td>
-                                <td>{{ $order->unit->nama_unit }}</td>
+                                <td>{{ $order->pasien->nama_px }} ({{ $order->no_rm }})</td>
+                                <td>{{ $order->asal_unit->nama_unit }}</td>
+                                <td>{{ $order->dokter->nama_paramedis }}</td>
                                 <td>{{ $order->penjamin_simrs->nama_penjamin }}</td>
                                 <td>{{ $order->kunjungan->no_sep ?? '-' }}</td>
                                 <td>
@@ -91,9 +89,7 @@
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
-
                     <p id="demo"></p>
-
                 </x-adminlte-card>
             @endif
 
