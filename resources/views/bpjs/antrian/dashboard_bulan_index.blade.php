@@ -79,6 +79,26 @@
                                 <td>{{ $item->tanggal }}</td>
                             </tr> --}}
                         @endforeach
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th>{{ $antrians->sum('jumlah_antrean') }}</th>
+                                <td>{{ round($antrians->sum('avg_waktu_task1') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task2') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task3') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task4') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task5') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task6') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task7') / 60 / $antrians->sum('jumlah_antrean')) }}
+                                    menit</td>
+                            </tr>
+                        </tfoot>
                     @endisset
                 </x-adminlte-datatable>
             </x-adminlte-card>

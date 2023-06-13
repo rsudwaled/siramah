@@ -29,7 +29,6 @@
                 <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" hoverable bordered compressed>
                     @isset($antrians)
                         @foreach ($antrians->groupBy('namapoli') as $key => $item)
-
                             <tr>
                                 <td>{{ $key }}</td>
                                 <td>{{ $item->sum('jumlah_antrean') }}</td>
@@ -41,46 +40,20 @@
                                 <td>{{ round($item->sum('avg_waktu_task6') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
                                 <td>{{ round($item->sum('avg_waktu_task7') / 60 / $item->sum('jumlah_antrean')) }} menit</td>
                             </tr>
-                            {{-- <tr>
-                                <td>
-                                    {{ $item->namapoli }} ({{ $item->kodepoli }})
-                                    <br>
-                                    {{ $item->nmppk }} ({{ $item->kdppk }})
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task1 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task1 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task2 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task2 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task3 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task3 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task4 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task4 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task5 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task5 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task6 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task6 }}
-                                </td>
-                                <td>{{ $item->jumlah_antrean }}</td>
-                                <td>{{ $item->tanggal }}</td>
-                            </tr> --}}
                         @endforeach
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <th>{{ $antrians->sum('jumlah_antrean') }}</th>
+                                <td>{{ round($antrians->sum('avg_waktu_task1') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task2') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task3') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task4') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task5') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task6') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                                <td>{{ round($antrians->sum('avg_waktu_task7') / 60 / $antrians->sum('jumlah_antrean')) }} menit</td>
+                            </tr>
+                        </tfoot>
                     @endisset
                 </x-adminlte-datatable>
             </x-adminlte-card>

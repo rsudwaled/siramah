@@ -2317,6 +2317,7 @@ class AntrianController extends APIController
                 $request['nohp'] = $antrian->nohp;
                 $request['kodedokter'] = $antrian->kodedokter;
                 $vclaim = new VclaimController();
+
                 // daftar pake surat kontrol
                 if ($antrian->jeniskunjungan == 3) {
                     $request['nomorreferensi'] = $antrian->nomorsuratkontrol;
@@ -2328,7 +2329,6 @@ class AntrianController extends APIController
                     if ($suratkontrol->metadata->code == 200) {
                         $suratkontrol = $suratkontrol;
                         $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
-
                         if ($suratkontrol->response->sep->jnsPelayanan == "Rawat Jalan") {
                             $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
                             $request['jeniskunjungan_print'] = 'KONTROL';
@@ -2387,6 +2387,7 @@ class AntrianController extends APIController
                             $request['nomorkartu'] = $antrian->nomorkartu;
                             $request['tanggal'] = $antrian->tanggalperiksa;
                             $data = $vclaim->peserta_nomorkartu($request);
+
                             // berhasil get rujukan
                             if ($data->metadata->code == 200) {
                                 $data = $data;
@@ -2493,7 +2494,7 @@ class AntrianController extends APIController
                 }
                 // create sep
                 $sep = $vclaim->sep_insert($request);
-                // dd($request->all(), $sep);
+                // dd($request->all(), $suratkontrol->response->sep->jnsPelayanan, $data);
                 // berhasil buat sep
                 if ($sep->metadata->code == 200) {
                     // update antrian sep
@@ -2507,10 +2508,10 @@ class AntrianController extends APIController
                 }
                 // gagal buat sep
                 else {
-                    if (!isset($antrian->nomorsep)) {
+                    if (isset($antrian->nomorsep)) {
                     } else {
                         $requests["nomorsep"] = $antrian->nomorsep;
-                        // return $this->sendError("Gagal Buat SEP : " . $sep->metadata->message,  400);
+                        return $this->sendError("Gagal Buat SEP : " . $sep->metadata->message,  400);
                     }
                 }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
@@ -2524,6 +2525,7 @@ class AntrianController extends APIController
                 $tagihanpribadi_adm = 0;
                 $totalpribadi =  0;
             }
+
             // jika pasien non jkn
             else {
                 $request['taskid'] = 3;
