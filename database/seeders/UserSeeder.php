@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Poliklinik;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -140,9 +141,9 @@ class UserSeeder extends Seeder
 
         ];
         foreach ($adminpoli as  $value) {
-            $poli = PoliklinikAntrian::where('kodeSubspesialis', $value)->first();
+            $poli = Poliklinik::where('kodesubspesialis', $value)->first();
             $user = User::create([
-                "name" => "ADMIN " . $poli->namaSubspesialis,
+                "name" => "ADMIN " . $poli->namasubspesialis,
                 "email" => $value . "@gmail.com",
                 "username" => $value,
                 "phone" => '089529909036',
