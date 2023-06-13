@@ -53,7 +53,7 @@
                     <x-adminlte-button type="submit" form="formOffTracer" class="withLoad mr-2"
                         theme="{{ $request->tracer == 'OFF' ? 'success' : 'secondary' }}" label="OFF" />
 
-                    <a href="" class="btn btn-warning"> Refresh</a>
+                    <a href="" class="btn btn-warning"> <i class="fas fa-sync"></i> Refresh</a>
 
                     @php
                         $heads = ['Id', 'Tgl Entry', 'No Order', 'No RM', 'Nama', 'Poliklinik', 'Penjamin', 'Tracer', 'SEP', 'Action'];
