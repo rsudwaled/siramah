@@ -126,16 +126,16 @@
     </div>
     <x-adminlte-modal id="modalBPJS" size="xl" title="Daftar Antrian Pasien" theme="success" icon="fas fa-user-plus">
         <div class="form-group">
-            <label>Silahkan pilih poliklinik BPJS di bawah ini</label>
+            <label>Silahkan pilih poliklinik di bawah ini</label>
             <div class="row">
-                @foreach ($poliklinik as $item)
+                @foreach ($jadwals->groupBy('kodesubspesialis') as $key =>  $item)
                     <div class="col-md-4">
                         <div class="custom-control custom-radio " style="scale: 100%">
                             <input class="custom-control-input btnPoliBPJS" type="radio"
-                                data-id="{{ $item->kodesubspesialis }}" id="{{ $item->namasubspesialis }}"
-                                value="{{ $item->kodesubspesialis }}" name="kodesubspesialis">
-                            <label for="{{ $item->namasubspesialis }}" class="custom-control-label"
-                                data-id="{{ $item->kodesubspesialis }}">{{ $item->namasubspesialis }} </label>
+                                data-id="{{ $item->first()->kodesubspesialis }}" id="{{ $item->first()->namasubspesialis }}"
+                                value="{{ $item->first()->kodesubspesialis }}" name="kodesubspesialis">
+                            <label for="{{ $item->first()->namasubspesialis }}" class="custom-control-label"
+                                data-id="{{ $item->first()->kodesubspesialis }}">{{ strtoupper($item->first()->namasubspesialis)  }} </label>
                         </div>
                     </div>
                 @endforeach
