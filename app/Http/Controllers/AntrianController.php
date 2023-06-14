@@ -1781,135 +1781,135 @@ class AntrianController extends APIController
         if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
             return $this->sendError("Tanggal periksa sudah terlewat", 401);
         }
-        // get jadwal poliklinik dari simrs
-        $jadwals = JadwalDokter::where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)
-            ->where("kodesubspesialis", $request->kodepoli)
-            ->get();
-        // tidak ada jadwal
-        if (!isset($jadwals)) {
-            return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", 404);
-        }
-        // get jadwal dokter
-        $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
-        // tidak ada dokter
-        if (!isset($jadwal)) {
-            return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
-        }
-        if ($jadwal->libur == 1) {
-            return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
-        }
-        // get hitungan antrian
-        $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('method', '!=', 'Bridging')
-            ->where('kodepoli', $request->kodepoli)
-            ->where('kodedokter', $request->kodedokter)
-            ->where('taskid', '!=', 99)
-            ->count();
-        // cek kapasitas pasien
-        if ($request->method != 'Bridging') {
-            if ($antrians >= $jadwal->kapasitaspasien) {
-                return $this->sendError("Kuota Dokter Telah Penuh",  201);
-            }
-        }
-        //  get nomor antrian
-        $nomorantean = 0;
-        $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
-            ->where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('taskid', 4)
-            ->first();
-        if (isset($antreanpanggil)) {
-            $nomorantean = $antreanpanggil->nomorantrean;
-        }
-        // get jumlah antrian jkn dan non-jkn
-        $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
-            ->where('method', '!=', 'Bridging')
-            ->where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('taskid', '!=', 99)
-            ->where('kodedokter', $request->kodedokter)
-            ->where('jenispasien', "JKN")->count();
-        $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
-            ->where('method', '!=', 'Bridging')
-            ->where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('tanggalperiksa', $request->tanggalperiksa)
-            ->where('kodedokter', $request->kodedokter)
-            ->where('taskid', '!=', 99)
-            ->where('jenispasien', "NON-JKN")->count();
-        $response = [
-            "namapoli" => $jadwal->namasubspesialis,
-            "namadokter" => $jadwal->namadokter,
-            "totalantrean" => $antrians,
-            "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
-            "antreanpanggil" => $nomorantean,
-            "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
-            "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
-            "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
-            "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
-            "keterangan" => "Informasi antrian poliklinik",
-        ];
-        return $this->sendResponse($response, 200);
-        // $jadwals = $this->ref_jadwal_dokter($request);
-        // if ($jadwals->metadata->code == 200) {
-        //     $jadwals = collect($jadwals->response);
-        //     $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
-        //     if ($jadwal) {
-        //         if ($jadwal->libur == 1) {
-        //             return $this->sendError('Jadwal sedang diliburkan', 404);
-        //         }
-        //         // get hitungan antrian
-        //         $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-        //             ->where('method', '!=', 'Bridging')
-        //             ->where('kodepoli', $request->kodepoli)
-        //             ->where('kodedokter', $request->kodedokter)
-        //             ->where('taskid', '!=', 99)
-        //             ->count();
-        //         // cek kapasitas pasien
-        //         if ($request->method != 'Bridging') {
-        //             if ($antrians >= $jadwal->kapasitaspasien) {
-        //                 return $this->sendError("Kuota Dokter Telah Penuh",  201);
-        //             }
-        //         }
-        //         //  get nomor antrian
-        //         $nomorantean = 0;
-        //         $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
-        //             ->where('tanggalperiksa', $request->tanggalperiksa)
-        //             ->where('taskid', 4)
-        //             ->first();
-        //         if (isset($antreanpanggil)) {
-        //             $nomorantean = $antreanpanggil->nomorantrean;
-        //         }
-        //         // get jumlah antrian jkn dan non-jkn
-        //         $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
-        //             ->where('method', '!=', 'Bridging')
-        //             ->where('tanggalperiksa', $request->tanggalperiksa)
-        //             ->where('taskid', '!=', 99)
-        //             ->where('kodedokter', $request->kodedokter)
-        //             ->where('jenispasien', "JKN")->count();
-        //         $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
-        //             ->where('method', '!=', 'Bridging')
-        //             ->where('tanggalperiksa', $request->tanggalperiksa)
-        //             ->where('tanggalperiksa', $request->tanggalperiksa)
-        //             ->where('kodedokter', $request->kodedokter)
-        //             ->where('taskid', '!=', 99)
-        //             ->where('jenispasien', "NON-JKN")->count();
-        //         $response = [
-        //             "namapoli" => $jadwal->namasubspesialis,
-        //             "namadokter" => $jadwal->namadokter,
-        //             "totalantrean" => $antrians,
-        //             "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
-        //             "antreanpanggil" => $nomorantean,
-        //             "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
-        //             "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
-        //             "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
-        //             "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
-        //             "keterangan" => "Informasi antrian poliklinik",
-        //         ];
-        //         return $this->sendResponse($response, 200);
-        //     } else {
-        //         return $this->sendError('Jadwal dokter tidak ditemukan', 404);
-        //     }
-        // } else {
-        //     return $this->sendError($jadwals->metadata->message, 400);
+        // // get jadwal poliklinik dari simrs
+        // $jadwals = JadwalDokter::where("hari",  Carbon::parse($request->tanggalperiksa)->dayOfWeek)
+        //     ->where("kodesubspesialis", $request->kodepoli)
+        //     ->get();
+        // // tidak ada jadwal
+        // if (!isset($jadwals)) {
+        //     return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", 404);
         // }
+        // // get jadwal dokter
+        // $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
+        // // tidak ada dokter
+        // if (!isset($jadwal)) {
+        //     return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
+        // }
+        // if ($jadwal->libur == 1) {
+        //     return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
+        // }
+        // // get hitungan antrian
+        // $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('method', '!=', 'Bridging')
+        //     ->where('kodepoli', $request->kodepoli)
+        //     ->where('kodedokter', $request->kodedokter)
+        //     ->where('taskid', '!=', 99)
+        //     ->count();
+        // // cek kapasitas pasien
+        // if ($request->method != 'Bridging') {
+        //     if ($antrians >= $jadwal->kapasitaspasien) {
+        //         return $this->sendError("Kuota Dokter Telah Penuh",  201);
+        //     }
+        // }
+        // //  get nomor antrian
+        // $nomorantean = 0;
+        // $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
+        //     ->where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('taskid', 4)
+        //     ->first();
+        // if (isset($antreanpanggil)) {
+        //     $nomorantean = $antreanpanggil->nomorantrean;
+        // }
+        // // get jumlah antrian jkn dan non-jkn
+        // $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
+        //     ->where('method', '!=', 'Bridging')
+        //     ->where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('taskid', '!=', 99)
+        //     ->where('kodedokter', $request->kodedokter)
+        //     ->where('jenispasien', "JKN")->count();
+        // $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
+        //     ->where('method', '!=', 'Bridging')
+        //     ->where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('tanggalperiksa', $request->tanggalperiksa)
+        //     ->where('kodedokter', $request->kodedokter)
+        //     ->where('taskid', '!=', 99)
+        //     ->where('jenispasien', "NON-JKN")->count();
+        // $response = [
+        //     "namapoli" => $jadwal->namasubspesialis,
+        //     "namadokter" => $jadwal->namadokter,
+        //     "totalantrean" => $antrians,
+        //     "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
+        //     "antreanpanggil" => $nomorantean,
+        //     "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
+        //     "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
+        //     "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
+        //     "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
+        //     "keterangan" => "Informasi antrian poliklinik",
+        // ];
+        // return $this->sendResponse($response, 200);
+        $jadwals = $this->ref_jadwal_dokter($request);
+        if ($jadwals->metadata->code == 200) {
+            $jadwals = collect($jadwals->response);
+            $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
+            if ($jadwal) {
+                if ($jadwal->libur == 1) {
+                    return $this->sendError('Jadwal sedang diliburkan', 404);
+                }
+                // get hitungan antrian
+                $antrians = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+                    ->where('method', '!=', 'Bridging')
+                    ->where('kodepoli', $request->kodepoli)
+                    ->where('kodedokter', $request->kodedokter)
+                    ->where('taskid', '!=', 99)
+                    ->count();
+                // cek kapasitas pasien
+                if ($request->method != 'Bridging') {
+                    if ($antrians >= $jadwal->kapasitaspasien) {
+                        return $this->sendError("Kuota Dokter Telah Penuh",  201);
+                    }
+                }
+                //  get nomor antrian
+                $nomorantean = 0;
+                $antreanpanggil =  Antrian::where('kodepoli', $request->kodepoli)
+                    ->where('tanggalperiksa', $request->tanggalperiksa)
+                    ->where('taskid', 4)
+                    ->first();
+                if (isset($antreanpanggil)) {
+                    $nomorantean = $antreanpanggil->nomorantrean;
+                }
+                // get jumlah antrian jkn dan non-jkn
+                $antrianjkn = Antrian::where('kodepoli', $request->kodepoli)
+                    ->where('method', '!=', 'Bridging')
+                    ->where('tanggalperiksa', $request->tanggalperiksa)
+                    ->where('taskid', '!=', 99)
+                    ->where('kodedokter', $request->kodedokter)
+                    ->where('jenispasien', "JKN")->count();
+                $antriannonjkn = Antrian::where('kodepoli', $request->kodepoli)
+                    ->where('method', '!=', 'Bridging')
+                    ->where('tanggalperiksa', $request->tanggalperiksa)
+                    ->where('tanggalperiksa', $request->tanggalperiksa)
+                    ->where('kodedokter', $request->kodedokter)
+                    ->where('taskid', '!=', 99)
+                    ->where('jenispasien', "NON-JKN")->count();
+                $response = [
+                    "namapoli" => $jadwal->namasubspesialis,
+                    "namadokter" => $jadwal->namadokter,
+                    "totalantrean" => $antrians,
+                    "sisaantrean" => $jadwal->kapasitaspasien - $antrians,
+                    "antreanpanggil" => $nomorantean,
+                    "sisakuotajkn" => round($jadwal->kapasitaspasien * 80 / 100) -  $antrianjkn,
+                    "kuotajkn" => round($jadwal->kapasitaspasien * 80 / 100),
+                    "sisakuotanonjkn" => round($jadwal->kapasitaspasien * 20 / 100) - $antriannonjkn,
+                    "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
+                    "keterangan" => "Informasi antrian poliklinik",
+                ];
+                return $this->sendResponse($response, 200);
+            } else {
+                return $this->sendError('Jadwal dokter tidak ditemukan', 404);
+            }
+        } else {
+            return $this->sendError($jadwals->metadata->message, 400);
+        }
     }
     public function ambil_antrian(Request $request) #ambil antrian api
     {
