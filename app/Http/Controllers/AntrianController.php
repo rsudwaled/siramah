@@ -90,6 +90,36 @@ class AntrianController extends APIController
             return redirect()->back();
         }
     }
+    public function selesaiPoliklinik(Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 5;
+        $request['keterangan'] = "Selesai poliklinik";
+        $request['waktu'] = Carbon::now()->timestamp * 1000;
+        $response = $this->update_antrean($request);
+        if ($response->metadata->code == 200) {
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                'user' => Auth::user()->name,
+            ]);
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
+            Alert::success('Success', 'Pasien Selesai Di Poliklinik');
+        } else {
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+        }
+        return redirect()->back();
+    }
     public function selesaiFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
@@ -587,7 +617,7 @@ class AntrianController extends APIController
     public function dashboardBulanAntrian(Request $request)
     {
         $antrians = null;
-        $antrian_total = null;
+        $antrianx = null;
         if (isset($request->tanggal)) {
             $tanggal = explode('-', $request->tanggal);
             $request['tahun'] = $tanggal[0];
@@ -595,23 +625,21 @@ class AntrianController extends APIController
             $response =  $this->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
                 $antrians = collect($response->response->list);
-                $antrian_total = Antrian::whereYear('tanggalperiksa', '=', $request->tahun)
+                $antrianx = Antrian::whereYear('tanggalperiksa', '=', $request->tahun)
                     ->whereMonth('tanggalperiksa', '=', $request->bulan)
                     ->where('method', '!=', 'Offline')
                     ->where('taskid', '!=', 99)
                     ->where('taskid', '!=', 0)
-                    ->count();
+                    ->get();
                 Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
                 Alert::error($response->metadata->message . ' ' . $response->metadata->code);
             }
         }
-
-
         return view('bpjs.antrian.dashboard_bulan_index', compact([
             'request',
             'antrians',
-            'antrian_total',
+            'antrianx',
         ]));
     }
     public function antrianPerTanggal(Request $request)
