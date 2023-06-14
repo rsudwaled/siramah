@@ -21,9 +21,34 @@
                         icon="fas fa-search" />
                 </form>
             </x-adminlte-card>
+            <div class="row">
+                {{-- <div class="col-md-3">
+                    <x-adminlte-small-box title="{{ $antrians->where('taskid', 4)->first()->nomorantrean ?? '0' }}"
+                        text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box
+                        title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->nomorantrean ?? '0' }}"
+                        text="Antrian Selanjutnya" theme="success" icon="fas fa-user-injured" />
+                </div> --}}
+                <div class="col-md-3">
+                    <x-adminlte-small-box title="{{ $antrians->sum('jumlah_antrean') }}" text="Selesai Antrian"
+                        theme="success" icon="fas fa-user-injured" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box title="{{ $antrian_total }}" text="Total Antrian" theme="warning"
+                        icon="fas fa-user-injured" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box
+                        title="{{ number_format(($antrians->sum('jumlah_antrean') / $antrian_total) * 100, 2) }} %"
+                        text="Quality Rate Antrian" theme="primary" icon="fas fa-user-injured" />
+                </div>
+            </div>
+
             <x-adminlte-card title="Laporan Waktu Pelayanan Antrian" theme="secondary" collapsible>
                 @php
-                    $heads = ['Poliklinik', 'Total Antrian', 'Checkin', 'Daftar', 'Tunggu Poli', 'Layan Poli', 'Tunggu Farmasi', 'Proses Farmasi', 'Selesai'];
+                    $heads = ['Poliklinik', 'Total Antrian', 'Checkin', 'Daftar', 'Tunggu Poli', 'Layan Poli', 'Tunggu Farmasi', 'Proses Farmasi', 'Total Waktu'];
                     $config = ['paging' => false];
 
                 @endphp
@@ -34,13 +59,28 @@
                             <tr>
                                 <td>{{ $key }}</td>
                                 <td>{{ $item->sum('jumlah_antrean') }}</td>
-                                <td>{{ round($item->sum('avg_waktu_task1') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task2') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task3') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task4') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task5') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task6') / 60 / $item->count()) }} menit</td>
-                                <td>{{ round($item->sum('avg_waktu_task7') / 60 / $item->count()) }} menit</td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task1') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task2') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task3') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task4') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task5') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds($item->sum('avg_waktu_task6') / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+                                <td>
+                                    {{ Carbon\CarbonInterval::seconds(($item->sum('avg_waktu_task1') + $item->sum('avg_waktu_task2') + $item->sum('avg_waktu_task3') + $item->sum('avg_waktu_task4') + $item->sum('avg_waktu_task5') + $item->sum('avg_waktu_task6') + $item->sum('avg_waktu_task7')) / $item->count())->cascade()->format('%H:%I:%S') }}
+                                </td>
+
                             </tr>
                             {{-- <tr>
                                 <td>
@@ -86,20 +126,28 @@
                             <tr>
                                 <th>Total</th>
                                 <th>{{ $antrians->sum('jumlah_antrean') }}</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task1') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task2') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task3') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task4') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task5') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task6') / 60 / $antrians->count()) }}
-                                    menit</th>
-                                <th>{{ round($antrians->sum('avg_waktu_task7') / 60 / $antrians->count()) }}
-                                    menit</th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task1') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task2') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task3') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task4') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task5') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task6') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+                                <th>
+                                    {{ Carbon\CarbonInterval::seconds(($antrians->sum('avg_waktu_task1') + $antrians->sum('avg_waktu_task2') + $antrians->sum('avg_waktu_task3') + $antrians->sum('avg_waktu_task4') + $antrians->sum('avg_waktu_task5') + $antrians->sum('avg_waktu_task6') + $antrians->sum('avg_waktu_task7')) / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                </th>
+
                             </tr>
                         </tfoot>
                     @endisset
