@@ -167,11 +167,11 @@ class FarmasiController extends APIController
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");
-                $printer->text("Order Resep Farmasi\n");
+                $printer->setTextSize(3, 3);
+                $printer->text("Resep Obat Farmasi\n");
+                $printer->setTextSize(1, 1);
                 // $printer->text("================================================\n");
-                // $printer->setTextSize(3, 3);
                 // $printer->text($no_antrian . "\n");
-                // $printer->setTextSize(1, 1);
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
                 $printer->setEmphasis(true);
