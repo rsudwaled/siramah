@@ -417,14 +417,14 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Dashboard Pertanggal',
+                    'text' => 'Capaian Antrian Pertanggal',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
                     'url'  => 'dashboardTanggalAntrianPoliklinik',
                     'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Dashboard Perbulan',
+                    'text' => 'Capaian Antrian Perbulan',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
                     'url'  => 'dashboardBulanAntrianPoliklinik',

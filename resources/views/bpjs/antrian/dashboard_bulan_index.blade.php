@@ -21,16 +21,8 @@
                         icon="fas fa-search" />
                 </form>
             </x-adminlte-card>
+            @if ($antrians)
             <div class="row">
-                {{-- <div class="col-md-3">
-                    <x-adminlte-small-box title="{{ $antrians->where('taskid', 4)->first()->nomorantrean ?? '0' }}"
-                        text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->nomorantrean ?? '0' }}"
-                        text="Antrian Selanjutnya" theme="success" icon="fas fa-user-injured" />
-                </div> --}}
                 <div class="col-md-3">
                     <x-adminlte-small-box title="{{ $antrians->sum('jumlah_antrean') }}" text="Selesai Antrian"
                         theme="success" icon="fas fa-user-injured" />
@@ -45,10 +37,9 @@
                         text="Quality Rate Antrian" theme="primary" icon="fas fa-user-injured" />
                 </div>
             </div>
-
             <x-adminlte-card title="Laporan Waktu Pelayanan Antrian" theme="secondary" collapsible>
                 @php
-                    $heads = ['Poliklinik', 'Total Antrian', 'Checkin', 'Daftar', 'Tunggu Poli', 'Layan Poli', 'Tunggu Farmasi', 'Proses Farmasi', 'Total Waktu'];
+                    $heads = ['Poliklinik', 'Total Antrian', 'Checkin', 'Daftar', 'Tunggu Poli', 'Layan Poli', 'Terima Resep', 'Proses Farmasi', 'Total Waktu'];
                     $config = ['paging' => false];
 
                 @endphp
@@ -82,45 +73,6 @@
                                 </td>
 
                             </tr>
-                            {{-- <tr>
-                                <td>
-                                    {{ $item->namapoli }} ({{ $item->kodepoli }})
-                                    <br>
-                                    {{ $item->nmppk }} ({{ $item->kdppk }})
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task1 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task1 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task2 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task2 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task3 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task3 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task4 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task4 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task5 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task5 }}
-                                </td>
-                                <td>
-                                    {{ $item->waktu_task6 }}
-                                    <br>
-                                    {{ $item->avg_waktu_task6 }}
-                                </td>
-                                <td>{{ $item->jumlah_antrean }}</td>
-                                <td>{{ $item->tanggal }}</td>
-                            </tr> --}}
                         @endforeach
                         <tfoot>
                             <tr>
@@ -147,12 +99,12 @@
                                 <th>
                                     {{ Carbon\CarbonInterval::seconds(($antrians->sum('avg_waktu_task1') + $antrians->sum('avg_waktu_task2') + $antrians->sum('avg_waktu_task3') + $antrians->sum('avg_waktu_task4') + $antrians->sum('avg_waktu_task5') + $antrians->sum('avg_waktu_task6') + $antrians->sum('avg_waktu_task7')) / $antrians->count())->cascade()->format('%H:%I:%S') }}
                                 </th>
-
                             </tr>
                         </tfoot>
                     @endisset
                 </x-adminlte-datatable>
             </x-adminlte-card>
+            @endif
         </div>
     </div>
 @stop
