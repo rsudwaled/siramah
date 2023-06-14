@@ -55,6 +55,7 @@ Route::get('login/google/callback', [SocialiteController::class, 'callback'])->m
 // layanan umum
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+Route::post('printerlabel', [ThermalPrintController::class, 'printerlabel'])->name('printerlabel');
 // daftar online
 // Route::get('daftarOnline', [AntrianController::class, 'daftarOnline'])->name('daftarOnline');
 // Route::get('checkAntrian', [AntrianController::class, 'checkAntrian'])->name('checkAntrian');

@@ -563,10 +563,16 @@ class AntrianController extends APIController
     public function dashboardTanggalAntrian(Request $request)
     {
         $antrians = null;
+        $antrianx = null;
         if (isset($request->waktu)) {
             $response =  $this->dashboard_tanggal($request);
             if ($response->metadata->code == 200) {
                 $antrians = collect($response->response->list);
+                $antrianx = Antrian::whereDate('tanggalperiksa', '=', $request->tanggal)
+                    ->where('method', '!=', 'Offline')
+                    ->where('taskid', '!=', 99)
+                    ->where('taskid', '!=', 0)
+                    ->get();
                 Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
                 Alert::error($response->metadata->message . ' ' . $response->metadata->code);
@@ -575,11 +581,13 @@ class AntrianController extends APIController
         return view('bpjs.antrian.dashboard_tanggal_index', compact([
             'request',
             'antrians',
+            'antrianx',
         ]));
     }
     public function dashboardBulanAntrian(Request $request)
     {
         $antrians = null;
+        $antrian_total = null;
         if (isset($request->tanggal)) {
             $tanggal = explode('-', $request->tanggal);
             $request['tahun'] = $tanggal[0];
@@ -587,13 +595,6 @@ class AntrianController extends APIController
             $response =  $this->dashboard_bulan($request);
             if ($response->metadata->code == 200) {
                 $antrians = collect($response->response->list);
-                // $antrian_total = Antrian::whereYear('tanggalperiksa', '=', $request->tahun)
-                //     ->whereMonth('tanggalperiksa', '=', $request->bulan)
-                //     ->where('method', '!=', 'Offline')
-                //     ->where('taskid', '!=', 99)
-                //     ->where('taskid', '!=', 0)
-                //     ->get();
-                // dd($antrian_total->groupBy('method'));
                 $antrian_total = Antrian::whereYear('tanggalperiksa', '=', $request->tahun)
                     ->whereMonth('tanggalperiksa', '=', $request->bulan)
                     ->where('method', '!=', 'Offline')
@@ -2733,7 +2734,6 @@ class AntrianController extends APIController
             $response = $this->update_antrean($request);
             // jika antrian berhasil diupdate di bpjs
             if ($response->metadata->code == 200) {
-
                 // update antrian kunjungan
                 try {
                     $antrian->update([
