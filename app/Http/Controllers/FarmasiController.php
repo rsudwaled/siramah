@@ -152,22 +152,18 @@ class FarmasiController extends APIController
             ->where('status_order', 1)
             ->where('kode_unit', $request->depo)
             ->first();
+
         $i = 1;
         // dd($order->detail->first()->barang);
         if ($order) {
             $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))->get()->count();
-            $order->update([
-                'status_order' => 2,
-                'updated_at' => now(),
-                'no_antrian' => $no_antrian + 1,
-            ]);
             // dd($order->pasien->desas);
             try {
                 $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");
-                $printer->setTextSize(3, 3);
+                $printer->setTextSize(2, 2);
                 $printer->text("Resep Obat Farmasi\n");
                 $printer->setTextSize(1, 1);
                 // $printer->text("================================================\n");
@@ -191,12 +187,13 @@ class FarmasiController extends APIController
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
-                foreach ($order->detail as $value) {
-                    $printer->text($i++ . ". " . $value->barang->nama_barang . " @ " . $value->jumlah_layanan . " " . $value->satuan_barang . "\n");
-                    // $printer->setJustification(Printer::JUSTIFY_RIGHT);
-                    $printer->text('   ' . $value->aturan_pakai . "\n\n");
-                    // $printer->setJustification(Printer::JUSTIFY_LEFT);
-                }
+                // foreach ($order->detail as $value) {
+                //     $printer->text($i++ . ". " . $value->barang->nama_barang . " @ " . $value->jumlah_layanan . " " . $value->satuan_barang . "\n");
+                //     // $printer->setJustification(Printer::JUSTIFY_RIGHT);
+                //     $printer->text('   ' . $value->aturan_pakai . "\n\n");
+                //     // $printer->setJustification(Printer::JUSTIFY_LEFT);
+                // }
+                $printer->text($order->detail->first()->keterangan . " \n");
                 $printer->text("================================================\n");
                 $printer->text("Input By : " . $order->tgl_entry . " \n");
                 $printer->text("Tgl Input : " . $order->tgl_entry . " \n");
@@ -208,6 +205,11 @@ class FarmasiController extends APIController
                 $printer->text("\n\n\n..............................\n");
                 $printer->cut();
                 $printer->close();
+                $order->update([
+                    'status_order' => 2,
+                    'updated_at' => now(),
+                    'no_antrian' => $no_antrian + 1,
+                ]);
             } catch (\Throwable $th) {
                 // throw $th;
                 return $this->sendError($th->getMessage(),  200);

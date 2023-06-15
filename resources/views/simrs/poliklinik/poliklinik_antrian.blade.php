@@ -181,6 +181,22 @@
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
                                                 onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $item->kodebooking }}'" />
+
+                                            @if ($item->method == 'Bridging')
+                                                <form action="{{ route('update_antrean_pendaftaran') }}" method="POST">
+                                                    <input type="hidden" name="kodebooking"
+                                                        value="{{ $item->kodebooking }}">
+                                                    <input type="hidden" name="taskid" value="3">
+                                                    <input type="hidden" name="waktu"
+                                                        value="{{ now()->timestamp * 1000 }}">
+                                                    <button type="submit">Update</button>
+                                                </form>
+                                                {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
+                                                    icon="fas fa-times" data-toggle="tooltop"
+                                                    title="Batal Antrian {{ $item->nomorantrean }}"
+                                                    onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $item->kodebooking }}'" /> --}}
+                                                Bridging
+                                            @endif
                                         </td>
                                         <td>
                                             @isset($item->nomorsep)
@@ -265,7 +281,8 @@
                                                 <span class="badge bg-secondary">{{ $antrian->taskid }}. Chekcin</span>
                                             @endif
                                             @if ($antrian->taskid == 2)
-                                                <span class="badge bg-secondary">{{ $antrian->taskid }}. Pendaftaran</span>
+                                                <span class="badge bg-secondary">{{ $antrian->taskid }}.
+                                                    Pendaftaran</span>
                                             @endif
                                             @if ($antrian->taskid == 3)
                                                 @if ($antrian->status_api == 0)
