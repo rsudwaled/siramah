@@ -107,6 +107,8 @@ Route::prefix('antrian')->group(function () {
     Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
     Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
+    Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran'])->name('update_antrean_pendaftaran');; #integrasi bridging pendaftaran agil
+
 });
 // API SIMRS
 Route::get('cari_pasien', [PasienController::class, 'cari_pasien'])->name('cari_pasien');
@@ -120,19 +122,6 @@ Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])-
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
 
 // API SIMRS
-// Route::prefix('wsrs')->group(function () {
-//     Route::post('status_antrian', [AntrianController::class, 'status_antrian']);
-//     Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian']);
-//     Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian']);
-//     Route::post('batal_antrian', [AntrianController::class, 'batal_antrian']);
-//     Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian']);
-//     Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru']);
-//     Route::post('jadwal_operasi_rs', [AntrianController::class, 'jadwal_operasi_rs']);
-//     Route::post('jadwal_operasi_pasien', [AntrianController::class, 'jadwal_operasi_pasien']);
-//     Route::post('ambil_antrean_farmasi', [AntrianController::class, 'ambil_antrian_farmasi']);
-//     Route::post('status_antrean_farmasi', [AntrianController::class, 'status_antrian_farmasi']);
-//     Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran']); #integrasi bridging pendaftaran agil
-// });
 Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'test']);
     Route::post('webhook', [WhatsappController::class, 'webhook']);
