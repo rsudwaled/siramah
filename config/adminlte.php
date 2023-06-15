@@ -345,6 +345,20 @@ return [
                     'can' => 'pendaftaran',
                 ],
                 [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Jadwal Dokter',
                     'icon'    => 'fas fa-calendar-alt',
                     'url'  => 'jadwalDokterAntrian',
@@ -473,6 +487,20 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
 
             ],
         ],
@@ -524,6 +552,20 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pelayanan-medis',
 
+                ],
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
                 ],
 
             ],
@@ -617,8 +659,20 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
-
-
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
             ],
         ],
         // BAGIAN UMUM
@@ -647,6 +701,20 @@ return [
                     'url'  => 'suratkeluar',
                     'shift'   => 'ml-2',
                     'can' => 'bagian-umum',
+                ],
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
                 ],
             ],
         ],

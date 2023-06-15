@@ -175,7 +175,7 @@ class FarmasiController extends APIController
                 $printer->text("Nama Pasien : " . $order->pasien->nama_px . " \n");
                 $printer->setEmphasis(false);
                 $printer->text("Tgl Lahir : " . Carbon::parse($order->pasien->tgl_lahir)->format('d M Y')  . " \n");
-                $printer->text("Alamat : " . $order->pasien->desas->nama_desa_kelurahan . ', ' . $order->pasien->kecamatans->nama_kecamatan . " \n");
+                // $printer->text("Alamat : " . $order->pasien->desas->nama_desa_kelurahan . ', ' . $order->pasien->kecamatans->nama_kecamatan . " \n");
                 $printer->text("Berat Badan : "  . " \n");
                 $printer->text("Kode Layanan : " . $order->kode_layanan_header   . " \n");
                 $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
@@ -187,13 +187,13 @@ class FarmasiController extends APIController
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
-                // foreach ($order->detail as $value) {
-                //     $printer->text($i++ . ". " . $value->barang->nama_barang . " @ " . $value->jumlah_layanan . " " . $value->satuan_barang . "\n");
-                //     // $printer->setJustification(Printer::JUSTIFY_RIGHT);
-                //     $printer->text('   ' . $value->aturan_pakai . "\n\n");
-                //     // $printer->setJustification(Printer::JUSTIFY_LEFT);
-                // }
-                $printer->text($order->detail->first()->keterangan . " \n");
+                foreach ($order->detail as $value) {
+                    $printer->text($i++ . ". " . $value->kode_barang . " @ " . $value->jumlah_layanan . " " . $value->satuan_barang . "\n");
+                    // $printer->setJustification(Printer::JUSTIFY_RIGHT);
+                    $printer->text('   ' . $value->aturan_pakai . "\n\n");
+                    // $printer->setJustification(Printer::JUSTIFY_LEFT);
+                }
+                // $printer->text($order->detail->first()->keterangan . " \n");
                 $printer->text("================================================\n");
                 $printer->text("Input By : " . $order->tgl_entry . " \n");
                 $printer->text("Tgl Input : " . $order->tgl_entry . " \n");
