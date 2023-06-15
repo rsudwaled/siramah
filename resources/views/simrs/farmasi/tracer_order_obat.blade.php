@@ -119,7 +119,7 @@
                         })
                         .done(function(data) {
                             console.log(data);
-                            element.innerHTML = time + " OK <br>";
+                            element.innerHTML = time + " " + data.metadata.message + " <br>";
                         })
                         .fail(function(data) {
                             console.log(data);
