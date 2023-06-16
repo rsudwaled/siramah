@@ -595,14 +595,15 @@ class AntrianController extends APIController
         $antrians = null;
         $antrianx = null;
         if (isset($request->waktu)) {
+            $antrianx = Antrian::whereDate('tanggalperiksa', '=', $request->tanggal)
+            ->where('method', '!=', 'Offline')
+            ->where('taskid', '!=', 99)
+            ->where('taskid', '!=', 0)
+            ->get();
             $response =  $this->dashboard_tanggal($request);
             if ($response->metadata->code == 200) {
                 $antrians = collect($response->response->list);
-                $antrianx = Antrian::whereDate('tanggalperiksa', '=', $request->tanggal)
-                    ->where('method', '!=', 'Offline')
-                    ->where('taskid', '!=', 99)
-                    ->where('taskid', '!=', 0)
-                    ->get();
+
                 Alert::success($response->metadata->message . ' ' . $response->metadata->code);
             } else {
                 Alert::error($response->metadata->message . ' ' . $response->metadata->code);

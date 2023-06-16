@@ -191,11 +191,6 @@
                                                         value="{{ now()->timestamp * 1000 }}">
                                                     <button type="submit">Update</button>
                                                 </form>
-                                                {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
-                                                    icon="fas fa-times" data-toggle="tooltop"
-                                                    title="Batal Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $item->kodebooking }}'" /> --}}
-                                                Bridging
                                             @endif
                                         </td>
                                         <td>

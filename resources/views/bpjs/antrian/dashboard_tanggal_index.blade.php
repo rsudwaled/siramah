@@ -22,11 +22,11 @@
                         icon="fas fa-search" />
                 </form>
             </x-adminlte-card>
-            @isset($antrians)
+            @isset($antrianx)
                 <div class="row">
                     <div class="col-md-3">
-                        <x-adminlte-small-box title="{{ $antrians->sum('jumlah_antrean') }}" text="Selesai Antrian"
-                            theme="success" icon="fas fa-user-injured" />
+                        <x-adminlte-small-box title="{{ $antrians ? $antrians->sum('jumlah_antrean') : '0' }}"
+                            text="Selesai Antrian" theme="success" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $antrianx->count() }}" text="Total Antrian" theme="warning"
@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ number_format(($antrians->sum('jumlah_antrean') / $antrianx->count()) * 100, 2) }} %"
+                            title="{{ $antrians ? number_format(($antrians->sum('jumlah_antrean') / $antrianx->count()) * 100, 2) : '0' }} %"
                             text="Quality Rate Antrian" theme="primary" icon="fas fa-user-injured" />
                     </div>
                 </div>
@@ -48,32 +48,32 @@
                         @foreach ($antrianx->groupBy('kodepoli') as $key => $item)
                             <tr>
                                 <td>{{ strtoupper($item->first()->namapoli) }}</td>
-                                <td>{{ $antrians->where('kodepoli', $key)->sum('jumlah_antrean') }} / {{ $item->count() }}
+                                <td>{{ $antrians ? $antrians->where('kodepoli', $key)->sum('jumlah_antrean') : '0' }} /
+                                    {{ $item->count() }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task1'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task1'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task2'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task2'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task3'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task3'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task4'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task4'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task5'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task5'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task6'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task6'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
                                 <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task1') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task2') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task3') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task4') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task5') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task6') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task7'))->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task1') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task2') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task3') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task4') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task5') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task6') + $antrians->where('kodepoli', $key)->sum('avg_waktu_task7'))->cascade()->format('%H:%I:%S'): '0' }}
                                 </td>
-                                <td
-                                    class="table-{{ ($antrians->where('kodepoli', $key)->sum('jumlah_antrean') / $item->count()) * 100 >= 80 ? 'success' : 'danger' }}">
-                                    {{ number_format(($antrians->where('kodepoli', $key)->sum('jumlah_antrean') / $item->count()) * 100, 2) }}
+                                <td class="">
+                                    {{ $antrians ? number_format(($antrians->where('kodepoli', $key)->sum('jumlah_antrean') / $item->count()) * 100, 2) : '0' }}
                                     %
                                 </td>
                             </tr>
@@ -81,30 +81,31 @@
                         <tfoot>
                             <tr>
                                 <th>Total</th>
-                                <th>{{ $antrians->sum('jumlah_antrean') }} / {{ $antrianx->count() }}</th>
+                                <th>{{ $antrians ? $antrians->sum('jumlah_antrean') : '0' }} / {{ $antrianx->count() }}</th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task1') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task1') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task2') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task2') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task3') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task3') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task4') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task4') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task5') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task5') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task6') / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task6') / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ Carbon\CarbonInterval::seconds(($antrians->sum('avg_waktu_task1') + $antrians->sum('avg_waktu_task2') + $antrians->sum('avg_waktu_task3') + $antrians->sum('avg_waktu_task4') + $antrians->sum('avg_waktu_task5') + $antrians->sum('avg_waktu_task6') + $antrians->sum('avg_waktu_task7')) / $antrians->count())->cascade()->format('%H:%I:%S') }}
+                                    {{ $antrians? Carbon\CarbonInterval::seconds(($antrians->sum('avg_waktu_task1') + $antrians->sum('avg_waktu_task2') + $antrians->sum('avg_waktu_task3') + $antrians->sum('avg_waktu_task4') + $antrians->sum('avg_waktu_task5') + $antrians->sum('avg_waktu_task6') + $antrians->sum('avg_waktu_task7')) / $antrians->count())->cascade()->format('%H:%I:%S'): '0' }}
                                 </th>
                                 <th>
-                                    {{ number_format(($antrians->sum('jumlah_antrean') / $antrianx->count()) * 100, 2) }} %
+                                    {{ $antrians ? number_format(($antrians->sum('jumlah_antrean') / $antrianx->count()) * 100, 2) : '0' }}
+                                    %
                                 </th>
                             </tr>
                         </tfoot>
