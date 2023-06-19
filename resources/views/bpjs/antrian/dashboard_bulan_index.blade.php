@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Dashboard Bulan - Antrian BPJS')
 @section('content_header')
-    <h1 class="m-0 text-dark">Dashboard sBulan Antrian BPJS</h1>
+    <h1 class="m-0 text-dark">Dashboard Bulan Antrian BPJS</h1>
 @stop
 @section('content')
     <div class="row">
@@ -39,7 +39,7 @@
                 </div>
                 <x-adminlte-card title="Laporan Waktu Pelayanan Antrian" theme="secondary" collapsible>
                     @php
-                        $heads = ['Poliklinik', 'Selesai / Total', 'Checkin', 'Daftar', 'Tunggu Poli', 'Layan Poli', 'Terima Resep', 'Proses Farmasi', 'Total Waktu', 'Q Rate'];
+                        $heads = ['Poliklinik', 'Selesai / Total',  'Tunggu Poli', 'Layan Poli', 'Terima Resep', 'Proses Farmasi', 'Total Waktu', 'Q Rate'];
                         $config = ['paging' => false];
 
                     @endphp
@@ -49,12 +49,6 @@
                             <tr>
                                 <td>{{ strtoupper($item->first()->namapoli) }}</td>
                                 <td>{{ $antrians->where('kodepoli', $key)->sum('jumlah_antrean') }} / {{ $item->count() }}
-                                </td>
-                                <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task1'))->cascade()->format('%H:%I:%S') }}
-                                </td>
-                                <td>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task2'))->cascade()->format('%H:%I:%S') }}
                                 </td>
                                 <td>
                                     {{ Carbon\CarbonInterval::seconds($antrians->where('kodepoli', $key)->sum('avg_waktu_task3'))->cascade()->format('%H:%I:%S') }}
@@ -82,13 +76,7 @@
                             <tr>
                                 <th>Total</th>
                                 <th>{{ $antrians->sum('jumlah_antrean') }} / {{ $antrianx->count() }}</th>
-                                <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task1') / $antrians->count())->cascade()->format('%H:%I:%S') }}
-                                </th>
-                                <th>
-                                    {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task2') / $antrians->count())->cascade()->format('%H:%I:%S') }}
-                                </th>
-                                <th>
+                                                                                            <th>
                                     {{ Carbon\CarbonInterval::seconds($antrians->sum('avg_waktu_task3') / $antrians->count())->cascade()->format('%H:%I:%S') }}
                                 </th>
                                 <th>

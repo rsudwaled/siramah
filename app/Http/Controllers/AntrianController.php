@@ -2721,7 +2721,6 @@ class AntrianController extends APIController
                             'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
-                    dd($nomorlayanandet, $karcis);
                     //  insert layanan detail admin
                     $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first();
                     $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
