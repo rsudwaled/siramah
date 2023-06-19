@@ -159,7 +159,12 @@ class FarmasiController extends APIController
             $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))->get()->count();
             // dd($order->pasien->desas);
             try {
-                $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
+                if ($order->kode_unit == 4002) {
+                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI_DP1'));
+                }
+                if ($order->kode_unit == 4008) {
+                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
+                }
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");

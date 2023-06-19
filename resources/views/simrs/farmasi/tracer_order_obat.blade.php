@@ -27,6 +27,7 @@
                             <x-adminlte-select name="depo" label="Depo Farmasi">
                                 <x-adminlte-options :options="[
                                     4008 => 'FARMASI DEPO 2',
+                                    4002 => 'FARMASI DEPO 1',
                                 ]" :selected="$request->depo ?? 1" />
                             </x-adminlte-select>
                         </div>
