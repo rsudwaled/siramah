@@ -90,6 +90,7 @@ class AntrianController extends APIController
             return redirect()->back();
         }
     }
+
     public function selesaiPoliklinik(Request $request)
     {
         $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
@@ -596,10 +597,10 @@ class AntrianController extends APIController
         $antrianx = null;
         if (isset($request->waktu)) {
             $antrianx = Antrian::whereDate('tanggalperiksa', '=', $request->tanggal)
-            ->where('method', '!=', 'Offline')
-            ->where('taskid', '!=', 99)
-            ->where('taskid', '!=', 0)
-            ->get();
+                ->where('method', '!=', 'Offline')
+                ->where('taskid', '!=', 99)
+                ->where('taskid', '!=', 0)
+                ->get();
             $response =  $this->dashboard_tanggal($request);
             if ($response->metadata->code == 200) {
                 $antrians = collect($response->response->list);
@@ -936,6 +937,21 @@ class AntrianController extends APIController
             ]
         ));
     }
+    public function checkinAntrian(Request $request)
+    {
+        $antrian = null;
+        $kunjungan = null;
+        if ($request->kodebooking) {
+            $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+            $kunjungan =  $antrian->kunjungan;
+        }
+        return view('simrs.antrian_checkin', compact([
+            'request',
+            'antrian',
+            'kunjungan',
+        ]));
+    }
+
     public function antrianPendaftaran(Request $request)
     {
         $antrians = null;
