@@ -14,7 +14,6 @@
                     $heads = ['Kode BPJS', 'Kode SIMRS', 'Nama Dokter', 'SIP', 'Status', 'Action'];
                     $config['paging'] = false;
                     $config['info'] = false;
-                    $config['searching'] = false;
                     $config['scrollY'] = '500px';
                     $config['scrollCollapse'] = true;
                 @endphp

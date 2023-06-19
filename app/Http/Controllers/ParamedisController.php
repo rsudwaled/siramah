@@ -17,11 +17,11 @@ class ParamedisController extends Controller
         // get dokter vclaim bpjs
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
-        if ($response->status() == 200) {
-            $dokter_bpjs = collect($response->getData()->response);
+        if ($response->metadata->code == 200) {
+            $dokter_bpjs = collect($response->response);
         } else {
             $dokter_bpjs = null;
-            Alert::error($response->getData()->metadata->message . ' ' . $response->status());
+            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
 
         // $paramedis->where('kode_dokter_jkn', )
