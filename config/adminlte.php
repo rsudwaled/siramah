@@ -331,6 +331,13 @@ return [
                     'can' => 'pendaftaran',
                 ],
                 [
+                    'text' => 'Checkin Antrian',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'checkinAntrian',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'antrianPendaftaran',

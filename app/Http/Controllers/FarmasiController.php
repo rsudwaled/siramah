@@ -178,10 +178,11 @@ class FarmasiController extends APIController
                 // $printer->text("Alamat : " . $order->pasien->desas->nama_desa_kelurahan . ', ' . $order->pasien->kecamatans->nama_kecamatan . " \n");
                 $printer->text("Berat Badan : "  . " \n");
                 $printer->text("Kode Layanan : " . $order->kode_layanan_header   . " \n");
+                $printer->text("Diagnosa : " . $order->diagnosa   . " \n");
                 $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
                 $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
-                $printer->text("SIP Dokter : " . $order->dokter->sip_dr . " \n\n");
+                $printer->text("SIP : " . $order->dokter->sip_dr . " \n\n");
 
                 $printer->text("================================================\n");
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");
@@ -195,7 +196,6 @@ class FarmasiController extends APIController
                 }
                 // $printer->text($order->detail->first()->keterangan . " \n");
                 $printer->text("================================================\n");
-                $printer->text("Input By : " . $order->tgl_entry . " \n");
                 $printer->text("Tgl Input : " . $order->tgl_entry . " \n");
                 $printer->text("Tgl Cetak : " . now() . " \n\n");
                 $printer->text("Serah terima obat \n");

@@ -15,4 +15,8 @@ class Antrian extends Model
     {
         return $this->belongsTo(Pasien::class, 'nik', 'nik_bpjs');
     }
+    public function kunjungan()
+    {
+        return $this->belongsTo(Kunjungan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
 }

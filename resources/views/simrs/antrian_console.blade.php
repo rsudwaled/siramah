@@ -81,15 +81,17 @@
 
                         </div>
                     </div>
+                    <x-slot name="footerSlot">
+                        <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
+                        <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
+                            Printer</a>
+                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning"><i class="fas fa-print"></i> Checkin
+                            Antrian</a>
+                        <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
+                                class="fas fa-calendar-alt"></i> Jadwal
+                            Dokter</a>
+                    </x-slot>
                 </x-adminlte-card>
-                <div class="col-md-12">
-                    <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                    <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
-                        Printer</a>
-                    <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
-                            class="fas fa-calendar-alt"></i> Jadwal
-                        Dokter</a>
-                </div>
             </div>
             {{-- ambil antrian offline --}}
             <div class="col-md-7">
@@ -128,14 +130,16 @@
         <div class="form-group">
             <label>Silahkan pilih poliklinik di bawah ini</label>
             <div class="row">
-                @foreach ($jadwals->groupBy('kodesubspesialis') as $key =>  $item)
+                @foreach ($jadwals->groupBy('kodesubspesialis') as $key => $item)
                     <div class="col-md-4">
                         <div class="custom-control custom-radio " style="scale: 100%">
                             <input class="custom-control-input btnPoliBPJS" type="radio"
-                                data-id="{{ $item->first()->kodesubspesialis }}" id="{{ $item->first()->namasubspesialis }}"
-                                value="{{ $item->first()->kodesubspesialis }}" name="kodesubspesialis">
+                                data-id="{{ $item->first()->kodesubspesialis }}"
+                                id="{{ $item->first()->namasubspesialis }}" value="{{ $item->first()->kodesubspesialis }}"
+                                name="kodesubspesialis">
                             <label for="{{ $item->first()->namasubspesialis }}" class="custom-control-label"
-                                data-id="{{ $item->first()->kodesubspesialis }}">{{ strtoupper($item->first()->namasubspesialis)  }} </label>
+                                data-id="{{ $item->first()->kodesubspesialis }}">{{ strtoupper($item->first()->namasubspesialis) }}
+                            </label>
                         </div>
                     </div>
                 @endforeach
