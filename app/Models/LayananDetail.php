@@ -11,4 +11,12 @@ class LayananDetail extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_layanan_detail';
     protected $guarded = ['id'];
+
+
+    public function tarif_detail()
+    {
+        return $this->hasOne(TarifLayananDetail::class, 'KODE_TARIF_DETAIL', 'kode_tarif_detail');
+    }
+
+
 }

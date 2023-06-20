@@ -12,4 +12,10 @@ class TarifLayananDetail extends Model
     protected $table = 'mt_tarif_detail';
     // protected $primaryKey = 'KODE_TARIF_HEADER';
     public $timestamps = false;
+
+
+    public function tarif()
+    {
+        return $this->hasOne(TarifLayanan::class, 'KODE_TARIF_HEADER', 'KODE_TARIF_HEADER');
+    }
 }

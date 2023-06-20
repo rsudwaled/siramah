@@ -183,7 +183,7 @@ class FarmasiController extends APIController
                 // $printer->text("Alamat : " . $order->pasien->desas->nama_desa_kelurahan . ', ' . $order->pasien->kecamatans->nama_kecamatan . " \n");
                 $printer->text("Berat Badan : "  . " \n");
                 $printer->text("Kode Layanan : " . $order->kode_layanan_header   . " \n");
-                $printer->text("Diagnosa : " . $order->diagnosa   . " \n");
+                $printer->text("Diagnosa : " . $order->kunjungan->diagx   . " \n");
                 $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
                 $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
