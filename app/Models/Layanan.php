@@ -11,4 +11,10 @@ class Layanan extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_layanan_header';
     protected $guarded = ['id'];
+
+
+    public function layanan_details()
+    {
+        return $this->hasMany(LayananDetail::class, 'row_id_header', 'id');
+    }
 }

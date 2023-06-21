@@ -6,17 +6,16 @@
 @section('body')
     <div class="wrapper">
         <div class="row p-1">
-            {{-- checkin --}}
-            <div class="col-md-12">
+            <div class="col-md-4">
                 <x-adminlte-card title="Anjungan Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <div class="text-center">
                         <form action="" method="GET">
                             <x-adminlte-input name="kodebooking"
                                 label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
-                                placeholder="Masukan Kode Antrian untuk Checkin" value="{{ $request->kodebooking }}" igroup-size="lg">
+                                placeholder="Masukan Kode Antrian untuk Checkin" value="{{ $request->kodebooking }}"
+                                igroup-size="lg">
                                 <x-slot name="appendSlot">
-                                    <x-adminlte-button type="submit" theme="success"
-                                        label="Checkin!" />
+                                    <x-adminlte-button type="submit" theme="success" label="Checkin!" />
                                 </x-slot>
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text text-success">
@@ -25,7 +24,6 @@
                                 </x-slot>
                             </x-adminlte-input>
                         </form>
-
                         <i class="fas fa-qrcode fa-3x"></i>
                         <br>
                         <label>Status = <span id="status">-</span></label>
@@ -38,24 +36,128 @@
                             Antrian</a>
                     </x-slot>
                 </x-adminlte-card>
-                {{-- <div class="col-md-12">
-                    <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                    <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
-                        Printer</a>
-                    <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
-                            class="fas fa-calendar-alt"></i> Jadwal
-                        Dokter</a>
-                </div> --}}
             </div>
             @if ($antrian)
+                <div class="col-md-8">
+                    <x-adminlte-card title="Detail Antrian" theme="primary" icon="fas fa-qrcode">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Booking</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->kodebooking }}</dd>
+                                    <dt class="col-sm-4">Pasien</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->nama }}</dd>
+                                    <dt class="col-sm-4">RM </dt>
+                                    <dd class="col-sm-8">: {{ $antrian->norm }} </dd>
+                                    <dt class="col-sm-4">No BPJS</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->nomorkartu }}</dd>
+                                    <dt class="col-sm-4">No HP</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->nohp }}</dd>
+                                    <dt class="col-sm-4">Jenis</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->jenispasien }}</dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-7">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Tanggal Periksa</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->tanggalperiksa }}</dd>
+                                    <dt class="col-sm-4">Jenis Kunjungan</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->jeniskunjungan }}</dd>
+                                    <dt class="col-sm-4">Poliklinik</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->namapoli }}</dd>
+                                    <dt class="col-sm-4">Dokter</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->namadokter }}</dd>
+                                    <dt class="col-sm-4">Jadwal</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->jampraktek }}</dd>
+                                    <dt class="col-sm-4">Taskid</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->taskid }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        @if ($antrian->nomorsep)
+                            <x-adminlte-alert theme="warning" title="Informasi SEP">
+                                SEP sudah dicetak dengan Nomor <b>{{ $antrian->nomorsep }}</b>
+                            </x-adminlte-alert>
+                        @endif
+                        @isset($kunjungan->layanan)
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">Kunjungan</dt>
+                                        <dd class="col-sm-8">: {{ $kunjungan->kode_kunjungan ?? '-' }}</dd>
+                                        <dt class="col-sm-4">Layanan</dt>
+                                        <dd class="col-sm-8">: {{ $kunjungan->layanan->kode_layanan_header }}</dd>
+                                        <dt class="col-sm-4">Penjamin</dt>
+                                        <dd class="col-sm-8">:
+                                            {{ $kunjungan->penjamin_simrs ? $kunjungan->penjamin_simrs->nama_penjamin : '-' }}
+                                        </dd>
 
-            <div class="col-md-12">
-                <x-adminlte-card title="Detail Antrian" theme="primary" icon="fas fa-qrcode">
-                    {{ $antrian->kodebooking }}
-                    {{ $antrian->taskid }}
-                    {{ $antrian->kunjungan }}
-                </x-adminlte-card>
-            </div>
+                                    </dl>
+                                </div>
+                                <div class="col-md-7">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">No SEP</dt>
+                                        <dd class="col-sm-8">: {{ $kunjungan->no_sep ?? '-' }}</dd>
+                                        <dt class="col-sm-4">Status</dt>
+                                        <dd class="col-sm-8">:
+                                            {{ $kunjungan->status ? $kunjungan->status->status_kunjungan : '-' }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                            <table class="table-bordered col-md-12">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode</th>
+                                        <th>Nama Tarif</th>
+                                        <th>Jumlah Tarif</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @foreach ($kunjungan->layanan->layanan_details as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->id_layanan_detail }}</td>
+                                            <td>{{ $item->tarif_detail->tarif->NAMA_TARIF }}</td>
+                                            <td class="text-right"> {{ money($item->total_layanan, 'IDR') }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th class="text-right" colspan="2">Total</th>
+                                        <th class="text-right">
+                                            {{ money($kunjungan->layanan->layanan_details->sum('total_layanan'), 'IDR') }}
+                                        </th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        @else
+                            <x-adminlte-alert theme="danger" title="Belum Cetak Karcis Antrian">
+                                Silahkan lakukan cetak karcis
+                            </x-adminlte-alert>
+                        @endisset
+                        <x-slot name="footerSlot">
+                            @if ($antrian->jenispasien == 'JKN')
+                                <a href="{{ route('checkinCetakSEP') }}?kodebooking={{ $request->kodebooking }}"
+                                    class="btn btn-warning"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
+                                @if ($antrian->nomorsep)
+                                    <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                        class="btn btn-success"><i class="fas fa-print"></i>
+                                        Cetak Karcis Antrian</a>
+                                @endif
+                            @else
+                                <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                    class="btn btn-success"><i class="fas fa-print"></i>
+                                    Cetak Karcis Antrian</a>
+                            @endif
+                            <a href="{{ route('batalAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                class="btn btn-danger"><i class="fas fa-times"></i> Batal Antrian</a>
+                        </x-slot>
+                    </x-adminlte-card>
+                </div>
             @endif
         </div>
     </div>

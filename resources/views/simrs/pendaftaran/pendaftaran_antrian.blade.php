@@ -173,24 +173,17 @@
                                             Loket {{ $item->loket }}
                                         </td>
                                         <td>
-                                            <form action="" method="GET">
-                                                <input type="hidden" name="kodebooking" value="{{ $item->kodebooking }}">
-                                                <input type="hidden" name="lantai" value="{{ $request->lantai }}">
-                                                <input type="hidden" name="loket" value="{{ $request->loket }}">
-                                                <x-adminlte-button class="btn-xs" theme="success" label="Layani"
-                                                    icon="fas fa-user-plus" type="submit" />
+                                            <x-adminlte-button label="BPJS" theme="success" icon="fas fa-user-plus"
+                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarBPJS" />
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
+                                                icon="fas fa-volume-down" data-toggle="tooltip"
+                                                title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('panggilPendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
+                                                icon="fas fa-times" data-toggle="tooltop"
+                                                title="Batal Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
 
-                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil"
-                                                    theme="primary" icon="fas fa-volume-down" data-toggle="tooltip"
-                                                    title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('panggilPendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
-
-                                                <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
-                                                    icon="fas fa-times" data-toggle="tooltop"
-                                                    title="Batal Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('batalAntrian', $item) }}'" />
-
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -198,8 +191,8 @@
                         </x-adminlte-card>
                     </div>
                     <div class="col-md-12">
-                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)"
-                            theme="warning" icon="fas fa-info-circle" collapsible=''>
+                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)" theme="warning"
+                            icon="fas fa-info-circle" collapsible=''>
                             @php
                                 $heads = ['No', 'Antrian', 'Pasien', 'Kunjungan', 'Poliklinik', 'Dokter', 'Status', 'Loket', 'Lantai'];
                                 $config['order'] = ['0', 'asc'];
@@ -209,8 +202,8 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads"
-                                :config="$config" striped bordered hoverable compressed>
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                striped bordered hoverable compressed>
                                 @foreach ($antrians as $item)
                                     <tr>
                                         <td>
@@ -295,305 +288,15 @@
                         </x-adminlte-card>
                     </div>
                 </div>
-                <x-adminlte-modal id="modalPelayanan" title="Pendaftaran Pasien" size="xl" theme="success"
-                    icon="fas fa-user-plus" v-centered static-backdrop scrollable>
-                    <form name="formLayanan" id="formLayanan" action="" method="post">
-                        @csrf
-                        <x-adminlte-card theme="primary" title="Informasi Kunjungan Berobat">
-                            <input type="hidden" name="antrianid" id="antrianid" value="">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <dl class="row">
-                                        <dt class="col-sm-5">Kode Booking</dt>
-                                        <dd class="col-sm-7">: <span id="kodebooking"></span></dd>
-                                        <dt class="col-sm-5">Antrian</dt>
-                                        <dd class="col-sm-7">: <span id="angkaantrean"></span> / <span
-                                                id="nomorantrean"></span>
-                                        </dd>
-                                        <dt class="col-sm-5 ">Tanggal Perikasa</dt>
-                                        <dd class="col-sm-7">: <span id="tanggalperiksa"></span></dd>
-                                        <dt class="col-sm-5">Metode Daftar</dt>
-                                        <dd class="col-sm-7">: <span id="method"></span></dd>
-                                        <dt class="col-sm-5">Poliklinik</dt>
-                                        <dd class="col-sm-7">: <span id="namapoli"></span></dd>
-                                        <dt class="col-sm-5">Dokter</dt>
-                                        <dd class="col-sm-7">: <span id="namadokter"></span></dd>
-                                        <dt class="col-sm-5">Jadwal</dt>
-                                        <dd class="col-sm-7">: <span id="jampraktek"></span></dd>
-                                    </dl>
-                                </div>
-                                <div class="col-md-6">
-                                    <dl class="row">
-                                        <dt class="col-sm-5">No RM</dt>
-                                        <dd class="col-sm-7">: <span id="norm"></span></dd>
-                                        <dt class="col-sm-5">NIK</dt>
-                                        <dd class="col-sm-7">: <span id="nik"></span></dd>
-                                        <dt class="col-sm-5">No BPJS</dt>
-                                        <dd class="col-sm-7">: <span id="nomorkartu"></span></dd>
-                                        <dt class="col-sm-5">Nama</dt>
-                                        <dd class="col-sm-7">: <span id="nama"></span></dd>
-                                        <dt class="col-sm-5">No HP</dt>
-                                        <dd class="col-sm-7">: <span id="nohp"></span></dd>
-                                        <dt class="col-sm-5">Jenis Pasien</dt>
-                                        <dd class="col-sm-7">: <span id="jenispasien"></span></dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </x-adminlte-card>
-                        <x-adminlte-card theme="primary" title="Pendaftaran Pasien Baru" collapsible="collapsed">
-                            <div class="row">
-                                Kosong
-                            </div>
-                        </x-adminlte-card>
-                        <x-slot name="footerSlot">
-                            <a href="#" id="lanjutFarmasi" class="btn btn-success mr-auto withLoad"> <i
-                                    class="fas fa-prescription-bottle-alt"></i> Lanjut Poliklinik</a>
-                            <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
-                        </x-slot>
-                    </form>
-                </x-adminlte-modal>
             @endif
-            @if ($antrian)
-                <div class="row">
-                    <div class="col-md-12">
-                        <x-adminlte-card title="Pencarian Pasien" theme="warning" icon="fas fa-user-injured"
-                            collapsible="{{ $request->norm ? 'collapsed' : '' }}">
-                            <form action="" method="get">
-                                <input type="hidden" name="kodebooking" value="{{ $request->kodebooking }}">
-                                <input type="hidden" name="lantai" value="{{ $request->lantai }}">
-                                <input type="hidden" name="loket" value="{{ $request->loket }}">
-                                <x-adminlte-input name="search" placeholder="Pencarian NIK / Nama" igroup-size="sm"
-                                    value="{{ $request->search }}">
-                                    <x-slot name="appendSlot">
-                                        <x-adminlte-button type="submit" theme="outline-primary" label="Cari" />
-                                    </x-slot>
-                                    <x-slot name="prependSlot">
-                                        <div class="input-group-text text-primary">
-                                            <i class="fas fa-search"></i>
-                                        </div>
-                                    </x-slot>
-                                </x-adminlte-input>
-                            </form>
-                            @php
-                                $heads = ['Tgl Entry', 'No RM', 'NIK', 'No BPJS', 'Nama', 'Alamat', 'No HP', 'Action'];
-                                $config['order'] = ['0', 'desc'];
-                                $config['paging'] = false;
-                                $config['info'] = false;
-                                $config['searching'] = false;
-                                $config['scrollY'] = '400px';
-                                $config['scrollCollapse'] = true;
-                                $config['scrollX'] = true;
-                            @endphp
-                            <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
-                                :config="$config" bordered hoverable compressed>
-                                @foreach ($pasiens as $pasienx)
-                                    <tr>
-                                        <td>{{ $pasienx->tgl_entry }}</td>
-                                        <td>{{ $pasienx->no_rm }}</td>
-                                        <td>{{ $pasienx->nik_bpjs }}</td>
-                                        <td>{{ $pasienx->no_Bpjs }}</td>
-                                        <td>{{ $pasienx->nama_px }}</td>
-                                        <td>{{ $pasienx->kecamatans->nama_kecamatan ?? '' }} ,
-                                            {{ $pasienx->desa->nama_kecamatan ?? '' }} </td>
-                                        <td>{{ $pasienx->no_hp ?? $pasienx->no_tlp }}</td>
-                                        <td>
-                                            <form action="" method="GET">
-                                                <input type="hidden" name="kodebooking"
-                                                    value="{{ $request->kodebooking }}">
-                                                <input type="hidden" name="lantai" value="{{ $request->lantai }}">
-                                                <input type="hidden" name="loket" value="{{ $request->loket }}">
-                                                <input type="hidden" name="norm" value="{{ $pasienx->no_rm }}">
-                                                <x-adminlte-button class="btn-xs withLoad" theme="success" label="Daftar"
-                                                    icon="fas fa-user-plus" type="submit" />
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </x-adminlte-datatable>
-                            <br>
-                            <div class="float-right pagination-sm">
-                                {{ $pasiens->appends(request()->input())->links() }}
-                            </div>
-                        </x-adminlte-card>
-                    </div>
-                    @if ($pasien)
-                        <div class="col-md-5">
-                            @if ($errors->any())
-                                <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </x-adminlte-alert>
-                            @endif
-                            <x-adminlte-profile-widget name="{{ $pasien->nama_px }}"
-                                desc="{{ $pasien->no_rm }} | {{ $pasien->no_Bpjs }} " theme="primary"
-                                img="https://picsum.photos/id/1/100" layout-type="classic">
-                                <dl class="row">
-                                    <dt class="col-sm-4">NIK</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->nik_bpjs }}</dd>
-                                    <dt class="col-sm-4">No Kartu</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->no_Bpjs }}</dd>
-                                    <dt class="col-sm-4">No RM</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->no_rm }}</dd>
-                                    <dt class="col-sm-4">No HP</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->no_hp }}</dd>
-                                    <dt class="col-sm-4">Nama</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->nama_px }}</dd>
-                                    <dt class="col-sm-4">Jenis Kelamin</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->jenis_kelamin }}</dd>
-                                    <dt class="col-sm-4">Tanggal Lahir</dt>
-                                    <dd class="col-sm-8">: {{ $pasien->tgl_lahir }}</dd>
-                                    <dt class="col-sm-4">
-                                        <x-adminlte-button id="btnInfoPeserta" icon="fas fa-user-injured"
-                                            class="mr-auto mb-1" theme="warning" label="Info Peserta BPJS" />
-                                    </dt>
-                                </dl>
-                                <x-adminlte-button icon="fas fa-file-medical" theme="primary" class="mr-auto mb-1"
-                                    label="Riwayat Kunjungan" data-toggle="modal" data-target="#riwayatKunjungan" />
-                                <x-adminlte-modal id="riwayatKunjungan" title="Riwayat Kunjungan" theme="warning"
-                                    icon="fas fa-file-medical" size='xl'>
-                                    <table id="tableKunjungan" class="table table-sm table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Tgl Masuk</th>
-                                                <th>Tgl Keluar</th>
-                                                <th>Penjamin</th>
-                                                <th>Unit</th>
-                                                <th>Dokter</th>
-                                                <th>Catatan</th>
-                                                <th>SEP</th>
-                                                <th>Rujukan</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </x-adminlte-modal>
-                                <x-adminlte-button id="btnRiwayatRujukan" icon="fas fa-file-medical" class="mr-auto mb-1"
-                                    theme="primary" label="Riwayat Rujukan" />
-                                <x-adminlte-modal id="riwayatRujukan" title="Riwayat Rujukan" theme="warning"
-                                    icon="fas fa-file-medical" size='xl'>
-                                    <table id="tableRujukan" class="table table-sm table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Tgl</th>
-                                                <th>No Rujukan</th>
-                                                <th>Pelayanan</th>
-                                                <th>Tujuan</th>
-                                                <th>Diagnosa</th>
-                                                <th>Provider</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </x-adminlte-modal>
-                                <x-adminlte-button id="btnRiwayatSuratKontrol" icon="fas fa-file-medical" theme="primary"
-                                    label="Riwayat Surat Kontrol" class="mr-auto mb-1" />
-                                <x-adminlte-modal id="riwayatSuratKontrol" title="Riwayat Surat Kontrol" theme="warning"
-                                    icon="fas fa-file-medical" size='xl'>
-                                    <table id="tableSuratKontrol" class="table table-sm table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Tgl Kontrol</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </x-adminlte-modal>
-                            </x-adminlte-profile-widget>
-                            @if ($pasien->antrians)
-                                @foreach ($pasien->antrians->where('taskid', '<', 5)->where('tanggalperiksa', now()->format('Y-m-d')) as $antrianaktif)
-                                    <x-adminlte-alert title="Pasien Memiliki Antrian Aktif" theme="danger">
-                                        Status : {{ $antrianaktif->taskid }}
-                                        <br>
-                                        Kode booking : {{ $antrianaktif->kodebooking }}
-                                        <br>
-                                        Tanggal Periksa : {{ $antrianaktif->tanggalperiksa }}
-                                        <br>
-                                        Method : {{ $antrianaktif->method }}
-                                        <br>
-                                        <a href="{{ route('batalAntrian') }}?kodebooking={{ $antrianaktif->kodebooking }}"
-                                            class="btn btn-xs ">Batalkan
-                                            Antrian</a>
-                                    </x-adminlte-alert>
-                                @endforeach
-                            @endif
-                        </div>
-                        <div class="col-md-7">
-                            <x-adminlte-card title="Pendaftaran Pasien" theme="success" icon="fas fa-user-plus"
-                                collapsible>
-                                <form action="{{ route('daftarBridgingAntrian') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="loket" value="{{ $request->loket }}">
-                                    <input type="hidden" name="lantai" value="{{ $request->lantai }}">
-                                    <x-adminlte-input name="nomorantrean" label="Nomor Antri"
-                                        value="{{ $antrian->nomorantrean }}" readonly />
-                                    <x-adminlte-input name="angkaantrean" label="Angka Antri"
-                                        value="{{ $antrian->angkaantrean }}" readonly />
-                                    <x-adminlte-input name="jampraktek" label="Jam Praktek"
-                                        value="{{ $antrian->jampraktek }}" readonly />
-                                    <x-adminlte-input name="tanggalperiksa" label="Tanggal Periksa"
-                                        value="{{ $antrian->tanggalperiksa }}" readonly />
-                                    <x-adminlte-select2 name="kodepoli" label="Poliklinik">
-                                        @foreach ($polikliniks as $item)
-                                            <option value="{{ $item->kodesubspesialis }}"
-                                                {{ $item->kodesubspesialis == $antrian->kodepoli ? 'selected' : '' }}>
-                                                {{ $item->namasubspesialis }}
-                                            </option>
-                                        @endforeach
-                                    </x-adminlte-select2>
-                                    <x-adminlte-select2 name="kodedokter" label="Dokter">
-                                        @foreach ($dokters as $item)
-                                            <option value="{{ $item->kodedokter }}"
-                                                {{ $item->kodedokter == $antrian->kodedokter ? 'selected' : '' }}>
-                                                {{ $item->namadokter }}
-                                            </option>
-                                        @endforeach
-                                    </x-adminlte-select2>
-                                    <x-adminlte-select name="jenispasien" label="Jenis Pasien">
-                                        <x-adminlte-options :options="[
-                                            'JKN' => 'JKN',
-                                            'NON-JKN' => 'NON-JKN',
-                                        ]" :selected="$antrian->jenispasien" />
-                                    </x-adminlte-select>
-                                    <x-adminlte-input name="norm" label="No RM" value="{{ $pasien->no_rm }}"
-                                        readonly />
-                                    <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $pasien->nama_px }}"
-                                        readonly />
-                                    <x-adminlte-input name="nomorkartu" label="No BPJS"
-                                        value="{{ $pasien->no_Bpjs }}" />
-                                    <x-adminlte-input name="nik" label="NIK" value="{{ $pasien->nik_bpjs }}"
-                                        required />
-                                    <x-adminlte-input name="nohp" label="No HP" value="{{ $pasien->no_hp }}"
-                                        required />
-                                    <x-adminlte-select name="jeniskunjungan" label="Jenis Pasien">
-                                        <x-adminlte-options :options="[
-                                            1 => 'RUJUKAN FKTP',
-                                            2 => 'RUJUKAN INTERNAL',
-                                            3 => 'SURAT KONTROL',
-                                            4 => 'RUJUKAN ANTAR-RS',
-                                        ]" :selected="$antrian->jeniskunjungan" />
-                                    </x-adminlte-select>
-                                    <x-adminlte-input name="nomorreferensi"
-                                        label="No Referensi (Rujukan / Surat Kontrol)" />
-                                    <x-adminlte-button type="submit" icon="fas fa-user-add" theme="success"
-                                        label="Daftar" class="mr-auto mb-1" />
-                                </form>
-                            </x-adminlte-card>
-                        </div>
-                    @endif
-                </div>
-            @endif
+
         </div>
     </div>
+
+    <x-adminlte-modal id="daftarBPJS" title="Pendaftaran Rawat Jalan" theme="warning" icon="fas fa-user-plus"
+        size='lg'>
+        This is a purple theme modal without animations.
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
