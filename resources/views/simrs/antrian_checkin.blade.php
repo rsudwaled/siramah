@@ -72,9 +72,13 @@
                                     <dt class="col-sm-4">Taskid</dt>
                                     <dd class="col-sm-8">: {{ $antrian->taskid }}</dd>
                                 </dl>
-
                             </div>
                         </div>
+                        @if ($antrian->nomorsep)
+                            <x-adminlte-alert theme="warning" title="Informasi SEP">
+                                SEP sudah dicetak dengan Nomor <b>{{ $antrian->nomorsep }}</b>
+                            </x-adminlte-alert>
+                        @endif
                         @isset($kunjungan->layanan)
                             <div class="row">
                                 <div class="col-md-5">
@@ -123,21 +127,32 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Total</th>
-                                        <th>Total</th>
+                                        <th class="text-right" colspan="2">Total</th>
                                         <th class="text-right">
                                             {{ money($kunjungan->layanan->layanan_details->sum('total_layanan'), 'IDR') }}
                                         </th>
                                     </tr>
                                 </tfoot>
                             </table>
+                        @else
+                            <x-adminlte-alert theme="danger" title="Belum Cetak Karcis Antrian">
+                                Silahkan lakukan cetak karcis
+                            </x-adminlte-alert>
                         @endisset
                         <x-slot name="footerSlot">
-                            <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                                class="btn btn-success"><i class="fas fa-print"></i>
-                                Cetak Karcis Antrian</a>
-                            <a href="{{ route('checkinCetakSEP') }}?kodebooking={{ $request->kodebooking }}"
-                                class="btn btn-warning"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
+                            @if ($antrian->jenispasien == 'JKN')
+                                <a href="{{ route('checkinCetakSEP') }}?kodebooking={{ $request->kodebooking }}"
+                                    class="btn btn-warning"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
+                                @if ($antrian->nomorsep)
+                                    <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                        class="btn btn-success"><i class="fas fa-print"></i>
+                                        Cetak Karcis Antrian</a>
+                                @endif
+                            @else
+                                <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                    class="btn btn-success"><i class="fas fa-print"></i>
+                                    Cetak Karcis Antrian</a>
+                            @endif
                             <a href="{{ route('batalAntrian') }}?kodebooking={{ $request->kodebooking }}"
                                 class="btn btn-danger"><i class="fas fa-times"></i> Batal Antrian</a>
                         </x-slot>
