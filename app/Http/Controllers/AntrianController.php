@@ -1121,6 +1121,7 @@ class AntrianController extends APIController
             if ($kunjungan) {
                 $kunjungan->update([
                     'status_kunjungan' => 1,
+                    'no_sep' => $antrian->nomorsep,
                 ]);
             }
             $antrian->update([
@@ -1345,11 +1346,6 @@ class AntrianController extends APIController
     public function antrianPendaftaran(Request $request)
     {
         $antrians = null;
-        $antrian = null;
-        $polikliniks = null;
-        $dokters = null;
-        $pasiens = null;
-        $pasien = null;
         // daftar antrian
         if ($request->tanggal && $request->loket && $request->jenispasien  && $request->lantai) {
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
@@ -1357,37 +1353,10 @@ class AntrianController extends APIController
                 ->where('jenispasien', $request->jenispasien)
                 ->where('lantaipendaftaran', $request->lantai)
                 ->get();
-            if ($request->kodepoli != null) {
-                $antrians = $antrians->where('kodepoli', $request->kodepoli);
-            }
         }
-        // layanan antrian
-        if ($request->kodebooking) {
-            $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-            $dokters = Dokter::where('status', 1)->get();
-            $pasiens = Pasien::with(['kecamatans'])
-                ->where('no_rm', 'LIKE', "%{$request->search}%")
-                ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
-                ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
-                ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
-                ->orderBy('tgl_entry', 'DESC')->paginate(10);
-            // pilih pasien
-            if ($request->norm) {
-                $pasien = Pasien::firstWhere('no_rm', $request->norm);
-                $request['nomorkartu'] = $pasien->no_Bpjs;
-                $request['tanggal'] = $antrian->tanggalperiksa;
-                toast('Pasien telah dipilih', 'success');
-            }
-        }
-        $polikliniks = Poliklinik::where('status', 1)->get();
         return view('simrs.pendaftaran.pendaftaran_antrian', compact([
             'antrians',
-            'antrian',
             'request',
-            'polikliniks',
-            'dokters',
-            'pasiens',
-            'pasien',
         ]));
     }
     public function daftarBridgingAntrian(Request $request)

@@ -123,7 +123,7 @@
                                             @endif
                                         </td>
                                         <td>
-                                            {{ $item->namapoli }}
+                                            {{ $item->kodepoli }}
                                         </td>
                                         <td>
                                             {{ $item->kodedokter }} - {{ substr($item->namadokter, 0, 19) }}...
@@ -175,6 +175,8 @@
                                         <td>
                                             <x-adminlte-button label="BPJS" theme="success" icon="fas fa-user-plus"
                                                 class="btn-xs mt-1" data-toggle="modal" data-target="#daftarBPJS" />
+                                            <x-adminlte-button label="UMUM" theme="success" icon="fas fa-user-plus"
+                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarUmum" />
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
                                                 icon="fas fa-volume-down" data-toggle="tooltip"
                                                 title="Panggil Antrian {{ $item->nomorantrean }}"
@@ -191,8 +193,8 @@
                         </x-adminlte-card>
                     </div>
                     <div class="col-md-12">
-                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)" theme="warning"
-                            icon="fas fa-info-circle" collapsible=''>
+                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)"
+                            theme="warning" icon="fas fa-info-circle" collapsible=''>
                             @php
                                 $heads = ['No', 'Antrian', 'Pasien', 'Kunjungan', 'Poliklinik', 'Dokter', 'Status', 'Loket', 'Lantai'];
                                 $config['order'] = ['0', 'asc'];
@@ -202,8 +204,8 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
-                                striped bordered hoverable compressed>
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads"
+                                :config="$config" striped bordered hoverable compressed>
                                 @foreach ($antrians as $item)
                                     <tr>
                                         <td>
@@ -289,11 +291,14 @@
                     </div>
                 </div>
             @endif
-
         </div>
     </div>
 
-    <x-adminlte-modal id="daftarBPJS" title="Pendaftaran Rawat Jalan" theme="warning" icon="fas fa-user-plus"
+    <x-adminlte-modal id="daftarBPJS" title="Pendaftaran Rawat Jalan BPJS" theme="warning" icon="fas fa-user-plus"
+        size='lg'>
+        This is a purple theme modal without animations.
+    </x-adminlte-modal>
+    <x-adminlte-modal id="daftarUmum" title="Pendaftaran Rawat Jalan UMUM" theme="warning" icon="fas fa-user-plus"
         size='lg'>
         This is a purple theme modal without animations.
     </x-adminlte-modal>

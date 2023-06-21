@@ -112,8 +112,8 @@
 
                                 <td>{{ $item->noSuratKontrol }}
                                     <br>
-                                    <a href="{{ route('suratKontrolPrint', $item->noSuratKontrol) }}"
-                                        target="_blank" class="btn btn-xs btn-success" data-toggle="tooltip"
+                                    <a href="{{ route('suratKontrolPrint', $item->noSuratKontrol) }}" target="_blank"
+                                        class="btn btn-xs btn-success" data-toggle="tooltip"
                                         title="Print Surat Kontrol {{ $item->kode_kunjungan }}"> <i
                                             class="fas fa-print"></i> Print</a>
                                     <x-adminlte-button class="btn-xs btnEditSuratKontrol" label="Edit" theme="warning"
@@ -146,8 +146,7 @@
                                 label="Nomor Surat Kontrol" readonly />
                         </div>
                         <div class="col-md-6">
-                            <x-adminlte-input name="nomorsep_suratkontrol" placeholder="Nomor SEP" label="Nomor SEP"
-                                readonly />
+                            <x-adminlte-input name="nomorsep_suratkontrol" placeholder="Nomor SEP" label="Nomor SEP" />
                         </div>
                     </div>
                     @php
@@ -250,8 +249,9 @@
                     type: "POST",
                     dataType: 'json',
                     success: function(data) {
+                        console.log(data);
                         var urlPrint =
-                            "{{ route('landingpage') }}/bpjs/vclaim/surat_kontrol_print/" +
+                            "{{ route('landingpage') }}/suratkontrol_print?nomorsuratkontrol=" +
                             data
                             .response.noSuratKontrol;
                         Swal.fire({
@@ -272,8 +272,8 @@
                     error: function(data) {
                         console.log(data);
                         swal.fire(
-                            data.statusText + ' ' + data.status,
-                            data.responseJSON.metadata.message,
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
                             'error'
                         );
                         $.LoadingOverlay("hide");
@@ -283,18 +283,60 @@
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                // var url = "{{ route('suratkontrol.index') }}";
+                var url = "{{ route('suratkontrol_update') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
                     type: "PUT",
                     dataType: 'json',
                     success: function(data) {
+                        if (data.metadata.code == 200) {
+                            swal.fire(
+                                'Success',
+                                'Surat Kontrol Berhasil Diperbaharui dengan Nomor ' + data
+                                .response
+                                .noSuratKontrol,
+                                'success'
+                            ).then(okay => {
+                                if (okay) {
+                                    $.LoadingOverlay("show");
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal.fire(
+                                'Error ' + data.metadata.code,
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
+            $('#btnDelete').click(function(e) {
+                $.LoadingOverlay("show");
+                e.preventDefault();
+                var url = "{{ route('suratkontrol_delete') }}";
+                $.ajax({
+                    data: $('#formSuratKontrol').serialize(),
+                    url: url,
+                    type: "DELETE",
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
                         swal.fire(
                             'Success',
-                            'Surat Kontrol Berhasil Diperbaharui dengan Nomor ' + data
-                            .response
-                            .noSuratKontrol,
+                            'Data berhasil dihapus',
                             'success'
                         ).then(okay => {
                             if (okay) {
@@ -307,40 +349,8 @@
                     error: function(data) {
                         console.log(data);
                         swal.fire(
-                            data.statusText + ' ' + data.status,
-                            data.responseJSON.metadata.message,
-                            'error'
-                        );
-                        $.LoadingOverlay("hide");
-                    }
-                });
-            });
-            $('#btnDelete').click(function(e) {
-                $.LoadingOverlay("show");
-                e.preventDefault();
-                // var url = "{{ route('suratkontrol.index') }}";
-                $.ajax({
-                    data: $('#formSuratKontrol').serialize(),
-                    url: url,
-                    type: "DELETE",
-                    dataType: 'json',
-                    success: function(data) {
-                        swal.fire(
-                            'Success',
-                            'Data Berhasil Disimpan',
-                            'success'
-                        ).then(okay => {
-                            if (okay) {
-                                $.LoadingOverlay("show");
-                                location.reload();
-                            }
-                        });
-                        $.LoadingOverlay("hide");
-                    },
-                    error: function(data) {
-                        swal.fire(
-                            data.statusText + ' ' + data.status,
-                            data.responseJSON.metadata.message,
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
                             'error'
                         );
                         $.LoadingOverlay("hide");

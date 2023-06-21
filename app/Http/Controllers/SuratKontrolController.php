@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Paramedis;
 use App\Models\Pasien;
+use App\Models\Poliklinik;
 use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratKontrolController extends Controller
@@ -20,11 +22,11 @@ class SuratKontrolController extends Controller
             $request['tanggalAkhir'] = Carbon::parse($tanggal[1])->format('Y-m-d');
             $vclaim = new VclaimController();
             $response =  $vclaim->suratkontrol_tanggal($request);
-            if ($response->status() == 200) {
-                $suratkontrol = $response->getData()->response->list;
-                Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');
+            if ($response->metadata->code == 200) {
+                $suratkontrol = $response->response->list;
+                Alert::success($response->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');
             } else {
-                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
             }
         }
         if ($request->nomorKartu) {
@@ -32,11 +34,11 @@ class SuratKontrolController extends Controller
             $request['tahun'] = $bulan[0];
             $request['bulan'] = $bulan[1];
             $response =  $this->suratkontrol_peserta($request);
-            if ($response->status() == 200) {
-                $suratkontrol = $response->getData()->response->list;
-                Alert::success($response->getData()->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');
+            if ($response->metadata->code == 200) {
+                $suratkontrol = $response->response->list;
+                Alert::success($response->metadata->message, 'Total Data Kunjungan BPJS ' . count($suratkontrol) . ' Pasien');
             } else {
-                Alert::error('Error ' . $response->status(), $response->getData()->metadata->message);
+                Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
             }
         }
         return view('bpjs.vclaim.surat_kontrol_index', compact([
@@ -54,12 +56,12 @@ class SuratKontrolController extends Controller
         $request['tglRencanaKontrol'] = $request->tanggal_suratkontrol;
         $request['kodeDokter'] = $request->kodedokter_suratkontrol;
         $request['poliKontrol'] = $request->kodepoli_suratkontrol;
-        $poli = PoliklinikDB::where('kodesubspesialis', $request->poliKontrol)->first();
+        $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
         $request['user'] = Auth::user()->name;
         $vclaim = new VclaimController();
         $response = $vclaim->suratkontrol_insert($request);
-        if ($response->status() == 200) {
-            $suratkontrol = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
             SuratKontrol::create([
                 "tglTerbitKontrol" => now()->format('Y-m-d'),
                 "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
@@ -80,10 +82,10 @@ class SuratKontrolController extends Controller
             $request['nomorkartu'] = $suratkontrol->noKartu;
             $request['tanggal'] = now()->format('Y-m-d');
             $response_peserta = $vclaim->peserta_nomorkartu($request);
-            if ($response_peserta->status() == 200) {
-                $peserta = $response_peserta->getData()->response->peserta;
+            if ($response_peserta->metadata->code == 200) {
+                $peserta = $response_peserta->response->peserta;
                 $wa = new WhatsappController();
-                $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/simrs/bpjs/vclaim/surat_kontrol_print/" . $suratkontrol->noSuratKontrol;
+                $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
                 $request['number'] = $peserta->mr->noTelepon;
                 $wa->send_message($request);
             }
@@ -97,12 +99,12 @@ class SuratKontrolController extends Controller
         $request['kodeDokter'] = $request->kodedokter_suratkontrol;
         $request['poliKontrol'] = $request->kodepoli_suratkontrol;
         $request['tglRencanaKontrol'] = $request->tanggal_suratkontrol;
-        $poli = PoliklinikDB::where('kodesubspesialis', $request->poliKontrol)->first();
-        $request['user'] = Auth::user()->name;
+        $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
+        $request['user'] = 'Siramah';
         $vclaim = new VclaimController();
         $response = $vclaim->suratkontrol_update($request);
-        if ($response->status() == 200) {
-            $suratkontrol = $response->getData()->response;
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
             $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->nomor_suratkontrol);
             $sk->update([
                 "tglTerbitKontrol" => now()->format('Y-m-d'),
@@ -118,7 +120,7 @@ class SuratKontrolController extends Controller
                 "nama" => $suratkontrol->nama,
                 "kelamin" => $suratkontrol->kelamin,
                 "tglLahir" => $suratkontrol->tglLahir,
-                "user" => Auth::user()->name,
+                "user" => 'Siramah',
             ]);
         }
         return $response;
@@ -126,10 +128,10 @@ class SuratKontrolController extends Controller
     public function destroy(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomor_suratkontrol;
-        $request['user'] = Auth::user()->name;
+        $request['user'] = 'Sistem SIRAMAH';
         $vclaim = new VclaimController();
         $response = $vclaim->suratkontrol_delete($request);
-        if ($response->status() == 200) {
+        if ($response->metadata->code == 200) {
             $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->nomor_suratkontrol);
             $sk->delete();
         }
@@ -140,10 +142,10 @@ class SuratKontrolController extends Controller
         $request['noSuratKontrol'] = $nomorsuratkontrol;
         $vclaim = new VclaimController();
         $response = $vclaim->suratkontrol_nomor($request);
-        if ($response->status() == 200) {
-            $suratkontrol = $response->getData()->response;
-            $sep = $response->getData()->response->sep;
-            $peserta = $response->getData()->response->sep->peserta;
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
+            $sep = $response->response->sep;
+            $peserta = $response->response->sep->peserta;
             $pasien = Pasien::firstWhere('no_Bpjs', $peserta->noKartu);
             $dokter = Paramedis::firstWhere('kode_dokter_jkn', $suratkontrol->kodeDokter);
             return view('simrs.suratkontrol.suratkontrol_print', compact([
@@ -154,7 +156,30 @@ class SuratKontrolController extends Controller
                 'dokter',
             ]));
         } else {
-            return $response->getData()->metadata->message;
+            return $response->metadata->message;
+        }
+    }
+    public function print(Request $request)
+    {
+        // dd($request->all());
+        $request['noSuratKontrol'] = $request->nomorsuratkontrol;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_nomor($request);
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
+            $sep = $response->response->sep;
+            $peserta = $response->response->sep->peserta;
+            $pasien = Pasien::firstWhere('no_Bpjs', $peserta->noKartu);
+            $dokter = Paramedis::firstWhere('kode_dokter_jkn', $suratkontrol->kodeDokter);
+            return view('simrs.suratkontrol.suratkontrol_print', compact([
+                'suratkontrol',
+                'sep',
+                'peserta',
+                'pasien',
+                'dokter',
+            ]));
+        } else {
+            return $response->metadata->message;
         }
     }
 }

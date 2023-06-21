@@ -401,7 +401,7 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Kunjungan Poliklinik',
+                    'text' => 'Surat Kontrol Poliklinik',
                     'icon'    => 'fas fa-file-medical',
                     'url'  => 'kunjunganPoliklinik',
                     'shift'   => 'ml-2',

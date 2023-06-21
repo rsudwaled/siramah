@@ -6,6 +6,7 @@ use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PoliklinikController;
+use App\Http\Controllers\SuratKontrolController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
 use App\Models\JadwalDokter;
@@ -52,8 +53,8 @@ Route::prefix('vclaim')->group(function () {
     Route::get('ref_pasca_pulang', [VclaimController::class, 'ref_pasca_pulang'])->name('ref_pasca_pulang');
     // RENCANA KONTROL
     Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
-    Route::put('suratkontrol_update', [VclaimController::class, 'suratkontrol_update'])->name('suratkontrol_update');
-    Route::delete('suratkontrol_delete', [VclaimController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+    Route::put('suratkontrol_update', [SuratKontrolController::class, 'update'])->name('suratkontrol_update');
+    Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('suratkontrol_delete');
     Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
     Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
     Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
