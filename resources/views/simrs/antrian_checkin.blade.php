@@ -190,7 +190,6 @@
                     });
                     var url = "{{ route('checkinAntrian') }}?kodebooking=" + sCode;
                     window.location.href = url;
-                    alert(url);
                     // var formData = {
                     //     kodebooking: sCode,
                     //     waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",

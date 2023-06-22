@@ -177,49 +177,54 @@
             onScan.attachTo(document, {
                 onScan: function(sCode, iQty) {
                     $.LoadingOverlay("show", {
-                        text: "Printing..."
+                        text: "Mencari kodebooking " + sCode + "..."
                     });
-                    var url = "{{ route('checkinUpdate') }}";
-                    var formData = {
-                        kodebooking: sCode,
-                        waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
-                    };
-                    $('#kodebooking').val(sCode);
-                    $.get(url, formData, function(data) {
-                        console.log(data);
-                        $.LoadingOverlay("hide");
-                        if (data.metadata.code == 200) {
-                            $('#status').html(data.metadata.message);
-                            swal.fire(
-                                'Sukses...',
-                                data.metadata.message,
-                                'success'
-                            ).then(okay => {
-                                if (okay) {
-                                    $.LoadingOverlay("show", {
-                                        text: "Reload..."
-                                    });
-                                    $('#status').html('-');
-                                    location.reload();
-                                }
-                            });
-                        } else {
-                            $('#status').html(data.metadata.message);
-                            swal.fire(
-                                'Opss Error...',
-                                data.metadata.message,
-                                'error'
-                            ).then(okay => {
-                                if (okay) {
-                                    $.LoadingOverlay("show", {
-                                        text: "Reload..."
-                                    });
-                                    $('#status').html('-');
-                                    location.reload();
-                                }
-                            });
-                        }
-                    });
+                    var url = "{{ route('checkinAntrian') }}?kodebooking=" + sCode;
+                    window.location.href = url;
+                    // $.LoadingOverlay("show", {
+                    //     text: "Printing..."
+                    // });
+                    // var url = "{{ route('checkinUpdate') }}";
+                    // var formData = {
+                    //     kodebooking: sCode,
+                    //     waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
+                    // };
+                    // $('#kodebooking').val(sCode);
+                    // $.get(url, formData, function(data) {
+                    //     console.log(data);
+                    //     $.LoadingOverlay("hide");
+                    //     if (data.metadata.code == 200) {
+                    //         $('#status').html(data.metadata.message);
+                    //         swal.fire(
+                    //             'Sukses...',
+                    //             data.metadata.message,
+                    //             'success'
+                    //         ).then(okay => {
+                    //             if (okay) {
+                    //                 $.LoadingOverlay("show", {
+                    //                     text: "Reload..."
+                    //                 });
+                    //                 $('#status').html('-');
+                    //                 location.reload();
+                    //             }
+                    //         });
+                    //     } else {
+                    //         $('#status').html(data.metadata.message);
+                    //         swal.fire(
+                    //             'Opss Error...',
+                    //             data.metadata.message,
+                    //             'error'
+                    //         ).then(okay => {
+                    //             if (okay) {
+                    //                 $.LoadingOverlay("show", {
+                    //                     text: "Reload..."
+                    //                 });
+                    //                 $('#status').html('-');
+                    //                 location.reload();
+                    //             }
+                    //         });
+                    //     }
+                    // });
                 },
             });
         });
@@ -230,49 +235,55 @@
             $('#btn_checkin').click(function() {
                 var kodebooking = $('#kodebooking').val();
                 $.LoadingOverlay("show", {
-                    text: "Printing..."
+                    text: "Mencari kodebooking " + kodebooking + "..."
                 });
-                var url = "{{ route('checkinUpdate') }}";
-                var formData = {
-                    kodebooking: kodebooking,
-                    waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
-                };
-                $('#kodebooking').val(kodebooking);
-                $.get(url, formData, function(data) {
-                    console.log(data);
-                    $.LoadingOverlay("hide");
-                    if (data.metadata.code == 200) {
-                        $('#status').html(data.metadata.message);
-                        swal.fire(
-                            'Sukses...',
-                            data.metadata.message,
-                            'success'
-                        ).then(okay => {
-                            if (okay) {
-                                $.LoadingOverlay("show", {
-                                    text: "Reload..."
-                                });
-                                $('#status').html('-');
-                                location.reload();
-                            }
-                        });
-                    } else {
-                        $('#status').html(data.metadata.message);
-                        swal.fire(
-                            'Opss Error...',
-                            data.metadata.message,
-                            'error'
-                        ).then(okay => {
-                            if (okay) {
-                                $.LoadingOverlay("show", {
-                                    text: "Reload..."
-                                });
-                                $('#status').html('-');
-                                location.reload();
-                            }
-                        });
-                    }
-                });
+                var url = "{{ route('checkinAntrian') }}?kodebooking=" + kodebooking;
+                window.location.href = url;
+                // var kodebooking = $('#kodebooking').val();
+                // $.LoadingOverlay("show", {
+                //     text: "Printing..."
+                // });
+                // var url = "{{ route('checkinUpdate') }}";
+                // var formData = {
+                //     kodebooking: kodebooking,
+                //     waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
+                // };
+                // $('#kodebooking').val(kodebooking);
+                // $.get(url, formData, function(data) {
+                //     console.log(data);
+                //     $.LoadingOverlay("hide");
+                //     if (data.metadata.code == 200) {
+                //         $('#status').html(data.metadata.message);
+                //         swal.fire(
+                //             'Sukses...',
+                //             data.metadata.message,
+                //             'success'
+                //         ).then(okay => {
+                //             if (okay) {
+                //                 $.LoadingOverlay("show", {
+                //                     text: "Reload..."
+                //                 });
+                //                 $('#status').html('-');
+                //                 location.reload();
+                //             }
+                //         });
+                //     } else {
+                //         $('#status').html(data.metadata.message);
+                //         swal.fire(
+                //             'Opss Error...',
+                //             data.metadata.message,
+                //             'error'
+                //         ).then(okay => {
+                //             if (okay) {
+                //                 $.LoadingOverlay("show", {
+                //                     text: "Reload..."
+                //                 });
+                //                 $('#status').html('-');
+                //                 location.reload();
+                //             }
+                //         });
+                //     }
+                // });
             });
         });
     </script>
