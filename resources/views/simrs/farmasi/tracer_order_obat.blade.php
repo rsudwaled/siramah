@@ -67,7 +67,7 @@
                         hoverable compressed>
                         @foreach ($orders as $order)
                             <tr>
-                                <td>{{ $order->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $order->tgl_entry }}</td>
                                 <td>{{ $order->kode_layanan_header }}</td>
                                 <td>{{ $order->pasien->nama_px }} ({{ $order->no_rm }})</td>
