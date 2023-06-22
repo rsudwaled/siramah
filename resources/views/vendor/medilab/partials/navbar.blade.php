@@ -33,19 +33,18 @@
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
                 <li><a class="nav-link scrollto" href="#doctors">Bed Monitoring</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
-                <li><a class="nav-link scrollto" href="{{ route('login') }}">
-                        @auth
-                            Dashboard
-                        @else
-                            Login
-                        @endauth
-                    </a>
-                </li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="#" class="appointment-btn scrollto">
-            Daftar
-        </a>
+        @auth
+            <a href="{{ route('home') }}" class="appointment-btn scrollto">
+                Login
+            </a>
+        @else
+            <a href="{{ route('login') }}" class="appointment-btn scrollto">
+                Login
+            </a>
+        @endauth
+
     </div>
 </header>
