@@ -110,7 +110,7 @@ class AntrianController extends APIController
             // } catch (\Throwable $th) {
             //     //throw $th;
             // }
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
             return redirect()->back();
         } else {
             Alert::error('Error', 'Kodebooking tidak ditemukan');
@@ -141,7 +141,7 @@ class AntrianController extends APIController
         // } catch (\Throwable $th) {
         //     //throw $th;
         // }
-        Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+        Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
         return redirect()->back();
     }
     // VIEW SIMRS

@@ -171,8 +171,10 @@ class FarmasiController extends APIController
                 $printer->setTextSize(2, 2);
                 $printer->text("Resep Obat Farmasi\n");
                 $printer->setTextSize(1, 1);
-                // $printer->text("================================================\n");
-                // $printer->text($no_antrian . "\n");
+                $printer->text("================================================\n");
+                $printer->setTextSize(2, 2);
+                $printer->text($no_antrian . "\n");
+                $printer->setTextSize(1, 1);
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
                 $printer->setEmphasis(true);
