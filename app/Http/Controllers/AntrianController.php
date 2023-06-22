@@ -935,7 +935,13 @@ class AntrianController extends APIController
         $kunjungan = null;
         if ($request->kodebooking) {
             $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-            $kunjungan =  $antrian->kunjungan;
+            if ($antrian) {
+                $kunjungan =  $antrian->kunjungan;
+                Alert::toast('Kodebooking berhasil ditemukan','success');
+
+            }else{
+                Alert::error('Maaf','Kodebooking tidak ditemukan');
+            }
         }
         return view('simrs.antrian_checkin', compact([
             'request',

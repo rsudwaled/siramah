@@ -76,37 +76,73 @@
                             <dd class="col-sm-7">{{ $antrian->keterangan }}</dd>
                         </dl>
                         <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger" icon="fas fa-times"
-                            data-toggle="tooltop" label="Batalkan Antrian" title="Batal Antrian {{ $antrian->kodebooking }}"
+                            data-toggle="tooltop" label="Batalkan Antrian"
+                            title="Batal Antrian {{ $antrian->kodebooking }}"
                             onclick="window.location='{{ route('batalPendaftaran') }}?kodebooking={{ $antrian->kodebooking }}'" />
                     </div>
                 @endif
-
             </div>
         </div>
     </section>
 @endsection
 
 @section('css')
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    {{-- <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> --}}
 @endsection
 
 @section('js')
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="{{ asset('vendor/onscan.js/onscan.min.js') }}"></script>
+    {{-- scan --}}
     <script>
         $(function() {
-            $("#tanggalperiksa").datepicker({
-                dateFormat: "yy-mm-dd"
-            });
-            $("#jenispasien").on("change", function() {
-                var jenispasien = $(this).val();
-                if (jenispasien == 'JKN') {
-                    $(".jeniskunjunganC").show()
-                    $(".nomorkartuC").show()
-                } else {
-                    $(".jeniskunjunganC").hide()
-                    $(".nomorkartuC").hide()
-                }
+            onScan.attachTo(document, {
+                onScan: function(sCode, iQty) {
+                    // $.LoadingOverlay("show", {
+                    //     text: "Printing..."
+                    // });
+                    var url = "{{ route('checkinAntrian') }}?kodebooking=" + sCode;
+                    alert(url);
+                    // var formData = {
+                    //     kodebooking: sCode,
+                    //     waktu: "{{ \Carbon\Carbon::now()->timestamp * 1000 }}",
+                    // };
+                    // $('#kodebooking').val(sCode);
+                    // $.get(url, formData, function(data) {
+                    //     console.log(data);
+                    //     $.LoadingOverlay("hide");
+                    //     if (data.metadata.code == 200) {
+                    //         $('#status').html(data.metadata.message);
+                    //         swal.fire(
+                    //             'Sukses...',
+                    //             data.metadata.message,
+                    //             'success'
+                    //         ).then(okay => {
+                    //             if (okay) {
+                    //                 $.LoadingOverlay("show", {
+                    //                     text: "Reload..."
+                    //                 });
+                    //                 $('#status').html('-');
+                    //                 location.reload();
+                    //             }
+                    //         });
+                    //     } else {
+                    //         $('#status').html(data.metadata.message);
+                    //         swal.fire(
+                    //             'Opss Error...',
+                    //             data.metadata.message,
+                    //             'error'
+                    //         ).then(okay => {
+                    //             if (okay) {
+                    //                 $.LoadingOverlay("show", {
+                    //                     text: "Reload..."
+                    //                 });
+                    //                 $('#status').html('-');
+                    //                 location.reload();
+                    //             }
+                    //         });
+                    //     }
+                    // });
+                },
             });
         });
     </script>
