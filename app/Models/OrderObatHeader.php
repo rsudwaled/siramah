@@ -12,7 +12,6 @@ class OrderObatHeader extends Model
     protected $table = 'ts_layanan_header_order';
     protected $guarded = ["id"];
 
-
     public function pasien()
     {
         return $this->hasOne(Pasien::class, 'no_rm', 'no_rm');

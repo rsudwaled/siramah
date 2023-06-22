@@ -16,21 +16,19 @@ class FarmasiController extends APIController
     {
         $orders = null;
         if ($request->depo) {
-            $orders = OrderObatHeader::whereDate('tgl_entry', $request->tanggal)
+            $orders = OrderObatHeader::with(['kunjungan','pasien','unit','asal_unit','dokter','penjamin_simrs','kunjungan.antrian'])->whereDate('tgl_entry', $request->tanggal)
                 ->where('status_order', '!=', 0)
                 ->where('kode_unit', $request->depo)
                 ->where('unit_pengirim', '!=', '1016')
                 ->get();
         }
         if ($request->depo == 4002) {
-            $orders_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
+            $orders_yasmin = OrderObatHeader::with(['kunjungan','pasien','unit','asal_unit','dokter','penjamin_simrs','kunjungan.antrian'])->whereDate('tgl_entry',  $request->tanggal)
                 ->where('status_order', '!=', 0)
                 ->where('unit_pengirim', '1016')
                 ->get();
             $orders = $orders->merge($orders_yasmin);
         }
-
-
         return view('simrs.farmasi.tracer_order_obat', compact([
             'request',
             'orders',
