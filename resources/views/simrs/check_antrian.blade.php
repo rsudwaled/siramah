@@ -86,11 +86,11 @@
     </section>
 @endsection
 
-@section('css')
+@section('adminlte_css')
     {{-- <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"> --}}
 @endsection
 
-@section('js')
+@section('adminlte_js')
     <script src="{{ asset('vendor/onscan.js/onscan.min.js') }}"></script>
     {{-- scan --}}
     <script>
