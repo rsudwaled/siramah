@@ -168,10 +168,13 @@ class FarmasiController extends APIController
                 ->first();
         }
         if ($request->depo == 4002) {
-            $order = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
-                ->where('status_order', 1)
-                ->where('unit_pengirim', '1016')
-                ->first();
+            if (empty($order)) {
+                $order_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
+                    ->where('status_order', 1)
+                    ->where('unit_pengirim', '1016')
+                    ->first();
+                $order = $order_yasmin;
+            }
         }
 
         $i = 1;
