@@ -29,10 +29,10 @@
                         <label>Status = <span id="status">-</span></label>
                     </div>
                     <x-slot name="footerSlot">
-                        <a href="{{ route('antrianConsole') }}" class="btn btn-danger"><i class="fas fa-arrow-left"></i>
+                        <a href="{{ route('antrianConsole') }}" class="btn btn-danger withLoad"><i class="fas fa-arrow-left"></i>
                             Mesin
                             Antrian</a>
-                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning"><i class="fas fa-sync"></i> Reset
+                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i class="fas fa-sync"></i> Reset
                             Antrian</a>
                     </x-slot>
                 </x-adminlte-card>

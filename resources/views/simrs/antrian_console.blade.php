@@ -34,7 +34,7 @@
                                     Antrian Lt 1
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir1 ?? '0' }}
+                                    {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 1)->count() ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                                     Antrian Lt 2
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir2 ?? '0' }}
+                                    {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 2)->count() ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                                     Antrian Online
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir3 ?? '0' }}
+                                    {{ $antrians->where('method', '!=', 'Bridging')->where('method', '!=', 'Offline')->count() ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -64,7 +64,7 @@
                                     Antrian Total
                                 </h6>
                                 <h4>
-                                    {{ $antrian_terakhir4 ?? '0' }}
+                                    {{ $antrians->where('method', '!=', 'Bridging')->count() ?? '0' }}
                                 </h4>
                             </div>
                         </div>
@@ -83,9 +83,11 @@
                     </div>
                     <x-slot name="footerSlot">
                         <x-adminlte-button icon="fas fa-sync" class="withLoad reload" theme="warning" label="Reload" />
-                        <a href="{{ route('cekPrinter') }}" class="btn btn-warning"><i class="fas fa-print"></i> Test
+                        <a href="{{ route('cekPrinter') }}" class="btn btn-warning withLoad"><i class="fas fa-print"></i>
+                            Test
                             Printer</a>
-                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning"><i class="fas fa-print"></i> Checkin
+                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i
+                                class="fas fa-print"></i> Checkin
                             Antrian</a>
                         <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
                                 class="fas fa-calendar-alt"></i> Jadwal
@@ -110,13 +112,13 @@
                                 @foreach ($jadwals as $jadwal)
                                     <tr
                                         class="text-left
-                                    {{ $jadwal->libur == 1 ||$jadwal->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('kodedokter', $jadwal->kodedokter)->where('taskid', '!=', 99)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
+                                    {{ $jadwal->libur == 1 ||$antrians->where('kodedokter', $jadwal->kodedokter)->where('method', '!=', 'Bridging')->where('taskid', '!=', 99)->count() >= $jadwal->kapasitaspasien? ' text-danger': ' text-black' }}
                                    ">
                                         <td> {{ strtoupper($jadwal->namasubspesialis) }}</td>
                                         <td> {{ $jadwal->namadokter }} {{ $jadwal->libur ? '(TUTUP)' : '' }}</td>
                                         <td> {{ $jadwal->jadwal }}</td>
                                         <td> {{ $jadwal->kapasitaspasien }}</td>
-                                        <td> {{ $jadwal->antrians->where('tanggalperiksa', \Carbon\Carbon::now()->format('Y-m-d'))->where('kodedokter', $jadwal->kodedokter)->where('taskid', '!=', 99)->count() }}
+                                        <td> {{ $antrians->where('kodedokter', $jadwal->kodedokter)->where('method', '!=', 'Bridging')->where('taskid', '!=', 99)->count() }}
                                     </tr>
                                 @endforeach
                             </x-adminlte-datatable>

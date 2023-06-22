@@ -915,19 +915,22 @@ class AntrianController extends APIController
     // pendaftaran
     public function antrianConsole()
     {
-        $jadwals = JadwalDokter::with(['antrians'])->where('hari',  now()->dayOfWeek)
+        $jadwals = JadwalDokter::where('hari',  now()->dayOfWeek)
             ->orderBy('namasubspesialis', 'asc')->get();
-        $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
-        $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
-        $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
-        $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
+
+        $antrians = Antrian::whereDate('tanggalperiksa', now()->format('Y-m-d'))->get();
+        // $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
+        // $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
+        // $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
+        // $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
         return view('simrs.antrian_console', compact(
             [
                 'jadwals',
-                'antrian_terakhir1',
-                'antrian_terakhir2',
-                'antrian_terakhir3',
-                'antrian_terakhir4',
+                'antrians',
+                // 'antrian_terakhir1',
+                // 'antrian_terakhir2',
+                // 'antrian_terakhir3',
+                // 'antrian_terakhir4',
             ]
         ));
     }
@@ -953,6 +956,10 @@ class AntrianController extends APIController
     {
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if ($antrian) {
+            if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+                Alert::error('Maaf', 'Tanggal periksa anda bukan hari ini.');
+                return redirect()->back();
+            }
             $request['waktu'] = now()->timestamp * 1000;
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $paramedis = Paramedis::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
