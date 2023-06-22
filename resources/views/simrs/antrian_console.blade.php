@@ -161,8 +161,6 @@
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)*
-
-
 @include('sweetalert::alert')
 @section('adminlte_css')
     {{-- <script src="{{ asset('vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></script> --}}
