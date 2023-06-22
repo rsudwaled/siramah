@@ -173,14 +173,25 @@
                                             Loket {{ $item->loket }}
                                         </td>
                                         <td>
-                                            <x-adminlte-button label="BPJS" theme="success" icon="fas fa-user-plus"
+                                            {{-- <x-adminlte-button label="BPJS" theme="success" icon="fas fa-user-plus"
                                                 class="btn-xs mt-1" data-toggle="modal" data-target="#daftarBPJS" />
                                             <x-adminlte-button label="UMUM" theme="success" icon="fas fa-user-plus"
-                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarUmum" />
+                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarUmum" /> --}}
+
+                                            {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
+                                                icon="fas fa-volume-down" data-toggle="tooltip"
+                                                title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('selesaiPendaftaran') }}?kodebooking='" /> --}}
+
+                                            <a class="btn btn-xs mt-1 btn-success"
+                                                href="{{ route('selesaiPendaftaran') }}?kodebooking={{ $item->kodebooking }}">
+                                                <i class="fas fa-user-plus"></i> Selesai</a>
+
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
                                                 icon="fas fa-volume-down" data-toggle="tooltip"
                                                 title="Panggil Antrian {{ $item->nomorantrean }}"
                                                 onclick="window.location='{{ route('panggilPendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
+
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
                                                 icon="fas fa-times" data-toggle="tooltop"
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
@@ -193,8 +204,8 @@
                         </x-adminlte-card>
                     </div>
                     <div class="col-md-12">
-                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)"
-                            theme="warning" icon="fas fa-info-circle" collapsible=''>
+                        <x-adminlte-card title="Total Data Antrian Pasien ({{ $antrians->count() }} Orang)" theme="warning"
+                            icon="fas fa-info-circle" collapsible=''>
                             @php
                                 $heads = ['No', 'Antrian', 'Pasien', 'Kunjungan', 'Poliklinik', 'Dokter', 'Status', 'Loket', 'Lantai'];
                                 $config['order'] = ['0', 'asc'];

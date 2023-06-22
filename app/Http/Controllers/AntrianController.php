@@ -1546,9 +1546,9 @@ class AntrianController extends APIController
             return redirect()->back();
         }
     }
-    public function selesaiPendaftaran($kodebooking, Request $request)
+    public function selesaiPendaftaran(Request $request)
     {
-        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 3;
         $request['waktu'] = Carbon::now()->timestamp * 1000;
@@ -1571,15 +1571,15 @@ class AntrianController extends APIController
             'keterangan' => $request->keterangan,
             'user' => 'Sistem Siramah',
         ]);
-        try {
-            // notif wa
-            $wa = new WhatsappController();
-            $request['message'] = "Anda berhasil di daftarkan atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
-            $request['number'] = $antrian->nohp;
-            $wa->send_message($request);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        // try {
+        //     // notif wa
+        //     $wa = new WhatsappController();
+        //     $request['message'] = "Anda berhasil di daftarkan atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+        //     $request['number'] = $antrian->nohp;
+        //     $wa->send_message($request);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
         Alert::success('Success', 'Pasien diteruskan ke poliklinik');
         return redirect()->back();
     }
