@@ -38,7 +38,7 @@
         </nav>
         @auth
             <a href="{{ route('home') }}" class="appointment-btn scrollto">
-                Login
+                Dashboard
             </a>
         @else
             <a href="{{ route('login') }}" class="appointment-btn scrollto">
