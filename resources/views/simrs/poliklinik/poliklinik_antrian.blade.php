@@ -182,16 +182,16 @@
                                                 title="Batal Antrian {{ $item->nomorantrean }}"
                                                 onclick="window.location='{{ route('batalAntrian') }}?kodebooking={{ $item->kodebooking }}'" />
 
-                                            @if ($item->method == 'Bridging')
-                                                <form action="{{ route('update_antrean_pendaftaran') }}" method="POST">
+                                            {{-- @if ($item->method == 'Bridging') --}}
+                                            {{-- <form action="{{ route('update_antrean_pendaftaran') }}" method="POST">
                                                     <input type="hidden" name="kodebooking"
                                                         value="{{ $item->kodebooking }}">
                                                     <input type="hidden" name="taskid" value="3">
                                                     <input type="hidden" name="waktu"
                                                         value="{{ now()->timestamp * 1000 }}">
                                                     <button type="submit">Update</button>
-                                                </form>
-                                            @endif
+                                                </form> --}}
+                                            {{-- @endif --}}
                                         </td>
                                         <td>
                                             @isset($item->nomorsep)

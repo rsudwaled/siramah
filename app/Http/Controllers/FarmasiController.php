@@ -14,10 +14,23 @@ class FarmasiController extends APIController
 {
     public function tracerOrderObat(Request $request)
     {
-        $orders = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
-            ->where('status_order', '!=', 0)
-            ->where('kode_unit', $request->depo)
-            ->get();
+        $orders = null;
+        if ($request->depo) {
+            $orders = OrderObatHeader::whereDate('tgl_entry', $request->tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('kode_unit', $request->depo)
+                ->where('unit_pengirim', '!=', '1016')
+                ->get();
+        }
+        if ($request->depo == 4002) {
+            $orders_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('unit_pengirim', '1016')
+                ->get();
+            $orders = $orders->merge($orders_yasmin);
+        }
+
+
         return view('simrs.farmasi.tracer_order_obat', compact([
             'request',
             'orders',
@@ -30,7 +43,6 @@ class FarmasiController extends APIController
             ->where('status_order', '!=', 0)
             ->where('kode_unit', 4008)
             ->get();
-
         return view('simrs.farmasi.order_farmasi', compact([
             'request',
             'orders',
@@ -148,10 +160,18 @@ class FarmasiController extends APIController
     {
         // $order = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_02 (25)'));
         // dd($request->all());
-        $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
-            ->where('status_order', 1)
-            ->where('kode_unit', $request->depo)
-            ->first();
+        if ($request->depo) {
+            $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
+                ->where('status_order', 1)
+                ->where('kode_unit', $request->depo)
+                ->first();
+        }
+        if ($request->depo == 4002) {
+            $order = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
+                ->where('status_order', 1)
+                ->where('unit_pengirim', '1016')
+                ->first();
+        }
 
         $i = 1;
         // dd($order->detail->first()->barang);
