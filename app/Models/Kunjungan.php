@@ -75,6 +75,11 @@ class Kunjungan extends Model
         return $this->hasOne(AlasanMasuk::class, 'id', 'id_alasan_masuk');
     }
 
+    public function tracer()
+    {
+        return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+
     protected $appends = ['nama_pasien'];
     public function getNamaPasienAttribute()
     {

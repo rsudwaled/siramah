@@ -1129,6 +1129,13 @@ class AntrianController extends APIController
                 'status_api' => $request->status_api,
                 'keterangan' =>  $request->keterangan,
             ]);
+            // insert tracer tc_tracer_header
+            $tracerbaru = Tracer::updateOrCreate([
+                'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                'tgl_tracer' => now()->format('Y-m-d'),
+                'id_status_tracer' => 1,
+                'cek_tracer' => "N",
+            ]);
             $this->print_karcis($request, $kunjungan);
             if ($res->metadata->code == 200) {
                 Alert::success('Success', 'OK');
@@ -3146,7 +3153,7 @@ class AntrianController extends APIController
                         'status_kunjungan' => 1,
                     ]);
                     // insert tracer tc_tracer_header
-                    $tracerbaru = Tracer::create([
+                    $tracerbaru = Tracer::updateOrCreate([
                         'kode_kunjungan' => $kunjungan->kode_kunjungan,
                         'tgl_tracer' => $now->format('Y-m-d'),
                         'id_status_tracer' => 1,

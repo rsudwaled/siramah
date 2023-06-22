@@ -54,15 +54,13 @@
                                     <dt class="col-sm-4">No HP</dt>
                                     <dd class="col-sm-8">: {{ $antrian->nohp }}</dd>
                                     <dt class="col-sm-4">Jenis</dt>
-                                    <dd class="col-sm-8">: {{ $antrian->jenispasien }}</dd>
+                                    <dd class="col-sm-8">: {{ $antrian->jenispasien }} / {{ $antrian->jeniskunjungan }}</dd>
                                 </dl>
                             </div>
                             <div class="col-md-7">
                                 <dl class="row">
                                     <dt class="col-sm-4">Tanggal Periksa</dt>
                                     <dd class="col-sm-8">: {{ $antrian->tanggalperiksa }}</dd>
-                                    <dt class="col-sm-4">Jenis Kunjungan</dt>
-                                    <dd class="col-sm-8">: {{ $antrian->jeniskunjungan }}</dd>
                                     <dt class="col-sm-4">Poliklinik</dt>
                                     <dd class="col-sm-8">: {{ $antrian->namapoli }}</dd>
                                     <dt class="col-sm-4">Dokter</dt>
@@ -71,6 +69,8 @@
                                     <dd class="col-sm-8">: {{ $antrian->jampraktek }}</dd>
                                     <dt class="col-sm-4">Taskid</dt>
                                     <dd class="col-sm-8">: {{ $antrian->taskid }}</dd>
+                                    <dt class="col-sm-4">No SEP</dt>
+                                    <dd class="col-sm-8">: {{ $antrian->nomorsep ?? '-' }}</dd>
                                 </dl>
                             </div>
                         </div>
@@ -101,6 +101,12 @@
                                         <dt class="col-sm-4">Status</dt>
                                         <dd class="col-sm-8">:
                                             {{ $kunjungan->status ? $kunjungan->status->status_kunjungan : '-' }}</dd>
+                                        <dt class="col-sm-4">Tracer</dt>
+                                        <dd class="col-sm-8">:
+                                            @if ($kunjungan->tracer)
+                                                {{ $kunjungan->tracer->id_tracer_header }} / {{ $kunjungan->tracer->cek_tracer }}
+                                            @endif
+                                        </dd>
                                     </dl>
                                 </div>
                             </div>
