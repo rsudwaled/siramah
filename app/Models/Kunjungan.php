@@ -66,6 +66,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function antrian()
+    {
+        return $this->belongsTo(Antrian::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function surat_kontrol()
     {
         return $this->hasOne(SuratKontrol::class, 'noSepAsalKontrol', 'no_sep');
