@@ -156,7 +156,9 @@ class FarmasiController extends APIController
         $i = 1;
         // dd($order->detail->first()->barang);
         if ($order) {
-            $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))->get()->count();
+            $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))
+                ->where('kode_unit', $request->depo)
+                ->get()->count();
             // dd($order->pasien->desas);
             try {
                 if ($order->kode_unit == 4002) {
@@ -172,8 +174,9 @@ class FarmasiController extends APIController
                 $printer->text("Resep Obat Farmasi\n");
                 $printer->setTextSize(1, 1);
                 $printer->text("================================================\n");
+                $printer->text($order->kode_layanan_header . "\n");
                 $printer->setTextSize(2, 2);
-                $printer->text($no_antrian . "\n");
+                $printer->text(substr($order->kode_layanan_header, 11) . "\n");
                 $printer->setTextSize(1, 1);
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
                 $printer->text("================================================\n");
