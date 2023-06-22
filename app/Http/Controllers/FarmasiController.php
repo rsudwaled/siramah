@@ -164,6 +164,7 @@ class FarmasiController extends APIController
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
                 ->where('status_order', 1)
                 ->where('kode_unit', $request->depo)
+                ->where('unit_pengirim', '!=', '1016')
                 ->first();
         }
         if ($request->depo == 4002) {
