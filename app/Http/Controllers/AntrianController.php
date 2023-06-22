@@ -50,7 +50,7 @@ class AntrianController extends APIController
                 'taskid' => $request->taskid,
                 'status_api' => 1,
                 'keterangan' => $request->keterangan,
-                'user' => Auth::user()->name,
+                'user' => 'Sistem Siramah',
             ]);
             // try {
             //     // notif wa
@@ -99,7 +99,7 @@ class AntrianController extends APIController
                 'taskid' => $request->taskid,
                 'status_api' => 1,
                 'keterangan' => $request->keterangan,
-                'user' => Auth::user()->name,
+                'user' => 'Sistem Siramah',
             ]);
             // try {
             //     // notif wa
@@ -130,7 +130,7 @@ class AntrianController extends APIController
             'taskid' => $request->taskid,
             'status_api' => 1,
             'keterangan' => $request->keterangan,
-            'user' => Auth::user()->name,
+            'user' => 'Sistem Siramah',
         ]);
         // try {
         //     // notif wa
@@ -741,7 +741,7 @@ class AntrianController extends APIController
     public function batalAntrian(Request $request)
     {
         $request['taskid'] = 99;
-        $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . Auth::user()->name;
+        $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . 'Sistem Siramah';
         $response = $this->batal_antrian($request);
         if ($response->metadata->code == 200) {
             Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
@@ -775,7 +775,7 @@ class AntrianController extends APIController
             'taskid' => $request->taskid,
             'status_api' => 1,
             'keterangan' => $request->keterangan,
-            'user' => Auth::user()->name,
+            'user' => 'Sistem Siramah',
         ]);
         if ($response->metadata->code == 200) {
             // try {
@@ -825,7 +825,7 @@ class AntrianController extends APIController
             'taskid' => $request->taskid,
             'status_api' => 0,
             'keterangan' => $request->keterangan,
-            'user' => Auth::user()->name,
+            'user' => 'Sistem Siramah',
         ]);
         if ($response->metadata->code == 200) {
 
@@ -865,7 +865,7 @@ class AntrianController extends APIController
                 'taskid' => $request->taskid,
                 'status_api' => 0,
                 'keterangan' => $request->keterangan,
-                'user' => Auth::user()->name,
+                'user' => 'Sistem Siramah',
             ]);
             // try {
             //     // notif wa
@@ -1408,7 +1408,7 @@ class AntrianController extends APIController
                 'status_api' => 0,
                 'keterangan' => "Panggilan ke loket pendaftaran",
                 'taskid2' => now(),
-                'user' => Auth::user()->name,
+                'user' => 'Sistem Siramah',
             ]);
             //panggil urusan mesin antrian
             try {
@@ -1481,7 +1481,7 @@ class AntrianController extends APIController
                 'loket' => $request->loket,
                 'keterangan' => "Panggilan ke loket pendaftaran",
                 'taskid2' => $now,
-                'user' => Auth::user()->name,
+                'user' => 'Sistem Siramah',
             ]);
             //panggil urusan mesin antrian
             try {
@@ -1562,7 +1562,7 @@ class AntrianController extends APIController
             'taskid' => $request->taskid,
             'status_api' => $request->status_api,
             'keterangan' => $request->keterangan,
-            'user' => Auth::user()->name,
+            'user' => 'Sistem Siramah',
         ]);
         try {
             // notif wa
