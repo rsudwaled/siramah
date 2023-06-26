@@ -815,7 +815,7 @@ class AntrianController extends APIController
     {
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
-        $request['jenisresep'] = 'Non Racikan';
+        $request['jenisresep'] = 'non racikan';
         $request['taskid'] = 5;
         $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
         $request['waktu'] = Carbon::now()->timestamp * 1000;
