@@ -1466,7 +1466,7 @@ class AntrianController extends APIController
                 Alert::error('Error', $th->getMessage());
                 return redirect()->back();
             }
-            Alert::success('Success', 'Panggilan Berhasil');
+            Alert::toast('Panggilan Berhasil', 'success');
             return redirect()->back();
         } else {
             Alert::error('Error', 'Kode Booking tidak ditemukan');
@@ -1536,10 +1536,10 @@ class AntrianController extends APIController
                         ]);
                 }
             } catch (\Throwable $th) {
-                Alert::error('Error', $th->getMessage());
+                Alert::toast('Error', $th->getMessage());
                 return redirect()->back();
             }
-            Alert::success('Success', 'Panggilan Berhasil');
+            Alert::toast('Panggilan Berhasil', 'success');
             return redirect()->back();
         } else {
             Alert::error('Error', 'Kode Booking tidak ditemukan');
@@ -1580,7 +1580,7 @@ class AntrianController extends APIController
         // } catch (\Throwable $th) {
         //     //throw $th;
         // }
-        Alert::success('Success', 'Pasien diteruskan ke poliklinik');
+        Alert::toast('Pasien diteruskan ke poliklinik', 'success');
         return redirect()->back();
     }
     public function kunjunganPoliklinik(Request $request)

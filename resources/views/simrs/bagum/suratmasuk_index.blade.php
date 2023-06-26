@@ -132,71 +132,71 @@
                         </div>
                     </div>
                     <x-adminlte-input name="tanda_terima" label="Tanda Terima" igroup-size="sm" enable-old-support />
-                    <x-adminlte-input-date name="tgl_terima_surat"  label="Tgl Terima Disposisi" igroup-size="sm"
-                        :config="$config" enable-old-support  />
+                    <x-adminlte-input-date name="tgl_terima_surat" label="Tgl Terima Disposisi" igroup-size="sm"
+                        :config="$config" enable-old-support />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-input-date name="tgl_diteruskan" label="Tgl Diteruskan" igroup-size="sm"
-                        :config="$config" enable-old-support disabled/>
-                    <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support readonly />
+                        :config="$config" enable-old-support />
+                    <x-adminlte-input name="pengolah" label="Diteruskan Kpd" igroup-size="sm" enable-old-support />
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti" disabled>
+                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti">
                             <label for="tindaklanjuti" class="custom-control-label">Untuk ditindaklanjuti</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="proses_sesuai_kemampuan"
-                                name="proses_sesuai_kemampuan" disabled>
+                                name="proses_sesuai_kemampuan">
                             <label for="proses_sesuai_kemampuan" class="custom-control-label">Proses sesuai kemampuan /
                                 peraturan yang berlaku</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan">
                             <label for="koordinasikan" class="custom-control-label">Koordinasikan / konfirmasi
                                 dengan
                                 ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu" disabled>
+                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu">
                             <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari" disabled>
+                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari">
                             <label for="pelajari" class="custom-control-label">Pelajari / telaah /
                                 sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri" disabled>
+                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri">
                             <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
                                 laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan">
                             <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
                                 koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya"
-                                name="ingatkan_waktunya" disabled>
+                                name="ingatkan_waktunya">
                             <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
                                 waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan" disabled>
+                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan">
                             <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="simpan_arsipkan" disabled>
+                                name="simpan_arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
-                        label="Catatan Disposisi" readonly/>
+                        label="Catatan Disposisi" />
                     <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur" disabled>
+                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur">
                         <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh Direktur</label>
                     </div>
 
@@ -307,7 +307,7 @@
                 e.preventDefault();
                 var url = "{{ route('suratmasuk.store') }}";
                 $('#formSurat').attr('action', url);
-                $("#method").prop('disabled', true);
+                $("#method").prop('', true);
                 $('#formSurat').submit();
             });
             $('#btnUpdate').click(function(e) {
