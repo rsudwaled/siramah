@@ -84,6 +84,20 @@ class AntrianController extends APIController
             // 'dokters' => $dokters,
         ]);
     }
+
+    public function getAntrianFarmasi(Request $request)
+    {
+        if ($request->tanggal) {
+            $antirans = Antrian::whereDate('tanggalperiksa', $request->tanggal)
+                ->where('taskid', 5)
+                ->where('status_api', 0)
+                ->get()->count();
+            // dd($order->pasien->desas);
+            return $this->sendError($antirans, 200);
+        } else {
+            return $this->sendError('Tidak ada order',  404);
+        }
+    }
     public function racikFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();

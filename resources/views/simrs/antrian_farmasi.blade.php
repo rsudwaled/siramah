@@ -244,9 +244,8 @@
                     </div>
                 </div>
                 {{-- selesai dilayani --}}
-                <x-adminlte-card
-                    title="Antrian Sudah Pelayanan Farmasi ({{ $antrians->count() }} Orang)"
-                    theme="success" icon="fas fa-info-circle" collapsible="collapsed">
+                <x-adminlte-card title="Antrian Sudah Pelayanan Farmasi ({{ $antrians->count() }} Orang)" theme="success"
+                    icon="fas fa-info-circle" collapsible="collapsed">
                     @php
                         $heads = ['No', 'Kode', 'Tanggal', 'No RM / NIK', 'Jenis / Pasien', 'No Kartu / Rujukan', 'Poliklinik / Dokter', 'Status'];
                         $config['order'] = ['7', 'asc'];
@@ -396,55 +395,80 @@
         </div>
     </div>
 
+
+    <audio id="myAudio">
+        <source src="{{ asset('rsudwaled/tingtung.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
 @stop
 
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.Sweetalert2', true)
 
 @section('js')
+
     <script>
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        function playAudio() {
+            x.play();
+        }
+
+        function pauseAudio() {
+            x.pause();
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            url = "{{ route('getAntrianFarmasi') }}";
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'bottom-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-            });
-            $('.btnLayani').click(function() {
-                var antrianid = $(this).data('id');
-                $.LoadingOverlay("show");
-                $.get("{{ route('antrian.index') }}" + '/' + antrianid + '/edit', function(data) {
-                    // console.log(data);
-                    $('#kodebooking').html(data.kodebooking);
-                    $('#angkaantrean').html(data.angkaantrean);
-                    $('#nomorantrean').html(data.nomorantrean);
-                    $('#tanggalperiksa').html(data.tanggalperiksa);
+            })
+            var tanggal = "{{ $request->tanggal }}";
+            if (tanggal) {
+                setInterval(function() {
+                    // alert('tanggal');
+                    // var dt = new Date($.now());
+                    // var time = "{{ $request->tanggal }}" + ' ' + dt.getHours() + ":" + dt.getMinutes() +
+                    //     ":" + dt
+                    //     .getSeconds();
+                    $.get(url, {
+                            tanggal: "{{ $request->tanggal }}",
+                        })
+                        .done(function(data) {
+                            console.log(data);
+                            if (data.metadata.code == 200) {
+                                var x = document.getElementById("myAudio");
+                                x.play();
+                                Toast.fire({
+                                    icon: 'info',
+                                    title: "Terdapat antrian " + data.metadata.message +
+                                        ' farmasi.'
+                                });
 
-                    $('#norm').html(data.norm);
-                    $('#nik').html(data.nik);
-                    $('#nomorkartu').html(data.nomorkartu);
-                    $('#nama').html(data.nama);
-                    $('#nohp').html(data.nohp);
+                            }
 
-                    $('#nomorreferensi').html(data.nomorreferensi);
-                    $('#jenispasien').html(data.jenispasien);
-                    $('#namapoli').html(data.namapoli);
-                    $('#namadokter').html(data.namadokter);
-                    $('#jampraktek').html(data.jampraktek);
-                    $('#jeniskunjungan').html(data.jeniskunjungan);
-
-                    $('#user').html(data.user);
-                    $('#antrianid').val(antrianid);
-                    $('#namapoli').val(data.namapoli);
-                    $('#namadokter').val(data.namadokter);
-                    $('#kodepoli').val(data.kodepoli);
-                    $('#kodedokter').val(data.kodedokter);
-                    $('#jampraktek').val(data.jampraktek);
-                    // $('#kodepoli').val(data.kodepoli).trigger('change');
-                    $('#modalPembayaran').modal('show');
-                    $.LoadingOverlay("hide", true);
-                })
-            });
+                            // element.innerHTML = time + " " + data.metadata.message + " <br>";
+                        })
+                        .fail(function(data) {
+                            console.log(data);
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'Error'
+                            });
+                            // element.innerHTML = time + " ERROR <br>";
+                        });
+                }, 5 * 1000);
+            }
         });
     </script>
 @endsection
