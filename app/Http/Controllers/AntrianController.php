@@ -92,6 +92,10 @@ class AntrianController extends APIController
                 ->where('taskid', 5)
                 ->where('status_api', 0)
                 ->get()->count();
+
+            if ($antirans == 0) {
+                return $this->sendError('Tidak ada order',  404);
+            }
             // dd($order->pasien->desas);
             return $this->sendError($antirans, 200);
         } else {
