@@ -1101,7 +1101,7 @@ class AntrianController extends APIController
                     );
                     //  insert layanan detail admin
                     $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first();
-                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
+                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1 + 1;
                     $adm = LayananDetail::create(
                         [
                             'id_layanan_detail' => "DET" . now()->format('y') . now()->format('m') . now()->format('d')  . $nomorlayanandet,
@@ -2760,6 +2760,7 @@ class AntrianController extends APIController
     public function checkin_antrian(Request $request) #checkin antrian api
     {
         // cek printer
+        return $this->sendError("Checkin offline", 500);
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
