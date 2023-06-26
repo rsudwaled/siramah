@@ -96,7 +96,6 @@ class AntrianController extends APIController
             if ($antirans == 0) {
                 return $this->sendError('Tidak ada order',  404);
             }
-            // dd($order->pasien->desas);
             return $this->sendError($antirans, 200);
         } else {
             return $this->sendError('Tidak ada order',  404);
@@ -972,6 +971,7 @@ class AntrianController extends APIController
     }
     public function checkinKarcisAntrian(Request $request)
     {
+        $now = Carbon::now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if ($antrian) {
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
@@ -1061,7 +1061,7 @@ class AntrianController extends APIController
                             'counter' => $counter,
                             'no_rm' => $antrian->norm,
                             'kode_unit' => $unit->kode_unit,
-                            'tgl_masuk' => now(),
+                            'tgl_masuk' => $now,
                             'kode_paramedis' => $paramedis->kode_paramedis,
                             'status_kunjungan' => 8,
                             'prefix_kunjungan' => $unit->prefix_unit,
@@ -1073,7 +1073,7 @@ class AntrianController extends APIController
                             'no_sep' =>  $request->nomorsep,
                             'no_rujukan' => $antrian->nomorrujukan,
                             'diagx' =>   $request->catatan,
-                            'created_at' => now(),
+                            'created_at' => $now,
                             'keterangan2' => 'MESIN_2',
                         ]
                     );
