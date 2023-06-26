@@ -124,4 +124,9 @@ class SuratMasukController extends Controller
         Alert::success('Success', 'Surat Berhasil Dihapus');
         return redirect()->back();
     }
+    public function get_surat(Request $request)
+    {
+
+    }
+
 }
