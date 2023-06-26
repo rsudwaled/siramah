@@ -1012,7 +1012,7 @@ class AntrianController extends APIController
                 $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
             }
             $res = $this->update_antrean($request);
-            if ($antrian->kunjungan == null) {
+            if ($antrian->kode_kunjungan == null) {
                 // insert kunjungan, layanan header dan detail
                 try {
                     // hitung counter kunjungan

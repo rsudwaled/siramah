@@ -27,6 +27,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->email_verified_at == null) {
+            $user = Auth::user();
             Alert::error('Success', 'Akun SIMRS Waled anda belum diverifikasi, silahkan masukan nomor telepon anda untuk meminta verifikasi.');
             return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
         } else {
