@@ -84,7 +84,6 @@ class AntrianController extends APIController
             // 'dokters' => $dokters,
         ]);
     }
-
     public function getAntrianFarmasi(Request $request)
     {
         if ($request->tanggal) {
@@ -161,7 +160,6 @@ class AntrianController extends APIController
         Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
         return redirect()->back();
     }
-    // VIEW SIMRS
     public function daftarOnline(Request $request)
     {
         $rujukans = null;
@@ -778,7 +776,6 @@ class AntrianController extends APIController
         }
         return redirect()->back();
     }
-
     public function panggilPoliklinik(Request $request)
     {
         $request['taskid'] = 4;
@@ -1021,7 +1018,6 @@ class AntrianController extends APIController
                 $tagihanpenjamin_karcis = 0;
                 $tagihanpenjamin_adm = 0;
                 $totalpenjamin =  0;
-
                 $tagihanpribadi_karcis = $tarifkarcis->TOTAL_TARIF_NEW;
                 $tagihanpribadi_adm = $tarifadm->TOTAL_TARIF_NEW;
                 $request['tarifkarcis'] =  $tarifkarcis->TOTAL_TARIF_NEW;
@@ -1162,7 +1158,7 @@ class AntrianController extends APIController
             // insert tracer tc_tracer_header
             $tracerbaru = Tracer::updateOrCreate([
                 'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                'tgl_tracer' => now()->format('Y-m-d'),
+                'tgl_tracer' => $now->format('Y-m-d'),
                 'id_status_tracer' => 1,
                 'cek_tracer' => "N",
             ]);
@@ -1181,6 +1177,7 @@ class AntrianController extends APIController
     function checkinCetakSEP(Request $request)
     {
         $vclaim = new VclaimController();
+        $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['noKartu'] = $antrian->nomorkartu;
         $request['tglSep'] = $antrian->tanggalperiksa;
@@ -1188,7 +1185,7 @@ class AntrianController extends APIController
         $request['jnsPelayanan'] = "2";
         $request['klsRawatHak'] = "3";
         $request['asalRujukan'] = "1";
-        $request['tglRujukan'] = now();
+        $request['tglRujukan'] =  $now;
         $request['noMR'] = $antrian->norm;
         if (empty($antrian->nomorsep)) {
             // daftar pake surat kontrol
@@ -1378,7 +1375,6 @@ class AntrianController extends APIController
             return redirect()->back();
         }
     }
-
     public function antrianPendaftaran(Request $request)
     {
         $antrians = null;
