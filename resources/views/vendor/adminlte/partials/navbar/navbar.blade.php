@@ -14,7 +14,7 @@
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
         <li class="nav-item d-none d-sm-inline-block">
-            <a class="nav-link">Waktu Server {{ \Carbon\Carbon::now() }}</a>
+            <a class="nav-link">Waktu Server {{ now() }}</a>
         </li>
     </ul>
 
