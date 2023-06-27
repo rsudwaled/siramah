@@ -930,20 +930,11 @@ class AntrianController extends APIController
     {
         $jadwals = JadwalDokter::where('hari',  now()->dayOfWeek)
             ->orderBy('namasubspesialis', 'asc')->get();
-
         $antrians = Antrian::whereDate('tanggalperiksa', now()->format('Y-m-d'))->get();
-        // $antrian_terakhir1 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 1)->count();
-        // $antrian_terakhir2 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', 'Offline')->where('lantaipendaftaran', 2)->where('jenispasien', 'JKN')->count();
-        // $antrian_terakhir3 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Offline')->where('method', '!=', 'Bridging')->count();
-        // $antrian_terakhir4 = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->count();
         return view('simrs.antrian_console', compact(
             [
                 'jadwals',
                 'antrians',
-                // 'antrian_terakhir1',
-                // 'antrian_terakhir2',
-                // 'antrian_terakhir3',
-                // 'antrian_terakhir4',
             ]
         ));
     }

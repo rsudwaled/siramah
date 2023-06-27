@@ -25,33 +25,6 @@ class DokterController extends Controller
         $dokter = Dokter::with(['paramedis'])->where('kodedokter', $id)->first();
         return response()->json($dokter);
     }
-    public function create()
-    {
-        $api = new AntrianController();
-        $dokters = $api->ref_dokter()->response;
-        foreach ($dokters as $value) {
-            Dokter::updateOrCreate(
-                [
-                    'kodedokter' => $value->kodedokter,
-                ],
-                [
-                    'namadokter' => $value->namadokter,
-                    'status' => 1,
-                ]
-            );
-            $user = User::updateOrCreate([
-                'email' => $value->kodedokter . '@gmail.com',
-                'username' => $value->kodedokter,
-            ], [
-                'name' => $value->namadokter,
-                'phone' => $value->kodedokter,
-                'password' => bcrypt($value->kodedokter),
-            ]);
-            $user->assignRole('Dokter');
-        }
-        Alert::success('Success', 'Refresh User Data Dokter Berhasil');
-        return redirect()->back();
-    }
     public function store(Request $request)
     {
         $request->validate([
@@ -61,6 +34,7 @@ class DokterController extends Controller
         Dokter::firstOrCreate([
             'kodedokter' => $request->kodedokter,
             'namadokter' => $request->namadokter,
+            'status' => 1,
             'user_by' => Auth::user()->name,
         ]);
         Alert::success('Success', 'Dokter Telah Ditambahkan');
@@ -116,6 +90,25 @@ class DokterController extends Controller
             Alert::error($response->metadata->message . ' ' . $response->metadata->code);
         }
         return redirect()->route('pelayanan-medis.dokter_antrian');
+    }
+    public function resetDokter()
+    {
+        $api = new AntrianController();
+        $dokters = $api->ref_dokter()->response;
+        foreach ($dokters as $value) {
+            Dokter::updateOrCreate(
+                [
+                    'kodedokter' => $value->kodedokter,
+                ],
+                [
+                    'namadokter' => $value->namadokter,
+                    'status' => 1,
+                    'user_by' => Auth::user()->name,
+                ]
+            );
+        }
+        Alert::success('Success', 'Reset Data Dokter Berhasil');
+        return redirect()->back();
     }
     public function dokter_antrian_yanmed(Request $request)
     {

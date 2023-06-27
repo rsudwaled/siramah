@@ -2,11 +2,10 @@
 
 @inject('layoutHelper', 'JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
 
-@section('title', 'Antrian QR Code')
+@section('title', 'Mesin Antrian')
 @section('body')
     <div class="wrapper">
         <div class="row p-1">
-            {{-- checkin --}}
             <div class="col-md-5">
                 <x-adminlte-card title="Anjungan Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <div class="text-center">
@@ -21,9 +20,8 @@
                                 </div>
                             </x-slot>
                         </x-adminlte-input>
-                        <i class="fas fa-qrcode fa-3x"></i>
+                        <i class="fas fa-qrcode fa-5x"></i>
                         <br>
-                        <label>Status = <span id="status">-</span></label>
                     </div>
                 </x-adminlte-card>
                 <x-adminlte-card title="Informasi Antrian" theme="primary" icon="fas fa-user-injured">
@@ -165,7 +163,6 @@
 @section('plugins.Sweetalert2', true)*
 @include('sweetalert::alert')
 @section('adminlte_css')
-    {{-- <script src="{{ asset('vendor/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}"></script> --}}
 @endsection
 @section('adminlte_js')
     <script src="{{ asset('vendor/moment/moment.min.js') }}"></script>

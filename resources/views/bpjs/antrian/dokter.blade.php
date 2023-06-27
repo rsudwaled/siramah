@@ -32,6 +32,7 @@
                         </tr>
                     @endforeach
                 </x-adminlte-datatable>
+                <a href="{{ route('resetDokter') }}" class="btn btn-warning"><i class="fas fa-sync"></i> Reset Dokter</a>
             </x-adminlte-card>
         </div>
     </div>
