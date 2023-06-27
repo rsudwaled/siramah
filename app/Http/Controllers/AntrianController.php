@@ -971,14 +971,14 @@ class AntrianController extends APIController
     }
     public function checkinKarcisAntrian(Request $request)
     {
-        $now = Carbon::now();
+        $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if ($antrian) {
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 Alert::error('Maaf', 'Tanggal periksa anda bukan hari ini.');
                 return redirect()->back();
             }
-            $request['waktu'] = now()->timestamp * 1000;
+            $request['waktu'] = $now->timestamp * 1000;
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $paramedis = Paramedis::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
             $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
@@ -1085,7 +1085,7 @@ class AntrianController extends APIController
                     $layananbaru = Layanan::create(
                         [
                             'kode_layanan_header' => $kodelayanan,
-                            'tgl_entry' => now(),
+                            'tgl_entry' => $now,
                             'kode_kunjungan' => $kunjungan->kode_kunjungan,
                             'kode_unit' => $unit->kode_unit,
                             'kode_tipe_transaksi' => $tipetransaksi,
@@ -1112,9 +1112,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
                             'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
-                            'tgl_layanan_detail' =>  now(),
+                            'tgl_layanan_detail' =>  $now,
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>  now(),
+                            'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
                     //  insert layanan detail admin
@@ -1133,9 +1133,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
                             'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
                             'kode_dokter1' => 0,
-                            'tgl_layanan_detail' =>  now(),
+                            'tgl_layanan_detail' =>  $now,
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>  now(),
+                            'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
                     //  update layanan header total tagihan
