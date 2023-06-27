@@ -407,7 +407,6 @@ class AntrianController extends APIController
             'antrian',
         ]));
     }
-
     public function statusAntrianBpjs()
     {
         $token = Token::latest()->first();
