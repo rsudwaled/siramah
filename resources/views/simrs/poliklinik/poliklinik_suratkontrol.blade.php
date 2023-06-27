@@ -250,23 +250,32 @@
                     dataType: 'json',
                     success: function(data) {
                         console.log(data);
-                        var urlPrint =
-                            "{{ route('landingpage') }}/suratkontrol_print?nomorsuratkontrol=" +
-                            data
-                            .response.noSuratKontrol;
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Surat Kontrol Berhasil Dibuat dengan Nomor ' + data
-                                .response.noSuratKontrol,
-                            footer: "<a href=" + urlPrint +
-                                " target='_blank'>Print Surat Kontrol</a>"
-                        }).then(okay => {
-                            if (okay) {
-                                $.LoadingOverlay("show");
-                                location.reload();
-                            }
-                        });
+                        if (data.metadata.code == 200) {
+                            var urlPrint =
+                                "{{ route('landingpage') }}/suratkontrol_print?nomorsuratkontrol=" +
+                                data
+                                .response.noSuratKontrol;
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Surat Kontrol Berhasil Dibuat dengan Nomor ' +
+                                    data
+                                    .response.noSuratKontrol,
+                                footer: "<a href=" + urlPrint +
+                                    " target='_blank'>Print Surat Kontrol</a>"
+                            }).then(okay => {
+                                if (okay) {
+                                    $.LoadingOverlay("show");
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            swal.fire(
+                                'Error ' + data.metadata.code,
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
