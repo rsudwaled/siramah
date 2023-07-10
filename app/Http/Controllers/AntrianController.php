@@ -1086,7 +1086,7 @@ class AntrianController extends APIController
                 $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
                 $karcis = LayananDetail::create(
                     [
-                        'id_layanan_detail' => "DET" . now()->format('y') . now()->format('m') . now()->format('d')  . $nomorlayanandet,
+                        'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
                         'row_id_header' => $layananbaru->id,
                         'kode_layanan_header' => $layananbaru->kode_layanan_header,
                         'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
@@ -1107,7 +1107,7 @@ class AntrianController extends APIController
                 $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1 + 1;
                 $adm = LayananDetail::create(
                     [
-                        'id_layanan_detail' => "DET" . now()->format('y') . now()->format('m') . now()->format('d')  . $nomorlayanandet,
+                        'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
                         'row_id_header' => $layananbaru->id,
                         'kode_layanan_header' => $layananbaru->kode_layanan_header,
                         'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,

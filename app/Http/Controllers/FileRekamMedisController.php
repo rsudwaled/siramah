@@ -16,7 +16,7 @@ class FileRekamMedisController extends APIController
         } else {
             $filerm = FileRekamMedis::latest()
                 ->where('norm', 'LIKE', '%' . $request->search . '%')
-                ->orWhere('nama', 'LIKE', "%{$request->search}%")
+                ->orWhere('nama', 'LIKE', "%" . $request->search . "%")
                 ->paginate(20);
         }
         return view('simrs.rekammedis.efile_index', compact([
