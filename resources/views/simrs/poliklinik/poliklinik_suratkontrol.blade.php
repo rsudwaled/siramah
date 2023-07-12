@@ -44,7 +44,7 @@
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['No', 'Tanggal Masuk', 'Kode', 'Pasien', 'BPJS / NIK', 'Antrian', 'Action', 'SEP / Ref', 'Poliklinik'];
+                        $heads = ['No', 'Tanggal Masuk', 'Kode', 'Pasien', 'BPJS / NIK', 'Poliklinik', 'Antrian', 'Action', 'SEP / Ref'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
@@ -58,7 +58,6 @@
                                 </td>
                                 <td>
                                     {{ $item->tgl_masuk }}
-
                                 </td>
                                 <td>
                                     {{ $item->kode_kunjungan }}
@@ -74,6 +73,7 @@
                                     <br>
                                     {{ $item->pasien ? $item->pasien->nik_bpjs : null }}
                                 </td>
+                                <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
                                 <td>
                                     @if ($item->antrian)
                                         @if ($item->antrian->taskid == 0)
@@ -137,13 +137,24 @@
                                 <td>
                                     <x-adminlte-button class="btn-xs btnBuatSuratKontrol" label="S. Kontrol" theme="primary"
                                         icon="fas fa-file-medical" data-toggle="tooltop" title="Buat Surat Kontrol"
-                                        data-id="{{ $item->kode_kunjungan }}" />
+                                        data-id="{{ $item->kode_kunjungan }}"
+                                        data-nomorkartu="{{ $item->pasien ? $item->pasien->no_Bpjs : null }}"
+                                        data-namapasien="{{ $item->pasien ? $item->pasien->nama_px : null }}"
+                                        data-nomorsep="{{ $item->no_sep }}" data-kodepoli="{{ $item->unit->KDPOLI }}"
+                                        data-kodedokter="{{ $item->dokter ? (string) $item->dokter->kode_dokter_jkn : null }}"
+                                        data-suratkontrol="{{ $item->surat_kontrol ? $item->surat_kontrol->noSuratKontrol : null }}"
+                                        data-tglkontrol="{{ $item->surat_kontrol ? $item->surat_kontrol->tglRencanaKontrol : now()->format('Y-m-d') }}" />
+                                    @if ($item->surat_kontrol)
+                                        <a href="{{ route('suratKontrolPrint', $item->surat_kontrol->noSuratKontrol) }}" target="_blank"
+                                            class="btn btn-xs btn-success" data-toggle="tooltip"
+                                            title="Print Surat Kontrol {{ $item->kode_kunjungan }}"> <i
+                                                class="fas fa-print"></i> Print</a>
+                                    @endif
                                 </td>
                                 <td>
                                     SEP : {{ $item->no_sep }} <br>
                                     Ref : {{ $item->no_rujukan }}
                                 </td>
-                                <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
@@ -151,7 +162,7 @@
                     *Warna teks hijau adalah kunjungan yang telah dibuatkan surat kontrol.
                 </x-adminlte-card>
             </div>
-            <div class="col-md-12">
+            {{-- <div class="col-md-12">
                 <x-adminlte-card title="Surat Kontrol Poliklinik ({{ $surat_kontrols->count() }})" theme="success"
                     icon="fas fa-info-circle" collapsible>
                     @php
@@ -193,14 +204,15 @@
                         @endforeach
                     </x-adminlte-datatable>
                 </x-adminlte-card>
-            </div>
-            <x-adminlte-modal id="modalSuratKontrol" name="modalSuratKontrol" title="Surat Kontrol Rawat Jalan"
-                theme="success" icon="fas fa-file-medical" v-centered>
+            </div> --}}
+            <x-adminlte-modal id="modalSuratKontrol" name="modalSuratKontrol" size="lg"
+                title="Surat Kontrol Rawat Jalan" theme="success" icon="fas fa-file-medical" v-centered>
                 <form id="formSuratKontrol" name="formSuratKontrol">
                     @csrf
                     <x-adminlte-input name="nama_suratkontrol" label="Nama Pasien" readonly />
                     <x-adminlte-input name="nomorkartu_suratkontrol" label="Nomor BPJS" readonly />
-                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP" readonly>
+                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP"
+                        readonly>
                         <x-slot name="appendSlot">
                             <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
                         </x-slot>
@@ -221,8 +233,7 @@
                         ];
                     @endphp
                     <x-adminlte-input-date name="tanggal_suratkontrol" label="Tanggal Rencana Surat Kontrol"
-                        :config="$config" placeholder="Pilih Tanggal Surat Kontrol ..."
-                        value="{{ Carbon\Carbon::now()->format('Y-m-d') }}">
+                        :config="$config" placeholder="Pilih Tanggal Surat Kontrol ..." value="">
                         <x-slot name="prependSlot">
                             <div class="input-group-text bg-primary">
                                 <i class="fas fa-calendar-alt"></i>
@@ -377,18 +388,28 @@
                 $('#btnStore').show();
                 $('#btnUpdate').hide();
                 var kodekunjungan = $(this).data('id');
-                var url = "{{ route('kunjungan.index') }}/" + kodekunjungan + "/edit";
+                var nomorkartu = $(this).data('nomorkartu');
+                var namapasien = $(this).data('namapasien');
+                var nomorsep = $(this).data('nomorsep');
+                var kodepoli = $(this).data('kodepoli');
+                var kodedokter = $(this).data('kodedokter');
+                var suratkontrol = $(this).data('suratkontrol');
+                var tglkontrol = $(this).data('tglkontrol');
+                if (suratkontrol) {
+                    $('#btnStore').hide();
+                    $('#btnUpdate').show();
+                }
                 $.LoadingOverlay("show");
-                $.get(url, function(data) {
-                    $('#formSuratKontrol').trigger("reset");
-                    $('#nama_suratkontrol').val(data.namaPasien);
-                    $('#nomorkartu_suratkontrol').val(data.nomorkartu);
-                    $('#nomorsep_suratkontrol').val(data.noSEP);
-                    $('#kodepoli_suratkontrol').val(data.kodePoli).trigger('change');
-                    $('#kodedokter_suratkontrol').val(data.kodeDokter).trigger('change');
-                    $('#modalSuratKontrol').modal('show');
-                    $.LoadingOverlay("hide", true);
-                });
+                $('#formSuratKontrol').trigger("reset");
+                $('#nama_suratkontrol').val(namapasien);
+                $('#nomorkartu_suratkontrol').val(nomorkartu);
+                $('#nomorsep_suratkontrol').val(nomorsep);
+                $('#nomor_suratkontrol').val(suratkontrol);
+                $('#tanggal_suratkontrol').val(tglkontrol);
+                $('#kodepoli_suratkontrol').val(kodepoli).trigger('change');
+                $('#kodedokter_suratkontrol').val(kodedokter).trigger('change');
+                $('#modalSuratKontrol').modal('show');
+                $.LoadingOverlay("hide", true);
             });
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
@@ -645,7 +666,7 @@
     </script>
 @endsection
 
-@section('css')
+{{-- @section('css')
     <style>
         table {
             table-layout: fixed
@@ -656,4 +677,4 @@
             white-space: nowrap
         }
     </style>
-@endsection
+@endsection --}}
