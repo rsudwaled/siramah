@@ -1587,26 +1587,7 @@ class AntrianController extends APIController
     {
         $kunjungans = null;
         $surat_kontrols = null;
-        if ($request->tanggal) {
-            $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
-            $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
-                ->where('status_kunjungan', "!=", 8)
-                ->where('kode_unit', "!=", null)
-                ->where('kode_unit', 'LIKE', '10%')
-                ->where('kode_unit', "!=", 1002)
-                ->where('kode_unit', "!=", 1023)
-                ->with(['dokter', 'unit', 'pasien', 'surat_kontrol'])
-                ->get();
-            if ($request->kodepoli != null) {
-                $poli = Unit::where('KDPOLI', $request->kodepoli)->first();
-                $kunjungans = $kunjungans->where('kode_unit', $poli->kode_unit);
-                $surat_kontrols = $surat_kontrols->where('poliTujuan', $request->kodepoli);
-            }
-            if ($request->kodedokter != null) {
-                $dokter = Paramedis::where('kode_dokter_jkn', $request->kodedokter)->first();
-                $kunjungans = $kunjungans->where('kode_paramedis', $dokter->kode_paramedis);
-            }
-        }
+
         if ($request->kodepoli == null) {
             $unit = Unit::where('KDPOLI', "!=", null)
                 ->where('KDPOLI', "!=", "")
@@ -1623,13 +1604,38 @@ class AntrianController extends APIController
                 ->where('kode_dokter_jkn', "!=", null)
                 ->get();
         }
-        return view('simrs.poliklinik.poliklinik_suratkontrol', [
-            'kunjungans' => $kunjungans,
-            'request' => $request,
-            'unit' => $unit,
-            'dokters' => $dokters,
-            'surat_kontrols' => $surat_kontrols,
-        ]);
+        if ($request->tanggal) {
+            $surat_kontrols = SuratKontrol::whereDate('tglTerbitKontrol', $request->tanggal)->get();
+            if ($request->kodepoli != null) {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+                    ->where('kode_unit', $poli->kode_unit)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->where('kode_unit', "!=", null)
+                    ->where('kode_unit', 'LIKE', '10%')
+                    ->where('kode_unit', "!=", 1002)
+                    ->where('kode_unit', "!=", 1023)
+                    ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+                    ->get();
+                $surat_kontrols = $surat_kontrols->where('poliTujuan', $request->kodepoli);
+            } else {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->where('kode_unit', "!=", null)
+                    ->where('kode_unit', 'LIKE', '10%')
+                    ->where('kode_unit', "!=", 1002)
+                    ->where('kode_unit', "!=", 1023)
+                    ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+                    ->get();
+            }
+        }
+
+        return view('simrs.poliklinik.poliklinik_suratkontrol', compact([
+            'kunjungans',
+            'request',
+            'unit',
+            'dokters',
+            'surat_kontrols',
+        ]));
     }
     public function daftarBpjsOffline(Request $request)
     {
@@ -3583,7 +3589,7 @@ class AntrianController extends APIController
             $printer->text("================================================\n");
             $printer->text("Nama Pasien : " . $sep->peserta->nama . " \n");
             $printer->text("Nomor Kartu : " . $sep->peserta->noKartu . " \n");
-            $printer->text("No. RM : " . $sep->peserta->mr->noMR . "\n");
+            // $printer->text("No. RM : " . $sep->peserta->mr->noMR . "\n");
             $printer->text("No. Telepon : " . $request->noTelp . "\n");
             $printer->text("Hak Kelas : " . $sep->peserta->hakKelas . " \n");
             $printer->text("Jenis Peserta : " . $sep->peserta->jnsPeserta . " \n\n");

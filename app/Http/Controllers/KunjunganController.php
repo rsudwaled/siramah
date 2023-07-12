@@ -45,6 +45,7 @@ class KunjunganController extends Controller
     {
         $kunjungan = Kunjungan::with(['pasien'])->firstWhere('kode_kunjungan', $kodekunjungan);
         $kunjungan['namaPasien'] = $kunjungan->pasien->nama_px;
+        $kunjungan['nomorkartu'] = $kunjungan->pasien->no_Bpjs;
         $kunjungan['kodePoli'] = $kunjungan->unit->KDPOLI;
         $kunjungan['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
         $kunjungan['noSEP'] = $kunjungan->no_sep;

@@ -57,7 +57,7 @@ Route::prefix('vclaim')->group(function () {
     Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('suratkontrol_delete');
     Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
     Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
-    Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
+    Route::get('suratkontrol_sep', [SuratKontrolController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
     Route::get('suratkontrol_nomor', [VclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
     Route::get('suratkontrol_peserta', [VclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
     Route::get('suratkontrol_tanggal', [VclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
