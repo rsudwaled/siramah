@@ -98,46 +98,41 @@
                 </x-adminlte-card>
                 <x-adminlte-modal id="modalObat" title="Order Obat Pasien" size="lg" theme="success"
                     icon="fas fa-user-plus">
-                    <dl class="row">
-                        <dt class="col-sm-3">Kode Order</dt>
-                        <dd class="col-sm-8">: <span id="kodelayananheader"></span></dd>
-                        <dt class="col-sm-3">Nomor RM</dt>
-                        <dd class="col-sm-8">: <span id="nomorrm"></span></dd>
-                        <dt class="col-sm-3">Nama Pasien</dt>
-                        <dd class="col-sm-8">: <span id="namapasien"></span></dd>
-                        <dt class="col-sm-3">Tgl Lahir</dt>
-                        <dd class="col-sm-8">: <span id="tgllahir"></span></dd>
-                        <dt class="col-sm-3">Poliklinik </dt>
-                        <dd class="col-sm-8">: <span id="namaunit"></span></dd>
-                        <dt class="col-sm-3">Dokter </dt>
-                        <dd class="col-sm-8">: <span id="namadokter"></span></dd>
-                        <dt class="col-sm-3">SIP Dokter </dt>
-                        <dd class="col-sm-8">: <span id="sipdokter"></span></dd>
-                        <dt class="col-sm-3">SEP </dt>
-                        <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
-
-                    </dl>
-                    <table id="tableResep" class="table table-sm table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th>kode_barang</th>
-                                <th>jumlah_layanan</th>
-                                <th>aturan_pakai</th>
-                                <th>satuan_barang</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                    <div id="printMe">
+                        <dl class="row">
+                            <dt class="col-sm-3">Kode Order</dt>
+                            <dd class="col-sm-8">: <span id="kodelayananheader"></span></dd>
+                            <dt class="col-sm-3">Nomor RM</dt>
+                            <dd class="col-sm-8">: <span id="nomorrm"></span></dd>
+                            <dt class="col-sm-3">Nama Pasien</dt>
+                            <dd class="col-sm-8">: <span id="namapasien"></span></dd>
+                            <dt class="col-sm-3">Tgl Lahir</dt>
+                            <dd class="col-sm-8">: <span id="tgllahir"></span></dd>
+                            <dt class="col-sm-3">Poliklinik </dt>
+                            <dd class="col-sm-8">: <span id="namaunit"></span></dd>
+                            <dt class="col-sm-3">Dokter </dt>
+                            <dd class="col-sm-8">: <span id="namadokter"></span></dd>
+                            <dt class="col-sm-3">SIP Dokter </dt>
+                            <dd class="col-sm-8">: <span id="sipdokter"></span></dd>
+                            <dt class="col-sm-3">SEP </dt>
+                            <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
+                        </dl>
+                        <table id="tableResep" class="table table-sm table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>kode_barang</th>
+                                    <th>jumlah_layanan</th>
+                                    <th>aturan_pakai</th>
+                                    <th>satuan_barang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                     <x-slot name="footerSlot">
-                        {{-- <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
-                            icon="fas fa-prescription-bottle-alt" />
-                        <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
-                                class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
-                        <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
-                                class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
-                        <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i
-                                class="fas fa-check"></i> Selesai</a> --}}
+                        <button class="btn btn-success" onclick="printDiv('printMe')">Print<i class="fas fa-print"></i>
+                            Print Laporan</button>
                         <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
                     </x-slot>
                     </form>
@@ -152,6 +147,14 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('js')
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            tampilan_print = document.body.innerHTML = printContents;
+            setTimeout('window.addEventListener("load", window.print());', 1000);
+        }
+    </script>
     <script>
         $(document).ready(function() {
             url = "{{ route('getOrderObat') }}";
