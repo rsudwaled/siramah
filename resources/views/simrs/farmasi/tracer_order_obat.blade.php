@@ -85,6 +85,9 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <button class="btnObat btn btn-xs btn-primary"
+                                        data-id="{{ $order->id }}"><i class="fas fa-info-circle"></i> Lihat</button>
+
                                     <a href="{{ route('cetakUlangOrderObat') }}?kode={{ $order->kode_layanan_header }}"
                                         class="btn btn-xs btn-warning"><i class="fas fa-sync"></i>Cetak
                                         Ulang</a>
@@ -94,8 +97,39 @@
                     </x-adminlte-datatable>
                     <p id="demo"></p>
                 </x-adminlte-card>
-            @endif
+                <x-adminlte-modal id="modalObat" title="Order Obat Pasien" size="lg" theme="success"
+                    icon="fas fa-user-plus">
+                    <dl class="row">
+                        <dt class="col-sm-3">Kode Order</dt>
+                        <dd class="col-sm-8">: <span id="kodelayananheader"></span></dd>
 
+                    </dl>
+                    <table id="tableResep" class="table table-sm table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th>kode_barang</th>
+                                <th>jumlah_layanan</th>
+                                <th>aturan_pakai</th>
+                                <th>satuan_barang</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <x-slot name="footerSlot">
+                        {{-- <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
+                            icon="fas fa-prescription-bottle-alt" />
+                        <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
+                                class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
+                        <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
+                                class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
+                        <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i
+                                class="fas fa-check"></i> Selesai</a> --}}
+                        <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
+                    </x-slot>
+                    </form>
+                </x-adminlte-modal>
+            @endif
         </div>
     </div>
 @stop
@@ -140,6 +174,57 @@
             } else {
 
             }
+        });
+        $('.btnObat').click(function() {
+            var orderid = $(this).data('id');
+            $.LoadingOverlay("show");
+            var table = $('#tableResep').DataTable();
+            table.rows().remove().draw();
+            var url = "{{ route('getOrderResep') }}?id=" + orderid;
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: 'json',
+                success: function(data) {
+                    if (data.metadata.code == 200) {
+                        console.log(data);
+                        $.each(data.response.reseps, function(key, value) {
+                            console.log(value);
+                            table.row.add([
+                                value.kode_barang,
+                                value.jumlah_layanan,
+                                value.aturan_pakai,
+                                value.satuan_barang,
+                            ]).draw(false);
+                        });
+                        // $('.btnPilihSEP').click(function() {
+                        //     var nomorsep = $(this).data('id');
+                        //     $.LoadingOverlay("show");
+                        //     $('#nomorsep_suratkontrol').val(nomorsep);
+                        //     $('#modalSEP').modal('hide');
+                        //     $.LoadingOverlay("hide");
+                        // });
+                    } else {
+                        swal.fire(
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                    $('#modalObat').modal('show');
+                    $.LoadingOverlay("hide");
+                },
+                error: function(data) {
+                    console.log(data);
+                    // swal.fire(
+                    //     'Error ' + data.metadata.code,
+                    //     data.metadata.message,
+                    //     'error'
+                    // );
+                    $.LoadingOverlay("hide");
+                }
+            });
+
         });
     </script>
 @endsection
