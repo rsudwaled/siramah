@@ -85,9 +85,8 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button class="btnObat btn btn-xs btn-primary"
-                                        data-id="{{ $order->id }}"><i class="fas fa-info-circle"></i> Lihat</button>
-
+                                    <button class="btnObat btn btn-xs btn-primary" data-id="{{ $order->id }}"><i
+                                            class="fas fa-info-circle"></i> Lihat</button>
                                     <a href="{{ route('cetakUlangOrderObat') }}?kode={{ $order->kode_layanan_header }}"
                                         class="btn btn-xs btn-warning"><i class="fas fa-sync"></i>Cetak
                                         Ulang</a>
@@ -102,6 +101,20 @@
                     <dl class="row">
                         <dt class="col-sm-3">Kode Order</dt>
                         <dd class="col-sm-8">: <span id="kodelayananheader"></span></dd>
+                        <dt class="col-sm-3">Nomor RM</dt>
+                        <dd class="col-sm-8">: <span id="nomorrm"></span></dd>
+                        <dt class="col-sm-3">Nama Pasien</dt>
+                        <dd class="col-sm-8">: <span id="namapasien"></span></dd>
+                        <dt class="col-sm-3">Tgl Lahir</dt>
+                        <dd class="col-sm-8">: <span id="tgllahir"></span></dd>
+                        <dt class="col-sm-3">Poliklinik </dt>
+                        <dd class="col-sm-8">: <span id="namaunit"></span></dd>
+                        <dt class="col-sm-3">Dokter </dt>
+                        <dd class="col-sm-8">: <span id="namadokter"></span></dd>
+                        <dt class="col-sm-3">SIP Dokter </dt>
+                        <dd class="col-sm-8">: <span id="sipdokter"></span></dd>
+                        <dt class="col-sm-3">SEP </dt>
+                        <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
 
                     </dl>
                     <table id="tableResep" class="table table-sm table-hover table-bordered">
@@ -188,6 +201,16 @@
                 success: function(data) {
                     if (data.metadata.code == 200) {
                         console.log(data);
+                        $('#kodelayananheader').html(data.response.kode_layanan_header);
+                        $('#nomorrm').html(data.response.no_rm);
+                        $('#namapasien').html(data.response.nama_px);
+                        $('#tgllahir').html(data.response.tgl_lahir);
+                        $('#namadokter').html(data.response.nama_paramedis);
+                        $('#sipdokter').html(data.response.sip_dr);
+                        $('#namaunit').html(data.response.nama_unit);
+                        $('#nomorsep').html(data.response.no_sep);
+
+
                         $.each(data.response.reseps, function(key, value) {
                             console.log(value);
                             table.row.add([
