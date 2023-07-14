@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Laporan Kunjungan Poliklinik')
+@section('title', 'Diagnosa Rawat Jalan')
 @section('content_header')
-    <h1>Laporan Kunjungan Poliklinik</h1>
+    <h1>Diagnosa Rawat Jalan</h1>
 @stop
 @section('content')
     <div class="row">
