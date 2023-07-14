@@ -183,15 +183,12 @@ class FarmasiController extends APIController
                 ->get()->count();
             // dd($order->pasien->desas);
             try {
-                // if ($order->kode_unit == 4002) {
-                //     // $connector = new WindowsPrintConnector(env('PRINTER_FARMASI_DP1'));
-                //     $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
-
-                // }
-                // if ($order->kode_unit == 4008) {
-                //     $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
-                // }
-                $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
+                if ($order->kode_unit == 4002) {
+                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI_DP1'));
+                }
+                if ($order->kode_unit == 4008) {
+                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
+                }
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");
