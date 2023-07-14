@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SuratLampiran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratLampiranController extends Controller
 {

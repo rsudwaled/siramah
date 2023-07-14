@@ -22,6 +22,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RujukanController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SuratKontrolController;
+use App\Http\Controllers\SuratLampiranController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\ThermalPrintController;
 use App\Http\Controllers\UnitController;
