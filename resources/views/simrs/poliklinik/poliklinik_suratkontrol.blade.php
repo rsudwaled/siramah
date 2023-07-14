@@ -135,6 +135,9 @@
                                     @endif --}}
                                 </td>
                                 <td>
+                                    @if ($item->surat_kontrol)
+                                        {{ $item->surat_kontrol->noSuratKontrol }} <br>
+                                    @endif
                                     <x-adminlte-button class="btn-xs btnBuatSuratKontrol" label="S. Kontrol" theme="primary"
                                         icon="fas fa-file-medical" data-toggle="tooltop" title="Buat Surat Kontrol"
                                         data-id="{{ $item->kode_kunjungan }}"
@@ -145,8 +148,8 @@
                                         data-suratkontrol="{{ $item->surat_kontrol ? $item->surat_kontrol->noSuratKontrol : null }}"
                                         data-tglkontrol="{{ $item->surat_kontrol ? $item->surat_kontrol->tglRencanaKontrol : now()->format('Y-m-d') }}" />
                                     @if ($item->surat_kontrol)
-                                        <a href="{{ route('suratKontrolPrint', $item->surat_kontrol->noSuratKontrol) }}" target="_blank"
-                                            class="btn btn-xs btn-success" data-toggle="tooltip"
+                                        <a href="{{ route('suratKontrolPrint', $item->surat_kontrol->noSuratKontrol) }}"
+                                            target="_blank" class="btn btn-xs btn-success" data-toggle="tooltip"
                                             title="Print Surat Kontrol {{ $item->kode_kunjungan }}"> <i
                                                 class="fas fa-print"></i> Print</a>
                                     @endif
@@ -211,8 +214,7 @@
                     @csrf
                     <x-adminlte-input name="nama_suratkontrol" label="Nama Pasien" readonly />
                     <x-adminlte-input name="nomorkartu_suratkontrol" label="Nomor BPJS" readonly />
-                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP"
-                        readonly>
+                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP" readonly>
                         <x-slot name="appendSlot">
                             <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
                         </x-slot>
