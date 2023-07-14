@@ -608,6 +608,13 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'Diagnosa Rawat Jalan',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'diagnosaRawatJalan',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Laporan Index',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',
