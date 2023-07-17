@@ -3,7 +3,7 @@
 @section('title', 'Scan E-File Rekam Medis')
 
 @section('content_header')
-    <h1>Scan E-Fileasdasd Rekam Medis</h1>
+    <h1>Scan E-File Rekam Medis</h1>
 @stop
 
 @section('content')
