@@ -396,7 +396,7 @@ return [
                 [
                     'text' => 'Antrian Poliklinik',
                     'icon'    => 'fas fa-user-injured',
-                    'url'  => 'antrianPoliklinik',
+                    'url'  => 'kunjunganPoliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],
