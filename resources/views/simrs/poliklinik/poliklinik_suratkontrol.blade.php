@@ -55,7 +55,11 @@
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $kunjungans->where('antrian.taskid', '<=', 3)->count() - $kunjungans->where('antrian.taskid', '<=', null)->count() }}"
-                            text="Belum Dilayani" theme="warning" icon="fas fa-user-injured" />
+                            text="Belum Dilayani" theme="danger" icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-adminlte-small-box title="{{ $kunjungans->where('antrian.taskid', 4)->count() }}"
+                            text="Sedang Dilayani" theme="warning" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $kunjungans->count() }}" text="Total Kunjungan" theme="success"
