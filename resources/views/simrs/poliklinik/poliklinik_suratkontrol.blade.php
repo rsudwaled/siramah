@@ -40,7 +40,32 @@
             </x-adminlte-card>
         </div>
         @if (isset($kunjungans))
+
             <div class="col-md-12">
+                <div class="row">
+                    {{-- <div class="col-md-3">
+                        <x-adminlte-small-box title="{{ $antrians->where('taskid', 4)->first()->nomorantrean ?? '0' }}"
+                            text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-adminlte-small-box
+                            title="{{ $antrians->where('taskid', 3)->where('status_api', 1)->first()->nomorantrean ?? '0' }}"
+                            text="Antrian Selanjutnya" theme="success" icon="fas fa-user-injured" />
+                    </div> --}}
+                    <div class="col-md-3">
+                        <x-adminlte-small-box
+                            title="{{ $kunjungans->where('antrian.taskid', '<=', 3)->count() - $kunjungans->where('antrian.taskid', '<=', null)->count() }}"
+                            text="Belum Dilayani" theme="warning" icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-adminlte-small-box title="{{ $kunjungans->count() }}" text="Total Kunjungan" theme="success"
+                            icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-md-3">
+                        <x-adminlte-small-box title="{{ $kunjungans->where('antrian.taskid', '<=', null)->count() }}"
+                            text="Tidak Bridging Antrian" theme="secondary" icon="fas fa-user-injured" />
+                    </div>
+                </div>
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
@@ -127,7 +152,10 @@
                                             <span class="badge bg-danger">{{ $item->antrian->taskid }}. Batal</span>
                                         @endif
                                     @else
-                                        <span class="badge bg-secondary">98. Tidak Bridging</span>
+                                        <span class="badge bg-secondary">3. Tidak Bridging</span>
+                                        {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="warning"
+                                            icon="fas fa-volume-down" data-toggle="tooltip"
+                                            title="Panggil dan Bridgingkan" /> --}}
                                     @endif
                                     {{-- @if ($item->taskid == 3)
                                         @if ($item->status_api == 1)
@@ -214,7 +242,8 @@
                     @csrf
                     <x-adminlte-input name="nama_suratkontrol" label="Nama Pasien" readonly />
                     <x-adminlte-input name="nomorkartu_suratkontrol" label="Nomor BPJS" readonly />
-                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP" readonly>
+                    <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP"
+                        readonly>
                         <x-slot name="appendSlot">
                             <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
                         </x-slot>

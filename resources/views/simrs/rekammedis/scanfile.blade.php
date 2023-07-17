@@ -236,6 +236,7 @@
             $.LoadingOverlay("show");
             $.get(url, function(data) {
                 console.log(data);
+                $('#norm').val(data.no_rm);
                 $('#nik').val(data.nik_bpjs);
                 $('#nomorkartu').val(data.no_Bpjs);
                 $('#nama').val(data.nama_px);

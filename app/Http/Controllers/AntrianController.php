@@ -800,7 +800,37 @@ class AntrianController extends APIController
             // } catch (\Throwable $th) {
             //     //throw $th;
             // }
+            Alert::success('Success', 'Panggil Pasien Berhasil');
+        } else {
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+        }
+        return redirect()->back();
+    }
+    public function panggilBridgingPoliklinik(Request $request)
+    {
 
+        $request['taskid'] = 4;
+        $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
+        $request['waktu'] = now()->timestamp * 1000;
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        $vclaim = new AntrianController();
+        $response = $vclaim->update_antrean($request);
+        $antrian->update([
+            'taskid' => $request->taskid,
+            'status_api' => 1,
+            'keterangan' => $request->keterangan,
+            'user' => 'Sistem Siramah',
+        ]);
+        if ($response->metadata->code == 200) {
+            // try {
+            //     // notif wa
+            //     $wa = new WhatsappController();
+            //     $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " untuk segera dilayani di POLIKLINIK " . $antrian->namapoli;
+            //     $request['number'] = $antrian->nohp;
+            //     $wa->send_message($request);
+            // } catch (\Throwable $th) {
+            //     //throw $th;
+            // }
             Alert::success('Success', 'Panggil Pasien Berhasil');
         } else {
             Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
