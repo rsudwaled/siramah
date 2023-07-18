@@ -608,13 +608,6 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'Diagnosa Rawat Jalan',
-                    'icon'    => 'fas fa-diagnoses',
-                    'url'  => 'diagnosaRawatJalan',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
                     'text' => 'Laporan Index',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',
@@ -663,6 +656,33 @@ return [
                     'url'  => 'tindakan',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                ],
+            ],
+        ],
+        // CASEMIX
+        [
+            'text'    => 'Aplikasi Casemix',
+            'icon'    => 'fas fa-file-medical',
+            'can' => 'casemix',
+            'submenu' => [
+                [
+                    'text' => 'Diagnosa Rawat Jalan',
+                    'icon'    => 'fas fa-diagnoses',
+                    'url'  => 'diagnosaRawatJalan',
+                    'shift'   => 'ml-2',
+                    'can' => 'casemix',
                 ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',
