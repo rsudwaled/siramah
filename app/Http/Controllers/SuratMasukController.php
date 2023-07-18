@@ -12,16 +12,18 @@ class SuratMasukController extends Controller
 {
     public function index(Request $request)
     {
-        $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
+        $surats = SuratMasuk::with(['lampiran'])
+            ->orderBy('id_surat_masuk', 'desc')
             ->where(function ($query) use ($request) {
-                $query->where('asal_surat', "like", "%" . $request->search . "%")
-                    ->orWhere('perihal', "like", "%" . $request->search . "%");
+                if ($request->search) {
+                    $query->where('asal_surat', "like", "%" . $request->search . "%")
+                        ->orWhere('perihal', "like", "%" . $request->search . "%");
+                }
             })->paginate(25);
-        $surat_total = SuratMasuk::count();
+        // $surat_total = SuratMasuk::count();
         return view('simrs.bagum.suratmasuk_index', compact([
             'request',
             'surats',
-            'surat_total'
         ]));
     }
     public function store(Request $request)
@@ -126,7 +128,5 @@ class SuratMasukController extends Controller
     }
     public function get_surat(Request $request)
     {
-
     }
-
 }

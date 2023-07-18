@@ -488,7 +488,14 @@ return [
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpo',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'E-KPO Rawat Inap',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpoRanap',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
                 ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',

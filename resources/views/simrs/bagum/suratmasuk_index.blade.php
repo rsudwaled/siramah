@@ -77,9 +77,6 @@
                     @endforeach
                 </x-adminlte-datatable>
                 <br>
-                <div class="text float-left ">
-                    Data yang ditampilkan {{ $surats->count() }} dari total {{ $surat_total }}
-                </div>
                 <div class="float-right pagination-sm">
                     {{ $surats->appends(request()->input())->links() }}
                 </div>

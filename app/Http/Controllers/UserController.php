@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users_total = User::count();
-        $users = User::with(['roles'])
+        $users = User::with(['roles','verificator'])
             ->latest()
             ->where(function ($query) use ($request) {
                 $query->where('name', "like", "%" . $request->search . "%");
