@@ -157,7 +157,6 @@ class FarmasiController extends APIController
     public function getOrderObat(Request $request)
     {
         // $order = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_02 (25)'));
-        // dd($request->all());
         if ($request->depo == 4008) {
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
                 ->where('status_order', 1)
@@ -167,6 +166,11 @@ class FarmasiController extends APIController
             $connector = env('PRINTER_FARMASI');
         }
         if ($request->depo == 4002) {
+            $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
+            ->where('status_order', 1)
+            ->where('kode_unit', $request->depo)
+            ->where('unit_pengirim', '!=', '1016')
+            ->first();
             if (empty($order)) {
                 $order_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
                     ->where('status_order', 1)
