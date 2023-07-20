@@ -148,6 +148,10 @@ Route::middleware('auth')->group(function () {
     Route::get('getOrderResep', [FarmasiController::class, 'getOrderResep'])->name('getOrderResep');
     Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
     Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
+
+    Route::get('kpoRanap', [KPOController::class, 'kpoRanap'])->name('kpoRanap');
+    Route::get('kunjunganRanap', [KunjunganController::class, 'kunjunganRanap'])->name('kunjunganRanap');
+
     // rekammedis
     Route::get('diagnosaRawatJalan', [PoliklinikController::class, 'diagnosaRawatJalan'])->name('diagnosaRawatJalan');
     // antrian bpjs

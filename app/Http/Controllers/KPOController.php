@@ -36,6 +36,14 @@ class KPOController extends Controller
             'kunjungan'
         ]));
     }
+    public function kpoRanap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])->pluck('nama_unit', 'kode_unit');
+        return view('simrs.kpo_ranap', compact([
+            'request',
+            'units',
+        ]));
+    }
     public function kunjungan_tanggal($tanggal)
     {
         $kunjungans = Kunjungan::where('status_kunjungan', 1)

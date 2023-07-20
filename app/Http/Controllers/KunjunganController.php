@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class KunjunganController extends Controller
+class KunjunganController extends APIController
 {
     public function index(Request $request)
     {
@@ -39,7 +39,7 @@ class KunjunganController extends Controller
         $data['namaPasien'] = $kunjungan->pasien->nama_px;
         $data['kodePoli'] = $kunjungan->unit->KDPOLI;
         $data['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
-        return $this->sendResponse('OK', $data, 200);
+        return $this->sendResponse($data, 200);
     }
     public function edit($kodekunjungan)
     {
@@ -94,5 +94,14 @@ class KunjunganController extends Controller
             'penjaminrs' => $penjaminrs,
             'unit' => $unit,
         ]);
+    }
+    public function kunjunganRanap(Request $request)
+    {
+        $kunjungans = Kunjungan::where('kode_unit', $request->unit)
+            ->where('status_kunjungan', 1)
+            ->with(['pasien', 'unit',  'dokter'])
+            ->whereHas('pasien')
+            ->get(['kode_kunjungan', 'tgl_masuk', 'no_rm', 'kode_unit',  'kode_paramedis', 'no_sep']);
+        return $this->sendResponse($kunjungans, 200);
     }
 }

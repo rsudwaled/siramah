@@ -82,23 +82,22 @@ class Kunjungan extends Model
     {
         return $this->hasOne(AlasanMasuk::class, 'id', 'id_alasan_masuk');
     }
-
     public function tracer()
     {
         return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');
     }
 
-    protected $appends = ['nama_pasien'];
-    public function getNamaPasienAttribute()
-    {
-        $pasien = Pasien::firstWhere('no_rm', $this->no_rm);
-        if (isset($pasien)) {
-            $pasien = $pasien->nama_px;
-        } else {
-            $pasien = '';
-        }
-        return $pasien;
-    }
+    // protected $appends = ['nama_pasien'];
+    // public function getNamaPasienAttribute()
+    // {
+    //     $pasien = Pasien::firstWhere('no_rm', $this->no_rm);
+    //     if (isset($pasien)) {
+    //         $pasien = $pasien->nama_px;
+    //     } else {
+    //         $pasien = '';
+    //     }
+    //     return $pasien;
+    // }
     // public function getNamaPenjaminAttribute()
     // {
     //     if (isset($this->kode_penjamin)) {
