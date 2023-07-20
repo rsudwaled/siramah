@@ -114,6 +114,16 @@ class UserSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $user->assignRole('Rekam Medis');
+        $user = User::create([
+            "name" => "Admin Casemix",
+            "email" => "casemix@gmail.com",
+            "username" => "casemix",
+            "phone" => "089529909036",
+            'password' => bcrypt('casemix'),
+            'user_verify' => 1,
+            'email_verified_at' => now()
+        ]);
+        $user->assignRole('Casemix');
         $adminpoli = [
             'OBG',
             // 'HIV',
