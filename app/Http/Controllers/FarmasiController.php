@@ -158,12 +158,13 @@ class FarmasiController extends APIController
     {
         // $order = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_02 (25)'));
         // dd($request->all());
-        if ($request->depo) {
+        if ($request->depo == 4008) {
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
                 ->where('status_order', 1)
                 ->where('kode_unit', $request->depo)
                 ->where('unit_pengirim', '!=', '1016')
                 ->first();
+            $connector = env('PRINTER_FARMASI');
         }
         if ($request->depo == 4002) {
             if (empty($order)) {
@@ -173,8 +174,12 @@ class FarmasiController extends APIController
                     ->first();
                 $order = $order_yasmin;
             }
+            $connector = env('PRINTER_FARMASI_DP1');
         }
-
+        // if ($order->kode_unit == 4002) {
+        // }
+        // if ($order->kode_unit == 4008) {
+        // }
         $i = 1;
         // dd($order->detail->first()->barang);
         if ($order) {
@@ -183,12 +188,7 @@ class FarmasiController extends APIController
                 ->get()->count();
             // dd($order->pasien->desas);
             try {
-                if ($order->kode_unit == 4002) {
-                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI_DP1'));
-                }
-                if ($order->kode_unit == 4008) {
-                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
-                }
+                $connector = new WindowsPrintConnector($connector);
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");
