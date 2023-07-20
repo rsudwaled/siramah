@@ -20,7 +20,7 @@
                             <dt class="col-sm-4">Tanggal Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_surat }}</dd>
                             <dt class="col-sm-4">Asal </dt>
-                            <dd class="col-sm-8 h6 text-secondary" >{{ $surat->asal_surat }}</dd>
+                            <dd class="col-sm-8 h6 text-secondary">{{ $surat->asal_surat }}</dd>
                             <dt class="col-sm-4">Perihal Surat</dt>
                             <dd class="col-sm-8 h6 text-secondary">{{ $surat->perihal }}</dd>
                             <dt class="col-sm-4">Tgl Disposisi</dt>
@@ -44,21 +44,32 @@
 
                         </dl>
                     </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-4">Lampiran</dt>
+                            <dd class="col-sm-8">
+                                @if ($surat->lampiran)
+                                    <a class="btn btn-xs btn-primary" href="{{ $surat->lampiran->fileurl }}"
+                                        target="_blank">Download Lampiran</a>
+                                @else
+                                    <i>tidak ada lampiran</i>
+                                @endif
+                            </dd>
+                        </dl>
+                    </div>
                 </div>
                 <x-slot name="footerSlot">
                     {{-- <button type="submit" form="formSurat" class="btn btn-success mr-auto">Simpan</button> --}}
-                    <x-adminlte-button class="mr-auto " id="btnStore" type="submit" theme="success"
-                        icon="fas fa-save" label="Simpan" />
-                    <x-adminlte-button class="mr-auto" id="btnUpdate" theme="warning" icon="fas fa-edit"
-                        label="Update" />
-                    <x-adminlte-button id="btnDelete" theme="danger" icon="fas fa-trash-alt" label="Delete" />
+                    {{-- <x-adminlte-button class="mr-auto " id="btnStore" type="submit" theme="success" icon="fas fa-save"
+                        label="Simpan" />
+                    <x-adminlte-button class="mr-auto" id="btnUpdate" theme="warning" icon="fas fa-edit" label="Update" />
+                    <x-adminlte-button id="btnDelete" theme="danger" icon="fas fa-trash-alt" label="Delete" /> --}}
                 </x-slot>
             </x-adminlte-card>
         </div>
     </div>
     <x-adminlte-modal id="modalLampiran" title="Lampiran Surat Masuk" size="xl" theme="success" v-centered>
-        <form action="{{ route('suratlampiran.store') }}" id="formLampiran" method="POST"
-            enctype="multipart/form-data">
+        <form action="{{ route('suratlampiran.store') }}" id="formLampiran" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="id_surat" id="id_surat_lampiran">
             <x-adminlte-input-file name="file" placeholder="Pilih file...">
