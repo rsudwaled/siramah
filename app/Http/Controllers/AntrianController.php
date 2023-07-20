@@ -1045,7 +1045,6 @@ class AntrianController extends APIController
                 $request['tarifadm'] =  $tarifadm->TOTAL_TARIF_NEW;
                 $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
             }
-            $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
             if ($antrian->kode_kunjungan == null) {
                 // insert kunjungan, layanan header dan detail
                 // hitung counter kunjungan
@@ -1160,15 +1159,15 @@ class AntrianController extends APIController
                     'tagihan_penjamin' => $totalpenjamin,
                 ]);
             }
-            $this->print_karcis($request, $kunjungan);
+            $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
+            if ($kunjungan) {
+                $kunjungan->update([
+                    'status_kunjungan' => 1,
+                    'no_sep' => $antrian->nomorsep,
+                ]);
+            }
             $res = $this->update_antrean($request);
             if ($res->metadata->code == 200) {
-                if ($kunjungan) {
-                    $kunjungan->update([
-                        'status_kunjungan' => 1,
-                        'no_sep' => $antrian->nomorsep,
-                    ]);
-                }
                 $antrian->update([
                     'taskid' => $request->taskid,
                     'status_api' => $request->status_api,
@@ -1185,6 +1184,7 @@ class AntrianController extends APIController
             } else {
                 Alert::error('Error', $res->metadata->message);
             }
+            $this->print_karcis($request, $kunjungan);
             return redirect()->back();
         } else {
             Alert::error('Error', "error");
