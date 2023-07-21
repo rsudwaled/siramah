@@ -73,18 +73,31 @@ class DisposisiController extends Controller
         $pernyataan_penerima = null;
         $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
         if (isset($surat->ttd_direktur)) {
-            $pernyataan_direktur = "E-Disposisi dengan nomor " . $nomor . " telah ditandatangani oleh Direktur RSUD Waled pada tanggal ";
+            $pernyataan_direktur = "E-Disposisi dengan nomor " . $nomor . " telah ditandatangani oleh Direktur RSUD Waled pada tanggal " . Carbon::parse($surat->ttd_direktur)->translatedFormat('l, d F Y  H:m:s');
         }
         if ($surat->tgl_terima_surat && $surat->tanda_terima) {
-            $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y');
+            $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y H:m:s');
         }
         return view('simrs.bagum.disposisi_print', compact(['surat', 'pernyataan_direktur', 'pernyataan_penerima']));
     }
     public function edit($id)
     {
+        $pernyataan_direktur = null;
+        $pernyataan_penerima = null;
         $surat = SuratMasuk::find($id);
-        return view('simrs.bagum.disposisi_edit', compact(['surat']));
-
+        $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
+        if (isset($surat->ttd_direktur)) {
+            $pernyataan_direktur = "E-Disposisi dengan nomor " . $nomor . " telah ditandatangani oleh Direktur RSUD Waled pada tanggal " . Carbon::parse($surat->ttd_direktur)->translatedFormat('l, d F Y  H:m:s');
+        }
+        if ($surat->tgl_terima_surat && $surat->tanda_terima) {
+            $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y H:m:s');
+        }
+        return view('simrs.bagum.disposisi_edit', compact([
+            'surat',
+            'nomor',
+            'pernyataan_direktur',
+            'pernyataan_penerima',
+        ]));
     }
     public function update(Request $request, $id)
     {

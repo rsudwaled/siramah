@@ -42,6 +42,6 @@ class OrderObatHeader extends Model
     }
     public function detail()
     {
-        return $this->hasMany(OrderObatDetail::class, 'kode_layanan_header', 'kode_layanan_header');
+        return $this->hasMany(OrderObatDetail::class,  'row_id_header','id');
     }
 }

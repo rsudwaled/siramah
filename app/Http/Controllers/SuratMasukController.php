@@ -68,7 +68,6 @@ class SuratMasukController extends Controller
     }
     public function update(Request $request, $id)
     {
-
         $tindakan = [];
         if (isset($request->tindaklanjuti)) {
             array_push($tindakan, "tindaklanjuti");
@@ -101,16 +100,14 @@ class SuratMasukController extends Controller
         if (isset($request->ttd_direktur)) {
             $request['ttd_direktur'] = now();
         }
-        $surat = SuratMasuk::firstWhere('id_surat_masuk', $request->id_surat);
-
+        $surat = SuratMasuk::firstWhere('id_surat_masuk', $id);
         $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
         if ($request->disposisi && $request->pengolah) {
             $wa = new WhatsappController();
-            $request['number'] = "628122350498@c.us";
+            $request['number'] = "089529909036@c.us";
             $request['message'] = "Telah diupdate Disposisi oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $surat->no_surat . "\n*Asal Surat :* " . $surat->asal_surat . "\n*Perihal :* " . $surat->perihal . "\n\n*No Disposisi :* " . $nomor . "\n*Ditujukan Untuk :* " . $request->pengolah . "\n*Disposisi :* " . $request->disposisi . "\n\nSilahkan untuk mengeceknya dengan link berikut. \nhttp://sim.rsudwaled.id/siramah/disposisi";
             $wa->send_message($request);
         }
-
         $surat->update($request->all());
         Alert::success('Success', 'Surat Berhasil Diupdate');
         return redirect()->back();
