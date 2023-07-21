@@ -45,9 +45,12 @@
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->pengolah ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Disposisi</dt>
                             <dd class="col-sm-8 h6 text-dark"><i>
-                                    @foreach ($surat->tindakan as $key => $item)
-                                        - {{ $item }} <br>
-                                    @endforeach
+                                    @if ($surat->tindakan)
+                                        @foreach ($surat->tindakan as $key => $item)
+                                            - {{ $item }} <br>
+                                        @endforeach
+                                    @endif
+
                                     {{ $surat->disposisi ?? 'Belum Diisi' }}
                                 </i></dd>
                             <dt class="col-sm-4">Ttd Direktur</dt>
@@ -166,7 +169,8 @@
                                 dengan ybs / instansi terkait</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="tindakan[]" value="Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan">
+                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="tindakan[]"
+                                value="Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan">
                             <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
