@@ -45,12 +45,11 @@
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->pengolah ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Disposisi</dt>
                             <dd class="col-sm-8 h6 text-dark"><i>
-                                    @if ($surat->tindakan)
-                                        @foreach ($surat->tindakan as $key => $item)
+                                    @if ($surat->tindakan != null)
+                                        @foreach (json_decode($surat->tindakan) as $key => $item)
                                             - {{ $item }} <br>
                                         @endforeach
                                     @endif
-
                                     {{ $surat->disposisi ?? 'Belum Diisi' }}
                                 </i></dd>
                             <dt class="col-sm-4">Ttd Direktur</dt>

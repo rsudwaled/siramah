@@ -68,34 +68,36 @@ class SuratMasukController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $tindakan = [];
-        if (isset($request->tindaklanjuti)) {
-            array_push($tindakan, "tindaklanjuti");
-        }
-        if (isset($request->proses_sesuai_kemampuan)) {
-            array_push($tindakan, "proses_sesuai_kemampuan");
-        }
-        if (isset($request->untuk_dibantu)) {
-            array_push($tindakan, "untuk_dibantu");
-        }
-        if (isset($request->pelajari)) {
-            array_push($tindakan, "pelajari");
-        }
-        if (isset($request->wakili_hadiri)) {
-            array_push($tindakan, "wakili_hadiri");
-        }
-        if (isset($request->agendakan)) {
-            array_push($tindakan, "agendakan");
-        }
-        if (isset($request->ingatkan_waktunya)) {
-            array_push($tindakan, "ingatkan_waktunya");
-        }
-        if (isset($request->siapkan_bahan)) {
-            array_push($tindakan, "siapkan_bahan");
-        }
-        if (isset($request->simpan_arsipkan)) {
-            array_push($tindakan, "simpan_arsipkan");
-        }
+    //    dd($request->all());
+        // $tindakan = [];
+        // if (isset($request->tindaklanjuti)) {
+        //     array_push($tindakan, "tindaklanjuti");
+        // }
+        // if (isset($request->proses_sesuai_kemampuan)) {
+        //     array_push($tindakan, "proses_sesuai_kemampuan");
+        // }
+        // if (isset($request->untuk_dibantu)) {
+        //     array_push($tindakan, "untuk_dibantu");
+        // }
+        // if (isset($request->pelajari)) {
+        //     array_push($tindakan, "pelajari");
+        // }
+        // if (isset($request->wakili_hadiri)) {
+        //     array_push($tindakan, "wakili_hadiri");
+        // }
+        // if (isset($request->agendakan)) {
+        //     array_push($tindakan, "agendakan");
+        // }
+        // if (isset($request->ingatkan_waktunya)) {
+        //     array_push($tindakan, "ingatkan_waktunya");
+        // }
+        // if (isset($request->siapkan_bahan)) {
+        //     array_push($tindakan, "siapkan_bahan");
+        // }
+        // if (isset($request->simpan_arsipkan)) {
+        //     array_push($tindakan, "simpan_arsipkan");
+        // }
+        // dd($request->all());
         // ttd direktur
         if (isset($request->ttd_direktur)) {
             $request['ttd_direktur'] = now();

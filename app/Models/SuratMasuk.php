@@ -25,8 +25,8 @@ class SuratMasuk extends Model
     //     return $this->attributes['tindakan'] = json_decode($value);
     // }
 
-    public function getTindakanAttribute($value)
-    {
-        return $this->attributes['tindakan'] = json_decode($value);
-    }
+    // public function getTindakanAttribute($value)
+    // {
+    //     return $this->attributes['tindakan'] = json_decode($value);
+    // }
 }
