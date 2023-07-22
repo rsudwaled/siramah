@@ -1167,19 +1167,20 @@ class AntrianController extends APIController
                 ]);
             }
             $res = $this->update_antrean($request);
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => $request->status_api,
+                'keterangan' =>  $request->keterangan,
+            ]);
+            // insert tracer tc_tracer_header
+            $tracerbaru = Tracer::updateOrCreate([
+                'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                'tgl_tracer' => $now->format('Y-m-d'),
+                'id_status_tracer' => 1,
+                'cek_tracer' => "N",
+            ]);
             if ($res->metadata->code == 200) {
-                $antrian->update([
-                    'taskid' => $request->taskid,
-                    'status_api' => $request->status_api,
-                    'keterangan' =>  $request->keterangan,
-                ]);
-                // insert tracer tc_tracer_header
-                $tracerbaru = Tracer::updateOrCreate([
-                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                    'tgl_tracer' => $now->format('Y-m-d'),
-                    'id_status_tracer' => 1,
-                    'cek_tracer' => "N",
-                ]);
+
                 Alert::success('Success', 'OK');
             } else {
                 Alert::error('Error', $res->metadata->message);
