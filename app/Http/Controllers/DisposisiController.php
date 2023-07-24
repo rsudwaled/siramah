@@ -92,6 +92,7 @@ class DisposisiController extends Controller
         if ($surat->tgl_terima_surat && $surat->tanda_terima) {
             $pernyataan_penerima = "E-Disposisi dengan nomor " . $nomor . " telah diterima dan ditandatangani oleh " . $surat->tanda_terima . " pada tanggal " . Carbon::parse($surat->tgl_terima_surat)->translatedFormat('l, d F Y H:m:s');
         }
+        // dd($surat->tindakan);
         return view('simrs.bagum.disposisi_edit', compact([
             'surat',
             'nomor',

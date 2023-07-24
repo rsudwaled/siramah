@@ -20,13 +20,13 @@ class SuratMasuk extends Model
         return $this->hasOne(SuratLampiran::class, 'surat_id', 'id_surat_masuk');
     }
 
-    // public function setTindakanAttribute($value)
-    // {
-    //     return $this->attributes['tindakan'] = json_decode($value);
-    // }
+    public function setTindakanAttribute($value)
+    {
+        $this->attributes['tindakan'] = json_encode($value);
+    }
 
-    // public function getTindakanAttribute($value)
-    // {
-    //     return $this->attributes['tindakan'] = json_decode($value);
-    // }
+    public function getTindakanAttribute($value)
+    {
+        return $this->attributes['tindakan'] = collect(json_decode($value));
+    }
 }

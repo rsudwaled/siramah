@@ -33,6 +33,15 @@
                             </dd>
                             <dt class="col-sm-4">Tanggal Terima Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_disposisi }}</dd>
+                            @if ($surat->tanda_terima)
+                                <dt class="col-sm-4">Penerima Disposisi</dt>
+                                <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
+                                <dt class="col-sm-4">Tgl Terima</dt>
+                                <dd class="col-sm-8">{{ $surat->tgl_terima_surat ?? '-' }}
+                                    <br>
+                                    {!! $surat->tanda_terima ? QrCode::size(100)->generate($pernyataan_penerima) : '-' !!}
+                                </dd>
+                            @endif
                         </dl>
                     </div>
                     <div class="col-md-6">
@@ -45,28 +54,18 @@
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->pengolah ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Disposisi</dt>
                             <dd class="col-sm-8 h6 text-dark"><i>
-                                    @if ($surat->tindakan != null)
-                                        @foreach (json_decode($surat->tindakan) as $key => $item)
+                                    @isset($surat->tindakan)
+                                        @foreach ($surat->tindakan as $key => $item)
                                             - {{ $item }} <br>
                                         @endforeach
-                                    @endif
-                                    {{ $surat->disposisi ?? 'Belum Diisi' }}
+                                    @endisset
                                 </i></dd>
+                            <dt class="col-sm-4">Catatan Disposisi</dt>
+                            <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->disposisi ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Ttd Direktur</dt>
                             <dd class="col-sm-8">
                                 {{ $surat->ttd_direktur ?? '-' }} <br>
                                 {!! $surat->ttd_direktur ? QrCode::size(100)->generate($pernyataan_direktur) : '-' !!}
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="col-md-6">
-                        <dl class="row">
-                            <dt class="col-sm-4">Penerima Disposisi</dt>
-                            <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
-                            <dt class="col-sm-4">Tgl Terima</dt>
-                            <dd class="col-sm-8">{{ $surat->tgl_terima_surat ?? '-' }}
-                                <br>
-                                {!! $surat->tanda_terima ? QrCode::size(100)->generate($pernyataan_penerima) : '-' !!}
                             </dd>
                         </dl>
                     </div>

@@ -723,6 +723,7 @@ return [
                     'icon'    => 'fas fa-file-signature',
                     'url'  => 'disposisi',
                     'shift'   => 'ml-2',
+                    'active'  => ['disposisi', 'disposisi/create', 'regex:@^disposisi(\/[0-9]+)?+$@', 'regex:@^disposisi(\/[0-9]+)?\/edit+$@',],
                     'can' =>  ['bagian-umum', 'direktur'],
                 ],
                 [
