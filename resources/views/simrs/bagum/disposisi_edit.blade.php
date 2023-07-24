@@ -174,34 +174,38 @@
                                 dipenuhi sesuai kebutuhan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pelajari" name="tindakan[]">
+                            <input class="custom-control-input" type="checkbox" id="pelajari" name="tindakan[]"
+                                value="Pelajari / telaah / sarannya">
                             <label for="pelajari" class="custom-control-label">Pelajari / telaah /
                                 sarannya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="tindakan[]">
+                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="tindakan[]"
+                                value="Wakili / hadiri / terima / laporkan hasilnya">
                             <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
                                 laporkan hasilnya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="agendakan" name="tindakan[]">
+                            <input class="custom-control-input" type="checkbox" id="agendakan" name="tindakan[]"
+                                value="Agendakan / persiapkan / koordinasikan">
                             <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
                                 koordinasikan </label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya"
-                                name="ingatkan_waktunya">
+                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya" name="tindakan[]"
+                                value="Jadwalkan ingatkan waktunya">
                             <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
                                 waktunya</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan">
+                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="tindakan[]"
+                                value="Siapkan pointer / sambutan / bahan">
                             <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="simpan_arsipkan">
+                                name="simpan_arsipkan" value="Simpan / arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
