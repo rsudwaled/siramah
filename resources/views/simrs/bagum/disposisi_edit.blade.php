@@ -17,7 +17,6 @@
                             <dd class="col-sm-8">{{ $surat->no_surat ?? '-' }}</dd>
                             <dt class="col-sm-4">Tanggal Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_surat }}</dd>
-
                             <dt class="col-sm-4">Asal </dt>
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->asal_surat }}</i></dd>
                             <dt class="col-sm-4">Perihal Surat</dt>
@@ -33,7 +32,7 @@
                             </dd>
                             <dt class="col-sm-4">Tanggal Terima Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_disposisi }}</dd>
-                            @if ($surat->tanda_terima)
+                            @isset($surat->tanda_terima)
                                 <dt class="col-sm-4">Penerima Disposisi</dt>
                                 <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
                                 <dt class="col-sm-4">Tgl Terima</dt>
@@ -41,7 +40,7 @@
                                     <br>
                                     {!! $surat->tanda_terima ? QrCode::size(100)->generate($pernyataan_penerima) : '-' !!}
                                 </dd>
-                            @endif
+                            @endisset
                         </dl>
                     </div>
                     <div class="col-md-6">
@@ -204,7 +203,7 @@
                         </div>
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="simpan_arsipkan" value="Simpan / arsipkan">
+                                name="tindakan[]" value="Simpan / arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
