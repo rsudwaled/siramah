@@ -93,60 +93,6 @@
                         :config="$config" enable-old-support />
                     <x-adminlte-textarea name="pengolah" rows=3 placeholder="Diteruskan Kpd" label="Diteruskan Kpd"
                         enable-old-support />
-                    {{-- <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindaklanjuti">
-                            <label for="tindaklanjuti" class="custom-control-label">Untuk ditindaklanjuti</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="proses_sesuai_kemampuan"
-                                name="proses_sesuai_kemampuan">
-                            <label for="proses_sesuai_kemampuan" class="custom-control-label">Proses sesuai kemampuan /
-                                peraturan yang berlaku</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="koordinasikan" name="koordinasikan">
-                            <label for="koordinasikan" class="custom-control-label">Koordinasikan / konfirmasi
-                                dengan
-                                ybs / instansi terkait</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="untuk_dibantu" name="untuk_dibantu">
-                            <label for="untuk_dibantu" class="custom-control-label">Untuk dibantu / difasilitasi /
-                                dipenuhi sesuai kebutuhan</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="pelajari" name="pelajari">
-                            <label for="pelajari" class="custom-control-label">Pelajari / telaah /
-                                sarannya</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="wakili_hadiri" name="wakili_hadiri">
-                            <label for="wakili_hadiri" class="custom-control-label">Wakili / hadiri / terima /
-                                laporkan hasilnya</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="agendakan" name="agendakan">
-                            <label for="agendakan" class="custom-control-label">Agendakan / persiapkan /
-                                koordinasikan </label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ingatkan_waktunya"
-                                name="ingatkan_waktunya">
-                            <label for="ingatkan_waktunya" class="custom-control-label">Jadwalkan ingatkan
-                                waktunya</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="siapkan_bahan" name="siapkan_bahan">
-                            <label for="siapkan_bahan" class="custom-control-label">Siapkan pointer / sambutan /
-                                bahan</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="simpan_arsipkan">
-                            <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
-                        </div>
-                    </div> --}}
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="tindaklanjuti" name="tindakan[]"
@@ -202,8 +148,8 @@
                                 bahan</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan"
-                                name="tindakan[]" value="Simpan / arsipkan">
+                            <input class="custom-control-input" type="checkbox" id="simpan_arsipkan" name="tindakan[]"
+                                value="Simpan / arsipkan">
                             <label for="simpan_arsipkan" class="custom-control-label">Simpan / arsipkan</label>
                         </div>
                     </div>
