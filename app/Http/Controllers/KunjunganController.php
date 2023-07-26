@@ -45,6 +45,8 @@ class KunjunganController extends APIController
     {
         $kunjungan = Kunjungan::with(['pasien'])->firstWhere('kode_kunjungan', $kodekunjungan);
         $kunjungan['namaPasien'] = $kunjungan->pasien->nama_px;
+        $kunjungan['tglLahir'] = Carbon::parse($kunjungan->pasien->tgl_lahir)->format('Y-m-d');
+        $kunjungan['sex'] = $kunjungan->pasien->jenis_kelamin;
         $kunjungan['nomorkartu'] = $kunjungan->pasien->no_Bpjs;
         $kunjungan['kodePoli'] = $kunjungan->unit->KDPOLI;
         $kunjungan['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;

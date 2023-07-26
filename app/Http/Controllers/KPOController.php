@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kunjungan;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -38,6 +39,11 @@ class KPOController extends Controller
     }
     public function kpoRanap(Request $request)
     {
+
+
+        // $date1 = Carbon::parse("2023-06-01");
+        // $date2 = Carbon::parse("2023-06-30");
+        // dd($date1->day . " - " .  $date2->day . " " . $date2->monthName);
         $units = Unit::whereIn('kelas_unit', ['2'])->pluck('nama_unit', 'kode_unit');
         return view('simrs.kpo_ranap', compact([
             'request',
@@ -77,4 +83,3 @@ class KPOController extends Controller
         //
     }
 }
-
