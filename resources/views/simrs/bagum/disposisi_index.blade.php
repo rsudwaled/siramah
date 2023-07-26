@@ -82,7 +82,7 @@
                     Data yang ditampilkan {{ $surats->count() }} dari total {{ $surats->total() }}
                 </div>
                 <div class="float-right pagination-sm">
-                    {{ $surats->appends(request()->input())->links() }}
+                    {{ $surats->appends(request()->input())->onEachSide(1)->links() }}
                 </div>
             </x-adminlte-card>
         </div>
