@@ -71,7 +71,7 @@
                                             Ditujukan : {{ $item->pengolah }}
                                         @endif
                                         <br>
-                                        Tgl Input : {{ $item->tgl_surat }}
+                                        Tgl Input : {{ $item->created_at }}
                                     </span>
                                 </div>
                             </a>

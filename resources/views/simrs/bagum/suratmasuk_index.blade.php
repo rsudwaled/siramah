@@ -8,9 +8,19 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Surat Masuk">
+                @if ($errors->any())
+                    <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-adminlte-alert>
+                @endif
                 <div class="row">
                     <div class="col-md-8">
-                        <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm mb-2" id="tambahSurat" />
+                        <x-adminlte-button theme="success" label="Tambah Surat Masuk" class=" btn-sm mb-2"
+                            id="tambahSurat" />
                         <x-adminlte-button theme="primary" label="Blanko Disposisi" class=" btn-sm mb-2" id="cetakBlanko" />
                         <x-adminlte-button label="Refresh" class="btn-sm mb-2" theme="warning" title="Refresh User"
                             icon="fas fa-sync" onclick="window.location='{{ route('suratmasuk.index') }}'" />

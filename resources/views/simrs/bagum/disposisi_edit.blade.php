@@ -31,7 +31,7 @@
                                 @endif
                             </dd>
                             <dt class="col-sm-4">Tanggal Terima Surat</dt>
-                            <dd class="col-sm-8">{{ $surat->tgl_disposisi }}</dd>
+                            <dd class="col-sm-8">{{ $surat->created_at }}</dd>
                             @isset($surat->tanda_terima)
                                 <dt class="col-sm-4">Penerima Disposisi</dt>
                                 <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
@@ -45,8 +45,7 @@
                     </div>
                     <div class="col-md-6">
                         <dl class="row">
-                            <dt class="col-sm-4">No Disposisi</dt>
-                            <dd class="col-sm-8">{{ $nomor }}</dd>
+
                             <dt class="col-sm-4">Tgl Disposisi</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_diteruskan ?? '-' }}</dd>
                             <dt class="col-sm-4">Pengolah</dt>
@@ -80,12 +79,46 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modalDisposisi" title="Edit Disposisi" theme="warning">
+    <x-adminlte-modal id="modalDisposisi" title="Edit Disposisi" theme="warning" size="xl">
         <form action="{{ route('suratmasuk.index') }}/{{ $surat->id_surat_masuk }}" id="formSurat" method="POST">
             @csrf
             @method('PUT')
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">No Disposisi</dt>
+                        <dd class="col-sm-8">{{ $nomor }}</dd>
+                        <dt class="col-sm-4">Nomor Surat</dt>
+                        <dd class="col-sm-8">{{ $surat->no_surat ?? '-' }}</dd>
+                        <dt class="col-sm-4">Tanggal Surat</dt>
+                        <dd class="col-sm-8">{{ $surat->tgl_surat }}</dd>
+                        <dt class="col-sm-4">Tanggal Terima Surat</dt>
+                        <dd class="col-sm-8">{{ $surat->created_at }}</dd>
+                        <dt class="col-sm-4">Asal </dt>
+                        <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->asal_surat }}</i></dd>
+                        <dt class="col-sm-4">Perihal Surat</dt>
+                        <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->perihal }}</i></dd>
+                        <dt class="col-sm-4">Lampiran</dt>
+                        <dd class="col-sm-8">
+                            @if ($surat->lampiran)
+                                <a class="btn btn-xs btn-primary" href="{{ $surat->lampiran->fileurl }}"
+                                    target="_blank">Download Lampiran</a>
+                            @else
+                                <i>tidak ada lampiran</i>
+                            @endif
+                        </dd>
+                        @isset($surat->tanda_terima)
+                            <dt class="col-sm-4">Penerima Disposisi</dt>
+                            <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
+                            <dt class="col-sm-4">Tgl Terima</dt>
+                            <dd class="col-sm-8">{{ $surat->tgl_terima_surat ?? '-' }}
+                                <br>
+                                {!! $surat->tanda_terima ? QrCode::size(100)->generate($pernyataan_penerima) : '-' !!}
+                            </dd>
+                        @endisset
+                    </dl>
+                </div>
+                <div class="col-md-6">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
@@ -201,19 +234,23 @@
                     if (data.tindakan.indexOf('Untuk ditindaklanjuti') > -1) {
                         $("#tindaklanjuti").prop('checked', true);
                     }
-                    if (data.tindakan.indexOf('Proses sesuai kemampuan / peraturan yang berlaku') > -1) {
+                    if (data.tindakan.indexOf('Proses sesuai kemampuan / peraturan yang berlaku') >
+                        -1) {
                         $("#proses_sesuai_kemampuan").prop('checked', true);
                     }
-                    if (data.tindakan.indexOf('Koordinasikan / konfirmasi dengan ybs / instansi terkait') > -1) {
+                    if (data.tindakan.indexOf(
+                            'Koordinasikan / konfirmasi dengan ybs / instansi terkait') > -1) {
                         $("#koordinasikan").prop('checked', true);
                     }
-                    if (data.tindakan.indexOf('Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan') > -1) {
+                    if (data.tindakan.indexOf(
+                            'Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan') > -1) {
                         $("#untuk_dibantu").prop('checked', true);
                     }
                     if (data.tindakan.indexOf('Pelajari / telaah / sarannya') > -1) {
                         $("#pelajari").prop('checked', true);
                     }
-                    if (data.tindakan.indexOf('Wakili / hadiri / terima / laporkan hasilnya') > -1) {
+                    if (data.tindakan.indexOf('Wakili / hadiri / terima / laporkan hasilnya') > -
+                        1) {
                         $("#wakili_hadiri").prop('checked', true);
                     }
                     if (data.tindakan.indexOf('Agendakan / persiapkan / koordinasikan') > -1) {
