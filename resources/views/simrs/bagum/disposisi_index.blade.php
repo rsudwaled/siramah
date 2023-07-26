@@ -33,7 +33,7 @@
             <x-adminlte-card>
                 <ul class="products-list product-list-in-card pl-2 pr-2">
                     @foreach ($surats as $item)
-                        <li class="item">
+                        <li class="item withLoad">
                             <a href="{{ route('disposisi.edit', $item->id_surat_masuk) }}">
                                 @if ($item->disposisi)
                                     @if ($item->tanda_terima)

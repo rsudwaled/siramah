@@ -155,9 +155,25 @@
                     </div>
                     <x-adminlte-textarea name="disposisi" rows=5 placeholder="Catatan Disposisi"
                         label="Catatan Disposisi" />
-                    <div class="custom-control custom-checkbox">
-                        <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur">
-                        <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh Direktur</label>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur"
+                                disabled>
+                            <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh
+                                Direktur</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="ttd_wadir" name="ttd_wadir">
+                            <label for="ttd_wadir" class="custom-control-label">Telah Ditandatangi Oleh Wadir</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="ttd_kabag" name="ttd_kabag">
+                            <label for="ttd_kabag" class="custom-control-label">Telah Ditandatangi Oleh Kabag</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="ttd_kasubag" name="ttd_kasubag">
+                            <label for="ttd_kasubag" class="custom-control-label">Telah Ditandatangi Oleh Kasubag</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,7 +197,37 @@
                 $.LoadingOverlay("show");
                 var url = "{{ route('suratmasuk.index') }}/" + id;
                 $.get(url, function(data) {
-                    console.log(data);
+                    // console.log(data.tindakan);
+                    if (data.tindakan.indexOf('Untuk ditindaklanjuti') > -1) {
+                        $("#tindaklanjuti").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Proses sesuai kemampuan / peraturan yang berlaku') > -1) {
+                        $("#proses_sesuai_kemampuan").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Koordinasikan / konfirmasi dengan ybs / instansi terkait') > -1) {
+                        $("#koordinasikan").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan') > -1) {
+                        $("#untuk_dibantu").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Pelajari / telaah / sarannya') > -1) {
+                        $("#pelajari").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Wakili / hadiri / terima / laporkan hasilnya') > -1) {
+                        $("#wakili_hadiri").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Agendakan / persiapkan / koordinasikan') > -1) {
+                        $("#agendakan").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Jadwalkan ingatkan waktunya') > -1) {
+                        $("#ingatkan_waktunya").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Siapkan pointer / sambutan / bahan') > -1) {
+                        $("#siapkan_bahan").prop('checked', true);
+                    }
+                    if (data.tindakan.indexOf('Simpan / arsipkan') > -1) {
+                        $("#simpan_arsipkan").prop('checked', true);
+                    }
                     if (data.tgl_diteruskan) {
                         $('#tgl_diteruskan').val(data.tgl_diteruskan);
                     }
