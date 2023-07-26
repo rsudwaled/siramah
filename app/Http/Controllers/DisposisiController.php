@@ -10,16 +10,19 @@ class DisposisiController extends Controller
 {
     public function index(Request $request)
     {
-        $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
-            ->where(function ($query) use ($request) {
-                $query->where('asal_surat', "LIKE", "%" . $request->search . "%")
-                    ->orWhere('perihal', "LIKE", "%" . $request->search . "%");
-            })->paginate(25);
-        $surat_total = SuratMasuk::count();
+        if ($request->search) {
+            $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
+                ->where(function ($query) use ($request) {
+                    $query->where('asal_surat', "LIKE", "%" . $request->search . "%")
+                        ->orWhere('perihal', "LIKE", "%" . $request->search . "%");
+                })->paginate(25);
+        } else {
+            $surats = SuratMasuk::orderBy('id_surat_masuk', 'desc')
+                ->paginate(25);
+        }
         return view('simrs.bagum.disposisi_index', compact([
             'request',
             'surats',
-            'surat_total'
         ]));
     }
     public function create()

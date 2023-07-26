@@ -7,16 +7,18 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Disposisi">
+            <x-adminlte-card theme="primary" icon="fas fa-envelope" collapsible title="Disposisi  {{ $surat->asal_surat }}">
                 <div class="row">
                     <div class="col-md-6">
                         <dl class="row">
-                            <dt class="col-sm-4">No Urut / Kode</dt>
-                            <dd class="col-sm-8"> {{ $surat->no_urut }} / {{ $surat->kode ?? '-' }}</dd>
+                            <dt class="col-sm-4">No Disposisi</dt>
+                            <dd class="col-sm-8">{{ $nomor }}</dd>
                             <dt class="col-sm-4">Nomor Surat</dt>
                             <dd class="col-sm-8">{{ $surat->no_surat ?? '-' }}</dd>
                             <dt class="col-sm-4">Tanggal Surat</dt>
                             <dd class="col-sm-8">{{ $surat->tgl_surat }}</dd>
+                            <dt class="col-sm-4">Tanggal Terima Surat</dt>
+                            <dd class="col-sm-8">{{ $surat->created_at }}</dd>
                             <dt class="col-sm-4">Asal </dt>
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->asal_surat }}</i></dd>
                             <dt class="col-sm-4">Perihal Surat</dt>
@@ -30,8 +32,6 @@
                                     <i>tidak ada lampiran</i>
                                 @endif
                             </dd>
-                            <dt class="col-sm-4">Tanggal Terima Surat</dt>
-                            <dd class="col-sm-8">{{ $surat->created_at }}</dd>
                             @isset($surat->tanda_terima)
                                 <dt class="col-sm-4">Penerima Disposisi</dt>
                                 <dd class="col-sm-8">{{ $surat->tanda_terima ?? '-' }} </dd>
@@ -45,9 +45,8 @@
                     </div>
                     <div class="col-md-6">
                         <dl class="row">
-
-                            <dt class="col-sm-4">Tgl Disposisi</dt>
-                            <dd class="col-sm-8">{{ $surat->tgl_diteruskan ?? '-' }}</dd>
+                            <dt class="col-sm-4">Tgl Diteruskan</dt>
+                            <dd class="col-sm-8">{{ $surat->tgl_diteruskan ?? 'Belum Diisi' }}</dd>
                             <dt class="col-sm-4">Pengolah</dt>
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->pengolah ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Disposisi</dt>
@@ -56,13 +55,15 @@
                                         @foreach ($surat->tindakan as $key => $item)
                                             - {{ $item }} <br>
                                         @endforeach
+                                    @else
+                                        Belum Diisi
                                     @endisset
                                 </i></dd>
                             <dt class="col-sm-4">Catatan Disposisi</dt>
                             <dd class="col-sm-8 h6 text-dark"><i>{{ $surat->disposisi ?? 'Belum Diisi' }}</i></dd>
                             <dt class="col-sm-4">Ttd Direktur</dt>
                             <dd class="col-sm-8">
-                                {{ $surat->ttd_direktur ?? '-' }} <br>
+                                {{ $surat->ttd_direktur ?? 'Belum Diisi' }} <br>
                                 {!! $surat->ttd_direktur ? QrCode::size(100)->generate($pernyataan_direktur) : '-' !!}
                             </dd>
                         </dl>
@@ -74,7 +75,7 @@
                     <a class="btn btn-primary" target="_blank"
                         href="{{ route('disposisi.index') }}/{{ $surat->id_surat_masuk }}"><i class="fas fa-print"></i>
                         Print</a>
-                    <a class="btn btn-danger" href="{{ route('disposisi.index') }}">Kembali</a>
+                    <a class="btn btn-danger withLoad" href="{{ route('disposisi.index') }}">Kembali</a>
                 </x-slot>
             </x-adminlte-card>
         </div>
@@ -122,8 +123,8 @@
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
-                    <x-adminlte-input-date name="tgl_diteruskan" value="" label="Tgl Diteruskan" igroup-size="sm"
-                        :config="$config" enable-old-support />
+                    <x-adminlte-input-date name="tgl_diteruskan" value="{{ now()->format('Y-m-d') }}"
+                        label="Tgl Diteruskan" igroup-size="sm" :config="$config" enable-old-support />
                     <x-adminlte-textarea name="pengolah" rows=3 placeholder="Diteruskan Kpd" label="Diteruskan Kpd"
                         enable-old-support />
                     <div class="form-group">
@@ -190,21 +191,23 @@
                         label="Catatan Disposisi" />
                     <div class="form-group">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur"
-                                disabled>
+                            <input class="custom-control-input" type="checkbox" id="ttd_direktur" name="ttd_direktur">
                             <label for="ttd_direktur" class="custom-control-label">Telah Ditandatangi Oleh
                                 Direktur</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ttd_wadir" name="ttd_wadir">
+                            <input class="custom-control-input" type="checkbox" id="ttd_wadir" name="ttd_wadir"
+                                disabled>
                             <label for="ttd_wadir" class="custom-control-label">Telah Ditandatangi Oleh Wadir</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ttd_kabag" name="ttd_kabag">
+                            <input class="custom-control-input" type="checkbox" id="ttd_kabag" name="ttd_kabag"
+                                disabled>
                             <label for="ttd_kabag" class="custom-control-label">Telah Ditandatangi Oleh Kabag</label>
                         </div>
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="ttd_kasubag" name="ttd_kasubag">
+                            <input class="custom-control-input" type="checkbox" id="ttd_kasubag" name="ttd_kasubag"
+                                disabled>
                             <label for="ttd_kasubag" class="custom-control-label">Telah Ditandatangi Oleh Kasubag</label>
                         </div>
                     </div>
@@ -268,12 +271,14 @@
                     if (data.tgl_diteruskan) {
                         $('#tgl_diteruskan').val(data.tgl_diteruskan);
                     }
-                    $('#pengolah').val(data.pengolah);
-                    $('#disposisi').val(data.disposisi);
+
                     if (typeof(data.ttd_direktur) != "undefined" && data.ttd_direktur !== null)
                         $('#ttd_direktur').prop('checked', true);
                     else
                         $('#ttd_direktur').prop('checked', false);
+
+                    $('#pengolah').val(data.pengolah);
+                    $('#disposisi').val(data.disposisi);
                     $('#modalDisposisi').modal('show');
                     $.LoadingOverlay("hide", true);
                 })
