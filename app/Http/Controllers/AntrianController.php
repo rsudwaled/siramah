@@ -1256,7 +1256,6 @@ class AntrianController extends APIController
                             $request['tujuan'] =  $antrian->kodepoli; // get antrian
                             $request['eksekutif'] =  0;
                             // dpjp
-
                             $request['tujuanKunj'] = "2";
                             $request['flagProcedure'] = "";
                             $request['kdPenunjang'] = "";

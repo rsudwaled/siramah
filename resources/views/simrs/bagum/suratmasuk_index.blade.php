@@ -58,10 +58,16 @@
                                     title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
 
                             </td>
-                            <td class="editSuratMasuk  {{ $item->disposisi ? 'table-success' : 'table-danger' }}"
-                                data-id="{{ $item->id_surat_masuk }}">
-                                {{ $item->id_surat_masuk }}/{{ $item->no_urut }}/{{ $item->kode }} <br>
-                                {{ $item->tgl_disposisi }}
+                            @if ($item->disposisi)
+                                @if ($item->tanda_terima)
+                                    <td class="editSuratMasuk table-success" data-id="{{ $item->id_surat_masuk }}">
+                                    @else
+                                    <td class="editSuratMasuk table-warning" data-id="{{ $item->id_surat_masuk }}">
+                                @endif
+                            @else
+                                <td class="editSuratMasuk table-danger" data-id="{{ $item->id_surat_masuk }}">
+                            @endif
+                            {{ $item->tgl_disposisi }}
                             </td>
                             <td>
                                 {{ $item->no_surat }} <br>
