@@ -187,68 +187,73 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- multipe diagnosa --}}
-                            <br><br>
-                            <h6>Diagnosa & Tindakan</h6>
-                            <label class=" mb-2">Diagnosa ICD-10</label>
-                            <button id="rowAdder" type="button" class="btn btn-xs btn-success  mb-2">
-                                <span class="fas fa-plus">
-                                </span> Tambah Diagnosa
-                            </button>
-                            <div id="row">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <select name="diagnosa[]" class="form-control diagnosaID ">
-                                        </select>
-                                        <div class="input-group-append"><button type="button" class="btn btn-warning">
-                                                <i class="fas fa-diagnoses "></i> Diagnosa Utama </button></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="newinput"></div>
-                            {{-- multipe tindakan --}}
-                            <label class="mb-2">Tindakan ICD-9</label>
-                            <button id="rowAddTindakan" type="button" class="btn btn-xs btn-success  mb-2">
-                                <span class="fas fa-plus">
-                                </span> Tambah Tindakan
-                            </button>
-                            <div id="rowTindakan" class="row">
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-hand-holding-medical "></i>
-                                                </span>
-                                            </div>
-                                            <select name="procedure[]" class="form-control procedure ">
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <b>@</b>
-                                                </span>
-                                            </div>
-                                            <input type="number" class="form-control" value="1">
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-warning">
-                                        <i class="fas fa-hand-holding-medical "></i> </button>
-                                </div>
-                            </div>
-                            <div id="newTindakan"></div>
-                        </div>
-                        <div class="tab-pane fade" id="tarif">
-
                             <div class="row">
+                                <div class="col-md-12">
+                                    {{-- multipe diagnosa --}}
+                                    <br><br>
+                                    <h6>Diagnosa & Tindakan</h6>
+                                    <label class=" mb-2">Diagnosa ICD-10</label>
+                                    <button id="rowAdder" type="button" class="btn btn-xs btn-success  mb-2">
+                                        <span class="fas fa-plus">
+                                        </span> Tambah Diagnosa
+                                    </button>
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <select name="diagnosa[]" class="form-control diagnosaID ">
+                                                </select>
+                                                <div class="input-group-append"><button type="button"
+                                                        class="btn btn-warning">
+                                                        <i class="fas fa-diagnoses "></i> Diagnosa Utama </button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="newinput"></div>
+                                    {{-- multipe tindakan --}}
+                                    <label class="mb-2">Tindakan ICD-9</label>
+                                    <button id="rowAddTindakan" type="button" class="btn btn-xs btn-success  mb-2">
+                                        <span class="fas fa-plus">
+                                        </span> Tambah Tindakan
+                                    </button>
+                                    <div id="rowTindakan" class="row">
+                                        <div class="col-md-7">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-hand-holding-medical "></i>
+                                                        </span>
+                                                    </div>
+                                                    <select name="procedure[]" class="form-control procedure ">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <b>@</b>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" class="form-control" value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-warning">
+                                                <i class="fas fa-hand-holding-medical "></i> </button>
+                                        </div>
+                                    </div>
+                                    <div id="newTindakan"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <br><br>
+                                    <h6>Tekanan Darah</h6>
+                                </div>
                                 <div class="col-md-4">
                                     <x-adminlte-input name="tgl_masuk" label="Prosedur Non Bedah" igroup-size="sm" />
                                     <x-adminlte-input name="tgl_masuk" label="Tenaga Ahli" igroup-size="sm" />
@@ -274,7 +279,35 @@
                                     <x-adminlte-input name="tgl_masuk" label="Sewa Alat" igroup-size="sm" />
                                 </div>
                                 <x-adminlte-input name="tgl_masuk" label="Tarif Rumah Sakit" fgroup-class="col-md-6" />
-
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tarif">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Prosedur Non Bedah" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Tenaga Ahli" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Radiologi" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Rehabilitasi" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Alkes" igroup-size="sm" />
+                                </div>
+                                <div class="col-md-4">
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Prosedur Bedah" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Keperawatan" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Laboratorium" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Kamar / Akomodasi" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat Kronis" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="BMHP" igroup-size="sm" />
+                                </div>
+                                <div class="col-md-4">
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Konsultasi" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Penunjang" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Pelayanan Darah" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Rawat Intensif" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat Kemoterapi" igroup-size="sm" />
+                                    <x-adminlte-input readonly name="tgl_masuk" label="Sewa Alat" igroup-size="sm" />
+                                </div>
+                                <x-adminlte-input name="tgl_masuk" label="Tarif Rumah Sakit" fgroup-class="col-md-6" />
                             </div>
                             <dl class="row">
                                 <dt class="col-sm-3">Kode</dt>
@@ -298,7 +331,6 @@
             </div>
         </div>
     </div>
-
     <x-adminlte-modal id="kunjunganPasien" size="xl" title="Daftar Kunjungnan Pasien" theme="success"
         icon="fas fa-user-md">
         <dl class="row">
@@ -323,15 +355,11 @@
             </tbody>
         </table>
     </x-adminlte-modal>
-
 @stop
-
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
-
-
 @section('js')
     <script>
         $(function() {
@@ -342,7 +370,6 @@
             });
             $('#dataPasien').hide();
             $('#riwayatPasien').hide();
-
             $('#btnCariPasien').click(function(e) {
                 $.LoadingOverlay("show");
                 var unit = $('#unit option:selected').text();
@@ -537,7 +564,6 @@
             });
         });
     </script>
-
     {{-- search select2 --}}
     <script>
         $(function() {
@@ -680,5 +706,4 @@
             $(this).parents("#row").remove();
         })
     </script>
-
 @endsection

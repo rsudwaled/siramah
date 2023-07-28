@@ -394,7 +394,6 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
     }
-
     public function set_claim_ranap(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -633,8 +632,6 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
     }
-
-
     public function send_request($json_request)
     {
         // data yang akan dikirimkan dengan method POST adalah encrypted:
@@ -751,5 +748,11 @@ class InacbgController extends APIController
         }
 
         return $result == 0;
+    }
+    public function rincian_biaya_pasien(Request $request)
+    {
+        $response = DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')");
+
+        dd($response);
     }
 }
