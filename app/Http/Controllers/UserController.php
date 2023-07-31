@@ -17,12 +17,18 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users_total = User::count();
-        $users = User::with(['roles','verificator'])
-            ->latest()
-            ->where(function ($query) use ($request) {
-                $query->where('name', "like", "%" . $request->search . "%");
-            })
-            ->simplePaginate();
+        if ($request->search) {
+            $users = User::with(['roles', 'verificator'])
+                ->latest()
+                ->where(function ($query) use ($request) {
+                    $query->where('name', "like", "%" . $request->search . "%");
+                })
+                ->simplePaginate();
+        } else {
+            $users = User::with(['roles', 'verificator'])
+                ->latest()
+                ->simplePaginate();
+        }
         $roles = Role::pluck('name');
         return view('admin.user_index', compact([
             'request',

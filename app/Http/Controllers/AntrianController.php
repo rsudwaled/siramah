@@ -1205,6 +1205,30 @@ class AntrianController extends APIController
         $request['asalRujukan'] = "1";
         $request['tglRujukan'] =  $now;
         $request['noMR'] = $antrian->norm;
+        // check backdate
+        if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+            return $this->sendError("Tanggal periksa bukan hari ini.", 400);
+        }
+        if ($antrian->taskid == 99) {
+            return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
+        }
+        // get jadwal poliklinik dari simrs
+        $jadwals = JadwalDokter::where("hari",  Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+            ->where("kodesubspesialis", $antrian->kodepoli)
+            ->get();
+        // tidak ada jadwal
+        if (!isset($jadwals)) {
+            return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", 404);
+        }
+        // get jadwal dokter
+        $jadwal = $jadwals->where('kodedokter', $antrian->kodedokter)->first();
+        // tidak ada dokter
+        if (!isset($jadwal)) {
+            return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
+        }
+        if ($jadwal->libur == 1) {
+            return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
+        }
         if (empty($antrian->nomorsep)) {
             // daftar pake surat kontrol
             if ($antrian->jeniskunjungan == 3) {
@@ -2812,13 +2836,13 @@ class AntrianController extends APIController
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 return $this->sendError("Tanggal periksa bukan hari ini.", 400);
             }
+            if ($antrian->taskid == 99) {
+                return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
+            }
             $now = Carbon::now();
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
-            if ($antrian->taskid == 99) {
-                return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
-            }
             if ($antrian->pasienbaru) {
                 $request['pasienbaru_print'] = 'BARU';
             } else {
