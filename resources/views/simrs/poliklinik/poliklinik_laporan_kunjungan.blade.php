@@ -2,7 +2,8 @@
 @section('title', 'Laporan Kunjungan Poliklinik')
 @section('content_header')
     <h1>Laporan Kunjungan Poliklinik</h1>
-@stop
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -35,6 +36,7 @@
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Laporan" />
                 </form>
+                <a href="{{ route('obat.create')}}"></a>
             </x-adminlte-card>
             @if (isset($kunjungans))
                 <div id="printMe">
