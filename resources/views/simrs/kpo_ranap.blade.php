@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'E-KPO Rawat Inap')
+@section('title', 'KMKB Rawat Inap')
 
 @section('content_header')
-    <h1>E-KPO Rawat Inap</h1>
+    <h1>KMKB Rawat Inap</h1>
 
 @stop
 
@@ -67,16 +67,19 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        {{-- icd 10 --}}
                         <div class="tab-pane fade show active" id="inacbg">
+                            {{-- pelyanan pasien --}}
                             <div class="row">
                                 <div class="col-md-9">
                                     <h6>Pelayanan Pasien</h6>
                                     <div class="row">
-                                        <x-adminlte-input name="tgl_masuk" label="Tgl Masuk" fgroup-class="col-md-4"
-                                            igroup-size="sm" />
-                                        <x-adminlte-input name="tgl_pulang" label="Tgl Pulang" fgroup-class="col-md-4"
-                                            igroup-size="sm" />
+                                        @php
+                                            $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                                        @endphp
+                                        <x-adminlte-input-date name="tgl_masuk" label="Tgl Masuk" fgroup-class="col-md-4"
+                                            igroup-size="sm" :config="$config" />
+                                        <x-adminlte-input-date name="tgl_pulang" label="Tgl Pulang" fgroup-class="col-md-4"
+                                            igroup-size="sm" :config="$config" />
                                         <x-adminlte-select name="cara_masuk" label="Cara Masuk" fgroup-class="col-md-4"
                                             igroup-size="sm">
                                             <option value="gp">Rujukan FKTP</option>
@@ -98,22 +101,22 @@
                                             <option value="1">Kelas 1</option>
                                         </x-adminlte-select>
                                         <x-adminlte-select name="kelas_pelayanan" label="Kelas Pelayanan"
-                                            fgroup-class="col-md-4" igroup-size="sm">
+                                            fgroup-class="col-md-4 naik_kelas" igroup-size="sm">
                                             <option value="3" selected>Kelas 3</option>
                                             <option value="2">Kelas 2</option>
                                             <option value="1">Kelas 1</option>
                                             <option value="4">Diatas Kelas 1</option>
                                         </x-adminlte-select>
                                         <x-adminlte-input name="lama_pelayanan" label="Lama Pelayanan"
-                                            fgroup-class="col-md-4" igroup-size="sm" placeholder="Lama hari pelayanan"
-                                            type="number" />
-                                        <x-adminlte-input name="lama_icu" label="Lama ICU" fgroup-class="col-md-4"
-                                            igroup-size="sm" placeholder="Lama hari ICU" type="number" />
-                                        <x-adminlte-input name="intubasi" label="Tgl Intubasi" fgroup-class="col-md-4"
-                                            igroup-size="sm" />
-                                        <x-adminlte-input name="ekstubasi" label="Tgl Ekstubasi" fgroup-class="col-md-4"
-                                            igroup-size="sm" />
-
+                                            fgroup-class="col-md-4 naik_kelas" igroup-size="sm"
+                                            placeholder="Lama hari pelayanan" type="number" />
+                                        <x-adminlte-input name="lama_icu" label="Lama ICU"
+                                            fgroup-class="col-md-4 masuk_icu" igroup-size="sm"
+                                            placeholder="Lama hari ICU" type="number" />
+                                        <x-adminlte-input name="intubasi" label="Tgl Intubasi"
+                                            fgroup-class="col-md-4 masuk_icu pake_ventilator" igroup-size="sm" />
+                                        <x-adminlte-input name="ekstubasi" label="Tgl Ekstubasi"
+                                            fgroup-class="col-md-4 masuk_icu pake_ventilator" igroup-size="sm" />
                                         <x-adminlte-select name="discharge_status" label="Cara Pulang"
                                             fgroup-class="col-md-4" igroup-size="sm">
                                             <option value="1">Atas persetujuan dokter</option>
@@ -137,18 +140,18 @@
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox" id="naik_turun_kelas"
-                                                value="naik_turun_kelas">
+                                                value="1" onchange="naikKelasFunc();">
                                             <label for="naik_turun_kelas" class="custom-control-label">Naik/Turun
                                                 Kelas</label>
                                         </div>
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox" id="perawatan_icu"
-                                                value="perawatan_icu">
+                                                value="1" onchange="perawatanIcuFunc();">
                                             <label for="perawatan_icu" class="custom-control-label">Perawatan ICU</label>
                                         </div>
                                         <div class="custom-control custom-checkbox">
                                             <input class="custom-control-input" type="checkbox" id="ventilator"
-                                                value="ventilator">
+                                                value="1" onchange="pakeVentilatorFunc();">
                                             <label for="ventilator" class="custom-control-label">Ventilator ICU</label>
                                         </div>
                                         <div class="custom-control custom-checkbox">
@@ -172,11 +175,10 @@
                                             placeholder="No Claim COVID-19" igroup-size="sm" />
                                     </div>
                                 </div>
-
                             </div>
-
-                            <br><br>
+                            {{-- tekanan darah --}}
                             <div class="row">
+                                <br><br>
                                 <div class="col-md-12">
                                     <h6>Tekanan Darah</h6>
                                     <div class="row">
@@ -187,6 +189,7 @@
                                     </div>
                                 </div>
                             </div>
+                            {{-- diagnosa --}}
                             <div class="row">
                                 <div class="col-md-12">
                                     {{-- multipe diagnosa --}}
@@ -249,80 +252,67 @@
                                     <div id="newTindakan"></div>
                                 </div>
                             </div>
+                            {{-- tarif --}}
                             <div class="row">
                                 <div class="col-md-12">
                                     <br><br>
                                     <h6>Tekanan Darah</h6>
                                 </div>
                                 <div class="col-md-4">
-                                    <x-adminlte-input name="tgl_masuk" label="Prosedur Non Bedah" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Tenaga Ahli" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Radiologi" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Rehabilitasi" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Obat" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Alkes" igroup-size="sm" />
+                                    <x-adminlte-input name="prosedur_non_bedah" label="Prosedur Non Bedah"
+                                        igroup-size="sm" />
+                                    <x-adminlte-input name="tenaga_ahli" label="Tenaga Ahli" igroup-size="sm" />
+                                    <x-adminlte-input name="radiologi" label="Radiologi" igroup-size="sm" />
+                                    <x-adminlte-input name="rehabilitasi" label="Rehabilitasi" igroup-size="sm" />
+                                    <x-adminlte-input name="obat" label="Obat" igroup-size="sm" />
+                                    <x-adminlte-input name="alkes" label="Alkes" igroup-size="sm" />
                                 </div>
                                 <div class="col-md-4">
-                                    <x-adminlte-input name="tgl_masuk" label="Prosedur Bedah" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Keperawatan" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Laboratorium" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Kamar / Akomodasi" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Obat Kronis" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="BMHP" igroup-size="sm" />
+                                    <x-adminlte-input name="prosedur_bedah" label="Prosedur Bedah" igroup-size="sm" />
+                                    <x-adminlte-input name="keperawatan" label="Keperawatan" igroup-size="sm" />
+                                    <x-adminlte-input name="laboratorium" label="Laboratorium" igroup-size="sm" />
+                                    <x-adminlte-input name="kamar_akomodasi" label="Kamar / Akomodasi"
+                                        igroup-size="sm" />
+                                    <x-adminlte-input name="obat_kronis" label="Obat Kronis" igroup-size="sm" />
+                                    <x-adminlte-input name="bmhp" label="BMHP" igroup-size="sm" />
                                 </div>
                                 <div class="col-md-4">
-                                    <x-adminlte-input name="tgl_masuk" label="Konsultasi" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Penunjang" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Pelayanan Darah" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Rawat Intensif" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Obat Kemoterapi" igroup-size="sm" />
-                                    <x-adminlte-input name="tgl_masuk" label="Sewa Alat" igroup-size="sm" />
+                                    <x-adminlte-input name="konsultasi" label="Konsultasi" igroup-size="sm" />
+                                    <x-adminlte-input name="penunjang" label="Penunjang" igroup-size="sm" />
+                                    <x-adminlte-input name="pelayanan_darah" label="Pelayanan Darah" igroup-size="sm" />
+                                    <x-adminlte-input name="rawat_intensif" label="Rawat Intensif" igroup-size="sm" />
+                                    <x-adminlte-input name="obat_kemo" label="Obat Kemoterapi" igroup-size="sm" />
+                                    <x-adminlte-input name="sewa_alat" label="Sewa Alat" igroup-size="sm" />
                                 </div>
-                                <x-adminlte-input name="tgl_masuk" label="Tarif Rumah Sakit" fgroup-class="col-md-6" />
+                                <x-adminlte-input name="tarif_rs" label="Tarif Rumah Sakit" fgroup-class="col-md-6" />
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="tarif">
+                            {{-- tarif inacbg --}}
                             <div class="row">
-                                <div class="col-md-4">
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Prosedur Non Bedah" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Tenaga Ahli" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Radiologi" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Rehabilitasi" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Alkes" igroup-size="sm" />
+                                <div class="col-md-6">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">Kode</dt>
+                                        <dd class="col-sm-9">: <span id="kode_inacbg"></span></dd>
+                                        <dt class="col-sm-3">Keterangan</dt>
+                                        <dd class="col-sm-9">: <span id="description_inacbg"></span></dd>
+                                        <dt class="col-sm-3">Base Tarif</dt>
+                                        <dd class="col-sm-9">: <span id="base_tariff"></span></dd>
+                                        <dt class="col-sm-3">Tarif</dt>
+                                        <dd class="col-sm-9">: <span id="tariff"></span></dd>
+                                        <dt class="col-sm-3">Kelas</dt>
+                                        <dd class="col-sm-9">: <span id="kelas"></span></dd>
+                                        <dt class="col-sm-3">Tarif Kelas Inacbg</dt>
+                                        <dd class="col-sm-9">: <span id="tarif_inacbg"></span></dd>
+                                    </dl>
                                 </div>
-                                <div class="col-md-4">
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Prosedur Bedah" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Keperawatan" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Laboratorium" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Kamar / Akomodasi" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat Kronis" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="BMHP" igroup-size="sm" />
+                                <div class="col-md-6">
+                                    <dl class="row">
+                                        <dt class="col-sm-3">MDC</dt>
+                                        <dd class="col-sm-9">: <span id="mdc_desc"></span></dd>
+                                        <dt class="col-sm-3">DRG</dt>
+                                        <dd class="col-sm-9">: <span id="drg_desc"></span></dd>
+                                    </dl>
                                 </div>
-                                <div class="col-md-4">
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Konsultasi" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Penunjang" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Pelayanan Darah" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Rawat Intensif" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Obat Kemoterapi" igroup-size="sm" />
-                                    <x-adminlte-input readonly name="tgl_masuk" label="Sewa Alat" igroup-size="sm" />
-                                </div>
-                                <x-adminlte-input name="tgl_masuk" label="Tarif Rumah Sakit" fgroup-class="col-md-6" />
                             </div>
-                            <dl class="row">
-                                <dt class="col-sm-3">Kode</dt>
-                                <dd class="col-sm-9">: <span id="kode_inacbg"></span></dd>
-                                <dt class="col-sm-3">Keterangan</dt>
-                                <dd class="col-sm-9">: <span id="description_inacbg"></span></dd>
-                                <dt class="col-sm-3">Base Tarif</dt>
-                                <dd class="col-sm-9">: <span id="base_tariff"></span></dd>
-                                <dt class="col-sm-3">Tarif</dt>
-                                <dd class="col-sm-9">: <span id="tariff"></span></dd>
-                                <dt class="col-sm-3">Kelas</dt>
-                                <dd class="col-sm-9">: <span id="kelas"></span></dd>
-                                <dt class="col-sm-3">Tarif Kelas Inacbg</dt>
-                                <dd class="col-sm-9">: <span id="tarif_inacbg"></span></dd>
-                            </dl>
                             {{-- <x-adminlte-button theme="success" id="btnSetClaim" label="Set Claim" /> --}}
                             <x-adminlte-button theme="primary" id="btnGroupperClaim" label="Groupper Claim" />
                         </div>
@@ -339,7 +329,6 @@
             <dt class="col-sm-2">Unit</dt>
             <dd class="col-sm-10">: <span id="unitKunjungan"></span> </dd>
         </dl>
-
         <table id="tableKunjunganPasien" class="table table-sm table-hover table-bordered">
             <thead>
                 <tr>
@@ -363,6 +352,9 @@
 @section('js')
     <script>
         $(function() {
+            $(".masuk_icu").hide();
+            $(".naik_kelas").hide();
+            $(".pake_ventilator").hide();
             var table = new DataTable('#tableKunjunganPasien', {
                 info: false,
                 ordering: false,
@@ -418,9 +410,201 @@
                                             .namaPasien);
                                         $('#tgl_lahir').val(data.tglLahir);
                                         $('#gender').val(data.sex);
-                                        $.LoadingOverlay("hide");
+                                        $('#tgl_masuk').val(data.tgl_masuk);
+                                        $('#tgl_pulang').val(data
+                                            .tgl_keluar);
+                                        var urlRincian =
+                                            "{{ route('api.eclaim.rincian_biaya_pasien') }}?counter=" +
+                                            data.counter + "&norm=" + data
+                                            .no_rm;
+                                        $.ajax({
+                                            url: urlRincian,
+                                            type: "GET",
+                                            success: function(
+                                                data) {
+                                                console.log(
+                                                    data);
+                                                if (data
+                                                    .metadata
+                                                    .code == 200
+                                                ) {
+                                                    $('#prosedur_non_bedah')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .prosedur_non_bedah
+                                                        );
+                                                    $('#tenaga_ahli')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .tenaga_ahli
+                                                        );
+                                                    $('#radiologi')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .radiologi
+                                                        );
+                                                    $('#rehabilitasi')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .rehabilitasi
+                                                        );
+                                                    $('#obat')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .obat
+                                                        );
+                                                    $('#alkes')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .alkes
+                                                        );
+                                                    $('#prosedur_bedah')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .prosedur_bedah
+                                                        );
+                                                    $('#keperawatan')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .keperawatan
+                                                        );
+                                                    $('#laboratorium')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .laboratorium
+                                                        );
+                                                    $('#kamar_akomodasi')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .kamar_akomodasi
+                                                        );
+                                                    $('#obat_kronis')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .obat_kronis
+                                                        );
+                                                    $('#bmhp')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .bmhp
+                                                        );
+                                                    $('#konsultasi')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .konsultasi
+                                                        );
+                                                    $('#penunjang')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .penunjang
+                                                        );
+                                                    $('#pelayanan_darah')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .pelayanan_darah
+                                                        );
+                                                    $('#rawat_intensif')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .rawat_intensif
+                                                        );
+                                                    $('#obat_kemo')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .obat_kemo
+                                                        );
+                                                    $('#sewa_alat')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .sewa_alat
+                                                        );
+                                                    $('#tarif_rs')
+                                                        .val(
+                                                            data
+                                                            .response
+                                                            .rangkuman
+                                                            .tarif_rs
+                                                        );
+                                                    swal.fire(
+                                                        'Success',
+                                                        data
+                                                        .metadata
+                                                        .message,
+                                                        'success'
+                                                    );
+                                                } else {
+                                                    console.log(
+                                                        data
+                                                    );
+                                                    swal.fire(
+                                                        'Error',
+                                                        data
+                                                        .metadata
+                                                        .message,
+                                                        'error'
+                                                    );
+                                                }
+                                                $.LoadingOverlay(
+                                                    "hide");
+                                            },
+                                            error: function(data) {
+                                                console.log(
+                                                    data);
+                                                swal.fire(
+                                                    'Error ' +
+                                                    data
+                                                    .responseJSON
+                                                    .metadata
+                                                    .code,
+                                                    data
+                                                    .responseJSON
+                                                    .metadata
+                                                    .message,
+                                                    'error'
+                                                );
+                                                $.LoadingOverlay(
+                                                    "hide");
+                                            }
+                                        });
                                         $('#kunjunganPasien').modal('hide');
                                         $('#dataPasien').show();
+                                        $('#riwayatPasien').show();
                                     },
                                     error: function(data) {
                                         console.log(data);
@@ -428,10 +612,6 @@
 
                                     }
                                 });
-                                // $.LoadingOverlay("show");
-                                // $('#nomorsep_suratkontrol').val(nomorsep);
-                                // $('#modalSEP').modal('hide');
-                                // $.LoadingOverlay("hide");
                             });
                         } else {
                             swal.fire(
@@ -445,11 +625,6 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        // swal.fire(
-                        //     'Error ' + data.metadata.code,
-                        //     data.metadata.message,
-                        //     'error'
-                        // );
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -492,7 +667,6 @@
                             );
                         }
                         $.LoadingOverlay("hide");
-                        $('#riwayatPasien').show();
                     },
                     error: function(data) {
                         console.log(data);
@@ -550,6 +724,130 @@
 
                         }
                         $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        swal.fire(
+                            'Error ' + data.responseJSON.metadata.code,
+                            data.responseJSON.metadata.message,
+                            'error'
+                        );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
+            $('#btnGroupperClaim').click(function() {
+                $.LoadingOverlay("show");
+                // setklaim
+                var nomor_sep = $('#nomor_sep').val();
+                var nomor_kartu = $('#nomor_kartu').val();
+                var tgl_masuk = $('#tgl_masuk').val();
+                var tgl_pulang = $('#tgl_pulang').val();
+                var cara_masuk = $('#cara_masuk').val();
+                var jenis_rawat = $('#jenis_rawat').val();
+                var kelas_rawat = $('#kelas_rawat').val();
+                var discharge_status = $('#discharge_status').val();
+                var diagnosa = $('select[name^=diagnosa]').find(":selected").map(function(idx, elem) {
+                    return $(elem).val();
+                }).get();
+                var procedure = $('select[name^=procedure]').find(":selected").map(function(idx, elem) {
+                    return $(elem).val();
+                }).get();
+                var dataKPO = {
+                    nomor_sep: nomor_sep,
+                    nomor_kartu: nomor_kartu,
+                    tgl_masuk: tgl_masuk,
+                    tgl_pulang: tgl_pulang,
+                    cara_masuk: cara_masuk,
+                    kelas_rawat: kelas_rawat,
+                    discharge_status: discharge_status,
+                    diagnosa: diagnosa,
+                    procedure: procedure,
+                }
+                var urlGroupper = "{{ route('api.eclaim.set_claim_ranap') }}";
+                $.ajax({
+                    data: dataKPO,
+                    url: urlGroupper,
+                    type: "POST",
+                    success: function(data) {
+                        console.log(data);
+                        if (data.metadata.code == 200) {
+                            // grouper
+                            var nomor_sep = $('#nomor_sep').val();
+                            var dataInput = {
+                                nomor_sep: nomor_sep,
+                            }
+                            var url = "{{ route('api.eclaim.grouper') }}";
+                            $.ajax({
+                                data: dataInput,
+                                url: url,
+                                type: "POST",
+                                success: function(data) {
+                                    console.log(data);
+                                    if (data.metadata.code == 200) {
+                                        const rupiah = (number) => {
+                                            return new Intl.NumberFormat(
+                                                "id-ID", {
+                                                    style: "currency",
+                                                    currency: "IDR"
+                                                }).format(number);
+                                        }
+                                        $('#kode_inacbg').html(data.response.cbg
+                                            .code);
+                                        $('#description_inacbg').html(data.response
+                                            .cbg.description);
+                                        $('#base_tariff').html(rupiah(data.response
+                                            .cbg
+                                            .base_tariff));
+                                        $('#tariff').html(rupiah(data.response.cbg
+                                            .tariff));
+
+                                        $('#kelas').html(data.response.kelas);
+                                        var tarif_kelas = data.tarif_alt;
+                                        var tarif_kelass = tarif_kelas.filter(x => x
+                                            .kelas === data.response.kelas)
+                                        $('#tarif_inacbg').html(rupiah(
+                                            tarif_kelass[0].tarif_inacbg));
+                                        $('#mdc_desc').html(data.response_inagrouper
+                                            .mdc_description);
+                                        $('#drg_desc').html(data.response_inagrouper
+                                            .drg_description);
+                                        swal.fire(
+                                            'Success',
+                                            data.metadata.message,
+                                            'success'
+                                        );
+                                    } else {
+                                        console.log(data);
+                                        swal.fire(
+                                            'Error',
+                                            data.metadata.message,
+                                            'error'
+                                        );
+                                        $.LoadingOverlay("hide");
+                                    }
+                                    $.LoadingOverlay("hide");
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                    swal.fire(
+                                        'Error ' + data.responseJSON.metadata
+                                        .code,
+                                        data.responseJSON.metadata.message,
+                                        'error'
+                                    );
+                                    $.LoadingOverlay("hide");
+                                }
+                            });
+                        } else {
+                            console.log(data);
+                            swal.fire(
+                                'Error',
+                                data.metadata.message,
+                                'error'
+                            );
+                            $.LoadingOverlay("hide");
+                        }
                     },
                     error: function(data) {
                         console.log(data);
@@ -705,5 +1003,25 @@
         $("body").on("click", "#deleteRowTindakan", function() {
             $(this).parents("#row").remove();
         })
+    </script>
+    <script type="text/javascript">
+        function naikKelasFunc() {
+            if ($('#naik_turun_kelas').is(":checked"))
+                $(".naik_kelas").show();
+            else
+                $(".naik_kelas").hide();
+        }
+        function perawatanIcuFunc() {
+            if ($('#perawatan_icu').is(":checked"))
+                $(".masuk_icu").show();
+            else
+                $(".masuk_icu").hide();
+        }
+        function pakeVentilatorFunc() {
+            if ($('#ventilator').is(":checked"))
+                $(".pake_ventilator").show();
+            else
+                $(".pake_ventilator").hide();
+        }
     </script>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
@@ -401,11 +402,9 @@ class InacbgController extends APIController
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required|date",
             "cara_masuk" =>  "required",
-            "jenis_rawat" =>  "required",
             "kelas_rawat" =>  "required",
-            "discharge_status" =>  "required",
             "diagnosa" =>  "required",
-            // "procedure" =>  "required",
+            "procedure" =>  "required",
         ]);
 
         if ($validator->fails()) {
@@ -423,6 +422,7 @@ class InacbgController extends APIController
         for ($i = 1; $i  <= $jumlah_diag; $i++) {
             $icd9 = $icd9 . '#' . $request->procedure[$i];
         }
+
 
         $request_data = [
             "metadata" => [
@@ -457,7 +457,7 @@ class InacbgController extends APIController
                 "sistole" => 120, #detak tensi
                 "diastole" => 70, #yg dbawah
                 "discharge_status" => "1", #kluar
-                "diagnosa" => $request->diagnosa,
+                "diagnosa" => $icd10,
                 "procedure" => "85.51",
                 "diagnosa_inagrouper" => $request->diagnosa_inagrouper,
                 "procedure_inagrouper" => $request->procedure_inagrouper,
@@ -751,8 +751,32 @@ class InacbgController extends APIController
     }
     public function rincian_biaya_pasien(Request $request)
     {
-        $response = DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')");
-
-        dd($response);
+        $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
+        // dd();
+        $data = [
+            // "rincian" => $response,
+            "rangkuman" => [
+                "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
+                "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
+                "prosedur_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE BEDAH")->sum("GRANTOTAL_LAYANAN")),
+                "tenaga_ahli" => round($response->where('nama_group_vclaim', "TENAGA AHLI")->sum("GRANTOTAL_LAYANAN")),
+                "radiologi" => round($response->where('nama_group_vclaim', "RADIOLOGI")->sum("GRANTOTAL_LAYANAN")),
+                "laboratorium" => round($response->where('nama_group_vclaim', "LABORATORIUM")->sum("GRANTOTAL_LAYANAN")),
+                "rehabilitasi" => round($response->where('nama_group_vclaim', "REHABILITASI MEDIK")->sum("GRANTOTAL_LAYANAN")),
+                "sewa_alat" => round($response->where('nama_group_vclaim', "SEWA ALAT")->sum("GRANTOTAL_LAYANAN")),
+                "keperawatan" => round($response->where('nama_group_vclaim', "KEPERAWATAN")->sum("GRANTOTAL_LAYANAN")),
+                "kamar_akomodasi" => round($response->where('nama_group_vclaim', "KAMAR/AKOMODASI")->sum("GRANTOTAL_LAYANAN")),
+                "penunjang" => round($response->where('nama_group_vclaim', "PENUNJANG MEDIS")->sum("GRANTOTAL_LAYANAN")),
+                "konsultasi" => round($response->where('nama_group_vclaim', "KONSULTASI")->sum("GRANTOTAL_LAYANAN")),
+                "pelayanan_darah" => round($response->where('nama_group_vclaim', "PELAYANAN DARAH")->sum("GRANTOTAL_LAYANAN")),
+                "rawat_intensif" => round($response->where('nama_group_vclaim', "RAWAT INTENSIF")->sum("GRANTOTAL_LAYANAN")),
+                "obat" => round($response->where('nama_group_vclaim', "OBAT")->sum("GRANTOTAL_LAYANAN")),
+                "alkes" => round($response->where('nama_group_vclaim', "ALKES")->sum("GRANTOTAL_LAYANAN")),
+                "bmhp" => round($response->where('nama_group_vclaim', "BMHP")->sum("GRANTOTAL_LAYANAN")),
+                "obat_kronis" => round($response->where('nama_group_vclaim', "OBAT KRONIS")->sum("GRANTOTAL_LAYANAN")),
+                "obat_kemo" => round($response->where('nama_group_vclaim', "OBAT KEMOTERAPI")->sum("GRANTOTAL_LAYANAN")),
+            ],
+        ];
+        return $this->sendResponse($data, 200);
     }
 }

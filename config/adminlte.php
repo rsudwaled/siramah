@@ -484,14 +484,14 @@ return [
                     'can' => 'farmasi',
                 ],
                 [
-                    'text' => 'E-KPO Rawat Jalan',
+                    'text' => 'KMKB Rawat Jalan',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpo',
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
                 ],
                 [
-                    'text' => 'E-KPO Rawat Inap',
+                    'text' => 'KMKB Rawat Inap',
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpoRanap',
                     'shift'   => 'ml-2',
