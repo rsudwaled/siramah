@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kunjungan;
+use App\Models\PenjaminSimrs;
 use App\Models\Poliklinik;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -172,5 +175,28 @@ class PoliklinikController extends BaseController
     {
         $poli = Poliklinik::where('status', 1)->get();
         return $this->sendResponse($poli, 200);
+    }
+    public function diagnosaRawatJalan(Request $request)
+    {
+        // $response = null;
+        $kunjungans = null;
+        if (isset($request->tanggal) && isset($request->kodepoli)) {
+            $poli = Unit::firstWhere('KDPOLI', $request->kodepoli);
+            $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+                ->where('kode_unit', $poli->kode_unit)
+                ->with(['unit', 'pasien', 'assesmen_dokter'])
+                ->get();
+            // $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
+        }
+        $unit = Unit::where('KDPOLI', "!=", null)->where('KDPOLI', "!=", "")->get();
+        // $penjaminrs = PenjaminSimrs::get();
+        // $response = collect($response);
+        return view('simrs.rekammedis.diagnosa_rawat_jalan', [
+            'kunjungans' => $kunjungans,
+            'request' => $request,
+            // 'response' => $response,
+            // 'penjaminrs' => $penjaminrs,
+            'unit' => $unit,
+        ]);
     }
 }

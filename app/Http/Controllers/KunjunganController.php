@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class KunjunganController extends Controller
+class KunjunganController extends APIController
 {
     public function index(Request $request)
     {
@@ -39,12 +39,15 @@ class KunjunganController extends Controller
         $data['namaPasien'] = $kunjungan->pasien->nama_px;
         $data['kodePoli'] = $kunjungan->unit->KDPOLI;
         $data['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
-        return $this->sendResponse('OK', $data, 200);
+        return $this->sendResponse($data, 200);
     }
     public function edit($kodekunjungan)
     {
         $kunjungan = Kunjungan::with(['pasien'])->firstWhere('kode_kunjungan', $kodekunjungan);
         $kunjungan['namaPasien'] = $kunjungan->pasien->nama_px;
+        $kunjungan['tglLahir'] = Carbon::parse($kunjungan->pasien->tgl_lahir)->format('Y-m-d');
+        $kunjungan['sex'] = $kunjungan->pasien->jenis_kelamin;
+        $kunjungan['nomorkartu'] = $kunjungan->pasien->no_Bpjs;
         $kunjungan['kodePoli'] = $kunjungan->unit->KDPOLI;
         $kunjungan['kodeDokter'] = $kunjungan->dokter ? (string) $kunjungan->dokter->kode_dokter_jkn : null;
         $kunjungan['noSEP'] = $kunjungan->no_sep;
@@ -93,5 +96,14 @@ class KunjunganController extends Controller
             'penjaminrs' => $penjaminrs,
             'unit' => $unit,
         ]);
+    }
+    public function kunjunganRanap(Request $request)
+    {
+        $kunjungans = Kunjungan::where('kode_unit', $request->unit)
+            ->where('status_kunjungan', 1)
+            ->with(['pasien', 'unit',  'dokter'])
+            ->whereHas('pasien')
+            ->get(['kode_kunjungan', 'tgl_masuk', 'no_rm', 'kode_unit',  'kode_paramedis', 'no_sep']);
+        return $this->sendResponse($kunjungans, 200);
     }
 }

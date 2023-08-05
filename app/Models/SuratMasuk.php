@@ -12,11 +12,21 @@ class SuratMasuk extends Model
     protected $table = 'ts_surat_masuk';
     protected $primaryKey = 'id_surat_masuk';
 
-    protected $guarded = ['id'];
+    protected $guarded = ['id_surat_masuk'];
 
 
     public function lampiran()
     {
         return $this->hasOne(SuratLampiran::class, 'surat_id', 'id_surat_masuk');
+    }
+
+    public function setTindakanAttribute($value)
+    {
+        $this->attributes['tindakan'] = json_encode($value);
+    }
+
+    public function getTindakanAttribute($value)
+    {
+        return $this->attributes['tindakan'] = collect(json_decode($value));
     }
 }

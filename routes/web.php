@@ -22,6 +22,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RujukanController;
 use App\Http\Controllers\SocialiteController;
 use App\Http\Controllers\SuratKontrolController;
+use App\Http\Controllers\SuratLampiranController;
 use App\Http\Controllers\SuratMasukController;
 use App\Http\Controllers\ThermalPrintController;
 use App\Http\Controllers\UnitController;
@@ -153,10 +154,16 @@ Route::middleware('auth')->group(function () {
     Route::get('orderFarmasi', [FarmasiController::class, 'orderFarmasi'])->name('orderFarmasi');
     Route::get('cetakOrderFarmasi', [FarmasiController::class, 'cetakOrderFarmasi'])->name('cetakOrderFarmasi');
     Route::get('selesaiOrderFarmasi', [FarmasiController::class, 'selesaiOrderFarmasi'])->name('selesaiOrderFarmasi');
-
     Route::get('getOrderObat', [FarmasiController::class, 'getOrderObat'])->name('getOrderObat');
+    Route::get('getOrderResep', [FarmasiController::class, 'getOrderResep'])->name('getOrderResep');
     Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
     Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
+
+    Route::get('kpoRanap', [KPOController::class, 'kpoRanap'])->name('kpoRanap');
+    Route::get('kunjunganRanap', [KunjunganController::class, 'kunjunganRanap'])->name('kunjunganRanap');
+
+    // rekammedis
+    Route::get('diagnosaRawatJalan', [PoliklinikController::class, 'diagnosaRawatJalan'])->name('diagnosaRawatJalan');
     // antrian bpjs
     Route::get('statusAntrianBpjs', [AntrianController::class, 'statusAntrianBpjs'])->name('statusAntrianBpjs');
     Route::get('poliklikAntrianBpjs', [PoliklinikController::class, 'poliklikAntrianBpjs'])->name('poliklikAntrianBpjs');

@@ -488,7 +488,14 @@ return [
                     'icon'    => 'fas fa-pills',
                     'url'  => 'kpo',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'E-KPO Rawat Inap',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpoRanap',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
                 ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',
@@ -712,218 +719,8 @@ return [
                     'shift'   => 'ml-2',
                     'url'  => 'dashboardBulanAntrianPoliklinik',
                 ],
-
-                // Formulir RL
-                [
-                    'text' => 'Formulir RL 1',
-                    'icon'    => 'fas fa-chart-bar',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'submenu' => [
-                        [
-                            'text' => 'Formulir RL 1',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 1.1',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 1.2',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 1.3',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'Formulir RL 2',
-                    'icon'    => 'fas fa-disease',
-                    'url'  => 'rekammedis/kunjungan_poliklinik',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Formulir RL 3',
-                    'icon'    => 'fas fa-chart-bar',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'submenu' => [
-                        [
-                            'text' => 'Formulir RL 3',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.1',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.2',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.3',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.4',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.5',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.6',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.7',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.8',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.9',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 3.10',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'Formulir RL 4',
-                    'icon'    => 'fas fa-chart-bar',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'submenu' => [
-                        [
-                            'text' => 'RL4A Rawat Inap',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL4A',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'RL4A Rawat Inap Kecelakaan',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL4AK',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'RL4B Rawat Jalan',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL4B',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'RL4B Rawat Jalan Kecelakaan',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL4BK',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                    ]
-                ],
-                [
-                    'text' => 'Formulir RL 5',
-                    'icon'    => 'fas fa-chart-bar',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'submenu' => [
-                        [
-                            'text' => 'Formulir RL 5.1',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 5.2',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 5.3',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL5_3',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 5.4',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL5_4',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
-                            'text' => 'Formulir RL 5.5',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL5_5',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                    ]
-                ],
             ],
         ],
-
         // BAGIAN UMUM
         [
             'text'    => 'Bagian Umum',
@@ -942,6 +739,7 @@ return [
                     'icon'    => 'fas fa-file-signature',
                     'url'  => 'disposisi',
                     'shift'   => 'ml-2',
+                    'active'  => ['disposisi', 'disposisi/create', 'regex:@^disposisi(\/[0-9]+)?+$@', 'regex:@^disposisi(\/[0-9]+)?\/edit+$@',],
                     'can' =>  ['bagian-umum', 'direktur'],
                 ],
                 [

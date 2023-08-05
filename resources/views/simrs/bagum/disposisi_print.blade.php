@@ -100,22 +100,30 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Untuk ditindaklanjuti
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Untuk ditindaklanjuti'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Untuk ditindaklanjuti
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Untuk ditindaklanjuti
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Proses sesuai ketentuan / peraturan yang berlaku
-                                            {{-- <label>
-                                                Proses sesuai ketentuan / peraturan yang berlaku
-                                            </label> --}}
+                                            @if ($surat->tindakan->contains('Proses sesuai kemampuan / peraturan yang berlaku'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Proses sesuai kemampuan / peraturan yang berlaku
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
+                                                Proses sesuai kemampuan / peraturan yang berlaku
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -124,22 +132,30 @@
                                         .........................................................</td>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Koordinasikan / konfirmasi dengan ybs / instansi terkait
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Koordinasikan / konfirmasi dengan ybs / instansi terkait'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Koordinasikan / konfirmasi dengan ybs / instansi terkait
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Koordinasikan / konfirmasi dengan ybs / instansi terkait
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Untuk dibantu / difasilitasi / dipenuhi sesuai kebutuhan
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -148,22 +164,30 @@
                                         .........................................................</td>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Pelajari / telaah / sarannya
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Pelajari / telaah / sarannya'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Pelajari / telaah / sarannya
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Pelajari / telaah / sarannya
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Wakili / hadiri / terima / laporkan hasilnya
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Wakili / hadiri / terima / laporkan hasilnya'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Wakili / hadiri / terima / laporkan hasilnya
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Wakili / hadiri / terima / laporkan hasilnya
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -172,22 +196,30 @@
                                         .........................................................</td>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Agendakan / persiapkan / koordinasikan
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Agendakan / persiapkan / koordinasikan'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Agendakan / persiapkan / koordinasikan
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Agendakan / persiapkan / koordinasikan
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Jadwalkan ingatkan waktunya
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Jadwalkan ingatkan waktunya'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Jadwalkan ingatkan waktunya
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Jadwalkan ingatkan waktunya
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -198,22 +230,30 @@
                                     </td>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Siapkan pointer / sambutan / bahan
-                                            {{-- <label>
+                                            @if ($surat->tindakan->contains('Siapkan pointer / sambutan / bahan'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Siapkan pointer / sambutan / bahan
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
                                                 Siapkan pointer / sambutan / bahan
-                                            </label> --}}
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <div>
-                                            <input type="checkbox">
-                                            Simpan / Arsipkan
-                                            {{-- <label>
-                                                Siapkan pointer / sambutan / bahan
-                                            </label> --}}
+                                            @if ($surat->tindakan->contains('Simpan / arsipkan'))
+                                                <input type="checkbox" checked>
+                                                <b>
+                                                    Simpan / arsipkan
+                                                </b>
+                                            @else
+                                                <input type="checkbox">
+                                                Simpan / arsipkan
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>

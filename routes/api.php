@@ -57,7 +57,7 @@ Route::prefix('vclaim')->group(function () {
     Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('suratkontrol_delete');
     Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
     Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
-    Route::get('suratkontrol_sep', [VclaimController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
+    Route::get('suratkontrol_sep', [SuratKontrolController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
     Route::get('suratkontrol_nomor', [VclaimController::class, 'suratkontrol_nomor'])->name('suratkontrol_nomor');
     Route::get('suratkontrol_peserta', [VclaimController::class, 'suratkontrol_peserta'])->name('suratkontrol_peserta');
     Route::get('suratkontrol_tanggal', [VclaimController::class, 'suratkontrol_tanggal'])->name('suratkontrol_tanggal');
@@ -191,6 +191,7 @@ Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::post('new_claim', [InacbgController::class, 'new_claim'])->name('new_claim');
     Route::post('set_claim', [InacbgController::class, 'set_claim'])->name('set_claim');
     Route::post('set_claim_rajal', [InacbgController::class, 'set_claim_rajal'])->name('set_claim_rajal');
+    Route::post('set_claim_ranap', [InacbgController::class, 'set_claim_ranap'])->name('set_claim_ranap');
     Route::post('grouper', [InacbgController::class, 'grouper'])->name('grouper');
     Route::post('get_claim_data', [InacbgController::class, 'get_claim_data'])->name('get_claim_data');
     Route::post('get_claim_status', [InacbgController::class, 'get_claim_status'])->name('get_claim_status');

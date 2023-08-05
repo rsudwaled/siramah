@@ -48,11 +48,10 @@ class WhatsappController extends Controller
     {
         $request->validate([
             'message' => 'required',
-            'number' => 'required',
         ]);
         $url = env('WHATASAPP_URL') . "send-message-group";
         $response = Http::post($url, [
-            'number' => $request->number,
+            'group' => $request->number,
             'message' => $request->message,
             'username' => 'rsudwaled',
         ]);
@@ -197,9 +196,9 @@ class WhatsappController extends Controller
                 }
                 // default
                 else {
-                    $request['fileurl'] = asset('rsudwaled/daftar.jpg');
-                    $request['caption'] = "Web SIRAMAH-RS Waled";
-                    $this->send_image($request);
+                    // $request['fileurl'] = asset('rsudwaled/daftar.jpg');
+                    // $request['caption'] = "Web SIRAMAH-RS Waled";
+                    // $this->send_image($request);
                     $request['message'] = "Layanan pendaftaran rawat jalan RSUD Waled dapat melalui dua aplikasi beriku \n\n1. Web SIRAMAH-RS Waled : https://siramah.rsudwaled.id\n\n2. Aplikasi JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
                     return $this->send_message($request);
                     break;

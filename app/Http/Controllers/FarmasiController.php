@@ -16,14 +16,14 @@ class FarmasiController extends APIController
     {
         $orders = null;
         if ($request->depo) {
-            $orders = OrderObatHeader::with(['kunjungan','pasien','unit','asal_unit','dokter','penjamin_simrs','kunjungan.antrian'])->whereDate('tgl_entry', $request->tanggal)
+            $orders = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])->whereDate('tgl_entry', $request->tanggal)
                 ->where('status_order', '!=', 0)
                 ->where('kode_unit', $request->depo)
                 ->where('unit_pengirim', '!=', '1016')
                 ->get();
         }
         if ($request->depo == 4002) {
-            $orders_yasmin = OrderObatHeader::with(['kunjungan','pasien','unit','asal_unit','dokter','penjamin_simrs','kunjungan.antrian'])->whereDate('tgl_entry',  $request->tanggal)
+            $orders_yasmin = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])->whereDate('tgl_entry',  $request->tanggal)
                 ->where('status_order', '!=', 0)
                 ->where('unit_pengirim', '1016')
                 ->get();
@@ -157,15 +157,20 @@ class FarmasiController extends APIController
     public function getOrderObat(Request $request)
     {
         // $order = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_02 (25)'));
-        // dd($request->all());
-        if ($request->depo) {
+        if ($request->depo == 4008) {
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
                 ->where('status_order', 1)
                 ->where('kode_unit', $request->depo)
                 ->where('unit_pengirim', '!=', '1016')
                 ->first();
+            $connector = env('PRINTER_FARMASI');
         }
         if ($request->depo == 4002) {
+            $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
+            ->where('status_order', 1)
+            ->where('kode_unit', $request->depo)
+            ->where('unit_pengirim', '!=', '1016')
+            ->first();
             if (empty($order)) {
                 $order_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
                     ->where('status_order', 1)
@@ -173,8 +178,12 @@ class FarmasiController extends APIController
                     ->first();
                 $order = $order_yasmin;
             }
+            $connector = env('PRINTER_FARMASI_DP1');
         }
-
+        // if ($order->kode_unit == 4002) {
+        // }
+        // if ($order->kode_unit == 4008) {
+        // }
         $i = 1;
         // dd($order->detail->first()->barang);
         if ($order) {
@@ -183,12 +192,7 @@ class FarmasiController extends APIController
                 ->get()->count();
             // dd($order->pasien->desas);
             try {
-                if ($order->kode_unit == 4002) {
-                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI_DP1'));
-                }
-                if ($order->kode_unit == 4008) {
-                    $connector = new WindowsPrintConnector(env('PRINTER_FARMASI'));
-                }
+                $connector = new WindowsPrintConnector($connector);
                 $printer = new Printer($connector);
                 $printer->setJustification(Printer::JUSTIFY_CENTER);
                 $printer->text("RSUD Waled Kab. Cirebon\n");
@@ -259,5 +263,38 @@ class FarmasiController extends APIController
             'status_order' => 1
         ]);
         return redirect()->back();
+    }
+    public function getOrderResep(Request $request)
+    {
+
+        $order = OrderObatHeader::find($request->id);
+        if ($order) {
+            $resep = null;
+            foreach ($order->detail as  $obat) {
+                $obat = [
+                    "kode_barang" => $obat->kode_barang,
+                    "jumlah_layanan" => $obat->jumlah_layanan,
+                    "satuan_barang" => $obat->satuan_barang,
+                    "aturan_pakai" => $obat->aturan_pakai,
+                ];
+
+                $resep[] = $obat;
+            }
+            $data = [
+                "kode_layanan_header" => $order->kode_layanan_header,
+                "no_rm" => $order->no_rm,
+                "nama_px" => $order->pasien->nama_px,
+                "tgl_lahir" => $order->pasien->tgl_lahir,
+                "no_sep" => $order->kunjungan->no_sep,
+                "diagx" => $order->kunjungan->diagx,
+                "nama_unit" =>  $order->asal_unit->nama_unit,
+                "nama_paramedis" =>  $order->dokter->nama_paramedis,
+                "sip_dr" =>  $order->dokter->sip_dr,
+                "reseps" =>    $resep,
+            ];
+            return $this->sendResponse($data, 200);
+        } else {
+            # code...
+        }
     }
 }

@@ -9,9 +9,10 @@ use App\Models\SuratKontrol;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class SuratKontrolController extends Controller
+class SuratKontrolController extends APIController
 {
     public function suratKontrolBpjs(Request $request)
     {
@@ -180,6 +181,27 @@ class SuratKontrolController extends Controller
             ]));
         } else {
             return $response->metadata->message;
+        }
+    }
+    public function suratkontrol_sep(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "nomorkartu" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $request['tanggalAkhir'] = now()->format('Y-m-d');
+        $request['tanggalMulai'] = now()->subDays(90)->format('Y-m-d');
+        $vclaim = new VclaimController();
+        $response = $vclaim->monitoring_pelayanan_peserta($request);
+
+        if ($response->metadata->code == 200) {
+            $data = $response->response->histori;
+            return $this->sendResponse($data, 200);
+        }else{
+            return $this->sendError($response->metadate->message);
+
         }
     }
 }

@@ -18,14 +18,13 @@ class RoleSeeder extends Seeder
         $roles = [
             'Pasien',
             'Admin',
-
             'Pendaftaran',
             'Kasir',
             'Poliklinik',
             'Perawat',
             'Dokter',
             'Farmasi',
-
+            'Casemix',
             'Direktur',
             'Rekam Medis',
             'Pelayanan Medis',

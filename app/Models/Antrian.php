@@ -11,6 +11,7 @@ class Antrian extends Model
     protected $connection = 'mysql2';
     protected $table = 'jkn_antrian';
     protected $guarded = ["id"];
+
     public function pasien()
     {
         return $this->belongsTo(Pasien::class, 'nik', 'nik_bpjs');

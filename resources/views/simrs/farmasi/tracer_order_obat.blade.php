@@ -85,6 +85,8 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <button class="btnObat btn btn-xs btn-primary" data-id="{{ $order->id }}"><i
+                                            class="fas fa-info-circle"></i> Lihat</button>
                                     <a href="{{ route('cetakUlangOrderObat') }}?kode={{ $order->kode_layanan_header }}"
                                         class="btn btn-xs btn-warning"><i class="fas fa-sync"></i>Cetak
                                         Ulang</a>
@@ -94,8 +96,48 @@
                     </x-adminlte-datatable>
                     <p id="demo"></p>
                 </x-adminlte-card>
+                <x-adminlte-modal id="modalObat" title="Order Obat Pasien" size="lg" theme="success"
+                    icon="fas fa-user-plus">
+                    <div id="printMe">
+                        <dl class="row">
+                            <dt class="col-sm-3">Kode Order</dt>
+                            <dd class="col-sm-8">: <span id="kodelayananheader"></span></dd>
+                            <dt class="col-sm-3">Nomor RM</dt>
+                            <dd class="col-sm-8">: <span id="nomorrm"></span></dd>
+                            <dt class="col-sm-3">Nama Pasien</dt>
+                            <dd class="col-sm-8">: <span id="namapasien"></span></dd>
+                            <dt class="col-sm-3">Tgl Lahir</dt>
+                            <dd class="col-sm-8">: <span id="tgllahir"></span></dd>
+                            <dt class="col-sm-3">Poliklinik </dt>
+                            <dd class="col-sm-8">: <span id="namaunit"></span></dd>
+                            <dt class="col-sm-3">Dokter </dt>
+                            <dd class="col-sm-8">: <span id="namadokter"></span></dd>
+                            <dt class="col-sm-3">SIP Dokter </dt>
+                            <dd class="col-sm-8">: <span id="sipdokter"></span></dd>
+                            <dt class="col-sm-3">SEP </dt>
+                            <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
+                        </dl>
+                        <table id="tableResep" class="table table-sm table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>kode_barang</th>
+                                    <th>jumlah_layanan</th>
+                                    <th>aturan_pakai</th>
+                                    <th>satuan_barang</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <x-slot name="footerSlot">
+                        <button class="btn btn-success" onclick="printDiv('printMe')">Print<i class="fas fa-print"></i>
+                            Print Laporan</button>
+                        <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
+                    </x-slot>
+                    </form>
+                </x-adminlte-modal>
             @endif
-
         </div>
     </div>
 @stop
@@ -105,6 +147,14 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('js')
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            var originalContents = document.body.innerHTML;
+            tampilan_print = document.body.innerHTML = printContents;
+            setTimeout('window.addEventListener("load", window.print());', 1000);
+        }
+    </script>
     <script>
         $(document).ready(function() {
             url = "{{ route('getOrderObat') }}";
@@ -140,6 +190,67 @@
             } else {
 
             }
+        });
+        $('.btnObat').click(function() {
+            var orderid = $(this).data('id');
+            $.LoadingOverlay("show");
+            var table = $('#tableResep').DataTable();
+            table.rows().remove().draw();
+            var url = "{{ route('getOrderResep') }}?id=" + orderid;
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: 'json',
+                success: function(data) {
+                    if (data.metadata.code == 200) {
+                        console.log(data);
+                        $('#kodelayananheader').html(data.response.kode_layanan_header);
+                        $('#nomorrm').html(data.response.no_rm);
+                        $('#namapasien').html(data.response.nama_px);
+                        $('#tgllahir').html(data.response.tgl_lahir);
+                        $('#namadokter').html(data.response.nama_paramedis);
+                        $('#sipdokter').html(data.response.sip_dr);
+                        $('#namaunit').html(data.response.nama_unit);
+                        $('#nomorsep').html(data.response.no_sep);
+
+
+                        $.each(data.response.reseps, function(key, value) {
+                            console.log(value);
+                            table.row.add([
+                                value.kode_barang,
+                                value.jumlah_layanan,
+                                value.aturan_pakai,
+                                value.satuan_barang,
+                            ]).draw(false);
+                        });
+                        // $('.btnPilihSEP').click(function() {
+                        //     var nomorsep = $(this).data('id');
+                        //     $.LoadingOverlay("show");
+                        //     $('#nomorsep_suratkontrol').val(nomorsep);
+                        //     $('#modalSEP').modal('hide');
+                        //     $.LoadingOverlay("hide");
+                        // });
+                    } else {
+                        swal.fire(
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                    $('#modalObat').modal('show');
+                    $.LoadingOverlay("hide");
+                },
+                error: function(data) {
+                    console.log(data);
+                    // swal.fire(
+                    //     'Error ' + data.metadata.code,
+                    //     data.metadata.message,
+                    //     'error'
+                    // );
+                    $.LoadingOverlay("hide");
+                }
+            });
+
         });
     </script>
 @endsection
