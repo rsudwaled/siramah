@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
-@stop
+@endsection
 
 @section('classes_body', $layoutHelper->makeBodyClasses())
 

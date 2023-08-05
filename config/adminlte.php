@@ -615,6 +615,14 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'CPPT',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'cppt',
+                    'shift'   => 'ml-2',
+                    'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Laporan Index',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',
@@ -623,7 +631,42 @@ return [
                         [
                             'text' => 'Index Penyakit Rawat Jalan',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'index_penyakit_rajal',
+                            'url'  => 'LaporanPenyakitRawatJalan',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Rawat Jalan (Penelitian)',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatJalanbyYears',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Penyakit Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatInap',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Index Rawat Inap (Penelitian)',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatInapbyYears',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Diagnosa Survailans Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanDiagnosaSurvailansInap',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Diagnosa Survailans Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanDiagnosaSurvailansRawatJalan',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -663,33 +706,6 @@ return [
                     'url'  => 'tindakan',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Capaian Antrian Pertanggal',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'dashboardTanggalAntrianPoliklinik',
-                ],
-                [
-                    'text' => 'Capaian Antrian Perbulan',
-                    'icon'    => 'fas fa-chart-line',
-                    'shift'   => 'ml-2',
-                    'url'  => 'dashboardBulanAntrianPoliklinik',
-                ],
-            ],
-        ],
-        // CASEMIX
-        [
-            'text'    => 'Aplikasi Casemix',
-            'icon'    => 'fas fa-file-medical',
-            'can' => 'casemix',
-            'submenu' => [
-                [
-                    'text' => 'Diagnosa Rawat Jalan',
-                    'icon'    => 'fas fa-diagnoses',
-                    'url'  => 'diagnosaRawatJalan',
-                    'shift'   => 'ml-2',
-                    'can' => 'casemix',
                 ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',

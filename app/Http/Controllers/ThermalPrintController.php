@@ -21,6 +21,7 @@ class ThermalPrintController extends Controller
     }
     public function testThermalPrinter(Request $request)
     {
+        $data = "TOKO ALFAMART";
         try {
             $connector = new WindowsPrintConnector($request->printer_connector);
             // $connector = new WindowsPrintConnector("EPSON TM-T82X Receipt");
@@ -31,7 +32,7 @@ class ThermalPrintController extends Controller
             $printer->barcode('BARCODE');
             $printer->qrCode('QRCODE');
             $printer->setEmphasis(true);
-            $printer->text("setEmphasis true\n");
+            $printer->text($data."\n");
             $printer->setEmphasis(false);
             $printer->text("setEmphasis false\n");
             $printer->setFont(2);
