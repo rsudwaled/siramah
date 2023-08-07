@@ -400,30 +400,26 @@ class InacbgController extends APIController
         $validator = Validator::make(request()->all(), [
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
-            "tgl_masuk" =>  "required|date",
+            "tgl_masuk" =>  "required",
+            "tgl_pulang" =>  "required",
             "cara_masuk" =>  "required",
             "kelas_rawat" =>  "required",
             "diagnosa" =>  "required",
             "procedure" =>  "required",
         ]);
-
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
         }
-
         $icd10 = $request->diagnosa[0];
         $jumlah_diag = count($request->diagnosa) - 1;
         for ($i = 1; $i  <= $jumlah_diag; $i++) {
             $icd10 = $icd10 . '#' . $request->diagnosa[$i];
         }
-
         $icd9 = $request->procedure[0];
         $jumlah_diag = count($request->procedure) - 1;
         for ($i = 1; $i  <= $jumlah_diag; $i++) {
             $icd9 = $icd9 . '#' . $request->procedure[$i];
         }
-
-
         $request_data = [
             "metadata" => [
                 "method" => "set_claim_data",
@@ -435,7 +431,7 @@ class InacbgController extends APIController
                 "nomor_kartu" => $request->nomor_kartu,
                 "tgl_masuk" => $request->tgl_masuk,
                 "tgl_pulang" => $request->tgl_pulang,
-                "cara_masuk" => "inp", #isi
+                "cara_masuk" => $request->cara_masuk, #isi
                 "jenis_rawat" => 1, #inap, jalan, igd
                 "kelas_rawat" => $request->kelas_rawat, #kelas rawat
                 "adl_sub_acute" => "0",
@@ -456,30 +452,30 @@ class InacbgController extends APIController
                 "birth_weight" => "0", #berat bayi
                 "sistole" => 120, #detak tensi
                 "diastole" => 70, #yg dbawah
-                "discharge_status" => "1", #kluar
+                "discharge_status" => $request->discharge_status, #kluar
                 "diagnosa" => $icd10,
-                "procedure" => "85.51",
+                "procedure" => $icd9,
                 "diagnosa_inagrouper" => $request->diagnosa_inagrouper,
                 "procedure_inagrouper" => $request->procedure_inagrouper,
                 "tarif_rs" => [
-                    "prosedur_non_bedah" => "0",
-                    "prosedur_bedah" => "0",
-                    "konsultasi" => "30000",
-                    "tenaga_ahli" => "0",
-                    "keperawatan" => "0",
-                    "penunjang" => "0",
-                    "radiologi" => "0",
-                    "laboratorium" => "0",
-                    "pelayanan_darah" => "0",
-                    "rehabilitasi" => "0",
-                    "kamar" => "0",
-                    "rawat_intensif" => "0",
-                    "obat" => "0",
-                    "obat_kronis" => "0",
-                    "obat_kemoterapi" => "0",
-                    "alkes" => "0",
-                    "bmhp" => "0",
-                    "sewa_alat" => "0"
+                    "prosedur_non_bedah" => $request->prosedur_non_bedah,
+                    "prosedur_bedah" => $request->prosedur_bedah,
+                    "konsultasi" => $request->konsultasi,
+                    "tenaga_ahli" => $request->tenaga_ahli,
+                    "keperawatan" => $request->keperawatan,
+                    "penunjang" => $request->penunjang,
+                    "radiologi" => $request->radiologi,
+                    "laboratorium" => $request->laboratorium,
+                    "pelayanan_darah" => $request->pelayanan_darah,
+                    "rehabilitasi" => $request->rehabilitasi,
+                    "kamar" => $request->kamar_akomodasi,
+                    "rawat_intensif" => $request->rawat_intensif,
+                    "obat" => $request->obat,
+                    "obat_kronis" => $request->obat_kronis,
+                    "obat_kemoterapi" => $request->obat_kemoterapi,
+                    "alkes" => $request->alkes,
+                    "bmhp" => $request->bmhp,
+                    "sewa_alat" => $request->sewa_alat,
                 ],
                 "pemulasaraan_jenazah" => "0",
                 "kantong_jenazah" => "0",
