@@ -42,7 +42,17 @@
             {{-- pencarian pasien --}}
             <x-adminlte-card title="Data Pasien" theme="warning" collapsible>
                 <x-adminlte-input igroup-size="sm" name="nomor_kartu" label="Nomor Kartu" value="" readonly />
-                <x-adminlte-input igroup-size="sm" name="nomor_sep" label="Nomor SEP" value="" readonly />
+                <x-adminlte-input name="nomor_sep" label="Nomor SEP" igroup-size="sm" placeholder="Cari nomor SEP" readonly>
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
+                    </x-slot>
+                    <x-slot name="prependSlot">
+                        <div class="input-group-text text-primary">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </x-slot>
+                </x-adminlte-input>
+
                 <x-adminlte-input igroup-size="sm" name="nomor_rm" label="Nomor RM" value="" readonly />
                 <x-adminlte-input igroup-size="sm" name="nama_pasien" label="Nama Pasien" value="" readonly />
                 <x-adminlte-input igroup-size="sm" name="tgl_lahir" label="Tgl Lahir" value="" readonly />
@@ -58,16 +68,16 @@
                             <h3 class="card-title"><b>Riwayat Pasien</b></h3>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" data-toggle="pill" href="#inacbg">INACBG</a>
+                            <a class="nav-link active" data-toggle="pill" href="#inacbgPasien">INACBG</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="pill" href="#tarif">TARIF</a>
+                            <a class="nav-link" data-toggle="pill" href="#tarifPasien">TARIF</a>
                         </li>
                     </ul>
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade show active" id="inacbg">
+                        <div class="tab-pane fade show active" id="inacbgPasien">
                             {{-- pelyanan pasien --}}
                             <div class="row">
                                 <div class="col-md-9">
@@ -316,6 +326,20 @@
                             {{-- <x-adminlte-button theme="success" id="btnSetClaim" label="Set Claim" /> --}}
                             <x-adminlte-button theme="primary" id="btnGroupperClaim" label="Groupper Claim" />
                         </div>
+                        <div class="tab-pane fade" id="tarifPasien">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @php
+                                        $heads = ['TGL', 'NAMA_UNIT', 'KELOMPOK_TARIF', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
+                                        $config['paging'] = false;
+                                        $config['info'] = false;
+                                    @endphp
+                                    <x-adminlte-datatable id="tableRincian" class="nowrap text-xs" :heads="$heads"
+                                        :config="$config" bordered hoverable compressed>
+                                    </x-adminlte-datatable>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -337,6 +361,24 @@
                     <th>Unit</th>
                     <th>Dokter</th>
                     <th>No SEP</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </x-adminlte-modal>
+    <x-adminlte-modal id="modalSEP" name="modalSEP" title="SEP Peserta" theme="success" icon="fas fa-file-medical"
+        size="xl" v-centered>
+        <table id="tableSEP" class="table table-sm table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>tglSep</th>
+                    <th>tglPlgSep</th>
+                    <th>noSep</th>
+                    <th>jnsPelayanan</th>
+                    <th>poli</th>
+                    <th>diagnosa</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -376,7 +418,6 @@
                     type: "GET",
                     dataType: 'json',
                     success: function(data) {
-                        console.log(data);
                         if (data.metadata.code == 200) {
                             $.each(data.response, function(key, value) {
                                 table.row.add([
@@ -401,7 +442,6 @@
                                     type: "GET",
                                     dataType: 'json',
                                     success: function(data) {
-                                        console.log(data);
                                         $('#nomor_kartu').val(data
                                             .nomorkartu);
                                         $('#nomor_sep').val(data.noSEP);
@@ -417,6 +457,11 @@
                                             "{{ route('api.eclaim.rincian_biaya_pasien') }}?counter=" +
                                             data.counter + "&norm=" + data
                                             .no_rm;
+
+                                        alert(urlRincian);
+                                        var table = $('#tableRincian')
+                                            .DataTable();
+                                        table.rows().remove().draw();
                                         $.ajax({
                                             url: urlRincian,
                                             type: "GET",
@@ -428,6 +473,38 @@
                                                     .metadata
                                                     .code == 200
                                                 ) {
+                                                    $.each(data
+                                                        .response
+                                                        .rincian,
+                                                        function(
+                                                            key,
+                                                            value
+                                                        ) {
+                                                            console
+                                                                .log(
+                                                                    value
+                                                                );
+                                                            table
+                                                                .row
+                                                                .add(
+                                                                    [
+                                                                        value
+                                                                        .TGL,
+                                                                        value
+                                                                        .NAMA_UNIT,
+                                                                        value
+                                                                        .KELOMPOK_TARIF,
+                                                                        value
+                                                                        .NAMA_TARIF,
+                                                                        value
+                                                                        .GRANTOTAL_LAYANAN,
+                                                                    ]
+                                                                )
+                                                                .draw(
+                                                                    false
+                                                                );
+
+                                                        });
                                                     $('#prosedur_non_bedah')
                                                         .val(
                                                             data
@@ -860,6 +937,68 @@
                     }
                 });
             });
+            $('#btnCariSEP').click(function(e) {
+                var nomorkartu = $('#nomor_kartu').val();
+                $('#modalSEP').modal('show');
+                var table = $('#tableSEP').DataTable();
+                table.rows().remove().draw();
+                $.LoadingOverlay("show");
+                e.preventDefault();
+                var url = "{{ route('suratkontrol_sep') }}?nomorkartu=" + nomorkartu;
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.metadata.code == 200) {
+                            $.each(data.response, function(key, value) {
+                                console.log(value);
+                                if (value.jnsPelayanan == 1) {
+                                    var jenispelayanan = "Rawat Inap";
+                                }
+                                if (value.jnsPelayanan == 2) {
+                                    var jenispelayanan = "Rawat Jalan";
+                                }
+                                table.row.add([
+                                    value.tglSep,
+                                    value.tglPlgSep,
+                                    value.noSep,
+                                    jenispelayanan,
+                                    value.poli,
+                                    value.diagnosa,
+                                    "<button class='btnPilihSEP btn btn-success btn-xs' data-id=" +
+                                    value.noSep +
+                                    ">Pilih</button>",
+                                ]).draw(false);
+
+                            });
+                            $('.btnPilihSEP').click(function() {
+                                var nomorsep = $(this).data('id');
+                                $.LoadingOverlay("show");
+                                $('#nomor_sep').val(nomorsep);
+                                $('#modalSEP').modal('hide');
+                                $.LoadingOverlay("hide");
+                            });
+                        } else {
+                            swal.fire(
+                                'Error ' + data.metadata.code,
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        // swal.fire(
+                        //     'Error ' + data.metadata.code,
+                        //     data.metadata.message,
+                        //     'error'
+                        // );
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
         });
     </script>
     {{-- search select2 --}}
@@ -1004,19 +1143,21 @@
             $(this).parents("#row").remove();
         })
     </script>
-    <script type="text/javascript">
+    <script>
         function naikKelasFunc() {
             if ($('#naik_turun_kelas').is(":checked"))
                 $(".naik_kelas").show();
             else
                 $(".naik_kelas").hide();
         }
+
         function perawatanIcuFunc() {
             if ($('#perawatan_icu').is(":checked"))
                 $(".masuk_icu").show();
             else
                 $(".masuk_icu").hide();
         }
+
         function pakeVentilatorFunc() {
             if ($('#ventilator').is(":checked"))
                 $(".pake_ventilator").show();
