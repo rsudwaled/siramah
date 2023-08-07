@@ -167,10 +167,10 @@ class FarmasiController extends APIController
         }
         if ($request->depo == 4002) {
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
-            ->where('status_order', 1)
-            ->where('kode_unit', $request->depo)
-            ->where('unit_pengirim', '!=', '1016')
-            ->first();
+                ->where('status_order', 1)
+                ->where('kode_unit', $request->depo)
+                ->where('unit_pengirim', '!=', '1016')
+                ->first();
             if (empty($order)) {
                 $order_yasmin = OrderObatHeader::whereDate('tgl_entry',  $request->tanggal)
                     ->where('status_order', 1)
@@ -178,7 +178,7 @@ class FarmasiController extends APIController
                     ->first();
                 $order = $order_yasmin;
             }
-            $connector = env('PRINTER_FARMASI_DP1');
+            $connector = "smb://192.168.2.29/EPSON TM-T82X Receipt";
         }
         // if ($order->kode_unit == 4002) {
         // }
