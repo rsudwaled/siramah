@@ -330,7 +330,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     @php
-                                        $heads = ['TGL', 'NAMA_UNIT', 'KELOMPOK_TARIF', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
+                                        $heads = ['TGL', 'NAMA_UNIT', 'GROUP_VCLAIM', 'KELOMPOK_TARIF', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
                                         $config['paging'] = false;
                                         $config['info'] = false;
                                     @endphp
@@ -360,6 +360,7 @@
                     <th>Pasien</th>
                     <th>Unit</th>
                     <th>Dokter</th>
+                    <th>Penjamin</th>
                     <th>No SEP</th>
                     <th>Action</th>
                 </tr>
@@ -425,12 +426,12 @@
                                     value.no_rm + ' ' + value.pasien.nama_px,
                                     value.unit.nama_unit ?? '-',
                                     value.dokter.nama_paramedis ?? '-',
+                                    value.penjamin_simrs.nama_penjamin ?? '-',
                                     value.no_sep,
                                     "<button class='btnPilihKunjungan btn btn-success btn-xs' data-id=" +
                                     value.kode_kunjungan +
                                     ">Pilih</button>",
                                 ]).draw(false);
-
                             });
                             $('.btnPilihKunjungan').click(function() {
                                 var kodekunjungan = $(this).data('id');
@@ -457,8 +458,6 @@
                                             "{{ route('api.eclaim.rincian_biaya_pasien') }}?counter=" +
                                             data.counter + "&norm=" + data
                                             .no_rm;
-
-                                        alert(urlRincian);
                                         var table = $('#tableRincian')
                                             .DataTable();
                                         table.rows().remove().draw();
@@ -492,6 +491,8 @@
                                                                         .TGL,
                                                                         value
                                                                         .NAMA_UNIT,
+                                                                        value
+                                                                        .nama_group_vclaim,
                                                                         value
                                                                         .KELOMPOK_TARIF,
                                                                         value
@@ -705,7 +706,6 @@
                         $.LoadingOverlay("hide");
                     }
                 });
-
             });
             $('#btnNewClaim').click(function() {
                 $.LoadingOverlay("show");
@@ -756,63 +756,6 @@
                     }
                 });
             });
-            $('#btnSetClaim').click(function() {
-                $.LoadingOverlay("show");
-                var nomor_sep = $('#nomor_sep').val();
-                var nomor_kartu = $('#nomor_kartu').val();
-                var tgl_masuk = $('#tgl_masuk').val();
-                var cara_masuk = $('#cara_masuk').val();
-                var jenis_rawat = $('#jenis_rawat').val();
-                var kelas_rawat = $('#kelas_rawat').val();
-                var discharge_status = $('#discharge_status').val();
-                var diagnosa = $('#diagnosa').val();
-                var procedure = $('#procedure').val();
-                var dataInput = {
-                    nomor_sep: nomor_sep,
-                    nomor_kartu: nomor_kartu,
-                    tgl_masuk: tgl_masuk,
-                    cara_masuk: cara_masuk,
-                    jenis_rawat: jenis_rawat,
-                    kelas_rawat: kelas_rawat,
-                    discharge_status: discharge_status,
-                    diagnosa: diagnosa,
-                    procedure: procedure,
-                }
-                var url = "{{ route('api.eclaim.set_claim_ranap') }}";
-                $.ajax({
-                    data: dataInput,
-                    url: url,
-                    type: "POST",
-                    success: function(data) {
-                        console.log(data);
-                        if (data.metadata.code == 200) {
-                            swal.fire(
-                                'Success',
-                                data.metadata.message,
-                                'success'
-                            );
-                        } else {
-                            console.log(data);
-                            swal.fire(
-                                'Error',
-                                data.metadata.message,
-                                'error'
-                            );
-
-                        }
-                        $.LoadingOverlay("hide");
-                    },
-                    error: function(data) {
-                        console.log(data);
-                        swal.fire(
-                            'Error ' + data.responseJSON.metadata.code,
-                            data.responseJSON.metadata.message,
-                            'error'
-                        );
-                        $.LoadingOverlay("hide");
-                    }
-                });
-            });
             $('#btnGroupperClaim').click(function() {
                 $.LoadingOverlay("show");
                 // setklaim
@@ -824,6 +767,27 @@
                 var jenis_rawat = $('#jenis_rawat').val();
                 var kelas_rawat = $('#kelas_rawat').val();
                 var discharge_status = $('#discharge_status').val();
+
+                var prosedur_non_bedah = $('#prosedur_non_bedah').val();
+                var tenaga_ahli = $('#tenaga_ahli').val();
+                var radiologi = $('#radiologi').val();
+                var rehabilitasi = $('#rehabilitasi').val();
+                var obat = $('#obat').val();
+                var alkes = $('#alkes').val();
+                var prosedur_bedah = $('#prosedur_bedah').val();
+                var keperawatan = $('#keperawatan').val();
+                var laboratorium = $('#laboratorium').val();
+                var kamar_akomodasi = $('#kamar_akomodasi').val();
+                var obat_kronis = $('#obat_kronis').val();
+                var bmhp = $('#bmhp').val();
+                var konsultasi = $('#konsultasi').val();
+                var penunjang = $('#penunjang').val();
+                var pelayanan_darah = $('#pelayanan_darah').val();
+                var rawat_intensif = $('#rawat_intensif').val();
+                var obat_kemo = $('#obat_kemo').val();
+                var sewa_alat = $('#sewa_alat').val();
+                var tarif_rs = $('#tarif_rs').val();
+
                 var diagnosa = $('select[name^=diagnosa]').find(":selected").map(function(idx, elem) {
                     return $(elem).val();
                 }).get();
@@ -840,6 +804,25 @@
                     discharge_status: discharge_status,
                     diagnosa: diagnosa,
                     procedure: procedure,
+                    prosedur_non_bedah: prosedur_non_bedah,
+                    tenaga_ahli: tenaga_ahli,
+                    radiologi: radiologi,
+                    rehabilitasi: rehabilitasi,
+                    obat: obat,
+                    alkes: alkes,
+                    prosedur_bedah: prosedur_bedah,
+                    keperawatan: keperawatan,
+                    laboratorium: laboratorium,
+                    kamar_akomodasi: kamar_akomodasi,
+                    obat_kronis: obat_kronis,
+                    bmhp: bmhp,
+                    konsultasi: konsultasi,
+                    penunjang: penunjang,
+                    pelayanan_darah: pelayanan_darah,
+                    rawat_intensif: rawat_intensif,
+                    obat_kemo: obat_kemo,
+                    sewa_alat: sewa_alat,
+                    tarif_rs: tarif_rs,
                 }
                 var urlGroupper = "{{ route('api.eclaim.set_claim_ranap') }}";
                 $.ajax({
@@ -1046,27 +1029,27 @@
                     cache: true
                 }
             });
-            $("#obat").select2({
-                placeholder: 'Silahkan pilih obat',
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('api.simrs.get_obats') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            search: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
+            // $("#obat").select2({
+            //     placeholder: 'Silahkan pilih obat',
+            //     theme: "bootstrap4",
+            //     ajax: {
+            //         url: "{{ route('api.simrs.get_obats') }}",
+            //         type: "get",
+            //         dataType: 'json',
+            //         delay: 100,
+            //         data: function(params) {
+            //             return {
+            //                 search: params.term // search term
+            //             };
+            //         },
+            //         processResults: function(response) {
+            //             return {
+            //                 results: response
+            //             };
+            //         },
+            //         cache: true
+            //     }
+            // });
         });
     </script>
     {{-- dynamic input --}}

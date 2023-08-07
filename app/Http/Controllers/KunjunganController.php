@@ -101,9 +101,9 @@ class KunjunganController extends APIController
     {
         $kunjungans = Kunjungan::where('kode_unit', $request->unit)
             ->where('status_kunjungan', 1)
-            ->with(['pasien', 'unit',  'dokter'])
+            ->with(['pasien', 'unit', 'dokter', 'penjamin_simrs'])
             ->whereHas('pasien')
-            ->get(['kode_kunjungan', 'tgl_masuk', 'no_rm', 'kode_unit',  'kode_paramedis', 'no_sep']);
+            ->get(['kode_kunjungan', 'tgl_masuk', 'no_rm', 'kode_unit', 'kode_penjamin' ,'kode_paramedis', 'no_sep']);
         return $this->sendResponse($kunjungans, 200);
     }
 }
