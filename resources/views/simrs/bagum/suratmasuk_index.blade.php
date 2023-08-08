@@ -68,7 +68,7 @@
                                     title="Edit Surat Masuk" data-id="{{ $item->id_surat_masuk }}" /> --}}
 
                             </td>
-                            @if ($item->disposisi)
+                            @if ($item->ttd_direktur)
                                 @if ($item->tanda_terima)
                                     <td class="editSuratMasuk table-success" data-id="{{ $item->id_surat_masuk }}">
                                     @else

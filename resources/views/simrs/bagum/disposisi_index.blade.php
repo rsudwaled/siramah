@@ -35,7 +35,7 @@
                     @foreach ($surats as $item)
                         <li class="item">
                             <a href="{{ route('disposisi.edit', $item->id_surat_masuk) }}">
-                                @if ($item->disposisi)
+                                @if ($item->ttd_direktur)
                                     @if ($item->tanda_terima)
                                         <div class="product-img rounded-circle bg-success">
                                             <i class="fas fa-clipboard-check fa-xl m-2 d-flex p-2 "></i>
