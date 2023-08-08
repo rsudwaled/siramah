@@ -21,7 +21,7 @@
         margin-bottom: 15px;
     }
     .container-assesment{
-        padding: 10px;
+        padding-left: 9px;
     }
     .title{
         width: 100%;
@@ -38,7 +38,7 @@
         text-align: left;
     }
     .title_asses{
-        color: white;
+        color: rgb(5, 4, 4);
     }
     .address{
         font-size: 12px;
@@ -62,7 +62,7 @@
     }
     #doc_ass{
         font-size: 12px;
-        padding-top: 100px;
+        padding-top: 70px;
         padding-left: 10px;
         text-align: center;
 
@@ -128,7 +128,7 @@
         </tr>
         {{-- assesmen awal --}}
         <tr>
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Assesmen Awal Medis</div>
                 </div>
@@ -163,14 +163,14 @@
                     </tr>
                     <tr>
                         <td>Suhu Tubuh</td>
-                        <td id="td_right">{{$data->suhu_tubuh}}</td>
+                        <td id="td_right">{{$data->suhu_tubuh}} (°C)</td>
                     </tr>
                 </table>
             </td>
         </tr>
         {{-- Riwayat Kesehatan --}}
         <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Riwayat Kesehatan</div>
                 </div>
@@ -196,7 +196,7 @@
         </tr>
          {{-- Riwayat Penyakit Dahulu --}}
          <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Riwayat Penyakit Dahulu</div>
                 </div>
@@ -266,7 +266,7 @@
         </tr>
         {{-- Riwayat Penyakit Dahulu --}}
         <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Pemeriksaan Fisik</div>
                 </div>
@@ -284,7 +284,7 @@
         </tr>
         {{-- Pemeriksaan Umum --}}
         <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Pemeriksaan Umum</div>
                 </div>
@@ -322,7 +322,7 @@
         </tr>
         {{-- Hasil Pemeriksaan Khusus --}}
         <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Pemeriksaan Khusus</div>
                 </div>
@@ -344,7 +344,7 @@
         </tr>
         <tr>
             <th><div class="container-assesment">Tanggal Assesmen</div></th>
-            <th><div class="container-assesment">Nama Pemeriksa</div></th>
+            <th><div class="container-assesment" style="text-align: center;">Nama Pemeriksa</div></th>
         </tr>
         <tr>
             <td  id="date_ass">{{$data->tgl_pemeriksaan}}</td>
@@ -387,8 +387,67 @@
                 </table>
             </th>
         </tr>
+        {{-- Riwayat Obat --}}
         <tr >
-            <th colspan="2" style="background-color: rgb(253, 36, 3)">
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
+                <div class="container-assesment">
+                    <div class="title_asses">Riwayat Obat</div>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td >
+                <table id="tbl_right">
+                    @foreach ($rincianbiaya as $item)
+                        @if ($item->KELOMPOK_TARIF != 'Administrasi' && $item->KELOMPOK_TARIF != 'Konsul Dan Visite Dokter')
+                            @if ($item->KELOMPOK_TARIF=="Obat & Bhp")
+                            <tr>
+                                <td id="td_right">{{$item->NAMA_TARIF != 'Jasa Baca' ? $item->NAMA_TARIF :''}}</td>
+                            </tr>
+                            @endif
+                        @endif
+                    @endforeach
+                </table>
+            </td>
+            <td >
+                <table id="tbl_right">
+                    @foreach ($rincianbiaya as $item)
+                        @if ($item->KELOMPOK_TARIF != 'Administrasi' && $item->KELOMPOK_TARIF != 'Konsul Dan Visite Dokter')
+                            @if ($item->KELOMPOK_TARIF=="Obat & Bhp" && $item->NAMA_TARIF !="Jasa Baca" )
+                            <tr>
+                                <td id="td_right">{{$item->JUMLAH_LAYANAN != 'Jasa Baca' ? $item->JUMLAH_LAYANAN :''}}</td>
+                            </tr>
+                            @endif
+                        @endif
+                    @endforeach
+                </table>
+            </td>
+        </tr>
+        {{-- Riwayat Tindakan --}}
+        <tr >
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
+                <div class="container-assesment">
+                    <div class="title_asses">Riwayat Tindakan</div>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table id="tbl_right">
+                    @foreach ($rincianbiaya as $item)
+                        @if ($item->KELOMPOK_TARIF != 'Administrasi' && $item->KELOMPOK_TARIF != 'Konsul Dan Visite Dokter')
+                            @if ($item->KELOMPOK_TARIF=="Tindakan Medis")
+                            <tr>
+                                <td id="td_right">{{$item->NAMA_TARIF != 'Jasa Baca' ? $item->NAMA_TARIF :''}}</td>
+                            </tr>
+                            @endif
+                        @endif
+                    @endforeach
+                </table>
+            </td>
+        </tr>
+        <tr >
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
                 <div class="container-assesment">
                     <div class="title_asses">Gambar Pemeriksaan</div>
                 </div>

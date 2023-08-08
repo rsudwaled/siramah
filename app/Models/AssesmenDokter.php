@@ -11,4 +11,14 @@ class AssesmenDokter extends Model
     protected $connection = 'mysql2';
     protected $table = 'assesmen_dokters';
     protected $guarded = ["id"];
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'id_pasien', 'no_rm');
+    }
+    public function kunjungan()
+    {
+        return $this->belongsTo(Kunjungan::class, 'id_kunjungan', 'id_kunjungan');
+    }
+
 }
