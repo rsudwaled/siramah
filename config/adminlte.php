@@ -943,6 +943,20 @@ return [
                     'can' => 'casemix',
                 ],
                 [
+                    'text' => 'KMKB Rawat Jalan',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpo',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'KMKB Rawat Inap',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'kpoRanap',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
                     'text' => 'Capaian Antrian Pertanggal',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',
