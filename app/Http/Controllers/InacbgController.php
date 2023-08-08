@@ -557,7 +557,7 @@ class InacbgController extends APIController
                 //     ]
                 // ],
                 "tarif_poli_eks" => "#",
-                "nama_dokter" => "RUDY, DR",
+                "nama_dokter" => $request->dokter_dpjp,
                 "kode_tarif" => "BP",
                 "payor_id" => "3",
                 "payor_cd" => "JKN",

@@ -135,15 +135,8 @@
                                             <option value="4">Meninggal</option>
                                             <option value="5">Lain-lain</option>
                                         </x-adminlte-select>
-                                        <x-adminlte-select name="dokter_dpjp" label="Dokter DPJP" fgroup-class="col-md-4"
-                                            igroup-size="sm">
-                                            <option value="1">Atas persetujuan dokter</option>
-                                            <option value="2">Dirujuk</option>
-                                            <option value="3">Atas permintaan sendiri</option>
-                                            <option value="4">Meninggal</option>
-                                            <option value="5">Lain-lain</option>
-                                        </x-adminlte-select>
-
+                                        <x-adminlte-input name="dokter_dpjp" label="Dokter DPJP" fgroup-class="col-md-4"
+                                            igroup-size="sm" placeholder="Dokter DPJP" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -443,6 +436,8 @@
                                     type: "GET",
                                     dataType: 'json',
                                     success: function(data) {
+                                        $('#dokter_dpjp').val(data
+                                            .dokter.nama_paramedis);
                                         $('#nomor_kartu').val(data
                                             .nomorkartu);
                                         $('#nomor_sep').val(data.noSEP);
@@ -466,8 +461,6 @@
                                             type: "GET",
                                             success: function(
                                                 data) {
-                                                console.log(
-                                                    data);
                                                 if (data
                                                     .metadata
                                                     .code == 200
@@ -647,9 +640,6 @@
                                                         'success'
                                                     );
                                                 } else {
-                                                    console.log(
-                                                        data
-                                                    );
                                                     swal.fire(
                                                         'Error',
                                                         data
@@ -662,8 +652,6 @@
                                                     "hide");
                                             },
                                             error: function(data) {
-                                                console.log(
-                                                    data);
                                                 swal.fire(
                                                     'Error ' +
                                                     data
@@ -685,9 +673,7 @@
                                         $('#riwayatPasien').show();
                                     },
                                     error: function(data) {
-                                        console.log(data);
                                         $.LoadingOverlay("hide");
-
                                     }
                                 });
                             });
@@ -702,7 +688,6 @@
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
-                        console.log(data);
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -736,7 +721,6 @@
                                 'success'
                             );
                         } else {
-                            console.log(data);
                             swal.fire(
                                 'Error',
                                 data.metadata.message,
@@ -746,7 +730,6 @@
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
-                        console.log(data);
                         swal.fire(
                             'Error ' + data.responseJSON.metadata.code,
                             data.responseJSON.metadata.message,
@@ -787,6 +770,7 @@
                 var obat_kemo = $('#obat_kemo').val();
                 var sewa_alat = $('#sewa_alat').val();
                 var tarif_rs = $('#tarif_rs').val();
+                var dokter_dpjp = $('#dokter_dpjp').val();
 
                 var diagnosa = $('select[name^=diagnosa]').find(":selected").map(function(idx, elem) {
                     return $(elem).val();
@@ -823,6 +807,7 @@
                     obat_kemo: obat_kemo,
                     sewa_alat: sewa_alat,
                     tarif_rs: tarif_rs,
+                    dokter_dpjp: dokter_dpjp,
                 }
                 var urlGroupper = "{{ route('api.eclaim.set_claim_ranap') }}";
                 $.ajax({
@@ -830,7 +815,6 @@
                     url: urlGroupper,
                     type: "POST",
                     success: function(data) {
-                        console.log(data);
                         if (data.metadata.code == 200) {
                             // grouper
                             var nomor_sep = $('#nomor_sep').val();
@@ -843,7 +827,6 @@
                                 url: url,
                                 type: "POST",
                                 success: function(data) {
-                                    console.log(data);
                                     if (data.metadata.code == 200) {
                                         const rupiah = (number) => {
                                             return new Intl.NumberFormat(
@@ -878,7 +861,6 @@
                                             'success'
                                         );
                                     } else {
-                                        console.log(data);
                                         swal.fire(
                                             'Error',
                                             data.metadata.message,
@@ -889,7 +871,6 @@
                                     $.LoadingOverlay("hide");
                                 },
                                 error: function(data) {
-                                    console.log(data);
                                     swal.fire(
                                         'Error ' + data.responseJSON.metadata
                                         .code,
@@ -900,7 +881,6 @@
                                 }
                             });
                         } else {
-                            console.log(data);
                             swal.fire(
                                 'Error',
                                 data.metadata.message,
@@ -910,7 +890,6 @@
                         }
                     },
                     error: function(data) {
-                        console.log(data);
                         swal.fire(
                             'Error ' + data.responseJSON.metadata.code,
                             data.responseJSON.metadata.message,
@@ -935,7 +914,6 @@
                     success: function(data) {
                         if (data.metadata.code == 200) {
                             $.each(data.response, function(key, value) {
-                                console.log(value);
                                 if (value.jnsPelayanan == 1) {
                                     var jenispelayanan = "Rawat Inap";
                                 }
@@ -972,7 +950,6 @@
                         $.LoadingOverlay("hide");
                     },
                     error: function(data) {
-                        console.log(data);
                         // swal.fire(
                         //     'Error ' + data.metadata.code,
                         //     data.metadata.message,
