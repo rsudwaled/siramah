@@ -32,7 +32,7 @@
                                 </x-adminlte-input-date>
                             </div>
                             <div class="col-lg-6">
-                                <x-adminlte-input name="jumlah" label="Jumlah Data" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
+                                <x-adminlte-input name="jumlah" label="Jumlah Data" id="jumlah" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
                                     <x-slot name="prependSlot">
                                         <div class="input-group-text">
                                             <i class="fas fa-user text-purple"></i>
@@ -40,11 +40,11 @@
                                     </x-slot>
                                 </x-adminlte-input>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" {{$dataperunit== 'on' ? 'checked' :''}} id="dataperunitC" name="dataperunit" onclick="myFunctionUnit()">
+                                    <input class="custom-control-input" type="checkbox" id="dataperunitC" name="dataperunit" value="false" >
                                     <label for="dataperunitC" class="custom-control-label">Laporan Perunit</label>
                                 </div>
                                 <div class="unit-group" id="unitopt" style="{{$kode_unit == null ? 'display:none' : 'display:block'}}">
-                                    <x-adminlte-select2 name="unit" label="Pilih Unit">
+                                    <x-adminlte-select2 name="unit" id="pilihunit" label="Pilih Unit">
                                         <option value="" id="opt_null">--Pilih Unit--</option>
                                         @foreach ($unit as $item)
                                             <option {{ $dataperunit =='on' ? $item->KODE_UNIT == $kode_unit ? 'selected':'' : ''}} value="{{ $dataperunit == 'on' ? $item->KODE_UNIT : ''}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
@@ -224,7 +224,7 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('js')
-    <script>
+    {{-- <script>
         function printDiv(divName) {
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
@@ -250,6 +250,25 @@
             }
         }
 
+    </script> --}}
+    <script>
+        var from = $('#from').val();
+        var to = $('#to').val();
+        var jumlah = $('#jumlah').val();
+        var pilihunit = $('#pilihunit').val();
+
+        $('#perunit').text($('#checkbox1').val());
+            $("#perunit").on('change', function() {
+                if ($(this).is(':checked')) {
+                    alert(cheked);
+                    // $(this).attr('value', 'true');
+                    // unit1.style.display = "block";
+                } else {
+                    $(this).attr('value', 'false');
+                    console.log(false)
+                    unit1.style.display = "none";
+                });
+            })
     </script>
 @endsection
 @section('css')

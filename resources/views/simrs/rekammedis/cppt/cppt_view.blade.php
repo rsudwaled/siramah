@@ -9,7 +9,8 @@
     <div class="row">
         <div class="col-lg-6">
             <x-adminlte-card title="Assesmen awal Keperawatan" theme="info" collapsible removable maximizable>
-                An info theme card with all the tool buttons...
+                LIHAT DATA CATATAN PERKEMBANGAN PASIEN TERINTEGRASI <br>
+                <a target="_blank" theme="success" class="btn btn-sm btn btn-primary" href="{{route('cppt-anestesi-print.get')}}">Lihat Data</a>
             </x-adminlte-card>
         </div>
         <div class="col-lg-6">

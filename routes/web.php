@@ -229,4 +229,5 @@ Route::middleware('auth')->group(function () {
     // cppt
     Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
     Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-print.get');
+    Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
 });
