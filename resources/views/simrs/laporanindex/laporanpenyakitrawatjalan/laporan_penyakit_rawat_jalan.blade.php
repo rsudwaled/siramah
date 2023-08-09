@@ -45,9 +45,11 @@
                     </div>
                     <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm" theme="primary"
                         label="Lihat Laporan" />
+                    @if (isset($laporanPenyakitRJ))
                     <x-adminlte-button label="Excel" class="bg-purple float-right btn btn-sm" id="export" />
                     <button class="btn btn-success float-right btn btn-sm" onclick="printDiv('printMe')">Print <i
                             class="fas fa-print"></i></button>
+                    @endif
                 </form>
             </x-adminlte-card>
             @if (isset($laporanPenyakitRJ))

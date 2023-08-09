@@ -214,6 +214,8 @@ Route::middleware('auth')->group(function () {
     Route::get('LaporanDiagnosaSurvailansRawatJalan/Export', [LaporanDiagnosaSurvailansRawatJalanController::class, 'exportExcel'])->name('laporan-survailans-rajal.export');
     // formulir RL 1
     Route::get('FormulirRL1', [FormulirRL1Controller::class, 'FormulirRL1'])->name('frl-1.get');
+    Route::get('FormulirRL2', [FormulirRL1Controller::class, 'FormulirRL2'])->name('frl-2.get');
+    Route::get('FormulirRL3', [FormulirRL1Controller::class, 'FormulirRL3'])->name('frl-3.get');
 
     // formulir RL 4
     Route::get('FormulirRL4A', [FormulirRL4Controller::class, 'FormulirRL4A'])->name('frl-4-A.get');
