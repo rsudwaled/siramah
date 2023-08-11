@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\BudgetControl;
+use App\Models\Kunjungan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class InacbgController extends APIController
 {
@@ -149,6 +152,38 @@ class InacbgController extends APIController
         ];
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
+    }
+    public function claim_ranap(Request $request)
+    {
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap($request);
+        $res = $this->grouper($request);
+        if ($res->getData()->metadata->code == 200) {
+            $rmcounter = $request->nomor_rm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->getData()->response->cbg->tariff,
+                    'no_rm' => $request->nomor_rm,
+                    'counter' => $request->counter,
+                    'diagnosa_kode' => $request->diagnosa,
+                    'diagnosa' => $request->diagnosa,
+                    'prosedur' => $request->procedure,
+                    'kode_cbg' => $res->getData()->response->cbg->code,
+                    'kelas' => $res->getData()->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->getData()->response->cbg->description,
+                ]
+            );
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->nomor_sep,
+            ]);
+        }
+        return redirect()->back();
     }
     public function set_claim(Request $request)
     {
@@ -401,11 +436,9 @@ class InacbgController extends APIController
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required",
-            "tgl_pulang" =>  "required",
             "cara_masuk" =>  "required",
             "kelas_rawat" =>  "required",
             "diagnosa" =>  "required",
-            "procedure" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -415,11 +448,16 @@ class InacbgController extends APIController
         for ($i = 1; $i  <= $jumlah_diag; $i++) {
             $icd10 = $icd10 . '#' . $request->diagnosa[$i];
         }
-        $icd9 = $request->procedure[0];
-        $jumlah_diag = count($request->procedure) - 1;
-        for ($i = 1; $i  <= $jumlah_diag; $i++) {
-            $icd9 = $icd9 . '#' . $request->procedure[$i];
+        $request['diagnosa'] = $icd10;
+        $icd9 = "#";
+        if ($request->procedure) {
+            $icd9 = $request->procedure[0];
+            $jumlah_diag = count($request->procedure) - 1;
+            for ($i = 1; $i  <= $jumlah_diag; $i++) {
+                $icd9 = $icd9 . '#' . $request->procedure[$i];
+            }
         }
+        $request['procedure'] = $icd9;
         $request_data = [
             "metadata" => [
                 "method" => "set_claim_data",
@@ -430,7 +468,7 @@ class InacbgController extends APIController
                 "nomor_sep" =>  $request->nomor_sep,
                 "nomor_kartu" => $request->nomor_kartu,
                 "tgl_masuk" => $request->tgl_masuk,
-                "tgl_pulang" => $request->tgl_pulang,
+                "tgl_pulang" => now(),
                 "cara_masuk" => $request->cara_masuk, #isi
                 "jenis_rawat" => 1, #inap, jalan, igd
                 "kelas_rawat" => $request->kelas_rawat, #kelas rawat
@@ -748,7 +786,6 @@ class InacbgController extends APIController
     public function rincian_biaya_pasien(Request $request)
     {
         $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
-        // dd();
         $data = [
             "rincian" => $response,
             "rangkuman" => [

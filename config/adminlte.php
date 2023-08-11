@@ -449,6 +449,21 @@ return [
                 ],
             ],
         ],
+        // POLIKLINIK
+        [
+            'text'    => 'Aplikasi Rawat Inap',
+            'icon'    => 'fas fa-clinic-medical',
+            // 'can' => 'ranap',
+            'submenu' => [
+                [
+                    'text' => 'Pasien Ranap Aktif',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienRanapAktif',
+                    'shift'   => 'ml-2',
+                    // 'can' => 'ranap',
+                ],
+            ],
+        ],
         // FARMASI
         [
             'text'    => 'Aplikasi Farmasi',
@@ -660,9 +675,9 @@ return [
                 ],
             ],
         ],
-           // LAPORAN REKAM MEDIS
-           [
-            'text'    => 'LAPORAN REKAM MEDIS',
+        // LAPORAN REKAM MEDIS
+        [
+            'text'    => 'Laporan Rekam Medis',
             'icon'    => 'fas fa-file-medical',
             'can'     => 'k3rs',
             'submenu' => [
