@@ -110,7 +110,7 @@
         <tr>
             <th>
                 <div class="container-assesment">
-                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK)</div>
+                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK) {{$data->COUNTER}}</div>
                 </div>
             </td>
             <th >

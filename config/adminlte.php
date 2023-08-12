@@ -694,13 +694,6 @@ return [
                     'can' => 'rekam-medis',
                     'submenu' => [
                         [
-                            'text' => 'Formulir RL 1',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
                             'text' => 'Formulir RL 1.1',
                             'icon'    => 'fas fa-disease',
                             'url'  => 'FormulirRL1',
@@ -717,7 +710,7 @@ return [
                         [
                             'text' => 'Formulir RL 1.3',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL1_3',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -737,30 +730,23 @@ return [
                     'can' => 'rekam-medis',
                     'submenu' => [
                         [
-                            'text' => 'Formulir RL 3',
-                            'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
-                            'shift'   => 'ml-3',
-                            'can' => 'rekam-medis',
-                        ],
-                        [
                             'text' => 'Formulir RL 3.1',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_1',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
                         [
                             'text' => 'Formulir RL 3.2',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_2',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
                         [
                             'text' => 'Formulir RL 3.3',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_3',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -781,14 +767,14 @@ return [
                         [
                             'text' => 'Formulir RL 3.6',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_6',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
                         [
                             'text' => 'Formulir RL 3.7',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_7',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -809,7 +795,14 @@ return [
                         [
                             'text' => 'Formulir RL 3.10',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_10',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.11',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3_11',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -860,7 +853,7 @@ return [
                         [
                             'text' => 'Formulir RL 5.1',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL5_1',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],

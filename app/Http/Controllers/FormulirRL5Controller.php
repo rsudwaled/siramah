@@ -8,6 +8,15 @@ use Carbon\Carbon;
 
 class FormulirRL5Controller extends Controller
 {
+    public function FormulirRL5_1(Request $request)
+    {
+        return view('simrs.formulir.f_r_l_5.formulir_rl_5_1');
+    }
+    public function FormulirRL5_2(Request $request)
+    {
+        return view('simrs.formulir.f_r_l_5.formulir_rl_5_2');
+    }
+
     public function FormulirRL5_3(Request $request)
     {
         $from = $request->dari;
