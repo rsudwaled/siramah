@@ -85,19 +85,19 @@
                 <table id="tbl_right">
                     <tr>
                         <td>No RM</td>
-                        <td id="td_right">{{$ass->id_pasien}}</td>
+                        <td id="td_right">{{$ass[0]->id_pasien}}</td>
                     </tr>
                     <tr>
                         <td>Nama Pasien</td>
-                        <td id="td_right">{{$ass->pasien->no_rm}}</td>
+                        <td id="td_right">{{$ass[0]->pasien->no_rm}}</td>
                     </tr>
                     <tr>
                         <td>Tanggal Lahir</td>
-                        <td id="td_right">{{$ass->pasien->tgl_lahir}}</td>
+                        <td id="td_right">{{$ass[0]->pasien->tgl_lahir}}</td>
                     </tr>
                     <tr>
                         <td>Jenis Kelamin</td>
-                        <td id="td_right">{{$ass->pasien->jenis_kelamin == 'P' ? 'Perempuan' :'Laki-Laki'}}</td>
+                        <td id="td_right">{{$ass[0]->pasien->jenis_kelamin == 'P' ? 'Perempuan' :'Laki-Laki'}}</td>
                     </tr>
                 </table>
             </th>
@@ -115,12 +115,12 @@
                     <tr>
                         <td>Sumber Data</td>
                         <td >:</td>
-                        <td >{{$ass->sumber_data}}</td>
+                        <td >{{$ass[0]->sumber_data}}</td>
                     </tr>
                     <tr>
                         <td>Tindakan</td>
                         <td >:</td>
-                        <td >{{$ass->tindakanmedis==null? '-' : $ass->tindakanmedis}}</td>
+                        <td >{{$ass[0]->tindakanmedis==null? '-' : $ass[0]->tindakanmedis}}</td>
                     </tr>
 
                 </table>
@@ -139,17 +139,17 @@
                     <tr>
                         <td>Kesadaran</td>
                         <td >:</td>
-                        <td >{{$ass->kesadaran==null? '-': $ass->kesadaran}}</td>
+                        <td >{{$ass[0]->kesadaran==null? '-': $ass[0]->kesadaran}}</td>
                     </tr>
                     <tr>
                         <td>Tekanan Darah</td>
                         <td >:</td>
-                        <td >{{$ass->tekanan_darah}} mmHg</td>
+                        <td >{{$ass[0]->tekanan_darah}} mmHg</td>
                     </tr>
                     <tr>
                         <td>Nadi</td>
                         <td >:</td>
-                        <td >{{$ass->frekuensi_nadi}} x/menit</td>
+                        <td >{{$ass[0]->frekuensi_nadi}} x/menit</td>
                     </tr>
                 </table>
             </td>
@@ -158,17 +158,17 @@
                     <tr>
                         <td>GSC</td>
                         <td >:</td>
-                        <td >{{$ass->frekuensi_nadi}}</td>
+                        <td >{{$ass[0]->frekuensi_nadi}}</td>
                     </tr>
                     <tr>
                         <td>Pernafasan</td>
                         <td >:</td>
-                        <td >{{$ass->frekuensi_nafas}} Kali/menit</td>
+                        <td >{{$ass[0]->frekuensi_nafas}} Kali/menit</td>
                     </tr>
                     <tr>
                         <td>Suhu</td>
                         <td >:</td>
-                        <td >{{$ass->suhu_tubuh}} (°C)</td>
+                        <td >{{$ass[0]->suhu_tubuh}} (°C)</td>
                     </tr>
                 </table>
             </td>
@@ -186,27 +186,27 @@
                     <tr>
                         <td>Alergi</td>
                         <td >:</td>
-                        <td >{{$ass->alergi}}</td>
+                        <td >{{$ass[0]->alergi}}</td>
                     </tr>
                     <tr>
                         <td>Medikasi</td>
                         <td >:</td>
-                        <td >{{$ass->medikasi}}</td>
+                        <td >{{$ass[0]->medikasi}}</td>
                     </tr>
                     <tr>
                         <td>Post Lines</td>
                         <td >:</td>
-                        <td >{{$ass->postillnes}}</td>
+                        <td >{{$ass[0]->postillnes}}</td>
                     </tr>
                     <tr>
                         <td>Last Meal</td>
                         <td >:</td>
-                        <td >{{$ass->lastmeal == null ? '-': $ass->lastmeal}}</td>
+                        <td >{{$ass[0]->lastmeal == null ? '-': $ass[0]->lastmeal}}</td>
                     </tr>
                     <tr>
                         <td>Event</td>
                         <td >:</td>
-                        <td >{{$ass->event}}</td>
+                        <td >{{$ass[0]->event}}</td>
                     </tr>
                 </table>
             </th>
@@ -224,22 +224,22 @@
                     <tr>
                         <td>Cor</td>
                         <td >:</td>
-                        <td >{{$ass->cor}}td>
+                        <td >{{$ass[0]->cor}}<td>
                     </tr>
                     <tr>
                         <td>Pulmo</td>
                         <td >:</td>
-                        <td >{{$ass->pulmo}}td>
+                        <td >{{$ass[0]->pulmo}}<td>
                     </tr>
                     <tr>
                         <td>Gigi</td>
                         <td >:</td>
-                        <td >{{$ass->gigi}}td>
+                        <td >{{$ass[0]->gigi}}<td>
                     </tr>
                     <tr>
                         <td>Extrimitas</td>
                         <td >:</td>
-                        <td >{{$ass->ekstremitas}}td>
+                        <td >{{$ass[0]->ekstremitas}}<td>
                     </tr>
                 </table>
             </th>
@@ -257,27 +257,27 @@
                     <tr>
                         <td>L</td>
                         <td >:</td>
-                        <td >{{$lemon[0]}}</td>
+                        <td >{{$lemon== null ? '-': $lemon[0]}}</td>
                     </tr>
                     <tr>
                         <td>E</td>
                         <td >:</td>
-                        <td >{{$lemon[1]}}</td>
+                        <td >{{$lemon== null ? '-': $lemon[1]}}</td>
                     </tr>
                     <tr>
                         <td>M</td>
                         <td >:</td>
-                        <td >{{$lemon[2]}}</td>
+                        <td >{{$lemon== null ? '-': $lemon[2]}}</td>
                     </tr>
                     <tr>
                         <td>O</td>
                         <td >:</td>
-                        <td >{{$lemon[3]}}</td>
+                        <td >{{$lemon== null ? '-': $lemon[3]}}</td>
                     </tr>
                     <tr>
                         <td>N</td>
                         <td >:</td>
-                        <td >{{$lemon[4]}}</td>
+                        <td >{{$lemon== null ? '-': $lemon[4]}}</td>
                     </tr>
                 </table>
             </th>
@@ -293,7 +293,7 @@
         <tr>
             <th colspan="2">
                 <table id="tbl_right">
-                    @if ($ass->tindak_lanjut == 1)
+                    @if ($ass[0]->tindak_lanjut == 1)
                     <tr>
                         <td>Setuju dijadwalkan untuk operasi</td>
                     </tr>
@@ -316,7 +316,7 @@
             <th colspan="2">
                 <table id="tbl_right">
                     <tr>
-                        <td>{{$ass->keterangan_tindak_lanjut}}</td>
+                        <td>{{$ass[0]->keterangan_tindak_lanjut}}</td>
                     </tr>
                 </table>
             </th>
@@ -333,7 +333,7 @@
                         <td>Dokter Anestesi</td>
                     </tr> --}}
                     <tr>
-                        <td ><label id="doc_ass">{{$ass->nama_dokter}}</label></td>
+                        <td ><label id="doc_ass">{{$ass[0]->nama_dokter}}</label></td>
                     </tr>
                 </table>
             </td>
