@@ -65,7 +65,7 @@
                 <x-adminlte-card theme="secondary" icon="fas fa-info-circle"
                     title="Total Pasien Aktif ({{ $kunjungans->count() }} Orang)">
                     @php
-                        $heads = ['Counter', 'Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Diagnosa', 'Budget', 'Status', 'Action'];
+                        $heads = ['Counter', 'Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Diagnosa', 'Tarif', 'Status', 'Action'];
                         $config['order'] = ['1', 'asc'];
                         $config['paging'] = false;
                         $config['scrollY'] = '400px';
@@ -75,7 +75,8 @@
                         @foreach ($kunjungans as $item)
                             @if ($item->budget)
                                 @if ($item->budget->diagnosa_kode)
-                                    <tr class="table-warning">
+                                    {{-- <tr class="table-warning"> --}}
+                                    <tr>
                                     @else
                                     <tr class="table-danger">
                                 @endif

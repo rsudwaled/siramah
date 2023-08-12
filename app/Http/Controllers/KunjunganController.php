@@ -124,6 +124,7 @@ class KunjunganController extends APIController
                 ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
                 ->get();
         }
+        // dd($kunjungans->first(), $kunjungans->first()->layanan->sum('total_layanan'));
         return view('simrs.ranap.ranap_aktif', compact([
             'request',
             'units',
