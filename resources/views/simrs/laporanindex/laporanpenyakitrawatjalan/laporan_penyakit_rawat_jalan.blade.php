@@ -276,7 +276,7 @@
             $('#diagnosa').select2({
                 placeholder: 'Pilih Kode Diagnosa',
                 ajax: {
-                    url: '/LaporanPenyakitRawatJalan/Data',
+                    url: "{{route('laporan-rawa-jalan.dataAjax')}}",
                     dataType: 'json',
                     delay: 150,
                     processResults: function (data) {

@@ -97,7 +97,7 @@
         if(rm){
             $.ajax({
             type:"GET",
-            url:"/getK?rm="+rm,
+            url:"{{route('resume-dokter-k.get')}}?rm="+rm,
             dataType: 'JSON',
             success:function(res){
                 if(res){
@@ -124,7 +124,7 @@
         if(id_kunjungan){
             $.ajax({
             type:"GET",
-            url:"getC?id_kunjungan="+id_kunjungan+'&rm='+rm,
+            url:"{{route('resume-dokter-c.get')}}?id_kunjungan="+id_kunjungan+'&rm='+rm,
             dataType: 'JSON',
             success:function(res){
                 if(res){
