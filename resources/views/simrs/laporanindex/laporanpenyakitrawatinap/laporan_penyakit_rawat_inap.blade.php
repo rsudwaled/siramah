@@ -205,7 +205,7 @@
             $('#diagnosa').select2({
                 placeholder: 'Pilih Kode Diagnosa',
                 ajax: {
-                    url: '/LaporanPenyakitRawatInap/Data',
+                    url: "{{route('laporan-rawa-inap.dataAjax')}}",
                     dataType: 'json',
                     delay: 150,
                     processResults: function (data) {
