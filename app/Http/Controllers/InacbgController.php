@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\BudgetControl;
+use App\Models\Icd10;
 use App\Models\Kunjungan;
 use Exception;
 use Illuminate\Http\Request;
@@ -155,6 +156,22 @@ class InacbgController extends APIController
     }
     public function claim_ranap(Request $request)
     {
+        $diag = null;
+        foreach ($request->diagnosa as $key => $value) {
+            $diagnosa = Icd10::where('diag', $value)->first();
+            if ($key == 0) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . "|" . $a;
+                dd($diagnosa, $key, $value, $diag);
+            } else {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . "|" . $diagnosa == null ? $diagnosa->nama : '-';
+            }
+            dd($diagnosa, $key);
+        }
+        dd($request->all(),  $diag);
+
+
         $res = $this->new_claim($request);
         $res = $this->set_claim_ranap($request);
         $res = $this->grouper($request);
@@ -168,10 +185,12 @@ class InacbgController extends APIController
                     'tarif_inacbg' => $res->response->cbg->tariff,
                     'no_rm' => $request->nomor_rm,
                     'counter' => $request->counter,
-                    'diagnosa_kode' => $request->diagnosa,
-                    'diagnosa' => $request->diagnosa,
-                    'prosedur' => $request->procedure,
-                    'kode_cbg' => $res->response->cbg->code,
+
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa' => $request->diagnosa, #kode | deskripsi
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code, #kode | deskripsi
+
                     'kelas' => $res->response->kelas,
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),

@@ -881,7 +881,6 @@
                     }
                 });
             });
-
         });
     </script>
     {{-- search select2 --}}
@@ -952,6 +951,80 @@
             //     }
             // });
         });
+    </script>
+    {{-- dynamic input --}}
+    <script>
+        // row select diagnosa
+        $("#rowAdder").click(function() {
+            newRowAdd =
+                '<div id="row"><div class="form-group"><div class="input-group">' +
+                '<select name="diagnosa[]" class="form-control diagnosaID"></select>' +
+                '<div class="input-group-append"><button type="button" class="btn btn-danger" id="DeleteRow">' +
+                '<i class="fas fa-trash "></i> Hapus </button></div>' +
+                '</div></div></div>';
+            $('#newinput').append(newRowAdd);
+            $(".diagnosaID").select2({
+                placeholder: 'Silahkan pilih Diagnosa ICD-10',
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('api.eclaim.search_diagnosis') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+        $("body").on("click", "#DeleteRow", function() {
+            $(this).parents("#row").remove();
+        })
+        // row select tindakan
+        $("#rowAddTindakan").click(function() {
+            newRowAdd =
+                '<div id="row" class="row"><div class="col-md-7"><div class="form-group"><div class="input-group">' +
+                '<div class="input-group-prepend"><span class="input-group-text">' +
+                '<i class="fas fa-hand-holding-medical "></i></span></div>' +
+                '<select name="procedure[]" class="form-control procedure "></select></div></div></div>' +
+                '<div class="col-md-3"><div class="form-group"><div class="input-group"><div class="input-group-prepend">' +
+                '<span class="input-group-text"><b>@</b></span></div><input type="number" class="form-control" value="1">' +
+                '</div></div></div><div class="col-md-2"><button type="button" class="btn btn-danger" id="deleteRowTindakan"> ' +
+                '<i class="fas fa-trash "></i> </button></div></div>';
+            $('#newTindakan').append(newRowAdd);
+            $(".procedure").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('api.eclaim.search_procedures') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+        $("body").on("click", "#deleteRowTindakan", function() {
+            $(this).parents("#row").remove();
+        })
     </script>
     {{-- checkbox --}}
     <script>
