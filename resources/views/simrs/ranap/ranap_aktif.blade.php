@@ -43,7 +43,7 @@
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $kunjungans->count() - $kunjungans->where('budget.diagnosa_kode', '!=', null)->count() }}"
-                            text="Sisa Pasien" theme="warning" icon="fas fa-user-injured" />
+                            text="Belum Groupper" theme="warning" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box title="{{ $kunjungans->count() }}" text="Total Pasien" theme="success"
@@ -786,32 +786,32 @@
                                     .tarif_rs.toLocaleString(
                                         'id-ID')
                                 );
-
-
-                            $('.kode_inacbg')
-                                .html(
-                                    data
-                                    .response
-                                    .budget
-                                    .kode_cbg
-                                );
-                            $('.description_inacbg')
-                                .html(
-                                    data
-                                    .response
-                                    .budget
-                                    .deskripsi
-                                );
-                            $('.kelas')
-                                .html(
-                                    data
-                                    .response
-                                    .budget
-                                    .kelas
-                                );
-                            $('.tarif_inacbg')
-                                .html(data.response.budget.tarif_inacbg.toLocaleString(
-                                    'id-ID'));
+                            if (data.response.budget != null) {
+                                $('.kode_inacbg')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .kode_cbg
+                                    );
+                                $('.description_inacbg')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .deskripsi
+                                    );
+                                $('.kelas')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .kelas
+                                    );
+                                $('.tarif_inacbg')
+                                    .html(data.response.budget.tarif_inacbg.toLocaleString(
+                                        'id-ID'));
+                            }
                             swal.fire(
                                 'Success',
                                 data
