@@ -453,14 +453,14 @@ return [
         [
             'text'    => 'Aplikasi Rawat Inap',
             'icon'    => 'fas fa-clinic-medical',
-            'can' => 'karu-ranap',
+            'can' => 'ranap',
             'submenu' => [
                 [
                     'text' => 'Pasien Ranap Aktif',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'pasienRanapAktif',
                     'shift'   => 'ml-2',
-                    'can' => 'karu-ranap',
+                    'can' => 'ranap',
                 ],
             ],
         ],

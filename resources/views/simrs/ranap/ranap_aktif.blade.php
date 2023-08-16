@@ -82,7 +82,6 @@
                             <td class="text-right">
                                 {{ $item->budget ? money($item->budget->tarif_inacbg, 'IDR') : '-' }}</td>
                             <td>
-                                test
                                 <x-adminlte-button class="btn-xs btnInfoPelayanan" label="Info" theme="warning"
                                     icon="fas fa-info-circle" data-toggle="tooltop" title="Info Pelayanan"
                                     data-id="{{ $item->kode_kunjungan }}" data-nomorsep="{{ $item->no_sep }}"
