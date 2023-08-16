@@ -23,24 +23,12 @@
 
                             </x-adminlte-select2>
                         </div>
-                        {{-- <div class="col-md-4">
-                            <x-adminlte-select2 name="kodedokter" label="Dokter">
-                                <option value="">SEMUA DOKTER (-)</option>
-                                @foreach ($dokters as $item)
-                                    <option value="{{ $item->kode_dokter_jkn }}"
-                                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
-                                        {{ $item->nama_paramedis }} ({{ $item->kode_dokter_jkn }})
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
-                        </div> --}}
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
         </div>
-        @if (isset($kunjungans))
-
+        @if ($kunjungans)
             <div class="col-md-12">
                 <div class="row">
                     {{-- <div class="col-md-3">
@@ -95,6 +83,10 @@
                                 {{ $item->budget ? money($item->budget->tarif_inacbg, 'IDR') : '-' }}</td>
                             <td>
                                 test
+                                <x-adminlte-button class="btn-xs btnInfoPelayanan" label="Info" theme="warning"
+                                    icon="fas fa-info-circle" data-toggle="tooltop" title="Info Pelayanan"
+                                    data-id="{{ $item->kode_kunjungan }}" data-nomorsep="{{ $item->no_sep }}"
+                                    data-norm="{{ $item->pasien->no_rm }}" data-counter="{{ $item->counter }}" />
                             </td>
                             <td>
                                 <x-adminlte-button class="btn-xs btnPilihKunjungan" label="Groupper" theme="primary"
@@ -366,6 +358,132 @@
             </x-slot>
         </form>
     </x-adminlte-modal>
+    <x-adminlte-modal id="modalPelayanan" name="modalPelayanan" title="Riwayat Pelayanan Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl" scrollable>
+        <div class="row">
+            <div class="col-md-4">
+                <dl class="row">
+                    <dt class="col-sm-4">Kode</dt>
+                    <dd class="col-sm-8">: <span class="kode_inacbg"></span></dd>
+                    <dt class="col-sm-4">Keterangan</dt>
+                    <dd class="col-sm-8">: <span class="description_inacbg"></span></dd>
+                    <dt class="col-sm-4">Kelas</dt>
+                    <dd class="col-sm-8">: <span class="kelas"></span></dd>
+                    <dt class="col-sm-4">Tarif RS</dt>
+                    <dd class="col-sm-8">: <span class="tarif_rs"></span></dd>
+                    <dt class="col-sm-4">Tarif INACBG</dt>
+                    <dd class="col-sm-8">: <span class="tarif_inacbg"></span></dd>
+                </dl>
+                <br><br>
+                <dl class="row">
+                    <dt class="col-sm-5">Prosedur Bedah</dt>
+                    <dd class="col-sm-7">: <span class="prosedur_non_bedah"></span></dd>
+                    <dt class="col-sm-5">Prosedur Non Bedah</dt>
+                    <dd class="col-sm-7">: <span class="prosedur_bedah"></span></dd>
+                    <dt class="col-sm-5">Tenaga Ahli</dt>
+                    <dd class="col-sm-7">: <span class="tenaga_ahli"></span></dd>
+                    <dt class="col-sm-5">radiologi</dt>
+                    <dd class="col-sm-7">: <span class="radiologi"></span></dd>
+                    <dt class="col-sm-5">laboratorium</dt>
+                    <dd class="col-sm-7">: <span class="laboratorium"></span></dd>
+                    <dt class="col-sm-5">rehabilitasi</dt>
+                    <dd class="col-sm-7">: <span class="rehabilitasi"></span></dd>
+                    <dt class="col-sm-5">sewa_alat</dt>
+                    <dd class="col-sm-7">: <span class="sewa_alat"></span></dd>
+                    <dt class="col-sm-5">keperawatan</dt>
+                    <dd class="col-sm-7">: <span class="keperawatan"></span></dd>
+                    <dt class="col-sm-5">kamar_akomodasi</dt>
+                    <dd class="col-sm-7">: <span class="kamar_akomodasi"></span></dd>
+                    <dt class="col-sm-5">penunjang</dt>
+                    <dd class="col-sm-7">: <span class="penunjang"></span></dd>
+                    <dt class="col-sm-5">konsultasi</dt>
+                    <dd class="col-sm-7">: <span class="konsultasi"></span></dd>
+                    <dt class="col-sm-5">pelayanan_darah</dt>
+                    <dd class="col-sm-7">: <span class="pelayanan_darah"></span></dd>
+                    <dt class="col-sm-5">rawat_intensif</dt>
+                    <dd class="col-sm-7">: <span class="rawat_intensif"></span></dd>
+                    <dt class="col-sm-5">obat</dt>
+                    <dd class="col-sm-7">: <span class="obat"></span></dd>
+                    <dt class="col-sm-5">alkes</dt>
+                    <dd class="col-sm-7">: <span class="alkes"></span></dd>
+                    <dt class="col-sm-5">bmhp</dt>
+                    <dd class="col-sm-7">: <span class="bmhp"></span></dd>
+                    <dt class="col-sm-5">obat_kronis</dt>
+                    <dd class="col-sm-7">: <span class="obat_kronis"></span></dd>
+                    <dt class="col-sm-5">obat_kemo</dt>
+                    <dd class="col-sm-7">: <span class="obat_kemo"></span></dd>
+                    <dt class="col-sm-5">tarif_rs</dt>
+                    <dd class="col-sm-7">: <span class="tarif_rs"></span></dd>
+                </dl>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-primary card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs">
+                            <li class="pt-2 px-3">
+                                <h3 class="card-title"><b>Riwayat Pasien</b></h3>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="pill" href="#tarifPasien">PELAYANAN</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#obatPasien">OBAT</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#penunjangPasien">PENUNJANG</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tarifPasien">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @php
+                                            $heads = ['TGL', 'NAMA_UNIT', 'GROUP_VCLAIM', 'KELOMPOK_TARIF', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
+                                            $config['paging'] = false;
+                                            $config['info'] = false;
+                                        @endphp
+                                        <x-adminlte-datatable id="tableRincian" class="nowrap text-xs" :heads="$heads"
+                                            :config="$config" bordered hoverable compressed>
+                                        </x-adminlte-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="obatPasien">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @php
+                                            $heads = ['TGL', 'NAMA_UNIT', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
+                                            $config['paging'] = false;
+                                            $config['info'] = false;
+                                        @endphp
+                                        <x-adminlte-datatable id="tableObat" class="nowrap text-xs" :heads="$heads"
+                                            :config="$config" bordered hoverable compressed>
+                                        </x-adminlte-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="penunjangPasien">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @php
+                                            $heads = ['TGL', 'NAMA_UNIT', 'NAMA_TARIF', 'GRANTOTAL_LAYANAN'];
+                                            $config['paging'] = false;
+                                            $config['info'] = false;
+                                        @endphp
+                                        <x-adminlte-datatable id="tablePenunjang" class="nowrap text-xs" :heads="$heads"
+                                            :config="$config" bordered hoverable compressed>
+                                        </x-adminlte-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </x-adminlte-modal>
     <x-adminlte-modal id="modalSEP" name="modalSEP" title="SEP Peserta" theme="success" icon="fas fa-file-medical"
         size="xl">
         <table id="tableSEP" class="table table-sm table-hover table-bordered">
@@ -389,6 +507,7 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.Sweetalert2', true)
 
 @section('js')
     <script>
@@ -428,6 +547,280 @@
                 $.LoadingOverlay("show");
                 $('#modalGroupper').modal('show');
                 $.LoadingOverlay("hide", true);
+            });
+            $('.btnInfoPelayanan').click(function() {
+                var kodekunjungan = $(this).data('id');
+                var nomorsep = $(this).data('nomorsep');
+                var norm = $(this).data('norm');
+                var counter = $(this).data('counter');
+                $('#kodekunjungan').val(kodekunjungan);
+                $('#nomor_sep').val(nomorsep);
+                $('#nomor_rm').val(norm);
+                $('#counter').val(counter);
+                $.LoadingOverlay("show");
+                var table = $('#tableRincian')
+                    .DataTable();
+                var tableObat = $('#tableObat')
+                    .DataTable();
+                var tablePenunjangPasien = $('#tablePenunjang')
+                    .DataTable();
+
+                table.rows().remove().draw();
+                var urlRincian = "{{ route('api.eclaim.rincian_biaya_pasien') }}?counter=" +
+                    counter + "&norm=" + norm;
+                $.ajax({
+                    url: urlRincian,
+                    type: "GET",
+                    success: function(data) {
+                        if (data.metadata.code == 200) {
+                            console.log(data.response.budget);
+                            $.each(data.response.rincian,
+                                function(key, value) {
+                                    table.row.add([
+                                            value.TGL,
+                                            value.NAMA_UNIT,
+                                            value.nama_group_vclaim,
+                                            value.KELOMPOK_TARIF,
+                                            value.NAMA_TARIF,
+                                            value.GRANTOTAL_LAYANAN.toLocaleString(
+                                                'id-ID'),
+                                        ])
+                                        .draw(false);
+                                    if (value.nama_group_vclaim === 'OBAT') {
+                                        tableObat.row.add([
+                                                value.TGL,
+                                                value.NAMA_UNIT,
+                                                value.NAMA_TARIF,
+                                                value.GRANTOTAL_LAYANAN.toLocaleString(
+                                                    'id-ID'),
+                                            ])
+                                            .draw(false);
+                                    }
+                                    if (value.nama_group_vclaim === 'LABORATORIUM') {
+                                        tablePenunjangPasien.row.add([
+                                                value.TGL,
+                                                value.NAMA_UNIT,
+                                                value.NAMA_TARIF,
+                                                value.GRANTOTAL_LAYANAN.toLocaleString(
+                                                    'id-ID'),
+                                            ])
+                                            .draw(false);
+                                    }
+                                });
+                            $('.prosedur_non_bedah')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .prosedur_non_bedah.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.tenaga_ahli')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .tenaga_ahli.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.radiologi')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .radiologi.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.rehabilitasi')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .rehabilitasi.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.obat')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .obat.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.alkes')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .alkes.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.prosedur_bedah')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .prosedur_bedah.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.keperawatan')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .keperawatan.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.laboratorium')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .laboratorium.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.kamar_akomodasi')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .kamar_akomodasi.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.obat_kronis')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .obat_kronis.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.bmhp')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .bmhp.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.konsultasi')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .konsultasi.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.penunjang')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .penunjang.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.pelayanan_darah')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .pelayanan_darah.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.rawat_intensif')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .rawat_intensif.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.obat_kemo')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .obat_kemo.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.sewa_alat')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .sewa_alat.toLocaleString(
+                                        'id-ID')
+                                );
+                            $('.tarif_rs')
+                                .html(
+                                    data
+                                    .response
+                                    .rangkuman
+                                    .tarif_rs.toLocaleString(
+                                        'id-ID')
+                                );
+
+
+                            $('.kode_inacbg')
+                                .html(
+                                    data
+                                    .response
+                                    .budget
+                                    .kode_cbg
+                                );
+                            $('.description_inacbg')
+                                .html(
+                                    data
+                                    .response
+                                    .budget
+                                    .deskripsi
+                                );
+                            $('.kelas')
+                                .html(
+                                    data
+                                    .response
+                                    .budget
+                                    .kelas
+                                );
+                            $('.tarif_inacbg')
+                                .html(data.response.budget.tarif_inacbg.toLocaleString(
+                                    'id-ID'));
+                            swal.fire(
+                                'Success',
+                                data
+                                .metadata
+                                .message,
+                                'success'
+                            );
+                        } else {
+                            swal.fire(
+                                'Error',
+                                data
+                                .metadata
+                                .message,
+                                'error'
+                            );
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        swal.fire(
+                            'Error ' +
+                            data
+                            .responseJSON
+                            .metadata
+                            .code,
+                            data
+                            .responseJSON
+                            .metadata
+                            .message,
+                            'error'
+                        );
+                        $.LoadingOverlay(
+                            "hide");
+                    }
+                });
+                $('#modalPelayanan').modal('show');
             });
             $('#btnCariSEP').click(function(e) {
                 var nomorkartu = $('#nomor_kartu').val();
@@ -489,6 +882,7 @@
                     }
                 });
             });
+
         });
     </script>
     {{-- search select2 --}}

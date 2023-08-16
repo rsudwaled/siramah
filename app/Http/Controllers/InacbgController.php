@@ -33,9 +33,9 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         $response =  $this->send_request($json_request);
         $datarray = array();
-        if ($response->status() == 200) {
-            $data = $response->getData()->response->data;
-            $count = $response->getData()->response->count;
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
             if ($count == 0) {
             } else {
                 foreach ($data as  $item) {
@@ -69,9 +69,9 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         $response =  $this->send_request($json_request);
         $datarray = array();
-        if ($response->status() == 200) {
-            $data = $response->getData()->response->data;
-            $count = $response->getData()->response->count;
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
             if ($count == 0) {
             } else {
                 foreach ($data as  $item) {
@@ -158,30 +158,31 @@ class InacbgController extends APIController
         $res = $this->new_claim($request);
         $res = $this->set_claim_ranap($request);
         $res = $this->grouper($request);
-        if ($res->getData()->metadata->code == 200) {
+        if ($res->metadata->code == 200) {
             $rmcounter = $request->nomor_rm . '|' . $request->counter;
             $budget = BudgetControl::updateOrCreate(
                 [
                     'rm_counter' => $rmcounter
                 ],
                 [
-                    'tarif_inacbg' => $res->getData()->response->cbg->tariff,
+                    'tarif_inacbg' => $res->response->cbg->tariff,
                     'no_rm' => $request->nomor_rm,
                     'counter' => $request->counter,
                     'diagnosa_kode' => $request->diagnosa,
                     'diagnosa' => $request->diagnosa,
                     'prosedur' => $request->procedure,
-                    'kode_cbg' => $res->getData()->response->cbg->code,
-                    'kelas' => $res->getData()->response->kelas,
+                    'kode_cbg' => $res->response->cbg->code,
+                    'kelas' => $res->response->kelas,
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
-                    'deskripsi' => $res->getData()->response->cbg->description,
+                    'deskripsi' => $res->response->cbg->description,
                 ]
             );
             $kunjungan = Kunjungan::find($request->kodekunjungan);
             $kunjungan->update([
                 'no_sep' => $request->nomor_sep,
             ]);
+        } else {
         }
         return redirect()->back();
     }
@@ -611,6 +612,7 @@ class InacbgController extends APIController
     {
         $validator = Validator::make(request()->all(), [
             "nomor_sep" =>  "required",
+            "nomor_kartu" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -699,7 +701,7 @@ class InacbgController extends APIController
         $response = $this->inacbg_decrypt($response, $key);
         // hasil decrypt adalah format json, ditranslate kedalam array
         $msg = json_decode($response);
-        return response()->json($msg);
+        return $msg;
     }
     // Encryption Function
     function inacbg_encrypt($data, $key)
@@ -786,8 +788,10 @@ class InacbgController extends APIController
     public function rincian_biaya_pasien(Request $request)
     {
         $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
+        $budget = BudgetControl::find($request->norm . '|' . $request->counter);
         $data = [
             "rincian" => $response,
+            "budget" => $budget,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
