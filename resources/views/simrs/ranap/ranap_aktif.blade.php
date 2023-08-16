@@ -53,7 +53,7 @@
                 <x-adminlte-card theme="secondary" icon="fas fa-info-circle"
                     title="Total Pasien Aktif ({{ $kunjungans->count() }} Orang)">
                     @php
-                        $heads = ['Counter', 'Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Diagnosa', 'Tarif', 'Status', 'Action'];
+                        $heads = ['Counter', 'Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Tarif Klaim', 'Tagihan RS', 'Status', 'Action'];
                         $config['order'] = ['1', 'asc'];
                         $config['paging'] = false;
                         $config['scrollY'] = '400px';
@@ -78,14 +78,42 @@
                             <td>{{ $item->kelas }} / {{ $item->penjamin_simrs->group_jaminan }}</td>
                             <td>{{ $item->dokter->nama_paramedis }}</td>
                             <td>{{ $item->unit->nama_unit }}</td>
-                            <td>{{ $item->budget->diagnosa_kode ?? '-' }}</td>
                             <td class="text-right">
                                 {{ $item->budget ? money($item->budget->tarif_inacbg, 'IDR') : '-' }}</td>
+                            <td class="text-right">
+                                {{ $item->tagihan ? money($item->tagihan->total_biaya, 'IDR') : '-' }}
+
+
+                            </td>
                             <td>
-                                <x-adminlte-button class="btn-xs btnInfoPelayanan" label="Info" theme="warning"
-                                    icon="fas fa-info-circle" data-toggle="tooltop" title="Info Pelayanan"
-                                    data-id="{{ $item->kode_kunjungan }}" data-nomorsep="{{ $item->no_sep }}"
-                                    data-norm="{{ $item->pasien->no_rm }}" data-counter="{{ $item->counter }}" />
+
+                                @if ($item->budget)
+                                    @if (round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) > 100)
+                                        <button class="btn btn-xs btn-danger btnInfoPelayanan" data-toggle="tooltop"
+                                            title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
+                                            data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
+                                            data-counter="{{ $item->counter }}">
+                                            {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
+
+                                        </button>
+                                    @else
+                                        <button class="btn btn-xs btn-success btnInfoPelayanan" data-toggle="tooltop"
+                                            title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
+                                            data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
+                                            data-counter="{{ $item->counter }}">
+                                            {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
+                                        </button>
+                                    @endif
+                                @else
+                                    <button class="btn btn-xs btn-danger btnInfoPelayanan" data-toggle="tooltop"
+                                        title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
+                                        data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
+                                        data-counter="{{ $item->counter }}">
+                                        0%
+                                    </button>
+                                @endif
+
+                                {{-- <x-adminlte-button label="Info" theme="warning" icon="fas fa-info-circle" /> --}}
                             </td>
                             <td>
                                 <x-adminlte-button class="btn-xs btnPilihKunjungan" label="Groupper" theme="primary"

@@ -94,6 +94,11 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(BudgetControl::class, 'rm_counter',   'rm_counter');
     }
+    public function tagihan()
+    {
+        return $this->belongsTo(TagihanPasien::class, 'rm_counter',   'rm_counter');
+    }
+
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()
     // {

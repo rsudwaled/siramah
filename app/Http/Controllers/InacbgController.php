@@ -157,21 +157,21 @@ class InacbgController extends APIController
     public function claim_ranap(Request $request)
     {
         $diag = null;
+        $diag_utama = null;
         foreach ($request->diagnosa as $key => $value) {
             $diagnosa = Icd10::where('diag', $value)->first();
             if ($key == 0) {
                 $a = $diagnosa != null ? $diagnosa->nama : '-';
-                $diag =  $value . "|" . $a;
-                dd($diagnosa, $key, $value, $diag);
+                $diag_utama =  $value . " | " . $a;
+            } else if ($key == 1) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . " | " . $a;
             } else {
                 $a = $diagnosa != null ? $diagnosa->nama : '-';
-                $diag = $diag . ";" .  $value . "|" . $diagnosa == null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . " | " . $a;
             }
-            dd($diagnosa, $key);
         }
-        dd($request->all(),  $diag);
-
-
+        // dd($diagnosa, $diag);
         $res = $this->new_claim($request);
         $res = $this->set_claim_ranap($request);
         $res = $this->grouper($request);
@@ -182,14 +182,15 @@ class InacbgController extends APIController
                     'rm_counter' => $rmcounter
                 ],
                 [
-                    'tarif_inacbg' => $res->response->cbg->tariff,
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
                     'no_rm' => $request->nomor_rm,
                     'counter' => $request->counter,
 
                     'diagnosa_kode' => $request->diagnosa, #kode
-                    'diagnosa' => $request->diagnosa, #kode | deskripsi
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
                     'prosedur' => $request->procedure, #kode | deskripsi
-                    'kode_cbg' => $res->response->cbg->code, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
 
                     'kelas' => $res->response->kelas,
                     'tgl_grouper' => now(),
