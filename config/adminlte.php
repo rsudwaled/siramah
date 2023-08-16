@@ -453,14 +453,14 @@ return [
         [
             'text'    => 'Aplikasi Rawat Inap',
             'icon'    => 'fas fa-clinic-medical',
-            // 'can' => 'ranap',
+            'can' => 'karu-ranap',
             'submenu' => [
                 [
                     'text' => 'Pasien Ranap Aktif',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'pasienRanapAktif',
                     'shift'   => 'ml-2',
-                    // 'can' => 'ranap',
+                    'can' => 'karu-ranap',
                 ],
             ],
         ],
@@ -1224,6 +1224,13 @@ return [
             'icon'    => 'fas fa-file-medical',
             'can' => 'casemix',
             'submenu' => [
+                [
+                    'text' => 'Pasien Ranap Aktif',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienRanapAktif',
+                    'shift'   => 'ml-2',
+                    'can' => 'casemix',
+                ],
                 [
                     'text' => 'Diagnosa Rawat Jalan',
                     'icon'    => 'fas fa-diagnoses',

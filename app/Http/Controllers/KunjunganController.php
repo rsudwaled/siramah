@@ -111,18 +111,21 @@ class KunjunganController extends APIController
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
-        if ($request->kodeunit == '-') {
-            $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
-                ->where('status_kunjungan', 1)
-                ->has('pasien')
-                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
-                ->get();
-        } else {
-            $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
-                ->where('status_kunjungan', 1)
-                ->has('pasien')
-                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
-                ->get();
+        $kunjungans = null;
+        if ($request->kodeunit) {
+            if ($request->kodeunit == '-') {
+                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->where('status_kunjungan', 1)
+                    ->has('pasien')
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                    ->where('status_kunjungan', 1)
+                    ->has('pasien')
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
+                    ->get();
+            }
         }
         // dd($kunjungans->first(), $kunjungans->first()->layanan->sum('total_layanan'));
         return view('simrs.ranap.ranap_aktif', compact([
