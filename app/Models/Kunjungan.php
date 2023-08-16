@@ -68,7 +68,7 @@ class Kunjungan extends Model
     }
     public function layanan()
     {
-        return $this->hasMany(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
+        return $this->hasOne(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
     public function assesmen_dokter()
     {
