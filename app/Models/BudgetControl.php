@@ -17,4 +17,9 @@ class BudgetControl extends Model
         'id',
     ];
     // public $timestamps = false;
+
+    public function pasien()
+    {
+        return $this->belongsTo(Pasien::class, 'no_rm', 'no_rm');
+    }
 }

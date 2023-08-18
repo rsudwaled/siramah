@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\BudgetControl;
 use App\Models\Icd10;
 use App\Models\Kunjungan;
+use App\Models\Pasien;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
+
 
 class InacbgController extends APIController
 {
@@ -196,6 +199,7 @@ class InacbgController extends APIController
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
                     'deskripsi' => $res->response->cbg->description,
+                    "pic" => Auth::user()->id,
                 ]
             );
             $kunjungan = Kunjungan::find($request->kodekunjungan);
@@ -812,6 +816,7 @@ class InacbgController extends APIController
         $data = [
             "rincian" => $response,
             "budget" => $budget,
+            "pasien" => $budget->pasien,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
@@ -835,5 +840,15 @@ class InacbgController extends APIController
             ],
         ];
         return $this->sendResponse($data, 200);
+    }
+    public function update_claim(Request $request)
+    {
+        $budget = BudgetControl::find($request->rm_counter);
+        $budget->update([
+            "status" => $request->status,
+            "saran" => $request->saran,
+            "pic2" => Auth::user()->id,
+        ]);
+        return redirect()->back();
     }
 }
