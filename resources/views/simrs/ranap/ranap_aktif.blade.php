@@ -64,7 +64,18 @@
                             @if ($item->budget)
                                 @if ($item->budget->diagnosa_kode)
                                     {{-- <tr class="table-warning"> --}}
-                                    <tr>
+                                    @switch($item->budget->status)
+                                        @case(1)
+                                            <tr class="table-warning">
+                                            @break
+
+                                            @case(2)
+                                            <tr class="table-success">
+                                            @break
+
+                                            @default
+                                            <tr>
+                                        @endswitch
                                     @else
                                     <tr class="table-danger">
                                 @endif
@@ -394,59 +405,72 @@
         icon="fas fa-file-medical" size="xl" scrollable>
         <div class="row">
             <div class="col-md-4">
-                <dl class="row">
-                    <dt class="col-sm-4">Kode</dt>
-                    <dd class="col-sm-8">: <span class="kode_inacbg"></span></dd>
-                    <dt class="col-sm-4">Keterangan</dt>
-                    <dd class="col-sm-8">: <span class="description_inacbg"></span></dd>
-                    <dt class="col-sm-4">Kelas</dt>
-                    <dd class="col-sm-8">: <span class="kelas"></span></dd>
-                    <dt class="col-sm-4">Tarif RS</dt>
-                    <dd class="col-sm-8">: <span class="tarif_rs"></span></dd>
-                    <dt class="col-sm-4">Tarif INACBG</dt>
-                    <dd class="col-sm-8">: <span class="tarif_inacbg"></span></dd>
-                </dl>
-                <br><br>
-                <dl class="row">
-                    <dt class="col-sm-5">Prosedur Bedah</dt>
-                    <dd class="col-sm-7">: <span class="prosedur_non_bedah"></span></dd>
-                    <dt class="col-sm-5">Prosedur Non Bedah</dt>
-                    <dd class="col-sm-7">: <span class="prosedur_bedah"></span></dd>
-                    <dt class="col-sm-5">Tenaga Ahli</dt>
-                    <dd class="col-sm-7">: <span class="tenaga_ahli"></span></dd>
-                    <dt class="col-sm-5">radiologi</dt>
-                    <dd class="col-sm-7">: <span class="radiologi"></span></dd>
-                    <dt class="col-sm-5">laboratorium</dt>
-                    <dd class="col-sm-7">: <span class="laboratorium"></span></dd>
-                    <dt class="col-sm-5">rehabilitasi</dt>
-                    <dd class="col-sm-7">: <span class="rehabilitasi"></span></dd>
-                    <dt class="col-sm-5">sewa_alat</dt>
-                    <dd class="col-sm-7">: <span class="sewa_alat"></span></dd>
-                    <dt class="col-sm-5">keperawatan</dt>
-                    <dd class="col-sm-7">: <span class="keperawatan"></span></dd>
-                    <dt class="col-sm-5">kamar_akomodasi</dt>
-                    <dd class="col-sm-7">: <span class="kamar_akomodasi"></span></dd>
-                    <dt class="col-sm-5">penunjang</dt>
-                    <dd class="col-sm-7">: <span class="penunjang"></span></dd>
-                    <dt class="col-sm-5">konsultasi</dt>
-                    <dd class="col-sm-7">: <span class="konsultasi"></span></dd>
-                    <dt class="col-sm-5">pelayanan_darah</dt>
-                    <dd class="col-sm-7">: <span class="pelayanan_darah"></span></dd>
-                    <dt class="col-sm-5">rawat_intensif</dt>
-                    <dd class="col-sm-7">: <span class="rawat_intensif"></span></dd>
-                    <dt class="col-sm-5">obat</dt>
-                    <dd class="col-sm-7">: <span class="obat"></span></dd>
-                    <dt class="col-sm-5">alkes</dt>
-                    <dd class="col-sm-7">: <span class="alkes"></span></dd>
-                    <dt class="col-sm-5">bmhp</dt>
-                    <dd class="col-sm-7">: <span class="bmhp"></span></dd>
-                    <dt class="col-sm-5">obat_kronis</dt>
-                    <dd class="col-sm-7">: <span class="obat_kronis"></span></dd>
-                    <dt class="col-sm-5">obat_kemo</dt>
-                    <dd class="col-sm-7">: <span class="obat_kemo"></span></dd>
-                    <dt class="col-sm-5">tarif_rs</dt>
-                    <dd class="col-sm-7">: <span class="tarif_rs"></span></dd>
-                </dl>
+                <x-adminlte-card title="Hasil Group INACBG" theme="primary" icon="fas fa-info-circle" collapsible>
+                    <dl class="row">
+                        <dt class="col-sm-5">Pasien</dt>
+                        <dd class="col-sm-7">: <span class="pasien"></span></dd>
+                        <dt class="col-sm-5">Kunjungan</dt>
+                        <dd class="col-sm-7">: <span class="kunjungan"></span></dd>
+                        <dt class="col-sm-5">Diagnosa Utama</dt>
+                        <dd class="col-sm-7">: <span class="diagnosa_utama"></span></dd>
+                        <dt class="col-sm-5">Diagnosa Sekunder</dt>
+                        <dd class="col-sm-7">: <span class="diagnosa_sekunder"></span></dd>
+                        <br>
+                        <br>
+                        <dt class="col-sm-5">Kode</dt>
+                        <dd class="col-sm-7">: <span class="kode_inacbg"></span></dd>
+                        <dt class="col-sm-5">Keterangan</dt>
+                        <dd class="col-sm-7">: <span class="description_inacbg"></span></dd>
+                        <dt class="col-sm-5">Kelas</dt>
+                        <dd class="col-sm-7">: <span class="kelas"></span></dd>
+                        <dt class="col-sm-5">Tarif RS</dt>
+                        <dd class="col-sm-7">: <span class="tarif_rs"></span></dd>
+                        <dt class="col-sm-5">Tarif INACBG</dt>
+                        <dd class="col-sm-7">: <span class="tarif_inacbg"></span></dd>
+                    </dl>
+                </x-adminlte-card>
+                <x-adminlte-card title="Tarif RS Per Group" theme="primary" icon="fas fa-info-circle" collapsible>
+                    <dl class="row">
+                        <dt class="col-sm-5">Prosedur Bedah</dt>
+                        <dd class="col-sm-7">: <span class="prosedur_non_bedah"></span></dd>
+                        <dt class="col-sm-5">Prosedur Non Bedah</dt>
+                        <dd class="col-sm-7">: <span class="prosedur_bedah"></span></dd>
+                        <dt class="col-sm-5">Tenaga Ahli</dt>
+                        <dd class="col-sm-7">: <span class="tenaga_ahli"></span></dd>
+                        <dt class="col-sm-5">radiologi</dt>
+                        <dd class="col-sm-7">: <span class="radiologi"></span></dd>
+                        <dt class="col-sm-5">laboratorium</dt>
+                        <dd class="col-sm-7">: <span class="laboratorium"></span></dd>
+                        <dt class="col-sm-5">rehabilitasi</dt>
+                        <dd class="col-sm-7">: <span class="rehabilitasi"></span></dd>
+                        <dt class="col-sm-5">sewa_alat</dt>
+                        <dd class="col-sm-7">: <span class="sewa_alat"></span></dd>
+                        <dt class="col-sm-5">keperawatan</dt>
+                        <dd class="col-sm-7">: <span class="keperawatan"></span></dd>
+                        <dt class="col-sm-5">kamar_akomodasi</dt>
+                        <dd class="col-sm-7">: <span class="kamar_akomodasi"></span></dd>
+                        <dt class="col-sm-5">penunjang</dt>
+                        <dd class="col-sm-7">: <span class="penunjang"></span></dd>
+                        <dt class="col-sm-5">konsultasi</dt>
+                        <dd class="col-sm-7">: <span class="konsultasi"></span></dd>
+                        <dt class="col-sm-5">pelayanan_darah</dt>
+                        <dd class="col-sm-7">: <span class="pelayanan_darah"></span></dd>
+                        <dt class="col-sm-5">rawat_intensif</dt>
+                        <dd class="col-sm-7">: <span class="rawat_intensif"></span></dd>
+                        <dt class="col-sm-5">obat</dt>
+                        <dd class="col-sm-7">: <span class="obat"></span></dd>
+                        <dt class="col-sm-5">alkes</dt>
+                        <dd class="col-sm-7">: <span class="alkes"></span></dd>
+                        <dt class="col-sm-5">bmhp</dt>
+                        <dd class="col-sm-7">: <span class="bmhp"></span></dd>
+                        <dt class="col-sm-5">obat_kronis</dt>
+                        <dd class="col-sm-7">: <span class="obat_kronis"></span></dd>
+                        <dt class="col-sm-5">obat_kemo</dt>
+                        <dd class="col-sm-7">: <span class="obat_kemo"></span></dd>
+                        <dt class="col-sm-5">tarif_rs</dt>
+                        <dd class="col-sm-7">: <span class="tarif_rs"></span></dd>
+                    </dl>
+                </x-adminlte-card>
             </div>
             <div class="col-md-8">
                 <div class="card card-primary card-tabs">
@@ -463,6 +487,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="pill" href="#penunjangPasien">PENUNJANG</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="pill" href="#verifikasi">VERIFIKASI</a>
                             </li>
                         </ul>
                     </div>
@@ -509,6 +536,25 @@
                                         </x-adminlte-datatable>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="tab-pane fade" id="verifikasi">
+                                <form action="{{ route('update_claim') }}" id="formUpdateClaim" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="rm_counter" class="rm_counter">
+                                    <x-adminlte-textarea name="saran" label="Saran Verifikasi"
+                                        placeholder="Saran..." />
+                                    <x-adminlte-select name="status" label="Status Verifikasi">
+                                        <option value="0">Belum Verifikasi</option>
+                                        <option value="99">Perbaiki</option>
+                                        <option selected value="1">Verfikasi Casemix Ruangan</option>
+                                        <option value="2">Verifikasi Casemix RS</option>
+                                    </x-adminlte-select>
+                                    <x-adminlte-input igroup-size="sm" name="user" label="User Verifikasi"
+                                        value="{{ Auth::user()->name }}" readonly />
+                                    <x-adminlte-button theme="success" class="mr-auto" label="Groupper" type="submit"
+                                        form="formUpdateClaim" />
+                                </form>
+
                             </div>
                         </div>
                     </div>
@@ -606,6 +652,7 @@
                     success: function(data) {
                         if (data.metadata.code == 200) {
                             console.log(data.response.budget);
+                            console.log(data.response.pasien);
                             $.each(data.response.rincian,
                                 function(key, value) {
                                     table.row.add([
@@ -816,6 +863,42 @@
                                 $('.tarif_inacbg')
                                     .html(data.response.budget.tarif_inacbg.toLocaleString(
                                         'id-ID'));
+
+                                $('.diagnosa_utama')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .diagnosa_utama
+                                    );
+                                $('.diagnosa_sekunder')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .diagnosa
+                                    );
+                                $('.pasien')
+                                    .html(
+                                        data
+                                        .response
+                                        .pasien
+                                        .nama_px
+                                    );
+                                $('.kunjungan')
+                                    .html(
+                                        data
+                                        .response
+                                        .budget
+                                        .rm_counter
+                                    );
+                                $('.rm_counter')
+                                    .val(
+                                        data
+                                        .response
+                                        .budget
+                                        .rm_counter
+                                    );
                             }
                             swal.fire(
                                 'Success',
@@ -933,7 +1016,6 @@
                         };
                     },
                     processResults: function(response) {
-                        console.log(response);
                         return {
                             results: response
                         };
