@@ -156,15 +156,6 @@ class InacbgController extends APIController
     }
     public function claim_ranap(Request $request)
     {
-        // $validator = Validator::make(request()->all(), [
-        //     "nomor_sep" =>  "required",
-        //     "nomor_kartu" =>  "required",
-        //     "tgl_masuk" =>  "required|date",
-        //     "diagnosa" =>  "required",
-        // ]);
-        // if ($validator->fails()) {
-        //     return $this->sendError($validator->errors()->first(), null, 400);
-        // }
         $diag = null;
         $diag_utama = null;
         foreach ($request->diagnosa as $key => $value) {
@@ -180,7 +171,7 @@ class InacbgController extends APIController
                 $diag = $diag . ";" .  $value . " | " . $a;
             }
         }
-        // dd($diagnosa, $diag);
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
         $res = $this->new_claim($request);
         $res = $this->set_claim_ranap($request);
         $res = $this->grouper($request);
@@ -498,7 +489,7 @@ class InacbgController extends APIController
                 "nomor_sep" =>  $request->nomor_sep,
                 "nomor_kartu" => $request->nomor_kartu,
                 "tgl_masuk" => $request->tgl_masuk,
-                "tgl_pulang" => now(),
+                "tgl_pulang" => $request->tgl_pulang,
                 "cara_masuk" => $request->cara_masuk, #isi
                 "jenis_rawat" => 1, #inap, jalan, igd
                 "kelas_rawat" => $request->kelas_rawat, #kelas rawat
