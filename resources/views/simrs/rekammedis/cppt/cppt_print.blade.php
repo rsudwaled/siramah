@@ -110,7 +110,7 @@
         <tr>
             <th>
                 <div class="container-assesment">
-                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK)</div>
+                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK) {{$data->COUNTER}}</div>
                 </div>
             </td>
             <th >
@@ -441,6 +441,27 @@
                                 <td id="td_right">{{$item->NAMA_TARIF != 'Jasa Baca' ? $item->NAMA_TARIF :''}}</td>
                             </tr>
                             @endif
+                        @endif
+                    @endforeach
+                </table>
+            </td>
+        </tr>
+        {{-- Riwayat Penunjang --}}
+        <tr >
+            <th colspan="2" style="background-color: rgb(109, 201, 175)">
+                <div class="container-assesment">
+                    <div class="title_asses">Riwayat Penunjang</div>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <table id="tbl_right">
+                    @foreach ($rincianbiaya as $item)
+                        @if ($item->nama_group_vclaim == 'RADIOLOGI'  || $item->nama_group_vclaim == 'LABORATORIUM'  || $item->nama_group_vclaim == 'PELAYANAN DARAH' || $item->nama_group_vclaim == 'REHABILITASI' || $item->nama_group_vclaim == 'PENUNJANG')
+                        <tr>
+                            <td id="td_right">{{$item->NAMA_TARIF != 'Jasa Baca' ? $item->NAMA_TARIF :''}}</td>
+                        </tr>
                         @endif
                     @endforeach
                 </table>

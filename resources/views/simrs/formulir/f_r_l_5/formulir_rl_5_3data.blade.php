@@ -1,13 +1,13 @@
 @extends('adminlte::page')
-@section('title', 'Formulir RL 5.4')
+@section('title', 'Formulir RL 5.3')
 @section('content_header')
-    <h1>Daftar Penyakit Rawat Jalan </h1>
+    <h1>Daftar Penyakit Rawat Inap </h1>
 @endsection
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Penyakit Rawat Jalan" theme="purple" >
+            <x-adminlte-card title="Penyakit Rawat Inap" theme="purple" >
                 <form action="{{route('get-rl-5-4-u')}}" method="post">
                     @csrf
                     <div class="row">
@@ -67,10 +67,11 @@
                     <div class="row p-3 kop-surat" style="vertical-align : middle;text-align:left;">
                         <img src="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" style="width: 100px">
                         <div class="col mt-4">
-                            <b >Formulir RL 5.4</b><br>
-                            <b > DAFTAR {{$jml}} BESAR PENYAKIT RAWAT JALAN</b>
+                            <b>Formulir RL 5.3</b><br>
+                            <b> DAFTAR {{ $jml }} BESAR PENYAKIT RAWAT INAP</b>
                         </div>
-                        <div class="col"><i class="fas fa-hospital float-right" style="color: #fcf7f7e7"></i></div>
+                        <div class="col"><i class="fas fa-hospital float-right" style="color: #fcf7f7e7"></i>
+                        </div>
                         <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                     </div>
                     <div class="row invoice-info p-3">
@@ -85,7 +86,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-2"><b>Tahun</b></div>
-                                <div class="col-sm-5"><b>: {{$th}}</b></div>
+                                <div class="col-sm-5"><b>: {{ $th }}</b></div>
                             </div>
                         </div>
                     </div>
@@ -93,28 +94,47 @@
                         <table class="table table-sm" style="text-align: center;">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;"id="no">No. Urut</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Kode ICD 10</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Deskripsi</th>
-                                    <th colspan="2" style="vertical-align : middle;text-align:center;" >Pasien Kasus Baru Menurut Jenis Kelamin</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;" >Jumlah Kasus Baru</th>
-                                    <th rowspan="2" style="vertical-align : middle;text-align:center;" >Jumlah Kunjungan</th>
+                                    <th rowspan="2"
+                                        style="vertical-align : middle;text-align:center;"id="no">No. Urut
+                                    </th>
+                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">Kode ICD
+                                        10</th>
+                                    <th rowspan="2" style="vertical-align : middle;text-align:center;">
+                                        Deskripsi</th>
                                 </tr>
                                 <tr>
-                                    <th >LK</th>
-                                    <th >PR</th>
+                                    <th colspan="2" style="vertical-align : middle;text-align:center;"
+                                        id="terapi">Pasien Hidup Menurut Jenis Kelamin</th>
+                                    <th colspan="2" style="vertical-align : middle;text-align:center;"
+                                        id="terapi">Pasien Mati Menurut Jenis Kelamin</th>
+                                    <th colspan="2" style="vertical-align : middle;text-align:center;"
+                                        id="terapi">Total (Hidup & Mati)</th>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>LK</th>
+                                    <th>PR</th>
+                                    <th>LK</th>
+                                    <th>PR</th>
+                                    <th>LK</th>
+                                    <th>PR</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($laporanFM as $item )
+                                @foreach ($laporanFM as $item)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$item->kode_icd}}</td>
-                                        <td style="vertical-align : middle;text-align:left;">{{$item->Nama_Penyakit}}</td>
-                                        <td>{{$item->Kasus_Baru_LK}}</td>
-                                        <td>{{$item->Kasus_Baru_PR}}</td>
-                                        <td>{{$item->JML_KASUS_BARU}}</td>
-                                        <td>{{$item->Jumlah}}</td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->kode_icd }}</td>
+                                        <td style="vertical-align : middle;text-align:left;">
+                                            {{ $item->Nama_Penyakit }}</td>
+                                        <td>{{ $item->Jumlah_KELUAR_HIDUP_LK }}</td>
+                                        <td>{{ $item->Jumlah_KELUAR_HIDUP_PR }}</td>
+                                        <td>{{ $item->Jumlah_KELUAR_MATI_LK }}</td>
+                                        <td>{{ $item->Jumlah_KELUAR_MATI_PR }}</td>
+                                        <td>{{ $item->HIDUP_MATI_LK }}</td>
+                                        <td>{{ $item->HIDUP_MATI_PR }}</td>
 
                                     </tr>
                                 @endforeach

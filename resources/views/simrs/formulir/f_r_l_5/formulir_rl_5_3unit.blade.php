@@ -7,8 +7,9 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Daftar Penyakit Rawat Inap Perunit" theme="secondary" id="hide_div" collapsible>
-                <form id="formFilter" action="" method="get">
+            <x-adminlte-card title="Filter Daftar Penyakit Rawat Inap Perunit" theme="purple" id="hide_div" collapsible>
+                <form action="{{route('get-rl-5-3-d')}}" method="post">
+                    @csrf
                     <div class="row">
                         <div class="col-md-3">
                             @php
@@ -19,7 +20,7 @@
                                 {{-- value="2023-06-01"> --}}
                                 {{-- value="-"> --}}
                                 <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
+                                    <div class="input-group-text bg-purple">
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                 </x-slot>
@@ -33,7 +34,7 @@
                                         {{-- value="2023-06-30"> --}}
                                         {{-- value="-"> --}}
                                         <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
+                                            <div class="input-group-text bg-purple">
                                                 <i class="fas fa-calendar-alt"></i>
                                             </div>
                                         </x-slot>
@@ -45,7 +46,7 @@
                                             <x-adminlte-input name="jumlah" label="Jumlah" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
                                                 <x-slot name="prependSlot">
                                                     <div class="input-group-text">
-                                                        <i class="fas fa-user text-lightblue"></i>
+                                                        <i class="fas fa-user text-purple"></i>
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-input>
@@ -53,17 +54,17 @@
                                         <div class="col- ml-2">
                                             <x-adminlte-select2 name="unit" required id="unit" label="Pilih Unit">
                                                 @foreach ($unit as $item)
-                                                    <option {{ $item->KODE_UNIT == $sel ? 'selected':'' }} value="{{$item->KODE_UNIT}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
+                                                    <option {{ $item->KODE_UNIT ==$kode_unit ? 'selected':'' }} value="{{$item->KODE_UNIT}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
                                                 @endforeach
                                             </x-adminlte-select2>
                                         </div>
                                     </div>
                                     <div class="row mt-4 float-right">
-                                        <a class="btn btn-sm m-1 btn-warning" href="{{ route('frl-5.get') }}">Kembali</a>
+                                        <a class="btn btn-sm m-1 btn-warning" href="{{ route('frl-5-3.get') }}">Kembali</a>
                                         @if (isset($laporanFM))
                                         <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
                                         @endif
-                                        <x-adminlte-button type="submit" class="btn btn-sm m-1 bg-primary" theme="primary" label="Lihat Laporan" />
+                                        <x-adminlte-button type="submit" class="btn btn-sm m-1 bg-purple" theme="primary" label="Lihat Laporan" />
                                     </div>
                                 </div>
                             </div>
@@ -159,18 +160,7 @@
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-        $(document).on('click', '#perunit', function(e) {
-            $.LoadingOverlay("show");
-            var data = $('#formFilter').serialize();
-            var url = "{{ route('frl-5perunit.get') }}?" + data;
-            window.location = url;
-            $.ajax({
-                    data: data,
-                    url: url,
-                    type: "GET",
-
-            });
-        });
+       
     </script>
 @endsection
 @section('css')
@@ -239,6 +229,9 @@
 
         #show_print {
             display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
         }
     </style>
 

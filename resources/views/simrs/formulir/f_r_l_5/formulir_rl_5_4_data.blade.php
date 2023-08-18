@@ -1,14 +1,15 @@
 @extends('adminlte::page')
-@section('title', 'Formulir RL 5.5')
+@section('title', 'Formulir RL 5.4')
 @section('content_header')
-    <h1>Diagnosa Penyakit by Kelompok Staf Medis </h1>
+    <h1>Daftar Penyakit Rawat Jalan Perunit </h1>
 @endsection
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Diagnosa Penyakit by Kelompok Staf Medis" theme="secondary" id="hide_div" collapsible>
-                <form id="formFilter" action="" method="get">
+            <x-adminlte-card title="Filter Daftar Penyakit Rawat Jalan Perunit" theme="purple"  id="hide_div" collapsible>
+                <form action="{{route('get-rl-5-4-u')}}" method="post">
+                    @csrf
                     <div class="row">
                         <div class="col-md-3">
                             @php
@@ -19,7 +20,7 @@
                                 {{-- value="2023-06-01"> --}}
                                 {{-- value="-"> --}}
                                 <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
+                                    <div class="input-group-text bg-purple">
                                         <i class="fas fa-calendar-alt"></i>
                                     </div>
                                 </x-slot>
@@ -33,23 +34,37 @@
                                         {{-- value="2023-06-30"> --}}
                                         {{-- value="-"> --}}
                                         <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
+                                            <div class="input-group-text bg-purple">
                                                 <i class="fas fa-calendar-alt"></i>
                                             </div>
                                         </x-slot>
                                     </x-adminlte-input-date>
                                 </div>
                                 <div class="col-md-8">
-                                    <x-adminlte-select2 name="ksm" required id="ksm" label="Pilih Staf Medis">
-                                        @foreach ($ksm as $item)
-                                            <option {{ $item->spesialis == $dataKsm ? 'selected':'' }} value="{{$item->spesialis}}">{{$item->spesialis}}</option>
-                                        @endforeach
-                                    </x-adminlte-select2>
+                                    <div class="row">
+                                        <div class="col-">
+                                            <x-adminlte-input name="jumlah" label="Jumlah" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
+                                                <x-slot name="prependSlot">
+                                                    <div class="input-group-text">
+                                                        <i class="fas fa-user text-purple"></i>
+                                                    </div>
+                                                </x-slot>
+                                            </x-adminlte-input>
+                                        </div>
+                                        <div class="col- ml-2">
+                                            <x-adminlte-select2 name="unit" required id="unit" label="Pilih Unit">
+                                                @foreach ($unit as $item)
+                                                    <option {{ $item->KODE_UNIT == $kode_unit ? 'selected':'' }} value="{{$item->KODE_UNIT}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
+                                    </div>
                                     <div class="row mt-4 float-right">
-                                        <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm m-1" theme="primary" label="Lihat Laporan" />
+                                        <a class="btn btn-warning btn btn-sm m-1" href="{{ route('frl-5_4.get') }}">Kembali</a>
                                         @if (isset($laporanFM))
                                         <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
                                         @endif
+                                        <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm m-1 bg-purple" label="Lihat Laporan" />
                                     </div>
                                 </div>
                             </div>
@@ -63,8 +78,8 @@
                         <div class="row p-3 kop-surat" style="vertical-align : middle;text-align:left;">
                             <img src="{{ asset('vendor/adminlte/dist/img/rswaledico.png') }}" style="width: 100px">
                             <div class="col mt-4">
-                                <b >Formulir RL 5.5</b><br>
-                                <b >Penyakit Terbanyak Per Kelompok Staf Medis</b>
+                                <b >Formulir RL 5.4</b><br>
+                                <b > DAFTAR {{$jml}} BESAR PENYAKIT RAWAT JALAN PERUNIT</b>
                             </div>
                             <div class="col"><i class="fas fa-hospital float-right" style="color: #fcf7f7e7"></i></div>
                             <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
@@ -92,12 +107,14 @@
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;" id="no">No. Urut</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Kode ICD 10</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Deskripsi</th>
-                                        <th colspan="2" style="vertical-align : middle;text-align:center;" >Kasus Baru</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;" >Jumlah</th>
+
+                                        <th colspan="2" style="vertical-align : middle;text-align:center;" id="terapi">Kasus Baru</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;" id="terapi">Jumlah Kasus Baru</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;" id="terapi">Jumlah</th>
                                     </tr>
                                     <tr>
-                                        <th >LK</th>
-                                        <th >PR</th>
+                                        <th>LK</th>
+                                        <th>PR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -108,7 +125,9 @@
                                             <td style="vertical-align : middle;text-align:left;">{{$item->Nama_Penyakit}}</td>
                                             <td>{{$item->Kasus_Baru_LK}}</td>
                                             <td>{{$item->Kasus_Baru_PR}}</td>
+                                            <td>{{$item->JML_KASUS_BARU}}</td>
                                             <td>{{$item->Jumlah}}</td>
+
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -131,7 +150,6 @@
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-
     </script>
 @endsection
 @section('css')
@@ -201,9 +219,6 @@
         #show_print {
             display: none;
         }
-        /* .table-laporan {
-            border: 1px solid #b8b8b8 !important;
-        } */
         thead, th, tbody {
             border: 1px solid #dfdcdc !important;
         }

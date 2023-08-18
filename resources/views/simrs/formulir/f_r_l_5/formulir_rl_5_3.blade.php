@@ -8,7 +8,8 @@
     <div class="row">
         <div class="col-lg-12" id="hide_div" >
                 <x-adminlte-card title="Penyakit Rawat Inap" theme="purple" >
-                    <form id="formFilter" action="" method="get">
+                    <form action="{{route('get-rl-5-3-d')}}" method="post">
+                        @csrf
                         <div class="row">
                             <div class="col-lg-6">
                                 @php
@@ -32,7 +33,7 @@
                                 </x-adminlte-input-date>
                             </div>
                             <div class="col-lg-6">
-                                <x-adminlte-input name="jumlah" label="Jumlah Data" id="jumlah" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
+                                <x-adminlte-input name="jumlah" label="Jumlah Data" id="jumlah" placeholder="jumlah data yang akan ditampilkan..." >
                                     <x-slot name="prependSlot">
                                         <div class="input-group-text">
                                             <i class="fas fa-user text-purple"></i>
@@ -40,14 +41,14 @@
                                     </x-slot>
                                 </x-adminlte-input>
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="dataperunitC" name="dataperunit" value="false" >
+                                    <input class="custom-control-input" type="checkbox" id="dataperunitC" name="dataperunit" onclick="myFunctionUnit()">
                                     <label for="dataperunitC" class="custom-control-label">Laporan Perunit</label>
                                 </div>
-                                <div class="unit-group" id="unitopt" style="{{$kode_unit == null ? 'display:none' : 'display:block'}}">
+                                <div class="unit-group" id="unitopt" style="display:none">
                                     <x-adminlte-select2 name="unit" id="pilihunit" label="Pilih Unit">
                                         <option value="" id="opt_null">--Pilih Unit--</option>
                                         @foreach ($unit as $item)
-                                            <option {{ $dataperunit =='on' ? $item->KODE_UNIT == $kode_unit ? 'selected':'' : ''}} value="{{ $dataperunit == 'on' ? $item->KODE_UNIT : ''}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
+                                            <option value="{{ $item->KODE_UNIT }}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
                                         @endforeach
                                     </x-adminlte-select2>
                                 </div>
@@ -233,53 +234,26 @@
 @section('plugins.TempusDominusBs4', true)
 
 @section('js')
-    {{-- <script>
+    <script>
         function printDiv(divName) {
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-        $(document).on('click', '#perunit', function(e) {
-            // $.LoadingOverlay("show");
-            var url = "{{ route('frl-53perunit.get') }}?";
-            window.location = url;
-            $.ajax({
-                url: url,
-                type: "GET",
-
-            });
-        });
-
         function myFunctionUnit() {
             var checkBox = document.getElementById("dataperunitC");
             var unit1 = document.getElementById("unitopt");
-            if (checkBox.checked == true) {
+            const changeSelected = (e) => {
+            const $select = document.querySelector('#valueopt');
+                $select.value = ''
+            };
+            if (checkBox.checked == true){
                 unit1.style.display = "block";
-                $("#unit").val("").change();
             } else {
                 unit1.style.display = "none";
-                $("#unit").val("").change();
+                $('#valueopt').addEventListener('click', changeSelected);
             }
         }
 
-    </script> --}}
-    <script>
-        var from = $('#from').val();
-        var to = $('#to').val();
-        var jumlah = $('#jumlah').val();
-        var pilihunit = $('#pilihunit').val();
-
-        $('#perunit').text($('#checkbox1').val());
-            $("#perunit").on('change', function() {
-                if ($(this).is(':checked')) {
-                    alert(cheked);
-                    // $(this).attr('value', 'true');
-                    // unit1.style.display = "block";
-                } else {
-                    $(this).attr('value', 'false');
-                    console.log(false)
-                    unit1.style.display = "none";
-                });
-            })
     </script>
 @endsection
 @section('css')
@@ -309,6 +283,9 @@
 
         #show_print {
             display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
         }
     </style>
 
