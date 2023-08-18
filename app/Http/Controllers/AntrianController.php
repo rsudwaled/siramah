@@ -2421,7 +2421,6 @@ class AntrianController extends APIController
         // cek duplikasi nik antrian
         $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
             ->where('nik', $request->nik)
-            ->where('kodepoli', $request->kodepoli)
             ->where('taskid', '<=', 4)
             ->first();
         if ($antrian_nik) {

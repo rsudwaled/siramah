@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Formulir RL 1')
 @section('content_header')
-    <h1>Formulir RL 1</h1>
+    <h1>Data Formulir Belum di Perbaharui !!</h1>
 @endsection
 
 @section('content')

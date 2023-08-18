@@ -13,7 +13,6 @@ class Kunjungan extends Model
     protected $primaryKey = 'kode_kunjungan';
     public $incrementing = false;
     protected $keyType = 'string';
-
     protected $fillable = [
         'counter',
         'no_rm',
@@ -34,6 +33,11 @@ class Kunjungan extends Model
         'created_at',
         'keterangan2',
     ];
+    protected $appends = ['rm_counter'];
+    public function getRmCounterAttribute()
+    {
+        return $this->no_rm . '|' . $this->counter;
+    }
     public function pasien()
     {
         return $this->belongsTo(Pasien::class, 'no_rm', 'no_rm');
@@ -85,6 +89,14 @@ class Kunjungan extends Model
     public function tracer()
     {
         return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function budget()
+    {
+        return $this->belongsTo(BudgetControl::class, 'rm_counter',   'rm_counter');
+    }
+    public function tagihan()
+    {
+        return $this->belongsTo(TagihanPasien::class, 'rm_counter',   'rm_counter');
     }
 
     // protected $appends = ['nama_pasien'];

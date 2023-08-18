@@ -45,9 +45,11 @@
                     </div>
                     <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm" theme="primary"
                         label="Lihat Laporan" />
+                    @if (isset($laporanPenyakitRI))
                     <x-adminlte-button label="Excel" class="bg-purple float-right btn btn-sm" id="export" />
                     <button class="btn btn-success float-right btn btn-sm" onclick="printDiv('printMe')">Print <i
                             class="fas fa-print"></i></button>
+                    @endif
                 </form>
             </x-adminlte-card>
             @if (isset($laporanPenyakitRI))
@@ -205,7 +207,7 @@
             $('#diagnosa').select2({
                 placeholder: 'Pilih Kode Diagnosa',
                 ajax: {
-                    url: '/LaporanPenyakitRawatInap/Data',
+                    url: "{{route('laporan-rawa-inap.dataAjax')}}",
                     dataType: 'json',
                     delay: 150,
                     processResults: function (data) {

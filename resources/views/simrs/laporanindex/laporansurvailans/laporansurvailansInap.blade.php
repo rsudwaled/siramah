@@ -40,8 +40,10 @@
                                 <div class="col-md-8">
                                     <div class="row mt-4 float-right">
                                         <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1" theme="primary" label="Lihat Laporan" />
+                                        @if (isset($laporanDS))
                                         <x-adminlte-button label="Excel" class="bg-purple btn btn-sm m-1" id="export" />
                                         <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

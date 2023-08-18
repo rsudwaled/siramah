@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\BudgetControl;
+use App\Models\Icd10;
+use App\Models\Kunjungan;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class InacbgController extends APIController
 {
@@ -30,9 +34,9 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         $response =  $this->send_request($json_request);
         $datarray = array();
-        if ($response->status() == 200) {
-            $data = $response->getData()->response->data;
-            $count = $response->getData()->response->count;
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
             if ($count == 0) {
             } else {
                 foreach ($data as  $item) {
@@ -66,9 +70,9 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         $response =  $this->send_request($json_request);
         $datarray = array();
-        if ($response->status() == 200) {
-            $data = $response->getData()->response->data;
-            $count = $response->getData()->response->count;
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
             if ($count == 0) {
             } else {
                 foreach ($data as  $item) {
@@ -149,6 +153,58 @@ class InacbgController extends APIController
         ];
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
+    }
+    public function claim_ranap(Request $request)
+    {
+        $diag = null;
+        $diag_utama = null;
+        foreach ($request->diagnosa as $key => $value) {
+            $diagnosa = Icd10::where('diag', $value)->first();
+            if ($key == 0) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag_utama =  $value . " | " . $a;
+            } else if ($key == 1) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . " | " . $a;
+            } else {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . " | " . $a;
+            }
+        }
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap($request);
+        $res = $this->grouper($request);
+        if ($res->metadata->code == 200) {
+            $rmcounter = $request->nomor_rm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+                    'no_rm' => $request->nomor_rm,
+                    'counter' => $request->counter,
+
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
+
+                    'kelas' => $res->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->response->cbg->description,
+                ]
+            );
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->nomor_sep,
+            ]);
+        } else {
+        }
+        return redirect()->back();
     }
     public function set_claim(Request $request)
     {
@@ -401,11 +457,9 @@ class InacbgController extends APIController
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required",
-            "tgl_pulang" =>  "required",
             "cara_masuk" =>  "required",
             "kelas_rawat" =>  "required",
             "diagnosa" =>  "required",
-            "procedure" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -415,11 +469,16 @@ class InacbgController extends APIController
         for ($i = 1; $i  <= $jumlah_diag; $i++) {
             $icd10 = $icd10 . '#' . $request->diagnosa[$i];
         }
-        $icd9 = $request->procedure[0];
-        $jumlah_diag = count($request->procedure) - 1;
-        for ($i = 1; $i  <= $jumlah_diag; $i++) {
-            $icd9 = $icd9 . '#' . $request->procedure[$i];
+        $request['diagnosa'] = $icd10;
+        $icd9 = "#";
+        if ($request->procedure) {
+            $icd9 = $request->procedure[0];
+            $jumlah_diag = count($request->procedure) - 1;
+            for ($i = 1; $i  <= $jumlah_diag; $i++) {
+                $icd9 = $icd9 . '#' . $request->procedure[$i];
+            }
         }
+        $request['procedure'] = $icd9;
         $request_data = [
             "metadata" => [
                 "method" => "set_claim_data",
@@ -573,6 +632,7 @@ class InacbgController extends APIController
     {
         $validator = Validator::make(request()->all(), [
             "nomor_sep" =>  "required",
+            "nomor_kartu" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -661,7 +721,7 @@ class InacbgController extends APIController
         $response = $this->inacbg_decrypt($response, $key);
         // hasil decrypt adalah format json, ditranslate kedalam array
         $msg = json_decode($response);
-        return response()->json($msg);
+        return $msg;
     }
     // Encryption Function
     function inacbg_encrypt($data, $key)
@@ -748,9 +808,10 @@ class InacbgController extends APIController
     public function rincian_biaya_pasien(Request $request)
     {
         $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
-        // dd();
+        $budget = BudgetControl::find($request->norm . '|' . $request->counter);
         $data = [
             "rincian" => $response,
+            "budget" => $budget,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),

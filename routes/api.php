@@ -190,6 +190,8 @@ Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::get('search_procedures_inagrouper', [InacbgController::class, 'search_procedures_inagrouper'])->name('search_procedures_inagrouper');
     Route::get('rincian_biaya_pasien', [InacbgController::class, 'rincian_biaya_pasien'])->name('rincian_biaya_pasien');
     Route::post('new_claim', [InacbgController::class, 'new_claim'])->name('new_claim');
+    Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
+
     Route::post('set_claim', [InacbgController::class, 'set_claim'])->name('set_claim');
     Route::post('set_claim_rajal', [InacbgController::class, 'set_claim_rajal'])->name('set_claim_rajal');
     Route::post('set_claim_ranap', [InacbgController::class, 'set_claim_ranap'])->name('set_claim_ranap');

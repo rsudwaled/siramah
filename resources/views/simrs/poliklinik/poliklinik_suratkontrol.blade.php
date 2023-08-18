@@ -700,16 +700,3 @@
         });
     </script>
 @endsection
-
-{{-- @section('css')
-    <style>
-        table {
-            table-layout: fixed
-        }
-
-        td {
-            overflow: hidden;
-            white-space: nowrap
-        }
-    </style>
-@endsection --}}

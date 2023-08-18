@@ -449,6 +449,21 @@ return [
                 ],
             ],
         ],
+        // POLIKLINIK
+        [
+            'text'    => 'Aplikasi Rawat Inap',
+            'icon'    => 'fas fa-clinic-medical',
+            'can' => 'ranap',
+            'submenu' => [
+                [
+                    'text' => 'Pasien Ranap Aktif',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienRanapAktif',
+                    'shift'   => 'ml-2',
+                    'can' => 'ranap',
+                ],
+            ],
+        ],
         // FARMASI
         [
             'text'    => 'Aplikasi Farmasi',
@@ -511,6 +526,7 @@ return [
                 ],
             ],
         ],
+
         // YANMED
         [
             'text'    => 'Pelayanan Medis',
@@ -950,12 +966,299 @@ return [
                 ],
             ],
         ],
+        // LAPORAN REKAM MEDIS
+        [
+            'text'    => 'Laporan Rekam Medis',
+            'icon'    => 'fas fa-file-medical',
+            'can'     => 'k3rs',
+            'submenu' => [
+                [
+                    'text' => 'Laporan Index',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                    'submenu' => [
+                        [
+                            'text' => 'Index Penyakit Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatJalan',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Index Rawat Jalan (Penelitian)',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatJalanbyYears',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Index Penyakit Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatInap',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Index Rawat Inap (Penelitian)',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanPenyakitRawatInapbyYears',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Diagnosa Survailans Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanDiagnosaSurvailansInap',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Diagnosa Survailans Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'LaporanDiagnosaSurvailansRawatJalan',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        // [
+                        //     'text' => 'Index Dokter',
+                        //     'icon'    => 'fas fa-user-md',
+                        //     'url'  => 'index_dokter',
+                        //     'shift'   => 'ml-3',
+                        //     'can' => 'k3rs',
+                        // ],
+                        // [
+                        //     'text' => 'Index Daerah',
+                        //     'icon'    => 'fas fa-maps',
+                        //     'url'  => 'index_daerah',
+                        //     'shift'   => 'ml-3',
+                        //     'can' => 'k3rs',
+                        // ],
+                    ]
+                ],
+                // Formulir RL
+                [
+                    'text' => 'Formulir RL 1',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                    'submenu' => [
+                        [
+                            'text' => 'Formulir RL 1',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 1.1',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 1.2',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 1.3',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                    ]
+                ],
+                [
+                    'text' => 'Formulir RL 2',
+                    'icon'    => 'fas fa-disease',
+                    'url'  => 'FormulirRL2',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                ],
+                [
+                    'text' => 'Formulir RL 3',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                    'submenu' => [
+                        [
+                            'text' => 'Formulir RL 3',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.1',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.2',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.3',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.4',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.5',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.6',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.7',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.8',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.9',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.10',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                    ]
+                ],
+                [
+                    'text' => 'Formulir RL 4',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                    'submenu' => [
+                        [
+                            'text' => 'RL4A Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4A',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'RL4A Rawat Inap Kecelakaan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4AK',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'RL4B Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4B',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'RL4B Rawat Jalan Kecelakaan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4BK',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                    ]
+                ],
+                [
+                    'text' => 'Formulir RL 5',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => 'k3rs',
+                    'submenu' => [
+                        [
+                            'text' => 'Formulir RL 5.1',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 5.2',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL1',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 5.3',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL5_3',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 5.4',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL5_4',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                        [
+                            'text' => 'Formulir RL 5.5',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL5_5',
+                            'shift'   => 'ml-3',
+                            'can' => 'k3rs',
+                        ],
+                    ]
+                ],
+            ],
+        ],
         // CASEMIX
         [
             'text'    => 'Aplikasi Casemix',
             'icon'    => 'fas fa-file-medical',
             'can' => 'casemix',
             'submenu' => [
+                [
+                    'text' => 'Pasien Ranap Aktif',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienRanapAktif',
+                    'shift'   => 'ml-2',
+                    'can' => 'casemix',
+                ],
                 [
                     'text' => 'Diagnosa Rawat Jalan',
                     'icon'    => 'fas fa-diagnoses',
@@ -1346,6 +1649,7 @@ return [
             'url'  => 'profile',
             'icon' => 'fas fa-fw fa-user',
         ],
+
     ],
 
     /*
