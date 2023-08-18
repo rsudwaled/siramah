@@ -82,27 +82,33 @@
                                 {{ $item->budget ? money($item->budget->tarif_inacbg, 'IDR') : '-' }}</td>
                             <td class="text-right">
                                 {{ $item->tagihan ? money($item->tagihan->total_biaya, 'IDR') : '-' }}
-
-
                             </td>
                             <td>
-
                                 @if ($item->budget)
-                                    @if (round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) > 100)
+                                    @if ($item->budget->tarif_inacbg == 0)
                                         <button class="btn btn-xs btn-danger btnInfoPelayanan" data-toggle="tooltop"
                                             title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
                                             data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
                                             data-counter="{{ $item->counter }}">
-                                            {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
-
+                                            Error
                                         </button>
                                     @else
-                                        <button class="btn btn-xs btn-success btnInfoPelayanan" data-toggle="tooltop"
-                                            title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
-                                            data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
-                                            data-counter="{{ $item->counter }}">
-                                            {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
-                                        </button>
+                                        @if (round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) > 100)
+                                            <button class="btn btn-xs btn-danger btnInfoPelayanan" data-toggle="tooltop"
+                                                title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
+                                                data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
+                                                data-counter="{{ $item->counter }}">
+                                                {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
+
+                                            </button>
+                                        @else
+                                            <button class="btn btn-xs btn-success btnInfoPelayanan" data-toggle="tooltop"
+                                                title="Info Pelayanan" data-id="{{ $item->kode_kunjungan }}"
+                                                data-nomorsep="{{ $item->no_sep }}" data-norm="{{ $item->pasien->no_rm }}"
+                                                data-counter="{{ $item->counter }}">
+                                                {{ round(($item->tagihan->total_biaya / $item->budget->tarif_inacbg) * 100) }}%
+                                            </button>
+                                        @endif
                                     @endif
                                 @else
                                     <button class="btn btn-xs btn-danger btnInfoPelayanan" data-toggle="tooltop"
@@ -112,7 +118,6 @@
                                         0%
                                     </button>
                                 @endif
-
                                 {{-- <x-adminlte-button label="Info" theme="warning" icon="fas fa-info-circle" /> --}}
                             </td>
                             <td>

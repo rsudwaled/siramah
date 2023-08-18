@@ -156,6 +156,15 @@ class InacbgController extends APIController
     }
     public function claim_ranap(Request $request)
     {
+        // $validator = Validator::make(request()->all(), [
+        //     "nomor_sep" =>  "required",
+        //     "nomor_kartu" =>  "required",
+        //     "tgl_masuk" =>  "required|date",
+        //     "diagnosa" =>  "required",
+        // ]);
+        // if ($validator->fails()) {
+        //     return $this->sendError($validator->errors()->first(), null, 400);
+        // }
         $diag = null;
         $diag_utama = null;
         foreach ($request->diagnosa as $key => $value) {
