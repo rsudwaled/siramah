@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 
 class InacbgController extends APIController
 {
+    public $key_eclaim = "53ea52e5c04ef904a372a5805ec44a24ca0789694669d90335887c6679b4be4a";
+
     public function search_diagnosis(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -199,7 +201,7 @@ class InacbgController extends APIController
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
                     'deskripsi' => $res->response->cbg->description,
-                    "pic" => Auth::user()->id,
+                    "pic" => 1,
                 ]
             );
             $kunjungan = Kunjungan::find($request->kodekunjungan);
@@ -695,7 +697,7 @@ class InacbgController extends APIController
     public function send_request($json_request)
     {
         // data yang akan dikirimkan dengan method POST adalah encrypted:
-        $key = env('EKLAIM_KEY');
+        $key = $this->key_eclaim;
         $payload = $this->inacbg_encrypt($json_request, $key);
         // tentukan Content-Type pada http header
         $header = array("Content-Type: application/x-www-form-urlencoded");

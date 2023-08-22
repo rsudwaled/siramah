@@ -149,19 +149,19 @@
                         <x-slot name="footerSlot">
                             @if ($antrian->jenispasien == 'JKN')
                                 <a href="{{ route('checkinCetakSEP') }}?kodebooking={{ $request->kodebooking }}"
-                                    class="btn btn-warning"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
+                                    class="btn btn-warning withLoad"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
                                 @if ($antrian->nomorsep)
                                     <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                                        class="btn btn-success"><i class="fas fa-print"></i>
+                                        class="btn btn-success withLoad"><i class="fas fa-print"></i>
                                         Cetak Karcis Antrian</a>
                                 @endif
                             @else
                                 <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                                    class="btn btn-success"><i class="fas fa-print"></i>
+                                    class="btn btn-success withLoad"><i class="fas fa-print"></i>
                                     Cetak Karcis Antrian</a>
                             @endif
                             <a href="{{ route('batalAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                                class="btn btn-danger"><i class="fas fa-times"></i> Batal Antrian</a>
+                                class="btn btn-danger"><i class="fas fa-times withLoad"></i> Batal Antrian</a>
                         </x-slot>
                     </x-adminlte-card>
                 </div>
