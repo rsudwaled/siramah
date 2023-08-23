@@ -1353,19 +1353,27 @@ return [
             'can' => ['admin'],
             'submenu' => [
                 [
+                    'text' => 'Data Pendukung',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'data-jabatan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Jurusan & Kebutuhan',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'kebutuhan-jurusan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
                     'text' => 'Data Pegawai',
                     'icon'    => 'fas fa-book',
                     'url'  => 'data-pegawai',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                [
-                    'text' => 'Import Pegawai',
-                    'icon'    => 'fas fa-book',
-                    'url'  => 'bukutamu',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
+                
             ]
         ],
         // ANTRIAN BPJS
@@ -1687,6 +1695,16 @@ return [
     */
 
     'plugins' => [
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
+                ],
+            ],
+        ],
         'TempusDominusBs4' => [
             'active' => false,
             'files' => [

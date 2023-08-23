@@ -41,7 +41,9 @@ use App\Http\Controllers\FormulirRL3Controller;
 use App\Http\Controllers\FormulirRL4Controller;
 use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
+use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
+use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
@@ -266,7 +268,15 @@ Route::middleware('auth')->group(function () {
     Route::get('getK', [CPPTController::class, 'getK'])->name('resume-dokter-k.get');
     Route::get('getC', [CPPTController::class, 'getC'])->name('resume-dokter-c.get');
     
+    // jabatan Kerja
+    Route::get('data-jabatan', [JabatanKerjaController::class, 'dataJabatan'])->name('jabatan-kepeg.get');
+    Route::post('tambah-jabatan', [JabatanKerjaController::class, 'addJabatan'])->name('jabatan.add');
+    Route::post('bidang-pegawai', [JabatanKerjaController::class, 'dataBidang'])->name('import-data-bidang');
+
     // kepegawaian
     Route::get('data-pegawai', [KepegawaianController::class, 'vData'])->name('data-kepeg.get');
-
+    Route::post('data-pegawai/import', [KepegawaianController::class, 'importData'])->name('import-data');
+    
+    Route::get('kebutuhan-jurusan', [KebutuhanJurusanController::class, 'kebutuhanJurusan'])->name('data-jurusan.get');
+    Route::post('kebutuhan-jurusan/import', [KebutuhanJurusanController::class, 'importJurusan'])->name('data-jurusan.import');
 });

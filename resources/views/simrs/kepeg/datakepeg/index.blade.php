@@ -8,25 +8,25 @@
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <x-adminlte-small-box
-                        title="99"
+                        title="{{$lk}}"
                         theme="primary" 
                         text="Pegawai Pria"
                         icon="fas fa-user-injured"
                         url="#"
                         url-text="Lihat Data" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <x-adminlte-small-box
-                        title="100"
+                        title="{{$pr}}"
                         theme="warning"
-                        text="Pegawai Pria" 
+                        text="Pegawai Perempuan" 
                         icon="fas fa-user-injured"
                         url="#"
                         url-text="Lihat Data" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <x-adminlte-small-box
                         title="Data Baru"
                         theme="success" 
@@ -35,62 +35,78 @@
                         url="#"
                         url-text="Buat Data Baru" />
                 </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box
+                        title="Import Data"
+                        theme="purple" 
+                        text="import data Pegawai"
+                        icon="fas fa-upload"
+                        data-toggle="modal" data-target="#importDataPegawai"
+                        url="#"
+                        url-text="Import Data Baru" />
+                </div>
             </div>
+            <x-adminlte-modal id="importDataPegawai" title="Import Data Pegawai" size="md" theme="purple"
+                icon="fas fa-upload" v-centered static-backdrop scrollable>
+                <form action="{{route('import-data')}}" id="importPegawai" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div style="height:100px;">
+                        <x-adminlte-input-file name="file" igroup-size="sm" placeholder="Choose a file...">
+                            <x-slot name="prependSlot">
+                                <div class="input-group-text bg-purple">
+                                    <i class="fas fa-upload"></i>
+                                </div>
+                            </x-slot>
+                        </x-adminlte-input-file>
+                    </div>
+                    <x-slot name="footerSlot">
+                        <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
+                        <x-adminlte-button type="submit" form="importPegawai"  class="bg-purple" label="import data"/>
+                    </x-slot>
+                </form>
+            </x-adminlte-modal>
             <div class="col-md-12">
                 <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                     title="List Data Pegawai">
+                    <form id="formFilter" action="" method="get">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="unit-group" id="tingkatpendidikan">
+                                <x-adminlte-select2 name="tingkat" label="Tingkat Pendidikan">
+                                    <option value="" >--Pilih Tingkat Pendidikan--</option>
+                                    @foreach ($tingkat as $item)
+                                        <option {{ $item->id_tingkat == $id_tingkat ?  'selected':'' }} value="{{ $item->id_tingkat }}">{{$item->nama_tingkat}}</option>
+                                    @endforeach
+                                </x-adminlte-select2>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Laporan" />
+                        </div>
+                    </div>
+                </form>
                     @php
-                        $heads = ['NIK', ' Nama', 'Jenis Kelamin', 'Alamat', 'Kedudukan', 'Pendidikan','Action'];
+                        $heads = ['NIK', ' Nama', 'Jenis Kelamin', 'Jenjang', 'Jurusan','Format Pendidikan','Action'];
                         $config['order'] = ['0', 'asc'];
                         $config['paging'] = false;
                         $config['info'] = false;
-                        $config['scrollY'] = '400px';
+                        $config['scrollY'] = '500px';
                         $config['scrollCollapse'] = true;
                         $config['scrollX'] = true;
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
                         striped bordered hoverable compressed>
-                            <tr>
-                                <td>
-                                    <b>sngk</b>
-                                </td>
-                                <td>
-                                    nomr<br>
-                                </td>
-                                <td>
-                                    jns
-                                </td>
-                                <td>Offline</td>
-                                <td>
-                                    000
-                                </td>
-                                <td>
-                                    ...
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary">0. Antri Pendaftaran</span>
-                                    
-                                </td>
-                                <td>
-                                    Loket
-                                </td>
-                                <td>
-                                    <a class="btn btn-xs mt-1 btn-success"
-                                        href="#">
-                                        <i class="fas fa-user-plus"></i> Selesai</a>
-
-                                    <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
-                                        icon="fas fa-volume-down" data-toggle="tooltip"
-                                        title="Panggil Antrian "
-                                        onclick="window.location='#'" />
-
-                                    <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
-                                        icon="fas fa-times" data-toggle="tooltop"
-                                        title="Batal Antrian "
-                                        onclick="window.location='#'" />
-
-                                </td>
-                            </tr>
+                            @foreach ($data as $item)
+                                <tr>
+                                    <td>{{$item->nik}}</td>
+                                    <td>{{$item->nama_lengkap}}</td>
+                                    <td>{{$item->jenis_kelamin == "L" ? 'LAKI-LAKI' : 'Perempuan'}}</td>
+                                    <td>{{$item->sPendidikan->nama_tingkat}}</td>
+                                    <td style="width: 50px;">{{$item->jurusan}}</td>
+                                    <td>{{$item->format_pendidikan}}</td>
+                                    <td>Aksi</td>
+                                </tr>
+                            @endforeach
                     </x-adminlte-datatable>
                 </x-adminlte-card>
             </div>
@@ -101,5 +117,34 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.BsCustomFileInput', true)
+
+@section('js')
+    <script>
+        $(document).on('click', '#lihatData', function(e) {
+            $.LoadingOverlay("show");
+            var data = $('#formFilter').serialize();
+            var url = "{{ route('jabatan-kepeg.get') }}?" + data;
+            window.location = url;
+            $.ajax({
+                    data: data,
+                    url: url,
+                    type: "GET",
+                    success: function(data) {
+                        setInterval(() => {
+                            $.LoadingOverlay("hide");
+                        }, 7000);
+                    },
+                }).then(function() {
+                    setInterval(() => {
+                        $.LoadingOverlay("hide");
+                    }, 2000);
+                });
+        })
+        // $(document).on('click', '#importPegawai', function(e) {
+        //     $.LoadingOverlay("show");
+        // });
+    </script>
+@endsection
 
 

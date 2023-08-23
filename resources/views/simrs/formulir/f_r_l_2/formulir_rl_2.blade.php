@@ -7,46 +7,28 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <x-adminlte-card title="Filter Formulir RL 2" theme="secondary" id="hide_div" collapsible>
+            <x-adminlte-card title="KETENAGAAN" theme="purple" >
                 <form id="formFilter" action="" method="get">
+                {{-- <form action="{{route('get-rl-5-3-d')}}" method="post">
+                    @csrf --}}
                     <div class="row">
-                        <div class="col-md-3">
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date name="dari" id="from" label="Tanggal Mulai" :config="$config"
-                                {{-- value="{{ $from == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $from }}"> --}}
-                                value="2023-06-01">
-                                <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <x-adminlte-input-date name="sampai" id="to" label="Tanggal Selesai" :config="$config"
-                                        {{-- value="{{ $to == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $to }}"> --}}
-                                        value="2023-06-30">
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input-date>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="row mt-4 float-right">
-                                        <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1" theme="primary" label="Lihat Laporan" />
-                                        @if (isset($dataGM))
-                                        <x-adminlte-button label="Excel" class="bg-purple btn btn-sm m-1" id="export" />
-                                        <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
+                        <div class="col-lg-6">
+                            <div class="unit-group" id="tingkatpendidikan">
+                                <x-adminlte-select2 name="tingkat" label="Tingkat Pendidikan">
+                                    <option value="" >--Pilih Tingkat Pendidikan--</option>
+                                    @foreach ($tingkat as $item)
+                                        @if ($idt)
+                                        <option {{$item->id_tingkat == $idt->id_tingkat ? 'selected' : ''}} value="{{ $item->id_tingkat }}">{{$item->nama_tingkat}}</option>
+                                        @else
+                                        <option value="{{ $item->id_tingkat }}">{{$item->nama_tingkat}}</option>
                                         @endif
-                                    </div>
-                                </div>
+                                    @endforeach
+                                </x-adminlte-select2>
                             </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Laporan" />
+                            <button class="btn btn-success btn btn-sm m-1 mt-4 float-right" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
                         </div>
                     </div>
                 </form>
@@ -87,7 +69,7 @@
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Kualifikasi Pendidikan</th>
                                         <th colspan="2" style="text-align: center;">Keadaan</th>
                                         <th colspan="2" style="text-align: center;">Kebutuhan</th>
-                                        <th colspan="2" style="text-align: center;">Keterangan</th>
+                                        <th colspan="2" style="text-align: center;">Kekurangan</th>
                                     </tr>
                                     <tr>
                                         <th>Laki-Laki</th>
@@ -99,7 +81,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    @foreach ($data as $key => $bidang)
+                                        <tr>
+                                            <th></th>
+                                            <th  colspan="7" style="vertical-align : middle;text-align:left;">{{$bidangd->where('id', $key)->first()->nama_bidang}}</th>
+                                            
+                                        </tr>
+                                        @foreach ($bidang as $key_jurusan => $jurusan)
+                                        <tr>
+                                            <td></td>
+                                            <td>{{$key_jurusan}}</td>
+                                            <td style="text-align:center;">{{$jurusan->where('jenis_kelamin','L')->count()}}</td>
+                                            <td style="text-align:center;">{{$jurusan->where('jenis_kelamin','P')->count()}}</td>
+                                        </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td></td>
+                                            <th style="vertical-align : middle;text-align:left;">Total</th>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                            <td style="background-color: rgb(212, 211, 211)"></td>
+                                        </tr>
+                                    @endforeach
+                                   
                                 </tbody>
                             </table>
                         </div>
