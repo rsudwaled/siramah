@@ -33,18 +33,18 @@
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
                 <li><a class="nav-link scrollto" href="#doctors">Bed Monitoring</a></li>
                 <li><a class="nav-link scrollto" href="#contact">Kontak</a></li>
+                @auth
+                    <li><a class="nav-link scrollto" href="{{ route('home') }}">Dashboard</a></li>
+                @else
+                    <li><a class="nav-link scrollto" href="{{ route('login') }}">Login</a></li>
+                @endauth
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        @auth
-            <a href="{{ route('home') }}" class="appointment-btn scrollto">
-                Dashboard
-            </a>
-        @else
-            <a href="{{ route('login') }}" class="appointment-btn scrollto">
-                Login
-            </a>
-        @endauth
+        <a href="https://www.siramah.rsudwaled.id/" class="appointment-btn scrollto">
+            Daftar
+        </a>
+
 
     </div>
 </header>
