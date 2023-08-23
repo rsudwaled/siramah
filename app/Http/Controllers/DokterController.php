@@ -73,24 +73,24 @@ class DokterController extends Controller
             'dokter_jkn_simrs',
         ]));
     }
-    public function dokter_antrian_refresh(Request $request)
-    {
-        $controller = new AntrianController();
-        $response = $controller->ref_dokter();
-        if ($response->metadata->code == 200) {
-            $dokters = $response->response;
-            foreach ($dokters as $value) {
-                DokterAntrian::firstOrCreate([
-                    'kodeDokter' => $value->kodedokter,
-                    'namaDokter' => $value->namadokter,
-                ]);
-            }
-            Alert::success($response->metadata->message, 'Refresh Dokter Antrian BPJS Total : ' . count($dokters));
-        } else {
-            Alert::error($response->metadata->message . ' ' . $response->metadata->code);
-        }
-        return redirect()->route('pelayanan-medis.dokter_antrian');
-    }
+    // public function dokter_antrian_refresh(Request $request)
+    // {
+    //     $controller = new AntrianController();
+    //     $response = $controller->ref_dokter();
+    //     if ($response->metadata->code == 200) {
+    //         $dokters = $response->response;
+    //         foreach ($dokters as $value) {
+    //             DokterAntrian::firstOrCreate([
+    //                 'kodeDokter' => $value->kodedokter,
+    //                 'namaDokter' => $value->namadokter,
+    //             ]);
+    //         }
+    //         Alert::success($response->metadata->message, 'Refresh Dokter Antrian BPJS Total : ' . count($dokters));
+    //     } else {
+    //         Alert::error($response->metadata->message . ' ' . $response->metadata->code);
+    //     }
+    //     return redirect()->route('pelayanan-medis.dokter_antrian');
+    // }
     public function resetDokter()
     {
         $api = new AntrianController();
@@ -110,13 +110,13 @@ class DokterController extends Controller
         Alert::success('Success', 'Reset Data Dokter Berhasil');
         return redirect()->back();
     }
-    public function dokter_antrian_yanmed(Request $request)
-    {
-        $dokters =  DokterAntrian::get();
-        return view('simrs.pelyananmedis.dokter_antrian', compact([
-            'dokters'
-        ]));
-    }
+    // public function dokter_antrian_yanmed(Request $request)
+    // {
+    //     $dokters =  DokterAntrian::get();
+    //     return view('simrs.pelyananmedis.dokter_antrian', compact([
+    //         'dokters'
+    //     ]));
+    // }
     public function dokterAntrianBpjs()
     {
         $controller = new AntrianController();
