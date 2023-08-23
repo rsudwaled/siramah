@@ -1406,6 +1406,8 @@ class AntrianController extends APIController
                 ]);
                 // print sep
                 $this->print_sep($request, $sep);
+                Alert::success('Succes', 'Cetak SEP');
+                return redirect()->back();
             }
             // gagal buat sep
             else {
