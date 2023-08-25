@@ -44,7 +44,7 @@
                 <x-adminlte-card theme="secondary" icon="fas fa-info-circle"
                     title="Total Pasien Aktif ({{ $kunjungans->count() }} Orang)">
                     @php
-                        $heads = ['Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Tarif Klaim', 'Tagihan RS', 'Status', 'Action'];
+                        $heads = ['Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Tarif Klaim', 'Tagihan RS', 'Status'];
                         $config['order'] = ['1', 'asc'];
                         $config['paging'] = false;
                         $config['scrollY'] = '400px';
@@ -147,7 +147,7 @@
                                 @endif
 
                             </td>
-                            <td>
+                            {{-- <td>
                                 <x-adminlte-button class="btn-xs btnPilihKunjungan" label="Groupper" theme="primary"
                                     icon="fas fa-file-medical" data-toggle="tooltop" title="Groupper INACBG"
                                     data-id="{{ $item->kode_kunjungan }}" data-nomorkartu="{{ $item->pasien->no_Bpjs }}"
@@ -158,7 +158,7 @@
                                     data-tglmasuk="{{ $item->tgl_masuk }}" data-kelas="{{ $item->kelas }}"
                                     data-dokter="{{ $item->dokter->nama_paramedis }}"
                                     data-counter="{{ $item->counter }}" />
-                            </td>
+                            </td> --}}
                             </tr>
                         @endforeach
                         {{-- <tfoot>
@@ -329,6 +329,10 @@
                                                     <div class="col-md-12">
                                                         <h6>Identitas Pasien</h6>
                                                         <div class="row">
+                                                            <input type="hidden" name="counter" id="counter"
+                                                                value="">
+                                                            <input type="hidden" name="kodekunjungan" id="kodekunjungan"
+                                                                value="">
                                                             <x-adminlte-input igroup-size="sm" fgroup-class="col-md-4"
                                                                 name="nomor_kartu" label="Nomor Kartu" value=""
                                                                 readonly />
@@ -624,7 +628,7 @@
                                                 </div>
                                             </div>
                                             <x-slot name="footerSlot">
-                                                <x-adminlte-button theme="success" class="mr-auto" label="Groupper"
+                                                <x-adminlte-button theme="success" class="mr-auto withLoad" label="Groupper"
                                                     type="submit" form="formGroupper" />
                                                 <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
                                             </x-slot>
