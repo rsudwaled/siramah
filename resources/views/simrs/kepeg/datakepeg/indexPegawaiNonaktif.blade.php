@@ -1,73 +1,26 @@
 @extends('adminlte::page')
-@section('title', 'Data Pegawai')
+@section('title', 'Data Pegawai Nonaktif')
 @section('content_header')
-    <h1>Informasi Pegawai</h1>
+    <h1>Informasi Pegawai Nonaktif</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="{{$lk}}"
-                        theme="primary" 
-                        text="Pegawai Pria"
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Lihat Data" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="{{$pr}}"
-                        theme="warning"
-                        text="Pegawai Perempuan" 
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Lihat Data" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="Data Baru"
-                        theme="success" 
-                        text="Tambah Data Baru"
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Buat Data Baru" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="Import Data"
-                        theme="purple" 
-                        text="import data Pegawai"
-                        icon="fas fa-upload"
-                        data-toggle="modal" data-target="#importDataPegawai"
-                        url="#"
-                        url-text="Import Data Baru" />
-                </div>
-            </div>
-            <x-adminlte-modal id="importDataPegawai" title="Import Data Pegawai" size="md" theme="purple"
-                icon="fas fa-upload" v-centered static-backdrop scrollable>
-                <form action="{{route('import-data')}}" id="importPegawai" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div style="height:100px;">
-                        <x-adminlte-input-file name="file" igroup-size="sm" placeholder="Choose a file...">
-                            <x-slot name="prependSlot">
-                                <div class="input-group-text bg-purple">
-                                    <i class="fas fa-upload"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input-file>
-                    </div>
-                    <x-slot name="footerSlot">
-                        <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
-                        <x-adminlte-button type="submit" form="importPegawai"  class="bg-purple" label="import data"/>
-                    </x-slot>
-                </form>
-            </x-adminlte-modal>
             <div class="col-md-12">
                 <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                     title="List Data Pegawai">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <x-adminlte-small-box
+                                    theme="success" 
+                                    text="Tambah Data Baru"
+                                    url="#"
+                                    url-text="Buat Data Baru" />
+                            </div>
+                        </div>
+                    </div>
                     <form id="formFilter" action="" method="get">
                     <div class="row">
                         <div class="col-lg-6">
@@ -81,7 +34,8 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Laporan" />
+                            <a href="{{route('data-kepeg.get')}}" class="btn btn-sm btn-success float-right mt-4">Pegawai Aktif</a>
+                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Data" />
                         </div>
                     </div>
                 </form>
@@ -104,7 +58,10 @@
                                     <td>{{$item->sPendidikan->nama_tingkat}}</td>
                                     <td style="width: 50px;">{{$item->jurusan}}</td>
                                     <td>{{$item->format_pendidikan}}</td>
-                                    <td>Aksi</td>
+                                    <td>
+                                        <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check" label="Aktifkan Karyawan"
+                                        onclick="ActiveConfirmation({{$item->id}})" />
+                                    </td>
                                 </tr>
                             @endforeach
                     </x-adminlte-datatable>
@@ -118,6 +75,7 @@
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.BsCustomFileInput', true)
+@section('plugins.Sweetalert2', true)
 
 @section('js')
     <script>
@@ -141,9 +99,48 @@
                     }, 2000);
                 });
         })
-        // $(document).on('click', '#importPegawai', function(e) {
-        //     $.LoadingOverlay("show");
-        // });
+
+        function ActiveConfirmation(id) {
+        swal.fire({
+            icon: 'warning',
+            title: "Apakah Anda Yakin?",
+            text: "Mengaktifkan Pegawai ini!",
+            type: "warning",
+            showCancelButton: !0,
+            confirmButtonText: "IYA, Aktifkan!",
+            cancelButtonText: "Batal!",
+            reverseButtons: !0
+        }).then(function (e) {
+
+            if (e.value === true) {
+                var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{url('data-pegawai/set-pegawai-aktif/')}}/" + id,
+                    data: {_token: CSRF_TOKEN},
+                    dataType: 'JSON',
+                    success: function (results) {
+                        if (results.success === true) {
+                            swal.fire("Done!", results.message, "success");
+                            setTimeout(function(){
+                                $.LoadingOverlay("show");
+                                location.reload();
+                            },1500);
+                            $.LoadingOverlay("hide");
+                        } else {
+                            swal.fire("Error!", results.message, "error");
+                        }
+                    }
+                });
+
+            } else {
+                e.dismiss;
+            }
+
+        }, function (dismiss) {
+            return false;
+        })
+    }
     </script>
 @endsection
 

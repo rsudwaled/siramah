@@ -22,15 +22,15 @@ class KepegawaianController extends Controller
         $id_tingkat =$request->tingkat; 
         if($id_tingkat)
         {
-            $data   = Kepegawaian::where('jenjang', $id_tingkat)->get();
-            $lk   = $data->where('jenis_kelamin', 'L')->count();
-            $pr   = $data->where('jenis_kelamin', 'P')->count();
+            $data   = Kepegawaian::where('is_pegawai',0)->where('jenjang', $id_tingkat)->get();
+            $lk   = $data->where('jenis_kelamin', 'L')->where('is_pegawai',0)->count();
+            $pr   = $data->where('jenis_kelamin', 'P')->where('is_pegawai',0)->count();
         }else{
-            $data   = Kepegawaian::all();
-            $lk   = Kepegawaian::where('jenis_kelamin', 'L')->count();
-            $pr   = Kepegawaian::where('jenis_kelamin', 'P')->count();
+            $data   = Kepegawaian::where('is_pegawai',0)->get();
+            $lk   = Kepegawaian::where('jenis_kelamin', 'L')->where('is_pegawai',0)->count();
+            $pr   = Kepegawaian::where('jenis_kelamin', 'P')->where('is_pegawai',0)->count();
         }
-        return view('simrs.kepeg.datakepeg.index', compact('request','data','tingkat','lk','pr','id_tingkat'));
+        return view('simrs.kepeg.datakepeg.indexPegawai', compact('request','data','tingkat','lk','pr','id_tingkat'));
     }
 
     public function importData(Request $request)
@@ -121,15 +121,106 @@ class KepegawaianController extends Controller
                 // 'no_sip'            => $row['no_sip'],
                 // 'tgl_sip'           => $tgl8,
                 // 'tgl_berlaku_sip'   => $tgl9,
-                'unit_kerja'        => $row['unit_kerja'],
-                'format_pendidikan' => $row['format_pendidikan'],
-                'kode_jabatan_jkn_kt'=> $row['kode_jabatan_jkn_kt'],
-                'alamat'            => $row['alamat'],
-                'id_bidang'            => $bidang->id ,
+                'unit_kerja'            => $row['unit_kerja'],
+                'format_pendidikan'     => $row['format_pendidikan'],
+                'kode_jabatan_jkn_kt'   => $row['kode_jabatan_jkn_kt'],
+                'alamat'                => $row['alamat'],
+                'id_bidang'             => $bidang->id ,
+                'is_pegawai'            => 0,
             ]);
         }
         Alert::success('Berhasil', 'Data Berhasil diimport sebanyak '.$jml_data.' Data Pegawai Baru');
         return back();
+    }
+
+    public function editPegawai($id)
+    {
+        $data = Kepegawaian::findOrFail($id);
+        $pendidikan = TingkatPendidikan::orderBy('id_tingkat', 'desc')->get();
+        
+        return view('simrs.kepeg.datakepeg.editPegawai', compact('data','pendidikan'));
+    }
+
+    public function setStatusPegawai(Request $request, $id)
+    {
+        // Kepegawaian::where('is_pegawai', 1)->update(['is_pegawai'=>0]);
+        $data = Kepegawaian::find($id);
+        if($data)
+        {   
+             // validasi jurusan
+             $cek_jurusan = KebutuhanJurusan::where('nama_jurusan',strtolower($data->jurusan))->first();
+            //  dd($cek_jurusan);
+             if($cek_jurusan)
+             {
+                 if($data->jenis_kelamin == 'L')
+                 {
+                     $add = $cek_jurusan->keadaan_lk - 1; 
+                     $cek_jurusan->keadaan_lk = $add;
+                     $cek_jurusan->update();
+                 }else{
+                     $add = $cek_jurusan->keadaan_pr - 1;
+                     $cek_jurusan->keadaan_pr = $add;
+                     $cek_jurusan->update();
+                 }
+             }
+            
+            $data->is_pegawai = 1;
+            $data->save();
+            $success = true;
+            $message = "Pegawai Berhasil Di Nonaktifkan";
+            
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
+    }
+
+    public function pegawaiNonaktif(Request $request)
+    {
+        $tingkat = TingkatPendidikan::get();
+        $cari_data = null;
+        $id_tingkat =$request->tingkat; 
+        if($id_tingkat)
+        {
+            $data   = Kepegawaian::where('is_pegawai',1)->where('jenjang', $id_tingkat)->get();
+        }else{
+            $data   = Kepegawaian::where('is_pegawai',1)->get();
+        }
+        return view('simrs.kepeg.datakepeg.indexPegawaiNonaktif', compact('request','data','tingkat','id_tingkat'));
+    }
+
+    public function setStatusPegawaiAktif(Request $request, $id)
+    {
+        $data = Kepegawaian::find($id);
+        if($data)
+        {
+            // validasi jurusan
+            $cek_jurusan = KebutuhanJurusan::where('nama_jurusan',strtolower($data->jurusan))->first();
+            // dd($cek_jurusan);
+            if($cek_jurusan)
+            {
+                if($data->jenis_kelamin == 'L')
+                {
+                    $add = $cek_jurusan->keadaan_lk + 1; 
+                    $cek_jurusan->keadaan_lk = $add;
+                    $cek_jurusan->update();
+                }else{
+                    $add = $cek_jurusan->keadaan_pr + 1;
+                    $cek_jurusan->keadaan_pr = $add;
+                    $cek_jurusan->update();
+                }
+            }
+
+            $data->is_pegawai = 0;
+            $data->save();
+            $success = true;
+            $message = "Pegawai Berhasil Di Aktifkan";
+        }
+        return response()->json([
+            'success' => $success,
+            'message' => $message,
+        ]);
     }
 
 }

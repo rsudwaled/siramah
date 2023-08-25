@@ -45,6 +45,7 @@ class Kepegawaian extends Model
         'kode_jabatan_jkn_kt',
         'alamat'           ,
         'id_bidang'           ,
+        'is_pegawai'           ,
     ];
 
     public function sPendidikan()
