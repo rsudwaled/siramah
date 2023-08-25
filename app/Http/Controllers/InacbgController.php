@@ -161,57 +161,57 @@ class InacbgController extends APIController
     }
     public function claim_ranap(Request $request)
     {
-        // $diag = null;
-        // $diag_utama = null;
-        // foreach ($request->diagnosa as $key => $value) {
-        //     $diagnosa = Icd10::where('diag', $value)->first();
-        //     if ($key == 0) {
-        //         $a = $diagnosa != null ? $diagnosa->nama : '-';
-        //         $diag_utama =  $value . " | " . $a;
-        //     } else if ($key == 1) {
-        //         $a = $diagnosa != null ? $diagnosa->nama : '-';
-        //         $diag =  $value . " | " . $a;
-        //     } else {
-        //         $a = $diagnosa != null ? $diagnosa->nama : '-';
-        //         $diag = $diag . ";" .  $value . " | " . $a;
-        //     }
-        // }
-        // $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
-        // $res = $this->new_claim($request);
-        // $res = $this->set_claim_ranap($request);
-        // $res = $this->grouper($request);
-        // if ($res->metadata->code == 200) {
-        //     $rmcounter = $request->nomor_rm . '|' . $request->counter;
-        //     $budget = BudgetControl::updateOrCreate(
-        //         [
-        //             'rm_counter' => $rmcounter
-        //         ],
-        //         [
-        //             'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
-        //             'no_rm' => $request->nomor_rm,
-        //             'counter' => $request->counter,
+        $diag = null;
+        $diag_utama = null;
+        foreach ($request->diagnosa as $key => $value) {
+            $diagnosa = Icd10::where('diag', $value)->first();
+            if ($key == 0) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag_utama =  $value . " | " . $a;
+            } else if ($key == 1) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . " | " . $a;
+            } else {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . " | " . $a;
+            }
+        }
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap($request);
+        $res = $this->grouper($request);
+        if ($res->metadata->code == 200) {
+            $rmcounter = $request->nomor_rm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+                    'no_rm' => $request->nomor_rm,
+                    'counter' => $request->counter,
 
-        //             'diagnosa_kode' => $request->diagnosa, #kode
-        //             'diagnosa_utama' => $diag_utama,
-        //             'diagnosa' => $diag,
-        //             'prosedur' => $request->procedure, #kode | deskripsi
-        //             'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
 
-        //             'kelas' => $res->response->kelas,
-        //             'tgl_grouper' => now(),
-        //             'tgl_edit' => now(),
-        //             'deskripsi' => $res->response->cbg->description,
-        //             "pic" => 1,
-        //         ]
-        //     );
-        //     $kunjungan = Kunjungan::find($request->kodekunjungan);
-        //     $kunjungan->update([
-        //         'no_sep' => $request->nomor_sep,
-        //     ]);
-        //     Alert::success('Success', 'Groupping berhasil');
-        // } else {
-        //     Alert::error('Gagal', 'Groupping gagal');
-        // }
+                    'kelas' => $res->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->response->cbg->description,
+                    "pic" => 1,
+                ]
+            );
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->nomor_sep,
+            ]);
+            Alert::success('Success', 'Groupping berhasil');
+        } else {
+            Alert::error('Gagal', 'Groupping gagal');
+        }
         Alert::error('Gagal', 'Groupping gagal');
         return redirect()->back();
     }
