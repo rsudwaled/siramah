@@ -517,7 +517,7 @@ class InacbgController extends APIController
                 // "upgrade_cla ss_los" => "0",
                 // "upgrade_class_payor" => "0",
                 // "add_payment_pct" => "0",
-                "birth_weight" => "0", #berat bayi
+                "birth_weight" => $request->berat_badan, #berat bayi
                 "sistole" => 120, #detak tensi
                 "diastole" => 70, #yg dbawah
                 "discharge_status" => $request->discharge_status, #kluar
