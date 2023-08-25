@@ -703,7 +703,7 @@ class InacbgController extends APIController
         $header = array("Content-Type: application/x-www-form-urlencoded");
         // url server aplikasi E-Klaim,
         // silakan disesuaikan instalasi masing-masing
-        $url = "http://192.168.2.210/E-Klaim/ws.php";
+        $url = "http://192.168.2.22/E-Klaim/ws.php";
         // setup curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -818,7 +818,7 @@ class InacbgController extends APIController
         $data = [
             "rincian" => $response,
             "budget" => $budget,
-            "pasien" => $budget->pasien,
+            "pasien" => $budget->pasien ?? null,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),

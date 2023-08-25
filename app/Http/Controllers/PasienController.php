@@ -50,7 +50,7 @@ class PasienController extends APIController
         $request['tanggal_lahir'] = date('Y-m-d', strtotime($request->tanggal_lahir));
         // $user = User::updateOrCreate(['id' => $request->user_id], $request->except(['_token', 'role']));
         // $user->assignRole('Pasien');
-        $pasien = PasienDB::updateOrCreate(['no_rm' => $request->no_rm], [
+        $pasien = Pasien::updateOrCreate(['no_rm' => $request->no_rm], [
             'nik_bpjs' => $request->nik,
             'nama_px' => $request->nama,
             'tempat_lahir' => $request->tempat_lahir,
@@ -117,42 +117,42 @@ class PasienController extends APIController
     }
     public function destroy($no_rm)
     {
-        $pasien = PasienDB::firstWhere('no_rm', $no_rm);
+        $pasien = Pasien::firstWhere('no_rm', $no_rm);
         $pasien->delete();
         Alert::success('Success', 'Data Pasien Telah Dihapus');
         return redirect()->route('simrs.pasien.index');
     }
     public function pasien_daerah(Request $request)
     {
-        $pasiens_kecamatan = PasienDB::select('kode_kecamatan', DB::raw('count(*) as total'))
+        $pasiens_kecamatan = Pasien::select('kode_kecamatan', DB::raw('count(*) as total'))
             ->where('kode_kecamatan', '!=', null)
             ->where('kode_kecamatan', '!=', 0)
             ->groupBy('kode_kecamatan')
             ->orderBy('total', 'desc')
             ->limit(20)
             ->get();
-        $pasiens_kabupaten = PasienDB::select('kode_kabupaten', DB::raw('count(*) as total'))
+        $pasiens_kabupaten = Pasien::select('kode_kabupaten', DB::raw('count(*) as total'))
             ->where('kode_kabupaten', '!=', null)
             ->where('kode_kabupaten', '!=', 0)
             ->groupBy('kode_kabupaten')
             ->orderBy('total', 'desc')
             ->limit(20)
             ->get();
-        $pasiens_pendidikan = PasienDB::select('pendidikan', DB::raw('count(*) as total'))
+        $pasiens_pendidikan = Pasien::select('pendidikan', DB::raw('count(*) as total'))
             ->where('pendidikan', '!=', null)
             ->where('pendidikan', '!=', 0)
             ->groupBy('pendidikan')
             ->orderBy('total', 'desc')
             ->get();
         $pendidikan = Pendidikan::get();
-        $pasiens_pekerjaan = PasienDB::select('pekerjaan', DB::raw('count(*) as total'))
+        $pasiens_pekerjaan = Pasien::select('pekerjaan', DB::raw('count(*) as total'))
             ->where('pekerjaan', '!=', null)
             ->where('pekerjaan', '!=', 0)
             ->groupBy('pekerjaan')
             ->orderBy('total', 'desc')
             ->get();
         $pekerjaan = Pekerjaan::get();
-        $pasiens_agama = PasienDB::select('agama', DB::raw('count(*) as total'))
+        $pasiens_agama = Pasien::select('agama', DB::raw('count(*) as total'))
             ->where('agama', '!=', null)
             ->where('agama', '!=', 0)
             ->groupBy('agama')
@@ -162,8 +162,8 @@ class PasienController extends APIController
         // dd($pasiens_pekerjaan);
         // dd($pasiens_pendidikan->where('pendidikan', 15)->first()->total);
         // dd($pasiens_pendidikan);
-        $pasiens_laki = PasienDB::where('jenis_kelamin', 'L')->count();
-        $pasiens_perempuan = PasienDB::where('jenis_kelamin', 'P')->count();
+        $pasiens_laki = Pasien::where('jenis_kelamin', 'L')->count();
+        $pasiens_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
         return view('simrs.pasien_daerah', compact([
             'pasiens_kecamatan',
             'pasiens_kabupaten',
