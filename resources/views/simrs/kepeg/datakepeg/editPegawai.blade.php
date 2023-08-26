@@ -17,7 +17,7 @@
                 </x-adminlte-alert>
             @endif
             <x-adminlte-card title="Edit Data Pegawai" theme="success" collapsible>
-                <form action="{{ route('bidang-kepeg.update', $data->id) }}" id="myform" method="POST">
+                <form action="{{ route('data-kepeg.update', $data->id) }}" id="myform" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="row">
@@ -87,7 +87,7 @@
                                 @endphp
                                 <div class="col-md-3">
                                     <x-adminlte-input value="{{ $data->eselon }}" name="eselon" label="Eselon Pegawai"
-                                        placeholder="Eselon" enable-old-support required />
+                                        placeholder="Eselon" enable-old-support />
                                 </div>
                                 <div class="col-md-3">
                                     <x-adminlte-input-date name="tmt_jabatan" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
@@ -105,7 +105,7 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <x-adminlte-input value="{{ $data->gol }}" name="gol" label="Gol Pegawai"
-                                        placeholder="Gol Pegawai" enable-old-support required />
+                                        placeholder="Gol Pegawai" enable-old-support />
                                 </div>
                                 <div class="col-md-3">
                                     <x-adminlte-input-date name="tmt_golru" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
@@ -133,14 +133,21 @@
                                         enable-old-support required />
                                 </div>
                                 <div class="col-md-3">
-                                    <x-adminlte-input-date name="tahun_kelulusan" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                        label="Tahun Kelulusan" :config="$config" />
+                                    <x-adminlte-select2 name="id_bidang" required id="id_bidang" label="Bidang">
+                                        @foreach ($bidang as $bd)
+                                            <option {{$data->id_bidang == $bd->id ? 'selected' : ''}} value="{{$bd->id}}">{{$bd->nama_bidang}}</option>
+                                        @endforeach
+                                    </x-adminlte-select2>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <x-adminlte-input value="{{ $data->format_pendidikan }}" name="format_pendidikan" label="Pendidikan"
+                                <div class="col-md-9">
+                                    <x-adminlte-input value="{{ $data->format_pendidikan }}" name="format_pendidikan" label="Format Pendidikan"
                                         enable-old-support required />
+                                </div>
+                                <div class="col-md-3">
+                                    <x-adminlte-input-date name="tahun_kelulusan" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                        label="Tahun Kelulusan" :config="$config" />
                                 </div>
                             </div>
                             <div class="row">
@@ -184,3 +191,4 @@
 @section('plugins.Datatables', true)
 @section('plugins.Select2', true)
 @section('plugins.TempusDominusBs4', true)
+

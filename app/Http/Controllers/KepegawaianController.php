@@ -136,9 +136,98 @@ class KepegawaianController extends Controller
     public function editPegawai($id)
     {
         $data = Kepegawaian::findOrFail($id);
+        $bidang = BidangPegawai::all();
         $pendidikan = TingkatPendidikan::orderBy('id_tingkat', 'desc')->get();
         
-        return view('simrs.kepeg.datakepeg.editPegawai', compact('data','pendidikan'));
+        return view('simrs.kepeg.datakepeg.editPegawai', compact('data','pendidikan','bidang'));
+    }
+
+    public function updatePegawai(Request $request, $id)
+    {
+        $data = Kepegawaian::findOrFail($id);
+        if($data)
+        {   
+             // validasi minus jurusan
+            $drop = KebutuhanJurusan::where('nama_jurusan',strtolower($data->jurusan))->first();
+            // dd($drop);
+             if($drop)
+             {
+                 if($data->jenis_kelamin == 'L')
+                 {
+                     $add = $drop->keadaan_lk - 1; 
+                     $drop->keadaan_lk = $add;
+                     $drop->update();
+                 }else{
+                     $add = $drop->keadaan_pr - 1;
+                     $drop->keadaan_pr = $add;
+                     $drop->update();
+                 }
+             }
+             // validasi add jurusan
+            $updateAdd = KebutuhanJurusan::where('nama_jurusan',strtolower($request->jurusan))->first();
+            // dd($updateAdd);
+            if($updateAdd)
+            {
+                if($request->jenis_kelamin == 'L')
+                {
+                    $add = $updateAdd->keadaan_lk + 1; 
+                    $updateAdd->keadaan_lk = $add;
+                    $updateAdd->update();
+                }else{
+                    $add = $updateAdd->keadaan_pr + 1;
+                    $updateAdd->keadaan_pr = $add;
+                    $updateAdd->update();
+                }
+            }else{
+                $jurusan_baru = KebutuhanJurusan::create([
+                    'nama_jurusan' =>$request->jurusan,
+                    'kebutuhan_lk' =>null,
+                    'kebutuhan_pr' =>null,
+                    'keadaan_lk' =>$request->jenis_kelamin == 'L' ? 1 : null,
+                    'keadaan_pr' =>$request->jenis_kelamin == 'P' ? 1 : null,
+                    'kekurangan_lk' =>null,
+                    'kekurangan_pr' =>null,
+                ]);
+            }
+
+            $data->nik               = $request->nik;
+            $data->nip               = $request->nip;
+            $data->nip_lama          = $request->nip_lama;
+            $data->nama_lengkap      = $request->nama_lengkap;
+            $data->tempat_lahir      = $request->tempat_lahir;
+            $data->tgl_lahir         = $request->tgl_lahir;
+            $data->status            = $request->status;
+            $data->jenis_kelamin     = $request->jenis_kelamin;
+            $data->pangkat           = $request->pangkat;
+            $data->jabatan           = $request->jabatan;
+            $data->tmt_jabatan       = $request->tmt_jabatan;
+            $data->tmt_cpns_kontrak  = $request->tmt_cpns_kontrak;
+            $data->tmt_pns_pt        = $request->tmt_pns_pt;
+            $data->eselon            = $request->eselon;
+            $data->gol               = $request->gol;
+            $data->tmt_golru         = $request->tmt_golru;
+            $data->tahun             = $request->tahun;
+            $data->bulan             = $request->bulan;
+            $data->jenjang           = $request->jenjang;
+            $data->jurusan           = $request->jurusan;
+            $data->struktural        = $request->struktural;
+            $data->no_str            = $request->no_str;
+            $data->tgl_str           = $request->tgl_str;
+            $data->tgl_berlaku_str   = $request->tgl_berlaku_str;
+            $data->no_sip            = $request->no_sip;
+            $data->tgl_sip           = $request->tgl_sip;
+            $data->tgl_berlaku_sip   = $request->tgl_berlaku_sip;
+            $data->unit_kerja        = $request->unit_kerja;
+            $data->format_pendidikan = $request->format_pendidikan;
+            $data->kode_jabatan_jkn_kt = $request->kode_jabatan_jkn_kt;
+            $data->alamat            = $request->alamat;
+            $data->id_bidang         = $request->id_bidang;
+            $data->is_pegawai        = 0;
+            $data->update();
+
+        }
+        Alert::success('Berhasil', 'Data A.N : '.$data->nama_lengkap.' Berhasil di Update ');
+        return redirect()->route('data-kepeg.get');
     }
 
     public function setStatusPegawai(Request $request, $id)
@@ -223,4 +312,17 @@ class KepegawaianController extends Controller
         ]);
     }
 
+    public function pegawaiMutasi(Request $request)
+    {
+        $data = Kepegawaian::whereNotNull('is_mutasi')->get();
+        $tingkat = TingkatPendidikan::get();
+        $id_tingkat =$request->tingkat; 
+        return view('simrs.kepeg.datakepeg.pegawaiMutasi', compact('request','data','tingkat','id_tingkat'));
+    }
+
+    public function pegawaiMutasiAdd(Request $request)
+    {
+        $pegawai = Kepegawaian::whereNull('is_mutasi')->get();
+        return view('simrs.kepeg.datakepeg.addPegawaiMutasi', compact('pegawai'));
+    }
 }

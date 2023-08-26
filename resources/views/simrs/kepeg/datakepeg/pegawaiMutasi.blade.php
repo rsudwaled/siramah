@@ -1,73 +1,26 @@
 @extends('adminlte::page')
-@section('title', 'Data Pegawai')
+@section('title', 'Data Pegawai Mutasi')
 @section('content_header')
-    <h1>Informasi Pegawai</h1>
+    <h1>Informasi Pegawai Mutasi</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="{{$lk}}"
-                        theme="primary" 
-                        text="Pegawai Pria"
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Lihat Data" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="{{$pr}}"
-                        theme="warning"
-                        text="Pegawai Perempuan" 
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Lihat Data" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="Data Baru"
-                        theme="success" 
-                        text="Tambah Data Baru"
-                        icon="fas fa-user-injured"
-                        url="#"
-                        url-text="Buat Data Baru" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        title="Import Data"
-                        theme="purple" 
-                        text="import data Pegawai"
-                        icon="fas fa-upload"
-                        data-toggle="modal" data-target="#importDataPegawai"
-                        url="#"
-                        url-text="Import Data Baru" />
-                </div>
-            </div>
-            <x-adminlte-modal id="importDataPegawai" title="Import Data Pegawai" size="md" theme="purple"
-                icon="fas fa-upload" v-centered static-backdrop scrollable>
-                <form action="{{route('import-data')}}" id="importPegawai" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div style="height:100px;">
-                        <x-adminlte-input-file name="file" igroup-size="sm" placeholder="Choose a file...">
-                            <x-slot name="prependSlot">
-                                <div class="input-group-text bg-purple">
-                                    <i class="fas fa-upload"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input-file>
-                    </div>
-                    <x-slot name="footerSlot">
-                        <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
-                        <x-adminlte-button type="submit" form="importPegawai"  class="bg-purple" label="import data"/>
-                    </x-slot>
-                </form>
-            </x-adminlte-modal>
             <div class="col-md-12">
                 <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
-                    title="List Data Pegawai Nonaktif">
+                    title="List Data Pegawai">
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <x-adminlte-small-box
+                                    theme="success" 
+                                    text="Tambah Data Baru"
+                                    url="{{route('pegawai-mutasi.add')}}"
+                                    url-text="Buat Data Baru" />
+                            </div>
+                        </div>
+                    </div>
                     <form id="formFilter" action="" method="get">
                     <div class="row">
                         <div class="col-lg-6">
@@ -81,14 +34,13 @@
                             </div>
                         </div>
                         <div class="col-lg-6">
-                            <a href="{{route('pegawai-nonaktif.get')}}" class="btn btn-sm btn-danger float-right mt-4 mr-1" >Pegawai Nonaktif</a>
-                            <a href="{{route('pegawai-mutasi.get')}}" class="btn btn-sm btn-warning float-right mt-4 mr-1">Pegawai Mutasi</a>
-                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm mr-1 mt-4 bg-purple" label="Lihat Data" />
+                            {{-- <a href="{{route('data-kepeg.get')}}" class="btn btn-sm btn-success float-right mt-4">Pegawai Aktif</a> --}}
+                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Data" />
                         </div>
                     </div>
                 </form>
                     @php
-                        $heads = ['NIK', ' Nama', 'Jenis Kelamin', 'Jenjang', 'Jurusan','Format Pendidikan','Action'];
+                        $heads = ['NIK', ' Nama', 'Tanggal', 'Jenis','Tujuan','Alasan','Asal Mutasi', 'Action'];
                         $config['order'] = ['0', 'asc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -102,16 +54,16 @@
                                 <tr>
                                     <td>{{$item->nik}}</td>
                                     <td>{{$item->nama_lengkap}}</td>
+                                    <td>{{$item->tgl_mutasi}}</td>
+                                    <td>{{$item->jenis_mutasi}}</td>
+                                    <td>{{$item->alasan_mutasi}}</td>
+                                    <td>{{$item->asal_tujuan_mutasi}}</td>
                                     <td>{{$item->jenis_kelamin == "L" ? 'LAKI-LAKI' : 'Perempuan'}}</td>
-                                    <td>{{$item->sPendidikan->nama_tingkat}}</td>
                                     <td style="width: 50px;">{{$item->jurusan}}</td>
                                     <td>{{$item->format_pendidikan}}</td>
                                     <td>
-                                        <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-business-time"
-                                        onclick="nonActiveConfirmation({{$item->id}})" />
-
-                                        <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
-                                        onclick="window.location='{{ route('data-kepeg.edit', $item->id) }}'" />
+                                        <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check" label="Aktifkan Karyawan"
+                                        onclick="ActiveConfirmation({{$item->id}})" />
                                     </td>
                                 </tr>
                             @endforeach
@@ -151,14 +103,14 @@
                 });
         })
 
-        function nonActiveConfirmation(id) {
+        function ActiveConfirmation(id) {
         swal.fire({
             icon: 'warning',
             title: "Apakah Anda Yakin?",
-            text: "Menonaktifkan Pegawai ini!",
+            text: "Mengaktifkan Pegawai ini!",
             type: "warning",
             showCancelButton: !0,
-            confirmButtonText: "IYA, Nonaktifkan!",
+            confirmButtonText: "IYA, Aktifkan!",
             cancelButtonText: "Batal!",
             reverseButtons: !0
         }).then(function (e) {
@@ -167,7 +119,7 @@
                 var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
                     type: 'POST',
-                    url: "{{url('data-pegawai/set-pegawai/')}}/" + id,
+                    url: "{{url('data-pegawai/set-pegawai-aktif/')}}/" + id,
                     data: {_token: CSRF_TOKEN},
                     dataType: 'JSON',
                     success: function (results) {
@@ -191,7 +143,7 @@
         }, function (dismiss) {
             return false;
         })
-        }
+    }
     </script>
 @endsection
 
