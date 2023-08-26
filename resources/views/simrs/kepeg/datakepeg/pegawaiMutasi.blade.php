@@ -12,8 +12,9 @@
                     title="List Data Pegawai">
                     <div class="col-lg-12">
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-12">
                                 <x-adminlte-small-box
+                                    class="float-right"
                                     theme="success" 
                                     text="Tambah Data Baru"
                                     url="{{route('pegawai-mutasi.add')}}"
@@ -21,26 +22,24 @@
                             </div>
                         </div>
                     </div>
-                    <form id="formFilter" action="" method="get">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div class="unit-group" id="tingkatpendidikan">
-                                <x-adminlte-select2 name="tingkat" label="Tingkat Pendidikan">
-                                    <option value="" >--Pilih Tingkat Pendidikan--</option>
-                                    @foreach ($tingkat as $item)
-                                        <option {{ $item->id_tingkat == $id_tingkat ?  'selected':'' }} value="{{ $item->id_tingkat }}">{{$item->nama_tingkat}}</option>
-                                    @endforeach
-                                </x-adminlte-select2>
+                    {{-- <form id="formFilter" action="" method="get">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="unit-group">
+                                    <x-adminlte-select2 name="id_pegawai" label="Pilih Pegawai">
+                                        @foreach ($data as $item)
+                                            <option value="{{ $item->id }}">{{$item->nama_lengkap}}</option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Data" />
                             </div>
                         </div>
-                        <div class="col-lg-6">
-                            {{-- <a href="{{route('data-kepeg.get')}}" class="btn btn-sm btn-success float-right mt-4">Pegawai Aktif</a> --}}
-                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Lihat Data" />
-                        </div>
-                    </div>
-                </form>
+                    </form> --}}
                     @php
-                        $heads = ['NIK', ' Nama', 'Tanggal', 'Jenis','Tujuan','Alasan','Asal Mutasi', 'Action'];
+                        $heads = ['NIK', ' Nama', 'Tanggal', 'Jenis','Tujuan','Alasan'];
                         $config['order'] = ['0', 'asc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -56,15 +55,9 @@
                                     <td>{{$item->nama_lengkap}}</td>
                                     <td>{{$item->tgl_mutasi}}</td>
                                     <td>{{$item->jenis_mutasi}}</td>
-                                    <td>{{$item->alasan_mutasi}}</td>
                                     <td>{{$item->asal_tujuan_mutasi}}</td>
-                                    <td>{{$item->jenis_kelamin == "L" ? 'LAKI-LAKI' : 'Perempuan'}}</td>
-                                    <td style="width: 50px;">{{$item->jurusan}}</td>
-                                    <td>{{$item->format_pendidikan}}</td>
-                                    <td>
-                                        <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-check" label="Aktifkan Karyawan"
-                                        onclick="ActiveConfirmation({{$item->id}})" />
-                                    </td>
+                                    <td>{{$item->alasan_mutasi}}</td>
+                                   
                                 </tr>
                             @endforeach
                     </x-adminlte-datatable>

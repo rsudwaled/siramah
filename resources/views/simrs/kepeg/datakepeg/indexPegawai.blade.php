@@ -32,7 +32,7 @@
                         theme="success" 
                         text="Tambah Data Baru"
                         icon="fas fa-user-injured"
-                        url="#"
+                        url="{{route('data-kepeg.add')}}"
                         url-text="Buat Data Baru" />
                 </div>
                 <div class="col-md-3">

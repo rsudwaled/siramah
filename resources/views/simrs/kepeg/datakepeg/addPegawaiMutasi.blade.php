@@ -10,37 +10,48 @@
             <div class="col-md-12">
                 <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                     title="Tambah Pegawai Mutasi">
-                    <form id="formFilter" action="" method="get">
+                    <form action="{{route('pegawai-mutasi.store')}}" id="mutasi" method="post">
+                        @csrf
                     <div class="row">
-                        <div class="col-lg-6">
-                            <div class="unit-group" id="pegawai">
-                                <x-adminlte-select2 name="pegawai" label="Pegawai">
-                                    <option value="" >--Pilih Pegawai--</option>
-                                    @foreach ($pegawai as $item)
-                                        <option value="{{ $item->id }}">{{$item->nama_lengkap}}</option>
-                                    @endforeach
-                                </x-adminlte-select2>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <x-adminlte-button type="submit" id="lihatData" class="withLoad float-right btn btn-sm m-1 mt-4 bg-purple" label="Cari Pegawai" />
+                        <div class="col-lg-12">
+                           <div class="row">
+                                <div class="col-lg-12">
+                                    <x-adminlte-select2 name="pegawai" label="Pegawai">
+                                        <option value="" >--Pilih Pegawai--</option>
+                                        @foreach ($pegawai as $item)
+                                            <option value="{{ $item->id }}">{{$item->nama_lengkap}}</option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                </div>
+                                <div class="col-lg-6">
+                                    @php
+                                    $config = ['format' => 'YYYY-MM-DD'];
+                                    @endphp
+                                    <x-adminlte-input-date name="tgl_mutasi" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                        label="Tanggal Mutasi" :config="$config" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <x-adminlte-select2 name="jenis_mutasi" label="Jenis Mutasi">
+                                        <option value="masuk" >Mutasi Masuk</option>
+                                        <option value="keluar" >Mutasi Keluar</option>
+                                    </x-adminlte-select2>
+                                </div>
+                                <div class="col-lg-6">
+                                    <x-adminlte-input name="asal_tujuan_mutasi" label="Tujuan Mutasi"
+                                        enable-old-support required />
+                                </div>
+                                <div class="col-lg-6">
+                                    <x-adminlte-input name="alasan_mutasi" label="Alasan Mutasi"
+                                        enable-old-support required />
+                                </div>
+                                
+                            </div> 
                         </div>
                     </div>
                 </form>
-                    @php
-                        $heads = ['NIK', ' Nama', 'Tanggal', 'Jenis','Tujuan','Alasan','Asal Mutasi', 'Action'];
-                        $config['order'] = ['0', 'asc'];
-                        $config['paging'] = false;
-                        $config['info'] = false;
-                        $config['scrollY'] = '500px';
-                        $config['scrollCollapse'] = true;
-                        $config['scrollX'] = true;
-                    @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
-                        striped bordered hoverable compressed>
-                           
-                    </x-adminlte-datatable>
                 </x-adminlte-card>
+                <x-adminlte-button form="mutasi" type="submit" class="float-right" theme="success" label="Simpan" />
+                <a href="{{ route('pegawai-mutasi.get') }}" class="btn btn-danger mr-1 float-right">Kembali</a>
             </div>
         </div>
     </div>
