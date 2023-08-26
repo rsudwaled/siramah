@@ -10,13 +10,19 @@
             <div class="row">
                 <div class="col-md-3">
                     <x-adminlte-small-box
-                        title="Import Data"
                         theme="purple" 
                         text="jurusan & Kebutuhan"
-                        icon="fas fa-upload"
                         data-toggle="modal" data-target="#importJurusan"
                         url="#"
                         url-text="Import Data Baru" />
+                </div>
+                <div class="col-md-3">
+                    <x-adminlte-small-box
+                    class="float-right"
+                    theme="success" 
+                    text="Tambah Data Baru"
+                    url="{{route('data-jurusan.add')}}"
+                    url-text="Buat Data Baru" />
                 </div>
             </div>
             <x-adminlte-modal id="importJurusan" title="Import Jurusan" size="md" theme="purple"
