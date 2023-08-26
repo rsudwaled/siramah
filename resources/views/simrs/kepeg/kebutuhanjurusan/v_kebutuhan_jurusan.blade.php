@@ -7,47 +7,48 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="row">
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                        theme="purple" 
-                        text="jurusan & Kebutuhan"
-                        data-toggle="modal" data-target="#importJurusan"
-                        url="#"
-                        url-text="Import Data Baru" />
-                </div>
-                <div class="col-md-3">
-                    <x-adminlte-small-box
-                    class="float-right"
-                    theme="success" 
-                    text="Tambah Data Baru"
-                    url="{{route('data-jurusan.add')}}"
-                    url-text="Buat Data Baru" />
-                </div>
-            </div>
-            <x-adminlte-modal id="importJurusan" title="Import Jurusan" size="md" theme="purple"
-                icon="fas fa-upload" v-centered static-backdrop scrollable>
-                <form action="{{route('data-jurusan.import')}}" id="importBidang" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div style="height:100px;">
-                        <x-adminlte-input-file name="file" igroup-size="sm" placeholder="Choose a file...">
-                            <x-slot name="prependSlot">
-                                <div class="input-group-text bg-purple">
-                                    <i class="fas fa-upload"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input-file>
-                    </div>
-                    <x-slot name="footerSlot">
-                        <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
-                        <x-adminlte-button type="submit" form="importBidang" class="bg-purple" label="import data"/>
-                    </x-slot>
-                </form>
-            </x-adminlte-modal>
             
             <div class="col-md-12">
                 <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                 title="List Jurusan dan Kebutuhan">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <x-adminlte-small-box
+                            theme="success" 
+                            text="Tambah Data Baru"
+                            url="{{route('data-jurusan.add')}}"
+                            url-text="Buat Data Baru" />
+                        </div>
+                        <div class="col-md-3">
+                            <x-adminlte-small-box
+                                theme="purple" 
+                                text="jurusan & Kebutuhan"
+                                data-toggle="modal" data-target="#importJurusan"
+                                url="#"
+                                url-text="Import Data Baru" />
+                        </div>
+                        <x-adminlte-modal id="importJurusan" title="Import Jurusan" size="md" theme="purple"
+                            icon="fas fa-upload" v-centered static-backdrop scrollable>
+                            <form action="{{route('data-jurusan.import')}}" id="importBidang" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <div style="height:100px;">
+                                    <x-adminlte-input-file name="file" igroup-size="sm" placeholder="Choose a file...">
+                                        <x-slot name="prependSlot">
+                                            <div class="input-group-text bg-purple">
+                                                <i class="fas fa-upload"></i>
+                                            </div>
+                                        </x-slot>
+                                    </x-adminlte-input-file>
+                                </div>
+                                <x-slot name="footerSlot">
+                                    <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
+                                    <x-adminlte-button type="submit" form="importBidang" class="bg-purple" label="import data"/>
+                                </x-slot>
+                            </form>
+                        </x-adminlte-modal>
+                    </div>
+                </div>
                 @php
                     $heads = ['No', 'Nama Jurusan','Keadaan L','Keadaan P','Kebutuhan L','Kebutuhan P','Kekurangan L','Kekurangan P', 'Action'];
                     $config['order'] = ['0', 'asc'];
