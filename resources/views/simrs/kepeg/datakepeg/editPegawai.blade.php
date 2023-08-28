@@ -25,11 +25,11 @@
                         $config = ['format' => 'YYYY-MM-DD'];
                         @endphp
                         <div class="col-lg-6">
-                            <x-adminlte-input value="{{ $data->nik }}" name="nik" label="NIK"
+                            <x-adminlte-input type="number" value="{{ $data->nik }}" name="nik" label="NIK"
                                 placeholder="NIK" enable-old-support required />
-                            <x-adminlte-input value="{{ $data->nip }}" name="nip" label="NIP"
+                            <x-adminlte-input type="number" value="{{ $data->nip }}" name="nip" label="NIP"
                                 placeholder="NIP" enable-old-support required />
-                            <x-adminlte-input value="{{ $data->nip_lama }}" name="nip_lama" label="NIP Lama"
+                            <x-adminlte-input type="number" value="{{ $data->nip_lama }}" name="nip_lama" label="NIP Lama"
                                 placeholder="NIP Lama" enable-old-support />
                             <x-adminlte-input value="{{ $data->nama_lengkap }}" name="nama_lengkap" label="Nama Pegawai"
                                 placeholder="Nama Pegawai" enable-old-support required />

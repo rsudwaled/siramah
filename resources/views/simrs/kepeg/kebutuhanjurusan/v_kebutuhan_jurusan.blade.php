@@ -17,8 +17,41 @@
                             <x-adminlte-small-box
                             theme="success" 
                             text="Tambah Data Baru"
-                            url="{{route('data-jurusan.add')}}"
+                            url="#"
+                            data-toggle="modal" data-target="#addKebutuhan"
                             url-text="Buat Data Baru" />
+                            <x-adminlte-modal id="addKebutuhan" title="Kebutuhan Jurusan" size="md" theme="success"
+                                v-centered static-backdrop scrollable>
+                                <form action="{{route('data-jurusan.add')}}" id="addKebutuhanJurusan" method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div style="height:220px;">
+                                        <div class="col-lg-12">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <x-adminlte-select2 name="id_jurusan" label="Pilih Jurusan">
+                                                        <option value="" >--Pilih Jurusan--</option>
+                                                        @foreach ($data as $item)
+                                                            <option value="{{ $item->id }}">{{$item->nama_jurusan}}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-adminlte-input name="kebutuhan_lk" label="Kebutuhan Laki-Laki"
+                                                    enable-old-support required />
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-adminlte-input name="kebutuhan_pr" label="Kebutuhan Perempuan"
+                                                    enable-old-support required />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <x-slot name="footerSlot">
+                                        <x-adminlte-button theme="danger" label="batalkan" class="mr-auto" data-dismiss="modal"/>
+                                        <x-adminlte-button type="submit" form="addKebutuhanJurusan"  class="bg-success" label="Simpan Data"/>
+                                    </x-slot>
+                                </form>
+                            </x-adminlte-modal>
                         </div>
                         <div class="col-md-3">
                             <x-adminlte-small-box
@@ -64,13 +97,16 @@
                             <tr>
                                 <td>{{$loop->iteration}}</td>
                                 <td >{{$item->nama_jurusan}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->keadaan_lk}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->keadaan_pr}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_lk}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_pr}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_lk}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_pr}}</td>
-                                <td>Aksi</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->keadaan_lk == Null ? '-':$item->keadaan_lk}}</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->keadaan_pr == Null ? '-': $item->keadaan_pr}}</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_lk == Null ? '-': $item->kebutuhan_lk}}</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_pr == Null ? '-': $item->kebutuhan_pr}}</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_lk == Null ? '-': $item->kekurangan_lk}}</td>
+                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_pr == Null ? '-': $item->kekurangan_pr}}</td>
+                                <td> 
+                                    <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                                    onclick="window.location='{{ route('data-kebutuhan.edit', $item->id) }}'" />
+                                </td>
                             </tr>
                         @endforeach
                         <tfoot>
@@ -85,6 +121,7 @@
                                 <th style="text-align: center; font-weight:bold;">{{$sum->sum('kebutuhan_pr')}}</th>
                                 <th style="text-align: center; font-weight:bold;">{{$sum->sum('kekurangan_lk')}}</th>
                                 <th style="text-align: center; font-weight:bold;">{{$sum->sum('kekurangan_pr')}}</th>
+                                <th></th>
                             </tr>
                         </tfoot>
                 </x-adminlte-datatable>

@@ -33,4 +33,36 @@ class KebutuhanJurusanController extends Controller
         Alert::success('Berhasil', 'Data Berhasil diimport sebanyak '. $jml_data);
         return back();
     }
+    public function kebutuhanJurusanAdd(Request $request)
+    {
+        $data = KebutuhanJurusan::findOrFail($request->id_jurusan);
+        $data->kebutuhan_lk = $request->kebutuhan_lk;
+        $data->kebutuhan_pr = $request->kebutuhan_pr;
+        $data->kekurangan_lk = $request->kebutuhan_lk-$data->keadaan_lk;
+        $data->kekurangan_pr = $request->kebutuhan_pr-$data->keadaan_pr;
+        $data->update();
+
+        Alert::success('Berhasil', 'kebutuhan laki-laki : '.$data->kebutuhan_lk.' dan kebutuhan perempuan : '.$data->kebutuhan_pr);
+        return back();
+    }
+
+    public function editKebutuhan(Request $request, $id)
+    {
+        $data = KebutuhanJurusan::findOrFail($request->id);
+        return view('simrs.kepeg.kebutuhanjurusan.v_kebutuhan_jurusan_edit', compact('data'));
+    }
+    public function updateKebutuhan(Request $request, $id)
+    {
+        $data = KebutuhanJurusan::find($id);
+        $data->keadaan_lk = $request->keadaan_lk;
+        $data->keadaan_pr = $request->keadaan_pr;
+        $data->kebutuhan_lk = $request->kebutuhan_lk;
+        $data->kebutuhan_pr = $request->kebutuhan_pr;
+        $data->kekurangan_lk = $request->kebutuhan_lk-$data->keadaan_lk;
+        $data->kekurangan_pr = $request->kebutuhan_pr-$data->keadaan_pr;
+        $data->save();
+
+        Alert::success('Berhasil Diupdate', 'laki-laki : '.$data->kebutuhan_lk.' dan perempuan : '.$data->kebutuhan_pr);
+        return redirect()->route('data-jurusan.get');
+    }
 }
