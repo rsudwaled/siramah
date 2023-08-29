@@ -58,7 +58,7 @@ use Illuminate\Support\Facades\Route;
 */
 // route default
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
-Auth::routes(); #ok
+Auth::routes(['register' => false]); #ok
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
@@ -87,6 +87,10 @@ Route::get('daftarUmumOffline', [AntrianController::class, 'daftarUmumOffline'])
 Route::get('cekPrinter', [AntrianController::class, 'cekPrinter'])->name('cekPrinter');
 Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
 
+// cppt
+// Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
+// Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
+// Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
 Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
 Route::middleware('auth')->group(function () {
     Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
@@ -245,10 +249,6 @@ Route::middleware('auth')->group(function () {
     Route::get('FormulirRL5_4', [FormulirRL5Controller::class, 'FormulirRL5_4'])->name('frl-5_4.get');
     Route::get('FormulirRL5_4_Perunit', [FormulirRL5Controller::class, 'FormulirRL5_4Perunit'])->name('frl-54Perunit.get');
     Route::get('FormulirRL5_5', [FormulirRL5Controller::class, 'FormulirRL5_5'])->name('frl-5_5.get');
-    // cppt
-    Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
-    Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
-    Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
 
     Route::get('cetakresumedokter/{rm}/{counter}/{kode_unit}', [CPPTController::class, 'getResumeDokter'])->name('resume-dokter.get');
     Route::get('getK', [CPPTController::class, 'getK'])->name('resume-dokter-k.get');
