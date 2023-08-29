@@ -719,7 +719,7 @@ return [
                         [
                             'text' => 'Formulir RL 1.2',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL1_2',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -735,7 +735,7 @@ return [
                 [
                     'text' => 'Formulir RL 2',
                     'icon'    => 'fas fa-disease',
-                    'url'  => 'rekammedis/kunjungan_poliklinik',
+                    'url'  => 'FormulirRL2',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
@@ -769,14 +769,14 @@ return [
                         [
                             'text' => 'Formulir RL 3.4',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_4',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
                         [
                             'text' => 'Formulir RL 3.5',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_5',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -797,14 +797,14 @@ return [
                         [
                             'text' => 'Formulir RL 3.8',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_8',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
                         [
                             'text' => 'Formulir RL 3.9',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL3_9',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -819,6 +819,34 @@ return [
                             'text' => 'Formulir RL 3.11',
                             'icon'    => 'fas fa-disease',
                             'url'  => 'FormulirRL3_11',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.12',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3_12',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.13',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3_13',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.14',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3_14',
+                            'shift'   => 'ml-3',
+                            'can' => 'rekam-medis',
+                        ],
+                        [
+                            'text' => 'Formulir RL 3.15',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL3_15',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -876,7 +904,7 @@ return [
                         [
                             'text' => 'Formulir RL 5.2',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'FormulirRL5_2',
                             'shift'   => 'ml-3',
                             'can' => 'rekam-medis',
                         ],
@@ -1318,6 +1346,36 @@ return [
                 ],
             ]
         ],
+        // KEPEGAWAIAN
+        [
+            'text'    => 'Kepegawaian',
+            'icon'    => 'fas fa-user-tie',
+            'can' => ['admin'],
+            'submenu' => [
+                [
+                    'text' => 'Data Pendukung',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'data-jabatan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Jurusan & Kebutuhan',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'kebutuhan-jurusan',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Data Pegawai',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'data-pegawai',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                
+            ]
+        ],
         // ANTRIAN BPJS
         [
             'text'    => 'Integrasi Antrian BPJS',
@@ -1637,6 +1695,16 @@ return [
     */
 
     'plugins' => [
+        'BsCustomFileInput' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bs-custom-file-input/bs-custom-file-input.min.js',
+                ],
+            ],
+        ],
         'TempusDominusBs4' => [
             'active' => false,
             'files' => [

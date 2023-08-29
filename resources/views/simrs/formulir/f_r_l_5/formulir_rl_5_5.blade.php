@@ -201,6 +201,12 @@
         #show_print {
             display: none;
         }
+        /* .table-laporan {
+            border: 1px solid #b8b8b8 !important;
+        } */
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
+        }
     </style>
 
 @endsection

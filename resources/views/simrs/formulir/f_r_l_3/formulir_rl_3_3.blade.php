@@ -40,8 +40,10 @@
                                 <div class="col-md-8">
                                     <div class="row mt-4 float-right">
                                         <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1" theme="primary" label="Lihat Laporan" />
+                                        @if (isset($dataGM))
                                         <x-adminlte-button label="Excel" class="bg-purple btn btn-sm m-1" id="export" />
                                         <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +51,7 @@
                     </div>
                 </form>
             </x-adminlte-card>
-            {{-- @if (isset($laporanDS)) --}}
+            @if (isset($dataGM))
                 <div id="printMe">
                     <section class="invoice p-3 mb-3">
                         <div class="row p-3 kop-surat">
@@ -78,22 +80,32 @@
                             </div>
                         </div>
                         <div class="col-12 table-responsive table-laporan">
-                            <table class="table table-sm" style="text-align: center;">
+                            <table class="table table-sm" >
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Jenis Kegiatan</th>
-                                        <th>Jumlah</th>
+                                        <th style="text-align: center;">Jumlah</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    @foreach ($dataGM as $item)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td>{{$item->jenis_pemeriksaan}}</td>
+                                            <td style="text-align: center;">{{$item->jumlah}}</td>
+                                        </tr>
+                                    @endforeach
+                                    <tr>
+                                        <th colspan="2" style="text-align: center;">Total</th>
+                                        <th style="text-align: center;">{{$dataGM->sum('jumlah')}}</th>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     </section>
                 </div>
-            {{-- @endif --}}
+            @endif
         </div>
     </div>
 @endsection
@@ -102,5 +114,107 @@
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
+
+@section('js')
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            window.print(printContents);
+        }
+        $(document).on('click', '#export', function(e) {
+            $.LoadingOverlay("show");
+            var data = $('#formFilter').serialize();
+            var url = "{{ route('laporan-survailans.export') }}?" + data;
+            window.location = url;
+            $.ajax({
+                    data: data,
+                    url: url,
+                    type: "GET",
+                    success: function(data) {
+                        setInterval(() => {
+                            $.LoadingOverlay("hide");
+                        }, 7000);
+                    },
+                }).then(function() {
+                    setInterval(() => {
+                        $.LoadingOverlay("hide");
+                    }, 2000);
+                });
+        })
+    </script>
+@endsection
+@section('css')
+    <style type="text/css" media="print">
+        @media print {
+            @page {
+                size: Legal landscape;
+            }
+        }
+
+        hr {
+            color: #333333 !important;
+            border: 1px solid #333333 !important;
+            line-height: 1.5;
+        }
+
+        .table-laporan {
+            font-size: 9px;
+            margin-left: -5px;
+        }
+
+        .table-laporan #golumr {
+            font-size: 6px;
+        }
+
+        .table-laporan #alamat {
+            width: 80px;
+        }
+
+        .table-laporan #terapi {
+            width: 90px;
+        }
+
+        .table-laporan #hide_print {
+            display: none;
+        }
+
+        .table-laporan #show_print {
+            display: block;
+        }
+
+        .table-laporan #terapi {
+            width: 45px;
+        }
+
+        .table-laporan #deskripsi {
+            width: 40px;
+        }
+
+        .table-laporan #alamat {
+            width: 40px;
+        }
+
+        .table-laporan #no {
+            width: 10px;
+        }
+
+        #hide_div {
+            display: none;
+        }
+    </style>
+    <style>
+        #golumr {
+            font-size: 7px;
+        }
+
+        #show_print {
+            display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
+        }
+    </style>
+
+@endsection
 
 

@@ -48,6 +48,8 @@
                             <option value="19884952">19884952</option>
                             <option value="23979132">TATI SUNARTI</option>
                             <option value="23978253">SAPRIJAL </option>
+                            <option value="23980884">PASIEN RADIOLOGI 1 </option>
+                            <option value="22947447">PASIEN RADIOLOGI 2</option>
                         </select>
                         </div>
                       </div>
@@ -97,7 +99,7 @@
         if(rm){
             $.ajax({
             type:"GET",
-            url:"{{route('resume-dokter-k.get')}}?rm="+rm,
+            url:"/getK?rm="+rm,
             dataType: 'JSON',
             success:function(res){
                 if(res){
@@ -124,7 +126,7 @@
         if(id_kunjungan){
             $.ajax({
             type:"GET",
-            url:"{{route('resume-dokter-c.get')}}?id_kunjungan="+id_kunjungan+'&rm='+rm,
+            url:"getC?id_kunjungan="+id_kunjungan+'&rm='+rm,
             dataType: 'JSON',
             success:function(res){
                 if(res){

@@ -10,7 +10,8 @@
             <div class="row" id="hide_div" >
                 <div class="col-lg-12">
                     <x-adminlte-card title="Penyakit Rawat Jalan" theme="purple" >
-                        <form id="formFilter" action="" method="get">
+                        <form action="{{route('get-rl-5-4-u')}}" method="post">
+                            @csrf
                             <div class="row">
                                 <div class="col-lg-6">
                                     @php
@@ -34,7 +35,7 @@
                                     </x-adminlte-input-date>
                                 </div>
                                 <div class="col-lg-6">
-                                    <x-adminlte-input name="jumlah" label="Jumlah Data" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
+                                    <x-adminlte-input name="jumlah" label="Jumlah Data" placeholder="jumlah data yang akan ditampilkan..." >
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text">
                                                 <i class="fas fa-user text-purple"></i>
@@ -42,16 +43,14 @@
                                         </x-slot>
                                     </x-adminlte-input>
                                     <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" {{($kode_unit != null) ? $dataperunit== 'on' ? 'checked' :'' : ''}} id="dataperunitC" name="dataperunit" onclick="myFunctionUnit()">
-                                        {{-- <input class="custom-control-input" type="checkbox" id="dataperunitC" name="dataperunit" onclick="myFunctionUnit()"> --}}
+                                        <input class="custom-control-input" type="checkbox" id="dataperunitC" name="dataperunit" onclick="myFunctionUnit()">
                                         <label for="dataperunitC" class="custom-control-label">Laporan Perunit</label>
                                     </div>
-                                    <div class="unit-group" id="unitopt" style="{{$kode_unit == null ? 'display:none' : 'display:block'}}">
+                                    <div class="unit-group" id="unitopt" style="display:none">
                                         <x-adminlte-select2 name="unit" label="Pilih Unit" id="valueopt">
                                             <option value="" id="opt_null">--Pilih Unit--</option>
                                             @foreach ($unit as $item)
-                                                {{-- <option {{ $dataperunit =='on' ? $item->KODE_UNIT == $kode_unit ? 'selected':'' : ''}} value="{{ $dataperunit == 'on' ? $item->KODE_UNIT : ''}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option> --}}
-                                                <option {{ $item->KODE_UNIT == $kode_unit ? 'selected':'' }} value="{{ $dataperunit == 'on' ? $item->KODE_UNIT : ''}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
+                                                <option value="{{ $item->KODE_UNIT}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
                                             @endforeach
                                         </x-adminlte-select2>
                                     </div>
@@ -65,54 +64,6 @@
                         </form>
                     </x-adminlte-card>
                 </div>
-                {{-- <div class="col-6">
-                    <x-adminlte-card title="Penyakit Rawat Jalan Perunit" theme="info" >
-                        <form id="formFilter" action="" method="get">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    @php
-                                        $config = ['format' => 'YYYY-MM-DD'];
-                                    @endphp
-                                    <x-adminlte-input-date name="dari" id="from" label="Tanggal Mulai" :config="$config"
-                                        value="{{ $from == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $from }}">
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input-date>
-                                    <x-adminlte-input-date name="sampai" id="to" label="Tanggal Selesai" :config="$config"
-                                        value="{{ $to == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $to }}">
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input-date>
-                                </div>
-                                <div class="col-lg-6">
-                                    <x-adminlte-input name="jumlah" label="Jumlah" placeholder="jumlah data yang akan ditampilkan..." value={{$jml}} >
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-user text-lightblue"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input>
-                                    <x-adminlte-select2 name="unit" required id="unit" label="Pilih Unit">
-                                        @foreach ($unit as $item)
-                                            <option {{ $item->KODE_UNIT == $kode_unit ? 'selected':'' }} value="{{$item->KODE_UNIT}}">{{$item->KODE_UNIT}} | {{$item->NAMA_UNIT}}</option>
-                                        @endforeach
-                                    </x-adminlte-select2>
-
-                                    @if (isset($laporanFM))
-                                    <button class="btn btn-success btn btn-sm m-1" onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
-                                    @endif
-                                    <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm m-1 " theme="primary" label="Lihat Laporan" />
-                                </div>
-                            </div>
-                        </form>
-                    </x-adminlte-card>
-                </div> --}}
             </div>
             @if (isset($laporanFM))
                 @if ($kode_unit)
@@ -256,17 +207,6 @@
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-        $(document).on('click', '#perunit', function(e) {
-            // $.LoadingOverlay("show");
-            var url = "{{ route('frl-54Perunit.get') }}?";
-            window.location = url;
-            $.ajax({
-                    url: url,
-                    type: "GET",
-
-            });
-        });
-
         function myFunctionUnit() {
             var checkBox = document.getElementById("dataperunitC");
             var unit1 = document.getElementById("unitopt");
@@ -310,6 +250,9 @@
         }
         #show_print {
             display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
         }
     </style>
 
