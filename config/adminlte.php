@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'SIRAMAH-RS Waled',
+    'title' => 'Sistem RSUD Waled',
     'title_prefix' => '',
     'title_postfix' => '',
 
