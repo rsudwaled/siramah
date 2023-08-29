@@ -109,26 +109,26 @@
                                         <th colspan="2">>65THN</th>
                                     </tr>
                                     <tr>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td>L</td>
-                                        <td>P</td>
-                                        <td style="vertical-align : middle;text-align:center;">LK</td>
-                                        <td style="vertical-align : middle;text-align:center;">PR</td>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th>L</th>
+                                        <th>P</th>
+                                        <th style="vertical-align : middle;text-align:center;">LK</th>
+                                        <th style="vertical-align : middle;text-align:center;">PR</th>
                                     </tr>
                                     </tr>
                                 </thead>
@@ -263,6 +263,9 @@
 
         #show_print {
             display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
         }
     </style>
 

@@ -106,5 +106,86 @@
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
+@section('js')
+    <script>
+        function printDiv(divName) {
+            var printContents = document.getElementById(divName).innerHTML;
+            window.print(printContents);
+        }
 
+    </script>
+@endsection
+@section('css')
+    <style type="text/css" media="print">
+        @media print {
+            @page {
+                size: Legal landscape;
+            }
+        }
+
+        hr {
+            color: #333333 !important;
+            border: 1px solid #333333 !important;
+            line-height: 1.5;
+        }
+
+        .table-laporan {
+            font-size: 9px;
+            margin-left: -5px;
+        }
+
+        .table-laporan #golumr {
+            font-size: 6px;
+        }
+
+        .table-laporan #alamat {
+            width: 80px;
+        }
+
+        .table-laporan #terapi {
+            width: 90px;
+        }
+
+        .table-laporan #hide_print {
+            display: none;
+        }
+
+        .table-laporan #show_print {
+            display: block;
+        }
+
+        .table-laporan #terapi {
+            width: 45px;
+        }
+
+        .table-laporan #deskripsi {
+            width: 40px;
+        }
+
+        .table-laporan #alamat {
+            width: 40px;
+        }
+
+        .table-laporan #no {
+            width: 10px;
+        }
+
+        #hide_div {
+            display: none;
+        }
+    </style>
+    <style>
+        #golumr {
+            font-size: 7px;
+        }
+
+        #show_print {
+            display: none;
+        }
+        thead, th, tbody {
+            border: 1px solid #dfdcdc !important;
+        }
+    </style>
+
+@endsection
 
