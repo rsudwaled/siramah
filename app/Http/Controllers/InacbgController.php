@@ -6,15 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\BudgetControl;
 use App\Models\Icd10;
 use App\Models\Kunjungan;
+use App\Models\Pasien;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
+
 
 class InacbgController extends APIController
 {
+    public $key_eclaim = "9f05163ca3a07fde41fea27f1b0319f277f334bcba0ad733e57e06c6763887c3";
+
     public function search_diagnosis(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -196,14 +201,18 @@ class InacbgController extends APIController
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
                     'deskripsi' => $res->response->cbg->description,
+                    "pic" => 1,
                 ]
             );
             $kunjungan = Kunjungan::find($request->kodekunjungan);
             $kunjungan->update([
                 'no_sep' => $request->nomor_sep,
             ]);
+            Alert::success('Success', 'Groupping berhasil');
         } else {
+            Alert::error('Gagal', 'Groupping gagal');
         }
+        Alert::error('Gagal', 'Groupping gagal');
         return redirect()->back();
     }
     public function set_claim(Request $request)
@@ -508,7 +517,7 @@ class InacbgController extends APIController
                 // "upgrade_cla ss_los" => "0",
                 // "upgrade_class_payor" => "0",
                 // "add_payment_pct" => "0",
-                "birth_weight" => "0", #berat bayi
+                "birth_weight" => $request->berat_badan, #berat bayi
                 "sistole" => 120, #detak tensi
                 "diastole" => 70, #yg dbawah
                 "discharge_status" => $request->discharge_status, #kluar
@@ -691,7 +700,7 @@ class InacbgController extends APIController
     public function send_request($json_request)
     {
         // data yang akan dikirimkan dengan method POST adalah encrypted:
-        $key = env('EKLAIM_KEY');
+        $key = $this->key_eclaim;
         $payload = $this->inacbg_encrypt($json_request, $key);
         // tentukan Content-Type pada http header
         $header = array("Content-Type: application/x-www-form-urlencoded");
@@ -812,6 +821,7 @@ class InacbgController extends APIController
         $data = [
             "rincian" => $response,
             "budget" => $budget,
+            "pasien" => $budget->pasien ?? null,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
@@ -835,5 +845,15 @@ class InacbgController extends APIController
             ],
         ];
         return $this->sendResponse($data, 200);
+    }
+    public function update_claim(Request $request)
+    {
+        $budget = BudgetControl::find($request->rm_counter);
+        $budget->update([
+            "status" => $request->status,
+            "saran" => $request->saran,
+            "pic2" => Auth::user()->id,
+        ]);
+        return redirect()->back();
     }
 }

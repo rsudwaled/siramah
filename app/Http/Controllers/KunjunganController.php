@@ -12,6 +12,7 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KunjunganController extends APIController
 {
@@ -117,17 +118,16 @@ class KunjunganController extends APIController
                 $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
                     ->where('status_kunjungan', 1)
                     ->has('pasien')
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
                     ->where('status_kunjungan', 1)
                     ->has('pasien')
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget'])
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan'])
                     ->get();
             }
         }
-        // dd($kunjungans->first(), $kunjungans->first()->layanan->sum('total_layanan'));
         return view('simrs.ranap.ranap_aktif', compact([
             'request',
             'units',

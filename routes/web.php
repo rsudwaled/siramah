@@ -41,6 +41,7 @@ use App\Http\Controllers\FormulirRL3Controller;
 use App\Http\Controllers\FormulirRL4Controller;
 use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
+use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
@@ -84,8 +85,6 @@ Route::get('antrianConsole', [AntrianController::class, 'antrianConsole'])->name
 Route::get('checkinAntrian', [AntrianController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [AntrianController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
 Route::get('checkinKarcisAntrian', [AntrianController::class, 'checkinKarcisAntrian'])->name('checkinKarcisAntrian');
-
-
 Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli'])->name('jadwaldokterPoli');
 Route::get('daftarBpjsOffline', [AntrianController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');
 Route::get('daftarUmumOffline', [AntrianController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
@@ -198,6 +197,9 @@ Route::middleware('auth')->group(function () {
     Route::get('suratKontrolBpjs', [SuratKontrolController::class, 'suratKontrolBpjs'])->name('suratKontrolBpjs');
     Route::get('rujukanBpjs', [RujukanController::class, 'rujukanBpjs'])->name('rujukanBpjs');
 
+    Route::post('update_claim', [InacbgController::class, 'update_claim'])->name('update_claim');
+
+
     // laporan penyakit rawat jalan
     Route::get('LaporanPenyakitRawatJalan', [LaporanPenyakitRawatJalanController::class, 'LaporanPenyakitRawatJalan'])->name('laporan-rawa-jalan.get');
     Route::get('LaporanPenyakitRawatJalan/Export', [LaporanPenyakitRawatJalanController::class, 'exportExcel'])->name('laporan-rawa-jalan.export');
@@ -267,7 +269,7 @@ Route::middleware('auth')->group(function () {
     Route::get('cetakresumedokter/{rm}/{counter}/{kode_unit}', [CPPTController::class, 'getResumeDokter'])->name('resume-dokter.get');
     Route::get('getK', [CPPTController::class, 'getK'])->name('resume-dokter-k.get');
     Route::get('getC', [CPPTController::class, 'getC'])->name('resume-dokter-c.get');
-    
+
     // jabatan Kerja
     Route::get('data-jabatan', [JabatanKerjaController::class, 'dataJabatan'])->name('jabatan-kepeg.get');
     Route::post('tambah-jabatan', [JabatanKerjaController::class, 'addJabatan'])->name('jabatan.add');
@@ -291,7 +293,7 @@ Route::middleware('auth')->group(function () {
     Route::get('pegawai-mutasi', [KepegawaianController::class, 'pegawaiMutasi'])->name('pegawai-mutasi.get');
     Route::get('pegawai-mutasi-add', [KepegawaianController::class, 'pegawaiMutasiAdd'])->name('pegawai-mutasi.add');
     Route::post('pegawai-mutasi-store', [KepegawaianController::class, 'pegawaiMutasiStore'])->name('pegawai-mutasi.store');
-    
+
     Route::post('kebutuhan-jurusan/import', [KebutuhanJurusanController::class, 'importJurusan'])->name('data-jurusan.import');
     Route::get('kebutuhan-jurusan', [KebutuhanJurusanController::class, 'kebutuhanJurusan'])->name('data-jurusan.get');
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
