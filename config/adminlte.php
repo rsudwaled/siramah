@@ -1373,6 +1373,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Pegawai Mutasi',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'pegawai-mutasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
                 
             ]
         ],

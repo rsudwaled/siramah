@@ -99,10 +99,10 @@
                                 <td >{{$item->nama_jurusan}}</td>
                                 <td style="text-align: center; font-weight:bold;">{{$item->keadaan_lk == Null ? '-':$item->keadaan_lk}}</td>
                                 <td style="text-align: center; font-weight:bold;">{{$item->keadaan_pr == Null ? '-': $item->keadaan_pr}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_lk == Null ? '-': $item->kebutuhan_lk}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kebutuhan_pr == Null ? '-': $item->kebutuhan_pr}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_lk == Null ? '-': $item->kekurangan_lk}}</td>
-                                <td style="text-align: center; font-weight:bold;">{{$item->kekurangan_pr == Null ? '-': $item->kekurangan_pr}}</td>
+                                <td style="text-align: center; font-weight:bold; color:rgb(2, 175, 2);">{{$item->kebutuhan_lk == Null ? '-': $item->kebutuhan_lk}}</td>
+                                <td style="text-align: center; font-weight:bold; color:rgb(2, 175, 2);">{{$item->kebutuhan_pr == Null ? '-': $item->kebutuhan_pr}}</td>
+                                <td style="text-align: center; font-weight:bold; color:red;">{{$item->kekurangan_lk == Null ? '-': $item->kekurangan_lk}}</td>
+                                <td style="text-align: center; font-weight:bold; color:red;">{{$item->kekurangan_pr == Null ? '-': $item->kekurangan_pr}}</td>
                                 <td> 
                                     <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
                                     onclick="window.location='{{ route('data-kebutuhan.edit', $item->id) }}'" />
@@ -117,10 +117,10 @@
                                 <th style="text-align: center; font-weight:bold;" colspan="2">Total ( {{$total}})</th>
                                 <th style="text-align: center; font-weight:bold;">{{$sum->sum('keadaan_lk')}}</th>
                                 <th style="text-align: center; font-weight:bold;">{{$sum->sum('keadaan_pr')}}</th>
-                                <th style="text-align: center; font-weight:bold;">{{$sum->sum('kebutuhan_lk')}}</th>
-                                <th style="text-align: center; font-weight:bold;">{{$sum->sum('kebutuhan_pr')}}</th>
-                                <th style="text-align: center; font-weight:bold;">{{$sum->sum('kekurangan_lk')}}</th>
-                                <th style="text-align: center; font-weight:bold;">{{$sum->sum('kekurangan_pr')}}</th>
+                                <th style="text-align: center; font-weight:bold; color:rgb(2, 175, 2);">{{$sum->sum('kebutuhan_lk')}}</th>
+                                <th style="text-align: center; font-weight:bold; color:rgb(2, 175, 2);">{{$sum->sum('kebutuhan_pr')}}</th>
+                                <th style="text-align: center; font-weight:bold; color:red;">{{$sum->sum('kekurangan_lk')}}</th>
+                                <th style="text-align: center; font-weight:bold; color:red;">{{$sum->sum('kekurangan_pr')}}</th>
                                 <th></th>
                             </tr>
                         </tfoot>
