@@ -44,7 +44,7 @@
                 <x-adminlte-card theme="secondary" icon="fas fa-info-circle"
                     title="Total Pasien Aktif ({{ $kunjungans->count() }} Orang)">
                     @php
-                        $heads = ['Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Tarif Klaim', 'Tagihan RS', 'Status'];
+                        $heads = ['Tgl Masuk', 'LOS', 'Pasien', 'Kelas/Jaminan', 'Dokter', 'Ruangan', 'Tarif Klaim', 'Tagihan RS', 'Status', 'Action'];
                         $config['order'] = ['1', 'asc'];
                         $config['paging'] = false;
                         $config['scrollY'] = '400px';
@@ -145,32 +145,38 @@
                                         0%
                                     </button>
                                 @endif
-
                             </td>
-                            {{-- <td>
-                                <x-adminlte-button class="btn-xs btnPilihKunjungan" label="Groupper" theme="primary"
-                                    icon="fas fa-file-medical" data-toggle="tooltop" title="Groupper INACBG"
-                                    data-id="{{ $item->kode_kunjungan }}" data-nomorkartu="{{ $item->pasien->no_Bpjs }}"
-                                    data-norm="{{ $item->pasien->no_rm }}"
+                            <td>
+                                <button class="btn btn-xs btn-warning btnPasien" data-toggle="tooltop"
+                                    title="Action Pelayanan Ranap" data-id="{{ $item->kode_kunjungan }}"
+                                    data-nomorkartu="{{ $item->pasien->no_Bpjs }}" data-norm="{{ $item->pasien->no_rm }}"
                                     data-namapasien="{{ $item->pasien->nama_px }}" data-nomorsep="{{ $item->no_sep }}"
                                     data-tgllahir="{{ $item->pasien->tgl_lahir }}"
                                     data-gender="{{ $item->pasien->jenis_kelamin }}"
                                     data-tglmasuk="{{ $item->tgl_masuk }}" data-kelas="{{ $item->kelas }}"
                                     data-dokter="{{ $item->dokter->nama_paramedis }}"
-                                    data-counter="{{ $item->counter }}" />
-                            </td> --}}
+                                    data-counter="{{ $item->counter }}">
+                                    Action
+                                </button>
+                            </td>
+
                             </tr>
                         @endforeach
-                        {{-- <tfoot>
+                        <tfoot>
                             <tr>
                                 <th colspan="6" class="text-right">Total</th>
                                 <th class="text-right">{{ money($kunjungans->sum('budget.tarif_inacbg'), 'IDR') }}</th>
                                 <th class="text-right">{{ money($kunjungans->sum('tagihan.total_biaya'), 'IDR') }}</th>
-                                <th colspan="2">
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            {{-- <tr>
+                                <th colspan="5"></th>
+                                <th colspan="2" class="text-right">
                                     {{ money($kunjungans->sum('budget.tarif_inacbg') - $kunjungans->sum('tagihan.total_biaya'), 'IDR') }}
                                 </th>
-                            </tr>
-                        </tfoot> --}}
+                            </tr> --}}
+                        </tfoot>
                     </x-adminlte-datatable>
                 </x-adminlte-card>
             </div>
@@ -628,8 +634,8 @@
                                                 </div>
                                             </div>
                                             <x-slot name="footerSlot">
-                                                <x-adminlte-button theme="success" class="mr-auto withLoad" label="Groupper"
-                                                    type="submit" form="formGroupper" />
+                                                <x-adminlte-button theme="success" class="mr-auto withLoad"
+                                                    label="Groupper" type="submit" form="formGroupper" />
                                                 <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
                                             </x-slot>
                                         </form>
@@ -659,6 +665,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </x-adminlte-modal>
+    <x-adminlte-modal id="modalPasien" name="modalPasien" title="Pasien Rawat Inap" theme="success"
+        icon="fas fa-file-medical" size="xl" scrollable>
+        <div class="row">
+            test
         </div>
     </x-adminlte-modal>
     <x-adminlte-modal id="modalSEP" name="modalSEP" title="SEP Peserta" theme="success" icon="fas fa-file-medical"

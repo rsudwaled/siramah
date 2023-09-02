@@ -310,7 +310,7 @@ return [
         [
             'text'        => 'Landing Page',
             'url'         => '',
-            'icon'        => 'fas fa-home',
+            'icon'        => 'fas fa-globe',
         ],
         [
             'text'        => 'Dashboard',
@@ -1373,7 +1373,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                
+
             ]
         ],
         // ANTRIAN BPJS
