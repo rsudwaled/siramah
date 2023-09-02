@@ -175,7 +175,6 @@ class JadwalDokterController extends BaseController
     }
     public function jadwal_dokter_bpjs(Request $request)
     {
-        dd('jadwal_dokter_bpjs');
         $controller = new AntrianController();
         $response = $controller->ref_dokter();
         if ($response->metadata->code == 200) {
@@ -210,7 +209,6 @@ class JadwalDokterController extends BaseController
     }
     public function jadwaldokter_add(Request $request)
     {
-        dd('jadwaldokter_add');
         $request->validate([
             'kodePoli' => 'required',
             'namaPoli' => 'required',
