@@ -92,9 +92,9 @@ Route::get('cekPrinter', [AntrianController::class, 'cekPrinter'])->name('cekPri
 Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
 
 // cppt
-// Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
-// Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
-// Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
+Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
+Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
+Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
 Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
 Route::middleware('auth')->group(function () {
     Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
@@ -265,11 +265,6 @@ Route::middleware('auth')->group(function () {
     Route::post('FormulirRL5_4/DaftarPenyakitRawatJalan', [FormulirRL5Controller::class, 'FormulirRL5_4P'])->name('get-rl-5-4-u');
     Route::get('FormulirRL5_5', [FormulirRL5Controller::class, 'FormulirRL5_5'])->name('frl-5_5.get');
     // custom frl 5.4
-    // cppt
-    Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
-    Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
-    Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
-
     Route::get('cetakresumedokter/{rm}/{counter}/{kode_unit}', [CPPTController::class, 'getResumeDokter'])->name('resume-dokter.get');
     Route::get('getK', [CPPTController::class, 'getK'])->name('resume-dokter-k.get');
     Route::get('getC', [CPPTController::class, 'getC'])->name('resume-dokter-c.get');

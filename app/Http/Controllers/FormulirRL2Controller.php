@@ -15,17 +15,14 @@ class FormulirRL2Controller extends Controller
         $tingkat = TingkatPendidikan::get();
         $id = $request->tingkat;
         $idt = null;
-        
+
         $data = Kepegawaian::all();
         $data = $data->groupBy(['id_bidang','jurusan']);
-        // $data = $data->groupBy('id_bidang','jurusan');
-        // $data = $data->groupBy('id_bidang');
-        // dd($data);
+
         $bidangd = BidangPegawai::all();
         $jurusan = KebutuhanJurusan::all();
-        // $jurusan = $jurusan->groupBy('nama_jurusan')->toArray();
-        // dd($jurusan);
+        $kb = $jurusan->groupBy('nama_jurusan')->toArray();
 
-        return view('simrs.formulir.f_r_l_2.formulir_rl_2', compact('data','tingkat','idt','bidangd','jurusan'));
+        return view('simrs.formulir.f_r_l_2.formulir_rl_2', compact('data','tingkat','idt','bidangd','jurusan','kb'));
     }
 }

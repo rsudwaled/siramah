@@ -1350,30 +1350,37 @@ return [
         [
             'text'    => 'Kepegawaian',
             'icon'    => 'fas fa-user-tie',
-            'can' => ['admin'],
+            'can' => ['pegawai'],
             'submenu' => [
                 [
                     'text' => 'Data Pendukung',
                     'icon'    => 'fas fa-book',
                     'url'  => 'data-jabatan',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
                 [
                     'text' => 'Jurusan & Kebutuhan',
                     'icon'    => 'fas fa-book',
                     'url'  => 'kebutuhan-jurusan',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
                 [
                     'text' => 'Data Pegawai',
                     'icon'    => 'fas fa-book',
                     'url'  => 'data-pegawai',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
-                
+                [
+                    'text' => 'Pegawai Mutasi',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'pegawai-mutasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'pegawai',
+                ],
+
             ]
         ],
         // ANTRIAN BPJS
