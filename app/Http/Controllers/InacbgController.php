@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Redirect;
 
 class InacbgController extends APIController
 {
@@ -133,11 +133,11 @@ class InacbgController extends APIController
     public function new_claim(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            "nomor_kartu" =>  "required",
-            "nomor_sep" =>  "required",
-            "nomor_rm" =>  "required",
-            "nama_pasien" =>  "required",
-            "tgl_lahir" =>  "required",
+            "nomorkartu" =>  "required",
+            "noSEP" =>  "required",
+            "norm" =>  "required",
+            "nama" =>  "required",
+            "tgllahir" =>  "required",
             "gender" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -148,11 +148,11 @@ class InacbgController extends APIController
                 "method" => "new_claim",
             ],
             "data" => [
-                "nomor_kartu" => $request->nomor_kartu,
-                "nomor_sep" => $request->nomor_sep,
-                "nomor_rm" => $request->nomor_rm,
-                "nama_pasien" => $request->nama_pasien,
-                "tgl_lahir" => $request->tgl_lahir,
+                "nomor_kartu" => $request->nomorkartu,
+                "nomor_sep" => $request->noSEP,
+                "nomor_rm" => $request->norm,
+                "nama_pasien" => $request->nama,
+                "tgl_lahir" => $request->tgllahir,
                 "gender" => $request->gender,
             ]
         ];
@@ -161,6 +161,12 @@ class InacbgController extends APIController
     }
     public function claim_ranap(Request $request)
     {
+        $request->validate([
+            "kodekunjungan" =>  "required",
+            "counter" =>  "required",
+            "norm" =>  "required",
+            "noSEP" =>  "required",
+        ]);
         $diag = null;
         $diag_utama = null;
         foreach ($request->diagnosa as $key => $value) {
@@ -181,14 +187,14 @@ class InacbgController extends APIController
         $res = $this->set_claim_ranap($request);
         $res = $this->grouper($request);
         if ($res->metadata->code == 200) {
-            $rmcounter = $request->nomor_rm . '|' . $request->counter;
+            $rmcounter = $request->norm . '|' . $request->counter;
             $budget = BudgetControl::updateOrCreate(
                 [
                     'rm_counter' => $rmcounter
                 ],
                 [
                     'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
-                    'no_rm' => $request->nomor_rm,
+                    'no_rm' => $request->norm,
                     'counter' => $request->counter,
 
                     'diagnosa_kode' => $request->diagnosa, #kode
@@ -206,13 +212,12 @@ class InacbgController extends APIController
             );
             $kunjungan = Kunjungan::find($request->kodekunjungan);
             $kunjungan->update([
-                'no_sep' => $request->nomor_sep,
+                'no_sep' => $request->noSEP,
             ]);
             Alert::success('Success', 'Groupping berhasil');
         } else {
             Alert::error('Gagal', 'Groupping gagal');
         }
-        Alert::error('Gagal', 'Groupping gagal');
         return redirect()->back();
     }
     public function set_claim(Request $request)
@@ -463,12 +468,14 @@ class InacbgController extends APIController
     public function set_claim_ranap(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            "nomor_sep" =>  "required",
-            "nomor_kartu" =>  "required",
-            "tgl_masuk" =>  "required",
+            "noSEP" =>  "required",
+            "nomorkartu" =>  "required",
+            "tglmasuk" =>  "required",
             "cara_masuk" =>  "required",
             "kelas_rawat" =>  "required",
             "diagnosa" =>  "required",
+            "discharge_status" =>  "required",
+            "dokter_dpjp" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -491,13 +498,13 @@ class InacbgController extends APIController
         $request_data = [
             "metadata" => [
                 "method" => "set_claim_data",
-                "nomor_sep" => $request->nomor_sep,
+                "nomor_sep" => $request->noSEP,
 
             ],
             "data" => [
-                "nomor_sep" =>  $request->nomor_sep,
-                "nomor_kartu" => $request->nomor_kartu,
-                "tgl_masuk" => $request->tgl_masuk,
+                "nomor_sep" =>  $request->noSEP,
+                "nomor_kartu" => $request->nomorkartu,
+                "tgl_masuk" => $request->tglmasuk,
                 "tgl_pulang" => $request->tgl_pulang,
                 "cara_masuk" => $request->cara_masuk, #isi
                 "jenis_rawat" => 1, #inap, jalan, igd
@@ -640,8 +647,8 @@ class InacbgController extends APIController
     public function grouper(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            "nomor_sep" =>  "required",
-            "nomor_kartu" =>  "required",
+            "noSEP" =>  "required",
+            "nomorkartu" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), null, 400);
@@ -652,7 +659,7 @@ class InacbgController extends APIController
                 "stage" => "1",
             ],
             "data" => [
-                "nomor_sep" => $request->nomor_sep,
+                "nomor_sep" => $request->noSEP,
             ]
         ];
         $json_request = json_encode($request_data);
