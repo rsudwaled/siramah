@@ -134,11 +134,12 @@
                         @endforeach
                         <tfoot>
                             <tr>
-                                <th colspan="7" class="text-right">Total</th>
+                                <th colspan="7" class="text-right">Total Laba / Rugi</th>
                                 <th class="text-right">{{ money($kunjungans->sum('budget.tarif_inacbg'), 'IDR') }}</th>
                                 <th class="text-right">{{ money($kunjungans->sum('tagihan.total_biaya'), 'IDR') }}</th>
-                                <th></th>
-                                <th></th>
+                                <th colspan="2" class="text-right">
+                                    {{ money($kunjungans->sum('budget.tarif_inacbg') - $kunjungans->sum('tagihan.total_biaya'), 'IDR') }}
+                                </th>
                             </tr>
                         </tfoot>
                     </x-adminlte-datatable>
@@ -1264,7 +1265,6 @@
                 var tanggal = $('#tglRencanaKontrol').val();
                 var url = "{{ route('suratkontrol_dokter') }}?kodePoli=" + poli + "&tglRencanaKontrol=" +
                     tanggal + "&jenisKontrol=2";
-                // alert(url);
                 $.ajax({
                     url: url,
                     type: "GET",
@@ -1304,9 +1304,7 @@
                 var url = "{{ route('suratkontrol_print') }}?nomorsuratkontrol=" + nomorsuratkontrol;
                 window.open(url, '_blank');
                 $.LoadingOverlay("hide");
-
             });
-
         });
     </script>
     {{-- search select2 --}}
@@ -1466,7 +1464,6 @@
             else
                 $(".checkCovid").hide();
         }
-
 
         function tbFunc() {
             if ($('#tb').is(":checked"))

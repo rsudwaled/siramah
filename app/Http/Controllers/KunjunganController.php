@@ -118,13 +118,13 @@ class KunjunganController extends APIController
                 $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
                     ->where('status_kunjungan', 1)
                     ->has('pasien')
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan'])
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan', 'surat_kontrol'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
                     ->where('status_kunjungan', 1)
                     ->has('pasien')
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan'])
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan', 'surat_kontrol'])
                     ->get();
             }
         }
