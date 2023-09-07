@@ -1,11 +1,11 @@
 @extends('adminlte::print')
-@section('title', 'Surat Kontrol ' . $peserta->nama )
+@section('title', 'Surat Kontrol ' . $peserta->nama)
 @section('content_header')
     <h1>Surat Kontrol {{ $peserta->nama }}</h1>
 @stop
 @section('content')
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12">
             <div id="printMe">
                 <section class="invoice p-3 mb-1">
                     <div class="row">
@@ -133,5 +133,8 @@
         $(document).ready(function() {
             window.print();
         });
+        setTimeout(function() {
+            window.top.close();
+        }, 2000);
     </script>
 @endsection

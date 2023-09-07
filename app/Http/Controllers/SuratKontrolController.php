@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kunjungan;
 use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Poliklinik;
@@ -94,6 +95,49 @@ class SuratKontrolController extends APIController
         }
         return $response;
     }
+    public function suratkontrol_simpan(Request $request)
+    {
+        $request['user'] = Auth::user()->name;
+        if ($request->noSEP) {
+            $request['noSep'] = $request->noSEP;
+        }
+        $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
+        $kunjungan = Kunjungan::where('kode_kunjungan', $request->kodekunjungan)->first();
+        if ($kunjungan) {
+            $kunjungan->update([
+                'no_sep' => $request->noSep,
+            ]);
+        }
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_insert($request);
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
+            SuratKontrol::create([
+                "tglTerbitKontrol" => now()->format('Y-m-d'),
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
+                "poliTujuan" => $request->poliKontrol,
+                "namaPoliTujuan" => $poli->namasubspesialis,
+                "kodeDokter" => $request->kodeDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->noSep,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "kelamin" => $suratkontrol->kelamin,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "user" => Auth::user()->name,
+            ]);
+            $wa = new WhatsappController();
+            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
+            $request['number'] = $request->nohp ?? '089529909036';
+            $wa->send_message($request);
+            Alert::success('Success', 'Surat Kontrol Berhasil Dibuatkan');
+        } else {
+            Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
+        }
+        return redirect()->back();
+    }
     public function update(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomor_suratkontrol;
@@ -163,7 +207,6 @@ class SuratKontrolController extends APIController
     }
     public function print(Request $request)
     {
-        // dd($request->all());
         $request['noSuratKontrol'] = $request->nomorsuratkontrol;
         $vclaim = new VclaimController();
         $response = $vclaim->suratkontrol_nomor($request);
@@ -181,7 +224,8 @@ class SuratKontrolController extends APIController
                 'dokter',
             ]));
         } else {
-            return $response->metadata->message;
+            Alert::error('Gagal', 'Surat Kontrol Tidak Ditemukan');
+            return redirect()->back();
         }
     }
     public function suratkontrol_sep(Request $request)
@@ -200,9 +244,8 @@ class SuratKontrolController extends APIController
         if ($response->metadata->code == 200) {
             $data = $response->response->histori;
             return $this->sendResponse($data, 200);
-        }else{
+        } else {
             return $this->sendError($response->metadate->message);
-
         }
     }
 }
