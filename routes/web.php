@@ -299,4 +299,21 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
+
+    //ROUTE ANTRIAN IGD 
+    Route::get('/antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'getAntrian'])->name('antrian-igd');
+    Route::get('/daftar-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'daftarkanPasien'])->name('antrian-igd.daftarkan');
+    Route::post('/cari-pasien', [App\Http\Controllers\AntrianIGDController::class, 'searchPasien'])->name('pasien-igd-search');
+    Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
+    Route::post('/pendaftaran-antrian-simpan', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
+    
+    //ROUTE IGD 
+    Route::get('/pendaftaran-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getPasien'])->name('pendaftaran-pasien');
+    Route::post('/pendaftaran-pasien-lama', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'searchPasien'])->name('pasien-search');
+    Route::get('/pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'daftarPasien'])->name('pasien-daftar.norm'); //datapasienview ajax route sebelum perubahan
+    Route::get('/pilih-pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPendaftaranPasien'])->name('pilih-pendaftaran-pasien');
+    Route::get('/daftar-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getRuangan'])->name('ruangan.get');
+    Route::post('/pilih-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihRuangan'])->name('pilih-ruangan');
+
+
 });

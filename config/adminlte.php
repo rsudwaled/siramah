@@ -372,6 +372,29 @@ return [
                 ],
             ],
         ],
+         // IGD
+         [
+            'text'    => 'Aplikasi IGD',
+            'icon'    => 'fas fa-user-plus',
+            'can' => 'pendaftaran-igd',
+            'submenu' => [
+                [
+                    'text' => 'Antrian IGD',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'antrian-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Pendaftaran IGD',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'pendaftaran-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                
+            ],
+        ],
         // KASIR
         [
             'text'    => 'Aplikasi Kasir',
@@ -387,6 +410,7 @@ return [
                 ],
             ],
         ],
+       
         // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',

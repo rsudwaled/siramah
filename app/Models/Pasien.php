@@ -35,6 +35,6 @@ class Pasien extends Model
     }
     public function kabupatens()
     {
-        return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
+        return $this->hasOne(Kabupaten::class, 'kode_kabupaten_kota', 'kabupaten');
     }
 }

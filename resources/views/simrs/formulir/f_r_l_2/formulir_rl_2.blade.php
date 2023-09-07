@@ -87,14 +87,26 @@
                                             <th  colspan="7" style="vertical-align : middle;text-align:left;">{{$bidangd->where('id', $key)->first()->nama_bidang}}</th>
                                             
                                         </tr>
+                                        
                                         @foreach ($bidang as $key_jurusan => $jurusan)
                                         <tr>
                                             <td></td>
                                             <td>{{$key_jurusan}}</td>
+                                            @foreach ($kb as $key_kebutuhan => $item)
+                                            @if (strtolower($key_jurusan) == $key_kebutuhan)
                                             <td style="text-align:center;">{{$jurusan->where('jenis_kelamin','L')->count()}}</td>
                                             <td style="text-align:center;">{{$jurusan->where('jenis_kelamin','P')->count()}}</td>
+                                            <td style="text-align:center;">{{$item[0]['kebutuhan_lk']}}</td>
+                                            <td style="text-align:center;">{{$item[0]['kebutuhan_pr']}}</td>
+                                            <td style="text-align:center; color:red;">{{$item[0]['kekurangan_lk']}}</td>
+                                            <td style="text-align:center; color:red;">{{$item[0]['kekurangan_pr']}}</td>
+                                            @endif
+                                            @endforeach
+                                            
+                                            
                                         </tr>
                                         @endforeach
+                                        
                                         <tr>
                                             <td></td>
                                             <th style="vertical-align : middle;text-align:left;">Total</th>
