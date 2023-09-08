@@ -138,6 +138,75 @@ class SuratKontrolController extends APIController
         }
         return redirect()->back();
     }
+    public function suratkontrol_edit(Request $request)
+    {
+        $request['noSuratKontrol'] = $request->nomorsuratkontrol;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_nomor($request);
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
+            $sep = $response->response->sep;
+            $peserta = $response->response->sep->peserta;
+            $pasien = Pasien::firstWhere('no_Bpjs', $peserta->noKartu);
+            $dokter = Paramedis::firstWhere('kode_dokter_jkn', $suratkontrol->kodeDokter);
+            return view('simrs.suratkontrol.suratkontrol_edit', compact([
+                'suratkontrol',
+                'sep',
+                'peserta',
+                'pasien',
+                'dokter',
+            ]));
+        } else {
+            Alert::error('Gagal', 'Surat Kontrol Tidak Ditemukan');
+            return redirect()->back();
+        }
+    }
+    public function suratkontrol_update(Request $request)
+    {
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_update($request);
+        if ($response->metadata->code == 200) {
+            $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->noSuratKontrol);
+            $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
+            $suratkontrol = $response->response;
+            $sk->update([
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
+                "poliTujuan" => $request->poliKontrol,
+                "namaPoliTujuan" => $poli->namasubspesialis,
+                "kodeDokter" => $request->kodeDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->noSEP,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "kelamin" => $suratkontrol->kelamin,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "user" => $request->user
+            ]);
+            $url = route('suratkontrol_print') . "?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
+            return redirect()->to($url);
+        } else {
+            Alert::error('Gagal', $response->metadata->message);
+            return redirect()->back();
+        }
+    }
+    public function suratkontrol_delete(Request $request)
+    {
+        $request['noSuratKontrol'] = $request->nomorsuratkontrol;
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_delete($request);
+        if ($response->metadata->code == 200) {
+            $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->nomorsuratkontrol);
+            $sk->delete();
+            Alert::success('Success', 'Surat Kontrol Behasil Dihapus');
+        } else {
+            Alert::error('Gagal', $response->metadata->message);
+        }
+        return   "<script>window.close();</script>";
+    }
     public function update(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomor_suratkontrol;

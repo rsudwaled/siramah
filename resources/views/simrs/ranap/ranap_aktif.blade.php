@@ -517,7 +517,7 @@
                                         value="">
                                     <button class="btn btn-xs btn-success btnPrintSuratKontrol">Print Surat
                                         Kontrol</button>
-                                    <button class="btn btn-xs btn-primary ">Edit Surat Kontrol</button>
+                                    <button class="btn btn-xs btn-primary btnEditSuratKontrol">Edit Surat Kontrol</button>
                                 </x-adminlte-alert>
                                 <form action="{{ route('suratkontrol_simpan') }}" method="POST">
                                     @csrf
@@ -1305,6 +1305,13 @@
                 window.open(url, '_blank');
                 $.LoadingOverlay("hide");
             });
+            $('.btnEditSuratKontrol').click(function(e) {
+                $.LoadingOverlay("show");
+                var nomorsuratkontrol = $(".nomorsuratkontrol-id").val();
+                var url = "{{ route('suratkontrol_edit') }}?nomorsuratkontrol=" + nomorsuratkontrol;
+                window.open(url, '_blank');
+                $.LoadingOverlay("hide");
+            });
         });
     </script>
     {{-- search select2 --}}
@@ -1457,21 +1464,18 @@
             else
                 $(".formbb").hide();
         }
-
         function covidFunc() {
             if ($('#covid').is(":checked"))
                 $(".checkCovid").show();
             else
                 $(".checkCovid").hide();
         }
-
         function tbFunc() {
             if ($('#tb').is(":checked"))
                 $(".checkTB").show();
             else
                 $(".checkTB").hide();
         }
-
         function perawatanIcuFunc() {
             if ($('#perawatan_icu').is(":checked")) {
                 $(".masuk_icu").show();
@@ -1483,7 +1487,6 @@
                 $(".pake_ventilator").hide();
             }
         }
-
         function pakeVentilatorFunc() {
             if ($('#ventilator').is(":checked"))
                 $(".pake_ventilator").show();
