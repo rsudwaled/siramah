@@ -71,6 +71,7 @@ Route::prefix('vclaim')->group(function () {
     Route::get('rujukan_jumlah_sep', [VclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
     // SEP
     Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
+    Route::get('sep_update_pulang', [VclaimController::class, 'sep_update_pulang'])->name('sep_update_pulang');
     Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
     // FINGERPRINT
     Route::get('fingerprint_peserta', [VclaimController::class, 'fingerprint_peserta'])->name('fingerprint_peserta');

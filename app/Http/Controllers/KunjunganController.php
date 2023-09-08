@@ -11,6 +11,7 @@ use App\Models\StatusKunjungan;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -107,7 +108,7 @@ class KunjunganController extends APIController
             ->get(['kode_kunjungan', 'tgl_masuk', 'no_rm', 'kode_unit', 'kode_penjamin', 'kode_paramedis', 'no_sep']);
         return $this->sendResponse($kunjungans, 200);
     }
-    function pasienRanapAktif(Request $request)
+    public function pasienRanapAktif(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
@@ -133,5 +134,17 @@ class KunjunganController extends APIController
             'units',
             'kunjungans',
         ]));
+    }
+    public function pemulangan_sep_pasien(Request $request)
+    {
+        $api = new VclaimController();
+        $request['user'] = Auth::user()->name;
+        $response = $api->sep_update_pulang($request);
+        if ($response->metadata->code == 200) {
+            Alert::success('Success', 'Update SEP Tanggal Pulang Berhasil.');
+        } else {
+            Alert::error('Gagal', $response->metadata->message);
+        }
+        return redirect()->back();
     }
 }

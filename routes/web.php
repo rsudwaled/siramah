@@ -202,6 +202,10 @@ Route::middleware('auth')->group(function () {
     Route::get('suratkontrol_edit', [SuratKontrolController::class, 'suratkontrol_edit'])->name('suratkontrol_edit');
     Route::post('suratkontrol_update', [SuratKontrolController::class, 'suratkontrol_update'])->name('suratkontrol_update');
     Route::get('suratkontrol_delete', [SuratKontrolController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
+    // sep
+    Route::post('pemulangan_sep_pasien', [KunjunganController::class, 'pemulangan_sep_pasien'])->name('pemulangan_sep_pasien');
+
+
 
     Route::get('rujukanBpjs', [RujukanController::class, 'rujukanBpjs'])->name('rujukanBpjs');
     Route::post('update_claim', [InacbgController::class, 'update_claim'])->name('update_claim');

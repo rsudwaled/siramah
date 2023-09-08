@@ -572,7 +572,7 @@
                             </div>
                             <div class="tab-pane" id="pemulangantab">
                                 Pemulangan Pasien
-                                <form action="" method="POST">
+                                <form action="{{ route('pemulangan_sep_pasien') }}" method="POST">
                                     @csrf
                                     <input type="hidden" name="kodebooking" class="kodebooking-id">
                                     <div class="row">
@@ -611,9 +611,8 @@
                                                 placeholder="Nomor Surat Meninggal" />
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-warning withLoad"> <i class="fas fa-save"></i>
-                                        Buat
-                                        Surat Kontrol</button>
+                                    <button type="submit" class="btn btn-warning withLoad">
+                                        <i class="fas fa-save"></i> Pulangkan Pasien</button>
                                 </form>
                             </div>
                             <div class="tab-pane fade" id="verifikasi">
@@ -1464,18 +1463,21 @@
             else
                 $(".formbb").hide();
         }
+
         function covidFunc() {
             if ($('#covid').is(":checked"))
                 $(".checkCovid").show();
             else
                 $(".checkCovid").hide();
         }
+
         function tbFunc() {
             if ($('#tb').is(":checked"))
                 $(".checkTB").show();
             else
                 $(".checkTB").hide();
         }
+
         function perawatanIcuFunc() {
             if ($('#perawatan_icu').is(":checked")) {
                 $(".masuk_icu").show();
@@ -1487,6 +1489,7 @@
                 $(".pake_ventilator").hide();
             }
         }
+
         function pakeVentilatorFunc() {
             if ($('#ventilator').is(":checked"))
                 $(".pake_ventilator").show();

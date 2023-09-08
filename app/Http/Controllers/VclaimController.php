@@ -1008,4 +1008,34 @@ class VclaimController extends APIController
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
+    public function sep_update_pulang(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSep" => "required",
+            "statusPulang" => "required",
+            "tglPulang" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $url = env('VCLAIM_URL') . "SEP/2.0/updtglplg";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "t_sep" => [
+                    "noSep" => $request->noSep,
+                    "statusPulang" => $request->statusPulang,
+                    "tglPulang" => $request->tglPulang,
+                    "user" => $request->user,
+                    "noSuratMeninggal" => $request->noSuratMeninggal,
+                    "tglMeninggal" => $request->tglMeninggal,
+                    "noLPManual" => $request->noLPManual,
+                ]
+            ]
+        ];
+        $response = Http::withHeaders($signature)->put($url, $data);
+        return $this->response_decrypt($response, $signature);
+    }
 }
