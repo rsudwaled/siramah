@@ -15,12 +15,10 @@ class FormulirRL2Controller extends Controller
         $tingkat = TingkatPendidikan::get();
         $id = $request->tingkat;
         $idt = null;
-        
+
         $data = Kepegawaian::all();
         $data = $data->groupBy(['id_bidang','jurusan']);
-        // $data = $data->groupBy('id_bidang','jurusan');
-        // $data = $data->groupBy('id_bidang');
-        // dd($data);
+
         $bidangd = BidangPegawai::all();
         $jurusan = KebutuhanJurusan::all();
         $kb = $jurusan->groupBy('nama_jurusan')->toArray();

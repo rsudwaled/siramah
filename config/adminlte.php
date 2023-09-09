@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'SIRAMAH-RS Waled',
+    'title' => 'Sistem RSUD Waled',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -150,7 +150,7 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -310,7 +310,7 @@ return [
         [
             'text'        => 'Landing Page',
             'url'         => '',
-            'icon'        => 'fas fa-home',
+            'icon'        => 'fas fa-globe',
         ],
         [
             'text'        => 'Dashboard',
@@ -958,7 +958,7 @@ return [
                 [
                     'text' => 'Laporan Kunjungan Poliklinik',
                     'icon'    => 'fas fa-disease',
-                    'url'  => 'rekammedis/kunjungan_poliklinik',
+                    'url'  => 'laporanKunjunganPoliklinik',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
@@ -1374,28 +1374,28 @@ return [
         [
             'text'    => 'Kepegawaian',
             'icon'    => 'fas fa-user-tie',
-            'can' => ['admin'],
+            'can' => ['pegawai'],
             'submenu' => [
                 [
                     'text' => 'Data Pendukung',
                     'icon'    => 'fas fa-book',
                     'url'  => 'data-jabatan',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
                 [
                     'text' => 'Jurusan & Kebutuhan',
                     'icon'    => 'fas fa-book',
                     'url'  => 'kebutuhan-jurusan',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
                 [
                     'text' => 'Data Pegawai',
                     'icon'    => 'fas fa-book',
                     'url'  => 'data-pegawai',
                     'shift'   => 'ml-2',
-                    'can' => 'admin',
+                    'can' => 'pegawai',
                 ],
                 [
                     'text' => 'Pegawai Mutasi',

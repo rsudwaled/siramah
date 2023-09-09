@@ -71,6 +71,7 @@ Route::prefix('vclaim')->group(function () {
     Route::get('rujukan_jumlah_sep', [VclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
     // SEP
     Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
+    Route::get('sep_update_pulang', [VclaimController::class, 'sep_update_pulang'])->name('sep_update_pulang');
     Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
     // FINGERPRINT
     Route::get('fingerprint_peserta', [VclaimController::class, 'fingerprint_peserta'])->name('fingerprint_peserta');
@@ -190,8 +191,6 @@ Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::get('search_procedures_inagrouper', [InacbgController::class, 'search_procedures_inagrouper'])->name('search_procedures_inagrouper');
     Route::get('rincian_biaya_pasien', [InacbgController::class, 'rincian_biaya_pasien'])->name('rincian_biaya_pasien');
     Route::post('new_claim', [InacbgController::class, 'new_claim'])->name('new_claim');
-    Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
-
     Route::post('set_claim', [InacbgController::class, 'set_claim'])->name('set_claim');
     Route::post('set_claim_rajal', [InacbgController::class, 'set_claim_rajal'])->name('set_claim_rajal');
     Route::post('set_claim_ranap', [InacbgController::class, 'set_claim_ranap'])->name('set_claim_ranap');
