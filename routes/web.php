@@ -307,6 +307,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
     Route::post('/pendaftaran-antrian-simpan', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
     
+    // GET ALAMAT PASIEN
+    Route::get('/get-kabupaten-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
+    Route::get('/get-kecamatan-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKecPasien'])->name('kec-pasien.get');
+    Route::get('/get-desa-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getDesaPasien'])->name('desa-pasien.get');
+    Route::get('/get-kabupaten-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgKabPasien'])->name('kab-klg-pasien.get');
+    Route::get('/get-kecamatan-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgKecPasien'])->name('kec-klg-pasien.get');
+    Route::get('/get-desa-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgDesaPasien'])->name('desa-klg-pasien.get');
+
     //ROUTE IGD 
     Route::get('/pendaftaran-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getPasien'])->name('pendaftaran-pasien');
     Route::post('/pendaftaran-pasien-lama', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'searchPasien'])->name('pasien-search');

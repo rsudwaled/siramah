@@ -56,7 +56,7 @@
                                                           </div>
                                                           <div class="col-lg-6">
                                                             <div class="row">
-                                                              <x-adminlte-input name="nik" label="NIK" placeholder="masukan nik" fgroup-class="col-md-6" disable-feedback />
+                                                              <x-adminlte-input name="nik_pasien_baru" label="NIK" placeholder="masukan nik" fgroup-class="col-md-6" disable-feedback />
                                                               <x-adminlte-input name="no_bpjs" label="BPJS" placeholder="masukan bpjs" fgroup-class="col-md-6" disable-feedback />
                                                               <x-adminlte-input name="nama_pasien_baru" label="Nama" placeholder="masukan nama pasien" fgroup-class="col-md-12" disable-feedback />
                                                               <x-adminlte-input name="tempat_lahir" label="Tempat lahir" placeholder="masukan tempat" fgroup-class="col-md-6" disable-feedback />
@@ -71,37 +71,46 @@
                                                                 </x-slot>
                                                               </x-adminlte-input-date>
                                                               <x-adminlte-select name="agama" label="Agama" fgroup-class="col-md-6">
-                                                                <option value="L">ISLAM</option>
+                                                                @foreach ($agama as $item)
+                                                                  <option value="{{$item->ID}}">{{$item->agama}}</option>
+                                                                @endforeach
                                                               </x-adminlte-select>
                                                               <x-adminlte-select name="pekerjaan" label="Pekerjaan" fgroup-class="col-md-6">
-                                                                <option value="L">PNS</option>
+                                                                @foreach ($pekerjaan as $item)
+                                                                  <option value="{{$item->ID}}">{{$item->pekerjaan}}</option>
+                                                                @endforeach
                                                               </x-adminlte-select>
                                                               <x-adminlte-select name="pendidikan" label="Pendidikan" fgroup-class="col-md-6">
-                                                                <option value="L">S1</option>
+                                                                @foreach ($pendidikan as $item)
+                                                                  <option value="{{$item->ID}}">{{$item->pendidikan}}</option>
+                                                                @endforeach
                                                               </x-adminlte-select>
                                                             </div>
                                                           </div>
                                                           <div class="col-lg-6">
                                                             <div class="row">
-                                                              <x-adminlte-select name="desa" label="Desa" fgroup-class="col-md-6">
-                                                                <option value="L">CILENGKRANG</option>
+                                                              <x-adminlte-select name="provinsi" label="Provinsi" id="provinsi_pasien" fgroup-class="col-md-6">
+                                                                <option value="" selected>--PROVINSI--</option>
+                                                                @foreach ($provinsi as $item)
+                                                                  <option value="{{$item->kode_provinsi}}">{{$item->nama_provinsi}}</option>
+                                                                @endforeach
                                                               </x-adminlte-select>
-                                                              <x-adminlte-select name="kecamatan" label="Kecamatan" fgroup-class="col-md-6">
-                                                                <option value="L">CILENGKRANG</option>
+                                                              <x-adminlte-select name="kabupaten" label="Kabupaten" id="kab_pasien" fgroup-class="col-md-6">
                                                               </x-adminlte-select>
-                                                              <x-adminlte-select name="kabupaten" label="Kabupaten" fgroup-class="col-md-6">
-                                                                <option value="L">KABUPATEN CIREBON</option>
+                                                              <x-adminlte-select name="kecamatan" label="Kecamatan" id="kec_pasien" fgroup-class="col-md-6">
                                                               </x-adminlte-select>
-                                                              <x-adminlte-select name="provinsi" label="Provinsi" fgroup-class="col-md-6">
-                                                                <option value="L">JAWA BARAT</option>
+                                                              <x-adminlte-select name="desa" label="Desa" id="desa_pasien" fgroup-class="col-md-6">
                                                               </x-adminlte-select>
-                                                              <x-adminlte-select name="negara" label="Negara" fgroup-class="col-md-6">
-                                                                <option value="L">INDONESIA</option>
+                                                              <x-adminlte-select2 name="negara" label="Negara" id="negara_pasien" fgroup-class="col-md-6">
+                                                                @foreach ($negara as $item)
+                                                                  <option value="{{$item->id}}">{{$item->nama_negara}}</option>
+                                                                @endforeach
+                                                              </x-adminlte-select2>
+                                                              <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_pasien" label="Kewarganegaraan" fgroup-class="col-md-6">
+                                                                <option value="0">WNA</option>
+                                                                <option value="1">WNI</option>
                                                               </x-adminlte-select>
-                                                              <x-adminlte-select name="kewarganegaraan" label="Kewarganegaraan" fgroup-class="col-md-6">
-                                                                <option value="L">WNI</option>
-                                                              </x-adminlte-select>
-                                                              <x-adminlte-textarea name="alamat_lengkap_pasien" placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
+                                                              <x-adminlte-textarea name="alamat_lengkap_pasien" label="Alamat Lengkap (RT/RW)" placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
                                                             </div>
                                                           </div>
                                                         </div>
@@ -116,21 +125,23 @@
                                                           <x-adminlte-input name="nama_keluarga" label="Nama Keluarga" placeholder="masukan nama keluarga" fgroup-class="col-md-12" disable-feedback />
                                                           <x-adminlte-input name="kontak" label="Kontak" placeholder="no tlp" fgroup-class="col-md-6" disable-feedback />
                                                           <x-adminlte-select name="hub_keluarga" label="Hubungan Dengan Pasien" fgroup-class="col-md-6">
-                                                            <option value="L">SUAMI</option>
+                                                            @foreach ($hb_keluarga as $item)
+                                                            <option value="{{$item->kode}}">{{$item->nama_hubungan}}</option>
+                                                            @endforeach
                                                           </x-adminlte-select>
-                                                          <x-adminlte-select name="desa" label="Desa" fgroup-class="col-md-6">
-                                                            <option value="L">CILENGKRANG</option>
+                                                          <x-adminlte-select name="provinsi" label="Provinsi" id="provinsi_klg_pasien" fgroup-class="col-md-6">
+                                                            <option value="" selected>--PROVINSI--</option>
+                                                            @foreach ($provinsi_klg as $item)
+                                                              <option value="{{$item->kode_provinsi}}">{{$item->nama_provinsi}}</option>
+                                                            @endforeach
                                                           </x-adminlte-select>
-                                                          <x-adminlte-select name="kecamatan" label="Kecamatan" fgroup-class="col-md-6">
-                                                            <option value="L">CILENGKRANG</option>
+                                                          <x-adminlte-select name="kabupaten" label="Kabupaten" id="kab_klg_pasien" fgroup-class="col-md-6">
                                                           </x-adminlte-select>
-                                                          <x-adminlte-select name="kabupaten" label="Kabupaten" fgroup-class="col-md-6">
-                                                            <option value="L">KABUPATEN CIREBON</option>
+                                                          <x-adminlte-select name="kecamatan" label="Kecamatan" id="kec_klg_pasien" fgroup-class="col-md-6">
                                                           </x-adminlte-select>
-                                                          <x-adminlte-select name="provinsi" label="Provinsi" fgroup-class="col-md-6">
-                                                            <option value="L">JAWA BARAT</option>
+                                                          <x-adminlte-select name="desa" label="Desa" id="desa_klg_pasien" fgroup-class="col-md-6">
                                                           </x-adminlte-select>
-                                                          <x-adminlte-textarea name="alamat_lengkap_sodara" placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
+                                                          <x-adminlte-textarea name="alamat_lengkap_sodara" label="Alamat Lengkap (RT/RW)" placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
                                                         </div>
                                                       </div>
                                                     </div>
@@ -193,29 +204,33 @@
                                             </div>
                                         </div>
                                         <div class="card-body p-0" style="display: block;">
-                                            <ul class="nav nav-pills flex-column">
-                                                <li class="nav-item active">
-                                                <a href="#" class="nav-link"><p id="rm_pasien">RM : </p></a>
-                                                </li>
-                                                <li class="nav-item">
-                                                <a href="#" class="nav-link"><p id="nama_pasien">NAMA : </p> </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                <a href="#" class="nav-link"><p id="desa_pasien">DESA : </p> </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                <a href="#" class="nav-link"><p id="kec_pasien">KECAMATAN : </p> </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                <a href="#" class="nav-link"><p id="kab_pasien">KABUPATEN : </p> </a>
-                                                </li>
-                                            </ul>
-                                            <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" label="Pilih Pendaftaran" onchange="showDiv(this)">
-                                                <option value="0" >IGD</option>
-                                                <option value="1" >IGD KEBIDANAN</option>
-                                                <option value="2" >RAWAT JALAN</option>
-                                                <option value="3" >RAWAT INAP</option>
-                                            </x-adminlte-select>
+                                            <div class="col-lg-12">
+                                                <ul class="nav nav-pills flex-column">
+                                                    <li class="nav-item active">
+                                                    <a href="#" class="nav-link"><p id="rm_pasien_selected">RM : </p></a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                    <a href="#" class="nav-link"><p id="nama_pasien_selected">NAMA : </p> </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                    <a href="#" class="nav-link"><p id="desa_pasien_selected">DESA : </p> </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                    <a href="#" class="nav-link"><p id="kec_pasien_selected">KECAMATAN : </p> </a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                    <a href="#" class="nav-link"><p id="kab_pasien_selected">KABUPATEN : </p> </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" label="Pilih Pendaftaran">
+                                                    <option value="0" >IGD</option>
+                                                    <option value="1" >IGD KEBIDANAN</option>
+                                                    <option value="2" >RAWAT JALAN</option>
+                                                    <option value="3" >RAWAT INAP</option>
+                                                </x-adminlte-select>
+                                            </div>
                                         </div>
                                         <x-adminlte-button type="submit" theme="danger" label="verifikasi data"/>
                                     </div>
@@ -303,11 +318,11 @@
                 var getPasienUrl = "{{route('pasien-terpilih.get')}}?rm="+rm;
                 $.get(getPasienUrl, function (data) {
                     console.log(data);
-                    $('#rm_pasien').text('NO RM : '+data.pasien['no_rm']);
-                    $('#nama_pasien').text('NAMA : '+data.pasien['nama_px']);
-                    $('#desa_pasien').text('DESA : '+data.pasien['desas']['nama_desa_kelurahan']);
-                    $('#kec_pasien').text('KEC. : '+data.pasien['kecamatans']['nama_kecamatan']);
-                    $('#kab_pasien').text('KAB. : '+data.pasien['kabupatens']['nama_kabupaten_kota']);
+                    $('#rm_pasien_selected').text('NO RM : '+data.pasien['no_rm']);
+                    $('#nama_pasien_selected').text('NAMA : '+data.pasien['nama_px']);
+                    $('#desa_pasien_selected').text('DESA : '+data.pasien['desas']['nama_desa_kelurahan']);
+                    $('#kec_pasien_selected').text('KEC. : '+data.pasien['kecamatans']['nama_kecamatan']);
+                    $('#kab_pasien_selected').text('KAB. : '+data.pasien['kabupatens']['nama_kabupaten_kota']);
                 })
                 Swal.fire('pasien berhasil dipilih', '', 'success')
                 $('#no_rm').val(rm);
@@ -331,6 +346,11 @@
         }).then((result) => {
             if (result.isConfirmed) 
             {
+                var getPasienUrl = "{{route('pasien-terpilih.get')}}?rm="+rm;
+                $.get(getPasienUrl, function (data) {
+                    console.log(data);
+                    $('#no_antri').text('NO RM : '+data.pasien['no_rm']);
+                })
                 $('#no_antri').text('VERIFIKASI PASIEN NO : '+antrian_id);
                 Swal.fire('no antrian sudah dipilih', '', 'success')
                 $('#no_antrian').val(antrian_id);
@@ -341,5 +361,156 @@
             // }
         })
     }
+    // alamat pasien
+    $('#provinsi_pasien').change(function(){
+        var prov_pasien = $(this).val();
+            if(prov_pasien){
+                $.ajax({
+                type:"GET",
+                url:"{{route('kab-pasien.get')}}?kab_prov_id="+prov_pasien,
+                dataType: 'JSON',
+                success:function(res){
+                    if(res){
+                        $("#desa_pasien").empty();
+                        $("#kec_pasien").empty();
+                        $("#kab_pasien").append('<option>--Pilih Kabupaten--</option>');
+                        $.each(res,function(key, value){
+                            $("#kab_pasien").append('<option value="'+value.kode_kabupaten_kota+'">'+value.nama_kabupaten_kota+'</option>');
+                        });
+                    }else{
+                    $("#desa_pasien").empty();
+                    $("#kec_pasien").empty();
+                    $("#kab_pasien").empty();
+                    }
+                }
+                });
+            }else{
+                $("#desa_pasien").empty();
+                $("#kec_pasien").empty();
+                $("#kab_pasien").empty();
+            }
+    });
+    $('#kab_pasien').change(function(){
+        var kec_kab_id = $("#kab_pasien").val();
+        if(kec_kab_id){
+            $.ajax({
+            type:"GET",
+            url:"{{route('kec-pasien.get')}}?kec_kab_id="+kec_kab_id,
+            dataType: 'JSON',
+            success:function(res){
+                if(res){
+                    $("#kec_pasien").empty();
+                    $("#kec_pasien").append('<option>--Pilih Kecamatan--</option>');
+                    $.each(res,function(key, value){
+                        $("#kec_pasien").append('<option value="'+value.kode_kecamatan+'">'+value.nama_kecamatan+'</option>');
+                    });
+                }else{
+                $("#kec_pasien").empty();
+                }
+            }
+            });
+        }else{
+            $("#kec_pasien").empty();
+        }
+    });
+    $('#kec_pasien').change(function(){
+        var desa_kec_id = $("#kec_pasien").val();
+        if(desa_kec_id){
+            $.ajax({
+            type:"GET",
+            url:"{{route('desa-pasien.get')}}?desa_kec_id="+desa_kec_id,
+            dataType: 'JSON',
+            success:function(res){
+                if(res){
+                    $("#desa_pasien").empty();
+                    $("#desa_pasien").append('<option>--Pilih Desa--</option>');
+                    $.each(res,function(key, value){
+                        $("#desa_pasien").append('<option value="'+value.kode_desa_kelurahan+'">'+value.nama_desa_kelurahan+'</option>');
+                    });
+                }else{
+                $("#desa_pasien").empty();
+                }
+            }
+            });
+        }else{
+            $("#desa_pasien").empty();
+        }
+    });
+    // alamat keluarga pasien
+    $('#provinsi_klg_pasien').change(function(){
+        var prov_klg_pasien = $(this).val();
+            if(prov_klg_pasien){
+                $.ajax({
+                type:"GET",
+                url:"{{route('kab-klg-pasien.get')}}?kab_prov_id="+prov_klg_pasien,
+                dataType: 'JSON',
+                success:function(res){
+                    if(res){
+                        $("#desa_klg_pasien").empty();
+                        $("#kec_klg_pasien").empty();
+                        $("#kab_klg_pasien").append('<option>--Pilih Kabupaten--</option>');
+                        $.each(res,function(key, value){
+                            $("#kab_klg_pasien").append('<option value="'+value.kode_kabupaten_kota+'">'+value.nama_kabupaten_kota+'</option>');
+                        });
+                    }else{
+                    $("#desa_klg_pasien").empty();
+                    $("#kec_klg_pasien").empty();
+                    $("#kab_klg_pasien").empty();
+                    }
+                }
+                });
+            }else{
+                $("#desa_klg_pasien").empty();
+                $("#kec_klg_pasien").empty();
+                $("#kab_klg_pasien").empty();
+            }
+    });
+    $('#kab_klg_pasien').change(function(){
+        var kec_kab_id = $("#kab_klg_pasien").val();
+        if(kec_kab_id){
+            $.ajax({
+            type:"GET",
+            url:"{{route('kec-klg-pasien.get')}}?kec_kab_id="+kec_kab_id,
+            dataType: 'JSON',
+            success:function(res){
+                if(res){
+                    $("#kec_klg_pasien").empty();
+                    $("#kec_klg_pasien").append('<option>--Pilih Kecamatan--</option>');
+                    $.each(res,function(key, value){
+                        $("#kec_klg_pasien").append('<option value="'+value.kode_kecamatan+'">'+value.nama_kecamatan+'</option>');
+                    });
+                }else{
+                $("#kec_klg_pasien").empty();
+                }
+            }
+            });
+        }else{
+            $("#kec_klg_pasien").empty();
+        }
+    });
+    $('#kec_klg_pasien').change(function(){
+        var desa_kec_id = $("#kec_klg_pasien").val();
+        if(desa_kec_id){
+            $.ajax({
+            type:"GET",
+            url:"{{route('desa-klg-pasien.get')}}?desa_kec_id="+desa_kec_id,
+            dataType: 'JSON',
+            success:function(res){
+                if(res){
+                    $("#desa_klg_pasien").empty();
+                    $("#desa_klg_pasien").append('<option>--Pilih Desa--</option>');
+                    $.each(res,function(key, value){
+                        $("#desa_klg_pasien").append('<option value="'+value.kode_desa_kelurahan+'">'+value.nama_desa_kelurahan+'</option>');
+                    });
+                }else{
+                $("#desa_klg_pasien").empty();
+                }
+            }
+            });
+        }else{
+            $("#desa_klg_pasien").empty();
+        }
+    });
+    
     </script>
 @endsection
