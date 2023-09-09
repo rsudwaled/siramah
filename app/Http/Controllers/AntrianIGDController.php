@@ -20,6 +20,25 @@ use Carbon\Carbon;
 class AntrianIGDController extends Controller
 {
 
+    public function antrianIGD()
+    {
+        $tgl            = Carbon::now()->format('Y-m-d');
+        $antrian_pasien = AntrianPasienIGD::whereDate('tgl', '<=', $tgl)->where('status', 1)->paginate(32);
+        $pasien         = Pasien::limit(200)->orderBy('tgl_entry', 'desc')->get();
+        $provinsi       = Provinsi::all();
+        $provinsi_klg       = Provinsi::all();
+        $negara         = Negara::all();
+        $hb_keluarga    = HubunganKeluarga::all();
+        $agama          = Agama::all();
+        $pekerjaan      = Pekerjaan::all();
+        $pendidikan      = Pendidikan::all();
+        return view('simrs.igd.antrian.antrian_igd', compact('provinsi_klg','provinsi','negara','agama','pekerjaan','pendidikan','antrian_pasien','pasien','hb_keluarga'));
+    }
+    public function getNoAntrian(Request $request)
+    {
+        $antrian = AntrianPasienIGD::find($request->no);
+        return response()->json($antrian);
+    }
     public function getAntrian()
     {
         $tgl            = Carbon::now()->format('Y-m-d');

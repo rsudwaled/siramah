@@ -379,12 +379,19 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
-                    'text' => 'Antrian IGD',
+                    'text' => 'dashboard IGD',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'antrian-igd',
+                    'url'  => 'dashboard-antrian-igd',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
+                // [
+                //     'text' => 'Antrian IGD',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
                     'text' => 'Pendaftaran IGD',
                     'icon'    => 'fas fa-user-plus',
