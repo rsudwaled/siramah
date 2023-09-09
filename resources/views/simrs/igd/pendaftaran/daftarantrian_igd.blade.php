@@ -346,12 +346,12 @@
         }).then((result) => {
             if (result.isConfirmed) 
             {
-                var getPasienUrl = "{{route('pasien-terpilih.get')}}?rm="+rm;
-                $.get(getPasienUrl, function (data) {
-                    console.log(data);
-                    $('#no_antri').text('NO RM : '+data.pasien['no_rm']);
-                })
-                $('#no_antri').text('VERIFIKASI PASIEN NO : '+antrian_id);
+                // var getPasienUrl = "{{route('pasien-terpilih.get')}}?rm="+rm;
+                // $.get(getPasienUrl, function (data) {
+                //     console.log(data);
+                //     $('#no_antri').text('NO RM : '+data.pasien['no_rm']);
+                // })
+                // $('#no_antri').text('VERIFIKASI PASIEN NO : '+antrian_id);
                 Swal.fire('no antrian sudah dipilih', '', 'success')
                 $('#no_antrian').val(antrian_id);
                
