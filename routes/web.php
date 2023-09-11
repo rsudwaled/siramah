@@ -304,7 +304,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/daftar-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'daftarkanPasien'])->name('antrian-igd.daftarkan');
     Route::post('/cari-pasien', [App\Http\Controllers\AntrianIGDController::class, 'searchPasien'])->name('pasien-igd-search');
     Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
-    Route::post('/pendaftaran-antrian-simpan', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
+    Route::post('/pendaftaran-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
     
     // GET ALAMAT PASIEN
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKabPasien'])->name('kab-pasien.get');

@@ -43,12 +43,19 @@
                 <div class="col-lg-12">
                   <x-adminlte-info-box title="klik untuk" data-toggle="modal" data-target="#modalAntrian" text="Lihat Antrian" icon="fas fa-lg fa-window-restore text-primary" class="bg-gradient-primary" icon-theme="white" />
                   <x-adminlte-modal id="modalAntrian" title="DAFTAR ANTRIAN" theme="info" icon="fas fa-bolt" size='xl' disable-animations>
-                    <div class="row"> @foreach ($antrian_pasien as $item) <a class="btn btn-app bg-success" id="pilihAntrian" onclick="pilihAntrian({{$item->id}})">
+                    <div class="row"> 
+                      @foreach ($antrian_pasien as $item) 
+                      <a class="btn btn-app bg-success" id="pilihAntrian" onclick="pilihAntrian({{$item->id}})">
                         <span class="badge bg-warning">Antrian</span>
                         <i class="fas fa-users"></i> {{$item->no_antri}}
-                      </a> @endforeach </div> @if ($antrian_pasien->links()->paginator->hasPages()) <div class="col-lg-5">
+                      </a> 
+                      @endforeach 
+                    </div> 
+                    @if ($antrian_pasien->links()->paginator->hasPages()) 
+                    <div class="col-lg-5">
                       {{$antrian_pasien->links()}}
-                    </div> @endif
+                    </div> 
+                    @endif
                   </x-adminlte-modal>
                 </div>
                 <div class="col-lg-12">
@@ -85,10 +92,10 @@
                         </div>
                         <div class="col-lg-12">
                           <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" label="Pilih Pendaftaran">
-                            <option value="0">IGD</option>
+                            <option value="0">IGD UMUM</option>
                             <option value="1">IGD KEBIDANAN</option>
-                            <option value="2">RAWAT JALAN</option>
-                            <option value="3">RAWAT INAP</option>
+                            <option value="2">RAWAT INAP</option>
+                            <option value="3">PENUNJANG</option>
                           </x-adminlte-select>
                         </div>
                       </div>
