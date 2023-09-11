@@ -499,7 +499,7 @@
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('suratkontrol_update') }}";
+                var url = "{{ route('api.suratkontrol_update') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
@@ -542,7 +542,7 @@
             $('#btnDelete').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('suratkontrol_delete') }}";
+                var url = "{{ route('api.suratkontrol_delete') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,

@@ -52,9 +52,9 @@ Route::prefix('vclaim')->group(function () {
     Route::get('ref_cara_keluar', [VclaimController::class, 'ref_cara_keluar'])->name('ref_cara_keluar');
     Route::get('ref_pasca_pulang', [VclaimController::class, 'ref_pasca_pulang'])->name('ref_pasca_pulang');
     // RENCANA KONTROL
-    Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('suratkontrol_insert');
-    Route::put('suratkontrol_update', [SuratKontrolController::class, 'update'])->name('suratkontrol_update');
-    Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('suratkontrol_delete');
+    Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('api.suratkontrol_insert');
+    Route::put('suratkontrol_update', [SuratKontrolController::class, 'update'])->name('api.suratkontrol_update');
+    Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('api.suratkontrol_delete');
     Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
     Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
     Route::get('suratkontrol_sep', [SuratKontrolController::class, 'suratkontrol_sep'])->name('suratkontrol_sep');
@@ -70,6 +70,7 @@ Route::prefix('vclaim')->group(function () {
     Route::get('rujukan_rs_peserta', [VclaimController::class, 'rujukan_rs_peserta'])->name('rujukan_rs_peserta');
     Route::get('rujukan_jumlah_sep', [VclaimController::class, 'rujukan_jumlah_sep'])->name('rujukan_jumlah_sep');
     // SEP
+    Route::post('sep_insert', [VclaimController::class, 'sep_insert'])->name('sep_insert');
     Route::get('sep_nomor', [VclaimController::class, 'sep_nomor'])->name('sep_nomor');
     Route::get('sep_update_pulang', [VclaimController::class, 'sep_update_pulang'])->name('sep_update_pulang');
     Route::delete('sep_delete', [VclaimController::class, 'sep_delete'])->name('sep_delete');
