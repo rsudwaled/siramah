@@ -487,11 +487,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -530,11 +526,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -564,11 +556,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });
