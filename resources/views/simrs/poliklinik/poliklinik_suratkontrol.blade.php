@@ -487,11 +487,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -499,7 +495,7 @@
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('suratkontrol_update') }}";
+                var url = "{{ route('api.suratkontrol_update') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
@@ -530,11 +526,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });
@@ -542,7 +534,7 @@
             $('#btnDelete').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('suratkontrol_delete') }}";
+                var url = "{{ route('api.suratkontrol_delete') }}";
                 $.ajax({
                     data: $('#formSuratKontrol').serialize(),
                     url: url,
@@ -564,11 +556,7 @@
                     },
                     error: function(data) {
                         console.log(data);
-                        swal.fire(
-                            'Error ' + data.metadata.code,
-                            data.metadata.message,
-                            'error'
-                        );
+                        alert('error jaringan');
                         $.LoadingOverlay("hide");
                     }
                 });

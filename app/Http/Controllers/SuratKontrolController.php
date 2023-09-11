@@ -211,6 +211,7 @@ class SuratKontrolController extends APIController
     {
         $request['noSuratKontrol'] = $request->nomor_suratkontrol;
         $request['noSep'] = $request->nomorsep_suratkontrol;
+        $request['noSEP'] = $request->nomorsep_suratkontrol;
         $request['kodeDokter'] = $request->kodedokter_suratkontrol;
         $request['poliKontrol'] = $request->kodepoli_suratkontrol;
         $request['tglRencanaKontrol'] = $request->tanggal_suratkontrol;
