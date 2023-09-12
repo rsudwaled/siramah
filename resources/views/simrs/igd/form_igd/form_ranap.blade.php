@@ -90,152 +90,11 @@
                     </div>
                 </div>
             @endif
+            
             <div class="col-md-9">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <x-adminlte-card theme="success" collapsible title="Jenis Pendaftaran">
-                            <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" label="Pilih Pendaftaran" onchange="showDiv(this)">
-                                <option value="0" >RAWAT JALAN</option>
-                                <option value="1" >RAWAT INAP</option>
-                            </x-adminlte-select>
-                        </x-adminlte-card>
-                        <x-adminlte-card theme="bg-maroon" id="div_ruangan" style="display:none;" collapsible title="Pilih Ruangan :">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                       @foreach ($ruangan_ranap as $item)
-                                        <div class="col-md-3">
-                                            <x-adminlte-info-box title="{{$item->kode_unit}}" text="{{$item->nama_unit}}" data-id="{{$item->kode_unit}}" theme="success" data-toggle="modal" data-target="#ruangan{{$item->id}}"/>
-                                        </div>
-                                        <x-adminlte-modal id="ruangan{{$item->id}}" class="modalruangan" title="Daftar Kamar di : {{$item->nama_unit}}" size="xl" theme="primary"
-                                            icon="fas fa-bell" v-centered static-backdrop scrollable>
-                                            <div class="modal-body" >
-                                                @php
-                                                $kamar = \DB::connection('mysql2')->select("CALL `SP_BED_MONITORING_RUANGAN`('$item->kode_unit')");
-                                                @endphp
-                                                <div class="col-lg-12">
-                                                    <div class="row">
-                                                        @foreach ($kamar as $bed)
-                                                        <div class="col-lg-3" >
-                                                            <x-adminlte-alert theme="primary" title="{{$bed->NAMA_KAMAR}}" id="id_ruangan" data-id="{{$bed->ID_RUANGAN}}">
-                                                                <p id="result"></p>
-                                                                NO : {{$bed->NO_BED}} ( KLS-{{$bed->ID_KELAS}} )
-                                                                <x-adminlte-button type="button" onclick="getID({{$bed->ID_RUANGAN}}, {{$pasien->no_rm}});" class="ruanganterpilih" label="Pilih Ruangan" theme="warning"/>
-                                                            </x-adminlte-alert>
-                                                            {{-- <x-adminlte-button class="btn-flat" type="submit" label="Submit" data-id="{{$bed->NAMA_KAMAR}}" theme="success" icon="fas fa-lg fa-save"/> --}}
-                                                        </div>
-                                                        @endforeach
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <x-slot name="footerSlot">
-                                                <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal"/>
-                                            </x-slot>
-                                        </x-adminlte-modal>
-                                       @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        </x-adminlte-card>
-                    </div>
                     <div class="col-lg-12" >
-                        <x-adminlte-card theme="purple" id="div_rajal"  icon="fas fa-info-circle" collapsible title="Form Pendaftaran Pasien RAWAT JALAN">
-                            <div class="col-lg-12" >
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="col-md-12">
-                                           <div class="row">
-                                            <div class="col-md-6">
-                                                <x-adminlte-input name="nama_pasien" value="{{$pasien->nama_px}}" disabled label="Nama Pasien" enable-old-support>
-                                                    <x-slot name="prependSlot"><div class="input-group-text text-olive">{{$pasien->no_rm}}</div></x-slot>
-                                                </x-adminlte-input>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <x-adminlte-input name="no_sep" label="NO.SEP" placeholder="masukan No SEP" enable-old-support>
-                                                    <x-slot name="prependSlot"><div class="input-group-text text-olive">NO SEP</div></x-slot>
-                                                    <x-slot name="bottomSlot"><small style="color: rgb(236, 131, 152)"><b>*masukan sep manual yang didapatkan dari vclaim</b></small></x-slot>
-                                                </x-adminlte-input>
-                                            </div>
-                                           </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <x-adminlte-select name="pilih_pendaftaran" id="pilihUnit" label="Pilih Pendaftaran" onchange="showUnit(this)">
-                                                        <option value="0" >UGD</option>
-                                                        <option value="1" >UGD KEBIDANAN</option>
-                                                        <option value="2" >UMUM</option>
-                                                    </x-adminlte-select>
-                                                </div>
-                                                <div class="col-md-6"  id="ugd">
-                                                    <x-adminlte-input name="unit_ugd_id" value="1002" disabled label="Daftar UGD" placeholder="UGD" enable-old-support>
-                                                        <x-slot name="prependSlot"><div class="input-group-text text-olive">UGD</div></x-slot>
-                                                        <x-slot name="bottomSlot"><a href="#">{{$lay_head1[0]->no_trx_layanan}}</a></x-slot>
-                                                    </x-adminlte-input>
-                                                </div>
-                                                <div class="col-md-6" id="ugd_keb" style="display:none;">
-                                                    <x-adminlte-input name="unit_ugd_keb_id"  value="1023" disabled label="Daftar UGD KEBIDANAN" placeholder="UGD" enable-old-support>
-                                                        <x-slot name="prependSlot"><div class="input-group-text text-olive">UGD KEBIDANAN</div></x-slot>
-                                                        <x-slot name="bottomSlot"><a href="#">{{$lay_head2[0]->no_trx_layanan}}</a></x-slot>
-                                                    </x-adminlte-input>
-                                                </div>
-                
-                                                <div class="col-md-6" id="umum" style="display:none;" >
-                                                    <x-adminlte-select name="unit_id" label="Pilih Unit">
-                                                        @foreach ($unit as $item)
-                                                            <option value="{{ $item->id }}">{{$item->nama_unit}}</option>
-                                                        @endforeach
-                                                    </x-adminlte-select>
-                                                </div>
-                                            </div>
-                                        </div>
-        
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
-                                                        <option value="" >--Pilih Dokter--</option>
-                                                        @foreach ($paramedis as $item)
-                                                            <option value="{{ $item->ID }}">{{$item->nama_paramedis}}</option>
-                                                        @endforeach
-                                                    </x-adminlte-select2>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    @php
-                                                    $config = ['format' => 'YYYY-MM-DD'];
-                                                    @endphp
-                                                    <x-adminlte-input-date name="tanggal_daftar" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                        label="Tanggal" :config="$config" />
-                                                </div>
-                                            </div>
-                                        </div>
-                    
-                                       <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                                    <option value="" >--Pilih Penjamin--</option>
-                                                    @foreach ($penjamin as $item)
-                                                        <option value="{{ $item->kode_penjamin }}">{{$item->nama_penjamin}}</option>
-                                                    @endforeach
-                                                </x-adminlte-select2>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Pendaftaran">
-                                                    <option value="" >--Pilih Alasan--</option>
-                                                    @foreach ($alasanmasuk as $item)
-                                                        <option value="{{ $item->id }}">{{$item->alasan_masuk}}</option>
-                                                    @endforeach
-                                                </x-adminlte-select2>
-                                            </div>
-                                        </div>
-                                       </div>
-                                    </div>
-                                </div>
-                                <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right" id="submitPasien" label="Simpan Data" />
-                            </div>
-                        </x-adminlte-card>
-                        <x-adminlte-card theme="success" id="div_ranap" style="display:none;"  icon="fas fa-info-circle" collapsible title="Form Pendaftaran Pasien RAWAT INAP">
+                        <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible title="Form Pendaftaran Pasien RAWAT INAP">
                             <div class="col-lg-12" >
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -274,7 +133,7 @@
                                                     label="Tanggal Masuk" :config="$config" />
                                             </div>
                                             <div class="col-md-6">
-                                                <x-adminlte-select name="kelas_pasien" label="Kelas">
+                                                <x-adminlte-select name="kelas_pasien" id="r_kelas_id" label="Kelas">
                                                     <option value="1" >KELAS 1</option>
                                                     <option value="2" >KELAS 2</option>
                                                     <option value="3" >KELAS 3</option>
@@ -282,6 +141,13 @@
                                                     <option value="5" >VVIP</option>
                                                 </x-adminlte-select>
                                             </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <x-adminlte-select name="ruangan_bykelas" id="ruangan_bykelas" label="Ruangan">
+                                                </x-adminlte-select>
+                                            </div>
+                                            <div class="col-md-6"></div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -394,5 +260,29 @@
             }
         })
     }
+    $('#r_kelas_id').change(function(){
+        var  r_kelas_id= $(this).val();
+            if(r_kelas_id){
+                $.ajax({
+                type:"GET",
+                url:"{{route('ruangan-kelas.get')}}?kelas_r_id="+r_kelas_id,
+                dataType: 'JSON',
+                success:function(res){
+                    if(res){
+                        $("#ruangan_bykelas").empty();
+                        $("#ruangan_bykelas").append('<option>--Pilih Ruangan--</option>');
+                        $.each(res.ruangan,function(key, value){
+                            console.log(value);
+                            $("#ruangan_bykelas").append('<option value="">'+value.nama_kamar+'</option>');
+                        });
+                    }else{
+                    $("#ruangan_bykelas").empty();
+                    }
+                }
+                });
+            }else{
+                $("#ruangan_bykelas").empty();
+            }
+    });
 </script>
 @endsection
