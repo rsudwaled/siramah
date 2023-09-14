@@ -81,8 +81,11 @@
                             <button type="button" class="btn btn-block bg-gradient-success btn-sm mb-2" data-toggle="modal" data-target="#modalSEPCreate">BUAT SEP</button>
                             <x-adminlte-modal id="modalSEPCreate" title="Buat SEP RM {{$pasien->no_rm}}" size="lg" theme="success"
                                 v-centered static-backdrop>
+                                <form action="" method="post">
+                                @csrf
                                 <div class="modal-body">
                                     <div class="col-lg-12">
+                                        <x-adminlte-callout theme="info" title="Information"><b>Status Pasien : {{$status_pendaftaran == 0 ? 'IGD' :'' }}</b></x-adminlte-callout>
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="card card-primary card-outline">
@@ -98,26 +101,193 @@
                                                       </ul>
                                                     </div>
                                                 </div>
+                                                <x-adminlte-input name="sep_nama_pasien" type="hidden" value="{{$pasien->nama_px}}" disabled fgroup-class="col-md-12" disable-feedback/>
+                                                <x-adminlte-input name="no_rm" value="{{$pasien->no_rm}}" type="hidden" disabled fgroup-class="col-md-12" disable-feedback/>    
                                             </div>
-                                            <div class="col-lg-6">
-                                                <x-adminlte-input name="sep_nama_pasien" label="Nama Pasien" value="{{$pasien->nama_px}}" disabled fgroup-class="col-md-6" disable-feedback/>    
+                                            <div class="col-lg-8">
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        @php $config = ['format' => 'DD-MM-YYYY']; @endphp 
+                                                        <x-adminlte-input-date name="tgl_sep" value="{{\Carbon\Carbon::parse(now())->format('Y-m-d')}}" fgroup-class="col-md-12" label="Tanggal SEP" :config="$config"/>
+                                                        <x-adminlte-input name="ppk_asal" value="RSUD WALED" label="PPK Asal Rujukan" disabled fgroup-class="col-md-12" disable-feedback/>    
+                                                        <x-adminlte-input name="kontak" value="{{$pasien->no_telp== null ? $pasien->no_hp : $pasien->no_telp }}" label="Kontak" fgroup-class="col-md-12" disable-feedback/> 
+                                                        <x-adminlte-input name="spesialis" value="UGD" label="Spesialis /Sub Spesialis" disabled fgroup-class="col-md-12" disable-feedback/>    
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <x-adminlte-select2 name="paramedis" required id="paramedis" label="DPJP">
+                                                            <option value="">--pilih dpjp--</option>
+                                                            @foreach ($paramedis as $u)
+                                                                <option value="{{$u->kode_paramedis}}">{{$u->nama_paramedis}}</option>
+                                                            @endforeach
+                                                        </x-adminlte-select2>
+                                                        <x-adminlte-select2 name="alasan_masuk" required id="alasan_masuk" label="Alasan Masuk">
+                                                            <option value="">--pilih alasan masuk--</option>
+                                                            @foreach ($alasanmasuk as $u)
+                                                                <option value="{{$u->id}}">{{$u->alasan_masuk}}</option>
+                                                            @endforeach
+                                                        </x-adminlte-select2>
+                                                        <x-adminlte-select2 name="status_kecelakaan" id="status_kecelakaan" label="Status Kecelakaan">
+                                                            <option value="">--pilih status kecelakaan--</option>
+                                                            <option value="0">Bukan Kecelakaan Lalu Lintas (BKLL)</option>
+                                                            <option value="1">KLL & Bukan Kecelakaan Kerja (BKK)</option>
+                                                            <option value="2">KLL & KK</option>
+                                                            <option value="3">Kecelakaan Kerja</option>
+                                                        </x-adminlte-select2>    
+                                                        <x-adminlte-textarea name="diagnosa" label="Diagnosa" placeholder="Silahkan masukan diagnosa" fgroup-class="col-md-12" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <x-slot name="footerSlot">
-                                    <x-adminlte-button class="mr-auto" theme="primary" label="Simpan Data"/>
-                                    <x-adminlte-button theme="danger" label="batal" data-dismiss="modal"/>
+                                    <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal"/>
+                                    <x-adminlte-button theme="success" label="Simpan Data"/>
                                 </x-slot>
+                                </form>
                             </x-adminlte-modal>
                         </div>
                         <div class="card-body">
                         <p>Cari Data <code>Rujukan</code> atau <code>Riwayat SEP</code> pasien: </p>
-                        <a class="btn btn-app bg-success" ><i class="fas fa-external-link-alt"></i> Rujukan </a>
-                        <a class="btn btn-app bg-danger"><i class="fas fa-clipboard-list"></i> Riwayat SEP </a>
+                        <a class="btn btn-app bg-success" onclick="cariRujukan({{$pasien->no_rm}})" data-toggle="modal" data-target="#modalRujukan"><i class="fas fa-external-link-alt"></i> Rujukan </a>
+                        <x-adminlte-modal id="modalRujukan" title="Rujukan dari RM:  {{$pasien->no_rm}}" size="xl" theme="success"
+                            v-centered static-backdrop>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h5>Rawat Jalan</h5>
+                                        @php $heads = ['No Rujukan', 'Tgl', 'Status','jenis Pelayanan','faskes','diagnosa','poli']; 
+                                        $config['order'] = ['0', 'asc']; 
+                                        $config['ordering'] = false; 
+                                        $config['paging'] = true; 
+                                        $config['info'] = false; 
+                                        $config['searching'] = false; 
+                                        $config['scrollY'] = '600px'; 
+                                        $config['scrollCollapse'] = true; 
+                                        $config['scrollX'] = true; 
+                                        @endphp 
+                                        <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h5>Rawat Inap</h5>
+                                        @php $heads = ['No Rujukan', 'Tgl', 'Status','jenis Pelayanan','faskes','diagnosa','poli']; 
+                                        $config['order'] = ['0', 'asc']; 
+                                        $config['ordering'] = false; 
+                                        $config['paging'] = true; 
+                                        $config['info'] = false; 
+                                        $config['searching'] = false; 
+                                        $config['scrollY'] = '600px'; 
+                                        $config['scrollCollapse'] = true; 
+                                        $config['scrollX'] = true; 
+                                        @endphp 
+                                        <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button theme="danger" label="batal" data-dismiss="modal"/>
+                                {{-- <x-adminlte-button theme="success" label="Simpan Data"/> --}}
+                            </x-slot>
+                        </x-adminlte-modal>
+                        <a class="btn btn-app bg-danger" data-toggle="modal" data-target="#modalRiwayaSEP"><i class="fas fa-clipboard-list"></i> Riwayat SEP </a>
+                        <x-adminlte-modal id="modalRiwayaSEP" title="Riwayat SEP dari RM :  {{$pasien->no_rm}}" size="xl" theme="success"
+                            v-centered static-backdrop>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h5>Rawat Jalan</h5>
+                                        @php $heads = ['No Rujukan', 'Tgl', 'Status','jenis Pelayanan','faskes','diagnosa','poli']; 
+                                        $config['order'] = ['0', 'asc']; 
+                                        $config['ordering'] = false; 
+                                        $config['paging'] = true; 
+                                        $config['info'] = false; 
+                                        $config['searching'] = false; 
+                                        $config['scrollY'] = '600px'; 
+                                        $config['scrollCollapse'] = true; 
+                                        $config['scrollX'] = true; 
+                                        @endphp 
+                                        <x-adminlte-datatable id="table3" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <h5>Rawat Inap</h5>
+                                        @php $heads = ['No Rujukan', 'Tgl', 'Status','jenis Pelayanan','faskes','diagnosa','poli']; 
+                                        $config['order'] = ['0', 'asc']; 
+                                        $config['ordering'] = false; 
+                                        $config['paging'] = true; 
+                                        $config['info'] = false; 
+                                        $config['searching'] = false; 
+                                        $config['scrollY'] = '600px'; 
+                                        $config['scrollCollapse'] = true; 
+                                        $config['scrollX'] = true; 
+                                        @endphp 
+                                        <x-adminlte-datatable id="table4" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                                    </div>
+                                </div>
+                            </div>
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button theme="danger" label="batal" data-dismiss="modal"/>
+                                {{-- <x-adminlte-button theme="success" label="Simpan Data"/> --}}
+                            </x-slot>
+                        </x-adminlte-modal>
                         <p>Surat Kontrol <code>(SK)</code>  :</p>
-                        <a class="btn btn-app bg-warning"><i class="fas fa-edit"></i>Buat <code>(SK)</code> </a>
-                        <a class="btn btn-app bg-info"><i class="fas fa-search"></i>Cari <code>(SK)</code> </a> 
+                        <a class="btn btn-app bg-warning" data-toggle="modal" data-target="#modalBuatSK"><i class="fas fa-edit"></i>Buat <code>(SK)</code> </a>
+                        <x-adminlte-modal id="modalBuatSK" title="Buat Surat Kontrol untuk RM : {{$pasien->no_rm}}" size="md" theme="success"
+                            v-centered static-backdrop>
+                            <form action="" method="post">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="col-lg-12">
+                                    <x-adminlte-input name="no_bpjs" value="{{$pasien->no_Bpjs==null ? 'tidak punya bpjs' : $pasien->no_Bpjs}}" label="No Kartu" fgroup-class="col-md-12" disable-feedback/>  
+                                    <x-adminlte-select2 name="jenis_surat" required id="jenis_surat" label="Poli">
+                                        <option value="">--Jenis Surat--</option>
+                                        <option value="surat_kontrol">Surat Kontrol</option>
+                                        <option value="spri">SPRI</option>
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="poli_kontrol" required id="poli_kontrol" label="Poli">
+                                        <option value="">--pilih poli--</option>
+                                        @foreach ($unit as $u)
+                                            <option value="{{$u->kode_unit}}">{{$u->nama_unit}}</option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                    @php $config = ['format' => 'DD-MM-YYYY']; @endphp 
+                                    <x-adminlte-input-date name="tgl_sk" value="{{\Carbon\Carbon::parse(now())->format('Y-m-d')}}" fgroup-class="col-md-12" label="Tanggal Kontrol" :config="$config"/>
+                                    <x-adminlte-select2 name="dokter_kontrol" required id="dokter_kontrol" label="Dokter">
+                                        <option value="">--pilih dokter--</option>
+                                        @foreach ($paramedis as $u)
+                                            <option value="{{$u->kode_paramedis}}">{{$u->nama_paramedis}}</option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                </div>
+                            </div>
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal"/>
+                                <x-adminlte-button theme="success" label="Simpan Data"/>
+                            </x-slot>
+                            </form>
+                        </x-adminlte-modal>
+                        <a class="btn btn-app bg-info" data-toggle="modal" data-target="#modalSK"><i class="fas fa-search"></i>Cari <code>(SK)</code> </a>
+                        <x-adminlte-modal id="modalSK" title="Cari Surat Kontrol/SPRI dari RM: {{$pasien->no_rm}}" size="xl" theme="success"
+                            v-centered static-backdrop>
+                            <div class="modal-body">
+                                <div class="col-lg-12">
+                                    @php
+                                    $heads = ['No Surat', 'Tgl Kontrol','Tgl Terbit', 'Status','jenis','SEP Asal','poli asal','poli tujuan','dokter','terbit sep'];
+                                    $config['order'] = ['0', 'asc']; 
+                                    $config['ordering'] = false; 
+                                    $config['paging'] = true; 
+                                    $config['info'] = false; 
+                                    $config['searching'] = false; 
+                                    $config['scrollY'] = '600px'; 
+                                    $config['scrollCollapse'] = true; 
+                                    $config['scrollX'] = true; 
+                                    @endphp 
+                                    <x-adminlte-datatable id="table5" class="nowrap text-xs" :heads="$heads" :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                                </div>
+                            </div>
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal"/>
+                            </x-slot>
+                        </x-adminlte-modal> 
                         </div>
                     </div>
                     <div class="card">
@@ -277,6 +447,13 @@
                 Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
             }
         })
+    }
+
+    function cariRujukan(rm)
+    {
+        var rujukan_rm = rm;
+        // alert(rujukan_rm);
+        $('#modalRujukan').show();
     }
 </script>
 @endsection

@@ -160,6 +160,7 @@ class AntrianIGDController extends Controller
              Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
              return back();
          }
+         $status_pendaftaran = $request->pendaftaran_id;
          $antrian = AntrianPasienIGD::find($request->antrian_id);
          $pasien = Pasien::where('no_rm',$request->pasien_id)->first();
          $kunjungan = \DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->pasien_id')");
@@ -176,25 +177,25 @@ class AntrianIGDController extends Controller
             return view('simrs.igd.form_igd.form_igd', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran'
             ));
         }else if($request->pendaftaran_id==1){
             return view('simrs.igd.form_igd.form_igd_kebidanan', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran'
             ));
         }else if($request->pendaftaran_id==2){
             return view('simrs.igd.form_igd.form_ranap', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran'
             ));
         }else if($request->pendaftaran_id==3){
             return view('simrs.igd.form_igd.form_penunjang', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran'
             ));    
         }else{
             Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');
