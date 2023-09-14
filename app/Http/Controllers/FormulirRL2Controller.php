@@ -22,6 +22,7 @@ class FormulirRL2Controller extends Controller
         $bidangd = BidangPegawai::all();
         $jurusan = KebutuhanJurusan::all();
         $kb = $jurusan->groupBy('nama_jurusan')->toArray();
+        // dd($data, $kb);
 
         return view('simrs.formulir.f_r_l_2.formulir_rl_2', compact('data','tingkat','idt','bidangd','jurusan','kb'));
     }

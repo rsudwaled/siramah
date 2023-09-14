@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Pasien extends Model
 {
     use HasFactory;
-    protected $connection = 'mysql2';
+    // protected $connection = 'mysql2';
+    protected $connection = 'mysql9';
     protected $table = 'mt_pasien';
     protected $primaryKey = 'no_rm';
     public $timestamps = false;
@@ -35,6 +36,6 @@ class Pasien extends Model
     }
     public function kabupatens()
     {
-        return $this->hasOne(Kecamatan::class, 'kode_kecamatan', 'kecamatan');
+        return $this->hasOne(Kabupaten::class, 'kode_kabupaten_kota', 'kabupaten');
     }
 }

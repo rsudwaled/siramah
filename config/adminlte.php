@@ -372,6 +372,36 @@ return [
                 ],
             ],
         ],
+         // IGD
+         [
+            'text'    => 'Aplikasi IGD',
+            'icon'    => 'fas fa-user-plus',
+            'can' => 'pendaftaran-igd',
+            'submenu' => [
+                [
+                    'text' => 'dashboard IGD',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'dashboard-antrian-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                // [
+                //     'text' => 'Antrian IGD',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'antrian-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                [
+                    'text' => 'Pendaftaran IGD',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'pendaftaran-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                
+            ],
+        ],
         // KASIR
         [
             'text'    => 'Aplikasi Kasir',
@@ -387,6 +417,7 @@ return [
                 ],
             ],
         ],
+       
         // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
@@ -1378,9 +1409,9 @@ return [
                     'icon'    => 'fas fa-book',
                     'url'  => 'pegawai-mutasi',
                     'shift'   => 'ml-2',
-                    'can' => 'pegawai',
+                    'can' => 'admin',
                 ],
-
+                
             ]
         ],
         // ANTRIAN BPJS
