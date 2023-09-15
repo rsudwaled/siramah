@@ -87,6 +87,7 @@
                                             <th  colspan="7" style="vertical-align : middle;text-align:left;">{{$bidangd->where('id', $key)->first()->nama_bidang}}</th>
 
                                         </tr>
+                                        
                                         @foreach ($bidang as $key_jurusan => $jurusan)
                                         <tr>
                                             <td></td>
@@ -103,6 +104,7 @@
                                             @endforeach
                                         </tr>
                                         @endforeach
+                                        
                                         <tr>
                                             <td></td>
                                             <th style="vertical-align : middle;text-align:left;">Total</th>

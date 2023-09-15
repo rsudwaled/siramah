@@ -50,6 +50,8 @@
                             <option value="23978253">SAPRIJAL </option>
                             <option value="23980884">PASIEN RADIOLOGI 1 </option>
                             <option value="22947447">PASIEN RADIOLOGI 2</option>
+                            <option value="23982005">PASIEN 1</option>
+                            <option value="23981926">PASIEN 2</option>
                         </select>
                         </div>
                       </div>
@@ -96,29 +98,29 @@
 
         $('#rm').change(function(){
         var rm = $(this).val();
-        if(rm){
-            $.ajax({
-            type:"GET",
-            url:"/getK?rm="+rm,
-            dataType: 'JSON',
-            success:function(res){
-                if(res){
+            if(rm){
+                $.ajax({
+                type:"GET",
+                url:"/getK?rm="+rm,
+                dataType: 'JSON',
+                success:function(res){
+                    if(res){
+                        $("#kode_unit").empty();
+                        $("#kode_unit").append('<option>---Pilih Kode Unit---</option>');
+                        $.each(res,function(key, value){
+                            $("#kode_unit").append('<option value="'+value.kode_unit+'">'+'Kunjungan:'+value.id_kunjungan+' | Kode Unit:'+value.kode_unit+'</option>');
+                        });
+                    }else{
+                    $("#counter").empty();
                     $("#kode_unit").empty();
-                    $("#kode_unit").append('<option>---Pilih Kode Unit---</option>');
-                    $.each(res,function(key, value){
-                        $("#kode_unit").append('<option value="'+value.kode_unit+'">'+'Kunjungan:'+value.id_kunjungan+' | Kode Unit:'+value.kode_unit+'</option>');
-                    });
-                }else{
+                    }
+                }
+                });
+            }else{
                 $("#counter").empty();
                 $("#kode_unit").empty();
-                }
             }
-            });
-        }else{
-            $("#counter").empty();
-            $("#kode_unit").empty();
-        }
-    });
+        });
 
     $('#kode_unit').change(function(){
         var id_kunjungan = $("#kode_unit").val();

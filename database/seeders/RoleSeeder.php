@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
             'Pelayanan Medis',
             'Bagian Umum',
             'BPJS',
+            'Pendaftaran IGD',
         ];
         foreach ($roles as $item) {
             $permission = Permission::create(['name' => Str::slug($item)]);
