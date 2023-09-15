@@ -388,14 +388,14 @@ return [
                 [
                     'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'dashboard-antrian-igd',
+                    'url'  => 'daftar-kunjungan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'dashboard-antrian-igd',
+                    'url'  => 'daftar-kunjungan-byuser',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

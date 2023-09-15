@@ -70,6 +70,38 @@
                                         <a class="btn btn-app btn-block bg-success"><i class="fas fa-users"></i> {{$antrian->no_antri}}</a>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-12 ml-2">
+                                        <button class="btn btn-block bg-gradient-warning btn-flat"
+                                                data-toggle="modal" 
+                                                data-target="#modalBPJSPROSES">BPJS Lagi PROSES</button>
+                                        <form action="" id="postPernyataan" method="post">
+                                        <x-adminlte-modal id="modalBPJSPROSES" title="Buat Surat Pernyataan BPJS PROSES" size="md" theme="success"
+                                            v-centered static-backdrop>
+                                                <div class="modal-body">
+                                                    <div class="col-lg-12">
+                                                        <input type="hidden" name="no_rm_by_pasien" id="rm_sp" value="{{$pasien->no_rm}}">
+                                                        <x-adminlte-input name="nama_pasien"  label="Pasien"  value="{{$pasien->nama_px}}" fgroup-class="col-md-12" disable-feedback/>
+                                                        <x-adminlte-input name="nama_keluarga_sp" id="nama_keluarga_sp"  label="Nama Keluarga" fgroup-class="col-md-12" disable-feedback/>
+                                                        <x-adminlte-input name="tlp_keluarga_sp" id="tlp_keluarga_sp"  label="Kontak Keluarga" fgroup-class="col-md-12" disable-feedback/>
+                                                        <x-adminlte-select2 name="hub_keluarga_sp" required id="hub_keluarga_sp" label="Hubungan Keluarga">
+                                                            @foreach ($hb_keluarga as $hbk)
+                                                                <option value="{{$hbk->kode}}">{{$hbk->nama_hubungan}}</option>
+                                                            @endforeach
+                                                        </x-adminlte-select2>
+                                                        @php $config = ['format' => 'DD-MM-YYYY']; @endphp 
+                                                        <x-adminlte-input-date name="tgl_surat_pernyataan" id="tgl_surat_pernyataan" value="{{\Carbon\Carbon::parse(now())->format('Y-m-d')}}" fgroup-class="col-md-12" label="Batas Waktu Melengkapi" :config="$config"/>
+                                                        <x-adminlte-textarea name="alamat_keluarga_sp" id="alamat_keluarga_sp" label="alamat keluarga" fgroup-class="col-md-12" />
+                                                    </div>
+                                                </div>
+                                                <x-slot name="footerSlot">
+                                                    <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal"/>
+                                                    <x-adminlte-button class="withLoad" from="postPernyataan" id="submitPernyataan" theme="success" label="Simpan Data"/>
+                                                </x-slot>
+                                            </x-adminlte-modal>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -441,6 +473,7 @@
                 });
                 Swal.fire('Ruangan Sudah di Pilih!', '', 'success')
                 $('.modalruangan').modal('hide')
+                
                
             } 
             else if (result.isDenied) {
@@ -449,10 +482,41 @@
         })
     }
 
+    $("#submitPernyataan").click(function(e){
+  
+    e.preventDefault();
+
+    var nama_keluarga_sp = $("#nama_keluarga_sp").val();
+    var rm_sp = $("#rm_sp").val();
+    var alamat_keluarga_sp = $("#alamat_keluarga_sp").val();
+    var tlp_keluarga_sp = $("#tlp_keluarga_sp").val();
+    var tgl_surat_pernyataan_sp = $("#tgl_surat_pernyataan").val();
+    var hub_keluarga_sp = $("#hub_keluarga_sp").val();
+    let token   = $("meta[name='csrf-token']").attr("content");
+    $.ajax({
+        type:'POST',
+        url:"{{ route('surat-pernyataan.bpjsproses') }}",
+        data:{
+            rm_sp:rm_sp, 
+            nama_keluarga_sp:nama_keluarga_sp, 
+            tlp_keluarga_sp:tlp_keluarga_sp, 
+            tgl_surat_pernyataan_sp:tgl_surat_pernyataan_sp,
+            hub_keluarga_sp:hub_keluarga_sp,
+            alamat_keluarga_sp:alamat_keluarga_sp,
+            _token:token,
+        },
+        success:function(data){
+            $('#modalBPJSPROSES').modal('hide');
+            $.LoadingOverlay("hide");
+            Swal.fire('pernyataan berhasil dibuat', '', 'success');
+        }
+    });
+
+    });
+
     function cariRujukan(rm)
     {
         var rujukan_rm = rm;
-        // alert(rujukan_rm);
         $('#modalRujukan').show();
     }
 </script>
