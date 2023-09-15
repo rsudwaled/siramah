@@ -84,7 +84,7 @@ class AntrianIGDController extends Controller
         $pasien      = Pasien::limit(100)->orderBy('tgl_entry', 'desc')->get();
  
         if($request->nik != ''){
-          $pasien    = Pasien::where('nik_bpjs',$request->nik)->get();
+          $pasien    = Pasien::where('nik_bpjs','LIKE','%'.$request->nik.'%')->get();
          }
         if($request->nama != ''){
           $pasien    = Pasien::where('nama_px','LIKE','%'.$request->nama.'%')->get();
@@ -160,8 +160,11 @@ class AntrianIGDController extends Controller
              Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
              return back();
          }
+         $status_pendaftaran = $request->pendaftaran_id;
          $antrian = AntrianPasienIGD::find($request->antrian_id);
          $pasien = Pasien::where('no_rm',$request->pasien_id)->first();
+         $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
+         $hb_keluarga    = HubunganKeluarga::all();
          $kunjungan = \DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->pasien_id')");
          $lay_head1 = \DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1002')");
          $lay_head2 = \DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1023')");
@@ -176,25 +179,25 @@ class AntrianIGDController extends Controller
             return view('simrs.igd.form_igd.form_igd', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga'
             ));
         }else if($request->pendaftaran_id==1){
             return view('simrs.igd.form_igd.form_igd_kebidanan', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga'
             ));
         }else if($request->pendaftaran_id==2){
             return view('simrs.igd.form_igd.form_ranap', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga'
             ));
         }else if($request->pendaftaran_id==3){
             return view('simrs.igd.form_igd.form_penunjang', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga'
             ));    
         }else{
             Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');

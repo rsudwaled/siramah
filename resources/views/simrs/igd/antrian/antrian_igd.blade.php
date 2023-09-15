@@ -283,9 +283,10 @@
           })
           Swal.fire('pasien berhasil dipilih', '', 'success')
           $('#no_rm').val(rm);
-        } else if (result.isDenied) {
-          Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
-        }
+        } 
+        // else if (result.isDenied) {
+        //   Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
+        // }
       })
     }
   

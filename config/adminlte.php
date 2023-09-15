@@ -379,23 +379,23 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
-                    'text' => 'dashboard IGD',
+                    'text' => 'Pendaftaran IGD',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'dashboard-antrian-igd',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                // [
-                //     'text' => 'Antrian IGD',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'antrian-igd',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
                 [
-                    'text' => 'Pendaftaran IGD',
+                    'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pendaftaran-igd',
+                    'url'  => 'daftar-kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Riwayat Pendaftaran byUser',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'daftar-kunjungan-byuser',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
