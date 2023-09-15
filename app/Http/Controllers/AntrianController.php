@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\JadwalOperasi;
 use App\Models\Kunjungan;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
@@ -383,6 +384,7 @@ class AntrianController extends APIController
                 "kodebooking" => $antrian->kodebooking,
                 "norm" =>  substr($antrian->norm, 2),
                 "namapasien" => $antrian->nama,
+                "jenispasien" => $antrian->jenispasien,
                 "status" => $taskid[$antrian->taskid],
                 "namapoli" => $antrian->namapoli,
                 "namadokter" => $antrian->namadokter,
@@ -2525,7 +2527,7 @@ class AntrianController extends APIController
                 ->count();
             $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
             $request['angkaantrean'] = $antrian_all + 1;
-            $request['kodebooking'] = date('ym') . random_int(1000, 9999);
+            $request['kodebooking'] = date('ymd') . random_int(1000, 9999);
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
             $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -2671,7 +2673,7 @@ class AntrianController extends APIController
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_lantai + 1;
-        $request['kodebooking'] = date('ym') . random_int(1000, 9999);
+        $request['kodebooking'] = date('ymd') . random_int(1000, 9999);
         // estimasi
         $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
         $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -3422,9 +3424,9 @@ class AntrianController extends APIController
         $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            $dokter = ParamedisDB::where('nama_paramedis', $jadwalop->nama_dokter)->first();
+            $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
             if (isset($dokter)) {
-                $unit = UnitDB::where('kode_unit', $dokter->unit)->first();
+                $unit = Unit::where('kode_unit', $dokter->unit)->first();
             } else {
                 $unit['KDPOLI'] = 'UGD';
             }
@@ -3457,9 +3459,9 @@ class AntrianController extends APIController
         $jadwalops = JadwalOperasi::where('nomor_bpjs', $request->nopeserta)->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            $dokter = ParamedisDB::where('nama_paramedis', $jadwalop->nama_dokter)->first();
+            $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
             if (isset($dokter)) {
-                $unit = UnitDB::where('kode_unit', $dokter->unit)->first();
+                $unit = Unit::where('kode_unit', $dokter->unit)->first();
             } else {
                 $unit['KDPOLI'] = 'UGD';
             }
