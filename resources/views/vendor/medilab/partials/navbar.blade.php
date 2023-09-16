@@ -41,7 +41,7 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="https://www.siramah.rsudwaled.id/" class="appointment-btn scrollto">
+        <a href="https://www.siramah.rsudwaled.id/daftar" class="appointment-btn scrollto">
             Daftar
         </a>
 
