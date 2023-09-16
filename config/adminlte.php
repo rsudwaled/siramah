@@ -256,7 +256,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => false,
+    'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => 'profile',
@@ -372,8 +372,8 @@ return [
                 ],
             ],
         ],
-         // IGD
-         [
+        // IGD
+        [
             'text'    => 'Aplikasi IGD',
             'icon'    => 'fas fa-user-plus',
             'can' => 'pendaftaran-igd',
@@ -399,7 +399,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                
+
             ],
         ],
         // KASIR
@@ -417,7 +417,7 @@ return [
                 ],
             ],
         ],
-       
+
         // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
@@ -1411,7 +1411,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                
+
             ]
         ],
         // ANTRIAN BPJS

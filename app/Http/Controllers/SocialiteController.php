@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialiteController extends Controller
@@ -41,11 +42,22 @@ class SocialiteController extends Controller
                     'avatar_original' => $user_google->avatar_original,
                 ]);
                 $user->assignRole('Pasien');
-                auth()->login($user, true);
+                Log::notice('Daftar Akun Gmail ' . $user_google->name . ' , ' . $user_google->email);
+                $request = new Request();
+                $wa = new WhatsappController();
+                $request['notif'] = "*Login akun gmail SIRAMAH-RS WALED* \nTelah mencoba login sistem dengan data sebagai berikut.\n\nNAMA : " . $user_google->name . "\nEMAIL : " . $user_google->email . "\n\nMohon segera lakukan verifikasi login tersebut.\nsiramah.rsudwaled.id";
+                $wa->send_notif($request);
             }
-            return redirect()->route('home');
+            if ($user->email_verified_at) {
+                auth()->login($user, true);
+                Log::info('Percobaan Login Gmail ' . $user_google->name . ' , ' . $user_google->email);
+                return redirect()->route('home');
+            } else {
+                Log::warning("Akun belum diverifikasi " . $user_google->name . ' , ' . $user_google->email);
+                return redirect()->route('login')->withErrors("Mohon maaf, akun anda belum diverifikasi.");
+            }
         } catch (\Exception $e) {
-            return redirect()->route('login');
+            return redirect()->route('login')->withErrors("Mohon maaf, " . $e->getMessage());
         }
     }
 }

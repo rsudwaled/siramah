@@ -48,6 +48,7 @@ use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,7 +63,7 @@ use Illuminate\Support\Facades\Route;
 */
 // route default
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
-Auth::routes(['register' => false]); #ok
+Auth::routes(); #ok
 Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
 Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
 Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
@@ -100,9 +101,11 @@ Route::middleware('auth')->group(function () {
     Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
     Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
     // route resource
-    Route::resource('user', UserController::class);
-    Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
+    Route::middleware('permission:admin')->group(function () {
+        Route::resource('user', UserController::class);
+        Route::resource('role', RoleController::class);
+        Route::resource('permission', PermissionController::class);
+    });
     Route::resource('poliklinik', PoliklinikController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('dokter', DokterController::class);
@@ -296,8 +299,7 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
-
-    //ROUTE ANTRIAN IGD 
+    //ROUTE ANTRIAN IGD
     Route::get('/dashboard-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
     Route::get('/get-no-antrian', [App\Http\Controllers\AntrianIGDController::class, 'getNoAntrian'])->name('get-no-antrian');
     Route::get('/antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'getAntrian'])->name('antrian-igd');
@@ -307,7 +309,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/pendaftaran-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
     Route::get('/get-kelas-ruangan', [App\Http\Controllers\AntrianIGDController::class, 'getKelasRuangan'])->name('ruangan-kelas.get');
     Route::post('/daftarkan-pasien-baru', [App\Http\Controllers\AntrianIGDController::class, 'pasienBaruCreate'])->name('pasien-baru.create');
-    
     // GET ALAMAT PASIEN
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
     Route::get('/get-kecamatan-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKecPasien'])->name('kec-pasien.get');
@@ -319,13 +320,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'kunjunganPasienHariIni'])->name('kunjungan-pasien.today');
     Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
-    //ROUTE IGD 
+    //ROUTE IGD
     Route::get('/pendaftaran-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getPasien'])->name('pendaftaran-pasien');
     Route::post('/pendaftaran-pasien-lama', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'searchPasien'])->name('pasien-search');
     Route::get('/pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'daftarPasien'])->name('pasien-daftar.norm'); //datapasienview ajax route sebelum perubahan
     Route::get('/pilih-pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPendaftaranPasien'])->name('pilih-pendaftaran-pasien');
     Route::get('/daftar-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getRuangan'])->name('ruangan.get');
     Route::post('/pilih-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihRuangan'])->name('pilih-ruangan');
-
-
 });

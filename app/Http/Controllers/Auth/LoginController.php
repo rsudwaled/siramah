@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -42,23 +43,18 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $input = $request->all();
-
         $this->validate($request, [
             'email' => 'required',
             'password' => 'required',
         ]);
-
         $fieldType = filter_var($request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
         $user = User::where('username', $request->email)
             ->orWhere('email', $request->email)->first();
-        if (isset($user)) {
-            if (empty($user->email_verified_at)) {
-                return view('vendor.adminlte.auth.verify', compact(['request', 'user']));
-            }
-        } else {
+        if (empty($user)) {
             return redirect()->route('login')->withErrors('Username / Email Tidak Ditemukan');
         }
         if (auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password']))) {
+            Log::info('Percobaan Login ' . $user->name);
             return redirect()->route('home');
         } else {
             return redirect()->route('login')->withErrors('Username / Email dan Password Salah');
