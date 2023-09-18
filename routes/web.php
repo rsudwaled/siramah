@@ -48,6 +48,7 @@ use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -62,11 +63,7 @@ use Illuminate\Support\Facades\Route;
 */
 // route default
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
-Auth::routes(['register' => false]); #ok
-Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
-Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
-Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
-Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
+Auth::routes(); #ok
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
 // layanan umum
@@ -88,21 +85,24 @@ Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('
 Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
 Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
 Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
-Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
 Route::middleware('auth')->group(function () {
+    Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
     Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
     // settingan umum
     Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
     Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
-    Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
-    Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
-    Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
-    Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
     // route resource
-    Route::resource('user', UserController::class);
-    Route::resource('role', RoleController::class);
-    Route::resource('permission', PermissionController::class);
+    Route::middleware('permission:admin')->group(function () {
+        Route::resource('user', UserController::class);
+        Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
+        Route::resource('role', RoleController::class);
+        Route::resource('permission', PermissionController::class);
+        Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
+        Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
+        Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
+        Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
+    });
     Route::resource('poliklinik', PoliklinikController::class);
     Route::resource('unit', UnitController::class);
     Route::resource('dokter', DokterController::class);
@@ -296,8 +296,7 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
-
-    //ROUTE ANTRIAN IGD 
+    //ROUTE ANTRIAN IGD
     Route::get('/dashboard-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
     Route::get('/get-no-antrian', [App\Http\Controllers\AntrianIGDController::class, 'getNoAntrian'])->name('get-no-antrian');
     Route::get('/antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'getAntrian'])->name('antrian-igd');
@@ -307,7 +306,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/pendaftaran-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
     Route::get('/get-kelas-ruangan', [App\Http\Controllers\AntrianIGDController::class, 'getKelasRuangan'])->name('ruangan-kelas.get');
     Route::post('/daftarkan-pasien-baru', [App\Http\Controllers\AntrianIGDController::class, 'pasienBaruCreate'])->name('pasien-baru.create');
-    
     // GET ALAMAT PASIEN
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
     Route::get('/get-kecamatan-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKecPasien'])->name('kec-pasien.get');
@@ -316,13 +314,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kecamatan-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgKecPasien'])->name('klg-kec-pasien.get');
     Route::get('/get-desa-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgDesaPasien'])->name('klg-desa-pasien.get');
 
-    //ROUTE IGD 
+    Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
+    Route::get('/daftar-kunjungan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'kunjunganPasienHariIni'])->name('kunjungan-pasien.today');
+    Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
+    //ROUTE IGD
     Route::get('/pendaftaran-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getPasien'])->name('pendaftaran-pasien');
     Route::post('/pendaftaran-pasien-lama', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'searchPasien'])->name('pasien-search');
     Route::get('/pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'daftarPasien'])->name('pasien-daftar.norm'); //datapasienview ajax route sebelum perubahan
     Route::get('/pilih-pendaftaran-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPendaftaranPasien'])->name('pilih-pendaftaran-pasien');
     Route::get('/daftar-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'getRuangan'])->name('ruangan.get');
     Route::post('/pilih-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihRuangan'])->name('pilih-ruangan');
-
-
 });

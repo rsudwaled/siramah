@@ -256,7 +256,7 @@ return [
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
     'login_url' => 'login',
-    'register_url' => false,
+    'register_url' => 'register',
     'password_reset_url' => 'password/reset',
     'password_email_url' => 'password/email',
     'profile_url' => 'profile',
@@ -372,34 +372,34 @@ return [
                 ],
             ],
         ],
-         // IGD
-         [
+        // IGD
+        [
             'text'    => 'Aplikasi IGD',
             'icon'    => 'fas fa-user-plus',
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
-                    'text' => 'dashboard IGD',
+                    'text' => 'Pendaftaran IGD',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'dashboard-antrian-igd',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                // [
-                //     'text' => 'Antrian IGD',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'antrian-igd',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
                 [
-                    'text' => 'Pendaftaran IGD',
+                    'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pendaftaran-igd',
+                    'url'  => 'daftar-kunjungan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                
+                [
+                    'text' => 'Riwayat Pendaftaran byUser',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'daftar-kunjungan-byuser',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+
             ],
         ],
         // KASIR
@@ -417,7 +417,7 @@ return [
                 ],
             ],
         ],
-       
+
         // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
@@ -1411,7 +1411,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
-                
+
             ]
         ],
         // ANTRIAN BPJS

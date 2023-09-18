@@ -12,7 +12,10 @@ use App\Models\AlasanMasuk;
 use App\Models\Ruangan;
 use App\Models\RuanganTerpilihIGD;
 use App\Models\AntrianPasienIGD;
+use App\Models\PernyataanBPJSPROSES;
+use App\Models\KeluargaPasien;
 use RealRashid\SweetAlert\Facades\Alert;
+use Auth;
 use Carbon\Carbon;
 
 class PendaftaranPasienIGDController extends Controller
@@ -27,7 +30,7 @@ class PendaftaranPasienIGDController extends Controller
     }
 
     public function searchPasien(Request $request)
-   {
+    {
        $pasien = Pasien::limit(100)->orderBy('tgl_entry', 'desc')->get();
 
        if($request->nik != ''){
@@ -112,5 +115,44 @@ class PendaftaranPasienIGDController extends Controller
       $pasien = Pasien::where('no_rm',$request->rm)->first();
       $kunjungan = \DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->rm')");
       return view('simrs.igd.pendaftaran.pilihpendaftaranpasien', compact('pasien','kunjungan'));
+    }
+
+
+    // caba route baru fix view
+    public function suratPernyataanPasien(Request $request)
+    {
+      // dd($request->all());
+      // $keluarga = KeluargaPasien::where('no_rm', $request->no_rm_by_pasien)->first();
+      // // dd($keluarga);
+      // if($keluarga->tlp_keluarga === null || $keluarga->alamat_keluarga === null)
+      // {
+      //   $keluarga->update([
+      //     'tlp_keluarga' => $request->tlp_keluarga_sp,
+      //     'alamat_keluarga' => $request->alamat_keluarga_sp,
+      //   ]);
+      // }
+      $pernyataan = PernyataanBPJSPROSES::create([
+        'no_rm' => $request->rm_sp,
+        'nama_keluarga' => $request->nama_keluarga_sp,
+        'alamat_keluarga' => $request->alamat_keluarga_sp,
+        'kontak' => $request->tlp_keluarga_sp,
+        'tgl_batas_waktu' => $request->tgl_surat_pernyataan_sp,
+        'status_proses' => 0,
+      ]);
+      return response()->json($pernyataan);
+    }
+
+    public function kunjunganPasienHariIni(Request $request)
+    {
+      $tgl       = Carbon::now()->format('Y-m-d');
+      $kunjungan = Kunjungan::whereDate('tgl_masuk', '<=', $tgl)->where('status_kunjungan', 1)->paginate(32);
+      return view('simrs.igd.kunjungan.kunjungan_igd', compact('kunjungan'));
+    }
+
+    public function listPasienDaftar(Request $request)
+    {
+      // $kunjungan = Kunjungan::where('id_user_igd', Auth::user()->id)->whereDate('tgl_masuk', '<=', $tgl)->get();
+      $kunjungan = Kunjungan::where('id_user_igd', Auth::user()->id)->get();
+      return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 }

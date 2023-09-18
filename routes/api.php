@@ -54,6 +54,7 @@ Route::prefix('vclaim')->group(function () {
     // RENCANA KONTROL
     Route::post('suratkontrol_insert', [VclaimController::class, 'suratkontrol_insert'])->name('api.suratkontrol_insert');
     Route::put('suratkontrol_update', [SuratKontrolController::class, 'update'])->name('api.suratkontrol_update');
+    Route::put('surat_kontrol_update', [VclaimController::class, 'suratkontrol_update'])->name('surat_kontrol_update');
     Route::delete('suratkontrol_delete', [SuratKontrolController::class, 'destroy'])->name('api.suratkontrol_delete');
     Route::post('spri_insert', [VclaimController::class, 'spri_insert'])->name('spri_insert');
     Route::put('spri_update', [VclaimController::class, 'spri_update'])->name('spri_update');
@@ -128,11 +129,10 @@ Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])-
 Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'test']);
     Route::post('webhook', [WhatsappController::class, 'webhook']);
-    Route::post('send_message', [WhatsappController::class, 'send_message'])->name('send_message');
+    Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
 });
 // APP.RSUDWALED.ID
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');

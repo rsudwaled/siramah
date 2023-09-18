@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Antrian;
 use App\Models\Dokter;
 use App\Models\JadwalDokter;
+use App\Models\JadwalOperasi;
 use App\Models\Kunjungan;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
@@ -32,6 +33,11 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianController extends APIController
 {
+    public $baseurl = "https://apijkn.bpjs-kesehatan.go.id/antreanrs/";
+    public $consid =  "3431";
+    public $secrekey = "7fI37884D3";
+    public $userkey = "5986edae06e23458e9c3ccb8a23d9bb6";
+
     public function edit($id)
     {
         $antrian = Antrian::find($id);
@@ -383,6 +389,7 @@ class AntrianController extends APIController
                 "kodebooking" => $antrian->kodebooking,
                 "norm" =>  substr($antrian->norm, 2),
                 "namapasien" => $antrian->nama,
+                "jenispasien" => $antrian->jenispasien,
                 "status" => $taskid[$antrian->taskid],
                 "namapoli" => $antrian->namapoli,
                 "namadokter" => $antrian->namadokter,
@@ -1783,9 +1790,9 @@ class AntrianController extends APIController
     // API FUNCTION
     public function signature()
     {
-        $cons_id =  env('ANTRIAN_CONS_ID');
-        $secretKey = env('ANTRIAN_SECRET_KEY');
-        $userkey = env('ANTRIAN_USER_KEY');
+        $cons_id =  $this->consid;
+        $secretKey = $this->secrekey;
+        $userkey = $this->userkey;
         date_default_timezone_set('UTC');
         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
         $signature = hash_hmac('sha256', $cons_id . "&" . $tStamp, $secretKey, true);
@@ -1830,14 +1837,14 @@ class AntrianController extends APIController
     // API BPJS
     public function ref_poli()
     {
-        $url = env('ANTRIAN_URL') . "ref/poli";
+        $url = $this->baseurl . "ref/poli";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function ref_dokter()
     {
-        $url = env('ANTRIAN_URL') . "ref/dokter";
+        $url = $this->baseurl . "ref/dokter";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1851,14 +1858,14 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
+        $url = $this->baseurl . "jadwaldokter/kodepoli/" . $request->kodepoli . "/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function ref_poli_fingerprint()
     {
-        $url = env('ANTRIAN_URL') . "ref/poli/fp";
+        $url = $this->baseurl . "ref/poli/fp";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1872,7 +1879,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  400);
         }
-        $url = env('ANTRIAN_URL') . "ref/pasien/fp/identitas/" . $request->jenisIdentitas . "/noidentitas/" . $request->noIdentitas;
+        $url = $this->baseurl . "ref/pasien/fp/identitas/" . $request->jenisIdentitas . "/noidentitas/" . $request->noIdentitas;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1888,7 +1895,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), $validator->errors(), 400);
         }
-        $url = env('ANTRIAN_URL') . "jadwaldokter/updatejadwaldokter";
+        $url = $this->baseurl . "jadwaldokter/updatejadwaldokter";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -1932,7 +1939,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  400);
         }
-        $url = env('ANTRIAN_URL') . "antrean/add";
+        $url = $this->baseurl . "antrean/add";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -1975,7 +1982,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "antrean/farmasi/add";
+        $url = $this->baseurl . "antrean/farmasi/add";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -1998,7 +2005,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "antrean/updatewaktu";
+        $url = $this->baseurl . "antrean/updatewaktu";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -2049,7 +2056,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  400);
         }
-        $url = env('ANTRIAN_URL') . "antrean/batal";
+        $url = $this->baseurl . "antrean/batal";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -2068,7 +2075,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "antrean/getlisttask";
+        $url = $this->baseurl . "antrean/getlisttask";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->post(
             $url,
@@ -2087,7 +2094,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
+        $url = $this->baseurl . "dashboard/waktutunggu/tanggal/" . $request->tanggal . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_no_decrypt($response, $signature);
@@ -2102,7 +2109,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
-        $url = env('ANTRIAN_URL') . "dashboard/waktutunggu/bulan/" . $request->bulan . "/tahun/" . $request->tahun . "/waktu/" . $request->waktu;
+        $url = $this->baseurl . "dashboard/waktutunggu/bulan/" . $request->bulan . "/tahun/" . $request->tahun . "/waktu/" . $request->waktu;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_no_decrypt($response);
@@ -2115,7 +2122,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/tanggal/" . $request->tanggal;
+        $url = $this->baseurl . "antrean/pendaftaran/tanggal/" . $request->tanggal;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -2128,7 +2135,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/kodebooking/" . $request->kodeBooking;
+        $url = $this->baseurl . "antrean/pendaftaran/kodebooking/" . $request->kodeBooking;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -2141,14 +2148,14 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/aktif";
+        $url = $this->baseurl . "antrean/pendaftaran/aktif";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function antrian_pendaftaran(Request $request)
     {
-        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/aktif";
+        $url = $this->baseurl . "antrean/pendaftaran/aktif";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -2164,7 +2171,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = env('ANTRIAN_URL') . "antrean/pendaftaran/kodepoli/" . $request->kodePoli . "/kodedokter/" . $request->kodeDokter . "/hari/" . $request->hari . "/jampraktek/" . $request->jamPraktek;
+        $url = $this->baseurl . "antrean/pendaftaran/kodepoli/" . $request->kodePoli . "/kodedokter/" . $request->kodeDokter . "/hari/" . $request->hari . "/jampraktek/" . $request->jamPraktek;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -2445,19 +2452,19 @@ class AntrianController extends APIController
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline",  201);
             }
             // Cek pasien kronis
-            $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
-                ->where('catatan', 'KRONIS')
-                ->orderBy('tgl_masuk', 'DESC')
-                ->first();
+            // $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
+            //     ->where('catatan', 'KRONIS')
+            //     ->orderBy('tgl_masuk', 'DESC')
+            //     ->first();
             // cek pasien kronis 30 hari dan beda poli
-            if (isset($kunjungan_kronis)) {
-                $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
-                if ($unit->KDPOLI ==  $request->kodepoli) {
-                    if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(29)) {
-                        return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
-                    }
-                }
-            }
+            // if (isset($kunjungan_kronis)) {
+            //     $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
+            //     if ($unit->KDPOLI ==  $request->kodepoli) {
+            //         if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(20)) {
+            //             return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
+            //         }
+            //     }
+            // }
             // cek jika jkn
             if (isset($request->nomorreferensi)) {
                 $request['jenispasien'] = 'JKN';
@@ -2525,7 +2532,7 @@ class AntrianController extends APIController
                 ->count();
             $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
             $request['angkaantrean'] = $antrian_all + 1;
-            $request['kodebooking'] = date('ym') . random_int(1000, 9999);
+            $request['kodebooking'] = strtoupper(uniqid());
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
             $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -2671,7 +2678,7 @@ class AntrianController extends APIController
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_lantai + 1;
-        $request['kodebooking'] = date('ym') . random_int(1000, 9999);
+        $request['kodebooking'] = strtoupper(uniqid());
         // estimasi
         $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
         $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -3422,9 +3429,9 @@ class AntrianController extends APIController
         $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            $dokter = ParamedisDB::where('nama_paramedis', $jadwalop->nama_dokter)->first();
+            $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
             if (isset($dokter)) {
-                $unit = UnitDB::where('kode_unit', $dokter->unit)->first();
+                $unit = Unit::where('kode_unit', $dokter->unit)->first();
             } else {
                 $unit['KDPOLI'] = 'UGD';
             }
@@ -3457,9 +3464,9 @@ class AntrianController extends APIController
         $jadwalops = JadwalOperasi::where('nomor_bpjs', $request->nopeserta)->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            $dokter = ParamedisDB::where('nama_paramedis', $jadwalop->nama_dokter)->first();
+            $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
             if (isset($dokter)) {
-                $unit = UnitDB::where('kode_unit', $dokter->unit)->first();
+                $unit = Unit::where('kode_unit', $dokter->unit)->first();
             } else {
                 $unit['KDPOLI'] = 'UGD';
             }
