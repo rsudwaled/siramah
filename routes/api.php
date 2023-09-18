@@ -129,11 +129,10 @@ Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])-
 Route::prefix('wa')->group(function () {
     Route::get('test', [WhatsappController::class, 'test']);
     Route::post('webhook', [WhatsappController::class, 'webhook']);
-    Route::post('send_message', [WhatsappController::class, 'send_message'])->name('send_message');
+    Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
 });
 // APP.RSUDWALED.ID
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-
 Route::prefix('simrs')->name('api.simrs.')->group(function () {
     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');

@@ -713,7 +713,7 @@ class InacbgController extends APIController
         $header = array("Content-Type: application/x-www-form-urlencoded");
         // url server aplikasi E-Klaim,
         // silakan disesuaikan instalasi masing-masing
-        $url = "http://192.168.2.210/E-Klaim/ws.php";
+        $url = "http://192.168.2.10/E-Klaim/ws.php";
         // setup curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

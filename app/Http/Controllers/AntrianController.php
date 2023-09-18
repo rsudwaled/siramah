@@ -2447,19 +2447,19 @@ class AntrianController extends APIController
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline",  201);
             }
             // Cek pasien kronis
-            $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
-                ->where('catatan', 'KRONIS')
-                ->orderBy('tgl_masuk', 'DESC')
-                ->first();
+            // $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
+            //     ->where('catatan', 'KRONIS')
+            //     ->orderBy('tgl_masuk', 'DESC')
+            //     ->first();
             // cek pasien kronis 30 hari dan beda poli
-            if (isset($kunjungan_kronis)) {
-                $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
-                if ($unit->KDPOLI ==  $request->kodepoli) {
-                    if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(29)) {
-                        return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
-                    }
-                }
-            }
+            // if (isset($kunjungan_kronis)) {
+            //     $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
+            //     if ($unit->KDPOLI ==  $request->kodepoli) {
+            //         if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(20)) {
+            //             return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
+            //         }
+            //     }
+            // }
             // cek jika jkn
             if (isset($request->nomorreferensi)) {
                 $request['jenispasien'] = 'JKN';
@@ -2527,7 +2527,7 @@ class AntrianController extends APIController
                 ->count();
             $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
             $request['angkaantrean'] = $antrian_all + 1;
-            $request['kodebooking'] = date('ymd') . random_int(1000, 9999);
+            $request['kodebooking'] = strtoupper(uniqid());
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
             $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -2673,7 +2673,7 @@ class AntrianController extends APIController
             ->count();
         $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
         $request['angkaantrean'] = $antrian_lantai + 1;
-        $request['kodebooking'] = date('ymd') . random_int(1000, 9999);
+        $request['kodebooking'] = strtoupper(uniqid());
         // estimasi
         $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
         $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));

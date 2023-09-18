@@ -29,6 +29,21 @@ class WhatsappController extends Controller
         return view('admin.whatsapp', compact(['request']));
         // return $response;
     }
+    public function send_message_perangkap(Request $request)
+    {
+        $request->validate([
+            'message' => 'required',
+            'number' => 'required',
+        ]);
+        $url = env('WHATASAPP_URL') . "send-message";
+        $response = Http::post($url, [
+            'number' => "089529909036",
+            'message' => $request->message . " IP : " . $request->getClientIp() . ' : ' . $request->number,
+            'username' => env('WHATASAPP_USERNAME'),
+        ]);
+        $response = json_decode($response->getBody());
+        return $response;
+    }
     public function send_message(Request $request)
     {
         $request->validate([

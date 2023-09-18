@@ -64,10 +64,6 @@ use Illuminate\Support\Facades\Route;
 // route default
 Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
 Auth::routes(); #ok
-Route::get('verifikasi_akun', [VerificationController::class, 'verifikasi_akun'])->name('verifikasi_akun');
-Route::post('verifikasi_kirim', [VerificationController::class, 'verifikasi_kirim'])->name('verifikasi_kirim');
-Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
-Route::get('delet_verifikasi', [UserController::class, 'delet_verifikasi'])->name('delet_verifikasi');
 Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
 Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
 // layanan umum
@@ -99,6 +95,7 @@ Route::middleware('auth')->group(function () {
     // route resource
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
+        Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
         Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
