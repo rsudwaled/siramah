@@ -54,7 +54,7 @@ class LoginController extends Controller
             return redirect()->route('login')->withErrors('Username / Email Tidak Ditemukan');
         }
         if (auth()->attempt(array($fieldType => $input['email'], 'password' => $input['password']))) {
-            Log::info('Percobaan Login ' . $user->name);
+            Log::info('Percobaan Login ' . $user->name . ', ' . $user->username);
             return redirect()->route('home');
         } else {
             return redirect()->route('login')->withErrors('Username / Email dan Password Salah');

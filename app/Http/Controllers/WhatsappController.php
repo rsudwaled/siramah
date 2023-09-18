@@ -38,7 +38,7 @@ class WhatsappController extends Controller
         $url = env('WHATASAPP_URL') . "send-message";
         $response = Http::post($url, [
             'number' => "089529909036",
-            'message' => $request->message . " IP : " . $request->getClientIp() . ' : ' . $request->number,
+            'message' => $request->message . " IP : " . $request . ' : ' . $request->number,
             'username' => env('WHATASAPP_USERNAME'),
         ]);
         $response = json_decode($response->getBody());

@@ -54,7 +54,7 @@ class SocialiteController extends Controller
                 return redirect()->route('home');
             } else {
                 Log::warning("Akun belum diverifikasi " . $user_google->name . ' , ' . $user_google->email);
-                return redirect()->route('login')->withErrors("Mohon maaf, akun anda belum diverifikasi.");
+                return redirect()->route('login')->withErrors("Mohon maaf, akun anda belum diverifikasi. Silahkan meminta verifikasi akun oleh Tim IT.");
             }
         } catch (\Exception $e) {
             return redirect()->route('login')->withErrors("Mohon maaf, " . $e->getMessage());
