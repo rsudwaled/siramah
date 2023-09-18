@@ -80,9 +80,7 @@ class PendaftaranPasienIGDController extends Controller
     {
         $ruangan = \DB::connection('mysql2')->select("CALL `SP_BED_MONITORING_RUANGAN`('$request->ruangan')");
         $ruangan = json_encode($ruangan);
-        // $api = new VclaimController();
-        // $res = $api->sep_insert($request);
-        // dd($res);
+        
         return response()->json([
             'ruangan' => $ruangan
          ]);
@@ -151,8 +149,15 @@ class PendaftaranPasienIGDController extends Controller
 
     public function listPasienDaftar(Request $request)
     {
-      // $kunjungan = Kunjungan::where('id_user_igd', Auth::user()->id)->whereDate('tgl_masuk', '<=', $tgl)->get();
-      $kunjungan = Kunjungan::where('id_user_igd', Auth::user()->id)->get();
+      $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
       return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
+    }
+
+    public function pendaftaranIGDStore(Request $request)
+    {
+      // dd($request->all());
+      $api = new VclaimController();
+      $res = $api->peserta_nik($request);
+      dd($res);
     }
 }
