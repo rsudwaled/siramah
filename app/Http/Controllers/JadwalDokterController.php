@@ -71,7 +71,6 @@ class JadwalDokterController extends BaseController
             $request['namadokter'] = $dokter->namadokter;
         }
         $hari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
-
         JadwalDokter::updateOrCreate([
             'kodesubspesialis' => $request->kodesubspesialis,
             'kodedokter' => $request->kodedokter,
