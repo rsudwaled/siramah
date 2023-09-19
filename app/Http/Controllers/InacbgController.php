@@ -202,7 +202,6 @@ class InacbgController extends APIController
                     'diagnosa' => $diag,
                     'prosedur' => $request->procedure, #kode | deskripsi
                     'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
-
                     'kelas' => $res->response->kelas,
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
