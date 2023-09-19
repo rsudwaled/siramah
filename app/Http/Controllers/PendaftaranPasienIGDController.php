@@ -15,48 +15,12 @@ use App\Models\AntrianPasienIGD;
 use App\Models\PernyataanBPJSPROSES;
 use App\Models\KeluargaPasien;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Validator;
 use Auth;
 use Carbon\Carbon;
 
 class PendaftaranPasienIGDController extends Controller
 {
-    public function getPasien(Request $request)
-    {
-        $selct_pasien = Pasien::limit(10)->get();
-        $pasien = Pasien::limit(200)->orderBy('tgl_entry', 'desc')->get();
-        $searc_pl = \DB::connection('mysql2')->select("CALL WSP_PANGGIL_DATAPASIEN('$request->no_rm','$request->nama_pasien','$request->alamat','$request->nik','$request->no_bpjs')");
-        // dd($searc_pl);
-        return view('simrs.igd.pendaftaran.datapasien', compact('pasien','request','selct_pasien','searc_pl'));
-    }
-
-    public function searchPasien(Request $request)
-    {
-       $pasien = Pasien::limit(100)->orderBy('tgl_entry', 'desc')->get();
-
-       if($request->nik != ''){
-         $pasien = Pasien::where('nik_bpjs','LIKE','%'.$request->nik.'%')->get();
-        }
-       if($request->nama != ''){
-         $pasien = Pasien::where('nama_px','LIKE','%'.$request->nama.'%')->get();
-        }
-       if($request->norm != ''){
-         $pasien = Pasien::where('no_rm',$request->norm)->get();
-        }
-       if($request->nobpjs != ''){
-         $pasien = Pasien::where('no_Bpjs',$request->nobpjs)->get();
-        }
-       if($request->alamat != ''){
-         $pasien = Pasien::where('alamat','LIKE','%'.$request->alamat.'%')->get();
-        }
-        if($request->nik && $request->nama && $request->norm && $request->nobpjs && $request->alamat)
-        {
-            $pasien = Pasien::where('no_rm',$request->norm)->get();
-        }
-        // if data nik dan nama ada tapi tidak singkron datanya maka munculkan alert
-      return response()->json([
-         'pasien' => $pasien
-      ]);
-    }
     public function daftarPasien(Request $request)
     {
         $antrian = AntrianPasienIGD::find($request->antrian);
@@ -143,7 +107,7 @@ class PendaftaranPasienIGDController extends Controller
     public function kunjunganPasienHariIni(Request $request)
     {
       $tgl       = Carbon::now()->format('Y-m-d');
-      $kunjungan = Kunjungan::whereDate('tgl_masuk', '<=', $tgl)->where('status_kunjungan', 1)->paginate(32);
+      $kunjungan = Kunjungan::whereDate('tgl_masuk', '<=', $tgl)->where('status_kunjungan', 1)->orderBy('tgl_masuk','desc')->paginate(32);
       return view('simrs.igd.kunjungan.kunjungan_igd', compact('kunjungan'));
     }
 
@@ -153,11 +117,82 @@ class PendaftaranPasienIGDController extends Controller
       return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 
-    public function pendaftaranIGDStore(Request $request)
+    public function updateNOBPJS(Request $request)
     {
       // dd($request->all());
-      $api = new VclaimController();
-      $res = $api->peserta_nik($request);
-      dd($res);
+      $data = Pasien::where('nik_bpjs', $request->nik_pas)->first();
+      $data->no_Bpjs = $request->no_bpjs;
+      $data->update();
+      return response()->json($data, 200);
+    }
+
+    public function tutupKunjunganPasien(Request $request)
+    {
+      $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      $ttp_k->status_kunjungan = 2;
+      $ttp_k->update();
+      Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil ditutup' );
+      return back();
+    }
+    public function bukaKunjunganPasien(Request $request)
+    {
+      $buka_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      $buka_k->status_kunjungan = 1;
+      $buka_k->update();
+      Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil dibuka' );
+      return back();
+    }
+
+    public function pendaftaranIGDStore(Request $request)
+    {
+      $data = Kunjungan::where('no_rm',$request->rm)->where('status_kunjungan', 1)->get();
+      if($data->count() > 0)
+      {
+        Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
+        return back();
+      }
+      $request->validate([
+          "nik" => "required",
+          "rm" => "required",
+          "unit" => "required",
+          "dokter_id" => "required",
+          "tanggal" => "required",
+          "penjamin_id" => "required",
+          "alasan_masuk_id" => "required",
+      ]);
+      // counter increment
+      $counter  = Kunjungan::latest('counter')->where('no_rm',$request->rm)->where('status_kunjungan', 2)->first();
+      if($counter == null){$c=1;}else{$c= $counter->counter+1;}
+      $unit     = Unit::findOrFail($request->unit);
+      $pasien   = Pasien::where('no_rm', $request->rm)->first();
+      $desa     = 'Desa '.$pasien->desas->nama_desa_kelurahan; 
+      $kec      = 'Kec. '.$pasien->kecamatans->nama_kecamatan; 
+      $kab      = 'Kab. '.$pasien->kabupatens->nama_kabupaten_kota; 
+      $alamat   = $pasien->alamat.' ( '.$desa.' - '.$kec.' - '.$kab.' )';
+      // dd($desa, $kec, $kab, $alamat);
+      $save = Kunjungan::create([
+        'counter'=>$c,
+        "no_rm" => $request->rm,
+        "kode_unit" => $unit->kode_unit,
+        "tgl_masuk" => now(),
+        "kode_paramedis" => $request->dokter_id,
+        "status_kunjungan" => 1,
+        "prefix_kunjungan" => $unit->prefix_unit,
+        "penjamin_id" => $request->penjamin_id,
+        "kelas" => 3,
+        "id_alasan_masuk" => $request->alasan_masuk_id,
+        "pic" => 'adm-web',
+      ]);
+      $ant_upd  = AntrianPasienIGD::find($request->antrian);
+      $ant_upd->no_rm     =$request->rm;
+      $ant_upd->nama_px   =$request->nama_px;
+      $ant_upd->kode_kunjungan =$save->kode_kunjungan;
+      $ant_upd->unit      =$unit->kode_unit;
+      $ant_upd->alamat    =$alamat;
+      $ant_upd->status    =2;
+      $ant_upd->update();
+      // dd($request->all(),$save,  $c, $ant_upd);
+      Alert::success('Daftar Sukses!!', 'pasien dg RM: '.$request->rm.' berhasil didaftarkan!');
+      return redirect()->route('d-antrian-igd');
     }
 }

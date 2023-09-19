@@ -174,18 +174,19 @@ class AntrianIGDController extends Controller
 
          $keluarga              = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
          $hb_keluarga           = HubunganKeluarga::all();
-         $kunjungan             = DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->pasien_id')");
+        //  $kunjungan             = DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->pasien_id')");
+         $kunjungan             = Kunjungan::where('no_rm', $request->pasien_id)->get();
          //  $lay_head1 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1002')"); //UGD230918000001
          //  $lay_head2 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1023')"); //UGK230918000002
          $lay_head1 = 'UGD230918000001'; //UGD230918000001
          $lay_head2 = 'UGK230918000002'; //UGK230918000002
         //  dd($lay_head1);
-         $unit = Unit::limit(10)->get();
+         $unit          = Unit::limit(10)->get();
          $ruangan_ranap = Unit::where('kelas_unit', '=', "2")->where('ACT', 1)->orderBy('id','desc')->get(); //ini aslinya unit
-         $ruangan = Ruangan::where('status_incharge',1)->get();
-         $alasanmasuk = AlasanMasuk::limit(10)->get();
-         $paramedis = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
-         $penjamin = PenjaminSimrs::limit(10)->where('act', 1)->get();
+         $ruangan       = Ruangan::where('status_incharge',1)->get();
+         $alasanmasuk   = AlasanMasuk::limit(10)->get();
+         $paramedis     = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
+         $penjamin      = PenjaminSimrs::limit(10)->where('act', 1)->get();
 
         if($request->pendaftaran_id==0){
             return view('simrs.igd.form_igd.form_igd', compact(

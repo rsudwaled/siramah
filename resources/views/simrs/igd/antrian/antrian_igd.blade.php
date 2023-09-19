@@ -74,7 +74,7 @@
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
-                                        <form action="{{ route('pasien-didaftarkan') }}" method="post"> @csrf 
+                                        <form action="{{ route('pasien-didaftarkan') }}" method="get">
                                             <input type="hidden" id="no_antrian" name="antrian_id">
                                             <input type="hidden" id="no_rm" name="pasien_id">
                                             <input type="hidden" id="nik" name="nik_pasien">

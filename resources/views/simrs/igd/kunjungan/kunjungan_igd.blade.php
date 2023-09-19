@@ -58,9 +58,9 @@
         @php
             $heads = ['No RM', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP','action'];
             $config['order'] = ['0', 'asc'];
-            $config['paging'] = false;
+            $config['paging'] = true;
             $config['info'] = false;
-            $config['scrollY'] = '300px';
+            $config['scrollY'] = '350px';
             $config['scrollCollapse'] = true;
             $config['scrollX'] = true;
         @endphp
