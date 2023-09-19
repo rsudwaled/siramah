@@ -11,7 +11,6 @@ class Kunjungan extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_kunjungan';
     protected $primaryKey = 'kode_kunjungan';
-    public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
         'counter',
