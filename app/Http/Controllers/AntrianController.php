@@ -2816,7 +2816,7 @@ class AntrianController extends APIController
     public function checkin_antrian(Request $request) #checkin antrian api
     {
         // cek printer
-        return $this->sendError("Checkin offline", 500);
+        return $this->sendError("Silahkan lakukan checkin di anjungan antrian RSUD Waled", 500);
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
