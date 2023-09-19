@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Pasien IGD Kebidanan')
+@section('title', 'UGD Kebidanan')
 @section('content_header')
-    <h1>Pasien IGD Kebidanan : {{ $pasien->nama_px }}</h1>
+    <h1>UGD Kebidanan : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -54,8 +54,11 @@
                                                 <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
                                                 </td>
                                                 <td>{{ $item->penjamin->nama_penjamin_bpjs }}</td>
-                                                <td>{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}
+                                                <td>
+                                                    <button type="button" class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-success disabled' : ($item->status_kunjungan == 1 ? 'btn-danger' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
+                                                    
                                                 </td>
+                                                
                                             </tr>
                                         @endforeach
                                     </x-adminlte-datatable>
@@ -71,6 +74,7 @@
                                         <button type="button" class="btn btn-block bg-gradient-danger btn-sm mb-2">Ada
                                             Kunjungan Yang Masih Aktif</button>
                                     @endif
+
                                     <x-adminlte-modal id="tutupKunjungan" title="Tutup Kunjungan RM {{ $pasien->no_rm }}"
                                         size="lg" theme="primary" v-centered static-backdrop>
                                         <form action="{{ route('tutup-kunjungan-pigd') }}" id="tutupKunjunganbyCounter"
@@ -529,11 +533,9 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="unit_ugd_id" value="1023" disabled
-                                                                label="UGD Kebidanan" placeholder="UGD Kebidanan"
-                                                                enable-old-support>
+                                                                label="UGD Kebidanan" placeholder="UGD Kebidanan" enable-old-support>
                                                                 <x-slot name="prependSlot">
-                                                                    <div class="input-group-text text-olive">UGD Kebidanan
-                                                                    </div>
+                                                                    <div class="input-group-text text-olive">UGD Kebidanan</div>
                                                                 </x-slot>
                                                                 <x-slot name="bottomSlot"><a {{-- href="#">{{ $lay_head1[0]->no_trx_layanan }}</a></x-slot> --}}
                                                                         href="#">{{ $lay_head1 }}</a></x-slot>
