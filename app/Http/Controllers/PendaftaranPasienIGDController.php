@@ -128,7 +128,16 @@ class PendaftaranPasienIGDController extends Controller
 
     public function tutupKunjunganPasien(Request $request)
     {
+      if ($request->rm_tk == null && $request->counter_tk) {
+        Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
+        return back();
+      }
       $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      if($ttp_k == null)
+      {
+        Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
+        return back();
+      }
       $ttp_k->status_kunjungan = 2;
       $ttp_k->update();
       Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil ditutup' );
@@ -137,6 +146,11 @@ class PendaftaranPasienIGDController extends Controller
     public function bukaKunjunganPasien(Request $request)
     {
       $buka_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      if($buka_k == null)
+      {
+        Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
+        return back();
+      }
       $buka_k->status_kunjungan = 1;
       $buka_k->update();
       Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil dibuka' );
@@ -178,14 +192,14 @@ class PendaftaranPasienIGDController extends Controller
         "kode_paramedis" => $request->dokter_id,
         "status_kunjungan" => 1,
         "prefix_kunjungan" => $unit->prefix_unit,
-        "penjamin_id" => $request->penjamin_id,
+        "kode_penjamin" => $request->penjamin_id,
         "kelas" => 3,
         "id_alasan_masuk" => $request->alasan_masuk_id,
         "pic" => 'adm-web',
       ]);
       $ant_upd  = AntrianPasienIGD::find($request->antrian);
       $ant_upd->no_rm     =$request->rm;
-      $ant_upd->nama_px   =$request->nama_px;
+      $ant_upd->nama_px   =$pasien->nama_px;
       $ant_upd->kode_kunjungan =$save->kode_kunjungan;
       $ant_upd->unit      =$unit->kode_unit;
       $ant_upd->alamat    =$alamat;
