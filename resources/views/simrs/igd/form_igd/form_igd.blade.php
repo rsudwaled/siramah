@@ -89,7 +89,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <x-adminlte-input name="rm_tk" label="No RM"
-                                                                value="{{ $pasien->no_rm }}" disable-feedback />
+                                                                value="{{ $pasien->no_rm }}" disable-feedback disabled/>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
@@ -117,7 +117,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-6">
                                                             <x-adminlte-input name="rm_tk" label="No RM"
-                                                                value="{{ $pasien->no_rm }}" disable-feedback />
+                                                                value="{{ $pasien->no_rm }}" disable-feedback disabled/>
                                                         </div>
                                                         <div class="col-lg-6">
                                                             <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
@@ -338,15 +338,15 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Jalan</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                $config['order'] = ['0', 'asc'];
-                                                                                                $config['ordering'] = false;
-                                                                                                $config['paging'] = true;
-                                                                                                $config['info'] = false;
-                                                                                                $config['searching'] = false;
-                                                                                                $config['scrollY'] = '600px';
-                                                                                                $config['scrollCollapse'] = true;
-                                                                                                $config['scrollX'] = true;
-                                                                                            @endphp ?>
+                                                                                                                                                    $config['order'] = ['0', 'asc'];
+                                                                                                                                                    $config['ordering'] = false;
+                                                                                                                                                    $config['paging'] = true;
+                                                                                                                                                    $config['info'] = false;
+                                                                                                                                                    $config['searching'] = false;
+                                                                                                                                                    $config['scrollY'] = '600px';
+                                                                                                                                                    $config['scrollCollapse'] = true;
+                                                                                                                                                    $config['scrollX'] = true;
+                                                                                                                                            @endphp ?>
                                                 <x-adminlte-datatable id="table1" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
@@ -354,15 +354,15 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Inap</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                $config['order'] = ['0', 'asc'];
-                                                                                                $config['ordering'] = false;
-                                                                                                $config['paging'] = true;
-                                                                                                $config['info'] = false;
-                                                                                                $config['searching'] = false;
-                                                                                                $config['scrollY'] = '600px';
-                                                                                                $config['scrollCollapse'] = true;
-                                                                                                $config['scrollX'] = true;
-                                                                                            @endphp ?>
+                                                                                                                                                    $config['order'] = ['0', 'asc'];
+                                                                                                                                                    $config['ordering'] = false;
+                                                                                                                                                    $config['paging'] = true;
+                                                                                                                                                    $config['info'] = false;
+                                                                                                                                                    $config['searching'] = false;
+                                                                                                                                                    $config['scrollY'] = '600px';
+                                                                                                                                                    $config['scrollCollapse'] = true;
+                                                                                                                                                    $config['scrollX'] = true;
+                                                                                                                                            @endphp ?>
                                                 <x-adminlte-datatable id="table2" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
@@ -383,15 +383,15 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Jalan</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                        $config['order'] = ['0', 'asc'];
-                                                                                                        $config['ordering'] = false;
-                                                                                                        $config['paging'] = true;
-                                                                                                        $config['info'] = false;
-                                                                                                        $config['searching'] = false;
-                                                                                                        $config['scrollY'] = '600px';
-                                                                                                        $config['scrollCollapse'] = true;
-                                                                                                        $config['scrollX'] = true;
-                                                                                        @endphp ?>
+                                                                                                                                                            $config['order'] = ['0', 'asc'];
+                                                                                                                                                            $config['ordering'] = false;
+                                                                                                                                                            $config['paging'] = true;
+                                                                                                                                                            $config['info'] = false;
+                                                                                                                                                            $config['searching'] = false;
+                                                                                                                                                            $config['scrollY'] = '600px';
+                                                                                                                                                            $config['scrollCollapse'] = true;
+                                                                                                                                                            $config['scrollX'] = true;
+                                                                                                                                        @endphp ?>
                                                 <x-adminlte-datatable id="table3" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>

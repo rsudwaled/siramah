@@ -120,7 +120,8 @@ class PendaftaranPasienIGDController extends Controller
 
     public function tutupKunjunganPasien(Request $request)
     {
-      if ($request->rm_tk == null && $request->counter_tk) {
+      dd($request->all());
+      if ($request->rm_tk == null && $request->kunjungan_tk) {
         Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
         return back();
       }
@@ -203,7 +204,7 @@ class PendaftaranPasienIGDController extends Controller
       $upd_triase_stts->is_daftar = 1;
       $upd_triase_stts->update();
 
-      dd($counter, $save, $ant_upd, $upd_triase_stts);
+      // dd($counter, $save, $ant_upd, $upd_triase_stts);
       Alert::success('Daftar Sukses!!', 'pasien dg RM: '.$request->rm.' berhasil didaftarkan!');
       return redirect()->route('d-antrian-igd');
     }

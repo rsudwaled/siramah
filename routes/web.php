@@ -325,6 +325,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
     // Menu Kunjungan
     Route::get('/daftar-kunjungan', [App\Http\Controllers\KunjunganIGDController::class, 'kunjunganPasienHariIni'])->name('kunjungan-pasien.today');
+    Route::put('/tutup-kunjungan-bykode', [App\Http\Controllers\KunjunganIGDController::class, 'tutupKunjunganByKode'])->name('tutup-kunjungan-bykode');
     Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
     
     //ROUTE IGD 
