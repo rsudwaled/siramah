@@ -15,7 +15,7 @@
                             <h3 class="profile-username text-center">RM : {{ $pasien->no_rm }}</h3>
                             <p class="text-muted text-center">Nama : {{ $pasien->nama_px }}</p>
                             <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item"><b>Jrnis Kelamin :
+                                <li class="list-group-item"><b>Jenis Kelamin :
                                         {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</b></li>
                                 <li class="list-group-item"><b>Alamat : {{ $pasien->alamat }}</b></li>
                                 <li class="list-group-item"><b>NIK : {{ $pasien->nik_bpjs }}</b></li>
@@ -36,7 +36,7 @@
                             <div class="row">
                                 <div class="col-lg-10">
                                     @php
-                                        $heads = ['Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
+                                        $heads = ['Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
                                         $config['order'] = ['0', 'asc'];
                                         $config['paging'] = false;
                                         $config['info'] = false;
@@ -49,30 +49,33 @@
                                         @foreach ($kunjungan as $item)
                                             <tr>
                                                 <td>{{ $item->counter }}</td>
+                                                <td>{{ $item->kode_kunjungan }}</td>
                                                 <td>{{ $item->unit->nama_unit }}</td>
                                                 <td>{{ $item->tgl_masuk }}</td>
                                                 <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
                                                 </td>
-                                                <td>{{ $item->penjamin->nama_penjamin_bpjs }}</td>
+                                                <td>{{ $item->kode_penjamin }}</td>
                                                 <td>
-                                                    <button type="button" class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-success disabled' : ($item->status_kunjungan == 1 ? 'btn-danger' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
-                                                    
+                                                    <button type="button"
+                                                        class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-success disabled' : ($item->status_kunjungan == 1 ? 'btn-danger' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
+
                                                 </td>
-                                                
+
                                             </tr>
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
                                 <div class="col-lg-2">
-                                    <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                        data-toggle="modal" data-target="#tutupKunjungan">Tutup
-                                        kunjungan</button>
-                                    <button type="button" class="btn btn-block bg-gradient-warning btn-sm mb-2"
-                                        data-toggle="modal" data-target="#bukaKunjungan">Buka
-                                        kunjungan</button>
                                     @if ($knj_aktif > 0)
+                                        <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
+                                            data-toggle="modal" data-target="#tutupKunjungan">Tutup
+                                            kunjungan</button>
                                         <button type="button" class="btn btn-block bg-gradient-danger btn-sm mb-2">Ada
                                             Kunjungan Yang Masih Aktif</button>
+                                    @else
+                                        <button type="button" class="btn btn-block bg-gradient-warning btn-sm mb-2"
+                                            data-toggle="modal" data-target="#bukaKunjungan">Buka
+                                            kunjungan</button>
                                     @endif
 
                                     <x-adminlte-modal id="tutupKunjungan" title="Tutup Kunjungan RM {{ $pasien->no_rm }}"
@@ -89,8 +92,8 @@
                                                                 value="{{ $pasien->no_rm }}" disable-feedback />
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <x-adminlte-input name="counter_tk" label="Counter"
-                                                                placeholder="masukan counter kunjungan" disable-feedback />
+                                                            <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
+                                                                placeholder="masukan kode kunjungan" disable-feedback />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -117,8 +120,8 @@
                                                                 value="{{ $pasien->no_rm }}" disable-feedback />
                                                         </div>
                                                         <div class="col-lg-6">
-                                                            <x-adminlte-input name="counter_tk" label="Counter"
-                                                                placeholder="masukan counter kunjungan" disable-feedback />
+                                                            <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
+                                                                placeholder="masukan kode kunjungan" disable-feedback />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -138,8 +141,14 @@
                 </div>
             </div>
             <div class="row">
-                @if ($pasien->no_Bpjs == null && $res->response->peserta->statusPeserta->kode > 0)
-                    <div class="col-md-3">
+                <div class="col-md-3">
+                    <div class="card">
+                        <x-adminlte-card title="Hasil Triase" theme="primary" theme-mode="outline"
+                            header-class="text-uppercase rounded-bottom border-info" collapsible>
+                            {{ $triase->pemeriksaan_triase }}
+                        </x-adminlte-card>
+                    </div>
+                    @if ($pasien->no_Bpjs == null && $res->response->peserta->statusPeserta->kode > 0)
                         <div class="card">
                             <div class="card-header">
                                 <h4>Status Pasien :</h4>
@@ -157,60 +166,58 @@
                                         </div>
                                     </div>
                                     {{-- <div class="row">
-                                        <div class="col-lg-12 ml-2">
-                                            <button class="btn btn-block bg-gradient-warning btn-flat" data-toggle="modal"
-                                                data-target="#modalBPJSPROSES">BPJS Lagi PROSES</button>
-                                            <form action="" id="postPernyataan" method="post">
-                                                <x-adminlte-modal id="modalBPJSPROSES"
-                                                    title="Buat Surat Pernyataan BPJS PROSES" size="md" theme="success"
-                                                    v-centered static-backdrop>
-                                                    <div class="modal-body">
-                                                        <div class="col-lg-12">
-                                                            <input type="hidden" name="no_rm_by_pasien" id="rm_sp"
-                                                                value="{{ $pasien->no_rm }}">
-                                                            <x-adminlte-input name="nama_pasien" label="Pasien"
-                                                                value="{{ $pasien->nama_px }}" fgroup-class="col-md-12"
-                                                                disable-feedback />
-                                                            <x-adminlte-input name="nama_keluarga_sp" id="nama_keluarga_sp"
-                                                                label="Nama Keluarga" fgroup-class="col-md-12"
-                                                                disable-feedback />
-                                                            <x-adminlte-input name="tlp_keluarga_sp" id="tlp_keluarga_sp"
-                                                                label="Kontak Keluarga" fgroup-class="col-md-12"
-                                                                disable-feedback />
-                                                            <x-adminlte-select2 name="hub_keluarga_sp" required
-                                                                id="hub_keluarga_sp" label="Hubungan Keluarga">
-                                                                @foreach ($hb_keluarga as $hbk)
-                                                                    <option value="{{ $hbk->kode }}">
-                                                                        {{ $hbk->nama_hubungan }}</option>
-                                                                @endforeach
-                                                            </x-adminlte-select2>
-                                                            @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                                                            <x-adminlte-input-date name="tgl_surat_pernyataan"
-                                                                id="tgl_surat_pernyataan"
-                                                                value="{{ \Carbon\Carbon::parse(now())->format('Y-m-d') }}"
-                                                                fgroup-class="col-md-12" label="Batas Waktu Melengkapi"
-                                                                :config="$config" />
-                                                            <x-adminlte-textarea name="alamat_keluarga_sp"
-                                                                id="alamat_keluarga_sp" label="alamat keluarga"
-                                                                fgroup-class="col-md-12" />
-                                                        </div>
+                                    <div class="col-lg-12 ml-2">
+                                        <button class="btn btn-block bg-gradient-warning btn-flat" data-toggle="modal"
+                                            data-target="#modalBPJSPROSES">BPJS Lagi PROSES</button>
+                                        <form action="" id="postPernyataan" method="post">
+                                            <x-adminlte-modal id="modalBPJSPROSES"
+                                                title="Buat Surat Pernyataan BPJS PROSES" size="md" theme="success"
+                                                v-centered static-backdrop>
+                                                <div class="modal-body">
+                                                    <div class="col-lg-12">
+                                                        <input type="hidden" name="no_rm_by_pasien" id="rm_sp"
+                                                            value="{{ $pasien->no_rm }}">
+                                                        <x-adminlte-input name="nama_pasien" label="Pasien"
+                                                            value="{{ $pasien->nama_px }}" fgroup-class="col-md-12"
+                                                            disable-feedback />
+                                                        <x-adminlte-input name="nama_keluarga_sp" id="nama_keluarga_sp"
+                                                            label="Nama Keluarga" fgroup-class="col-md-12"
+                                                            disable-feedback />
+                                                        <x-adminlte-input name="tlp_keluarga_sp" id="tlp_keluarga_sp"
+                                                            label="Kontak Keluarga" fgroup-class="col-md-12"
+                                                            disable-feedback />
+                                                        <x-adminlte-select2 name="hub_keluarga_sp" required
+                                                            id="hub_keluarga_sp" label="Hubungan Keluarga">
+                                                            @foreach ($hb_keluarga as $hbk)
+                                                                <option value="{{ $hbk->kode }}">
+                                                                    {{ $hbk->nama_hubungan }}</option>
+                                                            @endforeach
+                                                        </x-adminlte-select2>
+                                                        @php $config = ['format' => 'DD-MM-YYYY']; @endphp
+                                                        <x-adminlte-input-date name="tgl_surat_pernyataan"
+                                                            id="tgl_surat_pernyataan"
+                                                            value="{{ \Carbon\Carbon::parse(now())->format('Y-m-d') }}"
+                                                            fgroup-class="col-md-12" label="Batas Waktu Melengkapi"
+                                                            :config="$config" />
+                                                        <x-adminlte-textarea name="alamat_keluarga_sp"
+                                                            id="alamat_keluarga_sp" label="alamat keluarga"
+                                                            fgroup-class="col-md-12" />
                                                     </div>
-                                                    <x-slot name="footerSlot">
-                                                        <x-adminlte-button theme="danger" class="mr-auto" label="batal"
-                                                            data-dismiss="modal" />
-                                                        <x-adminlte-button class="withLoad" from="postPernyataan"
-                                                            id="submitPernyataan" theme="success" label="Simpan Data" />
-                                                    </x-slot>
-                                                </x-adminlte-modal>
-                                            </form>
-                                        </div>
-                                    </div> --}}
+                                                </div>
+                                                <x-slot name="footerSlot">
+                                                    <x-adminlte-button theme="danger" class="mr-auto" label="batal"
+                                                        data-dismiss="modal" />
+                                                    <x-adminlte-button class="withLoad" from="postPernyataan"
+                                                        id="submitPernyataan" theme="success" label="Simpan Data" />
+                                                </x-slot>
+                                            </x-adminlte-modal>
+                                        </form>
+                                    </div>
+                                </div> --}}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @else
-                    <div class="col-md-3">
+                    @else
                         <div class="card">
                             <div class="card-header">
                                 <button type="button" class="btn btn-block bg-gradient-success btn-sm mb-2"
@@ -331,15 +338,15 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Jalan</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['order'] = ['0', 'asc'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['ordering'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['paging'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['info'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['searching'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollY'] = '600px';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollCollapse'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollX'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endphp ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
+                                                                                                $config['order'] = ['0', 'asc'];
+                                                                                                $config['ordering'] = false;
+                                                                                                $config['paging'] = true;
+                                                                                                $config['info'] = false;
+                                                                                                $config['searching'] = false;
+                                                                                                $config['scrollY'] = '600px';
+                                                                                                $config['scrollCollapse'] = true;
+                                                                                                $config['scrollX'] = true;
+                                                                                            @endphp ?>
                                                 <x-adminlte-datatable id="table1" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
@@ -347,15 +354,15 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Inap</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['order'] = ['0', 'asc'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['ordering'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['paging'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['info'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['searching'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollY'] = '600px';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollCollapse'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollX'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endphp ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
+                                                                                                $config['order'] = ['0', 'asc'];
+                                                                                                $config['ordering'] = false;
+                                                                                                $config['paging'] = true;
+                                                                                                $config['info'] = false;
+                                                                                                $config['searching'] = false;
+                                                                                                $config['scrollY'] = '600px';
+                                                                                                $config['scrollCollapse'] = true;
+                                                                                                $config['scrollX'] = true;
+                                                                                            @endphp ?>
                                                 <x-adminlte-datatable id="table2" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
@@ -376,31 +383,32 @@
                                             <div class="col-lg-6">
                                                 <h5>Rawat Jalan</h5>
                                                 @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['order'] = ['0', 'asc'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['ordering'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['paging'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['info'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['searching'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollY'] = '600px';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollCollapse'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollX'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endphp ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
+                                                                                                        $config['order'] = ['0', 'asc'];
+                                                                                                        $config['ordering'] = false;
+                                                                                                        $config['paging'] = true;
+                                                                                                        $config['info'] = false;
+                                                                                                        $config['searching'] = false;
+                                                                                                        $config['scrollY'] = '600px';
+                                                                                                        $config['scrollCollapse'] = true;
+                                                                                                        $config['scrollX'] = true;
+                                                                                        @endphp ?>
                                                 <x-adminlte-datatable id="table3" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
                                             </div>
                                             <div class="col-lg-6">
                                                 <h5>Rawat Inap</h5>
-                                                @php$heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['order'] = ['0', 'asc'];
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['ordering'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['paging'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['info'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['searching'] = false;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollY'] = '600px';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollCollapse'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    $config['scrollX'] = true;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @endphp ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?> ?>
+                                                @php
+                                                    $heads = ['No Rujukan', 'Tgl', 'Status', 'jenis Pelayanan', 'faskes', 'diagnosa', 'poli'];
+                                                    $config['order'] = ['0', 'asc'];
+                                                    $config['ordering'] = false;
+                                                    $config['paging'] = true;
+                                                    $config['info'] = false;
+                                                    $config['searching'] = false;
+                                                    $config['scrollY'] = '600px';
+                                                    $config['scrollCollapse'] = true;
+                                                    $config['scrollX'] = true;
+                                                @endphp
                                                 <x-adminlte-datatable id="table4" class="nowrap text-xs"
                                                     :heads="$heads" :config="$config" striped bordered hoverable
                                                     compressed></x-adminlte-datatable>
@@ -501,8 +509,9 @@
                                 @endif
                             </div>
                         </div>
-                    </div>
-                @endif
+
+                    @endif
+                </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-lg-12">
@@ -515,7 +524,7 @@
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="col-md-12">
-                                                    <input type="hidden" value="{{ $antrian->id }}" name="antrian">
+                                                    <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="nama_pasien"
@@ -591,9 +600,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green float-right" id="submitPasien"
-                                            label="Simpan Data" />
+                                        @if ($knj_aktif == 0)
+                                            <x-adminlte-button type="submit"
+                                                class="withLoad btn btn-sm m-1 bg-green float-right" id="submitPasien"
+                                                label="Simpan Data" />
+                                        @else
+                                            <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
+                                                label="tidak bisa lanjut daftar" />
+                                        @endif
                                     </div>
                                 </form>
                             </x-adminlte-card>

@@ -14,7 +14,7 @@
         </span>
         <div class="info-box-content">
           <span class="info-box-text">IGD UMUM</span>
-          <span class="info-box-number"> 10</span>
+          <span class="info-box-number"> {{$ugd}}</span>
         </div>
       </div>
     </div>
@@ -25,7 +25,7 @@
         </span>
         <div class="info-box-content">
           <span class="info-box-text">IGD KEBIDANAN</span>
-          <span class="info-box-number">50</span>
+          <span class="info-box-number">{{$ugdkbd}}</span>
         </div>
       </div>
     </div>
@@ -75,7 +75,9 @@
                     <td>{{$item->diagx}}</td>
                     <td>{{$item->no_sep}}</td>
                     <td>
-                        <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit"
+                        <x-adminlte-button class="btn-xs" theme="danger" label="tutup kunjungan"
+                        onclick="window.location='#'" />
+                        <x-adminlte-button class="btn-xs" theme="warning" label="buka kunjungan"
                         onclick="window.location='#'" />
                     </td>
                 </tr>

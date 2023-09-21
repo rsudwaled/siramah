@@ -22,6 +22,7 @@ use App\Models\PenjaminSimrs;
 use App\Models\AlasanMasuk;
 use App\Models\Ruangan;
 use App\Models\RuanganTerpilihIGD;
+use App\Models\TriaseIGD;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 use DB;
@@ -31,8 +32,7 @@ class AntrianIGDController extends Controller
 
     public function antrianIGD()
     {
-        $tgl            = Carbon::now()->format('Y-m-d');
-        $antrian_pasien = AntrianPasienIGD::whereDate('tgl', '<=', $tgl)->where('status', 1)->paginate(32);
+        $antrian_pasien = TriaseIGD::whereDate('tgl_masuk_triase', now())->where('klasifikasi_pasien', 'IGD')->paginate(32);
         $pasien         = Pasien::limit(200)->orderBy('tgl_entry', 'desc')->get();
         $provinsi       = Provinsi::all();
         $provinsi_klg       = Provinsi::all();
@@ -45,7 +45,7 @@ class AntrianIGDController extends Controller
     }
     public function getNoAntrian(Request $request)
     {
-        $antrian = AntrianPasienIGD::find($request->no);
+        $antrian = TriaseIGD::find($request->no);
         return response()->json($antrian);
     }
    
@@ -82,25 +82,73 @@ class AntrianIGDController extends Controller
 
     public function searchPasien(Request $request)
     {
+        $s_bynik = $request->nik;
+        $s_byname = $request->nama;
+        $s_byaddress = $request->alamat;
+        $s_bydate = $request->tglLahir;
+        $s_bybpjs = $request->nobpjs;
+        // dd($s_bynik);
         
         $pasien      = Pasien::limit(100)->orderBy('tgl_entry', 'desc')->get();
-        if($request->nik != ''){
-          $pasien    = Pasien::where('nik_bpjs','LIKE','%'.$request->nik.'%')->get();
-         }
-        if($request->nama != ''){
-          $pasien    = Pasien::where('nama_px','LIKE','%'.$request->nama.'%')->get();
-         }
+        if($s_bynik){ $pasien       = Pasien::where('nik_bpjs', $s_bynik)->get();}
+        if($s_bybpjs){ $pasien      = Pasien::where('no_Bpjs', $s_bybpjs)->get();}
+        if($s_byname){ $pasien      = Pasien::where('nama_px',$s_byname)->get();}
+        if($s_byaddress){ $pasien   = Pasien::where('alamat','LIKE','%'.$s_byaddress.'%')->get();}
+        if($s_bydate){ $pasien      = Pasien::where('tgl_lahir',$s_bydate)->get();}
+
+        if($s_bynik && $s_byname )
+        {
+            $pasien    = Pasien::where('nik_bpjs',$s_bynik)
+                        ->where('nama_px','LIKE','%'.$s_byname.'%')
+                        ->get();
+        }
+        if($s_byname && $s_bydate)
+        {
+            $pasien    = Pasien::where('nama_px','LIKE','%'.$s_byname.'%')
+                        ->where('tgl_lahir',$s_bydate)
+                        ->get();
+        }
+        if($s_byname && $s_byaddress)
+        {
+            $pasien    = Pasien::where('nama_px','LIKE','%'.$s_byname.'%')
+                        ->where('alamat','LIKE','%'.$s_byaddress.'%')
+                        ->get();
+        }
         
-         if($request->nik && $request->nama)
-         {
-             $pasien = Pasien::where('nik_bpjs',$request->nik)->get();
-         }
-         // if data nik dan nama ada tapi tidak singkron datanya maka munculkan alert
-       return response()->json([
-          'pasien' => $pasien,
-          'success'=>true,
-       ]);
+        if($s_byname && $s_byaddress && $s_bydate )
+        {
+            $pasien    = Pasien::where('nama_px','LIKE','%'.$s_byname.'%')
+                        ->where('alamat','LIKE','%'.$s_byaddress.'%')
+                        ->where('tgl_lahir',$s_bydate)
+                        ->get();
+        }
+        if($s_bynik && $s_byname && $s_byaddress && $s_bydate && $s_bybpjs)
+        {
+            $pasien    = Pasien::where('nik_bpjs',$s_bynik)
+                        ->where('nama_px','LIKE','%'.$s_byname.'%')
+                        ->where('no_Bpjs','LIKE','%'.$s_bybpjs.'%')
+                        ->where('alamat','LIKE','%'.$s_byaddress.'%')
+                        ->where('tgl_lahir',$s_bydate)
+                        ->get();
+        }
+        
+        return response()->json([
+            'pasien' => $pasien,
+            'success'=>true,
+        ]);
      }
+
+    public function searchPasienByName(Request $request)
+    {
+        $pasien = Pasien::limit(100)->orderBy('tgl_entry', 'desc')->get();
+        if($request->search_byname != ''){
+        $pasien = Pasien::where('nama_px','LIKE','%'.$request->search_byname.'%')->get();
+        }
+        return response()->json([
+            'pasien' => $pasien,
+            'success'=>true,
+        ]);
+    }
     
     public function pasienBaruCreate(Request $request)
     {
@@ -157,23 +205,23 @@ class AntrianIGDController extends Controller
      public function pasiendiDaftarkan(Request $request)
      {
         //  dd($request->all());
-         if($request->antrian_id== null || $request->pasien_id== null)
+         if($request->no_antri_triase== null || $request->pasien_id== null)
          {
              Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
              return back();
          }
-         $status_pendaftaran    = $request->pendaftaran_id;
-         $antrian               = AntrianPasienIGD::find($request->antrian_id);
-         $pasien                = Pasien::where('no_rm',$request->pasien_id)->first();
+        $status_pendaftaran    = $request->pendaftaran_id;
+        $triase                = TriaseIGD::find($request->no_antri_triase);
+        $antrian               = AntrianPasienIGD::where('no_antri',$triase->no_antrian)->first();
+        $pasien                = Pasien::where('no_rm',$request->pasien_id)->first();
            // cek status bpjs aktif atau tidak
         $api = new VclaimController();
         $request["nik"] =$pasien->nik_bpjs;
         $request["tanggal"] = now()->format('Y-m-d');
         $res = $api->peserta_nik($request);
-        // dd($res);
 
-         $keluarga              = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
-         $hb_keluarga           = HubunganKeluarga::all();
+        $keluarga              = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
+        $hb_keluarga           = HubunganKeluarga::all();
         //  $kunjungan             = DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->pasien_id')");
         //  $lay_head1 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1002')"); //UGD230918000001
         //  $lay_head2 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1023')"); //UGK230918000002 //kebidanan
@@ -181,37 +229,37 @@ class AntrianIGDController extends Controller
         $knj_aktif  = Kunjungan::where('no_rm', $request->pasien_id)->where('status_kunjungan', 1)->count();
         $lay_head1  = 'UGD230918000001'; //UGD230918000001
         $lay_head2  = 'UGK230918000002'; //UGK230918000002
-        //  dd($lay_head1);
-         $unit          = Unit::limit(10)->get();
-         $ruangan_ranap = Unit::where('kelas_unit', '=', "2")->where('ACT', 1)->orderBy('id','desc')->get(); //ini aslinya unit
-         $ruangan       = Ruangan::where('status_incharge',1)->get();
-         $alasanmasuk   = AlasanMasuk::limit(10)->get();
-         $paramedis     = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
-         $penjamin      = PenjaminSimrs::limit(10)->where('act', 1)->get();
+        
+        $unit          = Unit::limit(10)->get();
+        $ruangan_ranap = Unit::where('kelas_unit', '=', "2")->where('ACT', 1)->orderBy('id','desc')->get(); //ini aslinya unit
+        $ruangan       = Ruangan::where('status_incharge',1)->get();
+        $alasanmasuk   = AlasanMasuk::limit(10)->get();
+        $paramedis     = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
+        $penjamin      = PenjaminSimrs::limit(10)->where('act', 1)->get();
 
         if($request->pendaftaran_id==0){
             return view('simrs.igd.form_igd.form_igd', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif','triase'
             ));
         }else if($request->pendaftaran_id==1){
             return view('simrs.igd.form_igd.form_igd_kebidanan', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif','triase'
             ));
         }else if($request->pendaftaran_id==2){
             return view('simrs.igd.form_igd.form_ranap', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif','triase'
             ));
         }else if($request->pendaftaran_id==3){
             return view('simrs.igd.form_igd.form_penunjang', compact(
                 'pasien','kunjungan','unit','paramedis','penjamin',
                 'lay_head1','lay_head2','alasanmasuk','ruangan_ranap',
-                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif'
+                'ruangan','antrian','status_pendaftaran','keluarga','hb_keluarga','res','knj_aktif','triase'
             ));    
         }else{
             Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');

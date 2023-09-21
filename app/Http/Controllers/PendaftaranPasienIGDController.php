@@ -13,11 +13,10 @@ use App\Models\Ruangan;
 use App\Models\RuanganTerpilihIGD;
 use App\Models\AntrianPasienIGD;
 use App\Models\PernyataanBPJSPROSES;
-use App\Models\KeluargaPasien;
+use App\Models\TriaseIGD;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Validator;
-use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class PendaftaranPasienIGDController extends Controller
 {
@@ -104,13 +103,6 @@ class PendaftaranPasienIGDController extends Controller
       return response()->json($pernyataan);
     }
 
-    public function kunjunganPasienHariIni(Request $request)
-    {
-      $tgl       = Carbon::now()->format('Y-m-d');
-      $kunjungan = Kunjungan::whereDate('tgl_masuk', '<=', $tgl)->where('status_kunjungan', 1)->orderBy('tgl_masuk','desc')->paginate(32);
-      return view('simrs.igd.kunjungan.kunjungan_igd', compact('kunjungan'));
-    }
-
     public function listPasienDaftar(Request $request)
     {
       $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
@@ -132,7 +124,7 @@ class PendaftaranPasienIGDController extends Controller
         Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
         return back();
       }
-      $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('kode_kunjungan', $request->kunjungan_tk)->first();
       if($ttp_k == null)
       {
         Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
@@ -140,12 +132,12 @@ class PendaftaranPasienIGDController extends Controller
       }
       $ttp_k->status_kunjungan = 2;
       $ttp_k->update();
-      Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil ditutup' );
+      Alert::success('success', 'Kunjungan pasien dengan kode : '.$ttp_k->kode_kunjungan.' berhasil ditutup' );
       return back();
     }
     public function bukaKunjunganPasien(Request $request)
     {
-      $buka_k = Kunjungan::where('no_rm',$request->rm_tk)->where('counter', $request->counter_tk)->first();
+      $buka_k = Kunjungan::where('no_rm',$request->rm_tk)->where('kode_kunjungan', $request->kunjungan_tk)->first();
       if($buka_k == null)
       {
         Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
@@ -153,12 +145,13 @@ class PendaftaranPasienIGDController extends Controller
       }
       $buka_k->status_kunjungan = 1;
       $buka_k->update();
-      Alert::success('success', 'Kunjungan pasien ke'.$request->counter_tk.' berhasil dibuka' );
+      Alert::success('success', 'Kunjungan pasien dengan kode : '.$buka_k->kode_kunjungan.' berhasil dibuka' );
       return back();
     }
 
     public function pendaftaranIGDStore(Request $request)
     {
+      // dd($request->all());
       $data = Kunjungan::where('no_rm',$request->rm)->where('status_kunjungan', 1)->get();
       if($data->count() > 0)
       {
@@ -183,7 +176,6 @@ class PendaftaranPasienIGDController extends Controller
       $kec      = 'Kec. '.$pasien->kecamatans->nama_kecamatan; 
       $kab      = 'Kab. '.$pasien->kabupatens->nama_kabupaten_kota; 
       $alamat   = $pasien->alamat.' ( '.$desa.' - '.$kec.' - '.$kab.' )';
-      // dd($desa, $kec, $kab, $alamat);
       $save = Kunjungan::create([
         'counter'=>$c,
         "no_rm" => $request->rm,
@@ -195,9 +187,10 @@ class PendaftaranPasienIGDController extends Controller
         "kode_penjamin" => $request->penjamin_id,
         "kelas" => 3,
         "id_alasan_masuk" => $request->alasan_masuk_id,
-        "pic" => 'adm-web',
+        "pic" => 'adm-web-'.Auth::user()->id,
       ]);
-      $ant_upd  = AntrianPasienIGD::find($request->antrian);
+
+      $ant_upd  = AntrianPasienIGD::find($request->id_antrian);
       $ant_upd->no_rm     =$request->rm;
       $ant_upd->nama_px   =$pasien->nama_px;
       $ant_upd->kode_kunjungan =$save->kode_kunjungan;
@@ -205,7 +198,12 @@ class PendaftaranPasienIGDController extends Controller
       $ant_upd->alamat    =$alamat;
       $ant_upd->status    =2;
       $ant_upd->update();
-      // dd($request->all(),$save,  $c, $ant_upd);
+
+      $upd_triase_stts = TriaseIGD::where('no_antrian', $ant_upd->no_antri)->first();
+      $upd_triase_stts->is_daftar = 1;
+      $upd_triase_stts->update();
+
+      dd($counter, $save, $ant_upd, $upd_triase_stts);
       Alert::success('Daftar Sukses!!', 'pasien dg RM: '.$request->rm.' berhasil didaftarkan!');
       return redirect()->route('d-antrian-igd');
     }

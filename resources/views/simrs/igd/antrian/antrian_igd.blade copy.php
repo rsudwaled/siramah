@@ -1,55 +1,11 @@
-@extends('adminlte::page') @section('title', 'Antrian Pendaftaran IGD')
-@section('content')
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-lg-12">
-                    <h6>silahkan cari pasien disini:</h6>
-                    <p>pencarian berdasarkan prioritas memudahkan dalam proses efektifitas pencarian. semakin kecil prioritas semakin akurat</p>
-                    <form action="" method="POST">
-                        <div class="row">
-                            <div class="col-lg-4 mt-2">
-                                <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas Pencarian 1</i></b></span>
-                                <input type="text" minlength="16" maxlength="16"class="form-control mr-2" placeholder="cari NIK Pasien" id="nik_search">
-                            </div>
-                            <div class="col-lg-4 mt-2">
-                                <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas Pencarian 2</i></b></span>
-                                <input type="text" class="form-control mr-2" placeholder="cari berdasarkan nama lengkap pasien"
-                                    id="nama_search">
-                            </div>
-                            <div class="col-lg-4 mt-2">
-                                <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas Pencarian 3</i></b></span>
-                                <input type="date" class="form-control mr-2" id="tgl_lahir_search">
-                            </div>
-                            <div class="col-lg-4 mt-2">
-                                <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas Pencarian 4</i></b></span>
-                                <input type="text" class="form-control mr-2" placeholder="cari berdasarkan alamat"
-                                    id="alamat_search">
-                            </div>
-                            <div class="col-lg-4 mt-2">
-                                <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas Pencarian 5</i></b></span>
-                                <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no bpjs"
-                                    id="no_bpjs_search">
-                            </div>
-                            <div class="col-lg-4 mt-4">
-                                <x-adminlte-button label="Cari Pasien" class="btn btn-flat" theme="primary" icon="fas fa-search"
-                                    id="search" />
-                                <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
-                                    onClick="window.location.reload();" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mt-3">
+@extends('adminlte::page') @section('title', 'Antrian Pendaftaran IGD') @section('content_header') <h1>Pendaftaran IGD</h1> @stop
+@section('content') <div class="row">
         <div class="col-12">
             <div class="invoice p-3 mb-3">
                 <div class="row">
                     <div class="col-12">
                         <h4>
-                            <i class="fas fa-globe"></i> Data Pasien : <small class="float-right">tanggal :
+                            <i class="fas fa-globe"></i> Antrian IGD : <small class="float-right">tanggal :
                                 {{ \Carbon\Carbon::now()->format('Y-m-d') }}!</small>
                         </h4>
                     </div>
@@ -57,9 +13,29 @@
                 <div class="row">
                     <div class="col-12 table-responsive">
                         <div class="row">
-                            <div class="col-lg-9">
+                            <div class="col-lg-7">
+                                <form action="" method="POST">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control mr-2"
+                                                    placeholder="cari NIK Pasien" id="nik">
+                                                <input type="text" class="form-control mr-2"
+                                                    placeholder="cari nama pasien" id="nama">
+                                                <div class="input-group-prepend withLoad">
+                                                    <x-adminlte-button label="Cari Pasien" theme="primary"
+                                                        icon="fas fa-search" id="search" />
+                                                    <x-adminlte-button label="Refresh" theme="danger" icon="fas fa-retweet"
+                                                    onClick="window.location.reload();" />
+                                                    {{-- <x-adminlte-button label="Cari Lebih Lengkap" theme="warning"
+                                                        icon="fas fa-search" /> --}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                                 @php
-                                    $heads = ['NO RM', 'NIK', 'NO BPJS', 'NAMA', 'TGL Lahir', 'ALAMAT'];
+                                    $heads = ['NO RM', 'NIK', 'NO BPJS', 'NAMA'];
                                     $config['order'] = ['0', 'asc'];
                                     $config['ordering'] = false;
                                     $config['paging'] = true;
@@ -72,7 +48,7 @@
                                 <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
                                     :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-5">
                                 <div class="col-lg-12">
                                     <div class="col-lg-12">
                                         <x-adminlte-info-box title="klik untuk" data-toggle="modal"
@@ -85,24 +61,28 @@
                                                 @foreach ($antrian_pasien as $item)
                                                     <a class="btn btn-app bg-success" id="pilihAntrian"
                                                         onclick="pilihAntrian({{ $item->id }})">
-                                                        <i class="fas fa-users"></i> {{ $item->no_antrian }}
+                                                        {{-- <span class="badge bg-danger">tidakada triase</span> --}}
+                                                        <i class="fas fa-users"></i> {{ $item->no_antri }}
                                                     </a>
                                                 @endforeach
                                             </div>
+                                            {{-- @if ($antrian_pasien->links()->paginator->hasPages()) 
+                                            <div class="col-lg-5">
+                                              {{$antrian_pasien->links()}}
+                                            </div> 
+                                            @endif --}}
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
                                         <form action="{{ route('pasien-didaftarkan') }}" method="get">
-                                            <input type="hidden" id="send_id_antri" name="no_antri_triase">
+                                            <input type="hidden" id="no_antrian" name="antrian_id">
                                             <input type="hidden" id="no_rm" name="pasien_id">
-                                            <input type="hidden" id="tanggal" name="tanggal"
-                                                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
+                                            <input type="hidden" id="nik" name="nik_pasien">
+                                            <input type="hidden" id="tanggal" name="tanggal" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                                             <div class="card" id="formdaftar">
                                                 <div class="card-header">
-                                                    <span class="badge badge-danger"><h3 class="card-title" id="no_antrian">No Antrian Belum dipilih?
-                                                    </h3></span>
-                                                    
-                                                    <span class="badge badge-success"><h3 class="card-title" id="tujuan_daftar">-</h3></span>
+                                                    <h3 class="card-title" id="no_antri">Saat ini No Antrian Belum dipilih?
+                                                    </h3>
                                                     <div class="card-tools">
                                                         <button type="button" class="btn btn-tool">
                                                             <i class="fas fa-minus"></i>
@@ -376,53 +356,53 @@
                 </div>
             </div>
         </div>
-    </div>
-@stop
-@section('plugins.Select2', true)
-@section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
-@section('plugins.TempusDominusBs4', true)
-@section('plugins.Sweetalert2', true)
-@section('js')
+    </div> 
+    @stop 
+    @section('plugins.Select2', true) 
+    @section('plugins.Datatables', true)
+    @section('plugins.DatatablesPlugins', true) 
+    @section('plugins.TempusDominusBs4', true) 
+    @section('plugins.Sweetalert2',true) 
+    {{-- @section(config('adminlte.sidebar_collapse', true))  --}}
+    @section('js')
     <script>
         $(document).ready(function() {
             $('#search').click(function(e) {
-                $.LoadingOverlay("show");
                 search();
-                $.LoadingOverlay("hide");
+                loading();
+                hideLoading();
             });
         });
         search();
-        
+
+        function loading() {
+            $.LoadingOverlay("show");
+        }
+
+        function hideLoading() {
+            $.LoadingOverlay("hide");
+        }
+
         function search() {
-            var nik = $('#nik_search').val();
-            var nama = $('#nama_search').val();
-            var alamat = $('#alamat_search').val();
-            var tglLahir = $('#tgl_lahir_search').val();
-            var nobpjs = $('#no_bpjs_search').val();
-            if (nik == '' && nama == '' && alamat=='' && tglLahir=='' && nobpjs=='') {
-                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia', '', 'info')
+            var nik = $('#nik').val();
+            var nama = $('#nama').val();
+            if(nik=='' && nama=='' )
+            {
+              Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia', '', 'info')
             }
             $.post('{{ route('pasien-igd-search') }}', {
                 _token: $('meta[name="csrf-token"]').attr('content'),
                 nik: nik,
                 nama: nama,
-                alamat: alamat,
-                tglLahir: tglLahir,
-                nobpjs: nobpjs,
-            }, 
-            function(data) {
-                $.LoadingOverlay("show");
+            }, function(data) {
                 table_post_row(data);
                 console.log(data);
-                $.LoadingOverlay("hide");
             });
         }
         // table row with ajax
         function table_post_row(res) {
             let htmlView = '';
             if (res.pasien.length <= 0) {
-                Swal.fire('data yang dicari tidak tersedia', '', 'info')
                 htmlView += `
               
                       <tr>
@@ -431,21 +411,16 @@
             }
             for (let i = 0; i < res.pasien.length; i++) {
                 var rm = res.pasien[i].no_rm;
-                var tgl_lahir = res.pasien[i].tgl_lahir;
-                var tgl = tgl_lahir.substr(0, 10);
-                var tgl_ind = new Date(tgl).toLocaleDateString('en-GB');
-        
                 htmlView += `
                   
                       <tr class="nowrap">
                           <td>
-                              <button type="button" onclick="pilihPasien(` + rm +`)" class="btn btn-block bg-maroon btn-sm">` + rm + `</button>
+                              <button type="button" onclick="pilihPasien(` + rm +
+                    `)" class="btn btn-block bg-maroon btn-sm">` + rm + `</button>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
                           <td>` + res.pasien[i].no_Bpjs + `</td>
                           <td>` + res.pasien[i].nama_px + `</td>
-                          <td>` + res.pasien[i].tempat_lahir + `,`+ tgl_ind +`</td>
-                          <td>` + res.pasien[i].alamat+ `</td>
                       </tr>`;
             }
             $('tbody').html(htmlView);
@@ -498,13 +473,13 @@
                     var getNoAntrian = "{{ route('get-no-antrian') }}?no=" + antrian_id;
                     $.get(getNoAntrian, function(data) {
                         console.log(data);
-                        $('#no_antrian').text('No. Antrian : ' + data['no_antrian']);
-                        $('#tujuan_daftar').text('Rekomendasi Daftar : ' + data['klasifikasi_pasien']);
+                        $('#no_antri').text('Antrian No : ' + data['no_antri']);
                     })
-                    $('#send_id_antri').val(antrian_id);
                     Swal.fire('no antrian sudah dipilih', '', 'success')
+                    $('#no_antrian').val(antrian_id);
                 }
             })
+            // $('#modalAntrian').hide();
             $('#modalAntrian').modal('hide')
         }
         // alamat pasien

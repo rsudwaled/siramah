@@ -15,7 +15,7 @@
                             <h3 class="profile-username text-center">RM : {{ $pasien->no_rm }}</h3>
                             <p class="text-muted text-center">Nama : {{ $pasien->nama_px }}</p>
                             <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item"><b>Jrnis Kelamin :
+                                <li class="list-group-item"><b>Jenis Kelamin :
                                         {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</b></li>
                                 <li class="list-group-item"><b>Alamat : {{ $pasien->alamat }}</b></li>
                                 <li class="list-group-item"><b>NIK : {{ $pasien->nik_bpjs }}</b></li>
