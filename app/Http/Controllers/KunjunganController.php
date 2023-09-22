@@ -135,6 +135,36 @@ class KunjunganController extends APIController
             'kunjungans',
         ]));
     }
+    public function pasienRanap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+
+        // dd($request->all());
+        $kunjungans = null;
+        // if ($request->kodeunit) {
+        //     if ($request->kodeunit == '-') {
+        //         $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+        //             ->where('status_kunjungan', 1)
+        //             ->has('pasien')
+        //             ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan', 'surat_kontrol'])
+        //             ->get();
+        //     } else {
+        //         $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+        //             ->where('status_kunjungan', 1)
+        //             ->has('pasien')
+        //             ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'tagihan', 'surat_kontrol'])
+        //             ->get();
+        //     }
+        // }
+        return view('simrs.ranap.ranap_aktif', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
+    }
+
     public function pemulangan_sep_pasien(Request $request)
     {
         $api = new VclaimController();

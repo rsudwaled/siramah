@@ -46,6 +46,11 @@ class JadwalDokterController extends BaseController
         $jadwal = JadwalDokter::find($id);
         return response()->json($jadwal);
     }
+    public function edit($id)
+    {
+        $jadwal = JadwalDokter::find($id);
+        return response()->json($jadwal);
+    }
     public function store(Request $request)
     {
         $request->validate([
