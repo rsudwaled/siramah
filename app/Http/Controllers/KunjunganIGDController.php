@@ -19,9 +19,9 @@ class KunjunganIGDController extends Controller
     }
     public function tutupKunjunganByKode(Request $request)
     {
-      dd($request->all());
+      // dd($request->all());
       if ($request->rm_tk == null && $request->kunjungan_tk) {
-        Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
+        Alert::error('Error!!', 'data yang dimasukan tidak boleh kosong!');
         return back();
       }
       $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('kode_kunjungan', $request->kunjungan_tk)->first();
@@ -33,6 +33,24 @@ class KunjunganIGDController extends Controller
       $ttp_k->status_kunjungan = 2;
       $ttp_k->update();
       Alert::success('success', 'Kunjungan pasien dengan kode : '.$ttp_k->kode_kunjungan.' berhasil ditutup' );
+      return back();
+    }
+    public function bukaKunjunganByKode(Request $request)
+    {
+      // dd($request->all());
+      if ($request->rm_tk == null && $request->kunjungan_tk) {
+        Alert::error('Error!!', 'data yang dimasukan tidak boleh kosong!');
+        return back();
+      }
+      $ttp_k = Kunjungan::where('no_rm',$request->rm_tk)->where('kode_kunjungan', $request->kunjungan_tk)->first();
+      if($ttp_k == null)
+      {
+        Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
+        return back();
+      }
+      $ttp_k->status_kunjungan = 1;
+      $ttp_k->update();
+      Alert::success('success', 'Kunjungan pasien dengan kode : '.$ttp_k->kode_kunjungan.' berhasil dibuka' );
       return back();
     }
 }

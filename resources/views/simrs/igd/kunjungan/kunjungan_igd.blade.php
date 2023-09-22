@@ -6,89 +6,155 @@
 @stop
 
 @section('content')
-    <div class="row">
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1">
-                    <i class="fas fa-users"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">IGD UMUM</span>
-                    <span class="info-box-number"> {{ $ugd }}</span>
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-info elevation-1">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">IGD UMUM</span>
+                                <span class="info-box-number"> {{ $ugd }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-danger elevation-1">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">IGD KEBIDANAN</span>
+                                <span class="info-box-number">{{ $ugdkbd }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-sm-6 col-md-6">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-success elevation-1">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">RAWAT INAP</span>
+                                <span class="info-box-number">100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-6">
+                        <div class="info-box mb-3">
+                            <span class="info-box-icon bg-warning elevation-1">
+                                <i class="fas fa-users"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">PENUNJANG</span>
+                                <span class="info-box-number">10</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-danger elevation-1">
-                    <i class="fas fa-users"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">IGD KEBIDANAN</span>
-                    <span class="info-box-number">{{ $ugdkbd }}</span>
+            <div class="col-md-4">
+
+                <div class="info-box mb-3 bg-success" data-toggle="modal" data-target="#bukaKunjungan">
+                    <span class="info-box-icon"><i class="fas fa-door-open"></i></span>
+                    <a href="#">
+                        <div class="info-box-content">
+                            <span class="info-box-text">klik untuk membuka kunjungan pasien</span>
+                            <span class="info-box-number">Buka Kunjungan</span>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="clearfix hidden-md-up"></div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-success elevation-1">
-                    <i class="fas fa-users"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">RAWAT INAP</span>
-                    <span class="info-box-number">100</span>
+                <x-adminlte-modal id="bukaKunjungan" title="Buka Kunjungan :" size="lg" theme="success" v-centered
+                    static-backdrop>
+                    <form action="{{ route('buka-kunjungan-bykode') }}" id="bukakunjunganByKode" method="post">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <x-adminlte-input name="rm_tk" label="No RM" placeholder="no rm" label-class="text-green">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-user text-green"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan" placeholder="kode kunjungan" label-class="text-green">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-user text-green"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <x-slot name="footerSlot">
+                            <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal" />
+                            <x-adminlte-button type="submit" form="bukakunjunganByKode"
+                                class="btn btn-sm m-1 bg-green float-right" label="Buka Kunjungan" />
+                        </x-slot>
+                    </form>
+                </x-adminlte-modal>
+                <div class="info-box mb-3 bg-danger" data-toggle="modal" data-target="#tutupKunjungan">
+                    <span class="info-box-icon"><i class="fas fa-chalkboard-teacher"></i></span>
+                    <a href="#">
+                        <div class="info-box-content">
+                            <span class="info-box-text">klik untuk tutup kunjungan pasien</span>
+                            <span class="info-box-number">Tutup Kunjungan</span>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="info-box mb-3">
-                <span class="info-box-icon bg-warning elevation-1">
-                    <i class="fas fa-users"></i>
-                </span>
-                <div class="info-box-content">
-                    <span class="info-box-text">PENUNJANG</span>
-                    <span class="info-box-number">10</span>
-                </div>
+                <x-adminlte-modal id="tutupKunjungan" title="Tutup Kunjungan :" size="lg" theme="danger" v-centered
+                    static-backdrop>
+                    <form action="{{ route('tutup-kunjungan-bykode') }}" id="tutupkunjunganByKode" method="post">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <x-adminlte-input name="rm_tk" label="No RM" placeholder="no rm" label-class="text-red">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-user text-red"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan" placeholder="kode kunjungan" label-class="text-red">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-user text-red"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <x-slot name="footerSlot">
+                            <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal" />
+                            <x-adminlte-button type="submit" form="tutupkunjunganByKode"
+                                class="btn btn-sm m-1 bg-primary float-right" label="Tutup Kunjungan" />
+                        </x-slot>
+                    </form>
+                </x-adminlte-modal>
             </div>
         </div>
     </div>
     <div class="col-lg-12">
-        <div class="col-lg-12">
-            <div class="row">
-                <div class="col-lg-4">
-                    <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2" data-toggle="modal"
-                        data-target="#tutupKunjungan">Tutup
-                        kunjungan</button>
-                    <x-adminlte-modal id="tutupKunjungan" title="Tutup Kunjungan :" size="lg" theme="primary"
-                        v-centered static-backdrop>
-                        <form action="{{ route('tutup-kunjungan-bykode') }}" id="tutupkunjunganByKode" method="post">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body">
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <x-adminlte-input type="text" name="rm_tk" label="No RM" disable-feedback
-                                                disabled />
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <x-adminlte-input type="text" name="kunjungan_tk" label="Kode Kunjungan"
-                                                disable-feedback disabled />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <x-slot name="footerSlot">
-                                <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal" />
-                                <x-adminlte-button type="submit" form="tutupkunjunganByKode"
-                                    class="btn btn-sm m-1 bg-green float-right" label="Tutup Kunjungan" />
-                            </x-slot>
-                        </form>
-                    </x-adminlte-modal>
-                </div>
-            </div>
-        </div>
+
         <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan :">
             @php
                 $heads = ['No RM', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'status kunjungan', 'action'];
