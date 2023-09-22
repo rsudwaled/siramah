@@ -88,9 +88,9 @@ class SuratKontrolController extends APIController
             if ($response_peserta->metadata->code == 200) {
                 $peserta = $response_peserta->response->peserta;
                 $wa = new WhatsappController();
-                $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nhttps://siramah.rsudwaled.id/suratkontrol?nomorsurat=" . $suratkontrol->noSuratKontrol;
-                $request['number'] = $peserta->mr->noTelepon;
-                $wa->send_message($request);
+                // $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nhttps://siramah.rsudwaled.id/suratkontrol?nomorsurat=" . $suratkontrol->noSuratKontrol;
+                // $request['number'] = $peserta->mr->noTelepon;
+                // $wa->send_message($request);
             }
         }
         return $response;
@@ -129,9 +129,9 @@ class SuratKontrolController extends APIController
                 "user" => Auth::user()->name,
             ]);
             $wa = new WhatsappController();
-            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
-            $request['number'] = $request->nohp ?? '089529909036';
-            $wa->send_message($request);
+            // $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
+            // $request['number'] = $request->nohp ?? '089529909036';
+            // $wa->send_message($request);
             Alert::success('Success', 'Surat Kontrol Berhasil Dibuatkan');
         } else {
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
