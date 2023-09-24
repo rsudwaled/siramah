@@ -379,6 +379,13 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
+                    'text' => 'Karcis Antrian',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'karcis-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Pendaftaran IGD',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'dashboard-antrian-igd',

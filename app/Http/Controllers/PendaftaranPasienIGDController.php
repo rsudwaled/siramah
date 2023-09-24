@@ -204,6 +204,9 @@ class PendaftaranPasienIGDController extends Controller
       $upd_triase_stts->is_daftar = 1;
       $upd_triase_stts->update();
 
+      // create table layanan
+      $tarif_karcis = TarifLayananDetail::$last_karc('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
+      $tarif_karcis = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
       // dd($counter, $save, $ant_upd, $upd_triase_stts);
       Alert::success('Daftar Sukses!!', 'pasien dg RM: '.$request->rm.' berhasil didaftarkan!');
       return redirect()->route('d-antrian-igd');

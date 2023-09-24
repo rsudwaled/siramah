@@ -296,7 +296,11 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
+    // mining pasien igd
+    Route::get('/mining-pasien', [App\Http\Controllers\KarcisAntrianIGDController::class, 'getPasienIGD'])->name('mining-pasien-igd');
 
+    Route::get('/karcis-igd', [App\Http\Controllers\KarcisAntrianIGDController::class, 'daftarKarcis'])->name('d-karcis-igd');
+    Route::post('/karcis-igd-create', [App\Http\Controllers\KarcisAntrianIGDController::class, 'createKarcisAntrian'])->name('d-karcis-igd-create');
     //ROUTE ANTRIAN IGD 
     Route::get('/dashboard-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
     Route::get('/get-no-antrian', [App\Http\Controllers\AntrianIGDController::class, 'getNoAntrian'])->name('get-no-antrian');
