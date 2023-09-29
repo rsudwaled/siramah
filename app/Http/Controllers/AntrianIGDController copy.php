@@ -25,7 +25,6 @@ use App\Models\RuanganTerpilihIGD;
 use App\Models\TriaseIGD;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Str;
 use DB;
 
 class AntrianIGDController extends Controller
@@ -223,7 +222,6 @@ class AntrianIGDController extends Controller
         Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
         return back();
     }
-
     public function pasiendiDaftarkan(Request $request)
     {
         //  dd($request->all());
@@ -242,18 +240,7 @@ class AntrianIGDController extends Controller
         $request['tanggal'] = now()->format('Y-m-d');
         $res = $api->peserta_nik($request);
         // dd($res);
-        $kelasBPJS = null;
-        $ketkelasBPJS = null;
-        $jpBpjs = null;
-        $ket_jpBpjs = null;
-        if ($res->metadata->code == 200) {
-            $kelasBPJS = $res->response->peserta->hakKelas->kode;
-            $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
-            //jenis peserta bpjs
-            $jpBpjs = $res->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
-        }
-        // dd($kelasBPJS);
+
         $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
         $hb_keluarga = HubunganKeluarga::all();
         $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
@@ -262,6 +249,11 @@ class AntrianIGDController extends Controller
             ->count();
 
         $unit = Unit::limit(10)->get();
+        $ruangan_ranap = Unit::where('kelas_unit', '=', '2')
+            ->where('ACT', 1)
+            ->orderBy('id', 'desc')
+            ->get(); //ini aslinya unit
+        $ruangan = Ruangan::where('status_incharge', 1)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
         $paramedis = Paramedis::where('spesialis', 'UMUM')
             ->where('act', 1)
@@ -270,19 +262,25 @@ class AntrianIGDController extends Controller
             ->where('act', 1)
             ->get();
        
-        
+        $lay_head2 = 'UGK230918000002'; //UGK230918000002
         if ($request->pendaftaran_id == 0) {
+            // create layanan
+            // $lay_head1 = 'UGD230918000001'; //UGD230918000001
+            $lay_head1 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1002')"); //UGD230918000001
+            $lay_head1 = $lay_head1[0]; 
+            $lay_head1 = $lay_head1->no_trx_layanan; 
             return view('simrs.igd.form_igd.form_igd', compact(
-                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 
-                'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs',
+                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'lay_head1','alasanmasuk', 
+                'ruangan_ranap','antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 
                 'knj_aktif',
             ));
         } elseif ($request->pendaftaran_id == 1) {
+            $lay_head2 = DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1023')"); //UGK230918000002 //kebidanan
+            $lay_head2 = $lay_head2[0]; 
+            $lay_head2 = $lay_head2->no_trx_layanan; 
             return view('simrs.igd.form_igd.form_igd_kebidanan', compact(
-                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin','alasanmasuk', 
-                'antrian', 'status_pendaftaran', 
-                'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs',
+                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin','lay_head2', 'alasanmasuk', 
+                'ruangan_ranap','antrian', 'status_pendaftaran', 
                 'keluarga', 'hb_keluarga', 'res', 'knj_aktif'));
         } else {
             Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');
@@ -290,68 +288,6 @@ class AntrianIGDController extends Controller
         }
     }
 
-    public function pasienBPJSDiDaftarkan(Request $request)
-    {
-        if ($request->no_antri == null || $request->pasien_id == null) {
-            Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
-            return back();
-        }
-
-        $antrian = AntrianPasienIGD::find($request->no_antri);
-        $status_pendaftaran = $request->pendaftaran_id;
-        $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
-
-        // cek status bpjs aktif atau tidak
-        $api = new VclaimController();
-        $request['nik'] = $pasien->nik_bpjs;
-        $request['tanggal'] = now()->format('Y-m-d');
-        $res = $api->peserta_nik($request);
-        // dd($res);
-        $kelasBPJS = null;
-        $ketkelasBPJS = null;
-        //jenis peserta bpjs
-        $jpBpjs = null;
-        $ket_jpBpjs = null;
-        if ($res->metadata->code ==200) {
-            $kelasBPJS = $res->response->peserta->hakKelas->kode;
-            $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
-            //jenis peserta bpjs
-            $jpBpjs = $res->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
-        }
-        $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
-        $hb_keluarga = HubunganKeluarga::all();
-        $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
-        $knj_aktif = Kunjungan::where('no_rm', $request->pasien_id)
-            ->where('status_kunjungan', 1)
-            ->count();
-
-        $unit = Unit::limit(10)->get();
-        $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
-            ->get();
-        $penjamin = PenjaminSimrs::limit(10)
-            ->where('act', 1)
-            ->get();
-       
-        
-        if ($request->pendaftaran_id == 0) {
-            return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
-                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res',
-                'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs','knj_aktif',
-            ));
-        } elseif ($request->pendaftaran_id == 1) {
-            return view('simrs.igd.pasienbpjs.p_bpjs_ranap', compact(
-                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin','alasanmasuk', 
-                'antrian', 'status_pendaftaran', 
-                'keluarga', 'hb_keluarga', 'res', 'knj_aktif'));
-        } else {
-            Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');
-            return back();
-        }
-    }
     // function nanti tidak dipakai
 
     public function getAntrian()
@@ -373,17 +309,17 @@ class AntrianIGDController extends Controller
         return view('simrs.igd.pendaftaran.daftarantrian_igd', compact('provinsi_klg', 'provinsi', 'negara', 'agama', 'pekerjaan', 'pendidikan', 'antrian_pasien', 'pasien', 'hb_keluarga'));
     }
 
-    // public function daftarkanPasien(Request $request)
-    // {
-    //     $antrian = AntrianPasienIGD::find($request->antrian);
-    //     $selct_pasien = Pasien::limit(10)->get();
-    //     $pasien = Pasien::limit(200)
-    //         ->orderBy('tgl_entry', 'desc')
-    //         ->get();
-    //     $searc_pl = \DB::connection('mysql2')->select("CALL WSP_PANGGIL_DATAPASIEN('$request->no_rm','$request->nama_pasien','$request->alamat','$request->nik','$request->no_bpjs')");
-    //     // dd($searc_pl);
-    //     return view('simrs.igd.pendaftaran.datapasien', compact('antrian', 'pasien', 'request', 'selct_pasien', 'searc_pl'));
-    // }
+    public function daftarkanPasien(Request $request)
+    {
+        $antrian = AntrianPasienIGD::find($request->antrian);
+        $selct_pasien = Pasien::limit(10)->get();
+        $pasien = Pasien::limit(200)
+            ->orderBy('tgl_entry', 'desc')
+            ->get();
+        $searc_pl = \DB::connection('mysql2')->select("CALL WSP_PANGGIL_DATAPASIEN('$request->no_rm','$request->nama_pasien','$request->alamat','$request->nik','$request->no_bpjs')");
+        // dd($searc_pl);
+        return view('simrs.igd.pendaftaran.datapasien', compact('antrian', 'pasien', 'request', 'selct_pasien', 'searc_pl'));
+    }
 
     public function getpasienTerpilih(Request $request)
     {

@@ -43,8 +43,8 @@
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                <a  class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{route('pendaftaran-pasien-igdbpjs')}}" >Pasien BPJS</a>
+                                    <a  class="btn btn-flat btn-warning" icon="fas fa-retweet"
+                                    href="{{route('d-antrian-igd')}}" >Pasien UMUM</a>
                             </div>
                         </div>
                     </form>
@@ -101,9 +101,10 @@
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
-                                        <form action="{{ route('pasien-didaftarkan') }}" method="get">
+                                        <form action="{{ route('pasien-igdbpjs-create') }}" method="get">
                                             <input type="hidden" id="send_id_antri" name="no_antri">
                                             <input type="hidden" id="no_rm" name="pasien_id">
+                                            <input type="hidden" id="nik" name="nik">
                                             <input type="hidden" id="tanggal" name="tanggal"
                                                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                                             <div class="card" id="formdaftar">
@@ -111,10 +112,6 @@
                                                     <span class="badge badge-danger">
                                                         <h3 class="card-title" id="no_antrian">No Antrian Belum dipilih?
                                                         </h3>
-                                                    </span>
-
-                                                    <span class="badge badge-success">
-                                                        <h3 class="card-title" id="tujuan_daftar">-</h3>
                                                     </span>
                                                     <div class="card-tools">
                                                         <button type="button" class="btn btn-tool">
@@ -145,7 +142,7 @@
                                                     <div class="col-lg-12">
                                                         <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran"
                                                             label="Pilih Pendaftaran">
-                                                            <option value="0">IGD UMUM</option>
+                                                            <option value="0">IGD</option>
                                                             <option value="1">IGD KEBIDANAN</option>
                                                         </x-adminlte-select>
                                                     </div>
@@ -442,6 +439,7 @@
             }
             for (let i = 0; i < res.pasien.length; i++) {
                 var rm = res.pasien[i].no_rm;
+                var nik = res.pasien[i].nik_bpjs;
                 var tgl_lahir = res.pasien[i].tgl_lahir;
                 var tgl = tgl_lahir.substr(0, 10);
                 var tgl_ind = new Date(tgl).toLocaleDateString('en-GB');
@@ -450,8 +448,7 @@
                   
                       <tr class="nowrap">
                           <td>
-                              <button type="button" onclick="pilihPasien(` + rm +
-                    `)" class="btn btn-block bg-maroon btn-sm">` + rm + `</button>
+                              <button type="button" onclick="pilihPasien(` + nik +`, ` + rm +`)" class="btn btn-block bg-maroon btn-sm">` + rm + `</button>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
                           <td>` + res.pasien[i].no_Bpjs + `</td>
@@ -463,8 +460,9 @@
             $('tbody').html(htmlView);
         }
 
-        function pilihPasien(norm) {
-            var rm = norm;
+        function pilihPasien(nik, rm) {
+            var nik = nik;
+            var rm = rm;
             swal.fire({
                 icon: 'question',
                 title: 'ANDA YAKIN PILIH RM : ' + rm,
@@ -490,10 +488,8 @@
                     })
                     Swal.fire('pasien berhasil dipilih', '', 'success')
                     $('#no_rm').val(rm);
+                    $('#nik').val(nik);
                 }
-                // else if (result.isDenied) {
-                //   Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
-                // }
             })
         }
 
@@ -510,16 +506,6 @@
                     var getNoAntrian = "{{ route('get-no-antrian') }}?id=" + antrian_id;
                     $.get(getNoAntrian, function(data) {
                         $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
-                        var jenis_antrian = data['no_antri'];
-                        var jp = jenis_antrian.substring(0, 1);
-                        if (jp === 'A') {
-                            $('#tujuan_daftar').text('Untuk Pasien IGD');
-                            $("#pilihPendaftaran option:selected").val(0);
-                        } else {
-                            $('#tujuan_daftar').text('Untuk Pasien IGD Kebidanan');
-                            $("#pilihPendaftaran option:selected").val(1);
-                        }
-                        $('#tujuan_daftar').val(jp);
                         $('#send_id_antri').val(antrian_id);
                     })
 

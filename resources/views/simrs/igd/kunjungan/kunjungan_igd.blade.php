@@ -17,7 +17,7 @@
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-text">IGD UMUM</span>
-                                <span class="info-box-number"> {{ $ugd }}</span>
+                                <span class="info-box-number"> {{ $ugd }} pasien</span>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-text">IGD KEBIDANAN</span>
-                                <span class="info-box-number">{{ $ugdkbd }}</span>
+                                <span class="info-box-number">{{ $ugdkbd }} pasien</span>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-text">RAWAT INAP</span>
-                                <span class="info-box-number">100</span>
+                                <span class="info-box-number">100 pasien</span>
                             </div>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             </span>
                             <div class="info-box-content">
                                 <span class="info-box-text">PENUNJANG</span>
-                                <span class="info-box-number">10</span>
+                                <span class="info-box-number">10 pasien</span>
                             </div>
                         </div>
                     </div>
@@ -157,7 +157,7 @@
 
         <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan :">
             @php
-                $heads = ['No RM', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'status kunjungan', 'action'];
+                $heads = ['No RM','kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'status kunjungan', 'action'];
                 $config['order'] = ['0', 'asc'];
                 $config['paging'] = true;
                 $config['info'] = false;
@@ -170,7 +170,8 @@
                 @foreach ($kunjungan as $item)
                     <tr>
                         <td>{{ $item->no_rm }}</td>
-                        <td>{{ $item->kode_unit }}</td>
+                        <td>{{ $item->kode_kunjungan }}</td>
+                        <td>{{ $item->kode_unit }} ({{ $item->unit->nama_unit}})</td>
                         <td>{{ $item->tgl_masuk }}</td>
                         <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}</td>
                         <td>{{ $item->diagx }}</td>

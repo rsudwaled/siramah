@@ -43,8 +43,6 @@
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                <a  class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{route('pendaftaran-pasien-igdbpjs')}}" >Pasien BPJS</a>
                             </div>
                         </div>
                     </form>
@@ -91,17 +89,36 @@
                                         <x-adminlte-modal id="modalAntrian" title="DAFTAR ANTRIAN" theme="info"
                                             icon="fas fa-bolt" size='xl' disable-animations>
                                             <div class="row">
-                                                @foreach ($antrian as $item)
-                                                    <a class="btn btn-app bg-warning" id="pilihAntrian"
-                                                        onclick="pilihAntrian({{ $item->id }})">
-                                                        <i class="fas fa-users"></i> {{ $item->no_antri }}
-                                                    </a>
-                                                @endforeach
+                                                <div class="col-lg-6">
+                                                    <x-adminlte-card title="Antrian Sudah di Triase" theme="success">
+                                                        <div class="row">
+                                                            @foreach ($antrian_triase as $item)
+                                                                <a class="btn btn-app bg-success" id="pilihAntrian"
+                                                                    onclick="pilihAntrian({{ $item->id }}, 1)">
+                                                                    <i class="fas fa-users"></i> {{ $item->no_antrian }}
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    </x-adminlte-card>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <x-adminlte-card title="Antrian Belum di Triase" theme="warning">
+                                                        <div class="row">
+                                                            @foreach ($antrian as $item)
+                                                                <a class="btn btn-app bg-warning" id="pilihAntrian"
+                                                                    onclick="pilihAntrian({{ $item->id }}, 0)">
+                                                                    <i class="fas fa-users"></i> {{ $item->no_antri }}
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    </x-adminlte-card>
+                                                </div>
                                             </div>
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
                                         <form action="{{ route('pasien-didaftarkan') }}" method="get">
+                                            <input type="hidden" id="s_antri" name="s_antri">
                                             <input type="hidden" id="send_id_antri" name="no_antri">
                                             <input type="hidden" id="no_rm" name="pasien_id">
                                             <input type="hidden" id="tanggal" name="tanggal"
@@ -147,6 +164,8 @@
                                                             label="Pilih Pendaftaran">
                                                             <option value="0">IGD UMUM</option>
                                                             <option value="1">IGD KEBIDANAN</option>
+                                                            <option value="2">RAWAT INAP</option>
+                                                            <option value="3">PENUNJANG</option>
                                                         </x-adminlte-select>
                                                     </div>
                                                 </div>
@@ -497,8 +516,9 @@
             })
         }
 
-        function pilihAntrian(antrianID) {
+        function pilihAntrian(antrianID, status) {
             var antrian_id = antrianID;
+            var s_antri = status;
             swal.fire({
                 icon: 'question',
                 title: 'ANDA YAKIN PILIH NO ANTRIAN INI ?',
@@ -507,20 +527,20 @@
                 denyButtonText: `Batal`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var getNoAntrian = "{{ route('get-no-antrian') }}?id=" + antrian_id;
+                    var getNoAntrian = "{{ route('get-no-antrian') }}?id=" + antrian_id + '&s_antri=' + s_antri;
                     $.get(getNoAntrian, function(data) {
-                        $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
-                        var jenis_antrian = data['no_antri'];
-                        var jp = jenis_antrian.substring(0, 1);
-                        if (jp === 'A') {
-                            $('#tujuan_daftar').text('Untuk Pasien IGD');
-                            $("#pilihPendaftaran option:selected").val(0);
+                        console.log(data);
+                        if (s_antri == 1) {
+                            $('#no_antrian').text('No. Antrian : ' + data['no_antrian']);
+                            $('#tujuan_daftar').text('Rekomendasi Daftar : ' + data['klasifikasi_pasien']);
+                            $('#send_id_antri').val(antrian_id);
+                            $('#s_antri').val(1);
                         } else {
-                            $('#tujuan_daftar').text('Untuk Pasien IGD Kebidanan');
-                            $("#pilihPendaftaran option:selected").val(1);
+                            $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
+                            $('#tujuan_daftar').text('antrian belum di triase');
+                            $('#s_antri').val(0);
+                            $('#send_id_antri').val(antrian_id);
                         }
-                        $('#tujuan_daftar').val(jp);
-                        $('#send_id_antri').val(antrian_id);
                     })
 
                     Swal.fire('no antrian sudah dipilih', '', 'success')
