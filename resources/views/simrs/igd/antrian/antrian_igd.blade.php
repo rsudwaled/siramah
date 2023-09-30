@@ -43,8 +43,8 @@
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                <a  class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{route('pendaftaran-pasien-igdbpjs')}}" >Pasien BPJS</a>
+                                <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
+                                    href="{{ route('pendaftaran-pasien-igdbpjs') }}">Pasien BPJS</a>
                             </div>
                         </div>
                     </form>
@@ -101,15 +101,18 @@
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
-                                        <form action="{{ route('pasien-didaftarkan') }}" method="get">
+
+                                        <form action="{{route('pasien-antrian-terpilih')}}" method="post">
+                                            @csrf
                                             <input type="hidden" id="send_id_antri" name="no_antri">
-                                            <input type="hidden" id="no_rm" name="pasien_id">
+                                            <input type="hidden" id="no_rm" name="no_rm">
+                                            <input type="hidden" id="nik" name="nik">
                                             <input type="hidden" id="tanggal" name="tanggal"
                                                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                                            <div class="card" id="formdaftar">
+                                            <div class="card">
                                                 <div class="card-header">
                                                     <span class="badge badge-danger">
-                                                        <h3 class="card-title" id="no_antrian">No Antrian Belum dipilih?
+                                                        <h3 class="card-title" id="ket_no_antri">No Antrian Belum dipilih?
                                                         </h3>
                                                     </span>
 
@@ -143,7 +146,7 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran"
+                                                        <x-adminlte-select name="pendaftaran_id" id="jenisPendaftaran"
                                                             label="Pilih Pendaftaran">
                                                             <option value="0">IGD UMUM</option>
                                                             <option value="1">IGD KEBIDANAN</option>
@@ -162,7 +165,6 @@
                                                 :
                                             </h5> jika pasien tidak terdaftar dalam sistem, silahkan masukan data pasien
                                             baru dengan cara klik tombol berikut : <br>
-                                            {{-- <x-adminlte-button label="Tambah Pasien Baru" data-toggle="modal" data-target="#tambahPasien" class="btn btn-info bg-info btn-xs" /> --}}
                                             <button type="button" class="btn btn-block bg-gradient-success btn-sm"
                                                 data-toggle="modal" data-target="#tambahPasien">Tambah Pasien
                                                 Baru</button>
@@ -487,6 +489,7 @@
                         $('#kab_pasien_selected').text('KAB. : ' + data.pasien['kabupatens'][
                             'nama_kabupaten_kota'
                         ]);
+                        $('#nik').val(data.pasien['nik_bpjs']);
                     })
                     Swal.fire('pasien berhasil dipilih', '', 'success')
                     $('#no_rm').val(rm);
@@ -509,7 +512,7 @@
                 if (result.isConfirmed) {
                     var getNoAntrian = "{{ route('get-no-antrian') }}?id=" + antrian_id;
                     $.get(getNoAntrian, function(data) {
-                        $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
+                        $('#ket_no_antri').text('No. Antrian : ' + data['no_antri']);
                         var jenis_antrian = data['no_antri'];
                         var jp = jenis_antrian.substring(0, 1);
                         if (jp === 'A') {
@@ -703,5 +706,41 @@
                 }
             });
         });
+
+        // $('#createPasienDaftar').on('submit', function(e) {
+        //     e.preventDefault();
+        //     let noAntri = $('#send_id_antri').val();
+        //     let noMR = $('#no_rm').val();
+        //     let tgl = $('#tanggal').val();
+        //     let jp = $('#jenisPendaftaran').val();
+        //     let nik = $('#nik').val();
+        //     let urlc = noAntri + noMR + jp;
+        //     if (noAntri && noMR && tgl && jp) {
+        //         var urlCustom = "{{ route('pasien-didaftarkan') }}/?par=" + urlc;
+        //         // alert(urlCustom)
+        //         $.ajax({
+        //             url: urlCustom,
+        //             type: "GET",
+        //             data: {
+        //                 // "_token": "{{ csrf_token() }}",
+        //                 noantrian: noAntri,
+        //                 norm: noMR,
+        //                 tanggal: tgl,
+        //                 jp: jp,
+        //                 nik: nik,
+        //             },
+        //             success: function(response) {
+        //                 alert('suksess');
+        //                 console.log(response);
+        //                 if(response.success){
+        //                     window.location.href = urlCustom;
+        //                 }
+        //             },
+        //         });
+        //     } else {
+        //         if(noAntri==null)Swal.fire('no antrian belum dipilih', '', 'error')
+        //         if(noMR==null)Swal.fire('pasien belum di pilih', '', 'error')
+        //     }
+        // });
     </script>
 @endsection

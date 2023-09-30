@@ -75,13 +75,13 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $antrian = AntrianPasienIGD::find($request->no_antri);
         $status_pendaftaran = $request->pendaftaran_id;
         $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
-        $icd = Icd10::limit(5)->get();
+        $icd = Icd10::limit(10)->get();
         // cek status bpjs aktif atau tidak
         $api = new VclaimController();
         $request['nik'] = $pasien->nik_bpjs;
         $request['tanggal'] = now()->format('Y-m-d');
         $res = $api->peserta_nik($request);
-        
+        // dd($res);
         if ($res->metadata->code != 200) {
             Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $res->metadata->message);
             return back();
@@ -90,14 +90,16 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $ketkelasBPJS = null;
         $jpBpjs = null;
         $ket_jpBpjs = null;
+        $statusBPJS = null;
         if ($res->metadata->code == 200) {
             $kelasBPJS = $res->response->peserta->hakKelas->kode;
+            $$statusBPJS = $res->response->peserta->statusPeserta->kode;
             $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
             //jenis peserta bpjs
             $jpBpjs = $res->response->peserta->jenisPeserta->kode;
             $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
         }
-        // dd($kelasBPJS);
+        // dd($statusBPJS);
         $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
         $hb_keluarga = HubunganKeluarga::all();
         $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
@@ -113,7 +115,10 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $penjamin = PenjaminSimrs::limit(10)
             ->where('act', 1)
             ->get();
-        return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact('pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 'kelasBPJS', 'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
+        return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
+            'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
+            'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 'kelasBPJS','statusBPJS', 
+            'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
     }
    
     // API FUNCTION
@@ -267,8 +272,6 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $resdescrtipt = $this->response_decrypt($response, $signature);
         $callback = json_decode($response->body());
         $sep = $resdescrtipt->response->sep->noSep;
-        // dd($request->all(), $data, $callback, $resdescrtipt, $sep);
-        // counter increment
         if ($callback->metaData->code == 200) {
             // jika sep sudah dicreate maka create kunjungan dibawah ini
             $counter = Kunjungan::latest('counter')
@@ -281,7 +284,7 @@ class PendaftaranPasienIGDBPJSController extends APIController
                 $c = $counter->counter + 1;
             }
             $penjamin = Penjamin::where('nama_penjamin_bpjs', $request->penjamin)->first();
-            $unit = Unit::findOrFail(1002);
+            $unit = Unit::findOrFail($request->unit);
             $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
             $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
             $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;

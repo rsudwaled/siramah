@@ -142,56 +142,25 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-
-                    @if ($pasien->no_Bpjs == null && $resdescrtipt->metadata->code != 200)
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Status Pasien :</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <a class="btn btn-app btn-block bg-maroon"><i class="fas fa-user-tag"></i>
-                                                PASIEN UMUM </a>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <a class="btn btn-app btn-block bg-success"><i class="fas fa-users"></i>
-                                                {{ $antrian->no_antri }}</a>
-                                        </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Status Pasien :</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a class="btn btn-app btn-block bg-maroon"><i class="fas fa-user-tag"></i>
+                                            PASIEN UMUM </a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a class="btn btn-app btn-block bg-success"><i class="fas fa-users"></i>
+                                            {{ $antrian->no_antri }}</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @else
-                    <div class="card {{$resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger'}} card-outline">
-                        <div class="card-body box-profile">
-                            <div class="card-header">
-                                <b>
-                                    <p>
-                                        STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
-                                        ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
-                                    </p>
-                                    @if ($resdescrtipt->metadata->code == 200) 
-                                    <p>
-                                        PENJAMIN : {{ $jpBpjs }} - ({{ $ket_jpBpjs }})
-                                    </p>
-                                    @endif
-                                </b>
-                                <button type="button" class="btn btn-block {{$resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger'}} btn-sm mb-2">BPJS :
-                                    {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
-                                @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
-                                    <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                        onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
-                                        no bpjs</button>
-                                    <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
-                                        Pasien
-                                        BPJS</a>
-                                @endif
-                            </div>
-                        </div>
                     </div>
-                    @endif
                 </div>
                 <div class="col-md-9">
                     <div class="row">

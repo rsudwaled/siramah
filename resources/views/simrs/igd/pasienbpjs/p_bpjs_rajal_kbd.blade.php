@@ -2,7 +2,7 @@
 
 @section('title', 'Pasien BPJS')
 @section('content_header')
-    <h1>Pasien BPJS: {{ $pasien->nama_px }}</h1>
+    <h1>Pasien BPJS : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -28,7 +28,7 @@
                                     {{ $antrian->no_antri }}</b></a>
                         </div>
                     </div>
-                    @if ($pasien->no_Bpjs == null && $res->metadata->code != 200)
+                    @if ($pasien->no_Bpjs == null && $resdescrtipt->metadata->code != 200)
                         <div class="card">
                             <div class="card-header">
                                 <h4>Status Pasien :</h4>
@@ -50,24 +50,24 @@
                         </div>
                     @else
                         <div
-                            class="card {{ $res->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
+                            class="card {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
                             <div class="card-body box-profile">
                                 <div class="card-header">
                                     <b>
                                         <p>
-                                            STATUS BPJS : {{ $res->response->peserta->noKartu }}
-                                            ({{ $res->response->peserta->statusPeserta->keterangan }})
+                                            STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
+                                            ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
                                         </p>
                                     </b>
                                     <button type="button"
-                                        class="btn btn-block {{ $res->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
+                                        class="btn btn-block {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
                                         :
-                                        {{ $res->response->peserta->statusPeserta->keterangan }}</button>
+                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
                                     <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2">PENJAMIN
                                         BPJS : <b>{{ $ket_jpBpjs }}</b></button>
-                                    @if ($pasien->no_Bpjs == null && $res->response->peserta->statusPeserta->kode == 0)
+                                    @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $res->response->peserta->noKartu }}')">update
+                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
                                             no bpjs</button>
                                         <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
                                             Pasien
@@ -98,13 +98,13 @@
                                                                 {{ $pasien->no_rm }}</div>
                                                         </x-slot>
                                                     </x-adminlte-input>
-                                                    <input type="hidden" name="unit" value="1002">
+                                                    <input type="hidden" name="unit" value="1023">
                                                     <input type="hidden" name="noKartu" value="{{ $pasien->no_Bpjs }}">
                                                     <input type="hidden" name="noMR" value="{{ $pasien->no_rm }}">
                                                     <input type="hidden" name="jnsPelayanan" value="2">
                                                     <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
                                                     <input type="hidden" name="klsRawatHak"
-                                                        value="{{ $res->response->peserta->hakKelas->kode }}">
+                                                        value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
@@ -225,7 +225,7 @@
                                     </div>
                                 </div>
                                 @if ($knj_aktif == 0)
-                                    @if ($res->response->peserta->statusPeserta->kode == 0)
+                                    @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="formPendaftaranIGD"
                                             label="Simpan Data" />

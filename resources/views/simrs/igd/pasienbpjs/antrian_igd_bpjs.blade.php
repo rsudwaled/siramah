@@ -101,9 +101,10 @@
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
-                                        <form action="{{ route('pasien-igdbpjs-create') }}" method="get">
+                                        <form action="{{ route('pasienbpjs-antrian-terpilih') }}" method="post">
+                                            @csrf
                                             <input type="hidden" id="send_id_antri" name="no_antri">
-                                            <input type="hidden" id="no_rm" name="pasien_id">
+                                            <input type="hidden" id="no_rm" name="no_rm">
                                             <input type="hidden" id="nik" name="nik">
                                             <input type="hidden" id="tanggal" name="tanggal"
                                                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
