@@ -286,7 +286,7 @@ class AntrianIGDController extends APIController
         $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
         $alamat = $pasien->alamat . ' ( ' . $desa . ' - ' . $kec . ' - ' . $kab . ' )';
 
-        $upd_thp1 =  AntrianPasienIGD::findOrFail($request->send_id_antri);
+        $upd_thp1 =  AntrianPasienIGD::findOrFail($request->no_antri);
         $upd_thp1->no_rm = $request->no_rm;
         $upd_thp1->is_px_daftar = $request->pendaftaran_id;
         $upd_thp1->update();
@@ -358,9 +358,17 @@ class AntrianIGDController extends APIController
     
     public function antrianPasienBPJSTerpilih(Request $request)
     {
+        // dd($request->all());
+        if ($request->no_rm == null) {
+            Alert::warning('INFORMASI!', 'anda belum memilih pasien!');
+            return back();
+        }
+        if ($request->no_antri == null) {
+            Alert::warning('INFORMASI!', 'anda belum memilih antrian!');
+            return back();
+        }
         $pasien = Pasien::where('no_rm', $request->no_rm)->first();
-        // dd($request->all(), $pasien);
-
+        
         $upd_thp1bpjs =  AntrianPasienIGD::findOrFail($request->no_antri);
         $upd_thp1bpjs->no_rm = $request->no_rm;
         $upd_thp1bpjs->is_px_daftar = $request->pendaftaran_id;
@@ -370,7 +378,7 @@ class AntrianIGDController extends APIController
         return redirect()->route('form-pasien-bpjs',['nik'=>$request->nik,'no'=>$upd_thp1bpjs->no_antri,'rm'=> $pasien->no_rm,'jp'=>$jpdaftar]);
     }
 
-    public function formPasienBPJS(Request $request,$nik, $no, $rm, $jp)
+    public function formPasienBPJS(Request $request, $nik, $no, $rm, $jp)
     {
         // get provinsi bpjs
         $data = new VclaimController();
@@ -385,10 +393,10 @@ class AntrianIGDController extends APIController
         $api = new VclaimController();
         $request['nik'] = $request->nik;
         $request['tanggal'] = now()->format('Y-m-d');
-        $res = $api->peserta_nik($request);
-        // dd($res);
-        if ($res->metadata->code != 200) {
-            Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $res->metadata->message);
+        $resdescrtipt = $api->peserta_nik($request);
+        // dd($resdescrtipt);
+        if ($resdescrtipt->metadata->code != 200) {
+            Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $resdescrtipt->metadata->message);
             return back();
         }
         $kelasBPJS = null;
@@ -396,13 +404,13 @@ class AntrianIGDController extends APIController
         $jpBpjs = null;
         $ket_jpBpjs = null;
         $statusBPJS = null;
-        if ($res->metadata->code == 200) {
-            $kelasBPJS = $res->response->peserta->hakKelas->kode;
-            $$statusBPJS = $res->response->peserta->statusPeserta->kode;
-            $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
+        if ($resdescrtipt->metadata->code == 200) {
+            $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
+            $$statusBPJS = $resdescrtipt->response->peserta->statusPeserta->kode;
+            $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
             //jenis peserta bpjs
-            $jpBpjs = $res->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
+            $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
+            $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
         }
         // dd($statusBPJS);
         $keluarga = KeluargaPasien::where('no_rm', $rm)->first();
@@ -420,10 +428,21 @@ class AntrianIGDController extends APIController
         $penjamin = PenjaminSimrs::limit(10)
             ->where('act', 1)
             ->get();
-        return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
-            'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-            'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 'kelasBPJS','statusBPJS', 
-            'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
+        if ($jp == 0) {
+            return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
+                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
+                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'resdescrtipt', 'kelasBPJS','statusBPJS', 
+                'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
+        } elseif ($jp == 1) {
+            return view('simrs.igd.pasienbpjs.p_bpjs_rajal_kbd', compact(
+                'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
+                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'resdescrtipt', 'kelasBPJS','statusBPJS', 
+                'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
+        } else {
+            Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');
+            return back();
+        }
+        
     }
     public function formPasienIGDFromBPJS($nik, $no, $rm, $jp)
     {
@@ -555,19 +574,19 @@ class AntrianIGDController extends APIController
         $api = new VclaimController();
         $request['nik'] = $pasien->nik_bpjs;
         $request['tanggal'] = now()->format('Y-m-d');
-        $res = $api->peserta_nik($request);
-        // dd($res);
+        $resdescrtipt = $api->peserta_nik($request);
+        // dd($resdescrtipt);
         $kelasBPJS = null;
         $ketkelasBPJS = null;
         //jenis peserta bpjs
         $jpBpjs = null;
         $ket_jpBpjs = null;
-        if ($res->metadata->code ==200) {
-            $kelasBPJS = $res->response->peserta->hakKelas->kode;
-            $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
+        if ($resdescrtipt->metadata->code ==200) {
+            $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
+            $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
             //jenis peserta bpjs
-            $jpBpjs = $res->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
+            $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
+            $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
         }
         $keluarga = KeluargaPasien::where('no_rm', $rm)->first();
         $hb_keluarga = HubunganKeluarga::all();
@@ -589,14 +608,14 @@ class AntrianIGDController extends APIController
         if ($request->pendaftaran_id == 0) {
             return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
                 'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res',
+                'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'resdescrtipt',
                 'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs','knj_aktif',
             ));
         } elseif ($request->pendaftaran_id == 1) {
             return view('simrs.igd.pasienbpjs.p_bpjs_ranap', compact(
                 'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin','alasanmasuk', 
                 'antrian', 'status_pendaftaran', 
-                'keluarga', 'hb_keluarga', 'res', 'knj_aktif'));
+                'keluarga', 'hb_keluarga', 'resdescrtipt', 'knj_aktif'));
         } else {
             Alert::warning('INFORMASI!', 'anda belum memilih jenis pendaftaran!');
             return back();
@@ -634,14 +653,4 @@ class AntrianIGDController extends APIController
         ]);
     }
 
-    // public function getKelasRuangan(Request $request)
-    // {
-    //     $ruangan = Ruangan::where('id_kelas', $request->kelas_r_id)
-    //         ->where('status_incharge', 1)
-    //         ->get();
-    //     // $ruangan = json_encode($ruangan);
-    //     return response()->json([
-    //         'ruangan' => $ruangan,
-    //     ]);
-    // }
 }

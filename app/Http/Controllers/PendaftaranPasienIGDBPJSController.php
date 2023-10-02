@@ -61,65 +61,65 @@ class PendaftaranPasienIGDBPJSController extends APIController
         return view('simrs.igd.pasienbpjs.antrian_igd_bpjs', compact('provinsi_klg', 'provinsi', 'negara', 'agama', 'pekerjaan', 'pendidikan', 'antrian_triase', 'antrian', 'pasien', 'hb_keluarga'));
     }
 
-    public function pasienBPJSCREATE(Request $request)
-    {
-        if ($request->no_antri == null || $request->pasien_id == null) {
-            Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
-            return back();
-        }
-        // get provinsi bpjs
-        $data = new VclaimController();
-        $provinsibpjs = $data->ref_provinsi_api($request);
-        $provinsibpjs = $provinsibpjs->original;
+    // public function pasienBPJSCREATE(Request $request)
+    // {
+    //     if ($request->no_antri == null || $request->pasien_id == null) {
+    //         Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
+    //         return back();
+    //     }
+    //     // get provinsi bpjs
+    //     $data = new VclaimController();
+    //     $provinsibpjs = $data->ref_provinsi_api($request);
+    //     $provinsibpjs = $provinsibpjs->original;
 
-        $antrian = AntrianPasienIGD::find($request->no_antri);
-        $status_pendaftaran = $request->pendaftaran_id;
-        $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
-        $icd = Icd10::limit(10)->get();
-        // cek status bpjs aktif atau tidak
-        $api = new VclaimController();
-        $request['nik'] = $pasien->nik_bpjs;
-        $request['tanggal'] = now()->format('Y-m-d');
-        $res = $api->peserta_nik($request);
-        // dd($res);
-        if ($res->metadata->code != 200) {
-            Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $res->metadata->message);
-            return back();
-        }
-        $kelasBPJS = null;
-        $ketkelasBPJS = null;
-        $jpBpjs = null;
-        $ket_jpBpjs = null;
-        $statusBPJS = null;
-        if ($res->metadata->code == 200) {
-            $kelasBPJS = $res->response->peserta->hakKelas->kode;
-            $$statusBPJS = $res->response->peserta->statusPeserta->kode;
-            $ketkelasBPJS = $res->response->peserta->hakKelas->keterangan;
-            //jenis peserta bpjs
-            $jpBpjs = $res->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $res->response->peserta->jenisPeserta->keterangan;
-        }
-        // dd($statusBPJS);
-        $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
-        $hb_keluarga = HubunganKeluarga::all();
-        $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
-        $knj_aktif = Kunjungan::where('no_rm', $request->pasien_id)
-            ->where('status_kunjungan', 1)
-            ->count();
+    //     $antrian = AntrianPasienIGD::find($request->no_antri);
+    //     $status_pendaftaran = $request->pendaftaran_id;
+    //     $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
+    //     $icd = Icd10::limit(10)->get();
+    //     // cek status bpjs aktif atau tidak
+    //     $api = new VclaimController();
+    //     $request['nik'] = $pasien->nik_bpjs;
+    //     $request['tanggal'] = now()->format('Y-m-d');
+    //     $resdescrtipt = $api->peserta_nik($request);
+    //     // dd($resdescrtipt);
+    //     if ($resdescrtipt->metadata->code != 200) {
+    //         Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $resdescrtipt->metadata->message);
+    //         return back();
+    //     }
+    //     $kelasBPJS = null;
+    //     $ketkelasBPJS = null;
+    //     $jpBpjs = null;
+    //     $ket_jpBpjs = null;
+    //     $statusBPJS = null;
+    //     if ($resdescrtipt->metadata->code == 200) {
+    //         $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
+    //         $$statusBPJS = $resdescrtipt->response->peserta->statusPeserta->kode;
+    //         $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
+    //         //jenis peserta bpjs
+    //         $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
+    //         $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+    //     }
+    //     // dd($statusBPJS);
+    //     $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
+    //     $hb_keluarga = HubunganKeluarga::all();
+    //     $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
+    //     $knj_aktif = Kunjungan::where('no_rm', $request->pasien_id)
+    //         ->where('status_kunjungan', 1)
+    //         ->count();
 
-        $unit = Unit::limit(10)->get();
-        $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
-            ->get();
-        $penjamin = PenjaminSimrs::limit(10)
-            ->where('act', 1)
-            ->get();
-        return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
-            'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-            'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res', 'kelasBPJS','statusBPJS', 
-            'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
-    }
+    //     $unit = Unit::limit(10)->get();
+    //     $alasanmasuk = AlasanMasuk::limit(10)->get();
+    //     $paramedis = Paramedis::where('spesialis', 'UMUM')
+    //         ->where('act', 1)
+    //         ->get();
+        // $penjamin = PenjaminSimrs::limit(10)
+        //     ->where('act', 1)
+        //     ->get();
+    //     return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
+    //         'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
+    //         'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'resdescrtipt', 'kelasBPJS','statusBPJS', 
+    //         'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
+    // }
    
     // API FUNCTION
     public function signature()
@@ -181,6 +181,30 @@ class PendaftaranPasienIGDBPJSController extends APIController
     public function pasienBPJSSTORE(Request $request)
     {
         dd($request->all());
+        if ($request->diagAwal ==null) {
+            Alert::error('Error', 'Diagnosa tidak boleh kosong!');
+            return back();
+        }
+        if ($request->dpjpLayan ==null) {
+            Alert::error('Error', 'DPJP tidak boleh kosong!');
+            return back();
+        }
+        if ($request->alasan_masuk_id ==null) {
+            Alert::error('Error', 'Alasan tidak boleh kosong!');
+            return back();
+        }
+        if ($request->lakaLantas ==null) {
+            Alert::error('Error', 'Status Kecelakaan tidak boleh kosong!');
+            return back();
+        }
+        if ($request->asalRujukan ==null) {
+            Alert::error('Error', 'Alasan Rujukan tidak boleh kosong!');
+            return back();
+        }
+        if ($request->noTelp ==null) {
+            Alert::error('Error', 'No Telepon tidak boleh kosong!');
+            return back();
+        }
         $pasien = Pasien::firstwhere('no_rm', $request->noMR);
         $user = Auth::user()->name;
 
@@ -392,6 +416,15 @@ class PendaftaranPasienIGDBPJSController extends APIController
         }
     }
 
+    public function batalDaftar(Request $request)
+    {
+        // dd($request->all());
+        $data =  AntrianPasienIGD::findOrFail($request->id);
+        $data->no_rm = (Null);
+        $data->is_px_daftar = (Null);
+        $data->update();
+        return response()->json($data, 200, $headers);
+    }
     public function getProvinsiBPJS(Request $request)
     {
         $provinsi = new VclaimController();

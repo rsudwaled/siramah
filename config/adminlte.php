@@ -392,17 +392,10 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                // [
-                //     'text' => 'Pendaftaran Pasien BPJS',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'pendaftaran-igd-bpjs',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
                 [
                     'text' => 'Pendaftaran Rawat Inap',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pendaftaran-igd-bpjs',
+                    'url'  => 'pendaftaran-rawat-inap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

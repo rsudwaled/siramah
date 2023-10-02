@@ -25,53 +25,7 @@ use Illuminate\Support\Str;
 
 class PendaftaranPasienIGDController extends Controller
 {
-    // public function daftarPasien(Request $request)
-    // {
-    //     $antrian = AntrianPasienIGD::find($request->antrian);
-    //     $pasien = Pasien::where('no_rm', $request->rm)->first();
-    //     $kunjungan = \DB::connection('mysql2')->select("CALL SP_RIWAYAT_KUNJUNGAN_PX('$request->rm')");
-    //     $lay_head1 = \DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1002')");
-    //     $lay_head2 = \DB::connection('mysql2')->select("CALL `GET_NOMOR_LAYANAN_HEADER`('1023')");
-    //     $unit = Unit::limit(10)->get();
-    //     $ruangan_ranap = Unit::where('kelas_unit', '=', '2')
-    //         ->where('ACT', 1)
-    //         ->orderBy('id', 'desc')
-    //         ->get(); //ini aslinya unit
-    //     $ruangan = Ruangan::where('status_incharge', 1)->get();
-    //     $alasanmasuk = AlasanMasuk::limit(10)->get();
-    //     $paramedis = Paramedis::where('spesialis', 'UMUM')
-    //         ->where('act', 1)
-    //         ->get();
-    //     $penjamin = PenjaminSimrs::limit(10)
-    //         ->where('act', 1)
-    //         ->get();
-    //     return view('simrs.igd.pendaftaran.kunjungan_pasien', compact('pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'lay_head1', 'lay_head2', 'alasanmasuk', 'ruangan_ranap', 'ruangan', 'antrian'));
-    // }
-    // public function getRuangan(Request $request)
-    // {
-    //     $ruangan = \DB::connection('mysql2')->select("CALL `SP_BED_MONITORING_RUANGAN`('$request->ruangan')");
-    //     $ruangan = json_encode($ruangan);
-
-    //     return response()->json([
-    //         'ruangan' => $ruangan,
-    //     ]);
-    // }
-
-
-    // caba route baru fix view
-    public function suratPernyataanPasien(Request $request)
-    {
-        $pernyataan = PernyataanBPJSPROSES::create([
-            'no_rm' => $request->rm_sp,
-            'nama_keluarga' => $request->nama_keluarga_sp,
-            'alamat_keluarga' => $request->alamat_keluarga_sp,
-            'kontak' => $request->tlp_keluarga_sp,
-            'tgl_batas_waktu' => $request->tgl_surat_pernyataan_sp,
-            'status_proses' => 0,
-        ]);
-        return response()->json($pernyataan);
-    }
-
+    
     // route yang dipake
     public function listPasienDaftar(Request $request)
     {
@@ -121,37 +75,6 @@ class PendaftaranPasienIGDController extends Controller
         Alert::success('success', 'Kunjungan pasien dengan kode : ' . $buka_k->kode_kunjungan . ' berhasil dibuka');
         return back();
     }
-
-    // public function pasienBPJSDiDaftarkan(Request $request)
-    // {
-    //     if ($request->no_antri == null || $request->pasien_id == null) {
-    //         Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
-    //         return back();
-    //     }
-
-    //     $antrian = AntrianPasienIGD::find($request->no_antri);
-    //     $status_pendaftaran = $request->pendaftaran_id;
-    //     $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
-    //     $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
-    //     $knj_aktif = Kunjungan::where('no_rm', $request->pasien_id)
-    //         ->where('status_kunjungan', 1)
-    //         ->count();
-
-    //     $unit = Unit::limit(10)->get();
-    //     $alasanmasuk = AlasanMasuk::limit(10)->get();
-    //     $paramedis = Paramedis::where('spesialis', 'UMUM')
-    //         ->where('act', 1)
-    //         ->get();
-    //     $penjamin = PenjaminSimrs::limit(10)
-    //         ->where('act', 1)
-    //         ->get();
-       
-    //     return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
-    //         'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-    //         'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'res',
-    //         'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs','knj_aktif',
-    //     ));
-    // }
 
     public function pendaftaranIGDStore(Request $request)
     {
@@ -447,6 +370,14 @@ class PendaftaranPasienIGDController extends Controller
         return redirect()->route('d-antrian-igd');
     }
 
+    public function batalDaftarIGD(Request $request)
+    {
+        $data =  AntrianPasienIGD::findOrFail($request->id);
+        $data->no_rm = (Null);
+        $data->is_px_daftar = (Null);
+        $data->update();
+        return response()->json($data, 200, $headers);
+    }
 
     // pasien (daftar) bpjs beralih ke pasien umum
     public function bpjsToUmum(Request $request)

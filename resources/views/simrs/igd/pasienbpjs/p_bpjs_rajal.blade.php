@@ -28,7 +28,7 @@
                                     {{ $antrian->no_antri }}</b></a>
                         </div>
                     </div>
-                    @if ($pasien->no_Bpjs == null && $res->metadata->code != 200)
+                    @if ($pasien->no_Bpjs == null && $resdescrtipt->metadata->code != 200)
                         <div class="card">
                             <div class="card-header">
                                 <h4>Status Pasien :</h4>
@@ -50,24 +50,24 @@
                         </div>
                     @else
                         <div
-                            class="card {{ $res->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
+                            class="card {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
                             <div class="card-body box-profile">
                                 <div class="card-header">
                                     <b>
                                         <p>
-                                            STATUS BPJS : {{ $res->response->peserta->noKartu }}
-                                            ({{ $res->response->peserta->statusPeserta->keterangan }})
+                                            STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
+                                            ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
                                         </p>
                                     </b>
                                     <button type="button"
-                                        class="btn btn-block {{ $res->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
+                                        class="btn btn-block {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
                                         :
-                                        {{ $res->response->peserta->statusPeserta->keterangan }}</button>
+                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
                                     <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2">PENJAMIN
                                         BPJS : <b>{{ $ket_jpBpjs }}</b></button>
-                                    @if ($pasien->no_Bpjs == null && $res->response->peserta->statusPeserta->kode == 0)
+                                    @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $res->response->peserta->noKartu }}')">update
+                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
                                             no bpjs</button>
                                         <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
                                             Pasien
@@ -104,7 +104,7 @@
                                                     <input type="hidden" name="jnsPelayanan" value="2">
                                                     <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
                                                     <input type="hidden" name="klsRawatHak"
-                                                        value="{{ $res->response->peserta->hakKelas->kode }}">
+                                                        value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
@@ -225,18 +225,22 @@
                                     </div>
                                 </div>
                                 @if ($knj_aktif == 0)
-                                    @if ($res->response->peserta->statusPeserta->kode == 0)
+                                    @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="formPendaftaranIGD"
                                             label="Simpan Data" />
+                                        <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
+                                            label="Batalkan Pendaftaran"
+                                            onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
                                     @else
-                                        <a href="{{ route('bpjstoumum')}}/?par={{$pasien->no_rm}}{{$antrian->no_antri}}"
+                                        <a href="{{ route('bpjstoumum') }}/?par={{ $pasien->no_rm }}{{ $antrian->no_antri }}"
                                             class="btn btn-danger btn-sm btn-flat float-right m-1">pasien bermasalah
                                             dengan bpjs</a>
                                     @endif
                                 @else
-                                    <a href="{{ route('pendaftaran-pasien-igdbpjs') }}"
-                                        class="btn btn-secondary btn-sm btn-flat float-right m-1">Kembali</a>
+                                    <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
+                                        label="Kembali" onclick="backAndDelete({{ $antrian->id }})"/>
+
                                     <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
                                         label="tidak bisa lanjut daftar (pasien memilki kunjungan yang masih aktif)" />
                                 @endif
@@ -267,9 +271,49 @@
 
         });
 
-        function submitPasien(dpjpLayan) {
-            var dpjpLayan = ('#dpjpLayan').val();
-            alert(dpjpLayan);
+        function batalDaftar(id, no) {
+            var no = no;
+            swal.fire({
+                icon: 'question',
+                title: 'BATALKAN PENDAFTARAN DENGAN NO ' + no,
+                showDenyButton: true,
+                confirmButtonText: 'Batalkan',
+                denyButtonText: `Tidak`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('batalkan.pendaftaranbpjs') }}/?id=" + id;
+                    $.ajax({
+                        type: "put",
+                        url: url,
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    });
+                    Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '', 'success');
+                    window.location.href = "{{ route('pendaftaran-pasien-igdbpjs') }}"
+                }
+            })
+        }
+        function backAndDelete(id) {
+            swal.fire({
+                icon: 'question',
+                title: 'Apakah Anda Yakin akan kembali? ',
+                showDenyButton: true,
+                confirmButtonText: 'Batalkan',
+                denyButtonText: `Tidak`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('batalkan.pendaftaranbpjs') }}/?id=" + id;
+                    $.ajax({
+                        type: "put",
+                        url: url,
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    });
+                    window.location.href = "{{ route('pendaftaran-pasien-igdbpjs') }}"
+                }
+            })
         }
 
         $(function() {

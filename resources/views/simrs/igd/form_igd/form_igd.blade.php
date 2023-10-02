@@ -164,33 +164,36 @@
                             </div>
                         </div>
                     @else
-                    <div class="card {{$resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger'}} card-outline">
-                        <div class="card-body box-profile">
-                            <div class="card-header">
-                                <b>
-                                    <p>
-                                        STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
-                                        ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
-                                    </p>
-                                    @if ($resdescrtipt->metadata->code == 200) 
-                                    <p>
-                                        PENJAMIN : {{ $jpBpjs }} - ({{ $ket_jpBpjs }})
-                                    </p>
+                        <div
+                            class="card {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
+                            <div class="card-body box-profile">
+                                <div class="card-header">
+                                    <b>
+                                        <p>
+                                            STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
+                                            ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
+                                        </p>
+                                        @if ($resdescrtipt->metadata->code == 200)
+                                            <p>
+                                                PENJAMIN : {{ $jpBpjs }} - ({{ $ket_jpBpjs }})
+                                            </p>
+                                        @endif
+                                    </b>
+                                    <button type="button"
+                                        class="btn btn-block {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
+                                        :
+                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
+                                    @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
+                                        <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
+                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
+                                            no bpjs</button>
+                                        <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
+                                            Pasien
+                                            BPJS</a>
                                     @endif
-                                </b>
-                                <button type="button" class="btn btn-block {{$resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger'}} btn-sm mb-2">BPJS :
-                                    {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
-                                @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
-                                    <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                        onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
-                                        no bpjs</button>
-                                    <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
-                                        Pasien
-                                        BPJS</a>
-                                @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
                 </div>
                 <div class="col-md-9">
@@ -283,9 +286,14 @@
                                             <x-adminlte-button type="submit"
                                                 class="withLoad btn btn-sm m-1 bg-green float-right" id="submitPasien"
                                                 label="Simpan Data" />
+                                            <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
+                                                label="Batalkan Pendaftaran"
+                                                onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
                                         @else
                                             <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
                                                 label="tidak bisa lanjut daftar" />
+                                            <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
+                                                label="Kembali" onclick="backAndDelete({{ $antrian->id }})" />
                                         @endif
                                     </div>
                                 </form>
@@ -440,9 +448,52 @@
             })
         }
 
-        function cariRujukan(rm) {
-            var rujukan_rm = rm;
-            $('#modalRujukan').show();
+        function batalDaftar(id, no) {
+            var no = no;
+            alert(id);
+            swal.fire({
+                icon: 'question',
+                title: 'BATALKAN PENDAFTARAN DENGAN NO ' + no,
+                showDenyButton: true,
+                confirmButtonText: 'Batalkan',
+                denyButtonText: `Tidak`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('batalkan.pendaftaranigd') }}/?id=" + id;
+                    $.ajax({
+                        type: "put",
+                        url: url,
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    });
+                    Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '', 'success');
+                    window.location.href = "{{ route('d-antrian-igd') }}"
+                }
+            })
+        }
+
+        function backAndDelete(id) {
+            alert(id);
+            swal.fire({
+                icon: 'question',
+                title: 'Apakah Anda Yakin akan kembali? ',
+                showDenyButton: true,
+                confirmButtonText: 'Kembali',
+                denyButtonText: `Batal`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var url = "{{ route('batalkan.pendaftaranigd') }}/?id=" + id;
+                    $.ajax({
+                        type: "put",
+                        url: url,
+                        success: function(data) {
+                            console.log(data);
+                        }
+                    });
+                    window.location.href = "{{ route('d-antrian-igd') }}"
+                }
+            })
         }
     </script>
 @endsection
