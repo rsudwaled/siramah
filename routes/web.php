@@ -148,6 +148,7 @@ Route::middleware('auth')->group(function () {
     // ranap
     Route::get('pasienRanapAktif', [KunjunganController::class, 'pasienRanapAktif'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [KunjunganController::class, 'pasienRanap'])->name('pasienRanap');
+    Route::get('pasienRanapPasien', [KunjunganController::class, 'pasienRanapPasien'])->name('pasienRanapPasien');
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
