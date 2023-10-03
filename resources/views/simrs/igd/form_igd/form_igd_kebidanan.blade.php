@@ -450,7 +450,7 @@
 
         function batalDaftar(id, no) {
             var no = no;
-            alert(id);
+            // alert(id);
             swal.fire({
                 icon: 'question',
                 title: 'BATALKAN PENDAFTARAN DENGAN NO ' + no,
@@ -474,7 +474,7 @@
         }
 
         function backAndDelete(id) {
-            alert(id);
+            // alert(id);
             swal.fire({
                 icon: 'question',
                 title: 'Apakah Anda Yakin akan kembali? ',

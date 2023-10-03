@@ -114,7 +114,7 @@
                 $config['order'] = ['0', 'asc'];
                 $config['paging'] = true;
                 $config['info'] = false;
-                $config['scrollY'] = '350px';
+                $config['scrollY'] = '450px';
                 $config['scrollCollapse'] = true;
                 $config['scrollX'] = true;
             @endphp
@@ -133,10 +133,10 @@
                                 class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-danger disabled' : ($item->status_kunjungan == 1 ? 'btn-success' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
                         </td>
                         <td>
-                            <x-adminlte-button class="btn-xs" theme="warning" label="Daftar Ranap"
-                                onclick="window.location='#'" />
+                            <a href="{{ route('ranapbpjs') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}"
+                                class="btn btn-success btn-sm btn-flat float-right m-1">Ranap BPJS</a>
                             <a href="{{ route('ranapumum') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}"
-                                class="btn btn-success btn-sm btn-flat float-right m-1">Ranap Umum</a>
+                                class="btn btn-primary btn-sm btn-flat float-right m-1">Ranap Umum</a>
                         </td>
                     </tr>
                 @endforeach

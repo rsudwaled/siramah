@@ -360,6 +360,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pendaftaran-rawat-inap', [App\Http\Controllers\RanapIGDController::class, 'getKunjunganNow'])->name('kunjungan.ranap');
     Route::get('/daftar-umum/ranap/', [App\Http\Controllers\RanapIGDController::class, 'ranapUmum'])->name('ranapumum');
     Route::get('/get-ruangan', [App\Http\Controllers\RanapIGDController::class, 'getKelasRuangan'])->name('ruangan-kelas.get');
+    Route::get('/daftar-bpjs/ranap/', [App\Http\Controllers\RanapIGDController::class, 'ranapBPJS'])->name('ranapbpjs');
     
 
 

@@ -56,6 +56,16 @@ class RanapIGDController extends Controller
         return view('simrs.igd.ranap.form_ranap', compact('pasien','kunjungan','unit','penjamin','alasanmasuk'));
     }
 
+    public function ranapBPJS(Request $request)
+    {
+        $pasien = Pasien::where('no_rm', 10230617)->first();
+        $kunjungan = Kunjungan::where('no_rm', $pasien->no_rm)->get();
+        $unit = Unit::limit(10)->get();
+        $alasanmasuk = AlasanMasuk::limit(10)->get();
+        $penjamin = PenjaminSimrs::get();
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','kunjungan','unit','penjamin','alasanmasuk'));
+    }
+
     public function getKelasRuangan(Request $request)
     {
         $ruangan = Ruangan::where('id_kelas', $request->kelas_r_id)

@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Ranap Umum')
+@section('title', 'Pasien RANAP')
 @section('content_header')
-    <h1>Ranap Umum : {{ $pasien->nama_px }}</h1>
+    <h1>Pasien RANAP : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -101,7 +101,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
-                                title="Form Pendaftaran">
+                                title="Form Pendaftaran Pasien RAWAT INAP">
                                 <div class="col-lg-12">
                                     <div class="row">
                                         <div class="col-lg-12">
