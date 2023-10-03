@@ -1295,6 +1295,7 @@ return [
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'pasienRanap',
                     'shift'   => 'ml-2',
+                    'active' => ['pasienRanapPasien', 'pasienRanap'],
                     'can' => 'casemix',
                 ],
                 [
