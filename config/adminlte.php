@@ -493,6 +493,14 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'ranap',
                 ],
+                [
+                    'text' => 'Pasien Ranap',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienRanap',
+                    'shift'   => 'ml-2',
+                    'active' => ['pasienRanapPasien', 'pasienRanap'],
+                    'can' => 'ranap',
+                ],
             ],
         ],
         // FARMASI
@@ -1283,21 +1291,21 @@ return [
             'icon'    => 'fas fa-file-medical',
             'can' => 'casemix',
             'submenu' => [
-                [
-                    'text' => 'Pasien Ranap Aktif',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'pasienRanapAktif',
-                    'shift'   => 'ml-2',
-                    'can' => 'casemix',
-                ],
-                [
-                    'text' => 'Pasien Ranap',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'pasienRanap',
-                    'shift'   => 'ml-2',
-                    'active' => ['pasienRanapPasien', 'pasienRanap'],
-                    'can' => 'casemix',
-                ],
+                // [
+                //     'text' => 'Pasien Ranap Aktif',
+                //     'icon'    => 'fas fa-user-injured',
+                //     'url'  => 'pasienRanapAktif',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'casemix',
+                // ],
+                // [
+                //     'text' => 'Pasien Ranap',
+                //     'icon'    => 'fas fa-user-injured',
+                //     'url'  => 'pasienRanap',
+                //     'shift'   => 'ml-2',
+                //     'active' => ['pasienRanapPasien', 'pasienRanap'],
+                //     'can' => 'casemix',
+                // ],
                 [
                     'text' => 'Diagnosa Rawat Jalan',
                     'icon'    => 'fas fa-diagnoses',
