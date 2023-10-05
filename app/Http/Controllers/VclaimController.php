@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kunjungan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -201,7 +202,8 @@ class VclaimController extends APIController
     {
         $sep = null;
         $vclaim = new VclaimController();
-        if ($request->tanggal && $request->jenisPelayanan) {
+        if ($request->tanggal && $request->jenispelayanan) {
+            $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)->get(['kode_kunjungan', 'no_sep']);
             $response =  $vclaim->monitoring_data_kunjungan($request);
             if ($response->metadata->code == 200) {
                 $sep = $response->response->sep;
@@ -211,7 +213,9 @@ class VclaimController extends APIController
             }
         }
         return view('bpjs.vclaim.monitoring_data_kunjungan_index', compact([
-            'request', 'sep'
+            'request',
+            'sep',
+            'kunjungans',
         ]));
     }
     public function monitoringDataKlaim(Request $request)

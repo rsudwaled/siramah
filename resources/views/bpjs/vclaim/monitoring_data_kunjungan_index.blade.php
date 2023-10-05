@@ -19,9 +19,9 @@
                             </div>
                         </x-slot>
                     </x-adminlte-input-date>
-                    <x-adminlte-select2 name="jenisPelayanan" label="Jenis Pelayanan">
-                        <option value="1" {{ $request->jenisPelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
-                        <option value="2" {{ $request->jenisPelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
+                    <x-adminlte-select2 name="jenispelayanan" label="Jenis Pelayanan">
+                        <option value="1" {{ $request->jenispelayanan == 1 ? 'selected' : null }}>Rawat Inap</option>
+                        <option value="2" {{ $request->jenispelayanan == 2 ? 'selected' : null }}>Rawat Jalan</option>
                     </x-adminlte-select2>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Data Kunjungan" />
                 </form>
@@ -30,13 +30,21 @@
         <div class="col-12">
             <x-adminlte-card title="Data Kunjungan BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['No SEP', 'Tgl Masuk', 'Tgl Pulang', 'Jenis Pelayanan', 'Kelas Rawat', 'No Kartu BPJS', 'Nama', 'Poliklik', 'Diagnosa', 'No Rujukan'];
+                    $heads = ['No SEP', 'Kunjungan', 'Tgl Masuk', 'Tgl Pulang', 'Jenis Pelayanan', 'Kelas Rawat', 'No Kartu BPJS', 'Nama', 'Poliklik', 'Diagnosa', 'No Rujukan'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" bordered hoverable compressed>
                     @isset($sep)
                         @foreach ($sep as $item)
                             <tr>
-                                <td>{{ $item->noSep }}</td>
+                                <td>{{ $item->noSep }}
+                                </td>
+                                <td>
+                                    @if ($kunjungans->where('no_sep', $item->noSep)->first())
+                                        {{ $kunjungans->where('no_sep', $item->noSep)->first()->kode_kunjungan }}
+                                    @else
+                                        ???
+                                    @endif
+                                </td>
                                 <td>{{ $item->tglSep }}</td>
                                 <td>{{ $item->tglPlgSep }}</td>
                                 <td>{{ $item->jnsPelayanan }}</td>
