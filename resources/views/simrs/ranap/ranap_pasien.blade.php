@@ -157,16 +157,17 @@
                                 <th class="text-right">{{ money($kunjungans->sum('budget.tarif_inacbg'), 'IDR') }}</th>
                                 <th class="text-right">{{ money($kunjungans->sum('tagihan.total_biaya'), 'IDR') }}</th>
                                 <th>
-
                                     {{ money($kunjungans->sum('budget.tarif_inacbg') - $kunjungans->sum('tagihan.total_biaya'), 'IDR') }}
-                                    @if (round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) > 100)
-                                        <button class="btn btn-xs btn-danger">
-                                            {{ round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) }}%
-                                        </button>
-                                    @else
-                                        <button class="btn btn-xs btn-success">
-                                            {{ round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) }}%
-                                        </button>
+                                    @if ($kunjungans->count() != 0)
+                                        @if (round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) > 100)
+                                            <button class="btn btn-xs btn-danger">
+                                                {{ round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) }}%
+                                            </button>
+                                        @else
+                                            <button class="btn btn-xs btn-success">
+                                                {{ round(($kunjungans->sum('tagihan.total_biaya') / $kunjungans->sum('budget.tarif_inacbg')) * 100) }}%
+                                            </button>
+                                        @endif
                                     @endif
                                 </th>
                             </tr>
