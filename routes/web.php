@@ -62,10 +62,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // route default
-Route::get('', [HomeController::class, 'landingpage'])->name('landingpage'); #ok
-Auth::routes(); #ok
-Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google'); #redirect google login
-Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback'); #callback google login
+Route::get('', [HomeController::class, 'landingpage'])->name('landingpage');
+Auth::routes();
+Route::get('login/google/redirect', [SocialiteController::class, 'redirect'])->middleware(['guest'])->name('login.google');
+Route::get('login/google/callback', [SocialiteController::class, 'callback'])->middleware(['guest'])->name('login.goole.callback');
 // layanan umum
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
