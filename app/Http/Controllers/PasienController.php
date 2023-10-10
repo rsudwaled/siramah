@@ -17,19 +17,20 @@ class PasienController extends APIController
             ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
             ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
             ->simplePaginate(20);
+
         $total_pasien = Pasien::count();
-        $pasien_jkn = Pasien::where('no_Bpjs', '!=', '')->count();
-        $pasien_nik = Pasien::where('nik_bpjs', '!=', '')->count();
-        $pasien_laki = Pasien::where('jenis_kelamin', 'L')->count();
-        $pasien_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
+        // $pasien_jkn = Pasien::where('no_Bpjs', '!=', '')->count();
+        // $pasien_nik = Pasien::where('nik_bpjs', '!=', '')->count();
+        // $pasien_laki = Pasien::where('jenis_kelamin', 'L')->count();
+        // $pasien_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
         return view('simrs.pasien_index', compact([
             'pasiens',
             'request',
             'total_pasien',
-            'pasien_jkn',
-            'pasien_nik',
-            'pasien_laki',
-            'pasien_perempuan',
+            // 'pasien_jkn',
+            // 'pasien_nik',
+            // 'pasien_laki',
+            // 'pasien_perempuan',
         ]));
     }
     public function edit($no_rm)
@@ -122,61 +123,61 @@ class PasienController extends APIController
         Alert::success('Success', 'Data Pasien Telah Dihapus');
         return redirect()->route('simrs.pasien.index');
     }
-    public function pasien_daerah(Request $request)
-    {
-        $pasiens_kecamatan = Pasien::select('kode_kecamatan', DB::raw('count(*) as total'))
-            ->where('kode_kecamatan', '!=', null)
-            ->where('kode_kecamatan', '!=', 0)
-            ->groupBy('kode_kecamatan')
-            ->orderBy('total', 'desc')
-            ->limit(20)
-            ->get();
-        $pasiens_kabupaten = Pasien::select('kode_kabupaten', DB::raw('count(*) as total'))
-            ->where('kode_kabupaten', '!=', null)
-            ->where('kode_kabupaten', '!=', 0)
-            ->groupBy('kode_kabupaten')
-            ->orderBy('total', 'desc')
-            ->limit(20)
-            ->get();
-        $pasiens_pendidikan = Pasien::select('pendidikan', DB::raw('count(*) as total'))
-            ->where('pendidikan', '!=', null)
-            ->where('pendidikan', '!=', 0)
-            ->groupBy('pendidikan')
-            ->orderBy('total', 'desc')
-            ->get();
-        $pendidikan = Pendidikan::get();
-        $pasiens_pekerjaan = Pasien::select('pekerjaan', DB::raw('count(*) as total'))
-            ->where('pekerjaan', '!=', null)
-            ->where('pekerjaan', '!=', 0)
-            ->groupBy('pekerjaan')
-            ->orderBy('total', 'desc')
-            ->get();
-        $pekerjaan = Pekerjaan::get();
-        $pasiens_agama = Pasien::select('agama', DB::raw('count(*) as total'))
-            ->where('agama', '!=', null)
-            ->where('agama', '!=', 0)
-            ->groupBy('agama')
-            ->orderBy('total', 'desc')
-            ->get();
-        $agama = Agama::get();
-        // dd($pasiens_pekerjaan);
-        // dd($pasiens_pendidikan->where('pendidikan', 15)->first()->total);
-        // dd($pasiens_pendidikan);
-        $pasiens_laki = Pasien::where('jenis_kelamin', 'L')->count();
-        $pasiens_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
-        return view('simrs.pasien_daerah', compact([
-            'pasiens_kecamatan',
-            'pasiens_kabupaten',
-            'pasiens_laki',
-            'pasiens_perempuan',
-            'pendidikan',
-            'pasiens_pendidikan',
-            'pasiens_pekerjaan',
-            'pekerjaan',
-            'pasiens_agama',
-            'agama',
-        ]));
-    }
+    // public function pasien_daerah(Request $request)
+    // {
+    //     $pasiens_kecamatan = Pasien::select('kode_kecamatan', DB::raw('count(*) as total'))
+    //         ->where('kode_kecamatan', '!=', null)
+    //         ->where('kode_kecamatan', '!=', 0)
+    //         ->groupBy('kode_kecamatan')
+    //         ->orderBy('total', 'desc')
+    //         ->limit(20)
+    //         ->get();
+    //     $pasiens_kabupaten = Pasien::select('kode_kabupaten', DB::raw('count(*) as total'))
+    //         ->where('kode_kabupaten', '!=', null)
+    //         ->where('kode_kabupaten', '!=', 0)
+    //         ->groupBy('kode_kabupaten')
+    //         ->orderBy('total', 'desc')
+    //         ->limit(20)
+    //         ->get();
+    //     $pasiens_pendidikan = Pasien::select('pendidikan', DB::raw('count(*) as total'))
+    //         ->where('pendidikan', '!=', null)
+    //         ->where('pendidikan', '!=', 0)
+    //         ->groupBy('pendidikan')
+    //         ->orderBy('total', 'desc')
+    //         ->get();
+    //     $pendidikan = Pendidikan::get();
+    //     $pasiens_pekerjaan = Pasien::select('pekerjaan', DB::raw('count(*) as total'))
+    //         ->where('pekerjaan', '!=', null)
+    //         ->where('pekerjaan', '!=', 0)
+    //         ->groupBy('pekerjaan')
+    //         ->orderBy('total', 'desc')
+    //         ->get();
+    //     $pekerjaan = Pekerjaan::get();
+    //     $pasiens_agama = Pasien::select('agama', DB::raw('count(*) as total'))
+    //         ->where('agama', '!=', null)
+    //         ->where('agama', '!=', 0)
+    //         ->groupBy('agama')
+    //         ->orderBy('total', 'desc')
+    //         ->get();
+    //     $agama = Agama::get();
+    //     // dd($pasiens_pekerjaan);
+    //     // dd($pasiens_pendidikan->where('pendidikan', 15)->first()->total);
+    //     // dd($pasiens_pendidikan);
+    //     $pasiens_laki = Pasien::where('jenis_kelamin', 'L')->count();
+    //     $pasiens_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
+    //     return view('simrs.pasien_daerah', compact([
+    //         'pasiens_kecamatan',
+    //         'pasiens_kabupaten',
+    //         'pasiens_laki',
+    //         'pasiens_perempuan',
+    //         'pendidikan',
+    //         'pasiens_pendidikan',
+    //         'pasiens_pekerjaan',
+    //         'pekerjaan',
+    //         'pasiens_agama',
+    //         'agama',
+    //     ]));
+    // }
     public function fingerprintPeserta(Request $request)
     {
         $peserta = null;

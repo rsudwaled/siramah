@@ -667,7 +667,6 @@ return [
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'cppt',
                     'shift'   => 'ml-2',
-                    'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
                 ],
                 [
