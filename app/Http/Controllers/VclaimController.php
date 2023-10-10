@@ -201,6 +201,7 @@ class VclaimController extends APIController
     public function monitoringDataKunjungan(Request $request)
     {
         $sep = null;
+        $kunjungans = null;
         $vclaim = new VclaimController();
         if ($request->tanggal && $request->jenispelayanan) {
             $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)->get(['kode_kunjungan', 'no_sep']);

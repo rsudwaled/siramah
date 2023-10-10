@@ -30,13 +30,19 @@
         <div class="col-12">
             <x-adminlte-card title="Data Kunjungan BPJS" theme="secondary" collapsible>
                 @php
-                    $heads = ['No SEP', 'Kunjungan', 'Tgl Masuk', 'Tgl Pulang', 'Jenis Pelayanan', 'Kelas Rawat', 'No Kartu BPJS', 'Nama', 'Poliklik', 'Diagnosa', 'No Rujukan'];
+                    $heads = ['No SEP', 'FPK', 'Kunjungan', 'Tgl Masuk', 'Tgl Pulang', 'Jenis Pelayanan', 'Kelas Rawat', 'No Kartu BPJS', 'Nama', 'Poliklik', 'Diagnosa', 'No Rujukan'];
                 @endphp
                 <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" bordered hoverable compressed>
                     @isset($sep)
                         @foreach ($sep as $item)
                             <tr>
                                 <td>{{ $item->noSep }}
+                                </td>
+                                <td>
+                                    <a class="btn btn-xs btn-warning"
+                                        href="http://192.168.2.46/klaimbpjs/klaim/RJ/2023/August/01/{{ $item->noSep }}.pdf">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </a>
                                 </td>
                                 <td>
                                     @if ($kunjungans->where('no_sep', $item->noSep)->first())
