@@ -40,11 +40,8 @@ class PendaftaranPasienIGDBPJSController extends APIController
 {
     public function getDataAntrianPasienBPJS(Request $request)
     {
-        $antrian_triase = TriaseIGD::whereDate('tgl_masuk_triase', now())
-            ->where('klasifikasi_pasien', 'IGD')
-            ->paginate(32);
         //TES
-        $antrian = AntrianPasienIGD::where('status', 1)->paginate(32);
+        $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->paginate(32);
         // $antrian = AntrianPasienIGD::whereDate('tgl', now())
         //     ->where('status', 1)
         //     ->paginate(32);
@@ -58,7 +55,72 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $agama = Agama::all();
         $pekerjaan = Pekerjaan::all();
         $pendidikan = Pendidikan::all();
-        return view('simrs.igd.pasienbpjs.antrian_igd_bpjs', compact('provinsi_klg', 'provinsi', 'negara', 'agama', 'pekerjaan', 'pendidikan', 'antrian_triase', 'antrian', 'pasien', 'hb_keluarga'));
+        return view('simrs.igd.pasienbpjs.antrian_igd_bpjs', compact('provinsi_klg', 'provinsi', 'negara', 'agama', 'pekerjaan', 'pendidikan','antrian', 'pasien', 'hb_keluarga'));
+    }
+    public function searchPasienIGDBPJS(Request $request)
+    {
+        $s_bynik = $request->nik;
+        $s_byname = $request->nama;
+        $s_byaddress = $request->alamat;
+        $s_bydate = $request->tglLahir;
+        $s_bybpjs = $request->nobpjs;
+        if ($s_bynik && $s_byname && $s_byaddress && $s_bydate && $s_bybpjs) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nik_bpjs', $s_bynik)
+                ->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('no_Bpjs', 'LIKE', '%' . $s_bybpjs . '%')
+                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
+                ->where('tgl_lahir', $s_bydate)
+                ->limit(100)->get();
+        }else{
+            $pasien = Pasien::whereNotNull('no_Bpjs')->limit(100)
+                ->orderBy('tgl_entry', 'desc')
+                ->get();
+        }
+        // dd($s_bynik);
+        if ($s_bynik) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nik_bpjs', $s_bynik)->limit(100)->get();
+        }
+        if ($s_bybpjs) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('no_Bpjs', $s_bybpjs)->limit(100)->get();
+        }
+        if ($s_byname) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nama_px', $s_byname)->limit(100)->get();
+        }
+        if ($s_byaddress) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('alamat', 'LIKE', '%' . $s_byaddress . '%')->limit(100)->get();
+        }
+        if ($s_bydate) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('tgl_lahir', $s_bydate)->limit(100)->get();
+        }
+
+        if ($s_bynik && $s_byname) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nik_bpjs', $s_bynik)
+                ->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->limit(100)->get();
+        }
+        if ($s_byname && $s_bydate) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('tgl_lahir', $s_bydate)
+                ->limit(100)->get();
+        }
+        if ($s_byname && $s_byaddress) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
+                ->limit(100)->get();
+        }
+
+        if ($s_byname && $s_byaddress && $s_bydate) {
+            $pasien = Pasien::whereNotNull('no_Bpjs')->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
+                ->where('tgl_lahir', $s_bydate)
+                ->limit(100)->get();
+        }
+        
+
+        return response()->json([
+            'pasien' => $pasien,
+            'success' => true,
+        ]);
     }
 
     // public function pasienBPJSCREATE(Request $request)
@@ -307,7 +369,8 @@ class PendaftaranPasienIGDBPJSController extends APIController
             } else {
                 $c = $counter->counter + 1;
             }
-            $penjamin = Penjamin::where('nama_penjamin_bpjs', $request->penjamin)->first();
+            $dokter = Paramedis::firstWhere('kode_dokter_jkn', $request->dpjpLayan);
+            $penjamin = Penjamin::firstWhere('nama_penjamin_bpjs', $request->penjamin);
             $unit = Unit::findOrFail($request->unit);
             $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
             $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
@@ -319,7 +382,7 @@ class PendaftaranPasienIGDBPJSController extends APIController
             $createKunjungan->no_rm = $request->noMR;
             $createKunjungan->kode_unit = $unit->kode_unit;
             $createKunjungan->tgl_masuk = now();
-            $createKunjungan->kode_paramedis = $request->dpjpLayan;
+            $createKunjungan->kode_paramedis = $dokter->kode_paramedis;
             $createKunjungan->status_kunjungan = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
             $createKunjungan->prefix_kunjungan = $unit->prefix_unit;
             $createKunjungan->kode_penjamin = $penjamin->kode_penjamin_simrs;
@@ -442,5 +505,86 @@ class PendaftaranPasienIGDBPJSController extends APIController
         $kec = new VclaimController();
         $kecbpjs = $kec->ref_kecamatan_api();
         return response()->json($kecbpjs, 200, $headers);
+    }
+
+    public function editPasienBPJS(Request $request)
+    {
+        $pasien = Pasien::firstWhere('no_rm',$request->rm);
+        $klp = KeluargaPasien::firstWhere('no_rm',$request->rm);
+        $provinsi = Provinsi::get();
+        $negara = Negara::get();
+        $hb_keluarga = HubunganKeluarga::get();
+        $agama = Agama::get();
+        $pekerjaan = Pekerjaan::get();
+        $pendidikan = Pendidikan::get();
+        return view('simrs.igd.pasienbpjs.edit_pasienbpjs',compact(
+            'klp','pasien','provinsi','negara',
+            'hb_keluarga','agama','pekerjaan','pendidikan',
+        ));
+    }
+
+    public function updatePasien(Request $request)
+    {
+        // dd($request->all());
+        $pasien = Pasien::firstWhere('no_rm',$request->rm);
+        $kabUpdate = is_numeric($request->kabupaten_pasien);
+        $kecUpdate = is_numeric($request->kecamatan_pasien);
+        $desaUpdate = is_numeric($request->desa_pasien);
+        if ($kabUpdate==false && $kecUpdate==false && $desaUpdate==false) {
+            $kab = Kabupaten::firstWhere('nama_kabupaten_kota', $request->kabupaten_pasien);
+            $kec = Kecamatan::firstWhere('nama_kecamatan', $request->kecamatan_pasien);
+            $desa = Desa::firstWhere('nama_desa_kelurahan', $request->desa_pasien);
+        }
+        // dd($request->all(),$kabUpdate, $kecUpdate,$desaUpdate, $kab, $kec, $desa);
+        $pasien->no_Bpjs            = $request->no_bpjs;
+        $pasien->nama_px            = $request->nama_pasien_baru;
+        $pasien->jenis_kelamin      = $request->jk;
+        $pasien->tempat_lahir       = $request->tempat_lahir;
+        $pasien->tgl_lahir          = $request->tgl_lahir;
+        $pasien->agama              = $request->agama;
+        $pasien->pendidikan         = $request->pendidikan;
+        $pasien->pekerjaan          = $request->pekerjaan;
+        $pasien->kewarganegaraan    = $request->kewarganegaraan;
+        $pasien->negara             = $request->negara;
+        $pasien->propinsi           = $request->provinsi_pasien;
+        $pasien->kabupaten          = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
+        $pasien->kecamatan          = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
+        $pasien->desa               = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
+        $pasien->kode_propinsi      = $request->provinsi_pasien;
+        $pasien->kode_kabupaten     = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
+        $pasien->kode_kecamatan     = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
+        $pasien->kode_desa          = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
+        $pasien->alamat             = $request->alamat_lengkap_pasien;
+        $pasien->no_tlp             = $request->no_tlp;
+        $pasien->no_hp              = $request->no_hp;
+        $pasien->nik_bpjs           = $request->nik;
+        if($pasien->update())
+        {
+            // if(is_null($request->nama_keluarga) || is_null($request->hub_keluarga) || is_null($request->alamat_lengkap_sodara)||is_null($request->kontak))
+            // {
+            //     return response()->json(['pasien'=>$pasien, 'status'=>201]);
+            // }
+            $klp = KeluargaPasien::firstWhere('no_rm',$request->rm);
+            if(is_null($klp))
+            {
+                KeluargaPasien::create([
+                    'no_rm'=>$request->rm,
+                    'nama_keluarga' => $request->nama_keluarga,
+                    'hubungan_keluarga' => $request->hub_keluarga,
+                    'alamat_keluarga' => $request->alamat_lengkap_sodara,
+                    'tlp_keluarga' => $request->tlp_keluarga,
+                    'Update_date' => Carbon::now(),
+                ]);
+
+            }else{
+                $klp->nama_keluarga = $request->nama_keluarga;
+                $klp->hubungan_keluarga = $request->hub_keluarga;
+                $klp->alamat_keluarga = $request->alamat_lengkap_sodara;
+                $klp->tlp_keluarga = $request->tlp_keluarga;
+                $klp->Update_date = Carbon::now();
+                $klp->update();
+            }
+        }
+        return response()->json(['pasien'=>$pasien, 'status'=>200]);
     }
 }

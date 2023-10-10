@@ -37,4 +37,8 @@ class Pasien extends Model
     {
         return $this->hasOne(Kabupaten::class, 'kode_kabupaten_kota', 'kabupaten');
     }
+    public function hubunganKeluarga()
+    {
+        return $this->belongsTo(KeluargaPasien::class,'no_rm','no_rm');
+    }
 }

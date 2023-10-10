@@ -66,21 +66,6 @@
                 <div class="row">
                     <div class="col-12 table-responsive">
                         <div class="row">
-                            <div class="col-lg-9">
-                                @php
-                                    $heads = ['NO RM', 'NIK', 'NO BPJS', 'NAMA', 'TGL Lahir', 'ALAMAT'];
-                                    $config['order'] = ['0', 'asc'];
-                                    $config['ordering'] = false;
-                                    $config['paging'] = true;
-                                    $config['info'] = false;
-                                    $config['searching'] = false;
-                                    $config['scrollY'] = '600px';
-                                    $config['scrollCollapse'] = true;
-                                    $config['scrollX'] = true;
-                                @endphp
-                                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
-                                    :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
-                            </div>
                             <div class="col-lg-3">
                                 <div class="col-lg-12">
                                     <div class="col-lg-12">
@@ -89,12 +74,14 @@
                                             icon="fas fa-lg fa-window-restore text-primary" class="bg-gradient-primary"
                                             icon-theme="white" />
                                         <x-adminlte-modal id="modalAntrian" title="DAFTAR ANTRIAN" theme="info"
-                                            icon="fas fa-bolt" size='xl' disable-animations>
+                                            size='xl' disable-animations>
                                             <div class="row">
                                                 @foreach ($antrian as $item)
-                                                    <a class="btn btn-app bg-warning" id="pilihAntrian"
-                                                        onclick="pilihAntrian({{ $item->id }})">
-                                                        <i class="fas fa-users"></i> {{ $item->no_antri }}
+                                                    <a class="btn btn-app btn-xl bg-warning" style="height: auto;"
+                                                        id="pilihAntrian" onclick="pilihAntrian({{ $item->id }})">
+                                                        <i class="fas fa-users"></i> {{ $item->no_antri }} <br>
+                                                        <span
+                                                            class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
                                                     </a>
                                                 @endforeach
                                             </div>
@@ -102,7 +89,7 @@
                                     </div>
                                     <div class="col-lg-12">
 
-                                        <form action="{{route('pasien-antrian-terpilih')}}" method="post">
+                                        <form action="{{ route('pasien-antrian-terpilih') }}" method="post">
                                             @csrf
                                             <input type="hidden" id="send_id_antri" name="no_antri">
                                             <input type="hidden" id="no_rm" name="no_rm">
@@ -343,26 +330,6 @@
                                                                                     {{ $item->nama_hubungan }}</option>
                                                                             @endforeach
                                                                         </x-adminlte-select>
-                                                                        <x-adminlte-select name="provinsi_klg"
-                                                                            label="Provinsi" id="klg_provinsi_pasien"
-                                                                            fgroup-class="col-md-6">
-                                                                            <option value="" selected>--PROVINSI--
-                                                                            </option>
-                                                                            @foreach ($provinsi_klg as $item)
-                                                                                <option
-                                                                                    value="{{ $item->kode_provinsi }}">
-                                                                                    {{ $item->nama_provinsi }}</option>
-                                                                            @endforeach
-                                                                        </x-adminlte-select>
-                                                                        <x-adminlte-select name="kabupaten_klg"
-                                                                            label="Kabupaten" id="klg_kab_pasien"
-                                                                            fgroup-class="col-md-6"></x-adminlte-select>
-                                                                        <x-adminlte-select name="kecamatan_klg"
-                                                                            label="Kecamatan" id="klg_kec_pasien"
-                                                                            fgroup-class="col-md-6"></x-adminlte-select>
-                                                                        <x-adminlte-select name="desa_klg" label="Desa"
-                                                                            id="klg_desa_pasien"
-                                                                            fgroup-class="col-md-6"></x-adminlte-select>
                                                                         <x-adminlte-textarea name="alamat_lengkap_sodara"
                                                                             label="Alamat Lengkap (RT/RW)"
                                                                             placeholder="Alamat Lengkap (RT/RW)"
@@ -384,6 +351,21 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-9">
+                                @php
+                                    $heads = ['NO RM', 'NIK', 'NO BPJS', 'NAMA', 'TGL Lahir', 'ALAMAT'];
+                                    $config['order'] = ['0', 'asc'];
+                                    $config['ordering'] = false;
+                                    $config['paging'] = true;
+                                    $config['info'] = false;
+                                    $config['searching'] = false;
+                                    $config['scrollY'] = '600px';
+                                    $config['scrollCollapse'] = true;
+                                    $config['scrollX'] = true;
+                                @endphp
+                                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
+                                    :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -402,7 +384,6 @@
             $('#search').click(function(e) {
                 $.LoadingOverlay("show");
                 search();
-                $.LoadingOverlay("hide");
             });
         });
         search();
@@ -414,10 +395,10 @@
             var tglLahir = $('#tgl_lahir_search').val();
             var nobpjs = $('#no_bpjs_search').val();
             if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && nobpjs == '') {
-                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia', '', 'info')
+                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data', '', 'info')
             }
-            $.post('{{ route('pasien-igd-search') }}', {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
+            $.get('{{ route('pasien-igd-search') }}', {
+                    // _token: $('meta[name="csrf-token"]').attr('content'),
                     nik: nik,
                     nama: nama,
                     alamat: alamat,
@@ -425,10 +406,8 @@
                     nobpjs: nobpjs,
                 },
                 function(data) {
-                    $.LoadingOverlay("show");
                     table_post_row(data);
                     console.log(data);
-                    $.LoadingOverlay("hide");
                 });
         }
         // table row with ajax
@@ -453,7 +432,7 @@
                       <tr class="nowrap">
                           <td>
                               <button type="button" onclick="pilihPasien(` + rm +
-                    `)" class="btn btn-block bg-maroon btn-sm">` + rm + `</button>
+                    `)" class="btn bg-maroon btn-flat btn-sm">` + rm + `</button> <a href="{{route('edit-pasienbpjs')}}?rm=`+rm+`" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
                           <td>` + res.pasien[i].no_Bpjs + `</td>
@@ -463,6 +442,7 @@
                       </tr>`;
             }
             $('tbody').html(htmlView);
+            $.LoadingOverlay("hide");
         }
 
         function pilihPasien(norm) {
@@ -617,130 +597,5 @@
                 }
             });
         });
-
-        // alamat keluarga pasien
-        $(document).ready(function() {
-            $('#klg_provinsi_pasien').change(function() {
-                var klg_prov_pasien = $(this).val();
-                if (klg_prov_pasien) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('klg-kab-pasien.get') }}?klg_kab_prov_id=" +
-                            klg_prov_pasien,
-                        dataType: 'JSON',
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(kabkeluarga) {
-                            if (kabkeluarga) {
-                                $('#klg_kab_pasien').empty();
-                                $("#klg_kab_pasien").append(
-                                    ' < option > --Pilih Kabupaten-- < /option>');
-                                $.each(kabkeluarga, function(key, value) {
-                                    $('#klg_kab_pasien').append('<option value="' +
-                                        value.kode_kabupaten_kota + '">' + value
-                                        .nama_kabupaten_kota + '</option>');
-                                });
-                            } else {
-                                $('#klg_kab_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#klg_kab_pasien").empty();
-                }
-            });
-            $('#klg_kab_pasien').change(function() {
-                var klg_kec_kab_id = $("#klg_kab_pasien").val();
-                if (klg_kec_kab_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('klg-kec-pasien.get') }}?klg_kec_kab_id=" + klg_kec_kab_id,
-                        dataType: 'JSON',
-                        success: function(keckeluarga) {
-                            console.log(keckeluarga);
-                            if (keckeluarga) {
-                                $('#klg_kec_pasien').empty();
-                                $("#klg_kec_pasien").append(
-                                    ' < option > --Pilih Kecamatan-- < /option>');
-                                $.each(keckeluarga, function(key, value) {
-                                    $('#klg_kec_pasien').append('<option value="' +
-                                        value.kode_kecamatan + '">' + value
-                                        .nama_kecamatan + '</option>');
-                                });
-                            } else {
-                                $('#klg_kec_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#klg_kec_pasien").empty();
-                }
-            });
-            $('#klg_kec_pasien').change(function() {
-                var klg_desa_kec_id = $("#klg_kec_pasien").val();
-                if (klg_desa_kec_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('klg-desa-pasien.get') }}?klg_desa_kec_id=" +
-                            klg_desa_kec_id,
-                        dataType: 'JSON',
-                        success: function(desakeluarga) {
-                            console.log(desakeluarga);
-                            if (desakeluarga) {
-                                $('#klg_desa_pasien').empty();
-                                $("#klg_desa_pasien").append(
-                                    ' < option > --Pilih Kecamatan-- < /option>');
-                                $.each(desakeluarga, function(key, value) {
-                                    $('#klg_desa_pasien').append('<option value="' +
-                                        value.kode_desa_kelurahan + '">' + value
-                                        .nama_desa_kelurahan + '</option>');
-                                });
-                            } else {
-                                $('#klg_desa_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#klg_desa_pasien").empty();
-                }
-            });
-        });
-
-        // $('#createPasienDaftar').on('submit', function(e) {
-        //     e.preventDefault();
-        //     let noAntri = $('#send_id_antri').val();
-        //     let noMR = $('#no_rm').val();
-        //     let tgl = $('#tanggal').val();
-        //     let jp = $('#jenisPendaftaran').val();
-        //     let nik = $('#nik').val();
-        //     let urlc = noAntri + noMR + jp;
-        //     if (noAntri && noMR && tgl && jp) {
-        //         var urlCustom = "{{ route('pasien-didaftarkan') }}/?par=" + urlc;
-        //         // alert(urlCustom)
-        //         $.ajax({
-        //             url: urlCustom,
-        //             type: "GET",
-        //             data: {
-        //                 // "_token": "{{ csrf_token() }}",
-        //                 noantrian: noAntri,
-        //                 norm: noMR,
-        //                 tanggal: tgl,
-        //                 jp: jp,
-        //                 nik: nik,
-        //             },
-        //             success: function(response) {
-        //                 alert('suksess');
-        //                 console.log(response);
-        //                 if(response.success){
-        //                     window.location.href = urlCustom;
-        //                 }
-        //             },
-        //         });
-        //     } else {
-        //         if(noAntri==null)Swal.fire('no antrian belum dipilih', '', 'error')
-        //         if(noMR==null)Swal.fire('pasien belum di pilih', '', 'error')
-        //     }
-        // });
     </script>
 @endsection

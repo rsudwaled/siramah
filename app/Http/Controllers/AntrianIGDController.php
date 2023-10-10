@@ -128,58 +128,16 @@ class AntrianIGDController extends APIController
         $s_byaddress = $request->alamat;
         $s_bydate = $request->tglLahir;
         $s_bybpjs = $request->nobpjs;
-        // dd($s_bynik);
-
-        $pasien = Pasien::limit(100)
-            ->orderBy('tgl_entry', 'desc')
-            ->get();
-        if ($s_bynik) {
-            $pasien = Pasien::where('nik_bpjs', $s_bynik)->get();
+        $s_byrm = $request->rm;
+        
+        if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_bybpjs || $s_byrm){
+            $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '$s_bybpjs' ,'$s_bynik' ,'$s_bydate')");   
         }
-        if ($s_bybpjs) {
-            $pasien = Pasien::where('no_Bpjs', $s_bybpjs)->get();
-        }
-        if ($s_byname) {
-            $pasien = Pasien::where('nama_px', $s_byname)->get();
-        }
-        if ($s_byaddress) {
-            $pasien = Pasien::where('alamat', 'LIKE', '%' . $s_byaddress . '%')->get();
-        }
-        if ($s_bydate) {
-            $pasien = Pasien::where('tgl_lahir', $s_bydate)->get();
-        }
-
-        if ($s_bynik && $s_byname) {
-            $pasien = Pasien::where('nik_bpjs', $s_bynik)
-                ->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+        else{
+            $pasien = Pasien::limit(100)
+                ->orderBy('tgl_entry', 'desc')
                 ->get();
         }
-        if ($s_byname && $s_bydate) {
-            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
-                ->where('tgl_lahir', $s_bydate)
-                ->get();
-        }
-        if ($s_byname && $s_byaddress) {
-            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
-                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
-                ->get();
-        }
-
-        if ($s_byname && $s_byaddress && $s_bydate) {
-            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
-                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
-                ->where('tgl_lahir', $s_bydate)
-                ->get();
-        }
-        if ($s_bynik && $s_byname && $s_byaddress && $s_bydate && $s_bybpjs) {
-            $pasien = Pasien::where('nik_bpjs', $s_bynik)
-                ->where('nama_px', 'LIKE', '%' . $s_byname . '%')
-                ->where('no_Bpjs', 'LIKE', '%' . $s_bybpjs . '%')
-                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
-                ->where('tgl_lahir', $s_bydate)
-                ->get();
-        }
-
         return response()->json([
             'pasien' => $pasien,
             'success' => true,
@@ -209,7 +167,7 @@ class AntrianIGDController extends APIController
         $add_rm_new = $rm_last + 1; //982847
         $th = substr(Carbon::now()->format('Y'), -2); //23
         $rm_new = $th . $add_rm_new;
-        // dd($rm_new);
+        
         $keluarga = KeluargaPasien::create([
             'no_rm' => $rm_new,
             'nama_keluarga' => $request->nama_keluarga,
@@ -255,8 +213,9 @@ class AntrianIGDController extends APIController
     public function antrianIGD()
     {
         // test
-        $antrian = AntrianPasienIGD::where('status', 1)->where('kode_kunjungan', null)
+        $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
             ->paginate(32);
+        // dd($antrian);
         // $antrian = AntrianPasienIGD::whereDate('tgl', now())
         //     ->where('status', 1)
         //     ->paginate(32);

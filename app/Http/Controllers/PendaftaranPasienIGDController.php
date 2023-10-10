@@ -44,7 +44,7 @@ class PendaftaranPasienIGDController extends Controller
 
     public function tutupKunjunganPasien(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         if ($request->rm_tk == null && $request->kunjungan_tk) {
             Alert::error('Error!!', 'pasien tidak memiliki kunjungan!');
             return back();
