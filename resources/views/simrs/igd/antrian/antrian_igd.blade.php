@@ -44,7 +44,7 @@
                                 <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no RM"
                                     id="no_rm_search">
                             </div>
-                            <div class="col-lg-4 mt-4">
+                            <div class="col-lg-12 mt-4 float-right">
                                 <x-adminlte-button label="Cari Pasien" class="btn btn-flat" theme="primary"
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"

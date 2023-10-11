@@ -9,7 +9,7 @@
     <div class="col-lg-12">
         <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan :">
             @php
-                $heads = ['Pasien', 'Kartu', 'Kunjungan', 'Unit', 'Tgl Masuk', 'Tgl keluar', 'Diagnosa', 'No SEP', 'stts kunj', 'action'];
+                $heads = ['Pasien', 'Kartu', 'Kunjungan', 'Unit', 'Tgl Masuk', 'Tgl keluar', 'Diagnosa', 'No SEP', 'stts kunj', 'daftar'];
                 $config['order'] = ['0', 'asc'];
                 $config['paging'] = true;
                 $config['info'] = false;
@@ -34,10 +34,12 @@
                         </td>
                         <td>
                             <a href="{{ route('ranapumum') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}"
-                                class="btn btn-block btn-primary btn-sm btn-flat ">Ranap Umum</a>
+                                class="btn btn-block btn-primary btn-xs btn-flat ">Umum</a>
                             <a href="{{ route('ranapbpjs') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}&nobp={{ $item->pasien->no_Bpjs }}"
-                                class="btn btn-block btn-success btn-sm btn-flat ">Ranap BPJS</a>
-
+                                class="btn btn-block btn-success btn-xs btn-flat ">BPJS</a>
+                            @if (!$item->no_sep)
+                            <a href="#" class="btn btn-block btn-warning btn-xs btn-flat "><b>SEP</b></a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

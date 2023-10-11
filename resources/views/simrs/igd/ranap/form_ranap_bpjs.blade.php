@@ -57,23 +57,106 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <button type="button" class="btn btn-block bg-gradient-success btn-sm mb-2">BUAT
-                                SEP</button>
-                        </div>
+                    <div class="card card-success card-outline">
                         <div class="card-body">
-                            <p>Cari Data <code>Rujukan</code> atau <code>Riwayat SEP</code> pasien: </p>
-                            <a class="btn btn-app bg-success"><i class="fas fa-external-link-alt"></i> Rujukan </a>
-                            <a class="btn btn-app bg-danger"><i class="fas fa-clipboard-list"></i> Riwayat SEP </a>
-                            <p>Surat Kontrol <code>(SK)</code> :</p>
-                            <a class="btn btn-app bg-warning"><i class="fas fa-edit"></i>Buat <code>(SK)</code> </a>
-                            <a class="btn btn-app bg-info"><i class="fas fa-search"></i>Cari <code>(SK)</code> </a>
+                            <button type="button" class="btn btn-block bg-gradient-success btn-sm mb-2" data-toggle="modal"
+                                data-target="#createSPRI">BUAT SPRI</button>
+                            <x-adminlte-modal id="createSPRI" title="SPRI" theme="primary" size='lg'
+                                disable-animations>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <x-adminlte-input name="noKartu" value="{{ $pasien->no_Bpjs }}" label="No Kartu"
+                                            disabled />
+                                    </div>
+                                    <div class="col-md-6">
+                                        @php
+                                            $config = ['format' => 'YYYY-MM-DD'];
+                                        @endphp
+                                        <x-adminlte-input-date name="tglRencanaKontrol"
+                                            value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Masuk"
+                                            :config="$config" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <x-adminlte-input name="poliKontrol" value="UGD" label="Poli Kontrol" disabled />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <x-adminlte-select2 name="kodeDokter" label="Pilih Dokter">
+                                            <option value="">--Pilih Dpjp--</option>
+                                            @foreach ($paramedis as $item)
+                                                <option value="{{ $item->kode_paramedis }}">
+                                                    {{ $item->nama_paramedis }}</option>
+                                            @endforeach
+                                        </x-adminlte-select2>
+                                    </div>
+                                </div>
+                                <x-slot name="footerSlot">
+                                    <x-adminlte-button theme="success" label="buat spri" />
+                                    <x-adminlte-button theme="danger" label="batal" data-dismiss="modal" />
+                                </x-slot>
+                            </x-adminlte-modal>
+                            <div class="col-md-12">
+                                <x-adminlte-select2 name="unitTerpilih" id="unitTerpilih" label="Ruangan">
+                                    @foreach ($unit as $item)
+                                        <option value="{{ $item->kode_unit }}">
+                                            {{ $item->nama_unit }}</option>
+                                    @endforeach
+                                </x-adminlte-select2>
+                            </div>
+                            <div class="col-md-12">
+                                <x-adminlte-select name="kelas_rawat" id="r_kelas_id" label="Kelas Rawat" disabled>
+                                    <option value="1" {{ $kodeKelas == 1 ? 'selected' : '' }}>KELAS 1</option>
+                                    <option value="2" {{ $kodeKelas == 2 ? 'selected' : '' }}>KELAS 2</option>
+                                    <option value="3" {{ $kodeKelas == 3 ? 'selected' : '' }}>KELAS 3</option>
+                                    <option value="4" {{ $kodeKelas == 4 ? 'selected' : '' }}>VIP</option>
+                                    <option value="5" {{ $kodeKelas == 5 ? 'selected' : '' }}>VVIP</option>
+                                </x-adminlte-select>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
+                                id="cariRuangan" class="bg-purple" />
+                            <a href="#" class="btn bg-teal" id="showBed" style="display: none">
+                                <i class="fas fa-bed"></i>
+                            </a>
+                            <a href="#" class="btn btn-primary" id="showRuangan" style="display: none">
+                                <i class="fas fa-bed"></i> Tidak ada
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card card-danger card-outline">
+                        <div class="card-body">
+                            <div class="col-md-12">
+                                <x-adminlte-select name="naik_kelas_rawat" label="Naik Kelas Rawat">
+                                    <option value="1">KELAS 1</option>
+                                    <option value="2">KELAS 2</option>
+                                    <option value="3">KELAS 3</option>
+                                    <option value="4">VIP</option>
+                                    <option value="5">VVIP</option>
+                                </x-adminlte-select>
+                            </div>
+                            <div class="col-md-12">
+                                <x-adminlte-select name="naikKelasPembiyaan" label="Pembiayaan">
+                                    <option value="0">--Pilih Pembiayaan--</option>
+                                    <option value="1">Pribadi</option>
+                                    <option value="2">Pemberi Kerja</option>
+                                    <option value="3">Asuransi Kesehatan Tambahan</option>
+                                </x-adminlte-select>
+                            </div>
+                            <div class="col-md-12">
+                                <x-adminlte-input name="nama_pj" label="Nama PenanggungJawab"
+                                    placeholder="masukan nama pj" label-class="text-black">
+                                    <x-slot name="prependSlot">
+                                        <div class="input-group-text">
+                                            <i class="fas fa-user text-black"></i>
+                                        </div>
+                                    </x-slot>
+                                </x-adminlte-input>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
@@ -90,8 +173,8 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="nama_pasien"
-                                                                value="{{ $pasien->nama_px }}" disabled label="Nama Pasien"
-                                                                enable-old-support>
+                                                                value="{{ $pasien->nama_px }}" disabled
+                                                                label="Nama Pasien" enable-old-support>
                                                                 <x-slot name="prependSlot">
                                                                     <div class="input-group-text text-olive">
                                                                         {{ $pasien->no_rm }}</div>
@@ -100,8 +183,8 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="nik_pasien"
-                                                                value="{{ $pasien->nik_bpjs }}" disabled label="NIK Pasien"
-                                                                enable-old-support>
+                                                                value="{{ $pasien->nik_bpjs }}" disabled
+                                                                label="NIK Pasien" enable-old-support>
                                                                 <x-slot name="prependSlot">
                                                                     <div class="input-group-text text-olive">
                                                                         NIK PASIEN</div>
@@ -127,7 +210,9 @@
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-input name="hak_kelas" value={{$kodeKelas}} placeholder="{{$kelas}}" label="Hak Kelas"
+                                                            <x-adminlte-input name="hak_kelas"
+                                                                value="{{ $kodeKelas }}"
+                                                                placeholder="{{ $kelas }}" label="Hak Kelas"
                                                                 id="hakKelas" disabled />
                                                         </div>
                                                         <div class="col-md-6">
@@ -176,6 +261,14 @@
             </div>
         </div>
     </div>
+
+    <x-adminlte-modal id="pilihRuangan" title="List Ruangan Tersedia" theme="success" icon="fas fa-bed" size='xl'
+        disable-animations>
+        <div class="row listruangan" id="idRuangan"></div>
+        <x-slot name="footerSlot">
+            <x-adminlte-button theme="danger" label="batal pilih" onclick="batalPilih()" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
@@ -183,44 +276,7 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
-@section('js')
-    <script>
-        const select = document.getElementById('pilihPendaftaran');
-        const pilihUnit = document.getElementById('pilihUnit');
 
-        function showDiv(select) {
-            if (select.value == 0) {
-                document.getElementById('div_rajal').style.display = "block";
-                document.getElementById('div_ranap').style.display = "none";
-                document.getElementById('div_ruangan').style.display = "none";
-            } else {
-                document.getElementById('div_ranap').style.display = "block";
-                document.getElementById('div_ruangan').style.display = "block";
-                document.getElementById('div_rajal').style.display = "none";
-            }
-        }
-
-        function showUnit(pilihUnit) {
-            if (pilihUnit.value == 0) {
-                document.getElementById('ugd').style.display = "block";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 1) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "block";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 2) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "block";
-            } else {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            }
-        }
-    </script>
-@endsection
 @section('js')
     <script>
         $('#cariRuangan').on('click', function() {

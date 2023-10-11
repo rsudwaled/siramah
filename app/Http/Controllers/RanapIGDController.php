@@ -77,7 +77,7 @@ class RanapIGDController extends Controller
         $refKunj = $request->kun;
         $pasien = Pasien::firstWhere('no_rm', $request->no);
         $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
-        $unit = Unit::limit(10)->get();
+        $unit = Unit::where('kelas_unit', 2)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
         $penjamin = PenjaminSimrs::get();
         $paramedis = Paramedis::where('spesialis', 'UMUM')
