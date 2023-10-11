@@ -71,13 +71,19 @@ class RanapIGDController extends Controller
         $request['nomorkartu'] = $request->nobp;
         $request['tanggal'] = now()->format('Y-m-d');
         $res = $vlcaim->peserta_nomorkartu($request);
-        dd($res);
-        $pasien = Pasien::where('no_rm', 10230617)->first();
-        $kunjungan = Kunjungan::where('no_rm', $pasien->no_rm)->first();
+        // dd($res->response);
+        $kodeKelas = $res->response->peserta->hakKelas->kode;
+        $kelas = $res->response->peserta->hakKelas->keterangan;
+        $refKunj = $request->kun;
+        $pasien = Pasien::firstWhere('no_rm', $request->no);
+        $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
         $unit = Unit::limit(10)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
         $penjamin = PenjaminSimrs::get();
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk'));
+        $paramedis = Paramedis::where('spesialis', 'UMUM')
+            ->where('act', 1)
+            ->get();
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','refKunj','kodeKelas','kelas', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
     }
 
     public function getUnit(Request $request)
