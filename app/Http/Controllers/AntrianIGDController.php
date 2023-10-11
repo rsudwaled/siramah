@@ -403,56 +403,56 @@ class AntrianIGDController extends APIController
         }
         
     }
-    public function formPasienIGDFromBPJS($nik, $no, $rm, $jp)
-    {
-        // dd($nik, $no, $rm, $jp);
-        $antrian = AntrianPasienIGD::firstWhere('no_antri',$no);
-        $pasien = Pasien::firstWhere('no_rm', $rm);
-        $tanggal =now()->format('Y-m-d');
+    // public function formPasienIGDFromBPJS($nik, $no, $rm, $jp)
+    // {
+    //     // dd($nik, $no, $rm, $jp);
+    //     $antrian = AntrianPasienIGD::firstWhere('no_antri',$no);
+    //     $pasien = Pasien::firstWhere('no_rm', $rm);
+    //     $tanggal =now()->format('Y-m-d');
 
-        // cek status bpjs aktif atau tidak
-        $url = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
-        $signature = $this->signature();
-        $response = Http::withHeaders($signature)->get($url);
-        $resdescrtipt = $this->response_decrypt($response, $signature);
-        $callback = json_decode($response->body());
+    //     // cek status bpjs aktif atau tidak
+    //     $url = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
+    //     $signature = $this->signature();
+    //     $response = Http::withHeaders($signature)->get($url);
+    //     $resdescrtipt = $this->response_decrypt($response, $signature);
+    //     $callback = json_decode($response->body());
         
-        // dd($res);
-        $kelasBPJS = null;
-        $ketkelasBPJS = null;
-        $jpBpjs = null;
-        $ket_jpBpjs = null;
-        if ($resdescrtipt->metadata->code == 200) {
-            $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
-            $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
-            //jenis peserta bpjs
-            $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
-            $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
-        }
-        // dd($kelasBPJS);
-        $icd = Icd10::limit(10)->get();
-        $keluarga = KeluargaPasien::where('no_rm', $rm)->first();
-        $hb_keluarga = HubunganKeluarga::all();
-        $kunjungan = Kunjungan::where('no_rm', $rm)->get();
-        $knj_aktif = Kunjungan::where('no_rm', $rm)
-            ->where('status_kunjungan', 1)
-            ->count();
+    //     // dd($res);
+    //     $kelasBPJS = null;
+    //     $ketkelasBPJS = null;
+    //     $jpBpjs = null;
+    //     $ket_jpBpjs = null;
+    //     if ($resdescrtipt->metadata->code == 200) {
+    //         $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
+    //         $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
+    //         //jenis peserta bpjs
+    //         $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
+    //         $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+    //     }
+    //     // dd($kelasBPJS);
+    //     $icd = Icd10::limit(10)->get();
+    //     $keluarga = KeluargaPasien::where('no_rm', $rm)->first();
+    //     $hb_keluarga = HubunganKeluarga::all();
+    //     $kunjungan = Kunjungan::where('no_rm', $rm)->get();
+    //     $knj_aktif = Kunjungan::where('no_rm', $rm)
+    //         ->where('status_kunjungan', 1)
+    //         ->count();
 
-        $unit = Unit::limit(10)->get();
-        $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
-            ->get();
-        $penjamin = PenjaminSimrs::limit(10)
-            ->where('act', 1)
-            ->get();
-        return view('simrs.igd.pasienbpjs.p_bpjs_rajal_kbd', compact(
-            'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-            'antrian','keluarga', 'hb_keluarga', 'resdescrtipt', 
-            'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs',
-            'knj_aktif','icd'
-        ));
-    }
+    //     $unit = Unit::limit(10)->get();
+    //     $alasanmasuk = AlasanMasuk::limit(10)->get();
+    //     $paramedis = Paramedis::where('spesialis', 'UMUM')
+    //         ->where('act', 1)
+    //         ->get();
+    //     $penjamin = PenjaminSimrs::limit(10)
+    //         ->where('act', 1)
+    //         ->get();
+    //     return view('simrs.igd.pasienbpjs.p_bpjs_rajal_kbd', compact(
+    //         'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
+    //         'antrian','keluarga', 'hb_keluarga', 'resdescrtipt', 
+    //         'kelasBPJS','ketkelasBPJS','jpBpjs','ket_jpBpjs',
+    //         'knj_aktif','icd'
+    //     ));
+    // }
     public function pasiendiDaftarkan(Request $request, $nik)
     {
         if ($antrian == null || $norm == null) {

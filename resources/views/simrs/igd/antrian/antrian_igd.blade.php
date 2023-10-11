@@ -140,8 +140,10 @@
                                                         </x-adminlte-select>
                                                     </div>
                                                 </div>
-                                                <x-adminlte-button type="submit" theme="primary"
+                                                <x-adminlte-button type="submit" id="lanjutDaftar" theme="primary"
                                                     label="Lanjutkan Pendaftaran" />
+                                                <x-adminlte-button id="warningDaftar" theme="danger"
+                                                    label="silahkan edit nik pasien terlebih dahulu" />
                                             </div>
                                         </form>
                                     </div>
@@ -385,6 +387,8 @@
                 $.LoadingOverlay("show");
                 search();
             });
+            $('#warningDaftar').hide();
+            $('#lanjutDaftar').show();
         });
         search();
 
@@ -395,7 +399,8 @@
             var tglLahir = $('#tgl_lahir_search').val();
             var nobpjs = $('#no_bpjs_search').val();
             if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && nobpjs == '') {
-                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data', '', 'info')
+                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data',
+                    '', 'info')
             }
             $.get('{{ route('pasien-igd-search') }}', {
                     // _token: $('meta[name="csrf-token"]').attr('content'),
@@ -432,7 +437,8 @@
                       <tr class="nowrap">
                           <td>
                               <button type="button" onclick="pilihPasien(` + rm +
-                    `)" class="btn bg-maroon btn-flat btn-sm">` + rm + `</button> <a href="{{route('edit-pasienbpjs')}}?rm=`+rm+`" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
+                    `)" class="btn bg-maroon btn-flat btn-sm">` + rm +
+                    `</button> <a href="{{ route('edit-pasienbpjs') }}?rm=` + rm + `" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
                           <td>` + res.pasien[i].no_Bpjs + `</td>
@@ -456,27 +462,34 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     var getPasienUrl = "{{ route('pasien-terpilih.get') }}?rm=" + rm;
-                    $.get(getPasienUrl, function(data) {
-                        console.log(data);
-                        $('#rm_pasien_selected').text('NO RM : ' + data.pasien['no_rm']);
-                        $('#nama_pasien_selected').text('NAMA : ' + data.pasien['nama_px']);
-                        $('#desa_pasien_selected').text('DESA : ' + data.pasien['desas'][
-                            'nama_desa_kelurahan'
-                        ]);
-                        $('#kec_pasien_selected').text('KEC. : ' + data.pasien['kecamatans'][
-                            'nama_kecamatan'
-                        ]);
-                        $('#kab_pasien_selected').text('KAB. : ' + data.pasien['kabupatens'][
-                            'nama_kabupaten_kota'
-                        ]);
-                        $('#nik').val(data.pasien['nik_bpjs']);
+                    $.get(getPasienUrl, function(pasien) {
+                        console.log(pasien);
+                        var nik = pasien.pasien['nik_bpjs'];
+                        if (!nik) {
+                            Swal.fire('pasien tidak memiliki nik. silahkan edit terlebih dahulu', '',
+                                'error')
+                                $('#lanjutDaftar').hide();
+                                $('#warningDaftar').show();
+                        } else {
+                            $('#rm_pasien_selected').text('NO RM : ' + pasien.pasien['no_rm']);
+                            $('#nama_pasien_selected').text('NAMA : ' + pasien.pasien['nama_px']);
+                            $('#desa_pasien_selected').text('DESA : ' + pasien.pasien['desas'][
+                                'nama_desa_kelurahan'
+                            ]);
+                            $('#kec_pasien_selected').text('KEC. : ' + pasien.pasien['kecamatans'][
+                                'nama_kecamatan'
+                            ]);
+                            $('#kab_pasien_selected').text('KAB. : ' + pasien.pasien['kabupatens'][
+                                'nama_kabupaten_kota'
+                            ]);
+                            $('#nik').val(pasien.pasien['nik_bpjs']);
+                            Swal.fire('pasien berhasil dipilih', '', 'success')
+                            $('#no_rm').val(rm);
+                            $('#warningDaftar').hide();
+                            $('#lanjutDaftar').show();
+                        }
                     })
-                    Swal.fire('pasien berhasil dipilih', '', 'success')
-                    $('#no_rm').val(rm);
                 }
-                // else if (result.isDenied) {
-                //   Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
-                // }
             })
         }
 

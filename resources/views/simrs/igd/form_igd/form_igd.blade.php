@@ -183,13 +183,13 @@
                                         class="btn btn-block {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
                                         :
                                         {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
-                                    @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
+                                    @if ($pasien->no_Bpjs == null)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
                                             onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
                                             no bpjs</button>
-                                        <a href="" class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
-                                            Pasien
-                                            BPJS</a>
+                                    @endif
+                                    @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
+                                    <a href="{{route('form-pasien-bpjs',['nik'=>$pasien->nik_bpjs,'no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>0])}}" class="btn btn-block btn-xl btn-warning btn-flat">daftarkan <b>dipasien bpjs</b></a>
                                     @endif
                                 </div>
                             </div>

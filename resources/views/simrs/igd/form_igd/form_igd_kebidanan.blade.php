@@ -2,7 +2,7 @@
 
 @section('title', 'Pasien IGD KEBIDANAN')
 @section('content_header')
-    <h1>Pasien IGD KEBIDANAN : {{ $pasien->nama_px }}</h1>
+    <h1>Pasien IGK : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -180,14 +180,14 @@
                                         {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
                                     <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2">PENJAMIN
                                         BPJS : <b>{{ $ket_jpBpjs }}</b></button>
-                                    @if ($pasien->no_Bpjs != null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
+                                    @if ($pasien->no_Bpjs == null && $resdescrtipt->response->peserta->statusPeserta->kode == 0)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
                                             onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
                                             no bpjs</button>
-                                        <a href="{{ route('form-pasien-idgtobpjs', ['nik' => $pasien->nik_bpjs, 'no' => $antrian->no_antri, 'rm' => $pasien->no_rm, 'jp' => 0]) }}"
-                                            class="btn btn-xl btn-warning btn-flat">Pindah Pendaftaran di
-                                            Pasien
-                                            BPJS</a>
+                                        </a>
+                                    @endif
+                                    @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
+                                    <a href="{{route('form-pasien-bpjs',['nik'=>$pasien->nik_bpjs,'no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>1])}}" class="btn btn-block btn-xl btn-warning btn-flat">daftarkan <b>dipasien bpjs</b></a>
                                     @endif
                                 </div>
                             </div>

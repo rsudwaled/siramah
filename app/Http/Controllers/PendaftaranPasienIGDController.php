@@ -407,4 +407,6 @@ class PendaftaranPasienIGDController extends Controller
             'antrian', 'knj_aktif',
         ));
     }
+
+
 }

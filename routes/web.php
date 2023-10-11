@@ -317,7 +317,7 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar-umum/pasien-igd/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGD'])->name('form-pasien');
     Route::get('daftar-bpjs/pasien-igd/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienBPJS'])->name('form-pasien-bpjs');
     
-    Route::get('daftar/pasien-igd-bpjs/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGDFromBPJS'])->name('form-pasien-idgtobpjs');
+    // Route::get('daftar/pasien-igd-bpjs/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGDFromBPJS'])->name('form-pasien-idgtobpjs');
 
     Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
     Route::get('/pendaftaran-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
@@ -339,8 +339,10 @@ Route::middleware('auth')->group(function () {
     
     Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
     Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
-    Route::get('/pendaftaran-pasien-igds', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'bpjsToUmum'])->name('bpjstoumum');
     Route::put('/pendaftaran-igd-batal', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'batalDaftarIGD'])->name('batalkan.pendaftaranigd');
+    Route::get('/pendaftaran-pasien-igds', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'bpjsToUmum'])->name('bpjstoumum');
+    
+    // pilih ruangan
     Route::post('/pilih-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihRuangan'])->name('pilih-ruangan');
 
     // Menu Kunjungan

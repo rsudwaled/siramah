@@ -233,9 +233,13 @@
                                             label="Batalkan Pendaftaran"
                                             onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
                                     @else
-                                        <a href="{{ route('bpjstoumum') }}/?par={{ $pasien->no_rm }}{{ $antrian->no_antri }}"
-                                            class="btn btn-danger btn-sm btn-flat float-right m-1">pasien bermasalah
-                                            dengan bpjs</a>
+                                        <a href="{{route('form-pasien',['no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>$status_pendaftaran])}}"
+                                            class="float-right">
+                                            <div class="alert alert-danger alert-dismissible">
+                                                <h5><i class="icon fas fa-ban"></i> BPJS BERMASALAH!</h5>
+                                                Pasien Bermasalah dengan bpjs, daftarkan sebagai pasien umum
+                                                </div>
+                                        </a>
                                     @endif
                                 @else
                                     <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
