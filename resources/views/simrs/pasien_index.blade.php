@@ -64,7 +64,7 @@
                             <td>{{ $item->tgl_entry }} ({{ $item->pic }})</td>
                             <td>
                                 <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
-                                    title="Edit User {{ $item->nama_px }}" data-id="{{ $item->id }}"
+                                    title="Edit User {{ $item->nama_px }}" data-id="{{ $item->idx }}"
                                     data-norm="{{ $item->no_rm }}" data-nokartu="{{ $item->no_Bpjs }}"
                                     data-nik="{{ $item->nik_bpjs }}" data-nama="{{ $item->nama_px }}" />
                             </td>
@@ -85,27 +85,28 @@
             </x-adminlte-card>
         </div>
     </div>
-    <x-adminlte-modal id="modalPasien" title="User" icon="fas fa-user" theme="success" size="xl">
+    <x-adminlte-modal id="modalPasien" title="Pasien" icon="fas fa-user-injured" theme="success" size="xl">
         <form action="" id="formPasien" method="POST">
             @csrf
+            <input type="hidden" name="id" id="id">
+            <input type="hidden" name="_method" id="method">
             <div class="row">
                 <div class="col-md-6">
                     <x-adminlte-input name="norm" label="Nomor RM" placeholder="Nomor Rekam Medis" enable-old-support
                         required readonly />
                     <x-adminlte-input name="nokartu" label="Nomor Kartu BPJS" placeholder="Nomor Kartu BPJS"
-                        enable-old-support required />
+                        enable-old-support />
                     <x-adminlte-input name="nik" label="NIK" placeholder="Nomor Induk Kependudukan"
-                        enable-old-support required />
-                    <x-adminlte-input name="nama" label="Nama" placeholder="Nama Lengkap" enable-old-support
-                        required />
-                    <x-adminlte-input name="no_hp" label="Nomor HP" placeholder="Nomor HP" enable-old-support required />
-                    <x-adminlte-input name="tempat_lahir" label="Tempat Lahir" placeholder="Tempat Lahir" enable-old-support
-                        required />
+                        enable-old-support />
+                    <x-adminlte-input name="nama" label="Nama" placeholder="Nama Lengkap" enable-old-support />
+                    <x-adminlte-input name="no_hp" label="Nomor HP" placeholder="Nomor HP" enable-old-support />
+                    <x-adminlte-input name="tempat_lahir" label="Tempat Lahir" placeholder="Tempat Lahir"
+                        enable-old-support />
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
                     <x-adminlte-input-date name="tanggal_lahir" label="Tanggal Lahir" placeholder="Tanggal Lahir"
-                        :config="$config" enable-old-support required />
+                        :config="$config" enable-old-support />
                 </div>
                 <div class="col-md-6">
                     <x-adminlte-select name="gender" label="Jenis Kelamin" enable-old-support>
@@ -172,7 +173,7 @@
             $('#btnStore').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var url = "{{ route('user.store') }}";
+                var url = "{{ route('pasien.store') }}";
                 $('#formPasien').attr('action', url);
                 $("#method").prop('', true);
                 $('#formPasien').submit();
@@ -181,8 +182,8 @@
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");
                 e.preventDefault();
-                var id = $('#id').val();
-                var url = "{{ route('user.index') }}/" + id;
+                var id = $('#norm').val();
+                var url = "{{ route('pasien.index') }}/" + id;
                 $('#formPasien').attr('action', url);
                 $('#method').val('PUT');
                 $('#formPasien').submit();
@@ -200,7 +201,7 @@
                     if (result.isDenied) {
                         $.LoadingOverlay("show");
                         var id = $(this).data("id");
-                        var url = "{{ route('user.index') }}/" + id;
+                        var url = "{{ route('pasien.index') }}/" + id;
                         $('#formDelete').attr('action', url);
                         $('#formDelete').submit();
                     }

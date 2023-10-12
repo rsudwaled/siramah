@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pasien;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -60,21 +61,17 @@ class PasienController extends APIController
         Alert::success('Success', 'Data Pasien Telah Disimpan');
         return redirect()->route('simrs.pasien.index');
     }
-    public function update(Request $request, Pasien $pasien)
+    public function update($id, Request $request)
     {
-        $request->validate([
-            'nik' => 'required',
-            'nokartu' => 'required',
-            'nama' => 'required',
-            'norm' => 'required',
-        ]);
+        $request['user'] = Auth::user()->id;
+        $pasien = Pasien::find($id);
         $pasien->update([
             'nik_bpjs' => $request->nik,
             'no_Bpjs' => $request->nokartu,
             'nama_px' => $request->nama,
         ]);
-        Alert::success('Success', 'Data Pasien Telah Disimpan');
-        return redirect()->route('pasien.index');
+        Alert::success('Success', 'Data Pasien Diperbaharui.');
+        return redirect()->back();
     }
     public function show($no_rm)
     {
