@@ -3,7 +3,6 @@
 @section('content_header')
     <h1>Antrian Pendaftaran {{ $request->loket ? 'Loket ' . $request->loket . ' Lantai ' . $request->lantai : '' }}</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -96,7 +95,7 @@
                                 $config['scrollX'] = true;
                             @endphp
                             <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config"
-                                striped bordered hoverable compressed>
+                                bordered hoverable compressed>
                                 @foreach ($antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai) as $item)
                                     <tr>
                                         <td>
@@ -173,30 +172,16 @@
                                             Loket {{ $item->loket }}
                                         </td>
                                         <td>
-                                            {{-- <x-adminlte-button label="BPJS" theme="success" icon="fas fa-user-plus"
-                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarBPJS" />
-                                            <x-adminlte-button label="UMUM" theme="success" icon="fas fa-user-plus"
-                                                class="btn-xs mt-1" data-toggle="modal" data-target="#daftarUmum" /> --}}
-
-                                            {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
-                                                icon="fas fa-volume-down" data-toggle="tooltip"
-                                                title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('selesaiPendaftaran') }}?kodebooking='" /> --}}
-
                                             <a class="btn btn-xs mt-1 btn-success"
                                                 href="{{ route('selesaiPendaftaran') }}?kodebooking={{ $item->kodebooking }}">
                                                 <i class="fas fa-user-plus"></i> Selesai</a>
-
                                             <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="primary"
                                                 icon="fas fa-volume-down" data-toggle="tooltip"
                                                 title="Panggil Antrian {{ $item->nomorantrean }}"
                                                 onclick="window.location='{{ route('panggilPendaftaran', [$item->kodebooking, $request->loket, $request->lantai]) }}'" />
-
-                                            <x-adminlte-button class="btn-xs mt-1 withLoad" theme="danger"
-                                                icon="fas fa-times" data-toggle="tooltop"
-                                                title="Batal Antrian {{ $item->nomorantrean }}"
-                                                onclick="window.location='{{ route('batalAntrian', $item) }}'" />
-
+                                            <a class="btn btn-xs mt-1 btn-danger withLoad"
+                                                href="{{ route('batalpendaftaran') }}?kodebooking={{ $item->kodebooking }}">
+                                                <i class="fas fa-times"></i> Batal</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -215,8 +200,8 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads"
-                                :config="$config" striped bordered hoverable compressed>
+                            <x-adminlte-datatable id="table2" class="nowrap text-xs" :heads="$heads" :config="$config"
+                                bordered hoverable compressed>
                                 @foreach ($antrians as $item)
                                     <tr>
                                         <td>
@@ -304,7 +289,6 @@
             @endif
         </div>
     </div>
-
     <x-adminlte-modal id="daftarBPJS" title="Pendaftaran Rawat Jalan BPJS" theme="warning" icon="fas fa-user-plus"
         size='lg'>
         This is a purple theme modal without animations.
@@ -314,11 +298,9 @@
         This is a purple theme modal without animations.
     </x-adminlte-modal>
 @stop
-
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
-
 @section('js')
     <script>
         $(function() {

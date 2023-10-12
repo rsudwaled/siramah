@@ -87,9 +87,6 @@
                         <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i
                                 class="fas fa-print"></i> Checkin
                             Antrian</a>
-                        <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
-                                class="fas fa-calendar-alt"></i> Jadwal
-                            Dokter</a>
                     </x-slot>
                 </x-adminlte-card>
             </div>
