@@ -29,29 +29,32 @@
                 </div>
                 <div class="col-md-9">
                     <x-adminlte-card theme="primary" collapsible title="Riwayat Kunjungan :">
-                        @php
-                            $heads = ['Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Petugas'];
-                            $config['order'] = ['0', 'asc'];
-                            $config['paging'] = false;
-                            $config['info'] = false;
-                            $config['scrollY'] = '450px';
-                            $config['scrollCollapse'] = true;
-                            $config['scrollX'] = true;
-                        @endphp
-                        <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped
-                            bordered hoverable compressed>
-                            @foreach ($kunjungan as $item)
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>{{ $item->counter }}</td>
-                                    <td>{{ $item->kode_kunjungan }}</td>
-                                    <td>{{ $item->unit->nama_unit }}</td>
-                                    <td>{{ $item->tgl_masuk }}</td>
-                                    <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}</td>
-                                    <td>{{ $item->nama_penjamin }}</td>
-                                    <td>{{ $item->nama_user }}</td>
+                                    <td>Kunjungan</td>
+                                    <td>Unit</td>
+                                    <td>Tgl Masuk</td>
+                                    <td>Tgl Keluar</td>
+                                    <td>Penjamin</td>
+                                    <td>Petugas</td>
                                 </tr>
-                            @endforeach
-                        </x-adminlte-datatable>
+                            </thead>
+                            <tbody>
+                                @foreach ($kunjungan as $item)
+                                    <tr>
+                                        <td>{{ $item->counter }}</td>
+                                        <td>{{ $item->kode_kunjungan }}</td>
+                                        <td>{{ $item->unit->nama_unit }}</td>
+                                        <td>{{ $item->tgl_masuk }}</td>
+                                        <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
+                                        </td>
+                                        <td>{{ $item->nama_penjamin }}</td>
+                                        <td>{{ $item->nama_user }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </x-adminlte-card>
                 </div>
             </div>
@@ -63,36 +66,41 @@
                                 data-target="#createSPRI">BUAT SPRI</button>
                             <x-adminlte-modal id="createSPRI" title="SPRI" theme="primary" size='lg'
                                 disable-animations>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="noKartu" value="{{ $pasien->no_Bpjs }}" label="No Kartu"
-                                            disabled />
+                                <form id="createSPRI">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <x-adminlte-input name="noKartu" value="{{ $pasien->no_Bpjs }}"
+                                                label="No Kartu" disabled />
+                                        </div>
+                                        <div class="col-md-6">
+                                            @php
+                                                $config = ['format' => 'YYYY-MM-DD'];
+                                            @endphp
+                                            <x-adminlte-input-date name="tglRencanaKontrol" id="tanggal"
+                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Masuk"
+                                                :config="$config" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <x-adminlte-select2 name="poliKontrol" label="poliKontrol" id="poliklinik">
+                                                <option selected disabled>Cari Poliklinik</option>
+                                            </x-adminlte-select2>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <x-adminlte-select2 name="kodeDokter" label="Dokter DPJP" id="dokter">
+                                                <option value="">--Pilih Dpjp--</option>
+                                                @foreach ($paramedis as $item)
+                                                    <option value="{{ $item->kode_dokter_jkn }}">
+                                                        {{ $item->nama_paramedis }}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        @php
-                                            $config = ['format' => 'YYYY-MM-DD'];
-                                        @endphp
-                                        <x-adminlte-input-date name="tglRencanaKontrol"
-                                            value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Masuk"
-                                            :config="$config" />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="poliKontrol" value="UGD" label="Poli Kontrol" disabled />
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-select2 name="kodeDokter" label="Pilih Dokter">
-                                            <option value="">--Pilih Dpjp--</option>
-                                            @foreach ($paramedis as $item)
-                                                <option value="{{ $item->kode_paramedis }}">
-                                                    {{ $item->nama_paramedis }}</option>
-                                            @endforeach
-                                        </x-adminlte-select2>
-                                    </div>
-                                </div>
-                                <x-slot name="footerSlot">
-                                    <x-adminlte-button theme="success" label="buat spri" />
-                                    <x-adminlte-button theme="danger" label="batal" data-dismiss="modal" />
-                                </x-slot>
+                                    <x-slot name="footerSlot">
+                                        <x-adminlte-button type="submit" theme="success" form="createSPRI"
+                                            class="btnCreateSPRI" label="buat spri" />
+                                        <x-adminlte-button theme="danger" label="batal" data-dismiss="modal" />
+                                    </x-slot>
+                                </form>
                             </x-adminlte-modal>
                             <div class="col-md-12">
                                 <x-adminlte-select2 name="unitTerpilih" id="unitTerpilih" label="Ruangan">
@@ -111,47 +119,24 @@
                                     <option value="5" {{ $kodeKelas == 5 ? 'selected' : '' }}>VVIP</option>
                                 </x-adminlte-select>
                             </div>
+                            <div class="col-md-12">
+                                <div class="icheck-primary d-inline ml-2">
+                                    <input type="checkbox" value="0" name="naikKelasRawat" id="naikKelasRawat">
+                                    <label for="naikKelasRawat"></label>
+                                </div>
+
+                                <span class="text text-red"><b id="textDescChange">ceklis apabila pasien naik kelas rawat</b></span>
+                            </div>
                         </div>
                         <div class="card-footer">
                             <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
-                                id="cariRuangan" class="bg-purple" />
-                            <a href="#" class="btn bg-teal" id="showBed" style="display: none">
+                                id="cariRuangan" class="bg-purple btn-block" />
+                            <a href="#" class="btn bg-teal btn-block" id="showBed" style="display: none">
                                 <i class="fas fa-bed"></i>
                             </a>
-                            <a href="#" class="btn btn-primary" id="showRuangan" style="display: none">
+                            <a href="#" class="btn btn-primary btn-block" id="showRuangan" style="display: none">
                                 <i class="fas fa-bed"></i> Tidak ada
                             </a>
-                        </div>
-                    </div>
-                    <div class="card card-danger card-outline">
-                        <div class="card-body">
-                            <div class="col-md-12">
-                                <x-adminlte-select name="naik_kelas_rawat" label="Naik Kelas Rawat">
-                                    <option value="1">KELAS 1</option>
-                                    <option value="2">KELAS 2</option>
-                                    <option value="3">KELAS 3</option>
-                                    <option value="4">VIP</option>
-                                    <option value="5">VVIP</option>
-                                </x-adminlte-select>
-                            </div>
-                            <div class="col-md-12">
-                                <x-adminlte-select name="naikKelasPembiyaan" label="Pembiayaan">
-                                    <option value="0">--Pilih Pembiayaan--</option>
-                                    <option value="1">Pribadi</option>
-                                    <option value="2">Pemberi Kerja</option>
-                                    <option value="3">Asuransi Kesehatan Tambahan</option>
-                                </x-adminlte-select>
-                            </div>
-                            <div class="col-md-12">
-                                <x-adminlte-input name="nama_pj" label="Nama PenanggungJawab"
-                                    placeholder="masukan nama pj" label-class="text-black">
-                                    <x-slot name="prependSlot">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-user text-black"></i>
-                                        </div>
-                                    </x-slot>
-                                </x-adminlte-input>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,6 +151,7 @@
                                     <input type="hidden" name="kodeKunjungan" value=" {{ $refKunj }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
+                                    <input type="hidden" name="crad" id="c_rad">
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -200,6 +186,11 @@
                                                                 label="Tanggal Masuk" :config="$config" />
                                                         </div>
                                                         <div class="col-md-6">
+                                                            <x-adminlte-input name="noSPRI" label="No SPRI"
+                                                                id="noSuratKontrol" label-class="text-black" disabled>
+                                                            </x-adminlte-input>
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             <x-adminlte-input name="noTelp" label="No Telp"
                                                                 placeholder="masukan no telp" label-class="text-black">
                                                                 <x-slot name="prependSlot">
@@ -213,7 +204,7 @@
                                                             <x-adminlte-input name="hak_kelas"
                                                                 value="{{ $kodeKelas }}"
                                                                 placeholder="{{ $kelas }}" label="Hak Kelas"
-                                                                id="hakKelas" disabled />
+                                                                disabled />
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
@@ -271,10 +262,10 @@
     </x-adminlte-modal>
 @stop
 
-@section('plugins.Select2', true)
 @section('plugins.Datatables', true)
-@section('plugins.DatatablesPlugins', true)
+@section('plugins.Select2', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
 
 @section('js')
@@ -335,5 +326,77 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
+
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $("#poliklinik").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_poliklinik_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            poliklinik: params.term // search term
+                        };
+                        var pol = $('#poliklinik').val();
+                        alert(pol);
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $('.btnCreateSPRI').click(function(e) {
+                var noKartu = $("#noKartu").val();
+                var kodeDokter = $("#dokter").val();
+                var poliKontrol = $("#poliklinik option:selected").val();
+                var tglRencanaKontrol = $("#tanggal").val();
+                var url = "{{ route('spri.create') }}";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        noKartu: noKartu,
+                        kodeDokter: kodeDokter,
+                        poliKontrol: poliKontrol,
+                        tglRencanaKontrol: tglRencanaKontrol
+                    },
+                    success: function(data) {
+
+                        if (data.metadata.code == 200) {
+                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
+                            $("#noSuratKontrol").val(data.response.noSPRI);
+                            $("#createSPRI").modal('toggle');
+
+                        } else {
+                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
+                                .code + ')', '', 'error');
+                        }
+                    },
+
+                });
+            });
+            $('#naikKelasRawat').click(function(e){
+                if (this.checked) {
+                    $("#r_kelas_id").removeAttr("disabled");
+                    $("#textDescChange").text("pasien memilih naik kelas rawat");
+                    $("#c_rad").val(1);
+                } else {
+                    $("#r_kelas_id").attr("disabled", true);
+                    $("#textDescChange").text("ceklis apabila pasien naik kelas rawat / edit kelas");
+                    $("#c_rad").val(0);
+                }
+            })
+        });
     </script>
 @endsection

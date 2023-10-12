@@ -285,7 +285,7 @@
                                         {{ $suratkontrol->terbitSEP }}
                                     </td>
                                     <td>
-                                        <form action="{{ route('suratkontrol_delete') }}" method="POST">
+                                        <form action="{{ route('spri_delete') }}" method="POST">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="noSuratKontrol"

@@ -972,6 +972,28 @@ class VclaimController extends APIController
         $response = Http::withHeaders($signature)->post($url, $data);
         return $this->response_decrypt($response, $signature);
     }
+    public function spri_delete(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSuratKontrol" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $url = env('VCLAIM_URL') . "RencanaKontrol/Delete";
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            "request" => [
+                "t_suratkontrol" => [
+                    "noSuratKontrol" => $request->noSuratKontrol,
+                    "user" => 'RSUD Waled',
+                ]
+            ]
+        ];
+        $response = Http::withHeaders($signature)->delete($url, $data);
+        return $this->response_decrypt($response, $signature);
+    }
     public function sep_delete(Request $request)
     {
         $validator = Validator::make(request()->all(), [

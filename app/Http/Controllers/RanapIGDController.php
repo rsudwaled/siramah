@@ -37,7 +37,7 @@ use Illuminate\Support\Str;
 use Auth;
 use DB;
 
-class RanapIGDController extends Controller
+class RanapIGDController extends APIController
 {
     public function getKunjunganNow()
     {
@@ -80,8 +80,7 @@ class RanapIGDController extends Controller
         $unit = Unit::where('kelas_unit', 2)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
         $penjamin = PenjaminSimrs::get();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
+        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')
             ->get();
         return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','refKunj','kodeKelas','kelas', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
     }
@@ -223,5 +222,81 @@ class RanapIGDController extends Controller
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
         return redirect()->route('kunjungan.ranap');
+    }
+
+    // API FUNCTION
+    public function signature()
+    {
+        $cons_id = env('ANTRIAN_CONS_ID');
+        $secretKey = env('ANTRIAN_SECRET_KEY');
+        $userkey = env('ANTRIAN_USER_KEY');
+        date_default_timezone_set('UTC');
+        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+        $signature = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
+        $encodedSignature = base64_encode($signature);
+        $data['user_key'] = $userkey;
+        $data['x-cons-id'] = $cons_id;
+        $data['x-timestamp'] = $tStamp;
+        $data['x-signature'] = $encodedSignature;
+        $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
+        return $data;
+    }
+    public static function stringDecrypt($key, $string)
+    {
+        $encrypt_method = 'AES-256-CBC';
+        $key_hash = hex2bin(hash('sha256', $key));
+        $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
+        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+        $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+        return $output;
+    }
+    public function response_decrypt($response, $signature)
+    {
+        $code = json_decode($response->body())->metaData->code;
+        $message = json_decode($response->body())->metaData->message;
+        if ($code == 200 || $code == 1) {
+            $response = json_decode($response->body())->response ?? null;
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response);
+            $data = json_decode($decrypt);
+            if ($code == 1) {
+                $code = 200;
+            }
+            return $this->sendResponse($data, $code);
+        } else {
+            return $this->sendError($message, $code);
+        }
+    }
+    public function response_no_decrypt($response)
+    {
+        $code = json_decode($response->body())->metaData->code;
+        $message = json_decode($response->body())->metaData->message;
+        $response = json_decode($response->body())->metaData->response;
+        $response = [
+            'response' => $response,
+            'metadata' => [
+                'message' => $message,
+                'code' => $code,
+            ],
+        ];
+        return json_decode(json_encode($response));
+    }
+    // pasien ranap bpjs
+    public function createSPRI(Request $request)
+    {
+        $vclaim = new VclaimController();
+        $url = env('VCLAIM_URL') . 'RencanaKontrol/InsertSPRI';
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            'request' => [
+                "noKartu"       =>$request->noKartu,
+                "kodeDokter"    =>$request->kodeDokter,
+                "poliKontrol"   =>$request->poliKontrol,
+                "tglRencanaKontrol"=>$request->tglRencanaKontrol,
+                "user"          =>Auth::user()->name,
+            ],
+        ];
+        $response = Http::withHeaders($signature)->post($url, $data);
+        return $this->response_decrypt($response, $signature);
     }
 }
