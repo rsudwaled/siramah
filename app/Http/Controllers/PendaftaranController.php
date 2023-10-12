@@ -803,6 +803,98 @@ class PendaftaranController extends APIController
         $printer->cut();
         $printer->close();
     }
+    function print_sep(Request $request, $sep)
+    {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
+        $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
+        // $for_sep = ['PERCOBAAN'];
+        foreach ($for_sep as  $value) {
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+            $printer = new Printer($connector);
+            $printer->setEmphasis(true);
+            $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
+            $printer->text("RSUD WALED KAB. CIREBON\n");
+            $printer->setEmphasis(false);
+            $printer->text("================================================\n");
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("SEP untuk " . $value . "\n");
+            $printer->text("Nomor SEP :\n");
+            $printer->setTextSize(2, 2);
+            $printer->setEmphasis(true);
+            $printer->text($sep->noSep . "\n");
+            $printer->setEmphasis(false);
+            $printer->setTextSize(1, 1);
+            $printer->text("Tgl SEP : " . $sep->tglSep . " \n");
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->text("================================================\n");
+            $printer->text("Nama Pasien : " . $sep->peserta->nama . " \n");
+            $printer->text("Nomor Kartu : " . $sep->peserta->noKartu . " \n");
+            // $printer->text("No. RM : " . $sep->peserta->mr->noMR . "\n");
+            $printer->text("No. Telepon : " . $request->noTelp . "\n");
+            $printer->text("Hak Kelas : " . $sep->peserta->hakKelas . " \n");
+            $printer->text("Jenis Peserta : " . $sep->peserta->jnsPeserta . " \n\n");
+            $printer->text("Jenis Pelayanan : " . $sep->jnsPelayanan . " \n");
+            $printer->text("Poli / Spesialis : " . $sep->poli . "\n");
+            $printer->text("COB : -\n");
+            $printer->text("Diagnosa Awal : " . $sep->diagnosa . "\n");
+            $printer->text("Faskes Perujuk : " . $request->faskesPerujuk . "\n");
+            $printer->text("Catatan : " . $sep->catatan . "\n\n");
+            $printer->setJustification(Printer::JUSTIFY_RIGHT);
+            $printer->text("Cirebon, " . $now->format('d-m-Y') . " \n\n\n\n");
+            $printer->text("RSUD Waled \n\n");
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->text("Cetakan : " . $now . "\n");
+            $printer->cut();
+            $printer->close();
+        }
+    }
+    function print_sep_ulang(Request $request, $sep)
+    {
+        Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+        $now = Carbon::now();
+        $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
+        // $for_sep = ['PERCOBAAN'];
+        foreach ($for_sep as  $value) {
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
+            $printer = new Printer($connector);
+            $printer->setEmphasis(true);
+            $printer->text("SURAT ELEGTABILITAS PASIEN (SEP)\n");
+            $printer->text("RSUD WALED KAB. CIREBON\n");
+            $printer->setEmphasis(false);
+            $printer->text("================================================\n");
+            $printer->setJustification(Printer::JUSTIFY_CENTER);
+            $printer->text("SEP untuk " . $value . "\n");
+            $printer->text("Nomor SEP :\n");
+            $printer->setTextSize(2, 2);
+            $printer->setEmphasis(true);
+            $printer->text($sep->noSep . "\n");
+            $printer->setEmphasis(false);
+            $printer->setTextSize(1, 1);
+            $printer->text("Tgl SEP : " . $sep->tglSep . " \n");
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->text("================================================\n");
+            $printer->text("Nama Pasien : " . $sep->peserta->nama . " \n");
+            $printer->text("Nomor Kartu : " . $sep->peserta->noKartu . " \n");
+            $printer->text("No. RM : " . $sep->peserta->noMr . "\n");
+            $printer->text("Hak Kelas : " . $sep->peserta->hakKelas . " \n");
+            $printer->text("Jenis Peserta : " . $sep->peserta->jnsPeserta . " \n\n");
+            $printer->text("Jenis Pelayanan : " . $sep->jnsPelayanan . " \n");
+            $printer->text("Poli / Spesialis : " . $sep->poli . "\n");
+            $printer->text("COB : -\n");
+            $printer->text("Diagnosa Awal : " . $sep->diagnosa . "\n");
+            $printer->text("Catatan : " . $sep->catatan . "\n\n");
+            $printer->setJustification(Printer::JUSTIFY_RIGHT);
+            $printer->text("Cirebon, " . $now->format('d-m-Y') . " \n\n\n\n");
+            $printer->text("RSUD Waled \n\n");
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+            $printer->text("Cetakan : " . $now . "\n");
+            $printer->cut();
+            $printer->close();
+        }
+    }
     // pendaftaran
     public function batalpendaftaran(Request $request)
     {
