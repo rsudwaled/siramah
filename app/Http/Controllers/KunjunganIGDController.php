@@ -49,6 +49,7 @@ class KunjunganIGDController extends Controller
         return back();
       }
       $ttp_k->status_kunjungan = 1;
+      $ttp_k->cfar = 1;
       $ttp_k->update();
       Alert::success('success', 'Kunjungan pasien dengan kode : '.$ttp_k->kode_kunjungan.' berhasil dibuka' );
       return back();

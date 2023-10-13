@@ -27,6 +27,7 @@ use App\Models\TriaseIGD;
 use App\Models\Icd10;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
+use App\Models\Spri;
 use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use Carbon\Carbon;
@@ -34,7 +35,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Auth;
 use DB;
 
 class RanapIGDController extends APIController
@@ -42,8 +42,9 @@ class RanapIGDController extends APIController
     public function getKunjunganNow()
     {
         $kunjungan = Kunjungan::with('pasien')->where('status_kunjungan', 2)->get();
-        // dd($kunjungan);
-        return view('simrs.igd.ranap.data_kunjungan', compact('kunjungan'));
+        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')
+            ->get();
+        return view('simrs.igd.ranap.data_kunjungan', compact('kunjungan','paramedis'));
     }
 
     public function ranapUmum(Request $request)
@@ -62,27 +63,28 @@ class RanapIGDController extends APIController
 
     public function ranapBPJS(Request $request)
     {
-        if($request->nobp==null)
+        if($request->no_kartu==null)
         {
             Alert::error('Error!!', 'pasien tidak memiliki no bpjs');
             return back();
         }
         $vlcaim = new VclaimController();
-        $request['nomorkartu'] = $request->nobp;
+        $request['nomorkartu'] = $request->no_kartu;
         $request['tanggal'] = now()->format('Y-m-d');
         $res = $vlcaim->peserta_nomorkartu($request);
-        // dd($res->response);
         $kodeKelas = $res->response->peserta->hakKelas->kode;
         $kelas = $res->response->peserta->hakKelas->keterangan;
-        $refKunj = $request->kun;
-        $pasien = Pasien::firstWhere('no_rm', $request->no);
+        $refKunj = $request->kodeKunjungan;
+        $pasien = Pasien::firstWhere('no_Bpjs', $request->no_kartu);
         $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
         $unit = Unit::where('kelas_unit', 2)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
         $penjamin = PenjaminSimrs::get();
         $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')
             ->get();
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','refKunj','kodeKelas','kelas', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
+        $spri = Spri::where('noKartu', $request->no_kartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
+        // dd($spri);
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','refKunj','kodeKelas','kelas','spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
     }
 
     public function getUnit(Request $request)
@@ -224,79 +226,41 @@ class RanapIGDController extends APIController
         return redirect()->route('kunjungan.ranap');
     }
 
-    // API FUNCTION
-    public function signature()
-    {
-        $cons_id = env('ANTRIAN_CONS_ID');
-        $secretKey = env('ANTRIAN_SECRET_KEY');
-        $userkey = env('ANTRIAN_USER_KEY');
-        date_default_timezone_set('UTC');
-        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
-        $signature = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
-        $encodedSignature = base64_encode($signature);
-        $data['user_key'] = $userkey;
-        $data['x-cons-id'] = $cons_id;
-        $data['x-timestamp'] = $tStamp;
-        $data['x-signature'] = $encodedSignature;
-        $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
-        return $data;
-    }
-    public static function stringDecrypt($key, $string)
-    {
-        $encrypt_method = 'AES-256-CBC';
-        $key_hash = hex2bin(hash('sha256', $key));
-        $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
-        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
-        $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
-        return $output;
-    }
-    public function response_decrypt($response, $signature)
-    {
-        $code = json_decode($response->body())->metaData->code;
-        $message = json_decode($response->body())->metaData->message;
-        if ($code == 200 || $code == 1) {
-            $response = json_decode($response->body())->response ?? null;
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response);
-            $data = json_decode($decrypt);
-            if ($code == 1) {
-                $code = 200;
-            }
-            return $this->sendResponse($data, $code);
-        } else {
-            return $this->sendError($message, $code);
-        }
-    }
-    public function response_no_decrypt($response)
-    {
-        $code = json_decode($response->body())->metaData->code;
-        $message = json_decode($response->body())->metaData->message;
-        $response = json_decode($response->body())->metaData->response;
-        $response = [
-            'response' => $response,
-            'metadata' => [
-                'message' => $message,
-                'code' => $code,
-            ],
-        ];
-        return json_decode(json_encode($response));
-    }
+
     // pasien ranap bpjs
     public function createSPRI(Request $request)
     {
         $vclaim = new VclaimController();
-        $url = env('VCLAIM_URL') . 'RencanaKontrol/InsertSPRI';
-        $signature = $this->signature();
-        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
-        $data = [
-            'request' => [
-                "noKartu"       =>$request->noKartu,
-                "kodeDokter"    =>$request->kodeDokter,
-                "poliKontrol"   =>$request->poliKontrol,
-                "tglRencanaKontrol"=>$request->tglRencanaKontrol,
-                "user"          =>Auth::user()->name,
-            ],
-        ];
-        $response = Http::withHeaders($signature)->post($url, $data);
-        return $this->response_decrypt($response, $signature);
+        $response = $vclaim->spri_insert($request);
+        if ($response->metadata->code == 200) {
+            $spri = $response->response;
+            Spri::create([
+                "noSPRI"=>$spri->noSPRI,
+                "tglRencanaKontrol"=>$spri->tglRencanaKontrol,
+                "namaDokter"=>$spri->namaDokter,
+                "noKartu"=>$spri->noKartu,
+                "nama"=>$spri->nama,
+                "kelamin"=>$spri->kelamin,
+                "tglLahir"=>$spri->tglLahir,
+                "namaDiagnosa"=>$spri->namaDiagnosa,
+        
+                "kodeDokter"=>$request->kodeDokter,
+                "poliKontrol"=>$request->poliKontrol,
+                "user" => $request->user,
+            ]);
+        } else {
+            Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
+        }
+        return  $response;
+    }
+    public function updateSPRI(Request $request)
+    {
+        $vclaim = new VclaimController();
+        $res = $vclaim->spri_update($request);
+    }
+
+    public function pasienRanapBPJSStore(Request $request)
+    {
+        dd($request->all());
     }
 }

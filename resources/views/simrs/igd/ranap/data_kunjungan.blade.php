@@ -20,7 +20,8 @@
             <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped bordered
                 hoverable compressed>
                 @foreach ($kunjungan as $item)
-                    <tr style="background-color:{{ $item->pasien->no_Bpjs==null?'rgb(213, 171, 171)':'rgb(152, 200, 152)' }};">
+                    <tr
+                        style="background-color:{{ $item->pasien->no_Bpjs == null ? 'rgb(213, 171, 171)' : 'rgb(152, 200, 152)' }};">
                         <td>{{ $item->no_rm }} <br>{{ $item->pasien->nama_px }}</td>
                         <td>BPJS : {{ $item->pasien->no_Bpjs }}<br>NIK : {{ $item->pasien->nik_bpjs }}</td>
                         <td>{{ $item->kode_kunjungan }}</td>
@@ -35,21 +36,136 @@
                         <td>
                             <a href="{{ route('ranapumum') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}"
                                 class="btn btn-block btn-primary btn-xs btn-flat ">Umum</a>
-                            <a href="{{ route('ranapbpjs') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}&nobp={{ $item->pasien->no_Bpjs }}"
-                                class="btn btn-block btn-success btn-xs btn-flat ">BPJS</a>
+                            {{-- <a href="{{ route('ranapbpjs') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}&nobp={{ $item->pasien->no_Bpjs }}"
+                                    class="btn btn-block btn-success btn-xs btn-flat ">BPJS</a> --}}
+                            @if ($item->pasien->no_Bpjs)
+                                <button href="#" data-toggle="modal" data-target="modalSPRI"
+                                    data-id="{{ $item->kode_kunjungan }}" data-nomorkartu="{{ $item->pasien->no_Bpjs }}"
+                                    class="btn btn-block btn-success btn-xs btn-flat btnModalSPRI">BPJS</button>
+                            @endif
                             @if (!$item->no_sep)
-                            <a href="#" class="btn btn-block btn-warning btn-xs btn-flat "><b>SEP</b></a>
+                                <a href="#" class="btn btn-block btn-warning btn-xs btn-flat "><b>SEP</b></a>
                             @endif
                         </td>
                     </tr>
                 @endforeach
             </x-adminlte-datatable>
-
         </x-adminlte-card>
     </div>
+    <x-adminlte-modal id="modalSPRI" title="Buat SPRI terlebih dahulu" theme="primary" size='lg' disable-animations>
+        <form>
+            <input type="hidden" name="user" id="user" value="{{Auth::user()->name}}">
+            <input type="hidden" name="kodeKunjungan" id="kodeKunjungan">
+            <div class="row">
+                <div class="col-md-6">
+                    <x-adminlte-input name="noKartu" id="noKartu" label="No Kartu" disabled />
+                </div>
+                <div class="col-md-6">
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date name="tglRencanaKontrol" id="tanggal"
+                        value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Masuk" :config="$config" />
+                </div>
+                <div class="col-md-6">
+                    <x-adminlte-select2 name="poliKontrol" label="poliKontrol" id="poliklinik">
+                        <option selected disabled>Cari Poliklinik</option>
+                    </x-adminlte-select2>
+                </div>
+                <div class="col-md-6">
+                    <x-adminlte-select2 name="kodeDokter" label="Dokter DPJP" id="dokter">
+                        <option value="">--Pilih Dpjp--</option>
+                        @foreach ($paramedis as $item)
+                            <option value="{{ $item->kode_dokter_jkn }}">
+                                {{ $item->nama_paramedis }}</option>
+                        @endforeach
+                    </x-adminlte-select2>
+                </div>
+            </div>
+            <x-slot name="footerSlot">
+                <x-adminlte-button type="submit" theme="success" form="formSPRI" class="btnCreateSPRI" label="Buat SPRI" />
+                <x-adminlte-button theme="danger" label="batal" data-dismiss="modal"/>
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
 @stop
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
+@section('js')
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $("#poliklinik").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_poliklinik_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            poliklinik: params.term // search term
+                        };
+                        // var pol = $('#poliklinik').val();
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $('.btnModalSPRI').click(function(e) {
+                $('#modalSPRI').show();
+                $('#modalSPRI').modal('toggle');
+                var kunjungan = $(this).data('id');
+                var noKartu = $(this).data('nomorkartu');
+                $('#noKartu').val(noKartu);
+                $('#kodeKunjungan').val(kunjungan);
+            });
+            $('.btnCreateSPRI').click(function(e) {
+                var kodeKunjungan = $("#kodeKunjungan").val();
+                var noKartu = $("#noKartu").val();
+                var kodeDokter = $("#dokter").val();
+                var poliKontrol = $("#poliklinik option:selected").val();
+                var tglRencanaKontrol = $("#tanggal").val();
+                var user = $("#user").val();
+                var url = "{{ route('spri.create') }}";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        noKartu: noKartu,
+                        kodeDokter: kodeDokter,
+                        poliKontrol: poliKontrol,
+                        tglRencanaKontrol: tglRencanaKontrol,
+                        kodeKunjungan: kodeKunjungan,
+                        user: user,
+                    },
+                    success: function(data) {
+
+                        if (data.metadata.code == 200) {
+                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
+                            $("#createSPRI").modal('toggle');
+                            location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
+
+                        } else {
+                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
+                                .code + ')', '', 'error');
+                        }
+                    },
+
+                });
+            });
+        });
+    </script>
+@endsection

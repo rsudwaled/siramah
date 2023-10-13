@@ -32,7 +32,8 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <td>Kunjungan</td>
+                                    <td>Counter</td>
+                                    <td>Kode Kunjungan</td>
                                     <td>Unit</td>
                                     <td>Tgl Masuk</td>
                                     <td>Tgl Keluar</td>
@@ -62,8 +63,9 @@
                 <div class="col-md-3">
                     <div class="card card-success card-outline">
                         <div class="card-body">
-                            <button type="button" class="btn btn-block bg-gradient-success btn-sm mb-2" data-toggle="modal"
-                                data-target="#createSPRI">BUAT SPRI</button>
+                            <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"id="editSPRI" data-toggle="modal"
+                            data-target="#createSPRI">Edit SPRI</button>
+                            <button type="button" class="btn btn-block bg-gradient-maroon btn-sm mb-2" id="hapusSPRI">HAPUS SPRI</button>
                             <x-adminlte-modal id="createSPRI" title="SPRI" theme="primary" size='lg'
                                 disable-animations>
                                 <form id="createSPRI">
@@ -77,7 +79,7 @@
                                                 $config = ['format' => 'YYYY-MM-DD'];
                                             @endphp
                                             <x-adminlte-input-date name="tglRencanaKontrol" id="tanggal"
-                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Masuk"
+                                                value="{{ $spri->tglRencanaKontrol==null? Carbon\Carbon::now()->format('Y-m-d') :  $spri->tglRencanaKontrol}}" label="Tanggal Masuk"
                                                 :config="$config" />
                                         </div>
                                         <div class="col-md-6">
@@ -96,8 +98,8 @@
                                         </div>
                                     </div>
                                     <x-slot name="footerSlot">
-                                        <x-adminlte-button type="submit" theme="success" form="createSPRI"
-                                            class="btnCreateSPRI" label="buat spri" />
+                                        <x-adminlte-button type="submit" theme="primary" form="createSPRI"
+                                            class="btnUpdateSPRI" label="Update SPRI" />
                                         <x-adminlte-button theme="danger" label="batal" data-dismiss="modal" />
                                     </x-slot>
                                 </form>
@@ -125,7 +127,8 @@
                                     <label for="naikKelasRawat"></label>
                                 </div>
 
-                                <span class="text text-red"><b id="textDescChange">ceklis apabila pasien naik kelas rawat</b></span>
+                                <span class="text text-red"><b id="textDescChange">ceklis apabila pasien naik kelas
+                                        rawat</b></span>
                             </div>
                         </div>
                         <div class="card-footer">
@@ -146,7 +149,7 @@
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
                                 title="Form Pendaftaran">
-                                <form action="{{ route('pasienranap.store') }}" method="post" id="submitRanap">
+                                <form action="{{ route('pasienranapbpjs.store') }}" method="post" id="submitRanap">
                                     @csrf
                                     <input type="hidden" name="kodeKunjungan" value=" {{ $refKunj }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
@@ -186,18 +189,14 @@
                                                                 label="Tanggal Masuk" :config="$config" />
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-input name="noSPRI" label="No SPRI"
-                                                                id="noSuratKontrol" label-class="text-black" disabled>
+                                                            <x-adminlte-input label="No SPRI" name="noSuratKontrol"
+                                                                id="noSuratKontrol" value="{{$spri->noSPRI}}"
+                                                                label-class="text-black" disabled>
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="noTelp" label="No Telp"
                                                                 placeholder="masukan no telp" label-class="text-black">
-                                                                <x-slot name="prependSlot">
-                                                                    <div class="input-group-text">
-                                                                        <i class="fas fa-phone text-black"></i>
-                                                                    </div>
-                                                                </x-slot>
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
@@ -345,8 +344,6 @@
                         return {
                             poliklinik: params.term // search term
                         };
-                        var pol = $('#poliklinik').val();
-                        alert(pol);
                     },
                     processResults: function(response) {
                         return {
@@ -356,37 +353,7 @@
                     cache: true
                 }
             });
-            $('.btnCreateSPRI').click(function(e) {
-                var noKartu = $("#noKartu").val();
-                var kodeDokter = $("#dokter").val();
-                var poliKontrol = $("#poliklinik option:selected").val();
-                var tglRencanaKontrol = $("#tanggal").val();
-                var url = "{{ route('spri.create') }}";
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        noKartu: noKartu,
-                        kodeDokter: kodeDokter,
-                        poliKontrol: poliKontrol,
-                        tglRencanaKontrol: tglRencanaKontrol
-                    },
-                    success: function(data) {
-
-                        if (data.metadata.code == 200) {
-                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
-                            $("#noSuratKontrol").val(data.response.noSPRI);
-                            $("#createSPRI").modal('toggle');
-
-                        } else {
-                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
-                                .code + ')', '', 'error');
-                        }
-                    },
-
-                });
-            });
-            $('#naikKelasRawat').click(function(e){
+            $('#naikKelasRawat').click(function(e) {
                 if (this.checked) {
                     $("#r_kelas_id").removeAttr("disabled");
                     $("#textDescChange").text("pasien memilih naik kelas rawat");
@@ -396,7 +363,61 @@
                     $("#textDescChange").text("ceklis apabila pasien naik kelas rawat / edit kelas");
                     $("#c_rad").val(0);
                 }
-            })
+            });
+            $('#submitRanap').click(function(e) {
+                
+            });
+            $('#editSPRI').click(function(e) {
+                var nomorsuratkontrol = $('#noSuratKontrol').val();
+                // $.LoadingOverlay("show");
+                // $.get(url, function(data) {
+                //     $('#nama_suratkontrol').val(data.nama);
+                //     $('#nomor_suratkontrol').val(data.noSuratKontrol);
+                //     $('#nomorsep_suratkontrol').val(data.noSepAsalKontrol);
+                //     $('#tanggal_suratkontrol').val(data.tglRencanaKontrol);
+                //     $('#kodepoli_suratkontrol').val(data.poliTujuan).trigger('change');
+                //     $('#kodedokter_suratkontrol').val(data.kodeDokter).trigger('change');
+                //     $('#modalSuratKontrol').modal('show');
+                //     $.LoadingOverlay("hide", true);
+                // });
+                // var url = "{{route('spri.update')}}?noSPRI="+noSPRI;
+
+            });
+            $("#hapusSPRI").hide();
+            $('#hapusSPRI').click(function(e) {
+                var noSPRI = $('#noSuratKontrol').val();
+                swal.fire({
+                    icon: 'question',
+                    title: 'ANDA YAKIN HAPUS NO SPRI ' + noSPRI + ' ?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Hapus',
+                    denyButtonText: `Batal`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var url = "{{ route('spri_delete') }}";
+                        $.ajax({
+                            type: 'DELETE',
+                            url: url,
+                            data: {
+                                noSuratKontrol: noSPRI,
+                                user:'coba',
+                            },
+                            success: function(data) {
+
+                                if (data.metadata.code == 200) {
+                                    Swal.fire('SPRI BERHASIL DIHAPUS', '', 'success');
+                                    location.reload();
+                                } else {
+                                    Swal.fire(data.metadata.message + '( ERROR : ' +
+                                        data.metadata
+                                        .code + ')', '', 'error');
+                                }
+                            },
+
+                        });
+                    }
+                })
+            });
         });
     </script>
 @endsection

@@ -369,7 +369,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-unit', [App\Http\Controllers\RanapIGDController::class, 'getUnit'])->name('ruangan-unit.get');
     Route::get('/get-bed-byruangan', [App\Http\Controllers\RanapIGDController::class, 'getBedByRuangan'])->name('bed-ruangan.get');
     Route::post('/pasien-ranap-store', [App\Http\Controllers\RanapIGDController::class, 'pasienRanapStore'])->name('pasienranap.store');
+    Route::post('/pasien-ranapbpjs-store', [App\Http\Controllers\RanapIGDController::class, 'pasienRanapBPJSStore'])->name('pasienranapbpjs.store');
     Route::post('/ranap/spri-create', [App\Http\Controllers\RanapIGDController::class, 'createSPRI'])->name('spri.create');
+    Route::put('/ranap/spri-update/', [App\Http\Controllers\RanapIGDController::class, 'updateSPRI'])->name('spri.update');
     
 
 

@@ -216,10 +216,6 @@ class PendaftaranPasienIGDController extends Controller
                     }
                 }
             } 
-            // dd($createKunjungan,  $ant_upd, $createLH, $createKarcis, $createAdm);
-            // else if($unit->kelas_unit == 2) {
-            //     // jika kelas unit 2
-            // }
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
         return redirect()->route('d-antrian-igd');
