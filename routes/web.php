@@ -372,6 +372,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/pasien-ranapbpjs-store', [App\Http\Controllers\RanapIGDController::class, 'pasienRanapBPJSStore'])->name('pasienranapbpjs.store');
     Route::post('/ranap/spri-create', [App\Http\Controllers\RanapIGDController::class, 'createSPRI'])->name('spri.create');
     Route::put('/ranap/spri-update/', [App\Http\Controllers\RanapIGDController::class, 'updateSPRI'])->name('spri.update');
+    Route::get('/ranap/spri-get/', [App\Http\Controllers\RanapIGDController::class, 'getSPRI'])->name('spri.get');
+    Route::get('/ranap/spri-check/', [App\Http\Controllers\RanapIGDController::class, 'cekProsesDaftarSPRI'])->name('cekprosesdaftar.spri');
     
 
 

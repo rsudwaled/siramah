@@ -28,6 +28,7 @@ use App\Models\Icd10;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
 use App\Models\Spri;
+use App\Models\Poliklinik;
 use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use Carbon\Carbon;
@@ -78,21 +79,21 @@ class RanapIGDController extends APIController
         $pasien = Pasien::firstWhere('no_Bpjs', $request->no_kartu);
         $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
         $unit = Unit::where('kelas_unit', 2)->get();
+        $poli = Unit::whereNotNull('KDPOLI')->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
+        $icd = Icd10::limit(15)->get();
         $penjamin = PenjaminSimrs::get();
         $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')
             ->get();
         $spri = Spri::where('noKartu', $request->no_kartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
         // dd($spri);
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','refKunj','kodeKelas','kelas','spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien','icd','poli','refKunj','kodeKelas','kelas','spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk','paramedis'));
     }
-
     public function getUnit(Request $request)
     {
         // $unit 
         $unit = Unit::where('kelas_id', 2)
             ->get();
-        // $unit = json_encode($unit);
         return response()->json([
             'unit' => $unit,
         ]);
@@ -228,6 +229,14 @@ class RanapIGDController extends APIController
 
 
     // pasien ranap bpjs
+
+    public function getSPRI(Request $request)
+    {
+        $spri = Spri::firstWhere('noSPRI', $request->noSuratKontrol);
+        return response()->json([
+            'spri' => $spri,
+        ]);
+    }
     public function createSPRI(Request $request)
     {
         $vclaim = new VclaimController();
@@ -255,12 +264,184 @@ class RanapIGDController extends APIController
     }
     public function updateSPRI(Request $request)
     {
+        
         $vclaim = new VclaimController();
         $res = $vclaim->spri_update($request);
+        if($res->metadata->code == 200)
+        {
+            $updateSPRI =  Spri::firstWhere('noSPRI', $request->noSPRI);
+            $updateSPRI->tglRencanaKontrol = $request->tglRencanaKontrol;
+            $updateSPRI->kodeDokter = $request->kodeDokter;
+            $updateSPRI->poliKontrol = $request->poliKontrol;
+            $updateSPRI->user = $request->user;
+            $updateSPRI->update();
+        }
+        return response()->json([
+            'res' => $res,
+        ]);
     }
+
+    public function cekProsesDaftarSPRI(Request $request)
+    {
+        $cekSPRI = Spri::where('noKartu', $request->noKartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
+        // dd($cekSPRI);
+        return response()->json([
+            'cekSPRI' => $cekSPRI,
+        ]);
+    }
+
+
+     // API FUNCTION
+     public function signature()
+     {
+         $cons_id = env('ANTRIAN_CONS_ID');
+         $secretKey = env('ANTRIAN_SECRET_KEY');
+         $userkey = env('ANTRIAN_USER_KEY');
+         date_default_timezone_set('UTC');
+         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
+         $signature = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
+         $encodedSignature = base64_encode($signature);
+         $data['user_key'] = $userkey;
+         $data['x-cons-id'] = $cons_id;
+         $data['x-timestamp'] = $tStamp;
+         $data['x-signature'] = $encodedSignature;
+         $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
+         return $data;
+     }
+     public static function stringDecrypt($key, $string)
+     {
+         $encrypt_method = 'AES-256-CBC';
+         $key_hash = hex2bin(hash('sha256', $key));
+         $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
+         $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+         $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+         return $output;
+     }
+     public function response_decrypt($response, $signature)
+     {
+         $code = json_decode($response->body())->metaData->code;
+         $message = json_decode($response->body())->metaData->message;
+         if ($code == 200 || $code == 1) {
+             $response = json_decode($response->body())->response ?? null;
+             $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response);
+             $data = json_decode($decrypt);
+             if ($code == 1) {
+                 $code = 200;
+             }
+             return $this->sendResponse($data, $code);
+         } else {
+             return $this->sendError($message, $code);
+         }
+     }
+     public function response_no_decrypt($response)
+     {
+         $code = json_decode($response->body())->metaData->code;
+         $message = json_decode($response->body())->metaData->message;
+         $response = json_decode($response->body())->metaData->response;
+         $response = [
+             'response' => $response,
+             'metadata' => [
+                 'message' => $message,
+                 'code' => $code,
+             ],
+         ];
+         return json_decode(json_encode($response));
+     }
 
     public function pasienRanapBPJSStore(Request $request)
     {
         dd($request->all());
+        $validator = $request->validate([
+            "tanggal_daftar" => "required|date",
+            "kodeKunjungan" => "required",
+            "noMR" => "required",
+            "penjamin_id" => "required",
+            "idRuangan" => "required",
+            "alasan_masuk_id" => "required",
+            "noTelp" => "required",
+            "dpjp" => "required",
+            "diagnosa" => "required",
+        ]);
+        $counter = Kunjungan::latest('counter')
+        ->where('no_rm', $request->noMR)
+        ->where('status_kunjungan', 2)
+        ->first();
+        if ($counter == null) {
+            $c = 1;
+        } else {
+            $c = $counter->counter + 1;
+        }
+        $vclaim = new VclaimController();
+        $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
+        $signature = $this->signature();
+        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+        $data = [
+            'request' => [
+                't_sep' => [
+                    'noKartu' => $request->noKartu,
+                    'tglSep' => $request->tanggal_daftar,
+                    'ppkPelayanan' => '1018R001',
+                    'jnsPelayanan' => '1',
+                    'klsRawat' => [
+                        'klsRawatHak' => $request->klsRawatHak,
+                        'klsRawatNaik' => '',
+                        'pembiayaan' => '',
+                        'penanggungJawab' => '',
+                    ],
+                    'noMR' => $request->noMR,
+                    'rujukan' => [
+                        'asalRujukan' => "$request->asalRujukan",
+                        'tglRujukan' => '',
+                        'noRujukan' => '',
+                        'ppkRujukan' => '',
+                    ],
+                    'catatan' => '',
+                    'diagAwal' => $request->diagAwal,
+                    'poli' => [
+                        'tujuan' => 'IGD',
+                        'eksekutif' => '0',
+                    ],
+                    'cob' => [
+                        'cob' => '0',
+                    ],
+                    'katarak' => [
+                        'katarak' => '0',
+                    ],
+                    // "lakaLantas":" 0 : Bukan Kecelakaan lalu lintas [BKLL], 1 : KLL dan bukan kecelakaan Kerja [BKK], 2 : KLL dan KK, 3 : KK",
+                    'jaminan' => [
+                        'lakaLantas' => $request->lakaLantas,
+                        'noLP' => $request->noLP == null ? '' : $request->noLP,
+                        'penjamin' => [
+                            'tglKejadian' => $request->lakaLantas == 0 ? '' : $request->tglKejadian,
+                            'keterangan' => $request->keterangan == null ? '' : $request->keterangan,
+                            'suplesi' => [
+                                'suplesi' => '0',
+                                'noSepSuplesi' => '',
+                                'lokasiLaka' => [
+                                    'kdPropinsi' => $request->provinsi == null ? '' : $request->provinsi,
+                                    'kdKabupaten' => $request->kabupaten == null ? '' : $request->kabupaten,
+                                    'kdKecamatan' => $request->kecamatan == null ? '' : $request->kecamatan,
+                                ],
+                            ],
+                        ],
+                    ],
+                    'tujuanKunj' => '0',
+                    'flagProcedure' => '',
+                    'kdPenunjang' => '',
+                    'assesmentPel' => '',
+                    'skdp' => [
+                        'noSurat' => $request->noSurat,
+                        'kodeDPJP' => $request->kodeDPJP,
+                    ],
+                    'dpjpLayan' =>'',
+                    'noTelp' => $request->noTelp,
+                    'user' => $user,
+                ],
+            ],
+        ];
+        $response = Http::withHeaders($signature)->post($url, $data);
+        $resdescrtipt = $this->response_decrypt($response, $signature);
+        $callback = json_decode($response->body());
+        $sep = $resdescrtipt->response->sep->noSep;
     }
 }

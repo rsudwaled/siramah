@@ -63,28 +63,36 @@
                 <div class="col-md-3">
                     <div class="card card-success card-outline">
                         <div class="card-body">
-                            <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"id="editSPRI" data-toggle="modal"
-                            data-target="#createSPRI">Edit SPRI</button>
-                            <button type="button" class="btn btn-block bg-gradient-maroon btn-sm mb-2" id="hapusSPRI">HAPUS SPRI</button>
-                            <x-adminlte-modal id="createSPRI" title="SPRI" theme="primary" size='lg'
+                            <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"id="editSPRI"
+                                data-toggle="modal" data-target="#updateSPRI">Edit SPRI</button>
+                            <button type="button" class="btn btn-block bg-gradient-maroon btn-sm mb-2" id="hapusSPRI">HAPUS
+                                SPRI</button>
+                            <x-adminlte-modal id="updateSPRI" title="SPRI" theme="primary" size='lg'
                                 disable-animations>
-                                <form id="createSPRI">
+                                <form id="updateSPRI">
                                     <div class="row">
+                                        <input type="hidden" name="user" id="user"
+                                            value="{{ Auth::user()->name }}">
+                                        <input type="hidden" name="noSPRI" id="noSPRI" value="{{ $spri->noSPRI }}">
                                         <div class="col-md-6">
-                                            <x-adminlte-input name="noKartu" value="{{ $pasien->no_Bpjs }}"
+                                            <x-adminlte-input name="noKartu" id="noKartu" value="{{ $pasien->no_Bpjs }}"
                                                 label="No Kartu" disabled />
                                         </div>
                                         <div class="col-md-6">
                                             @php
                                                 $config = ['format' => 'YYYY-MM-DD'];
                                             @endphp
-                                            <x-adminlte-input-date name="tglRencanaKontrol" id="tanggal"
-                                                value="{{ $spri->tglRencanaKontrol==null? Carbon\Carbon::now()->format('Y-m-d') :  $spri->tglRencanaKontrol}}" label="Tanggal Masuk"
-                                                :config="$config" />
+                                            <x-adminlte-input-date name="tglRencanaKontrol" id="tglRencanaKontrol"
+                                                value="{{ $spri->tglRencanaKontrol == null ? Carbon\Carbon::now()->format('Y-m-d') : $spri->tglRencanaKontrol }}"
+                                                label="Tanggal Masuk" :config="$config" />
                                         </div>
                                         <div class="col-md-6">
-                                            <x-adminlte-select2 name="poliKontrol" label="poliKontrol" id="poliklinik">
-                                                <option selected disabled>Cari Poliklinik</option>
+                                            <x-adminlte-select2 name="poliKontrol" label="poliKontrol" id="poliKontrol">
+                                                <option value="">--Pilih Poli--</option>
+                                                @foreach ($poli as $item)
+                                                    <option value="{{ $item->KDPOLI }}">
+                                                        {{ $item->nama_unit }}</option>
+                                                @endforeach
                                             </x-adminlte-select2>
                                         </div>
                                         <div class="col-md-6">
@@ -98,8 +106,8 @@
                                         </div>
                                     </div>
                                     <x-slot name="footerSlot">
-                                        <x-adminlte-button type="submit" theme="primary" form="createSPRI"
-                                            class="btnUpdateSPRI" label="Update SPRI" />
+                                        <x-adminlte-button type="submit" theme="primary" form="updateSPRI"
+                                            id="btnUpdateSPRI" label="Update SPRI" />
                                         <x-adminlte-button theme="danger" label="batal" data-dismiss="modal" />
                                     </x-slot>
                                 </form>
@@ -155,6 +163,9 @@
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
+                                    <input type="hidden" name="noKartuBPJS" id="noKartuBPJS" value="{{$pasien->no_Bpjs}}">
+                                    <input type="hidden" name="noSurat" id="noSurat" value="{{ $spri->noSPRI }}">
+                                    <input type="hidden" name="kodeDPJP" id="kodeDPJP" value="{{ $spri->kodeDokter }}">
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -185,14 +196,8 @@
                                                                 $config = ['format' => 'YYYY-MM-DD'];
                                                             @endphp
                                                             <x-adminlte-input-date name="tanggal_daftar"
-                                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                                label="Tanggal Masuk" :config="$config" />
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-input label="No SPRI" name="noSuratKontrol"
-                                                                id="noSuratKontrol" value="{{$spri->noSPRI}}"
-                                                                label-class="text-black" disabled>
-                                                            </x-adminlte-input>
+                                                                value="{{ $spri->tglRencanaKontrol == null ? Carbon\Carbon::now()->format('Y-m-d') : $spri->tglRencanaKontrol }}"
+                                                                label="Tanggal Masuk" :config="$config" disabled />
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="noTelp" label="No Telp"
@@ -200,19 +205,22 @@
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
+                                                            <x-adminlte-input label="No SPRI" name="noSuratKontrol"
+                                                                id="noSuratKontrol" value="{{ $spri->noSPRI }}"
+                                                                label-class="text-black" disabled>
+                                                            </x-adminlte-input>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <x-adminlte-input label="DPJP" name="dpjpBySPRI"
+                                                                value="{{ $spri->namaDokter }}" label-class="text-black"
+                                                                disabled>
+                                                            </x-adminlte-input>
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             <x-adminlte-input name="hak_kelas"
                                                                 value="{{ $kodeKelas }}"
                                                                 placeholder="{{ $kelas }}" label="Hak Kelas"
                                                                 disabled />
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
-                                                                <option value="">--Pilih Penjamin--</option>
-                                                                @foreach ($penjamin as $item)
-                                                                    <option value="{{ $item->kode_penjamin }}">
-                                                                        {{ $item->nama_penjamin }}</option>
-                                                                @endforeach
-                                                            </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-select name="alasan_masuk_id"
@@ -225,13 +233,103 @@
                                                             </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select name="dpjp" label="pilih dpjp">
-                                                                <option value="">--Pilih Dpjp--</option>
-                                                                @foreach ($paramedis as $item)
-                                                                    <option value="{{ $item->kode_paramedis }}">
-                                                                        {{ $item->nama_paramedis }}</option>
+                                                            <x-adminlte-select2 name="diagnosa" label="Diagnosa"
+                                                                id="diagnosa">
+                                                                <option value="">--Pilih Diagnosa--</option>
+                                                                @foreach ($icd as $item)
+                                                                    <option value="{{ $item->diag }}">
+                                                                        {{ $item->diag }} || {{ $item->nama }}
+                                                                    </option>
                                                                 @endforeach
+                                                            </x-adminlte-select2>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
+                                                                label="Status Kecelakaan">
+                                                                <option value="">--Status Kecelakaan--</option>
+                                                                <option value="0">BUKAN KECELAKAAN LALU LINTAS (BKLL)
+                                                                </option>
+                                                                <option value="1">KLL & BUKAN KECELAKAAN KERJA (BKK)
+                                                                </option>
+                                                                <option value="2">KLL & KK</option>
+                                                                <option value="3">KECELAKAAN KERJA</option>
                                                             </x-adminlte-select>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="icheck-primary d-inline ml-2">
+                                                                <input type="checkbox" value="0"
+                                                                    name="katarak">
+                                                                <label for="katarak"></label>
+                                                            </div>
+
+                                                            <span class="text text-red"><b>ceklis
+                                                                    apabila pasien katarak, dan akan dioperasi</b></span>
+                                                        </div>
+                                                        <div class="col-md-12" id="div_stts_kecelakaan"
+                                                            style="display: none;">
+                                                            <div class="card card-danger card-outline">
+                                                                <div class="card-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <x-adminlte-input name="noLP"
+                                                                                label="NO LP"
+                                                                                placeholder="no laporan polisi"
+                                                                                disable-feedback />
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <x-adminlte-input name="keterangan"
+                                                                                label="Keterangan"
+                                                                                placeholder="keterangan kecelakaan"
+                                                                                disable-feedback />
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            @php
+                                                                                $config = ['format' => 'YYYY-MM-DD'];
+                                                                            @endphp
+                                                                            <x-adminlte-input-date name="tglKejadian"
+                                                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                                                label="Tanggal Kejadian"
+                                                                                :config="$config" />
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <x-adminlte-select2 name="provinsi"
+                                                                                label="Provinsi">
+                                                                                <option selected disabled>Cari Provinsi
+                                                                                </option>
+                                                                            </x-adminlte-select2>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <x-adminlte-select2 name="kabupaten"
+                                                                                label="Kota / Kabupaten">
+                                                                                <option selected disabled>Cari Kota /
+                                                                                    Kabupaten</option>
+                                                                            </x-adminlte-select2>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <x-adminlte-select2 name="kecamatan"
+                                                                                label="Kecamatan">
+                                                                                <option selected disabled>Cari Kecamatan
+                                                                                </option>
+                                                                            </x-adminlte-select2>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6" id="naikKelasDesc1">
+                                                            <x-adminlte-select name="pembiayaan"
+                                                                label="pembiayaan (pasien naik kelas)" id="pembiayaan">
+                                                                <option value="1">PRIBADI</option>
+                                                                <option value="2">PEMBERI KERJA</option>
+                                                                <option value="3">ASURANSI KESEHATAN TAMBAHAN</option>
+                                                            </x-adminlte-select>
+                                                        </div>
+                                                        <div class="col-md-6" id="naikKelasDesc2">
+                                                            <x-adminlte-input name="penanggungJawab"
+                                                                label="Penanggung Jawab (pasien naik kelas)"
+                                                                placeholder="jika pembiayaan oleh pemberi kerja atau tambahan layanan kesehatan"
+                                                                label-class="text-black">
+                                                            </x-adminlte-input>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -269,37 +367,231 @@
 
 @section('js')
     <script>
-        $('#cariRuangan').on('click', function() {
-            // $("#pilihRuangan").show();
-            var unit = $('#unitTerpilih').val();
-            var kelas = $('#r_kelas_id').val();
-            $('#hakKelas').val(kelas);
-            $('#hakKelas').text('Kelas ' + kelas);
-            if (kelas) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
-                    dataType: 'JSON',
-                    success: function(res) {
-                        if (res) {
-                            $.each(res.bed, function(key, value) {
-                                $("#idRuangan").append(
-                                    '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
-                                    value.id_ruangan + ', `' + value.nama_kamar + '`, ' +
-                                    value.no_bed +
-                                    ')" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
-                                    value.nama_kamar + '"</h6> <br> NO BED : "' + value
-                                    .no_bed + '"<br></div></div></div>');
-                            });
-                        } else {
-                            $("#bed_byruangan").empty();
-                        }
-                    }
-                });
+        const select = document.getElementById('status_kecelakaan');
+        const pilihUnit = document.getElementById('div_stts_kecelakaan');
+        $(select).on('change', function() {
+            if (select.value > 0 || select.value == null) {
+                document.getElementById('div_stts_kecelakaan').style.display = "block";
             } else {
-                $("#bed_byruangan").empty();
+                document.getElementById('div_stts_kecelakaan').style.display = "none";
             }
+
         });
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('#cariRuangan').on('click', function() {
+                var unit = $('#unitTerpilih').val();
+                var kelas = $('#r_kelas_id').val();
+                $('#hakKelas').val(kelas);
+                $('#hakKelas').text('Kelas ' + kelas);
+                if (kelas) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
+                        dataType: 'JSON',
+                        success: function(res) {
+                            if (res) {
+                                $.each(res.bed, function(key, value) {
+                                    $("#idRuangan").append(
+                                        '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
+                                        value.id_ruangan + ', `' + value
+                                    .nama_kamar + '`, `' + value.no_bed +
+                                    '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
+                                        value.nama_kamar +
+                                        '"</h6> <br> NO BED : "' + value
+                                        .no_bed + '"<br></div></div></div>');
+                                });
+                            } else {
+                                $("#bed_byruangan").empty();
+                            }
+                        }
+                    });
+                } else {
+                    $("#bed_byruangan").empty();
+                }
+            });
+            $("#naikKelasDesc1").hide();
+            $("#naikKelasDesc2").hide();
+            $('#naikKelasRawat').click(function(e) {
+                if (this.checked) {
+                    $("#r_kelas_id").removeAttr("disabled");
+                    $("#textDescChange").text("pasien memilih naik kelas rawat");
+                    $("#c_rad").val(1);
+                    $("#naikKelasDesc1").show();
+                    $("#naikKelasDesc2").show();
+                } else {
+                    $("#r_kelas_id").attr("disabled", true);
+                    $("#textDescChange").text("ceklis apabila pasien naik kelas rawat / edit kelas");
+                    $("#c_rad").val(0);
+                    $("#naikKelasDesc1").hide();
+                    $("#naikKelasDesc2").hide();
+                }
+            });
+            $('#submitRanap').click(function(e) {
+
+            });
+            $('#editSPRI').click(function(e) {
+                var nomorsuratkontrol = $('#noSPRI').val();
+                var url = "{{ route('spri.get') }}?noSuratKontrol=" + nomorsuratkontrol;
+                $.LoadingOverlay("show");
+                $.get(url, function(data) {
+                    $('#tglRencanaKontrol').val(data.spri.tglRencanaKontrol);
+                    $('#poliKontrol').val(data.spri.poliKontrol).trigger('change');
+                    $('#dokter').val(data.spri.kodeDokter).trigger('change');
+                    $('#updateSPRI').modal('show');
+                    $.LoadingOverlay("hide", true);
+                });
+
+
+            });
+            $('#btnUpdateSPRI').click(function(e) {
+                var noSPRI = $('#noSPRI').val();
+                var tglRencanaKontrol = $('#tglRencanaKontrol').val();
+                var poliKontrol = $('#poliKontrol').val();
+                var kodeDokter = $('#dokter').val();
+                var user = $('#user').val();
+                swal.fire({
+                    icon: 'question',
+                    title: 'ANDA YAKIN UPDATE SPRI ' + noSPRI + ' ?',
+                    showDenyButton: true,
+                    confirmButtonText: 'YA',
+                    denyButtonText: `Tidak`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var url = "{{ route('spri.update') }}?noSPRI=" + noSPRI;
+                        $.LoadingOverlay("show");
+                        $.ajax({
+                            type: 'PUT',
+                            url: url,
+                            data: {
+                                noSPRI: noSPRI,
+                                tglRencanaKontrol: tglRencanaKontrol,
+                                poliKontrol: poliKontrol,
+                                kodeDokter: kodeDokter,
+                                user: user,
+                            },
+                            success: function(data) {
+                                console.log(data)
+                                if (data.res.metadata.code == 200) {
+                                    Swal.fire('SPRI BERHASIL DIUPDATE', '', 'success');
+                                    location.reload();
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire(data.res.metadata.message + '( ERROR : ' +
+                                        data.res.metadata.code + ')', '', 'error');
+                                    $.LoadingOverlay("hide");
+                                }
+
+                            },
+
+                        });
+                    }
+                })
+            });
+            $("#hapusSPRI").hide();
+            $('#hapusSPRI').click(function(e) {
+                var noSPRI = $('#noSuratKontrol').val();
+                swal.fire({
+                    icon: 'question',
+                    title: 'ANDA YAKIN HAPUS NO SPRI ' + noSPRI + ' ?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Hapus',
+                    denyButtonText: `Batal`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var url = "{{ route('spri_delete') }}";
+                        $.ajax({
+                            type: 'DELETE',
+                            url: url,
+                            data: {
+                                noSuratKontrol: noSPRI,
+                                user: 'coba',
+                            },
+                            success: function(data) {
+
+                                if (data.metadata.code == 200) {
+                                    Swal.fire('SPRI BERHASIL DIHAPUS', '', 'success');
+                                    location.reload();
+                                } else {
+                                    Swal.fire(data.metadata.message + '( ERROR : ' +
+                                        data.metadata
+                                        .code + ')', '', 'error');
+                                }
+                            },
+
+                        });
+                    }
+                })
+            });
+
+            $("#provinsi").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_provinsi_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#kabupaten").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_kabupaten_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            kodeprovinsi: $("#provinsi option:selected").val(),
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#kecamatan").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_kecamatan_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            kodekabupaten: $("#kabupaten option:selected").val(),
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
 
         function chooseRuangan(id, nama, bed) {
             swal.fire({
@@ -325,99 +617,5 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
-
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $("#poliklinik").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_poliklinik_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            poliklinik: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-            $('#naikKelasRawat').click(function(e) {
-                if (this.checked) {
-                    $("#r_kelas_id").removeAttr("disabled");
-                    $("#textDescChange").text("pasien memilih naik kelas rawat");
-                    $("#c_rad").val(1);
-                } else {
-                    $("#r_kelas_id").attr("disabled", true);
-                    $("#textDescChange").text("ceklis apabila pasien naik kelas rawat / edit kelas");
-                    $("#c_rad").val(0);
-                }
-            });
-            $('#submitRanap').click(function(e) {
-                
-            });
-            $('#editSPRI').click(function(e) {
-                var nomorsuratkontrol = $('#noSuratKontrol').val();
-                // $.LoadingOverlay("show");
-                // $.get(url, function(data) {
-                //     $('#nama_suratkontrol').val(data.nama);
-                //     $('#nomor_suratkontrol').val(data.noSuratKontrol);
-                //     $('#nomorsep_suratkontrol').val(data.noSepAsalKontrol);
-                //     $('#tanggal_suratkontrol').val(data.tglRencanaKontrol);
-                //     $('#kodepoli_suratkontrol').val(data.poliTujuan).trigger('change');
-                //     $('#kodedokter_suratkontrol').val(data.kodeDokter).trigger('change');
-                //     $('#modalSuratKontrol').modal('show');
-                //     $.LoadingOverlay("hide", true);
-                // });
-                // var url = "{{route('spri.update')}}?noSPRI="+noSPRI;
-
-            });
-            $("#hapusSPRI").hide();
-            $('#hapusSPRI').click(function(e) {
-                var noSPRI = $('#noSuratKontrol').val();
-                swal.fire({
-                    icon: 'question',
-                    title: 'ANDA YAKIN HAPUS NO SPRI ' + noSPRI + ' ?',
-                    showDenyButton: true,
-                    confirmButtonText: 'Hapus',
-                    denyButtonText: `Batal`,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var url = "{{ route('spri_delete') }}";
-                        $.ajax({
-                            type: 'DELETE',
-                            url: url,
-                            data: {
-                                noSuratKontrol: noSPRI,
-                                user:'coba',
-                            },
-                            success: function(data) {
-
-                                if (data.metadata.code == 200) {
-                                    Swal.fire('SPRI BERHASIL DIHAPUS', '', 'success');
-                                    location.reload();
-                                } else {
-                                    Swal.fire(data.metadata.message + '( ERROR : ' +
-                                        data.metadata
-                                        .code + ')', '', 'error');
-                                }
-                            },
-
-                        });
-                    }
-                })
-            });
-        });
     </script>
 @endsection

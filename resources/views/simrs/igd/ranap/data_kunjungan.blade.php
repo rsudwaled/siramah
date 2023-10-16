@@ -54,7 +54,7 @@
     </div>
     <x-adminlte-modal id="modalSPRI" title="Buat SPRI terlebih dahulu" theme="primary" size='lg' disable-animations>
         <form>
-            <input type="hidden" name="user" id="user" value="{{Auth::user()->name}}">
+            <input type="hidden" name="user" id="user" value="{{ Auth::user()->name }}">
             <input type="hidden" name="kodeKunjungan" id="kodeKunjungan">
             <div class="row">
                 <div class="col-md-6">
@@ -84,7 +84,9 @@
             </div>
             <x-slot name="footerSlot">
                 <x-adminlte-button type="submit" theme="success" form="formSPRI" class="btnCreateSPRI" label="Buat SPRI" />
-                <x-adminlte-button theme="danger" label="batal" data-dismiss="modal"/>
+                <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal" data-dismiss="modal" />
+                <x-adminlte-button class="btn bg-gradient-maroon btn-md lanjutkanPROSESDAFTAR"
+                    label="ADA PROSES YANG BELUM SELESAI, LANJUTKAN PROSES SEKARANG !!" />
             </x-slot>
         </form>
     </x-adminlte-modal>
@@ -111,10 +113,10 @@
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
+                        console.log(params);
                         return {
                             poliklinik: params.term // search term
                         };
-                        // var pol = $('#poliklinik').val();
                     },
                     processResults: function(response) {
                         return {
@@ -125,12 +127,36 @@
                 }
             });
             $('.btnModalSPRI').click(function(e) {
-                $('#modalSPRI').show();
-                $('#modalSPRI').modal('toggle');
                 var kunjungan = $(this).data('id');
                 var noKartu = $(this).data('nomorkartu');
                 $('#noKartu').val(noKartu);
                 $('#kodeKunjungan').val(kunjungan);
+                $('.lanjutkanPROSESDAFTAR').hide();
+                if ($('#modalSPRI').show()) {
+                    var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        dataType: 'JSON',
+                        success: function(data) {
+                            console.log(data.cekSPRI);
+                            if(data.cekSPRI==null)
+                            {
+                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '', 'info');
+                            }else{
+                                $('.lanjutkanPROSESDAFTAR').show();
+                                $('.btnCreateSPRI').hide();
+                                $('.btnCreateSPRIBatal').hide();
+                                $('.lanjutkanPROSESDAFTAR').click(function(e) {
+                                    location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + data.cekSPRI.noKartu;
+                                });
+                            }
+                        }
+                    });
+                }
+                $('#modalSPRI').modal('toggle');
+
+
             });
             $('.btnCreateSPRI').click(function(e) {
                 var kodeKunjungan = $("#kodeKunjungan").val();
