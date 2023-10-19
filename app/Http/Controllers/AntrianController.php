@@ -962,22 +962,6 @@ class AntrianController extends APIController
             'antrians',
         ]));
     }
-    public function antrianPendaftaran(Request $request)
-    {
-        $antrians = null;
-        // daftar antrian
-        if ($request->tanggal && $request->loket && $request->jenispasien  && $request->lantai) {
-            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
-                ->where('method', 'Offline')
-                ->where('jenispasien', $request->jenispasien)
-                ->where('lantaipendaftaran', $request->lantai)
-                ->get();
-        }
-        return view('simrs.pendaftaran.pendaftaran_antrian', compact([
-            'antrians',
-            'request',
-        ]));
-    }
     public function daftarBridgingAntrian(Request $request)
     {
         $request['method'] = 'Bridging';
@@ -1976,7 +1960,6 @@ class AntrianController extends APIController
                 ->count();
             $request['nomorantrean'] = $request->kodepoli . "-" .  str_pad($antrian_poli + 1, 3, '0', STR_PAD_LEFT);
             $request['angkaantrean'] = $antrian_all + 1;
-            $request['kodebooking'] = strtoupper(uniqid());
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
             $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
@@ -2002,6 +1985,7 @@ class AntrianController extends APIController
                 $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
                 $request['method'] = "JKN Mobile";
             }
+            $request['kodebooking'] = strtoupper(uniqid());
             //tambah antrian bpjs
             $response = $this->tambah_antrean($request);
             if ($response->metadata->code == 200) {

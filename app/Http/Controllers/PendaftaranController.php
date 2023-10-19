@@ -896,6 +896,21 @@ class PendaftaranController extends APIController
         }
     }
     // pendaftaran
+    public function antrianPendaftaran(Request $request)
+    {
+        $antrians = null;
+        if ($request->tanggal && $request->loket && $request->jenispasien  && $request->lantai) {
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)
+                ->where('method', 'Offline')
+                ->where('jenispasien', $request->jenispasien)
+                ->where('lantaipendaftaran', $request->lantai)
+                ->get();
+        }
+        return view('simrs.pendaftaran.pendaftaran_antrian', compact([
+            'antrians',
+            'request',
+        ]));
+    }
     public function batalpendaftaran(Request $request)
     {
         $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();

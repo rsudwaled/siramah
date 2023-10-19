@@ -10,60 +10,42 @@
                 collapsible="{{ $request->loket ? 'collapsed' : '' }}">
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-3">
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date name="tanggal" label="Tanggal Antrian Pasien" :config="$config"
-                                value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
-                                <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col-md-3">
-                            <x-adminlte-select name="jenispasien" label="Jenis Pasien">
-                                <option value="JKN" {{ $request->jenispasien == 'JKN' ? 'selected' : null }}>BPJS
-                                </option>
-                                <option value="NON-JKN" {{ $request->jenispasien == 'NON-JKN' ? 'selected' : null }}>UMUM
-                                </option>
-                            </x-adminlte-select>
-                        </div>
-                        <div class="col-md-3">
-                            <x-adminlte-select name="loket" label="Loket">
-                                <x-adminlte-options :options="[
-                                    1 => 'Loket 1',
-                                    2 => 'Loket 2',
-                                    3 => 'Loket 3',
-                                    4 => 'Loket 4',
-                                    5 => 'Loket 5',
-                                ]" :selected="$request->loket ?? 1" />
-                            </x-adminlte-select>
-                        </div>
-                        <div class="col-md-3">
-                            <x-adminlte-select name="lantai" label="Lantai">
-                                <x-adminlte-options :options="[
-                                    1 => 'Lantai 1',
-                                    2 => 'Lantai 2',
-                                    3 => 'Lantai 3',
-                                    4 => 'Lantai 4',
-                                    5 => 'Lantai 5',
-                                ]" :selected="$request->lantai ?? 1" />
-                            </x-adminlte-select>
-                        </div>
+                        @php
+                            $config = ['format' => 'YYYY-MM-DD'];
+                        @endphp
+                        <x-adminlte-input-date name="tanggal" fgroup-class="col-md-3" igroup-size="sm"
+                            label="Tanggal Antrian Pasien" :config="$config"
+                            value="{{ $request->tanggal ?? now()->format('Y-m-d') }}" />
+                        <x-adminlte-select name="jenispasien" fgroup-class="col-md-3" igroup-size="sm" label="Jenis Pasien">
+                            <option value="JKN" {{ $request->jenispasien == 'JKN' ? 'selected' : null }}>BPJS
+                            </option>
+                            <option value="NON-JKN" {{ $request->jenispasien == 'NON-JKN' ? 'selected' : null }}>UMUM
+                            </option>
+                        </x-adminlte-select>
+                        <x-adminlte-select name="loket" fgroup-class="col-md-3" igroup-size="sm" label="Loket">
+                            <x-adminlte-options :options="[
+                                1 => 'Loket 1',
+                                2 => 'Loket 2',
+                                3 => 'Loket 3',
+                                4 => 'Loket 4',
+                                5 => 'Loket 5',
+                            ]" :selected="$request->loket ?? 1" />
+                        </x-adminlte-select>
+                        <x-adminlte-select name="lantai" fgroup-class="col-md-3" igroup-size="sm" label="Lantai">
+                            <x-adminlte-options :options="[
+                                1 => 'Lantai 1',
+                                2 => 'Lantai 2',
+                                3 => 'Lantai 3',
+                                4 => 'Lantai 4',
+                                5 => 'Lantai 5',
+                            ]" :selected="$request->lantai ?? 1" />
+                        </x-adminlte-select>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
             @if (isset($antrians))
                 <div class="row">
-                    <div class="col-md-3">
-                        <x-adminlte-small-box
-                            title="{{ $antrians->where('taskid', 2)->where('lantaipendaftaran', $request->lantai)->first()->angkaantrean ?? '0' }}"
-                            text="Antrian Saat Ini" theme="primary" icon="fas fa-user-injured" />
-                    </div>
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $antrians->where('method', 'Offline')->where('taskid', 0)->where('lantaipendaftaran', $request->lantai)->first()->angkaantrean ?? '0' }}"
@@ -80,7 +62,7 @@
                     <div class="col-md-3">
                         <x-adminlte-small-box
                             title="{{ $antrians->where('method', 'Offline')->where('lantaipendaftaran', $request->lantai)->count() }}"
-                            text="Total Antrian" theme="success" icon="fas fa-user-injured" />
+                            text="Total Antrian" theme="primary" icon="fas fa-user-injured" />
                     </div>
                     <div class="col-md-12">
                         <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible

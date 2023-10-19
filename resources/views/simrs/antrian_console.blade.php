@@ -157,8 +157,7 @@
     </x-adminlte-modal>
 @stop
 @section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)*
-@include('sweetalert::alert')
+
 @section('adminlte_css')
 @endsection
 @section('adminlte_js')
@@ -370,4 +369,6 @@
             location.reload();
         });
     </script>
+    @section('plugins.Sweetalert2', true)
+    @include('sweetalert::alert')
 @stop
