@@ -32,19 +32,19 @@
                                 <input type="text" class="form-control mr-2" placeholder="cari berdasarkan alamat"
                                     id="alamat_search">
                             </div>
-                            <div class="col-lg-4 mt-2">
+                            {{-- <div class="col-lg-4 mt-2">
                                 <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas
                                             Pencarian 5</i></b></span>
                                 <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no bpjs"
                                     id="no_bpjs_search">
-                            </div>
+                            </div> --}}
                             <div class="col-lg-4 mt-2">
                                 <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas
                                             Pencarian 5</i></b></span>
                                 <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no RM"
                                     id="no_rm_search">
                             </div>
-                            <div class="col-lg-12 mt-4 float-right">
+                            <div class="col-lg-4 mt-4 float-right">
                                 <x-adminlte-button label="Cari Pasien" class="btn btn-flat" theme="primary"
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
@@ -403,9 +403,8 @@
             var nama = $('#nama_search').val();
             var alamat = $('#alamat_search').val();
             var tglLahir = $('#tgl_lahir_search').val();
-            var nobpjs = $('#no_bpjs_search').val();
             var norm = $('#no_rm_search').val();
-            if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && nobpjs == '' && norm == '') {
+            if (nik == '' && nama == '' && alamat == '' && tglLahir == ''&& norm == '') {
                 Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data',
                     '', 'info')
             }
@@ -415,7 +414,6 @@
                     nama: nama,
                     alamat: alamat,
                     tglLahir: tglLahir,
-                    nobpjs: nobpjs,
                     norm: norm,
                 },
                 function(data) {

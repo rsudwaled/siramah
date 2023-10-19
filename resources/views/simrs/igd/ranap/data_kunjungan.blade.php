@@ -166,6 +166,7 @@
                 var tglRencanaKontrol = $("#tanggal").val();
                 var user = $("#user").val();
                 var url = "{{ route('spri.create') }}";
+                $.LoadingOverlay("show");
                 $.ajax({
                     type: 'POST',
                     url: url,
@@ -183,7 +184,7 @@
                             Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
                             $("#createSPRI").modal('toggle');
                             location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
-
+                            $.LoadingOverlay("hide");
                         } else {
                             Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
                                 .code + ')', '', 'error');

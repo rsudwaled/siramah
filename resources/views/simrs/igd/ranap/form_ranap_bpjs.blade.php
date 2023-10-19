@@ -157,15 +157,17 @@
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
                                 title="Form Pendaftaran">
-                                <form action="{{ route('pasienranapbpjs.store') }}" method="post" id="submitRanap">
+                                <form id="submitRanap">
                                     @csrf
                                     <input type="hidden" name="kodeKunjungan" value=" {{ $refKunj }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
-                                    <input type="hidden" name="noKartuBPJS" id="noKartuBPJS" value="{{$pasien->no_Bpjs}}">
+                                    <input type="hidden" name="noKartuBPJS" id="noKartuBPJS"
+                                        value="{{ $pasien->no_Bpjs }}">
                                     <input type="hidden" name="noSurat" id="noSurat" value="{{ $spri->noSPRI }}">
-                                    <input type="hidden" name="kodeDPJP" id="kodeDPJP" value="{{ $spri->kodeDokter }}">
+                                    <input type="hidden" name="kodeDPJP" id="kodeDPJP"
+                                        value="{{ $spri->kodeDokter }}">
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-12">
@@ -195,9 +197,9 @@
                                                             @php
                                                                 $config = ['format' => 'YYYY-MM-DD'];
                                                             @endphp
-                                                            <x-adminlte-input-date name="tanggal_daftar"
-                                                                value="{{ $spri->tglRencanaKontrol == null ? Carbon\Carbon::now()->format('Y-m-d') : $spri->tglRencanaKontrol }}"
-                                                                label="Tanggal Masuk" :config="$config" disabled />
+                                                            <x-adminlte-input-date name="tanggal_daftar" id="tanggal_daftar"
+                                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                                label="Tanggal Masuk" :config="$config" />
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="noTelp" label="No Telp"
@@ -233,8 +235,8 @@
                                                             </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select2 name="diagnosa" label="Diagnosa"
-                                                                id="diagnosa">
+                                                            <x-adminlte-select2 name="diagAwal" label="diagAwal"
+                                                                id="diagAwal">
                                                                 <option value="">--Pilih Diagnosa--</option>
                                                                 @foreach ($icd as $item)
                                                                     <option value="{{ $item->diag }}">
@@ -257,8 +259,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="icheck-primary d-inline ml-2">
-                                                                <input type="checkbox" value="0"
-                                                                    name="katarak">
+                                                                <input type="checkbox" value="0" name="katarak">
                                                                 <label for="katarak"></label>
                                                             </div>
 
@@ -336,8 +337,8 @@
                                             </div>
                                         </div>
                                         <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green float-right" form="submitRanap"
-                                            label="Simpan Data" />
+                                            class="withLoad btn btn-sm m-1 bg-green float-right ranapCreateData"
+                                            form="submitRanap" label="Simpan Data" />
                                         <a href="{{ route('kunjungan.ranap') }}"
                                             class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
                                     </div>
@@ -431,9 +432,6 @@
                     $("#naikKelasDesc2").hide();
                 }
             });
-            $('#submitRanap').click(function(e) {
-
-            });
             $('#editSPRI').click(function(e) {
                 var nomorsuratkontrol = $('#noSPRI').val();
                 var url = "{{ route('spri.get') }}?noSuratKontrol=" + nomorsuratkontrol;
@@ -447,6 +445,49 @@
                 });
 
 
+            });
+            $('.ranapCreateData').click(function(e) {
+                var noKartu = $('#noKartuBPJS').val();
+                var tglSep = $('#tanggal_daftar').val();
+                var klsRawatHak = $('#klsRawatHak').val();
+                var idRuangan = $('#ruanganSend').val();
+                var diagAwal = $('#diagAwal').val();
+                var tujuan = $('').val();
+                var eksekutif = $('').val();
+                var dpjpLayan = $('').val();
+                var noTelp = $('').val();
+                var user = $('').val();
+                var noSurat = $('').val();
+                var kodeDPJP = $('').val();
+                $.ajax({
+                    data: $('#submitRanap').serialize(),
+                    url: url,
+                    type: "POST",
+                    data: {
+                        noKartu = required,
+                        tglSep = required,
+                        klsRawatHak = required,
+                        catatan = required,
+                        diagAwal = required,
+                        tujuan = required,
+                        eksekutif = required,
+                        dpjpLayan = required,
+                        noTelp = required,
+                        user = required,
+                        noSurat = required,
+                        kodeDPJP = required,
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        console.log(data);
+                        alert('error jaringan');
+                        $.LoadingOverlay("hide");
+                    }
+                });
             });
             $('#btnUpdateSPRI').click(function(e) {
                 var noSPRI = $('#noSPRI').val();
@@ -590,6 +631,8 @@
                     cache: true
                 }
             });
+
+
         });
 
 

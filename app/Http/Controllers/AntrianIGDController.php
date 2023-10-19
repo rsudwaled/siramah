@@ -127,11 +127,11 @@ class AntrianIGDController extends APIController
         $s_byname = $request->nama;
         $s_byaddress = $request->alamat;
         $s_bydate = $request->tglLahir;
-        $s_bybpjs = $request->nobpjs;
+        // $s_bybpjs = $request->nobpjs;
         $s_byrm = $request->norm;
         
-        if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_bybpjs || $s_byrm){
-            $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '$s_bybpjs' ,'$s_bynik' ,'$s_bydate')");   
+        if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_byrm){
+            $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");   
         }
         else{
             $pasien = Pasien::limit(100)
