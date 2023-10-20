@@ -1283,21 +1283,6 @@ return [
             'icon'    => 'fas fa-file-medical',
             'can' => 'casemix',
             'submenu' => [
-                // [
-                //     'text' => 'Pasien Ranap Aktif',
-                //     'icon'    => 'fas fa-user-injured',
-                //     'url'  => 'pasienRanapAktif',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'casemix',
-                // ],
-                // [
-                //     'text' => 'Pasien Ranap',
-                //     'icon'    => 'fas fa-user-injured',
-                //     'url'  => 'pasienRanap',
-                //     'shift'   => 'ml-2',
-                //     'active' => ['pasienRanapPasien', 'pasienRanap'],
-                //     'can' => 'casemix',
-                // ],
                 [
                     'text' => 'Diagnosa Rawat Jalan',
                     'icon'    => 'fas fa-diagnoses',
@@ -1306,18 +1291,11 @@ return [
                     'can' => 'casemix',
                 ],
                 [
-                    'text' => 'KMKB Rawat Jalan',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'kpo',
+                    'text' => 'Pasien Ranap Pulang',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'pasienranappulang',
                     'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
-                [
-                    'text' => 'KMKB Rawat Inap',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'kpoRanap',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
+                    'can' => 'casemix',
                 ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',

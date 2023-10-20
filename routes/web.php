@@ -165,8 +165,9 @@ Route::middleware('auth')->group(function () {
     Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
     Route::get('kpoRanap', [KPOController::class, 'kpoRanap'])->name('kpoRanap');
     Route::get('kunjunganRanap', [KunjunganController::class, 'kunjunganRanap'])->name('kunjunganRanap');
-    // rekammedis
+    // casemix
     Route::get('diagnosaRawatJalan', [PoliklinikController::class, 'diagnosaRawatJalan'])->name('diagnosaRawatJalan');
+    Route::get('pasienranappulang', [KunjunganController::class, 'pasienRanapPulang'])->name('pasienranappulang');
     // antrian bpjs
     Route::get('statusAntrianBpjs', [AntrianController::class, 'statusAntrianBpjs'])->name('statusAntrianBpjs');
     Route::get('poliklikAntrianBpjs', [PoliklinikController::class, 'poliklikAntrianBpjs'])->name('poliklikAntrianBpjs');

@@ -85,6 +85,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(AlasanMasuk::class, 'id', 'id_alasan_masuk');
     }
+    public function alasan_pulang()
+    {
+        return $this->hasOne(AlasanPulang::class, 'kode', 'id_alasan_pulang');
+    }
     public function tracer()
     {
         return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');

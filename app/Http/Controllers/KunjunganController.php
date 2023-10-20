@@ -193,8 +193,24 @@ class KunjunganController extends APIController
             'budget',
         ]));
     }
-
-
+    public function pasienRanapPulang(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
+            $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
+            $kunjungans = collect(DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_PULANG('','" . $tanggalawal . "','" . $tanggalakhir . "','" . $request->kodeunit . "')"));
+        }
+        dump($kunjungans);
+        return view('simrs.ranap.ranap_pasien_pulang', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
+    }
     public function pemulangan_sep_pasien(Request $request)
     {
         $api = new VclaimController();

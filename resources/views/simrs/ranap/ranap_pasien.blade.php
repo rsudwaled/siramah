@@ -10,30 +10,25 @@
             <x-adminlte-card title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-6">
-                            <x-adminlte-select2 name="kodeunit" label="Ruangan">
-                                <option value="-" {{ $request->kodeunit ? '-' : 'selected' }}>SEMUA RUANGAN (-)
+                        @php
+                            $config = [
+                                'timePicker' => false,
+                                'locale' => ['format' => 'YYYY/MM/DD'],
+                            ];
+                        @endphp
+                        <x-adminlte-date-range fgroup-class="col-md-4" igroup-size="sm" name="tanggal"
+                            label="Tanggal Rawat Inap" :config="$config" value="{{ $request->tanggal }}" />
+                        <x-adminlte-select2 fgroup-class="col-md-4" igroup-size="sm" name="kodeunit" label="Ruangan">
+                            <option value="-" {{ $request->kodeunit ? '-' : 'selected' }}>SEMUA RUANGAN (-)
+                            </option>
+                            @foreach ($units as $key => $item)
+                                <option value="{{ $key }}" {{ $key == $request->kodeunit ? 'selected' : null }}>
+                                    {{ $item }} ({{ $key }})
                                 </option>
-                                @foreach ($units as $key => $item)
-                                    <option value="{{ $key }}"
-                                        {{ $key == $request->kodeunit ? 'selected' : null }}>
-                                        {{ $item }} ({{ $key }})
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
-                        </div>
-                        <div class="col-md-6">
-                            @php
-                                $config = [
-                                    'timePicker' => false,
-                                    'locale' => ['format' => 'YYYY/MM/DD'],
-                                ];
-                            @endphp
-                            <x-adminlte-date-range name="tanggal" label="Tanggal Rawat Inap" :config="$config"
-                                value="{{ $request->tanggal }}" />
-                        </div>
+                            @endforeach
+                        </x-adminlte-select2>
                     </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
+                    <x-adminlte-button type="submit" class="withLoad" theme="primary" icon="fas fa-search" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
         </div>

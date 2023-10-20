@@ -66,7 +66,10 @@
                                 <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
                                     title="Edit User {{ $item->nama_px }}" data-id="{{ $item->idx }}"
                                     data-norm="{{ $item->no_rm }}" data-nokartu="{{ $item->no_Bpjs }}"
-                                    data-nik="{{ $item->nik_bpjs }}" data-nama="{{ $item->nama_px }}" />
+                                    data-nik="{{ $item->nik_bpjs }}" data-nama="{{ $item->nama_px }}"
+                                    data-tgllahir="{{ $item->tgl_lahir }}" data-tempatlahir="{{ $item->tempat_lahir }}"
+                                    data-nohp="{{ $item->no_hp }}" data-telp="{{ $item->no_tlp }}"
+                                    data-gender="{{ $item->jenis_kelamin }}" />
                             </td>
                         </tr>
                     @endforeach
@@ -99,7 +102,10 @@
                     <x-adminlte-input name="nik" label="NIK" placeholder="Nomor Induk Kependudukan"
                         enable-old-support />
                     <x-adminlte-input name="nama" label="Nama" placeholder="Nama Lengkap" enable-old-support />
-                    <x-adminlte-input name="no_hp" label="Nomor HP" placeholder="Nomor HP" enable-old-support />
+                    <x-adminlte-input name="nohp" label="Nomor HP" placeholder="Nomor HP" enable-old-support />
+                    <x-adminlte-select name="gender" label="Jenis Kelamin" enable-old-support>
+                        <x-adminlte-options :options="['L' => 'Laki-Laki', 'P' => 'Perempuan']" placeholder="Jenis Kelamin" />
+                    </x-adminlte-select>
                     <x-adminlte-input name="tempat_lahir" label="Tempat Lahir" placeholder="Tempat Lahir"
                         enable-old-support />
                     @php
@@ -108,10 +114,7 @@
                     <x-adminlte-input-date name="tanggal_lahir" label="Tanggal Lahir" placeholder="Tanggal Lahir"
                         :config="$config" enable-old-support />
                 </div>
-                <div class="col-md-6">
-                    <x-adminlte-select name="gender" label="Jenis Kelamin" enable-old-support>
-                        <x-adminlte-options :options="['L' => 'Laki-Laki', 'P' => 'Perempuan']" placeholder="Jenis Kelamin" />
-                    </x-adminlte-select>
+                {{-- <div class="col-md-6">
                     <x-adminlte-select name="Agama" label="Agama" enable-old-support>
                         <x-adminlte-options :options="['Islam', 'Perempuan']" placeholder="Agama" />
                     </x-adminlte-select>
@@ -124,7 +127,7 @@
                     <x-adminlte-select name="darah" label="Golongan Darah" enable-old-support>
                         <x-adminlte-options :options="['A', 'B', 'AB', 'O']" placeholder="Golongan Darah" />
                     </x-adminlte-select>
-                </div>
+                </div> --}}
             </div>
         </form>
         <form id="formDelete" action="" method="POST">
@@ -142,6 +145,7 @@
 @stop
 
 @section('plugins.Datatables', true)
+@section('plugins.TempusDominusBs4', true)
 @section('js')
     <script>
         $(function() {
@@ -167,6 +171,10 @@
                 $('#norm').val($(this).data("norm"));
                 $('#nokartu').val($(this).data("nokartu"));
                 $('#nik').val($(this).data("nik"));
+                $('#tanggal_lahir').val($(this).data("tgllahir"));
+                $('#tempat_lahir').val($(this).data("tempatlahir"));
+                $('#nohp').val($(this).data("nohp"));
+                $('#gender').val($(this).data("gender")).change();
                 $('#modalPasien').modal('show');
                 $.LoadingOverlay("hide");
             });
