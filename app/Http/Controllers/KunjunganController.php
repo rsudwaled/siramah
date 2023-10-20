@@ -204,7 +204,6 @@ class KunjunganController extends APIController
             $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
             $kunjungans = collect(DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_PULANG('','" . $tanggalawal . "','" . $tanggalakhir . "','" . $request->kodeunit . "')"));
         }
-        dump($kunjungans);
         return view('simrs.ranap.ranap_pasien_pulang', compact([
             'request',
             'units',
