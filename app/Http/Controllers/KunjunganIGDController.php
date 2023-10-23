@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kunjungan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\PenjaminSimrs;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KunjunganIGDController extends Controller
@@ -53,5 +54,22 @@ class KunjunganIGDController extends Controller
       $ttp_k->update();
       Alert::success('success', 'Kunjungan pasien dengan kode : '.$ttp_k->kode_kunjungan.' berhasil dibuka' );
       return back();
+    }
+
+    public function editKunjungan(Request $request)
+    {
+      $kunjungan = Kunjungan::where('no_rm', $request->no_rm)->get();
+      $noRM = $request->no_rm;
+      $penjamin = PenjaminSimrs::get();
+      return view('simrs.igd.kunjungan.list_edit_kunjungan', compact('kunjungan','noRM','penjamin'));
+    }
+
+    public function editKunjunganTerpilih(Request $request)
+    {
+      $data = Kunjungan::with(['penjamin_simrs','pasien','unit'])
+        ->where('counter', $request->counter)
+        ->where('no_rm', $request->rm)->first();
+      $data=collect($data);
+      return response()->json($data, 200);
     }
 }
