@@ -1298,6 +1298,13 @@ return [
                     'can' => 'casemix',
                 ],
                 [
+                    'text' => 'Kunjungan Pasien Ranap',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'kunjunganpasienranap',
+                    'shift'   => 'ml-2',
+                    'can' => 'casemix',
+                ],
+                [
                     'text' => 'Capaian Antrian Pertanggal',
                     'icon'    => 'fas fa-chart-line',
                     'shift'   => 'ml-2',

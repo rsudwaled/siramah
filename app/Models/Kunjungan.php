@@ -12,25 +12,8 @@ class Kunjungan extends Model
     protected $table = 'ts_kunjungan';
     protected $primaryKey = 'kode_kunjungan';
     protected $keyType = 'string';
-    protected $fillable = [
-        'counter',
-        'no_rm',
-        'kode_unit',
-        'tgl_masuk',
-        'kode_paramedis',
-        'status_kunjungan',
-        'prefix_kunjungan',
-        'kode_penjamin',
-        'pic',
-        'id_alasan_masuk',
-        'pic2',
-        'kelas',
-        'hak_kelas',
-        'no_sep',
-        'no_rujukan',
-        'diagx',
-        'created_at',
-        'keterangan2',
+    protected $guarded = [
+        'kode_kunjungan',
     ];
     protected $appends = ['rm_counter'];
     public function getRmCounterAttribute()

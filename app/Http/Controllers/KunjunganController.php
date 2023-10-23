@@ -210,6 +210,59 @@ class KunjunganController extends APIController
             'kunjungans',
         ]));
     }
+    public function kunjunganpasienranap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
+            $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
+
+            $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                ->whereBetween('tgl_keluar', [$tanggalawal, $tanggalakhir])
+                ->has('pasien')
+                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status', 'alasan_pulang'])
+                ->get();
+            $kunjungan_aktif = Kunjungan::where('kode_unit', $request->kodeunit)
+                ->where('status_kunjungan', 1)
+                ->has('pasien')
+                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status', 'alasan_pulang'])
+                ->get();
+        }
+        return view('simrs.ranap.kunjungan_pasien_ranap', compact([
+            'request',
+            'units',
+            'kunjungans',
+            'kunjungan_aktif',
+        ]));
+    }
+    public function bukakunjungan(Request $request)
+    {
+        $kunjungan = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjungan->update([
+            'tgl_keluar' => null,
+            'catatan' => $kunjungan->tgl_keluar,
+            'status_kunjungan' => 1,
+            'cfar' => 1,
+            'cetak_label' => 1,
+        ]);
+        Alert::success('Succes', 'Kunjungan berhasil dibuka kembali. Lihat di pasien aktif');
+        return redirect()->back();
+    }
+    public function tutupkunjungan(Request $request)
+    {
+        $kunjungan = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjungan->update([
+            'tgl_keluar' => $kunjungan->catatan,
+            'status_kunjungan' => 2,
+            'cfar' => 1,
+            'cetak_label' => 1,
+        ]);
+        Alert::success('Succes', 'Kunjungan berhasil ditutup kembali. Lihat di pasien pulang.');
+        return redirect()->back();
+    }
     public function pemulangan_sep_pasien(Request $request)
     {
         $api = new VclaimController();
