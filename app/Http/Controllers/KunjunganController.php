@@ -216,10 +216,10 @@ class KunjunganController extends APIController
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
+        $kunjungan_aktif = null;
         if ($request->tanggal) {
             $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
             $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
-
             $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
                 ->whereBetween('tgl_keluar', [$tanggalawal, $tanggalakhir])
                 ->has('pasien')
