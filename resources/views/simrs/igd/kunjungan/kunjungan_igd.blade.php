@@ -169,18 +169,18 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="info-box mb-3 bg-purple" data-toggle="modal" data-target="#editKunjungan">
+                        <div class="info-box mb-3 bg-purple" data-toggle="modal" data-target="#editPenjamin">
                             <span class="info-box-icon"><i class="fas fa-door-open"></i></span>
                             <a href="#">
                                 <div class="info-box-content">
-                                    <span class="info-box-text">klik untuk buka edit kunjungan</span>
-                                    <span class="info-box-number">Edit Kunjungan</span>
+                                    <span class="info-box-text">klik untuk buka edit Penjamin</span>
+                                    <span class="info-box-number">Edit Penjamin</span>
                                 </div>
                             </a>
                         </div>
-                        <x-adminlte-modal id="editKunjungan" title="Edit Kunjungan :" size="md" theme="purple"
+                        <x-adminlte-modal id="editPenjamin" title="Edit Penjamin :" size="md" theme="purple"
                             v-centered static-backdrop>
-                            <form action="{{route('kunjungan-pasien.edit')}}" id="editKunjunganByKode" method="get">
+                            <form action="{{route('kunjungan-pasien.edit')}}" id="editPenjaminByKode" method="get">
                                 <div class="modal-body">
                                     <div class="col-lg-12">
                                         <x-adminlte-input name="no_rm" label="No RM" placeholder="no rm"
@@ -196,7 +196,7 @@
                                 <x-slot name="footerSlot">
                                     <x-adminlte-button theme="danger" class="mr-auto" label="batal"
                                         data-dismiss="modal" />
-                                    <x-adminlte-button type="submit" form="editKunjunganByKode"
+                                    <x-adminlte-button type="submit" form="editPenjaminByKode"
                                         class="btn btn-sm m-1 bg-purple float-right" label="Cari Kunjungan" />
                                 </x-slot>
                             </form>

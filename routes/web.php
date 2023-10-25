@@ -304,6 +304,9 @@ Route::middleware('auth')->group(function () {
 
     //DASHBOARD IGD
     Route::get('/dashboard-igd', [App\Http\Controllers\DashboardIGDController::class, 'getDataAll'])->name('dashboard-igd');
+    Route::get('/pendaftaran-pasien-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPasienPendaftaran'])->name('pendaftaran.pasien');
+    Route::get('/pendaftaran-pasien-bayi', [App\Http\Controllers\IGDBAYIController::class, 'pendaftaranPasienBayi'])->name('pendaftaranpasien.bayi');
+    Route::get('/cari-orangtua-bayi', [App\Http\Controllers\IGDBAYIController::class, 'cariOrangtua'])->name('cari-ortu.bayi');
 
     //ROUTE ANTRIAN IGD 
     Route::get('/pendaftaran-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
@@ -320,8 +323,8 @@ Route::middleware('auth')->group(function () {
     // Route::get('daftar/pasien-igd-bpjs/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGDFromBPJS'])->name('form-pasien-idgtobpjs');
 
     Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
-    Route::get('/pendaftaran-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
-    Route::get('/pendaftaran-pasien-bpjs-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasienBPJSDiDaftarkan'])->name('pasien-bpjs-didaftarkan');
+    Route::get('/pendaftaran-antrian-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
+    Route::get('/pendaftaran-antrian-pasien-bpjs-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasienBPJSDiDaftarkan'])->name('pasien-bpjs-didaftarkan');
     
     // GET ALAMAT PASIEN BARU
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
@@ -331,37 +334,38 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kecamatan-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgKecPasien'])->name('klg-kec-pasien.get');
     Route::get('/get-desa-keluarga-pasien', [App\Http\Controllers\AntrianIGDController::class, 'getKlgDesaPasien'])->name('klg-desa-pasien.get');
 
-    Route::post('/pendaftaran-igd-store', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pendaftaranIGDStore'])->name('pendaftaran-igd.igdstore');
-    Route::post('/pendaftaran-igd-kbd-store', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pendaftaranIGDKBDStore'])->name('pendaftaran-igd-kbd.igdstore');
-    Route::put('/update-nik-bpjs-pasien', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'updateNOBPJS'])->name('update-nobpjs.pasien');
-    Route::put('/tutup-kunjungan-pasien-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'tutupKunjunganPasien'])->name('tutup-kunjungan-pigd');
-    Route::put('/buka-kunjungan-pasien-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'bukaKunjunganPasien'])->name('buka-kunjungan-pigd');
+    Route::post('/pendaftaran-igd-store', [App\Http\Controllers\IGDUMUMController::class, 'pendaftaranIGDStore'])->name('pendaftaran-igd.igdstore');
+    Route::post('/pendaftaran-igd-kbd-store', [App\Http\Controllers\IGDUMUMController::class, 'pendaftaranIGDKBDStore'])->name('pendaftaran-igd-kbd.igdstore');
+    Route::put('/update-nik-bpjs-pasien', [App\Http\Controllers\IGDUMUMController::class, 'updateNOBPJS'])->name('update-nobpjs.pasien');
+    Route::put('/tutup-kunjungan-pasien-igd', [App\Http\Controllers\IGDUMUMController::class, 'tutupKunjunganPasien'])->name('tutup-kunjungan-pigd');
+    Route::put('/buka-kunjungan-pasien-igd', [App\Http\Controllers\IGDUMUMController::class, 'bukaKunjunganPasien'])->name('buka-kunjungan-pigd');
     
-    Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
-    Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
-    Route::put('/pendaftaran-igd-batal', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'batalDaftarIGD'])->name('batalkan.pendaftaranigd');
-    Route::get('/pendaftaran-pasien-igds', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'bpjsToUmum'])->name('bpjstoumum');
+    Route::post('/surat-pernyataan-bpjs-proses', [App\Http\Controllers\IGDUMUMController::class, 'suratPernyataanPasien'])->name('surat-pernyataan.bpjsproses');
+    Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\IGDUMUMController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
+    Route::put('/pendaftaran-igd-batal', [App\Http\Controllers\IGDUMUMController::class, 'batalDaftarIGD'])->name('batalkan.pendaftaranigd');
+    Route::get('/pendaftaran-antrian-pasien-igds', [App\Http\Controllers\IGDUMUMController::class, 'bpjsToUmum'])->name('bpjstoumum');
     
     // pilih ruangan
-    Route::post('/pilih-ruangan', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihRuangan'])->name('pilih-ruangan');
+    Route::post('/pilih-ruangan', [App\Http\Controllers\IGDUMUMController::class, 'pilihRuangan'])->name('pilih-ruangan');
 
     // Menu Kunjungan
     Route::get('/daftar-kunjungan', [App\Http\Controllers\KunjunganIGDController::class, 'kunjunganPasienHariIni'])->name('kunjungan-pasien.today');
     Route::put('/tutup-kunjungan-bykode', [App\Http\Controllers\KunjunganIGDController::class, 'tutupKunjunganByKode'])->name('tutup-kunjungan-bykode');
     Route::put('/buka-kunjungan-bykode', [App\Http\Controllers\KunjunganIGDController::class, 'bukaKunjunganByKode'])->name('buka-kunjungan-bykode');
-    Route::get('/edit-kunjungan', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjungan'])->name('kunjungan-pasien.edit');
+    Route::get('/edit-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjungan'])->name('kunjungan-pasien.edit');
     Route::get('/edit-kunjungan-terpilih', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjunganTerpilih'])->name('kunjungan-terpilih.edit');
+    Route::put('/edit-kunjungan-status-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'updateKunjunganTerpilih'])->name('statuskunjungan-terpilih.update');
     
     //ROUTE IGD BPJS
-    Route::get('/pendaftaran-igd-bpjs', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'getDataAntrianPasienBPJS'])->name('pendaftaran-pasien-igdbpjs');
-    Route::post('/pasien-igdbpjs-search', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'searchPasienIGDBPJS'])->name('pasien-igdbpjs-search');
-    Route::post('/pendaftaran-pasien-bpjs-store', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'pasienBPJSSTORE'])->name('pasien-igdbpjs-store');
-    Route::put('/pendaftaran-igd-bpjs-batal', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'batalDaftar'])->name('batalkan.pendaftaranbpjs');
-    Route::get('/provinsi-bpjs', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'getProvinsiBPJS'])->name('provinsi-bpjs');
-    Route::get('/kabupaten-bpjs', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'getKabBPJS'])->name('kab-bpjs');
-    Route::get('/kecamatan-bpjs', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'getKecBPJS'])->name('kec-bpjs');
-    Route::get('/pasien-bpjs/edit/', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'editPasienBPJS'])->name('edit-pasienbpjs');
-    Route::put('/pasien-update', [App\Http\Controllers\PendaftaranPasienIGDBPJSController::class, 'updatePasien'])->name('update-pasien.update');
+    Route::get('/pendaftaran-igd-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getDataAntrianPasienBPJS'])->name('pendaftaran-pasien-igdbpjs');
+    Route::post('/pasien-igdbpjs-search', [App\Http\Controllers\IGDBPJSController::class, 'searchPasienIGDBPJS'])->name('pasien-igdbpjs-search');
+    Route::post('/pendaftaran-pasien-bpjs-store', [App\Http\Controllers\IGDBPJSController::class, 'pasienBPJSSTORE'])->name('pasien-igdbpjs-store');
+    Route::put('/pendaftaran-igd-bpjs-batal', [App\Http\Controllers\IGDBPJSController::class, 'batalDaftar'])->name('batalkan.pendaftaranbpjs');
+    Route::get('/provinsi-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getProvinsiBPJS'])->name('provinsi-bpjs');
+    Route::get('/kabupaten-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getKabBPJS'])->name('kab-bpjs');
+    Route::get('/kecamatan-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getKecBPJS'])->name('kec-bpjs');
+    Route::get('/pasien-bpjs/edit/', [App\Http\Controllers\IGDBPJSController::class, 'editPasienBPJS'])->name('edit-pasienbpjs');
+    Route::put('/pasien-update', [App\Http\Controllers\IGDBPJSController::class, 'updatePasien'])->name('update-pasien.update');
 
     
     // RANAP IGD

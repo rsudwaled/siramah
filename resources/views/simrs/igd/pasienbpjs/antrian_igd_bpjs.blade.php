@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-lg-12">
-                    <h6>silahkan cari pasien disini:</h6>
+                    <h6>silahkan cari pasien bpjs disini:</h6>
                     <p>pencarian berdasarkan prioritas memudahkan dalam proses efektifitas pencarian. semakin kecil
                         prioritas semakin akurat</p>
                     <form action="" method="POST">
@@ -43,8 +43,10 @@
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{ route('d-antrian-igd') }}">Pasien UMUM</a>
+                                {{-- <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
+                                    href="{{ route('d-antrian-igd') }}">Pasien UMUM</a> --}}
+                                <a class="btn btn-flat btn-secondary" icon="fas fa-retweet"
+                                    href="{{ route('pendaftaran.pasien') }}">Kembali</a>
                             </div>
                         </div>
                     </form>
@@ -61,6 +63,20 @@
                             <i class="fas fa-globe"></i> Data Pasien : <small class="float-right">tanggal :
                                 {{ \Carbon\Carbon::now()->format('Y-m-d') }}!</small>
                         </h4>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <h3 class="text-center">TAMBAH PASIEN ERROR!!</h3>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                    <li>jika pasien bpjs, maka no bpjs wajib diisi</li>
+                                </ul>
+                                <button type="button" class="btn btn-block bg-gradient-success btn-sm" data-toggle="modal"
+                                    data-target="#tambahPasien">Tambah Pasien
+                                    Baru</button>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row">
@@ -145,10 +161,12 @@
                                     <div class="col-lg-12">
                                         <div class="alert alert-warning alert-dismissible">
                                             <h5>
-                                                <i class="icon fas fa-info-circle"></i> form untuk mendaftarkan pasien baru
+                                                <i class="icon fas fa-info-circle"></i> form untuk mendaftarkan pasien
+                                                baru
                                                 :
                                             </h5> jika pasien tidak terdaftar dalam sistem, silahkan masukan data pasien
                                             baru dengan cara klik tombol berikut : <br>
+
                                             {{-- <x-adminlte-button label="Tambah Pasien Baru" data-toggle="modal" data-target="#tambahPasien" class="btn btn-info bg-info btn-xs" /> --}}
                                             <button type="button" class="btn btn-block bg-gradient-success btn-sm"
                                                 data-toggle="modal" data-target="#tambahPasien">Tambah Pasien
@@ -156,7 +174,7 @@
                                             <form action="{{ route('pasien-baru.create') }}" method="post">
                                                 @csrf
                                                 <x-adminlte-modal id="tambahPasien" title="Tambah Pasien Baru"
-                                                    size="xl" theme="info" icon="fas fa-user-plus" v-centered
+                                                    size="xl" theme="success" icon="fas fa-user-plus" v-centered
                                                     static-backdrop scrollable>
                                                     <div class="modal-body">
                                                         <div class="col-lg-12">
@@ -221,7 +239,8 @@
                                                                                     @foreach ($agama as $item)
                                                                                         <option
                                                                                             value="{{ $item->ID }}">
-                                                                                            {{ $item->agama }}</option>
+                                                                                            {{ $item->agama }}
+                                                                                        </option>
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pekerjaan"
@@ -230,7 +249,8 @@
                                                                                     @foreach ($pekerjaan as $item)
                                                                                         <option
                                                                                             value="{{ $item->ID }}">
-                                                                                            {{ $item->pekerjaan }}</option>
+                                                                                            {{ $item->pekerjaan }}
+                                                                                        </option>
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pendidikan"
@@ -308,7 +328,8 @@
                                                                 <div class="col-lg-4">
                                                                     <div class="alert alert-warning alert-dismissible">
                                                                         <h5>
-                                                                            <i class="icon fas fa-users"></i>Info Keluarga
+                                                                            <i class="icon fas fa-users"></i>Info
+                                                                            Keluarga
                                                                             Pasien :
                                                                         </h5>
                                                                     </div>

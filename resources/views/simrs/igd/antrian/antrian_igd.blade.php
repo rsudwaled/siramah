@@ -49,8 +49,10 @@
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{ route('pendaftaran-pasien-igdbpjs') }}">Pasien BPJS</a>
+                                {{-- <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
+                                    href="{{ route('pendaftaran-pasien-igdbpjs') }}">Pasien BPJS</a> --}}
+                                    <a class="btn btn-flat btn-secondary" icon="fas fa-retweet"
+                                    href="{{ route('pendaftaran.pasien') }}">Kembali</a>
                             </div>
                         </div>
                     </form>
@@ -67,6 +69,20 @@
                             <i class="fas fa-globe"></i> Data Pasien : <small class="float-right">tanggal :
                                 {{ \Carbon\Carbon::now()->format('Y-m-d') }}!</small>
                         </h4>
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <h3 class="text-center">TAMBAH PASIEN ERROR!!</h3>
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                    <li>jika pasien bpjs, maka no bpjs wajib diisi</li>
+                                </ul>
+                                <button type="button" class="btn btn-block bg-gradient-success btn-sm" data-toggle="modal"
+                                    data-target="#tambahPasien">Tambah Pasien
+                                    Baru</button>
+                            </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row">
@@ -175,7 +191,7 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
                                                                             <div
-                                                                                class="alert alert-success alert-dismissible">
+                                                                                class="alert alert-info alert-dismissible">
                                                                                 <h5>
                                                                                     <i
                                                                                         class="icon fas fa-users"></i>Informasi
@@ -351,7 +367,7 @@
                                                         <x-adminlte-button theme="danger" class="mr-auto" label="batal"
                                                             data-dismiss="modal" />
                                                         <x-adminlte-button type="submit" class="float-right"
-                                                            theme="success" label="simpan data" />
+                                                            theme="info" label="simpan data" />
                                                     </x-slot>
                                                 </x-adminlte-modal>
                                             </form>
@@ -389,6 +405,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $.LoadingOverlay("hide");
             $('#search').click(function(e) {
                 $.LoadingOverlay("show");
                 search();
@@ -404,7 +421,7 @@
             var alamat = $('#alamat_search').val();
             var tglLahir = $('#tgl_lahir_search').val();
             var norm = $('#no_rm_search').val();
-            if (nik == '' && nama == '' && alamat == '' && tglLahir == ''&& norm == '') {
+            if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && norm == '') {
                 Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data',
                     '', 'info')
             }
@@ -474,8 +491,8 @@
                         if (!nik) {
                             Swal.fire('pasien tidak memiliki nik. silahkan edit terlebih dahulu', '',
                                 'error')
-                                $('#lanjutDaftar').hide();
-                                $('#warningDaftar').show();
+                            $('#lanjutDaftar').hide();
+                            $('#warningDaftar').show();
                         } else {
                             $('#rm_pasien_selected').text('NO RM : ' + pasien.pasien['no_rm']);
                             $('#nama_pasien_selected').text('NAMA : ' + pasien.pasien['nama_px']);

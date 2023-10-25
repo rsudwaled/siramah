@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Http;
 use Auth;
 use DB;
 
-class PendaftaranPasienIGDBPJSController extends APIController
+class IGDBPJSController extends APIController
 {
     public function getDataAntrianPasienBPJS(Request $request)
     {

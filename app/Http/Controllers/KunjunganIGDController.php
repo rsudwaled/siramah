@@ -72,4 +72,20 @@ class KunjunganIGDController extends Controller
       $data=collect($data);
       return response()->json($data, 200);
     }
+
+    public function updateKunjunganTerpilih(Request $request)
+    {
+      // dd($request->all());
+      $data = Kunjungan::where('counter', $request->counter)->where('no_rm', $request->no_rm)->first();
+      if($request->status==0)
+      {
+        $status = $data->status_kunjungan;
+      }else{
+        $status = $request->status;
+      }
+      $data->status_kunjungan = $status;
+      $data->kode_penjamin = $request->penjamin;
+      $data->update();
+      return response()->json(['data'=>$data, 'status'=>200]);
+    }
 }

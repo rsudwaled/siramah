@@ -385,10 +385,17 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
+                // [
+                //     'text' => 'Pendaftaran Pasien*',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pendaftaran-antrian-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
                     'text' => 'Pendaftaran Pasien',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pendaftaran-antrian-igd',
+                    'url'  => 'pendaftaran-pasien-igd',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

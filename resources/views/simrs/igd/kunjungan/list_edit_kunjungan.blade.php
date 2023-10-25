@@ -3,7 +3,7 @@
 @section('title', 'List Pasien')
 @section('content_header')
     <div class="callout callout-warning">
-        <h5>Edit Kunjungan : RM ( {{ $noRM }} ) <x-adminlte-button class="btn-sm btn-flat float-right"
+        <h5>Edit Penjamin : RM ( {{ $noRM }} ) <x-adminlte-button class="btn-sm btn-flat float-right"
                 theme="secondary" label="kembali" onclick="window.location='{{ route('kunjungan-pasien.today') }}'" /></h5>
 
     </div>
@@ -51,7 +51,7 @@
             <div class="modal-body">
                 <div class="col-lg-12">
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-5 card card-primary card-outline">
                             <div class="card bg-light d-flex flex-fill">
                                 <div class="card-header small text-muted border-bottom-0">
                                     Data Pasien :
@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-7">
                             <div class="row">
                                 <div class="col-md-6">
                                     <x-adminlte-input name="counter" label="Counter" id="counter"
@@ -100,6 +100,7 @@
                                 <div class="col-md-6">
                                     <x-adminlte-select name="status_kunjungan" id="status_kunjungan"
                                         label-class="text-primary" label="Status Kunjungan">
+                                        <option value="0">--Pilih Status--</option>
                                         <option value="13">Batal Periksa</option>
                                         <option value="8">Batal Rawat</option>
                                     </x-adminlte-select>
@@ -111,8 +112,8 @@
             </div>
             <x-slot name="footerSlot">
                 <x-adminlte-button theme="danger" class="mr-auto" label="batal" data-dismiss="modal" />
-                <x-adminlte-button type="submit" form="editByKunjungan" class="btn btn-sm m-1 bg-primary float-right updateKunjungan"
-                    label="Update" />
+                <x-adminlte-button type="submit" form="editByKunjungan"
+                    class="btn btn-sm m-1 bg-primary float-right updateKunjungan" label="Update" />
             </x-slot>
         </form>
     </x-adminlte-modal>
@@ -131,9 +132,41 @@
                 }
             });
 
-            // $('.updateKunjungan').click(function(e) {
-
-            // });
+            $('.updateKunjungan').click(function(e) {
+                var no_rm = $('#no_rm').val();
+                var counter = $('#counter').val();
+                var penjamin = $('#penjamin_id').val();
+                var status = $('#status_kunjungan').val();
+                swal.fire({
+                    icon: 'question',
+                    title: 'YAKIN UPDATE PENJAMIN DAN STATUS KUNJUNGAN ?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Update',
+                    denyButtonText: `Batal`,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var url = "{{ route('statuskunjungan-terpilih.update') }}";
+                        $.ajax({
+                            type: "put",
+                            url: url,
+                            data: {
+                                "_token": "{{ csrf_token() }}",
+                                no_rm: no_rm,
+                                counter: counter,
+                                penjamin: penjamin,
+                                status: status,
+                            },
+                            success: function(res) {
+                                if(res.status==200)
+                                {
+                                    Swal.fire('kunjungan berhasil di perbaharui', '', 'success');
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                })
+            });
 
             $('.modalKunjungan').click(function(e) {
                 var counter = $(this).data('counter');

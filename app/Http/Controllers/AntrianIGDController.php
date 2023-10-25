@@ -160,7 +160,28 @@ class AntrianIGDController extends APIController
 
     public function pasienBaruCreate(Request $request)
     {
-        // dd($request->all());
+        
+        
+        $validated = $request->validate([
+            'nik_pasien_baru' =>'required',
+            'nama_pasien_baru' =>'required',
+            'tempat_lahir' =>'required',
+            'jk' =>'required',
+            'tgl_lahir' =>'required',
+            'agama' =>'required',
+            'pekerjaan' =>'required',
+            'pendidikan' =>'required',
+            'no_telp' =>'required',
+            'provinsi_pasien' =>'required',
+            'negara' =>'required',
+            'kewarganegaraan' =>'required',
+            'alamat_lengkap_pasien' =>'required',
+            'nama_keluarga' =>'required',
+            'kontak' =>'required',
+            'hub_keluarga' =>'required',
+            'alamat_lengkap_sodara' =>'required',
+        ]);
+
         $tgl_lahir = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
         $last_rm = Pasien::latest('no_rm')->first(); // 23982846
         $rm_last = substr($last_rm->no_rm, -6); //982846
