@@ -307,6 +307,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pendaftaran-pasien-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPasienPendaftaran'])->name('pendaftaran.pasien');
     Route::get('/pendaftaran-pasien-bayi', [App\Http\Controllers\IGDBAYIController::class, 'pendaftaranPasienBayi'])->name('pendaftaranpasien.bayi');
     Route::get('/cari-orangtua-bayi', [App\Http\Controllers\IGDBAYIController::class, 'cariOrangtua'])->name('cari-ortu.bayi');
+    Route::post('/pasien-bayi-create', [App\Http\Controllers\IGDBAYIController::class, 'pasienBayiCreate'])->name('pasien_bayi.create');
 
     //ROUTE ANTRIAN IGD 
     Route::get('/pendaftaran-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
