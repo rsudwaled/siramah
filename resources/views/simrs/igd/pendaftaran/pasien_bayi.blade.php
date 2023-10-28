@@ -8,7 +8,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <form>
+            <form id="form_pasien_bayi">
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="alert alert-warning alert-dismissible">
@@ -20,7 +20,7 @@
                             <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi" placeholder="masukan nama bayi"
                                 fgroup-class="col-md-12" disable-feedback />
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
+                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-4"
                                 label="Tanggal Lahir" :config="$config">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
@@ -28,10 +28,12 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input-date>
-                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin" id="jk_bayi" fgroup-class="col-md-6">
+                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin" id="jk_bayi" fgroup-class="col-md-4">
                                 <option value="L">Laki-Laki</option>
                                 <option value="P">Perempuan</option>
                             </x-adminlte-select>
+                            <x-adminlte-input name="bb_bayi" id="bb_bayi" label="BB Bayi" placeholder="masukan berat bayi"
+                                fgroup-class="col-md-4" disable-feedback />
                             <x-adminlte-textarea name="alamat_bayi" id="alamat_bayi" label="Alamat Lengkap (RT/RW)"
                                 placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
 
@@ -49,6 +51,13 @@
                                     <h5>
                                         <i class="icon fas fa-users"></i>Informasi Orangtua Bayi :
                                     </h5>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="callout callout-success" id="card_desc_bpjs" style="display: none;">
+                                    <h5 id="cek_bpjs">I am a success callout!</h5>
+                                    <p id="cek_keterangan_bpjs">This is a green callout.</p>
+                                    <p id="cek_jenis_peserta">This is a green callout.</p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -69,7 +78,8 @@
                                         <option value="P">
                                             Perempuan
                                         </option>
-                                    </x-adminlte-select> @php $config = ['format' => 'DD-MM-YYYY']; @endphp
+                                    </x-adminlte-select>
+                                    @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                                     <x-adminlte-input-date name="tgl_lahir" id="tgl_lahir_ortu" fgroup-class="col-md-6"
                                         label="Tanggal Lahir" :config="$config">
                                         <x-slot name="prependSlot">
@@ -160,11 +170,13 @@
                     </div>
 
                 </div>
+               
                 <x-adminlte-button class="float-right btn-sm btn-flat simpan-data" theme="success" label="SIMPAN DATA" />
                 <a href="{{ route('pendaftaran-pasien-igdbpjs') }}"
                     class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
+                <x-adminlte-button label="Reset Form" class="btn btn-flat reset_form" theme="warning" icon="fas fa-retweet" />
             </form>
         </div>
     </div>
@@ -219,17 +231,48 @@
                                 $('#negara_ortu').val(res.data.negara).trigger('change');
                                 $.LoadingOverlay("hide", true);
 
+                               
+                                var date = new Date();
+                                var tanggal = date.getFullYear() + "-" + (date.getMonth() + 1) +
+                                    "-" + date.getDate();
+                                $.ajax({
+                                    type: "GET",
+                                    url: "{{ route('peserta_nik') }}",
+                                    data: {
+                                        nik: nikOrangtua,
+                                        tanggal: tanggal,
+                                    },
+                                    dataType: 'JSON',
+                                    success: function(res) {
+                                        console.log(res.response);
+                                        if (res.metadata.code) {
+                                            document.getElementById('card_desc_bpjs').style.display = "block";
+                                            $('#cek_bpjs').text(' BPJS ORANGTUA: '+ res.response.peserta.statusPeserta.keterangan)
+                                            $('#cek_keterangan_bpjs').text(' HAK KELAS : '+ res.response.peserta.hakKelas.keterangan)
+                                            $('#cek_jenis_peserta').text(' Jenis Peserta : '+ res.response.peserta.jenisPeserta.keterangan)
+                                        }
+                                    }
+                                });
+
                             } else {
                                 Swal.fire('NIK Orangtua tidak ditemukan!',
                                     ' silahkan masukan data orangtua baru / periksa kembali nik yang dimasukan',
                                     'error');
                                 $.LoadingOverlay("hide", true);
+                                document.getElementById('card_desc_bpjs').style.display = "none";
+                                $("#form_pasien_bayi")[0].reset() 
                             }
                         }
                     });
                 }
             });
 
+            $('.reset_form').click(function(e) {
+                $.LoadingOverlay("show");
+                $("#form_pasien_bayi")[0].reset();
+                document.getElementById('card_desc_bpjs').style.display = "none";
+                $.LoadingOverlay("hide");
+            });
             $('.simpan-data').click(function(e) {
                 swal.fire({
                     icon: 'question',
@@ -241,37 +284,38 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             data: {
-                                nik_ortu : $('#nik_ortu').val(),
-                                no_bpjs_ortu : $('#no_bpjs_ortu').val(),
-                                nama_ortu : $('#nama_ortu').val(),
-                                tempat_lahir_ortu : $('#tempat_lahir_ortu').val(),
-                                alamat_lengkap_ortu : $('#alamat_lengkap_ortu').val(),
-                                no_hp_ortu : $('#no_hp_ortu').val(),
-                                no_telp_ortu : $('#no_telp_ortu').val(),
-                                tgl_lahir_ortu : $('#tgl_lahir_ortu').val(),
-                                jk_ortu : $('#jk_ortu').val(),
-                                agama_ortu : $('#agama_ortu').val(),
-                                pendidikan_ortu : $('#pendidikan_ortu').val(),
-                                pekerjaan_ortu : $('#pekerjaan_ortu').val(),
-                                kewarganegaraan_ortu : $('#kewarganegaraan_ortu').val(),
-                                provinsi_ortu : $('#provinsi_ortu').val(),
-                                kab_ortu : $('#kab_ortu').val(),
-                                kec_ortu : $('#kec_ortu').val(),
-                                desa_ortu : $('#desa_ortu').val(),
-                                negara_ortu : $('#negara_ortu').val(),
+                                nik_ortu: $('#nik_ortu').val(),
+                                no_bpjs_ortu: $('#no_bpjs_ortu').val(),
+                                nama_ortu: $('#nama_ortu').val(),
+                                tempat_lahir_ortu: $('#tempat_lahir_ortu').val(),
+                                alamat_lengkap_ortu: $('#alamat_lengkap_ortu').val(),
+                                no_hp_ortu: $('#no_hp_ortu').val(),
+                                no_telp_ortu: $('#no_telp_ortu').val(),
+                                tgl_lahir_ortu: $('#tgl_lahir_ortu').val(),
+                                jk_ortu: $('#jk_ortu').val(),
+                                agama_ortu: $('#agama_ortu').val(),
+                                pendidikan_ortu: $('#pendidikan_ortu').val(),
+                                pekerjaan_ortu: $('#pekerjaan_ortu').val(),
+                                kewarganegaraan_ortu: $('#kewarganegaraan_ortu').val(),
+                                provinsi_ortu: $('#provinsi_ortu').val(),
+                                kab_ortu: $('#kab_ortu').val(),
+                                kec_ortu: $('#kec_ortu').val(),
+                                desa_ortu: $('#desa_ortu').val(),
+                                negara_ortu: $('#negara_ortu').val(),
 
-                                nama_bayi : $('#nama_bayi').val(),
-                                jk_bayi : $('#jk_bayi').val(),
-                                tgl_lahir_bayi : $('#tgl_lahir_bayi').val(),
-                                alamat_bayi : $('#alamat_bayi').val(),
+                                nama_bayi: $('#nama_bayi').val(),
+                                jk_bayi: $('#jk_bayi').val(),
+                                tgl_lahir_bayi: $('#tgl_lahir_bayi').val(),
+                                bb_bayi: $('#bb_bayi').val(),
+                                alamat_bayi: $('#alamat_bayi').val(),
                             },
-                            url: "{{route('pasien_bayi.create')}}",
+                            url: "{{ route('pasien_bayi.create') }}",
                             type: "POST",
                             dataType: 'json',
                             success: function(data) {
                                 console.log(data);
                             },
-                            
+
                         });
                     }
                 })
