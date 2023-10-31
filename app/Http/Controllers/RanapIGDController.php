@@ -489,4 +489,17 @@ class RanapIGDController extends APIController
             return back();
         }
     }
+
+
+
+
+    // pasien ranap bayi
+    public function ranapBPJSBayi(Request $request)
+    {
+        return view('simrs.igd.ranapbayi.bayi_bpjs');
+    }
+    public function ranapUMUMBayi(Request $request)
+    {
+        return view('simrs.igd.ranapbayi.bayi_umum');
+    }
 }

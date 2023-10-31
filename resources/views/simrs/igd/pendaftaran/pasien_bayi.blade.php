@@ -8,6 +8,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
+            <div class="alert alert-danger" id="validation-errors" style="display:none;"></div>
             <form id="form_pasien_bayi">
                 <div class="row">
                     <div class="col-lg-4">
@@ -17,8 +18,9 @@
                             </h5>
                         </div>
                         <div class="row">
-                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi" placeholder="masukan nama bayi"
-                                fgroup-class="col-md-12" disable-feedback />
+                            <input type="hidden" name="isbpjs" id="isbpjs">
+                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi"
+                                placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                             <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-4"
                                 label="Tanggal Lahir" :config="$config">
@@ -37,7 +39,7 @@
                             <x-adminlte-textarea name="alamat_bayi" id="alamat_bayi" label="Alamat Lengkap (RT/RW)"
                                 placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
 
-                            <x-adminlte-input name="nik_orangtua" id="nik_orangtua" label="NIK ORANTUA"
+                            <x-adminlte-input name="nik_orangtua" id="nik_orangtua" label="NIK ORANTUA" type="number"
                                 placeholder="masukan nik orangtua bayi" fgroup-class="col-md-12" disable-feedback />
                             <button type="button"
                                 class="btn btn-flat btn-block bg-gradient-primary btn-sm mr-2 mb-2 cari_orangtua">Cari Orang
@@ -170,13 +172,14 @@
                     </div>
 
                 </div>
-               
+
                 <x-adminlte-button class="float-right btn-sm btn-flat simpan-data" theme="success" label="SIMPAN DATA" />
                 <a href="{{ route('pendaftaran-pasien-igdbpjs') }}"
                     class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
-                <x-adminlte-button label="Reset Form" class="btn btn-flat reset_form" theme="warning" icon="fas fa-retweet" />
+                <x-adminlte-button label="Reset Form" class="btn btn-flat reset_form" theme="warning"
+                    icon="fas fa-retweet" />
             </form>
         </div>
     </div>
@@ -198,8 +201,14 @@
             });
 
             $('.cari_orangtua').click(function(e) {
-                var nikOrangtua = $('#nik_orangtua').val();
                 $.LoadingOverlay("show");
+                var nikOrangtua = $('#nik_orangtua').val();
+                if(!nikOrangtua)
+                {
+                    $.LoadingOverlay("hide");
+                    Swal.fire('NIK Orangtua tidak boleh kosong!', ' silahkan masukan nik orangtua yang akan dicari','error');
+                }
+                
                 if (nikOrangtua) {
                     $.ajax({
                         type: "GET",
@@ -231,7 +240,6 @@
                                 $('#negara_ortu').val(res.data.negara).trigger('change');
                                 $.LoadingOverlay("hide", true);
 
-                               
                                 var date = new Date();
                                 var tanggal = date.getFullYear() + "-" + (date.getMonth() + 1) +
                                     "-" + date.getDate();
@@ -244,12 +252,30 @@
                                     },
                                     dataType: 'JSON',
                                     success: function(res) {
-                                        console.log(res.response);
-                                        if (res.metadata.code) {
-                                            document.getElementById('card_desc_bpjs').style.display = "block";
-                                            $('#cek_bpjs').text(' BPJS ORANGTUA: '+ res.response.peserta.statusPeserta.keterangan)
-                                            $('#cek_keterangan_bpjs').text(' HAK KELAS : '+ res.response.peserta.hakKelas.keterangan)
-                                            $('#cek_jenis_peserta').text(' Jenis Peserta : '+ res.response.peserta.jenisPeserta.keterangan)
+                                        console.log(res);
+                                        if (res.metadata.code == 200) {
+                                            document.getElementById(
+                                                    'card_desc_bpjs').style
+                                                .display = "block";
+                                            $('#cek_bpjs').text('STATUS BPJS : ' +
+                                                res.response.peserta
+                                                .statusPeserta.keterangan)
+                                            $('#cek_keterangan_bpjs').text(
+                                                ' HAK KELAS : ' + res.response
+                                                .peserta.hakKelas.keterangan)
+                                            $('#cek_jenis_peserta').text(
+                                                ' Jenis Peserta : ' + res
+                                                .response.peserta.jenisPeserta
+                                                .keterangan)
+                                            if(res.response.peserta.statusPeserta.kode == 0)
+                                            {
+                                                $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
+                                                $('#cek_bpjs').css('style:text-green');
+                                            }else{
+                                                $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
+                                            }
+                                        }else{
+                                            $('#cek_bpjs').css('style:text-green')
                                         }
                                     }
                                 });
@@ -259,8 +285,9 @@
                                     ' silahkan masukan data orangtua baru / periksa kembali nik yang dimasukan',
                                     'error');
                                 $.LoadingOverlay("hide", true);
-                                document.getElementById('card_desc_bpjs').style.display = "none";
-                                $("#form_pasien_bayi")[0].reset() 
+                                document.getElementById('card_desc_bpjs').style.display =
+                                    "none";
+                                $("#form_pasien_bayi")[0].reset()
                             }
                         }
                     });
@@ -302,6 +329,7 @@
                                 kec_ortu: $('#kec_ortu').val(),
                                 desa_ortu: $('#desa_ortu').val(),
                                 negara_ortu: $('#negara_ortu').val(),
+                                isbpjs :  $('#isbpjs').val(),
 
                                 nama_bayi: $('#nama_bayi').val(),
                                 jk_bayi: $('#jk_bayi').val(),
@@ -312,9 +340,22 @@
                             url: "{{ route('pasien_bayi.create') }}",
                             type: "POST",
                             dataType: 'json',
-                            success: function(data) {
-                                console.log(data);
-                            },
+                            error: function(res) {
+                                heart();
+                                console.log(res);
+                               if (res.responseJSON) {
+                                $.each(res.responseJSON.errors, function(index,
+                                    value) {
+                                    console.log(value);
+                                    console.log(index);
+                                    $('#validation-errors').append(
+                                        '<div class="alert-error"><h6>' +
+                                        index + ' : ' +
+                                        value + '</h6></div>');
+                                });
+                               }
+                            }
+
 
                         });
                     }
@@ -322,5 +363,12 @@
 
             });
         });
+    </script>
+    <script>
+       function heart() {
+            document.getElementById("validation-errors").style.display = "block"
+            setTimeout(function(){ document.getElementById("validation-errors").style.display = "none"}, 5000);
+            $('.alert-error').remove();
+        }
     </script>
 @endsection

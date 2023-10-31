@@ -382,6 +382,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/spri-get/', [App\Http\Controllers\RanapIGDController::class, 'getSPRI'])->name('spri.get');
     Route::get('/ranap/spri-check/', [App\Http\Controllers\RanapIGDController::class, 'cekProsesDaftarSPRI'])->name('cekprosesdaftar.spri');
     
+    //RANAP BAYI
+    Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\RanapIGDController::class, 'ranapBPJSBayi'])->name('ranapbpjs.bayi');
+    Route::get('/ranap-umum/pasien-bayi/', [App\Http\Controllers\RanapIGDController::class, 'ranapUMUMBayi'])->name('ranapumum.bayi');
 
 
 });
