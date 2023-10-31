@@ -496,6 +496,7 @@ class RanapIGDController extends APIController
     // pasien ranap bayi
     public function ranapBPJSBayi(Request $request)
     {
+        dd($request->all());
         return view('simrs.igd.ranapbayi.bayi_bpjs');
     }
     public function ranapUMUMBayi(Request $request)

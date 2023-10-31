@@ -19,6 +19,7 @@
                         </div>
                         <div class="row">
                             <input type="hidden" name="isbpjs" id="isbpjs">
+                            <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
                             <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi"
                                 placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
@@ -270,9 +271,11 @@
                                             if(res.response.peserta.statusPeserta.kode == 0)
                                             {
                                                 $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
+                                                $('#isbpjs_keterangan').val(res.response.peserta.statusPeserta.keterangan);
                                                 $('#cek_bpjs').css('style:text-green');
                                             }else{
                                                 $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
+                                                $('#isbpjs_keterangan').val(res.response.peserta.statusPeserta.keterangan);
                                             }
                                         }else{
                                             $('#cek_bpjs').css('style:text-green')
@@ -330,6 +333,7 @@
                                 desa_ortu: $('#desa_ortu').val(),
                                 negara_ortu: $('#negara_ortu').val(),
                                 isbpjs :  $('#isbpjs').val(),
+                                isbpjs_keterangan :  $('#isbpjs_keterangan').val(),
 
                                 nama_bayi: $('#nama_bayi').val(),
                                 jk_bayi: $('#jk_bayi').val(),
@@ -340,6 +344,15 @@
                             url: "{{ route('pasien_bayi.create') }}",
                             type: "POST",
                             dataType: 'json',
+                            success: function(res) {
+                                console.log(res);
+                                if(res.is_bpjs > 0)
+                                {
+                                    window.location.href = "{{route('ranapumum.bayi')}}?rmby="+res.rm_bayi;
+                                }else{
+                                    window.location.href = "{{route('ranapbpjs.bayi')}}";
+                                }
+                            },
                             error: function(res) {
                                 heart();
                                 console.log(res);

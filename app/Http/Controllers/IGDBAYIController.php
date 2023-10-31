@@ -74,33 +74,35 @@ class IGDBAYIController extends Controller
             // "isbpjs" => 'required',
         ]);
 
-        // $last_rm = Pasien::latest('no_rm')->first(); // 23982846
-        // $rm_last = substr($last_rm->no_rm, -6); //982846
-        // $add_rm_new = $rm_last + 1; //982847
-        // $th = substr(Carbon::now()->format('Y'), -2); //23
-        // $rm_new = $th . $add_rm_new;
+        $last_rm = Pasien::latest('no_rm')->first(); // 23982846
+        $rm_last = substr($last_rm->no_rm, -6); //982846
+        $add_rm_new = $rm_last + 1; //982847
+        $th = substr(Carbon::now()->format('Y'), -2); //23
+        $rm_new = $th . $add_rm_new;
 
-        // $bayi = new PasienBayiIGD();
-        // $bayi->nik_ortu = $request->nik_ortu;
-        // $bayi->no_bpjs_ortu = $request->no_bpjs_ortu;
-        // $bayi->nama_ortu = $request->nama_ortu;
-        // $bayi->tempat_lahir_ortu = $request->tempat_lahir_ortu;
-        // $bayi->alamat_lengkap_ortu = $request->alamat_lengkap_ortu;
-        // $bayi->no_hp_ortu = $request->no_hp_ortu;
-        // $bayi->no_telp_ortu = $request->no_telp_ortu;
-        // $bayi->tgl_lahir_ortu = $request->tgl_lahir_ortu;
-        // $bayi->jk_ortu = $request->jk_ortu;
-        // $bayi->provinsi_ortu = $request->provinsi_ortu;
-        // $bayi->kab_ortu = $request->kab_ortu;
-        // $bayi->kec_ortu = $request->kec_ortu;
-        // $bayi->desa_ortu = $request->desa_ortu;
-        // $bayi->negara_ortu = $request->negara_ortu;
+        $bayi = new PasienBayiIGD();
+        $bayi->nik_ortu = $request->nik_ortu;
+        $bayi->no_bpjs_ortu = $request->no_bpjs_ortu;
+        $bayi->nama_ortu = $request->nama_ortu;
+        $bayi->tempat_lahir_ortu = $request->tempat_lahir_ortu;
+        $bayi->alamat_lengkap_ortu = $request->alamat_lengkap_ortu;
+        $bayi->no_hp_ortu = $request->no_hp_ortu;
+        $bayi->no_telp_ortu = $request->no_telp_ortu;
+        $bayi->tgl_lahir_ortu = $request->tgl_lahir_ortu;
+        $bayi->provinsi_ortu = $request->provinsi_ortu;
+        $bayi->kab_ortu = $request->kab_ortu;
+        $bayi->kec_ortu = $request->kec_ortu;
+        $bayi->desa_ortu = $request->desa_ortu;
+        $bayi->negara_ortu = $request->negara_ortu;
         
-        // $bayi->rm_bayi = $rm_new;
-        // $bayi->nama_bayi = $request->nama_bayi;
-        // $bayi->jk_bayi = $request->jk_bayi;
-        // $bayi->tgl_lahir_bayi = $request->tgl_lahir_bayi;
-        // $bayi->alamat_bayi = $request->alamat_bayi;
+        $bayi->rm_bayi = $rm_new;
+        $bayi->nama_bayi = $request->nama_bayi;
+        $bayi->jk_bayi = $request->jk_bayi;
+        $bayi->tgl_lahir_bayi = $request->tgl_lahir_bayi;
+        $bayi->alamat_bayi = $request->alamat_bayi;
+        $bayi->is_bpjs = (int) $request->isbpjs;
+        $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
+        $bayi->save();
         // if($bayi->save())
         // {
         //         $pasien = new Pasien();
@@ -131,12 +133,13 @@ class IGDBAYIController extends Controller
         //         $pasien->negara = $request->negara_ortu;
         //         $pasien->save();
         // }
-        $is_bpjs = $request->isbpjs;
-        if($is_bpjs > 0)
-        {
-            return view('simrs.igd.ranapbayi.bayi_umum');
-        }else{
-            return view('simrs.igd.ranapbayi.bayi_bpjs');
-        }
+        
+        // if($is_bpjs > 0)
+        // {
+        //     return view('simrs.igd.ranapbayi.bayi_umum');
+        // }else{
+        //     return view('simrs.igd.ranapbayi.bayi_bpjs');
+        // }
+        return response()->json($bayi, 200);
     }
 }
