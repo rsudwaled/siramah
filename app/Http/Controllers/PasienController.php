@@ -47,6 +47,7 @@ class PasienController extends APIController
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'no_rm' => 'required',
+            'no_rm' => 'required',
         ]);
         $request['username'] = $request->nik;
         $request['tanggal_lahir'] = date('Y-m-d', strtotime($request->tanggal_lahir));
