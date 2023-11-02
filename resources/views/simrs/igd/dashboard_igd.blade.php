@@ -37,7 +37,7 @@
                                         @foreach ($kunNow as $item)
                                             <tr>
                                                 <td>{{ $item->no_rm }}</td>
-                                                <td></td>
+                                                <td>{{ $item->prefix_kunjungan}}</td>
                                                 <td><span class="badge badge-success">IN : </span> {{ $item->tgl_masuk }} /
                                                     <span class="badge badge-danger">OUT :
                                                     </span> {{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
@@ -68,61 +68,35 @@
                         <div class="card card-primary">
                             <div class="card-header">
                                 <h4 class="card-title w-100">
-                                    <a class="d-block w-100 collapsed" data-toggle="collapse" href="#collapseOne"
+                                    <a class="d-block w-100 collapsed" data-toggle="collapse"
                                         aria-expanded="false">
                                         Pasien Harus Di BRIDGING #1
                                     </a>
                                 </h4>
                             </div>
-                            <div id="collapseOne" class="collapse" data-parent="#accordion" style="">
-                                <div class="card-body">
-                                    <ul class="products-list product-list-in-card">
-                                        <li class="item">
-                                            <div class="product-info">
-                                                <a href="javascript:void(0)" class="product-title">Samsung TV
-                                                    <span class="badge badge-warning float-right">$1800</span></a>
-                                                <span class="product-description">
-                                                    Samsung 32" 1080p 60Hz LED Smart HDTV.
-                                                </span>
-                                            </div>
-                                        </li>
+                            <div class="collapsed" data-parent="#accordion" style="">
+                                <ul class="products-list product-list-in-card">
+                                    <li class="item">
+                                        <div class="product-info">
+                                            <a class="product-title">PASIEN IGD UMUM
+                                                <span class="badge badge-warning float-right">10 PASIEN</span></a>
+                                            <span class="product-description">
+                                               JUMLAH IGD YANG BELUM BRIDGING
+                                            </span>
+                                        </div>
+                                    </li>
 
-                                        <li class="item">
-                                            <div class="product-info">
-                                                <a href="javascript:void(0)" class="product-title">Bicycle
-                                                    <span class="badge badge-info float-right">$700</span></a>
-                                                <span class="product-description">
-                                                    26" Mongoose Dolomite Men's 7-speed, Navy Blue.
-                                                </span>
-                                            </div>
-                                        </li>
+                                    <li class="item">
+                                        <div class="product-info">
+                                            <a class="product-title">PASIEN IGD KEBIDANAN
+                                                <span class="badge badge-info float-right">5 PASIEN</span></a>
+                                            <span class="product-description">
+                                                JUMLAH IGK YANG BELUM DI BRIDGING.
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ul>
 
-                                        <li class="item">
-                                            <div class="product-info">
-                                                <a href="javascript:void(0)" class="product-title">
-                                                    Xbox One <span class="badge badge-danger float-right">
-                                                        $350
-                                                    </span>
-                                                </a>
-                                                <span class="product-description">
-                                                    Xbox One Console Bundle with Halo Master Chief Collection.
-                                                </span>
-                                            </div>
-                                        </li>
-
-                                        <li class="item">
-                                            <div class="product-info">
-                                                <a href="javascript:void(0)" class="product-title">PlayStation 4
-                                                    <span class="badge badge-success float-right">$399</span></a>
-                                                <span class="product-description">
-                                                    PlayStation 4 500GB Console (PS4)
-                                                </span>
-                                            </div>
-                                        </li>
-
-                                    </ul>
-
-                                </div>
                             </div>
                         </div>
                     </div>

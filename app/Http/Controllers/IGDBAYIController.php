@@ -47,13 +47,13 @@ class IGDBAYIController extends Controller
     {
         
         $validated = $request->validate([
+            "rm_ibu" => 'required',
             "nik_ortu" => 'required',
-            "no_bpjs_ortu" => 'required',
+            // "no_bpjs_ortu" => 'required',
             "nama_ortu" => 'required',
             "tempat_lahir_ortu" => 'required',
             "alamat_lengkap_ortu" => 'required',
             "no_hp_ortu" => 'required',
-            "no_telp_ortu" => 'required',
             "tgl_lahir_ortu" => 'required',
             "jk_ortu" =>'required',
             "agama_ortu" => 'required',
@@ -68,8 +68,6 @@ class IGDBAYIController extends Controller
             "nama_bayi" => 'required',
             "jk_bayi" => 'required',
             "tgl_lahir_bayi" => 'required',
-            "bb_bayi" => 'required',
-            "alamat_bayi" => 'required',
             
             // "isbpjs" => 'required',
         ]);
@@ -80,26 +78,28 @@ class IGDBAYIController extends Controller
         $th = substr(Carbon::now()->format('Y'), -2); //23
         $rm_new = $th . $add_rm_new;
 
+        $kontak = $request->no_hp_ortu==null? $request->no_telp_ortu:$request->no_hp_ortu; 
+
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu = $request->nik_ortu;
         $bayi->no_bpjs_ortu = $request->no_bpjs_ortu;
         $bayi->nama_ortu = $request->nama_ortu;
         $bayi->tempat_lahir_ortu = $request->tempat_lahir_ortu;
         $bayi->alamat_lengkap_ortu = $request->alamat_lengkap_ortu;
-        $bayi->no_hp_ortu = $request->no_hp_ortu;
-        $bayi->no_telp_ortu = $request->no_telp_ortu;
-        $bayi->tgl_lahir_ortu = $request->tgl_lahir_ortu;
-        $bayi->provinsi_ortu = $request->provinsi_ortu;
-        $bayi->kab_ortu = $request->kab_ortu;
-        $bayi->kec_ortu = $request->kec_ortu;
-        $bayi->desa_ortu = $request->desa_ortu;
-        $bayi->negara_ortu = $request->negara_ortu;
+        $bayi->no_hp_ortu = $kontak;
+        // $bayi->no_telp_ortu = $request->no_telp_ortu;
+        // $bayi->tgl_lahir_ortu = $request->tgl_lahir_ortu;
+        // $bayi->provinsi_ortu = $request->provinsi_ortu;
+        // $bayi->kab_ortu = $request->kab_ortu;
+        // $bayi->kec_ortu = $request->kec_ortu;
+        // $bayi->desa_ortu = $request->desa_ortu;
+        // $bayi->negara_ortu = $request->negara_ortu;
         
         $bayi->rm_bayi = $rm_new;
+        $bayi->rm_ibu = $request->rm_ibu;
         $bayi->nama_bayi = $request->nama_bayi;
         $bayi->jk_bayi = $request->jk_bayi;
         $bayi->tgl_lahir_bayi = $request->tgl_lahir_bayi;
-        $bayi->alamat_bayi = $request->alamat_bayi;
         $bayi->is_bpjs = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
         $bayi->save();

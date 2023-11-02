@@ -9,12 +9,25 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="row">
-                <div class="col-md-4 col-sm-6 col-12 pasien-umum" style="cursor: pointer">
+                <div class="col-sm-6 col-12 pasien-umum" style="cursor: pointer">
                     <div class="info-box bg-gradient-info">
                         <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
                         <div class="info-box-content  m-4">
-                            <span class="info-box-text">PASIEN UMUM</span>
-                            <span class="info-box-number">daftarkan Sebagai pasien umum</span>
+                            <span class="info-box-text">PASIEN IGD UMUM</span>
+                            <span class="info-box-number">daftarkan Sebagai pasien igd umum</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-sm-6 col-12 pasien-umum" style="cursor: pointer">
+                    <div class="info-box bg-gradient-warning">
+                        <span class="info-box-icon"><i class="fas fa-baby"></i></span>
+                        <div class="info-box-content  m-4">
+                            <span class="info-box-text">PASIEN IGD KEBIDANAN</span>
+                            <span class="info-box-number">daftarkan Sebagai pasien igd kebidanan</span>
                             <div class="progress">
                                 <div class="progress-bar" style="width: 70%"></div>
                             </div>
@@ -22,7 +35,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 col-sm-6 col-12 pasien-bpjs" style="cursor: pointer">
+                <div class="col-sm-6 col-12 pasien-bpjs" style="cursor: pointer">
                     <div class="info-box bg-gradient-success">
                         <span class="info-box-icon"><i class="fas fa-hospital-user"></i></span>
                         <div class="info-box-content  m-4">
@@ -35,12 +48,25 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 col-sm-6 col-12 pasien-bayi" style="cursor: pointer">
-                    <div class="info-box bg-gradient-warning">
+                <div class="col-sm-6 col-12 pasien-bayi" style="cursor: pointer">
+                    <div class="info-box bg-gradient-danger">
+                        <span class="info-box-icon"><i class="fas fa-baby"></i></span>
+                        <div class="info-box-content  m-4">
+                            <span class="info-box-text">PASIEN BAYI BARU LAHIR</span>
+                            <span class="info-box-number">daftarkan Sebagai pasien bayi baru lahir</span>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-12 pasien-ranap" style="cursor: pointer">
+                    <div class="info-box bg-gradient-maroon">
                         <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
                         <div class="info-box-content  m-4">
-                            <span class="info-box-text">PASIEN BAYI</span>
-                            <span class="info-box-number">daftarkan Sebagai pasien bayi</span>
+                            <span class="info-box-text">PASIEN RAWAT INAP</span>
+                            <span class="info-box-number">daftarkan Sebagai pasien rawat inap igd</span>
                             <div class="progress">
                                 <div class="progress-bar" style="width: 70%"></div>
                             </div>
@@ -78,6 +104,10 @@
             $('.pasien-bayi').click(function(e) {
                 $.LoadingOverlay("show");
                 window.location.href ="{{route('pendaftaranpasien.bayi')}}";
+            });
+            $('.pasien-ranap').click(function(e) {
+                $.LoadingOverlay("show");
+                window.location.href ="{{route('kunjungan.ranap')}}";
             });
         });
 </script>

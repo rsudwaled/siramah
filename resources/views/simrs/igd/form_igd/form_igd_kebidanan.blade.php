@@ -34,7 +34,7 @@
                     <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan :">
                         <div class="col-lg-12">
                             <div class="row">
-                                <div class="col-lg-10">
+                                <div class="col-lg-12">
                                     @php
                                         $heads = ['Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
                                         $config['order'] = ['0', 'asc'];
@@ -65,7 +65,7 @@
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
-                                <div class="col-lg-2">
+                                {{-- <div class="col-lg-2">
                                     @if ($knj_aktif > 0)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
                                             data-toggle="modal" data-target="#tutupKunjungan">Tutup
@@ -134,7 +134,7 @@
                                             </x-slot>
                                         </form>
                                     </x-adminlte-modal>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </x-adminlte-card>
@@ -313,40 +313,40 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        const select = document.getElementById('pilihPendaftaran');
-        const pilihUnit = document.getElementById('pilihUnit');
+        // const select = document.getElementById('pilihPendaftaran');
+        // const pilihUnit = document.getElementById('pilihUnit');
 
-        function showDiv(select) {
-            if (select.value == 0) {
-                document.getElementById('div_rajal').style.display = "block";
-                document.getElementById('div_ranap').style.display = "none";
-                document.getElementById('div_ruangan').style.display = "none";
-            } else {
-                document.getElementById('div_ranap').style.display = "block";
-                document.getElementById('div_ruangan').style.display = "block";
-                document.getElementById('div_rajal').style.display = "none";
-            }
-        }
+        // function showDiv(select) {
+        //     if (select.value == 0) {
+        //         document.getElementById('div_rajal').style.display = "block";
+        //         document.getElementById('div_ranap').style.display = "none";
+        //         document.getElementById('div_ruangan').style.display = "none";
+        //     } else {
+        //         document.getElementById('div_ranap').style.display = "block";
+        //         document.getElementById('div_ruangan').style.display = "block";
+        //         document.getElementById('div_rajal').style.display = "none";
+        //     }
+        // }
 
-        function showUnit(pilihUnit) {
-            if (pilihUnit.value == 0) {
-                document.getElementById('ugd').style.display = "block";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 1) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "block";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 2) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "block";
-            } else {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            }
-        }
+        // function showUnit(pilihUnit) {
+        //     if (pilihUnit.value == 0) {
+        //         document.getElementById('ugd').style.display = "block";
+        //         document.getElementById('ugd_keb').style.display = "none";
+        //         document.getElementById('umum').style.display = "none";
+        //     } else if (pilihUnit.value == 1) {
+        //         document.getElementById('ugd').style.display = "none";
+        //         document.getElementById('ugd_keb').style.display = "block";
+        //         document.getElementById('umum').style.display = "none";
+        //     } else if (pilihUnit.value == 2) {
+        //         document.getElementById('ugd').style.display = "none";
+        //         document.getElementById('ugd_keb').style.display = "none";
+        //         document.getElementById('umum').style.display = "block";
+        //     } else {
+        //         document.getElementById('ugd').style.display = "none";
+        //         document.getElementById('ugd_keb').style.display = "none";
+        //         document.getElementById('umum').style.display = "none";
+        //     }
+        // }
 
         function getID(rID, pasien_id) {
             var ruangan_terpilih = rID;

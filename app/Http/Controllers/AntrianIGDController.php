@@ -311,8 +311,7 @@ class AntrianIGDController extends APIController
 
         $unit = Unit::limit(10)->get();
         $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
+        $paramedis = Paramedis::where('act', 1)
             ->get();
         $penjamin = PenjaminSimrs::limit(10)
             ->where('act', 1)

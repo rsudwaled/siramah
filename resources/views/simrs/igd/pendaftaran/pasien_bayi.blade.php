@@ -19,11 +19,12 @@
                         </div>
                         <div class="row">
                             <input type="hidden" name="isbpjs" id="isbpjs">
+                            <input type="hidden" name="rm_ibu" id="rm_ibu">
                             <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
                             <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi"
                                 placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-4"
+                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
                                 label="Tanggal Lahir" :config="$config">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
@@ -31,14 +32,10 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input-date>
-                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin" id="jk_bayi" fgroup-class="col-md-4">
+                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin" id="jk_bayi" fgroup-class="col-md-6">
                                 <option value="L">Laki-Laki</option>
                                 <option value="P">Perempuan</option>
                             </x-adminlte-select>
-                            <x-adminlte-input name="bb_bayi" id="bb_bayi" label="BB Bayi" placeholder="masukan berat bayi"
-                                fgroup-class="col-md-4" disable-feedback />
-                            <x-adminlte-textarea name="alamat_bayi" id="alamat_bayi" label="Alamat Lengkap (RT/RW)"
-                                placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
 
                             <x-adminlte-input name="nik_orangtua" id="nik_orangtua" label="NIK ORANTUA" type="number"
                                 placeholder="masukan nik orangtua bayi" fgroup-class="col-md-12" disable-feedback />
@@ -218,6 +215,7 @@
                         success: function(res) {
                             console.log(res);
                             if (res.data != null) {
+                                $('#rm_ibu').val(res.data.no_rm);
                                 $('#nik_ortu').val(res.data.nik_bpjs);
                                 $('#no_bpjs_ortu').val(res.data.no_Bpjs);
                                 $('#nama_ortu').val(res.data.nama_px);
@@ -314,6 +312,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             data: {
+                                rm_ibu: $('#rm_ibu').val(),
                                 nik_ortu: $('#nik_ortu').val(),
                                 no_bpjs_ortu: $('#no_bpjs_ortu').val(),
                                 nama_ortu: $('#nama_ortu').val(),
@@ -338,19 +337,18 @@
                                 nama_bayi: $('#nama_bayi').val(),
                                 jk_bayi: $('#jk_bayi').val(),
                                 tgl_lahir_bayi: $('#tgl_lahir_bayi').val(),
-                                bb_bayi: $('#bb_bayi').val(),
-                                alamat_bayi: $('#alamat_bayi').val(),
                             },
                             url: "{{ route('pasien_bayi.create') }}",
                             type: "POST",
                             dataType: 'json',
                             success: function(res) {
                                 console.log(res);
+                                console.log(res.rm_bayi);
                                 if(res.is_bpjs > 0)
                                 {
                                     window.location.href = "{{route('ranapumum.bayi')}}?rmby="+res.rm_bayi;
                                 }else{
-                                    window.location.href = "{{route('ranapbpjs.bayi')}}";
+                                    window.location.href = "{{route('ranapbpjs.bayi')}}?rmby="+res.rm_bayi+"&nomorkartu="+res.no_bpjs_ortu;
                                 }
                             },
                             error: function(res) {

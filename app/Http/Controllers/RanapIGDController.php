@@ -31,6 +31,7 @@ use App\Models\Spri;
 use App\Models\Poliklinik;
 use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
+use App\Models\PasienBayiIGD;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
@@ -496,8 +497,17 @@ class RanapIGDController extends APIController
     // pasien ranap bayi
     public function ranapBPJSBayi(Request $request)
     {
-        dd($request->all());
-        return view('simrs.igd.ranapbayi.bayi_bpjs');
+        $pasien = PasienBayiIGD::firstWhere('rm_bayi', $request->rmby);
+        $vlcaim = new VclaimController();
+        $request['nomorkartu'] = $request->nomorkartu;
+        $request['tanggal'] = now()->format('Y-m-d');
+        $res = $vlcaim->peserta_nomorkartu($request);
+        // dd($request->all(), $pasienBayi, $res);
+        $kodeKelas = $res->response->peserta->hakKelas->kode;
+        $kelas = $res->response->peserta->hakKelas->keterangan;
+        $alasanmasuk = AlasanMasuk::whereNotIn('id', [2,7, 3,13,9])->get();
+        $icd = Icd10::limit(15)->get();
+        return view('simrs.igd.ranapbayi.bayi_bpjs', compact('kodeKelas','kelas','pasien','alasanmasuk','icd'));
     }
     public function ranapUMUMBayi(Request $request)
     {
