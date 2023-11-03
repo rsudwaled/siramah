@@ -159,6 +159,12 @@
                                                     </x-adminlte-select>
                                                 </div>
                                                 <div class="col-md-6">
+                                                    <x-adminlte-select name="isBridging" label="Pilih Bridging / Tidak">
+                                                        <option value="1">Bridging</option>
+                                                        <option value="0">Tidak Bridging</option>
+                                                    </x-adminlte-select>
+                                                </div>
+                                                <div class="col-md-6">
                                                     <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
                                                         label="Status Kecelakaan">
                                                         <option value="">--Status Kecelakaan--</option>

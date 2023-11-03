@@ -51,7 +51,7 @@
                                     onClick="window.location.reload();" />
                                 {{-- <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
                                     href="{{ route('pendaftaran-pasien-igdbpjs') }}">Pasien BPJS</a> --}}
-                                    <a class="btn btn-flat btn-secondary" icon="fas fa-retweet"
+                                <a class="btn btn-flat btn-secondary" icon="fas fa-retweet"
                                     href="{{ route('pendaftaran.pasien') }}">Kembali</a>
                             </div>
                         </div>
@@ -98,14 +98,38 @@
                                         <x-adminlte-modal id="modalAntrian" title="DAFTAR ANTRIAN" theme="info"
                                             size='xl' disable-animations>
                                             <div class="row">
-                                                @foreach ($antrian as $item)
-                                                    <a class="btn btn-app btn-xl bg-warning" style="height: auto;"
-                                                        id="pilihAntrian" onclick="pilihAntrian({{ $item->id }})">
-                                                        <i class="fas fa-users"></i> {{ $item->no_antri }} <br>
-                                                        <span
-                                                            class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
-                                                    </a>
-                                                @endforeach
+                                                <div class="col-md-6">
+                                                    <div class="card card-warning card-outline">
+                                                        <div class="card-body box-profile">
+                                                            <h3 class="profile-username text-center mb-2">LIST ANTRIAN IGD :
+                                                            </h3>
+                                                            @foreach ($antrian->where('isNoAntrian', 1) as $item)
+                                                                <a class="btn btn-app bg-warning" id="pilihAntrian"
+                                                                    onclick="pilihAntrian({{ $item->id }})">
+                                                                    <i class="fas fa-users"></i> {{ $item->no_antri }}
+                                                                    <span
+                                                                        class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="card card-success card-outline">
+                                                        <div class="card-body box-profile">
+                                                            <h3 class="profile-username text-center mb-2">LIST ANTRIAN IGK :
+                                                            </h3>
+                                                            @foreach ($antrian->where('isNoAntrian', 0) as $item)
+                                                                <a class="btn btn-app bg-warning" id="pilihAntrian"
+                                                                    onclick="pilihAntrian({{ $item->id }})">
+                                                                    <i class="fas fa-users"></i> {{ $item->no_antri }}
+                                                                    <span
+                                                                        class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
+                                                                </a>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </x-adminlte-modal>
                                     </div>

@@ -34,7 +34,7 @@
                     <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan :">
                         <div class="col-lg-12">
                             <div class="row">
-                                <div class="col-lg-10">
+                                <div class="col-lg-12">
                                     @php
                                         $heads = ['Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
                                         $config['order'] = ['0', 'asc'];
@@ -65,7 +65,7 @@
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
-                                <div class="col-lg-2">
+                                {{-- <div class="col-lg-2">
                                     @if ($knj_aktif > 0)
                                         <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
                                             data-toggle="modal" data-target="#tutupKunjungan">Tutup
@@ -134,7 +134,7 @@
                                             </x-slot>
                                         </form>
                                     </x-adminlte-modal>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </x-adminlte-card>

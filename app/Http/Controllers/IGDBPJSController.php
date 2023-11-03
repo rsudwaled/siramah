@@ -242,7 +242,7 @@ class IGDBPJSController extends APIController
     // API FUNCTION END
     public function pasienBPJSSTORE(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         if ($request->diagAwal ==null) {
             Alert::error('Error', 'Diagnosa tidak boleh kosong!');
             return back();
@@ -286,197 +286,315 @@ class IGDBPJSController extends APIController
             return back();
         }
 
-        $vclaim = new VclaimController();
-        $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
-        $signature = $this->signature();
-        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
-        $data = [
-            'request' => [
-                't_sep' => [
-                    'noKartu' => $request->noKartu,
-                    'tglSep' => $request->tglSep,
-                    'ppkPelayanan' => '1018R001',
-                    'jnsPelayanan' => $request->jnsPelayanan,
-                    'klsRawat' => [
-                        'klsRawatHak' => $request->klsRawatHak,
-                        'klsRawatNaik' => '',
-                        'pembiayaan' => '',
-                        'penanggungJawab' => '',
-                    ],
-                    'noMR' => $request->noMR,
-                    'rujukan' => [
-                        'asalRujukan' => "$request->asalRujukan",
-                        'tglRujukan' => '',
-                        'noRujukan' => '',
-                        'ppkRujukan' => '',
-                    ],
-                    'catatan' => '',
-                    'diagAwal' => $request->diagAwal,
-                    'poli' => [
-                        'tujuan' => 'IGD',
-                        'eksekutif' => '0',
-                    ],
-                    'cob' => [
-                        'cob' => '0',
-                    ],
-                    'katarak' => [
-                        'katarak' => '0',
-                    ],
-                    // "lakaLantas":" 0 : Bukan Kecelakaan lalu lintas [BKLL], 1 : KLL dan bukan kecelakaan Kerja [BKK], 2 : KLL dan KK, 3 : KK",
-                    'jaminan' => [
-                        'lakaLantas' => $request->lakaLantas,
-                        'noLP' => $request->noLP == null ? '' : $request->noLP,
-                        'penjamin' => [
-                            'tglKejadian' => $request->lakaLantas == 0 ? '' : $request->tglKejadian,
-                            'keterangan' => $request->keterangan == null ? '' : $request->keterangan,
-                            'suplesi' => [
-                                'suplesi' => '0',
-                                'noSepSuplesi' => '',
-                                'lokasiLaka' => [
-                                    'kdPropinsi' => $request->provinsi == null ? '' : $request->provinsi,
-                                    'kdKabupaten' => $request->kabupaten == null ? '' : $request->kabupaten,
-                                    'kdKecamatan' => $request->kecamatan == null ? '' : $request->kecamatan,
+        if($request->isBridging > 0)
+        {
+            $vclaim = new VclaimController();
+            $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
+            $signature = $this->signature();
+            $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+            $data = [
+                'request' => [
+                    't_sep' => [
+                        'noKartu' => $request->noKartu,
+                        'tglSep' => $request->tglSep,
+                        'ppkPelayanan' => '1018R001',
+                        'jnsPelayanan' => $request->jnsPelayanan,
+                        'klsRawat' => [
+                            'klsRawatHak' => $request->klsRawatHak,
+                            'klsRawatNaik' => '',
+                            'pembiayaan' => '',
+                            'penanggungJawab' => '',
+                        ],
+                        'noMR' => $request->noMR,
+                        'rujukan' => [
+                            'asalRujukan' => "$request->asalRujukan",
+                            'tglRujukan' => '',
+                            'noRujukan' => '',
+                            'ppkRujukan' => '',
+                        ],
+                        'catatan' => '',
+                        'diagAwal' => $request->diagAwal,
+                        'poli' => [
+                            'tujuan' => 'IGD',
+                            'eksekutif' => '0',
+                        ],
+                        'cob' => [
+                            'cob' => '0',
+                        ],
+                        'katarak' => [
+                            'katarak' => '0',
+                        ],
+                        // "lakaLantas":" 0 : Bukan Kecelakaan lalu lintas [BKLL], 1 : KLL dan bukan kecelakaan Kerja [BKK], 2 : KLL dan KK, 3 : KK",
+                        'jaminan' => [
+                            'lakaLantas' => $request->lakaLantas,
+                            'noLP' => $request->noLP == null ? '' : $request->noLP,
+                            'penjamin' => [
+                                'tglKejadian' => $request->lakaLantas == 0 ? '' : $request->tglKejadian,
+                                'keterangan' => $request->keterangan == null ? '' : $request->keterangan,
+                                'suplesi' => [
+                                    'suplesi' => '0',
+                                    'noSepSuplesi' => '',
+                                    'lokasiLaka' => [
+                                        'kdPropinsi' => $request->provinsi == null ? '' : $request->provinsi,
+                                        'kdKabupaten' => $request->kabupaten == null ? '' : $request->kabupaten,
+                                        'kdKecamatan' => $request->kecamatan == null ? '' : $request->kecamatan,
+                                    ],
                                 ],
                             ],
                         ],
+                        'tujuanKunj' => '0',
+                        'flagProcedure' => '',
+                        'kdPenunjang' => '',
+                        'assesmentPel' => '',
+                        'skdp' => [
+                            'noSurat' => '',
+                            'kodeDPJP' => '',
+                        ],
+                        'dpjpLayan' => $request->dpjpLayan,
+                        'noTelp' => $request->noTelp,
+                        'user' => $user,
                     ],
-                    'tujuanKunj' => '0',
-                    'flagProcedure' => '',
-                    'kdPenunjang' => '',
-                    'assesmentPel' => '',
-                    'skdp' => [
-                        'noSurat' => '',
-                        'kodeDPJP' => '',
-                    ],
-                    'dpjpLayan' => $request->dpjpLayan,
-                    'noTelp' => $request->noTelp,
-                    'user' => $user,
                 ],
-            ],
-        ];
-        $response = Http::withHeaders($signature)->post($url, $data);
-        $resdescrtipt = $this->response_decrypt($response, $signature);
-        $callback = json_decode($response->body());
-        $sep = $resdescrtipt->response->sep->noSep;
-        if ($callback->metaData->code == 200) {
-            // jika sep sudah dicreate maka create kunjungan dibawah ini
-            $counter = Kunjungan::latest('counter')
-                ->where('no_rm', $request->noMR)
-                ->where('status_kunjungan', 2)
-                ->first();
-            if ($counter == null) {
-                $c = 1;
-            } else {
-                $c = $counter->counter + 1;
-            }
-            $dokter = Paramedis::firstWhere('kode_dokter_jkn', $request->dpjpLayan);
-            $penjamin = Penjamin::firstWhere('nama_penjamin_bpjs', $request->penjamin);
-            $unit = Unit::findOrFail($request->unit);
-            $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
-            $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
-            $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
-            $alamat = $pasien->alamat . ' ( ' . $desa . ' - ' . $kec . ' - ' . $kab . ' )';
-
-            $createKunjungan = new Kunjungan();
-            $createKunjungan->counter = $c;
-            $createKunjungan->no_rm = $request->noMR;
-            $createKunjungan->kode_unit = $unit->kode_unit;
-            $createKunjungan->tgl_masuk = now();
-            $createKunjungan->kode_paramedis = $dokter->kode_paramedis;
-            $createKunjungan->status_kunjungan = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
-            $createKunjungan->prefix_kunjungan = $unit->prefix_unit;
-            $createKunjungan->kode_penjamin = $penjamin->kode_penjamin_simrs;
-            $createKunjungan->kelas = 3;
-            $createKunjungan->no_sep = $sep;
-            $createKunjungan->diagx = $request->diagAwal;
-            $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
-            $createKunjungan->pic = Auth::user()->id;
-            if ($createKunjungan->save()) {
-                $ant_upd = AntrianPasienIGD::find($request->id_antrian);
-                $ant_upd->no_rm = $request->noMR;
-                $ant_upd->nama_px = $pasien->nama_px;
-                $ant_upd->kode_kunjungan = $createKunjungan->kode_kunjungan;
-                $ant_upd->unit = $unit->kode_unit;
-                $ant_upd->alamat = $alamat;
-                $ant_upd->status = 2;
-                $ant_upd->update();
-
-                $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-                if ($kodelayanan == null) {
-                    $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+            ];
+            $response = Http::withHeaders($signature)->post($url, $data);
+            $callback = json_decode($response->body());
+            $resdescrtipt = $this->response_decrypt($response, $signature);
+            // dd($request->all(), $callback, $resdescrtipt);
+            $sep = $resdescrtipt->response->sep->noSep;
+            if ($callback->metaData->code == 200) {
+                // jika sep sudah dicreate maka create kunjungan dibawah ini
+                $counter = Kunjungan::latest('counter')
+                    ->where('no_rm', $request->noMR)
+                    ->where('status_kunjungan', 2)
+                    ->first();
+                if ($counter == null) {
+                    $c = 1;
+                } else {
+                    $c = $counter->counter + 1;
                 }
+                $dokter = Paramedis::firstWhere('kode_dokter_jkn', $request->dpjpLayan);
+                $penjamin = Penjamin::firstWhere('nama_penjamin_bpjs', $request->penjamin);
+                $unit = Unit::findOrFail($request->unit);
+                $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
+                $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
+                $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
+                $alamat = $pasien->alamat . ' ( ' . $desa . ' - ' . $kec . ' - ' . $kab . ' )';
 
-                $tarif_karcis = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
-                $tarif_adm = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
-                $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
-                // create layanan header
-                $createLH = new Layanan();
-                $createLH->kode_layanan_header = $kodelayanan;
-                $createLH->tgl_entry = now();
-                $createLH->kode_kunjungan = $createKunjungan->kode_kunjungan;
-                $createLH->kode_unit = $unit->kode_unit;
-                $createLH->pic = Auth::user()->id;
-                $createLH->status_pembayaran = 'OPN';
-                if ($unit->kelas_unit == 1) {
-                    $createLH->kode_tipe_transaksi = 2;
-                    $createLH->status_layanan = 3; // status 3 nanti di update jadi 1
-                    $createLH->total_layanan = $total_bayar_k_a;
-                    $createLH->tagihan_penjamin = $total_bayar_k_a;
-                    // header create
-                    if ($createLH->save()) {
-                        // create layanan detail
-                        $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                        $nomorlayanandetkarc = substr($layanandet->id_layanan_detail, 9) + 1;
-                        $nomorlayanandetadm = substr($layanandet->id_layanan_detail, 9) + 2;
+                $createKunjungan = new Kunjungan();
+                $createKunjungan->counter = $c;
+                $createKunjungan->no_rm = $request->noMR;
+                $createKunjungan->kode_unit = $unit->kode_unit;
+                $createKunjungan->tgl_masuk = now();
+                $createKunjungan->kode_paramedis = $dokter->kode_paramedis;
+                $createKunjungan->status_kunjungan = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+                $createKunjungan->prefix_kunjungan = $unit->prefix_unit;
+                $createKunjungan->kode_penjamin = $penjamin->kode_penjamin_simrs;
+                $createKunjungan->kelas = 3;
+                $createKunjungan->no_sep = $sep;
+                $createKunjungan->diagx = $request->diagAwal;
+                $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+                $createKunjungan->pic = Auth::user()->id;
+                if ($createKunjungan->save()) {
+                    $ant_upd = AntrianPasienIGD::find($request->id_antrian);
+                    $ant_upd->no_rm = $request->noMR;
+                    $ant_upd->nama_px = $pasien->nama_px;
+                    $ant_upd->kode_kunjungan = $createKunjungan->kode_kunjungan;
+                    $ant_upd->unit = $unit->kode_unit;
+                    $ant_upd->alamat = $alamat;
+                    $ant_upd->status = 2;
+                    $ant_upd->update();
 
-                        // create detail karcis
-                        $createKarcis = new LayananDetail();
-                        $createKarcis->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
-                        $createKarcis->kode_layanan_header = $createLH->kode_layanan_header;
-                        $createKarcis->kode_tarif_detail = $unit->kode_tarif_karcis;
-                        $createKarcis->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                        $createKarcis->jumlah_layanan = 1;
-                        $createKarcis->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                        $createKarcis->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                        $createKarcis->status_layanan_detail = 'OPN';
-                        $createKarcis->tgl_layanan_detail = now();
-                        $createKarcis->tgl_layanan_detail_2 = now();
-                        $createKarcis->row_id_header = $createLH->id;
-                        $createKarcis->tagihan_penjamin = $total_bayar_k_a;
-                        if ($createKarcis->save()) {
+                    $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+                    if ($kodelayanan == null) {
+                        $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+                    }
+
+                    $tarif_karcis = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
+                    $tarif_adm = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
+                    $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    // create layanan header
+                    $createLH = new Layanan();
+                    $createLH->kode_layanan_header = $kodelayanan;
+                    $createLH->tgl_entry = now();
+                    $createLH->kode_kunjungan = $createKunjungan->kode_kunjungan;
+                    $createLH->kode_unit = $unit->kode_unit;
+                    $createLH->pic = Auth::user()->id;
+                    $createLH->status_pembayaran = 'OPN';
+                    if ($unit->kelas_unit == 1) {
+                        $createLH->kode_tipe_transaksi = 2;
+                        $createLH->status_layanan = 3; // status 3 nanti di update jadi 1
+                        $createLH->total_layanan = $total_bayar_k_a;
+                        $createLH->tagihan_penjamin = $total_bayar_k_a;
+                        // header create
+                        if ($createLH->save()) {
+                            // create layanan detail
+                            $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+                            $nomorlayanandetkarc = substr($layanandet->id_layanan_detail, 9) + 1;
+                            $nomorlayanandetadm = substr($layanandet->id_layanan_detail, 9) + 2;
+
                             // create detail karcis
-                            $createAdm = new LayananDetail();
-                            $createAdm->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
-                            $createAdm->kode_layanan_header = $createLH->kode_layanan_header;
-                            $createAdm->kode_tarif_detail = $unit->kode_tarif_karcis;
-                            $createAdm->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                            $createAdm->jumlah_layanan = 1;
-                            $createAdm->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                            $createAdm->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                            $createAdm->status_layanan_detail = 'OPN';
-                            $createAdm->tgl_layanan_detail = now();
-                            $createAdm->tgl_layanan_detail_2 = now();
-                            $createAdm->row_id_header = $createLH->id;
-                            $createAdm->tagihan_penjamin = $total_bayar_k_a;
+                            $createKarcis = new LayananDetail();
+                            $createKarcis->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
+                            $createKarcis->kode_layanan_header = $createLH->kode_layanan_header;
+                            $createKarcis->kode_tarif_detail = $unit->kode_tarif_karcis;
+                            $createKarcis->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->jumlah_layanan = 1;
+                            $createKarcis->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->status_layanan_detail = 'OPN';
+                            $createKarcis->tgl_layanan_detail = now();
+                            $createKarcis->tgl_layanan_detail_2 = now();
+                            $createKarcis->row_id_header = $createLH->id;
+                            $createKarcis->tagihan_penjamin = $total_bayar_k_a;
+                            if ($createKarcis->save()) {
+                                // create detail karcis
+                                $createAdm = new LayananDetail();
+                                $createAdm->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+                                $createAdm->kode_layanan_header = $createLH->kode_layanan_header;
+                                $createAdm->kode_tarif_detail = $unit->kode_tarif_karcis;
+                                $createAdm->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->jumlah_layanan = 1;
+                                $createAdm->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->status_layanan_detail = 'OPN';
+                                $createAdm->tgl_layanan_detail = now();
+                                $createAdm->tgl_layanan_detail_2 = now();
+                                $createAdm->row_id_header = $createLH->id;
+                                $createAdm->tagihan_penjamin = $total_bayar_k_a;
 
-                            if ($createAdm->save()) {
-                                $createKunjungan->status_kunjungan = 1; //status 8 update setelah header dan detail selesai jadi 1
-                                $createKunjungan->update();
+                                if ($createAdm->save()) {
+                                    $createKunjungan->status_kunjungan = 1; //status 8 update setelah header dan detail selesai jadi 1
+                                    $createKunjungan->update();
 
-                                $createLH->status_layanan = 2; // status 3 di update jadi 1
-                                $createLH->update();
+                                    $createLH->status_layanan = 2; // status 3 di update jadi 1
+                                    $createLH->update();
+                                }
                             }
                         }
                     }
                 }
+                Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan sebagai pasien bpjs!');
+                return redirect()->route('pendaftaran-pasien-igdbpjs');
+            } else {
+                // jika response code tidak 200 maka pendaftaran digagalkan/ pasien di daftarkan dengan status pasien umum
+                Alert::error('WARNING ERROR!!', 'PERINGATAN ERROR: ' . $callback->metaData->code . $callback->metaData->message);
+                return back();
             }
-            Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan sebagai pasien bpjs!');
-            return redirect()->route('pendaftaran-pasien-igdbpjs');
-        } else {
-            // jika response code tidak 200 maka pendaftaran digagalkan/ pasien di daftarkan dengan status pasien umum
-            Alert::error('WARNING ERROR!!', 'PERINGATAN ERROR: ' . $callback->metaData->code . $callback->metaData->message);
-            return back();
+        }else{
+            $counter = Kunjungan::latest('counter')
+                    ->where('no_rm', $request->noMR)
+                    ->where('status_kunjungan', 2)
+                    ->first();
+                if ($counter == null) {
+                    $c = 1;
+                } else {
+                    $c = $counter->counter + 1;
+                }
+                $dokter = Paramedis::firstWhere('kode_dokter_jkn', $request->dpjpLayan);
+                $penjamin = Penjamin::firstWhere('nama_penjamin_bpjs', $request->penjamin);
+                $unit = Unit::findOrFail($request->unit);
+                $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
+                $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
+                $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
+                $alamat = $pasien->alamat . ' ( ' . $desa . ' - ' . $kec . ' - ' . $kab . ' )';
+
+                $createKunjungan = new Kunjungan();
+                $createKunjungan->counter = $c;
+                $createKunjungan->no_rm = $request->noMR;
+                $createKunjungan->kode_unit = $unit->kode_unit;
+                $createKunjungan->tgl_masuk = now();
+                $createKunjungan->kode_paramedis = $dokter->kode_paramedis;
+                $createKunjungan->status_kunjungan = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+                $createKunjungan->prefix_kunjungan = $unit->prefix_unit;
+                $createKunjungan->kode_penjamin = $penjamin->kode_penjamin_simrs;
+                $createKunjungan->kelas = 3;
+                $createKunjungan->no_sep = '';
+                $createKunjungan->diagx = '';
+                $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+                $createKunjungan->pic = Auth::user()->id;
+                if ($createKunjungan->save()) {
+                    $ant_upd = AntrianPasienIGD::find($request->id_antrian);
+                    $ant_upd->no_rm = $request->noMR;
+                    $ant_upd->nama_px = $pasien->nama_px;
+                    $ant_upd->kode_kunjungan = $createKunjungan->kode_kunjungan;
+                    $ant_upd->unit = $unit->kode_unit;
+                    $ant_upd->alamat = $alamat;
+                    $ant_upd->status = 2;
+                    $ant_upd->update();
+
+                    $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+                    if ($kodelayanan == null) {
+                        $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+                    }
+
+                    $tarif_karcis = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
+                    $tarif_adm = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
+                    $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    // create layanan header
+                    $createLH = new Layanan();
+                    $createLH->kode_layanan_header = $kodelayanan;
+                    $createLH->tgl_entry = now();
+                    $createLH->kode_kunjungan = $createKunjungan->kode_kunjungan;
+                    $createLH->kode_unit = $unit->kode_unit;
+                    $createLH->pic = Auth::user()->id;
+                    $createLH->status_pembayaran = 'OPN';
+                    if ($unit->kelas_unit == 1) {
+                        $createLH->kode_tipe_transaksi = 2;
+                        $createLH->status_layanan = 3; // status 3 nanti di update jadi 1
+                        $createLH->total_layanan = $total_bayar_k_a;
+                        $createLH->tagihan_penjamin = $total_bayar_k_a;
+                        // header create
+                        if ($createLH->save()) {
+                            // create layanan detail
+                            $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+                            $nomorlayanandetkarc = substr($layanandet->id_layanan_detail, 9) + 1;
+                            $nomorlayanandetadm = substr($layanandet->id_layanan_detail, 9) + 2;
+
+                            // create detail karcis
+                            $createKarcis = new LayananDetail();
+                            $createKarcis->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
+                            $createKarcis->kode_layanan_header = $createLH->kode_layanan_header;
+                            $createKarcis->kode_tarif_detail = $unit->kode_tarif_karcis;
+                            $createKarcis->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->jumlah_layanan = 1;
+                            $createKarcis->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                            $createKarcis->status_layanan_detail = 'OPN';
+                            $createKarcis->tgl_layanan_detail = now();
+                            $createKarcis->tgl_layanan_detail_2 = now();
+                            $createKarcis->row_id_header = $createLH->id;
+                            $createKarcis->tagihan_penjamin = $total_bayar_k_a;
+                            if ($createKarcis->save()) {
+                                // create detail karcis
+                                $createAdm = new LayananDetail();
+                                $createAdm->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+                                $createAdm->kode_layanan_header = $createLH->kode_layanan_header;
+                                $createAdm->kode_tarif_detail = $unit->kode_tarif_karcis;
+                                $createAdm->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->jumlah_layanan = 1;
+                                $createAdm->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                                $createAdm->status_layanan_detail = 'OPN';
+                                $createAdm->tgl_layanan_detail = now();
+                                $createAdm->tgl_layanan_detail_2 = now();
+                                $createAdm->row_id_header = $createLH->id;
+                                $createAdm->tagihan_penjamin = $total_bayar_k_a;
+
+                                if ($createAdm->save()) {
+                                    $createKunjungan->status_kunjungan = 1; //status 8 update setelah header dan detail selesai jadi 1
+                                    $createKunjungan->update();
+
+                                    $createLH->status_layanan = 2; // status 3 di update jadi 1
+                                    $createLH->update();
+                                }
+                            }
+                        }
+                    }
+                }
+                Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan sebagai pasien bpjs!');
+                return redirect()->route('pendaftaran-pasien-igdbpjs');
         }
+        
     }
 
     public function batalDaftar(Request $request)

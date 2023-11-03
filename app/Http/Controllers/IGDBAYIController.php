@@ -47,9 +47,7 @@ class IGDBAYIController extends Controller
     {
         
         $validated = $request->validate([
-            "rm_ibu" => 'required',
             "nik_ortu" => 'required',
-            // "no_bpjs_ortu" => 'required',
             "nama_ortu" => 'required',
             "tempat_lahir_ortu" => 'required',
             "alamat_lengkap_ortu" => 'required',
@@ -69,16 +67,19 @@ class IGDBAYIController extends Controller
             "jk_bayi" => 'required',
             "tgl_lahir_bayi" => 'required',
             
-            // "isbpjs" => 'required',
         ]);
 
         $last_rm = Pasien::latest('no_rm')->first(); // 23982846
         $rm_last = substr($last_rm->no_rm, -6); //982846
         $add_rm_new = $rm_last + 1; //982847
+        $add_rmbayi_new = $rm_last + 2; //982847
         $th = substr(Carbon::now()->format('Y'), -2); //23
         $rm_new = $th . $add_rm_new;
+        $rmbayi_new = $th . $add_rmbayi_new;
 
         $kontak = $request->no_hp_ortu==null? $request->no_telp_ortu:$request->no_hp_ortu; 
+        $rm_ibu = $request->rm_ibu == null ? $add_rm_new : $request->rm_ibu;
+        $rm_bayi = $request->rm_ibu == null ? $rmbayi_new: $rm_new;
 
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu = $request->nik_ortu;
@@ -87,59 +88,98 @@ class IGDBAYIController extends Controller
         $bayi->tempat_lahir_ortu = $request->tempat_lahir_ortu;
         $bayi->alamat_lengkap_ortu = $request->alamat_lengkap_ortu;
         $bayi->no_hp_ortu = $kontak;
-        // $bayi->no_telp_ortu = $request->no_telp_ortu;
-        // $bayi->tgl_lahir_ortu = $request->tgl_lahir_ortu;
-        // $bayi->provinsi_ortu = $request->provinsi_ortu;
-        // $bayi->kab_ortu = $request->kab_ortu;
-        // $bayi->kec_ortu = $request->kec_ortu;
-        // $bayi->desa_ortu = $request->desa_ortu;
-        // $bayi->negara_ortu = $request->negara_ortu;
         
-        $bayi->rm_bayi = $rm_new;
-        $bayi->rm_ibu = $request->rm_ibu;
+        $bayi->rm_bayi  = $rm_bayi;
+        $bayi->rm_ibu   = $rm_ibu;
         $bayi->nama_bayi = $request->nama_bayi;
         $bayi->jk_bayi = $request->jk_bayi;
         $bayi->tgl_lahir_bayi = $request->tgl_lahir_bayi;
         $bayi->is_bpjs = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
-        $bayi->save();
-        // if($bayi->save())
-        // {
-        //         $pasien = new Pasien();
-        //         $pasien->no_rm = $rm_new;
-        //         $pasien->nik_bpjs = $request->nik_ortu;
-        //         $pasien->no_Bpjs = $request->no_bpjs_ortu;
-        //         $pasien->jk = $request->jk_ortu;
-        //         if($request->jk_ortu =='L')
-        //         {
-        //             $pasien->nama_px = 'bayi Sdr. '.$request->nama_ortu;
-        //         }else{
-        //             $pasien->nama_px = 'bayi Ny. '.$request->nama_ortu;
-        //         }
-        //         $pasien->tempat_lahir = $request->tempat_lahir_ortu;
-        //         $pasien->alamat_lengkap = $request->alamat_lengkap_ortu;
-        //         $pasien->no_hp = $request->no_hp_ortu;
-        //         $pasien->no_telp = $request->no_telp_ortu;
-        //         $pasien->tgl_lahir = $request->tgl_lahir_ortu;
+        if($bayi->save())
+        {
+            if($request->rm_ibu == null)
+            {
+                // pasien orangtua baru create
+                $ortuNew = new Pasien();
+                $ortuNew->no_rm = $rm_ibu;
+                $ortuNew->nik_bpjs = $request->nik_ortu;
+                $ortuNew->no_Bpjs = $request->no_bpjs_ortu;
+                $ortuNew->jenis_kelamin = $request->jk_ortu;
+                $ortuNew->nama_px = $request->nama_ortu;
+                $ortuNew->tempat_lahir = $request->tempat_lahir_ortu;
+                $ortuNew->alamat = $request->alamat_lengkap_ortu;
+                $ortuNew->no_hp = $kontak;
+                $ortuNew->no_tlp = $kontak;
+                $ortuNew->tgl_lahir = $request->tgl_lahir_ortu;
                 
-        //         $pasien->agama = $request->agama_ortu;
-        //         $pasien->pendidikan = $request->pendidikan_ortu;
-        //         $pasien->pekerjaan = $request->pekerjaan_ortu;
-        //         $pasien->kewarganegaraan = $request->kewarganegaraan_ortu;
-        //         $pasien->kode_propinsi = $request->provinsi_ortu;
-        //         $pasien->kode_kabupaten = $request->kab_ortu;
-        //         $pasien->kode_kecamatan = $request->kec_ortu;
-        //         $pasien->kode_desa = $request->desa_ortu;
-        //         $pasien->negara = $request->negara_ortu;
-        //         $pasien->save();
-        // }
-        
-        // if($is_bpjs > 0)
-        // {
-        //     return view('simrs.igd.ranapbayi.bayi_umum');
-        // }else{
-        //     return view('simrs.igd.ranapbayi.bayi_bpjs');
-        // }
+                $ortuNew->agama = $request->agama_ortu;
+                $ortuNew->pendidikan = $request->pendidikan_ortu;
+                $ortuNew->pekerjaan = $request->pekerjaan_ortu;
+                $ortuNew->kewarganegaraan = $request->kewarganegaraan_ortu;
+                $ortuNew->kode_propinsi = $request->provinsi_ortu;
+                $ortuNew->kode_kabupaten = $request->kab_ortu;
+                $ortuNew->kode_kecamatan = $request->kec_ortu;
+                $ortuNew->kode_desa = $request->desa_ortu;
+                $ortuNew->negara = $request->negara_ortu;
+                if($ortuNew->save()){
+                    // pasien bayi create
+                    $pasienBayi = new Pasien();
+                    $pasienBayi->no_rm = $rm_bayi;
+                    $pasienBayi->jenis_kelamin = $request->jk_bayi;
+                    $pasienBayi->nama_px = $request->nama_bayi;
+                    $pasienBayi->tempat_lahir = $request->tempat_lahir_bayi;
+                    $pasienBayi->alamat = $request->alamat_lengkap_ortu;
+                    
+                    $pasienBayi->agama = $request->agama_ortu;
+                    $pasienBayi->kewarganegaraan = $request->kewarganegaraan_ortu;
+                    $pasienBayi->kode_propinsi = $request->provinsi_ortu;
+                    $pasienBayi->kode_kabupaten = $request->kab_ortu;
+                    $pasienBayi->kode_kecamatan = $request->kec_ortu;
+                    $pasienBayi->kode_desa = $request->desa_ortu;
+                    $pasienBayi->negara = $request->negara_ortu;
+                    if($pasienBayi->save()){
+                        $hub =  $ortuNew->jenis_kelamin=='L'? 1 : 2 ;
+                        $keluarga = KeluargaPasien::create([
+                            'no_rm' => $rm_bayi,
+                            'nama_keluarga' => $request->nama_ortu,
+                            'hubungan_keluarga' => $hub,
+                            'alamat_keluarga' => $request->alamat_lengkap_ortu,
+                            'telp_keluarga' => $kontak,
+                            'input_date' => Carbon::now(),
+                            'Update_date' => Carbon::now(),
+                        ]);
+                    }
+                }
+            }else{
+                $pasienBayi = new Pasien();
+                $pasienBayi->no_rm = $rm_bayi;
+                $pasienBayi->jenis_kelamin = $request->jk_bayi;
+                $pasienBayi->nama_px = $request->nama_bayi;
+                $pasienBayi->tempat_lahir = $request->tempat_lahir_bayi;
+                $pasienBayi->alamat = $request->alamat_lengkap_ortu;
+                
+                $pasienBayi->agama = $request->agama_ortu;
+                $pasienBayi->kewarganegaraan = $request->kewarganegaraan_ortu;
+                $pasienBayi->kode_propinsi = $request->provinsi_ortu;
+                $pasienBayi->kode_kabupaten = $request->kab_ortu;
+                $pasienBayi->kode_kecamatan = $request->kec_ortu;
+                $pasienBayi->kode_desa = $request->desa_ortu;
+                $pasienBayi->negara = $request->negara_ortu;
+                if($pasienBayi->save()){
+                    $hub =  $ortuNew->jenis_kelamin=='L'? 1 : 2 ;
+                    $keluarga = KeluargaPasien::create([
+                        'no_rm' => $rm_bayi,
+                        'nama_keluarga' => $request->nama_ortu,
+                        'hubungan_keluarga' => $hub,
+                        'alamat_keluarga' => $request->alamat_lengkap_ortu,
+                        'telp_keluarga' => $kontak,
+                        'input_date' => Carbon::now(),
+                        'Update_date' => Carbon::now(),
+                    ]);
+                }
+            }
+        }
         return response()->json($bayi, 200);
     }
 }

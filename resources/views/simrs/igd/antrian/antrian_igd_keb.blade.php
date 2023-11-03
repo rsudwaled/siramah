@@ -1,10 +1,10 @@
-@extends('adminlte::page') @section('title', 'Antrian Pendaftaran IGD')
+@extends('adminlte::page') @section('title', 'Antrian IGD KEBIDANAN')
 @section('content')
     <div class="row mt-3">
         <div class="col-12">
             <div class="row">
                 <div class="col-lg-12">
-                    <h6>silahkan cari pasien bpjs disini:</h6>
+                    <h6>silahkan cari pasien disini:</h6>
                     <p>pencarian berdasarkan prioritas memudahkan dalam proses efektifitas pencarian. semakin kecil
                         prioritas semakin akurat</p>
                     <form action="" method="POST">
@@ -35,16 +35,14 @@
                             <div class="col-lg-4 mt-2">
                                 <span class="bg-pink disabled color-palette p-1" style="font-size: 12px"><b><i>*Prioritas
                                             Pencarian 5</i></b></span>
-                                <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no bpjs"
-                                    id="no_bpjs_search">
+                                <input type="text" class="form-control mr-2" placeholder="cari berdasarkan no RM"
+                                    id="no_rm_search">
                             </div>
-                            <div class="col-lg-4 mt-4">
+                            <div class="col-lg-4 mt-4 float-right">
                                 <x-adminlte-button label="Cari Pasien" class="btn btn-flat" theme="primary"
                                     icon="fas fa-search" id="search" />
                                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                                     onClick="window.location.reload();" />
-                                {{-- <a class="btn btn-flat btn-warning" icon="fas fa-retweet"
-                                    href="{{ route('d-antrian-igd') }}">Pasien UMUM</a> --}}
                                 <a class="btn btn-flat btn-secondary" icon="fas fa-retweet"
                                     href="{{ route('pendaftaran.pasien') }}">Kembali</a>
                             </div>
@@ -92,52 +90,35 @@
                                         <x-adminlte-modal id="modalAntrian" title="DAFTAR ANTRIAN" theme="info"
                                             size='xl' disable-animations>
                                             <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="card card-warning card-outline">
-                                                        <div class="card-body box-profile">
-                                                            <h3 class="profile-username text-center mb-2">LIST ANTRIAN IGD : </h3>
-                                                            @foreach ($antrian->where('isNoAntrian', 1) as $item)
-                                                                <a class="btn btn-app bg-warning" id="pilihAntrian"
-                                                                    onclick="pilihAntrian({{ $item->id }})">
-                                                                    <i class="fas fa-users"></i> {{ $item->no_antri }}
-                                                                    <span
-                                                                        class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
-                                                                </a>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="card card-success card-outline">
-                                                        <div class="card-body box-profile">
-                                                            <h3 class="profile-username text-center mb-2">LIST ANTRIAN IGK : </h3>
-                                                            @foreach ($antrian->where('isNoAntrian', 0) as $item)
-                                                                <a class="btn btn-app bg-warning" id="pilihAntrian"
-                                                                    onclick="pilihAntrian({{ $item->id }})">
-                                                                    <i class="fas fa-users"></i> {{ $item->no_antri }}
-                                                                    <span
-                                                                        class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
-                                                                </a>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                @foreach ($antrian as $item)
+                                                    <a class="btn btn-app btn-xl bg-warning" style="height: auto;"
+                                                        id="pilihAntrian" onclick="pilihAntrian({{ $item->id }})">
+                                                        <i class="fas fa-users"></i> {{ $item->no_antri }} <br>
+                                                        <span
+                                                            class="badge {{ $item->isTriase == null ? 'badge-danger' : 'badge-success' }}">{{ $item->isTriase == null ? '-' : 'Triase : ' . $item->isTriase->klasifikasi_pasien }}</span>
+                                                    </a>
+                                                @endforeach
                                             </div>
                                         </x-adminlte-modal>
                                     </div>
                                     <div class="col-lg-12">
-                                        <form action="{{ route('pasienbpjs-antrian-terpilih') }}" method="post">
+
+                                        <form action="{{ route('pasien-antrian-terpilih') }}" method="post">
                                             @csrf
                                             <input type="hidden" id="send_id_antri" name="no_antri">
                                             <input type="hidden" id="no_rm" name="no_rm">
                                             <input type="hidden" id="nik" name="nik">
                                             <input type="hidden" id="tanggal" name="tanggal"
                                                 value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
-                                            <div class="card" id="formdaftar">
+                                            <div class="card">
                                                 <div class="card-header">
                                                     <span class="badge badge-danger">
-                                                        <h3 class="card-title" id="no_antrian">No Antrian Belum dipilih?
+                                                        <h3 class="card-title" id="ket_no_antri">No Antrian Belum dipilih?
                                                         </h3>
+                                                    </span>
+
+                                                    <span class="badge badge-success">
+                                                        <h3 class="card-title" id="tujuan_daftar">-</h3>
                                                     </span>
                                                     <div class="card-tools">
                                                         <button type="button" class="btn btn-tool">
@@ -166,9 +147,9 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran"
+                                                        <x-adminlte-select name="pendaftaran_id" id="jenisPendaftaran"
                                                             label="Pilih Pendaftaran">
-                                                            <option value="0">IGD</option>
+                                                            <option value="0">IGD UMUM</option>
                                                             <option value="1">IGD KEBIDANAN</option>
                                                         </x-adminlte-select>
                                                     </div>
@@ -183,20 +164,17 @@
                                     <div class="col-lg-12">
                                         <div class="alert alert-warning alert-dismissible">
                                             <h5>
-                                                <i class="icon fas fa-info-circle"></i> form untuk mendaftarkan pasien
-                                                baru
+                                                <i class="icon fas fa-info-circle"></i> form untuk mendaftarkan pasien baru
                                                 :
                                             </h5> jika pasien tidak terdaftar dalam sistem, silahkan masukan data pasien
                                             baru dengan cara klik tombol berikut : <br>
-
-                                            {{-- <x-adminlte-button label="Tambah Pasien Baru" data-toggle="modal" data-target="#tambahPasien" class="btn btn-info bg-info btn-xs" /> --}}
                                             <button type="button" class="btn btn-block bg-gradient-success btn-sm"
                                                 data-toggle="modal" data-target="#tambahPasien">Tambah Pasien
                                                 Baru</button>
                                             <form action="{{ route('pasien-baru.create') }}" method="post">
                                                 @csrf
                                                 <x-adminlte-modal id="tambahPasien" title="Tambah Pasien Baru"
-                                                    size="xl" theme="success" icon="fas fa-user-plus" v-centered
+                                                    size="xl" theme="info" icon="fas fa-user-plus" v-centered
                                                     static-backdrop scrollable>
                                                     <div class="modal-body">
                                                         <div class="col-lg-12">
@@ -205,7 +183,7 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-12">
                                                                             <div
-                                                                                class="alert alert-success alert-dismissible">
+                                                                                class="alert alert-info alert-dismissible">
                                                                                 <h5>
                                                                                     <i
                                                                                         class="icon fas fa-users"></i>Informasi
@@ -261,8 +239,7 @@
                                                                                     @foreach ($agama as $item)
                                                                                         <option
                                                                                             value="{{ $item->ID }}">
-                                                                                            {{ $item->agama }}
-                                                                                        </option>
+                                                                                            {{ $item->agama }}</option>
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pekerjaan"
@@ -271,8 +248,7 @@
                                                                                     @foreach ($pekerjaan as $item)
                                                                                         <option
                                                                                             value="{{ $item->ID }}">
-                                                                                            {{ $item->pekerjaan }}
-                                                                                        </option>
+                                                                                            {{ $item->pekerjaan }}</option>
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pendidikan"
@@ -350,8 +326,7 @@
                                                                 <div class="col-lg-4">
                                                                     <div class="alert alert-warning alert-dismissible">
                                                                         <h5>
-                                                                            <i class="icon fas fa-users"></i>Info
-                                                                            Keluarga
+                                                                            <i class="icon fas fa-users"></i>Info Keluarga
                                                                             Pasien :
                                                                         </h5>
                                                                     </div>
@@ -371,7 +346,6 @@
                                                                                     {{ $item->nama_hubungan }}</option>
                                                                             @endforeach
                                                                         </x-adminlte-select>
-
                                                                         <x-adminlte-textarea name="alamat_lengkap_sodara"
                                                                             label="Alamat Lengkap (RT/RW)"
                                                                             placeholder="Alamat Lengkap (RT/RW)"
@@ -385,7 +359,7 @@
                                                         <x-adminlte-button theme="danger" class="mr-auto" label="batal"
                                                             data-dismiss="modal" />
                                                         <x-adminlte-button type="submit" class="float-right"
-                                                            theme="success" label="simpan data" />
+                                                            theme="info" label="simpan data" />
                                                     </x-slot>
                                                 </x-adminlte-modal>
                                             </form>
@@ -408,7 +382,6 @@
                                 <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
                                     :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -424,12 +397,13 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            $.LoadingOverlay("hide");
             $('#search').click(function(e) {
                 $.LoadingOverlay("show");
                 search();
             });
-            $('#lanjutDaftar').show();
             $('#warningDaftar').hide();
+            $('#lanjutDaftar').show();
         });
         search();
 
@@ -438,23 +412,22 @@
             var nama = $('#nama_search').val();
             var alamat = $('#alamat_search').val();
             var tglLahir = $('#tgl_lahir_search').val();
-            var nobpjs = $('#no_bpjs_search').val();
-            if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && nobpjs == '') {
-                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia', '', 'info')
+            var norm = $('#no_rm_search').val();
+            if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && norm == '') {
+                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data',
+                    '', 'info')
             }
-            $.post('{{ route('pasien-igdbpjs-search') }}', {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
+            $.get('{{ route('pasien-igd-search') }}', {
+                    // _token: $('meta[name="csrf-token"]').attr('content'),
                     nik: nik,
                     nama: nama,
                     alamat: alamat,
                     tglLahir: tglLahir,
-                    nobpjs: nobpjs,
+                    norm: norm,
                 },
                 function(data) {
-                    $.LoadingOverlay("show");
                     table_post_row(data);
                     console.log(data);
-                    $.LoadingOverlay("hide");
                 });
         }
         // table row with ajax
@@ -470,17 +443,16 @@
             }
             for (let i = 0; i < res.pasien.length; i++) {
                 var rm = res.pasien[i].no_rm;
-                var nik = res.pasien[i].nik_bpjs;
                 var tgl_lahir = res.pasien[i].tgl_lahir;
                 var tgl = tgl_lahir.substr(0, 10);
                 var tgl_ind = new Date(tgl).toLocaleDateString('en-GB');
 
                 htmlView += `
                   
-                      <tr >
-                          <td width="20%">
+                      <tr class="nowrap">
+                          <td>
                               <button type="button" onclick="pilihPasien(` + rm +
-                    `)" class="btn bg-maroon btn-sm btn-flat">` + rm +
+                    `)" class="btn bg-maroon btn-flat btn-sm">` + rm +
                     `</button> <a href="{{ route('edit-pasienbpjs') }}?rm=` + rm + `" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
@@ -494,11 +466,8 @@
             $.LoadingOverlay("hide");
         }
 
-        function pilihPasien(rm) {
-            var rm = rm;
-            if (nik == null) {
-                Swal.fire('silahkan edit data pasien, agar memiliki NIK', '', 'error');
-            }
+        function pilihPasien(norm) {
+            var rm = norm;
             swal.fire({
                 icon: 'question',
                 title: 'ANDA YAKIN PILIH RM : ' + rm,
@@ -508,34 +477,33 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     var getPasienUrl = "{{ route('pasien-terpilih.get') }}?rm=" + rm;
-                    $.get(getPasienUrl, function(data) {
-                        console.log(data);
-                        var nik = data.pasien['nik_bpjs'];
+                    $.get(getPasienUrl, function(pasien) {
+                        console.log(pasien);
+                        var nik = pasien.pasien['nik_bpjs'];
                         if (!nik) {
                             Swal.fire('pasien tidak memiliki nik. silahkan edit terlebih dahulu', '',
                                 'error')
                             $('#lanjutDaftar').hide();
                             $('#warningDaftar').show();
                         } else {
-                            $('#rm_pasien_selected').text('NO RM : ' + data.pasien['no_rm']);
-                            $('#nama_pasien_selected').text('NAMA : ' + data.pasien['nama_px']);
-                            $('#desa_pasien_selected').text('DESA : ' + data.pasien['desas'][
+                            $('#rm_pasien_selected').text('NO RM : ' + pasien.pasien['no_rm']);
+                            $('#nama_pasien_selected').text('NAMA : ' + pasien.pasien['nama_px']);
+                            $('#desa_pasien_selected').text('DESA : ' + pasien.pasien['desas'][
                                 'nama_desa_kelurahan'
                             ]);
-                            $('#kec_pasien_selected').text('KEC. : ' + data.pasien['kecamatans'][
+                            $('#kec_pasien_selected').text('KEC. : ' + pasien.pasien['kecamatans'][
                                 'nama_kecamatan'
                             ]);
-                            $('#kab_pasien_selected').text('KAB. : ' + data.pasien['kabupatens'][
+                            $('#kab_pasien_selected').text('KAB. : ' + pasien.pasien['kabupatens'][
                                 'nama_kabupaten_kota'
                             ]);
+                            $('#nik').val(pasien.pasien['nik_bpjs']);
                             Swal.fire('pasien berhasil dipilih', '', 'success')
                             $('#no_rm').val(rm);
-                            $('#nik').val(nik);
-                            $('#lanjutDaftar').show();
                             $('#warningDaftar').hide();
+                            $('#lanjutDaftar').show();
                         }
                     })
-
                 }
             })
         }
@@ -552,7 +520,17 @@
                 if (result.isConfirmed) {
                     var getNoAntrian = "{{ route('get-no-antrian') }}?id=" + antrian_id;
                     $.get(getNoAntrian, function(data) {
-                        $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
+                        $('#ket_no_antri').text('No. Antrian : ' + data['no_antri']);
+                        var jenis_antrian = data['no_antri'];
+                        var jp = jenis_antrian.substring(0, 1);
+                        if (jp === 'A') {
+                            $('#tujuan_daftar').text('Untuk Pasien IGD');
+                            $("#pilihPendaftaran option:selected").val(0);
+                        } else {
+                            $('#tujuan_daftar').text('Untuk Pasien IGD Kebidanan');
+                            $("#pilihPendaftaran option:selected").val(1);
+                        }
+                        $('#tujuan_daftar').val(jp);
                         $('#send_id_antri').val(antrian_id);
                     })
 

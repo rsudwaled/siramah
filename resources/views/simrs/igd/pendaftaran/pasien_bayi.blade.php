@@ -23,6 +23,10 @@
                             <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
                             <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi"
                                 placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
+
+                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir"
+                                placeholder="masukan nik orangtua bayi" fgroup-class="col-md-12" disable-feedback />
+
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                             <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
                                 label="Tanggal Lahir" :config="$config">
@@ -201,12 +205,12 @@
             $('.cari_orangtua').click(function(e) {
                 $.LoadingOverlay("show");
                 var nikOrangtua = $('#nik_orangtua').val();
-                if(!nikOrangtua)
-                {
+                if (!nikOrangtua) {
                     $.LoadingOverlay("hide");
-                    Swal.fire('NIK Orangtua tidak boleh kosong!', ' silahkan masukan nik orangtua yang akan dicari','error');
+                    Swal.fire('NIK Orangtua tidak boleh kosong!',
+                        ' silahkan masukan nik orangtua yang akan dicari', 'error');
                 }
-                
+
                 if (nikOrangtua) {
                     $.ajax({
                         type: "GET",
@@ -266,16 +270,23 @@
                                                 ' Jenis Peserta : ' + res
                                                 .response.peserta.jenisPeserta
                                                 .keterangan)
-                                            if(res.response.peserta.statusPeserta.kode == 0)
-                                            {
-                                                $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
-                                                $('#isbpjs_keterangan').val(res.response.peserta.statusPeserta.keterangan);
-                                                $('#cek_bpjs').css('style:text-green');
-                                            }else{
-                                                $('#isbpjs').val(res.response.peserta.statusPeserta.kode);
-                                                $('#isbpjs_keterangan').val(res.response.peserta.statusPeserta.keterangan);
+                                            if (res.response.peserta.statusPeserta
+                                                .kode == 0) {
+                                                $('#isbpjs').val(res.response
+                                                    .peserta.statusPeserta.kode);
+                                                $('#isbpjs_keterangan').val(res
+                                                    .response.peserta
+                                                    .statusPeserta.keterangan);
+                                                $('#cek_bpjs').css(
+                                                    'style:text-green');
+                                            } else {
+                                                $('#isbpjs').val(res.response
+                                                    .peserta.statusPeserta.kode);
+                                                $('#isbpjs_keterangan').val(res
+                                                    .response.peserta
+                                                    .statusPeserta.keterangan);
                                             }
-                                        }else{
+                                        } else {
                                             $('#cek_bpjs').css('style:text-green')
                                         }
                                     }
@@ -331,10 +342,11 @@
                                 kec_ortu: $('#kec_ortu').val(),
                                 desa_ortu: $('#desa_ortu').val(),
                                 negara_ortu: $('#negara_ortu').val(),
-                                isbpjs :  $('#isbpjs').val(),
-                                isbpjs_keterangan :  $('#isbpjs_keterangan').val(),
+                                isbpjs: $('#isbpjs').val(),
+                                isbpjs_keterangan: $('#isbpjs_keterangan').val(),
 
                                 nama_bayi: $('#nama_bayi').val(),
+                                tempat_lahir_bayi: $('#tempat_lahir_bayi').val(),
                                 jk_bayi: $('#jk_bayi').val(),
                                 tgl_lahir_bayi: $('#tgl_lahir_bayi').val(),
                             },
@@ -344,27 +356,30 @@
                             success: function(res) {
                                 console.log(res);
                                 console.log(res.rm_bayi);
-                                if(res.is_bpjs > 0)
-                                {
-                                    window.location.href = "{{route('ranapumum.bayi')}}?rmby="+res.rm_bayi;
-                                }else{
-                                    window.location.href = "{{route('ranapbpjs.bayi')}}?rmby="+res.rm_bayi+"&nomorkartu="+res.no_bpjs_ortu;
+                                if (res.is_bpjs > 0) {
+                                    window.location.href =
+                                        "{{ route('ranapumum.bayi') }}?rmby=" + res
+                                        .rm_bayi;
+                                } else {
+                                    window.location.href =
+                                        "{{ route('ranapbpjs.bayi') }}?rmby=" + res
+                                        .rm_bayi + "&nomorkartu=" + res.no_bpjs_ortu;
                                 }
                             },
                             error: function(res) {
                                 heart();
                                 console.log(res);
-                               if (res.responseJSON) {
-                                $.each(res.responseJSON.errors, function(index,
-                                    value) {
-                                    console.log(value);
-                                    console.log(index);
-                                    $('#validation-errors').append(
-                                        '<div class="alert-error"><h6>' +
-                                        index + ' : ' +
-                                        value + '</h6></div>');
-                                });
-                               }
+                                if (res.responseJSON) {
+                                    $.each(res.responseJSON.errors, function(index,
+                                        value) {
+                                        console.log(value);
+                                        console.log(index);
+                                        $('#validation-errors').append(
+                                            '<div class="alert-error"><h6>' +
+                                            index + ' : ' +
+                                            value + '</h6></div>');
+                                    });
+                                }
                             }
 
 
@@ -376,9 +391,11 @@
         });
     </script>
     <script>
-       function heart() {
+        function heart() {
             document.getElementById("validation-errors").style.display = "block"
-            setTimeout(function(){ document.getElementById("validation-errors").style.display = "none"}, 5000);
+            setTimeout(function() {
+                document.getElementById("validation-errors").style.display = "none"
+            }, 5000);
             $('.alert-error').remove();
         }
     </script>
