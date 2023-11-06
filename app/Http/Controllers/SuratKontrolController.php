@@ -192,6 +192,38 @@ class SuratKontrolController extends APIController
             return redirect()->back();
         }
     }
+    public function suratkontrol_update_v2(Request $request)
+    {
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_update($request);
+        if ($response->metadata->code == 200) {
+            $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->noSuratKontrol);
+            $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
+            $suratkontrol = $response->response;
+            $sk->update([
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
+                "poliTujuan" => $request->poliKontrol,
+                "namaPoliTujuan" => $poli->namasubspesialis,
+                "kodeDokter" => $request->kodeDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->noSEP,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "kelamin" => $suratkontrol->kelamin,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "user" => $request->user
+            ]);
+            Alert::success('Success', "Surat Kontrol Berhasil Diupdate");
+            return redirect()->back();
+        } else {
+            Alert::error('Gagal', $response->metadata->message);
+            return redirect()->back();
+        }
+    }
+
     public function suratkontrol_delete(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomorsuratkontrol;
@@ -205,7 +237,7 @@ class SuratKontrolController extends APIController
         } else {
             Alert::error('Gagal', $response->metadata->message);
         }
-        return   "<script>window.close();</script>";
+        return redirect()->back();
     }
     public function update(Request $request)
     {

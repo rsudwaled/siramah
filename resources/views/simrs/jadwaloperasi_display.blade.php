@@ -1,5 +1,5 @@
 @extends('vendor.medilab.display')
-@section('title', 'Buku Tamu - SIMRS Waled')
+@section('title', 'Display Jadwal Operasi')
 
 @section('content')
     <section id="jadwalrawatjalan" class="faq section-bg">
@@ -8,8 +8,13 @@
                 <div class="row">
                     <div class="col-md-4">
                         <iframe width="100%" height="315"
-                            src="https://www.youtube.com/embed/oRj04KcUmuU?autoplay=1&loop=1&mute=1&controls=0"
+                            src="https://www.youtube.com/embed/rLInKEMHykE?si=CdNV4IaFXfpfI7qq&autoplay=1&loop=1&mute=1&controls=0"
                             frameborder="0" allowfullscreen></iframe>
+                        {{-- <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/rLInKEMHykE?si=CdNV4IaFXfpfI7qq" title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen></iframe> --}}
                     </div>
                     <div class="col-md-8">
                         <div class="card ">
@@ -31,7 +36,7 @@
                                     <tbody>
                                         @foreach ($jadwals as $item)
                                             <tr class="text-xs ">
-                                                <td>{{ Carbon\Carbon::parse( $item->tanggal)->format('d M Y') }}</td>
+                                                <td>{{ Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}</td>
                                                 <td>{{ $item->no_book }}</td>
                                                 <td>{{ $item->ruangan }}</td>
                                                 <td>{{ strlen($item->nomor_rm) == 6 ? $item->nomor_rm : substr($item->nomor_rm, -6) }}

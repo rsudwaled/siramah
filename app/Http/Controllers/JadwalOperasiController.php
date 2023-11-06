@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Validator;
 
 class JadwalOperasiController extends APIController
 {
+    public function index()
+    {
+        $dokters = Dokter::get();
+        $poli = Poliklinik::get();
+        $jadwals = JadwalOperasi::whereYear('tanggal', '=', 2023)
+            ->get();
+        return view('simrs.jadwaloperasi_index', [
+            'dokters' => $dokters,
+            'poli' => $poli,
+            'jadwals' => $jadwals
+        ]);
+    }
     public function jadwalOperasi()
     {
         $dokters = Dokter::get();

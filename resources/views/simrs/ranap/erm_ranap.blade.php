@@ -471,6 +471,182 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- suratkontrol --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion"
+                                href="#cSuratKontrol">
+                                <h3 class="card-title">
+                                    Surat Kontrol
+                                </h3>
+                                <div class="card-tools">
+                                    @if ($kunjungan->surat_kontrol)
+                                        Sudah Dibuatkan Surat Kontrol {{ $kunjungan->surat_kontrol->noSuratKontrol }}
+                                        <i class="fas fa-check-circle"></i>
+                                    @else
+                                        Belum Dibuatkan Surat Kontrol <i class="fas fa-times-circle"></i>
+                                    @endif
+                                </div>
+                            </a>
+                            <div id="cSuratKontrol" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    @if ($kunjungan->surat_kontrol)
+                                        <input type="hidden" name="nomorsuratkontrol" class="nomorsuratkontrol-id"
+                                            value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}">
+                                        <form action="{{ route('suratkontrol_update_v2') }}" method="POST">
+                                            @csrf
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
+                                                        value="{{ $pasien->no_Bpjs }}" igroup-size="sm"
+                                                        label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
+                                                    <x-adminlte-input name="norm" class="norm-id" label="No RM"
+                                                        igroup-size="sm" placeholder="No RM "
+                                                        value="{{ $pasien->no_rm }}" readonly />
+                                                    <x-adminlte-input name="nama" class="nama-id"
+                                                        value="{{ $pasien->nama_px }}" label="Nama Pasien"
+                                                        igroup-size="sm" placeholder="Nama Pasien" readonly />
+                                                    <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
+                                                        igroup-size="sm" placeholder="Nomor HP" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <x-adminlte-input name="noSuratKontrol" igroup-size="sm"
+                                                        label="Nomor Surat Kontrol" placeholder="Nomor SEP"
+                                                        value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}"
+                                                        readonly />
+                                                    <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
+                                                        label="Nomor SEP" placeholder="Nomor SEP"
+                                                        value="{{ $kunjungan->surat_kontrol->noSepAsalKontrol }}"
+                                                        readonly />
+                                                    @php
+                                                        $config = ['format' => 'YYYY-MM-DD'];
+                                                    @endphp
+                                                    <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm"
+                                                        label="Tanggal Rencana Kontrol"
+                                                        value="{{ $kunjungan->surat_kontrol->tglRencanaKontrol }}"
+                                                        placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
+                                                        <x-slot name="appendSlot">
+                                                            <div class="btn btn-primary btnCariPoli">
+                                                                <i class="fas fa-search"></i> Cari Poli
+                                                            </div>
+                                                        </x-slot>
+                                                    </x-adminlte-input-date>
+                                                    <x-adminlte-select2 igroup-size="sm" name="poliKontrol"
+                                                        label="Poliklinik">
+                                                        <option value="{{ $kunjungan->surat_kontrol->poliTujuan }}"
+                                                            selected>{{ $kunjungan->surat_kontrol->namaPoliTujuan }}
+                                                        </option>
+                                                        <option disabled>Silahkan Klik Cari Poliklinik</option>
+                                                        <x-slot name="appendSlot">
+                                                            <div class="btn btn-primary btnCariDokter">
+                                                                <i class="fas fa-search"></i> Cari Dokter
+                                                            </div>
+                                                        </x-slot>
+                                                    </x-adminlte-select2>
+                                                    <x-adminlte-select2 igroup-size="sm" name="kodeDokter"
+                                                        label="Dokter">
+                                                        <option value="{{ $kunjungan->surat_kontrol->kodeDokter }}"
+                                                            selected>{{ $kunjungan->surat_kontrol->namaDokter }}</option>
+                                                        <option disabled>Silahkan Klik Cari Dokter</option>
+                                                    </x-adminlte-select2>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning withLoad">
+                                                <i class="fas fa-save"></i> Update</button>
+                                            <div class="btn  btn-success btnPrintSuratKontrol"> <i
+                                                    class="fas fa-print"></i> Print</div>
+                                            <a href="{{ route('suratkontrol_delete') }}?nomorsuratkontrol={{ $kunjungan->surat_kontrol->noSuratKontrol }}"
+                                                class="btn btn-danger withLoad">
+                                                <i class="fas fa-trash-alt"></i> Hapus
+                                            </a>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('suratkontrol_simpan') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="counter" id="counter"
+                                                value="{{ $kunjungan->counter }}" class="counter-id" value="">
+                                            <input type="hidden" name="kodekunjungan" id="kodekunjungan"
+                                                class="kodekunjungan-id" value="{{ $kunjungan->kode_kunjungan }}">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
+                                                        label="Nomor SEP" placeholder="Nomor SEP" readonly>
+                                                        <x-slot name="appendSlot">
+                                                            <div class="btn btn-primary btnCariSEP">
+                                                                <i class="fas fa-search"></i> Cari SEP
+                                                            </div>
+                                                        </x-slot>
+                                                    </x-adminlte-input>
+                                                    <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
+                                                        value="{{ $pasien->no_Bpjs }}" igroup-size="sm"
+                                                        label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
+                                                    <x-adminlte-input name="norm" class="norm-id" label="No RM"
+                                                        igroup-size="sm" placeholder="No RM "
+                                                        value="{{ $pasien->no_rm }}" readonly />
+                                                    <x-adminlte-input name="nama" class="nama-id"
+                                                        value="{{ $pasien->nama_px }}" label="Nama Pasien"
+                                                        igroup-size="sm" placeholder="Nama Pasien" readonly />
+                                                    <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
+                                                        igroup-size="sm" placeholder="Nomor HP" />
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @php
+                                                        $config = ['format' => 'YYYY-MM-DD'];
+                                                    @endphp
+                                                    <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm"
+                                                        label="Tanggal Rencana Kontrol"
+                                                        placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
+                                                        <x-slot name="appendSlot">
+                                                            <div class="btn btn-primary btnCariPoli">
+                                                                <i class="fas fa-search"></i> Cari Poli
+                                                            </div>
+                                                        </x-slot>
+                                                    </x-adminlte-input-date>
+                                                    <x-adminlte-select igroup-size="sm" name="poliKontrol"
+                                                        label="Poliklinik">
+                                                        <option selected disabled>Silahkan Klik Cari Poliklinik</option>
+                                                        <x-slot name="appendSlot">
+                                                            <div class="btn btn-primary btnCariDokter">
+                                                                <i class="fas fa-search"></i> Cari Dokter
+                                                            </div>
+                                                        </x-slot>
+                                                    </x-adminlte-select>
+                                                    <x-adminlte-select igroup-size="sm" name="kodeDokter" label="Dokter">
+                                                        <option selected disabled>Silahkan Klik Cari Dokter</option>
+                                                    </x-adminlte-select>
+                                                    <x-adminlte-textarea igroup-size="sm" label="Catatan" name="catatan"
+                                                        placeholder="Catatan Pasien" />
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning withLoad"> <i
+                                                    class="fas fa-save"></i>
+                                                Buat
+                                                Surat Kontrol</button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        {{-- pemulangan --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cPulang">
+                                <h3 class="card-title">
+                                    Pemulangan Pasien
+                                </h3>
+                                <div class="card-tools">
+                                    @if ($kunjungan->tgl_keluar)
+                                        Sudah Dipulangkan {{ $kunjungan->tgl_keluar }}
+                                        <i class="fas fa-check-circle"></i>
+                                    @else
+                                        Belum Dipulangkan <i class="fas fa-times-circle"></i>
+                                    @endif
+                                </div>
+                            </a>
+                            <div id="cPulang" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    test
+                                </div>
+                            </div>
+                        </div>
                         {{-- filepenunjang --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#collapseFile">
@@ -525,7 +701,7 @@
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-            })
+            });
             $(".masuk_icu").hide();
             $(".naik_kelas").hide();
             $(".pake_ventilator").hide();
@@ -789,5 +965,113 @@
             });
         });
     </script>
-
+    {{-- suratkontrol --}}
+    <script>
+        $(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            $('.btnCariPoli').click(function(e) {
+                e.preventDefault();
+                $.LoadingOverlay("show");
+                var sep = $('.nomorsep-id').val();
+                var tanggal = $('#tglRencanaKontrol').val();
+                var url = "{{ route('suratkontrol_poli') }}?nomor=" + sep + "&tglRencanaKontrol=" +
+                    tanggal + "&jenisKontrol=2";
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.metadata.code == 200) {
+                            $('#poliKontrol').empty()
+                            $.each(data.response.list, function(key, value) {
+                                optText = value.namaPoli + " (" + value.persentase +
+                                    "%)";
+                                optValue = value.kodePoli;
+                                $('#poliKontrol').append(new Option(optText, optValue));
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Pasien Ditemukan'
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error ' + data.metadata.code,
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        alert(url);
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
+            $('.btnCariDokter').click(function(e) {
+                e.preventDefault();
+                $.LoadingOverlay("show");
+                var poli = $('#poliKontrol').find(":selected").val();
+                var tanggal = $('#tglRencanaKontrol').val();
+                var url = "{{ route('suratkontrol_dokter') }}?kodePoli=" + poli + "&tglRencanaKontrol=" +
+                    tanggal + "&jenisKontrol=2";
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.metadata.code == 200) {
+                            $('#kodeDokter').empty()
+                            $.each(data.response.list, function(key, value) {
+                                optText = value.namaDokter + " (" + value
+                                    .jadwalPraktek +
+                                    ")";
+                                optValue = value.kodeDokter;
+                                $('#kodeDokter').append(new Option(optText, optValue));
+                            });
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Pasien Ditemukan'
+                            });
+                        } else {
+                            Swal.fire(
+                                'Error ' + data.metadata.code,
+                                data.metadata.message,
+                                'error'
+                            );
+                        }
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(data) {
+                        alert(url);
+                        $.LoadingOverlay("hide");
+                    }
+                });
+            });
+            $('.btnPrintSuratKontrol').click(function(e) {
+                $.LoadingOverlay("show");
+                var nomorsuratkontrol = $(".nomorsuratkontrol-id").val();
+                var url = "{{ route('suratkontrol_print') }}?nomorsuratkontrol=" + nomorsuratkontrol;
+                window.open(url, '_blank');
+                $.LoadingOverlay("hide");
+            });
+            $('.btnEditSuratKontrol').click(function(e) {
+                $.LoadingOverlay("show");
+                var nomorsuratkontrol = $(".nomorsuratkontrol-id").val();
+                var url = "{{ route('suratkontrol_edit') }}?nomorsuratkontrol=" + nomorsuratkontrol;
+                window.open(url, '_blank');
+                $.LoadingOverlay("hide");
+            });
+        });
+    </script>
 @endsection

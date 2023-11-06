@@ -71,6 +71,9 @@ Route::get('login/google/callback', [SocialiteController::class, 'callback'])->m
 // layanan umum
 Route::get('bukutamu', [BukuTamuController::class, 'bukutamu'])->name('bukutamu');
 Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_store');
+// layanan umum
+Route::get('jadwaloperasi_info', [JadwalOperasiController::class, 'jadwaloperasi_info'])->name('jadwaloperasi_info');
+Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
 // mesin antrian
 Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
@@ -214,6 +217,7 @@ Route::middleware('auth')->group(function () {
     Route::post('suratkontrol_simpan', [SuratKontrolController::class, 'suratkontrol_simpan'])->name('suratkontrol_simpan');
     Route::get('suratkontrol_edit', [SuratKontrolController::class, 'suratkontrol_edit'])->name('suratkontrol_edit');
     Route::post('suratkontrol_update', [SuratKontrolController::class, 'suratkontrol_update'])->name('suratkontrol_update');
+    Route::post('suratkontrol_update_v2', [SuratKontrolController::class, 'suratkontrol_update_v2'])->name('suratkontrol_update_v2');
     Route::get('suratkontrol_delete', [SuratKontrolController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
     Route::get('suratkontrol_print', [SuratKontrolController::class, 'print'])->name('suratkontrol_print');
     // sep
