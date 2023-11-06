@@ -180,17 +180,26 @@
                                 <h3 class="card-title">
                                     Groupping E-Klaim
                                 </h3>
+                                <div class="card-tools">
+                                    @if ($kunjungan->budget)
+                                        Sudah Groupping
+                                        {{ $kunjungan->budget->updated_at }}
+                                        <i class="fas fa-check-circle"></i>
+                                    @else
+                                        Belum Groupping <i class="fas fa-times-circle"></i>
+                                    @endif
+                                </div>
                             </a>
                             <div id="cGroupping" class="collapse" role="tabpanel">
                                 <div class="card-body">
-                                    <form action="{{ route('claim_ranap') }}" id="formGroupper" method="POST">
+                                    <form action="{{ route('claim_ranap_v2') }}" id="formGroupper" method="POST">
                                         @csrf
                                         <input type="hidden" name="counter" id="counter" class="counter-id"
-                                            value="">
+                                            value="{{ $kunjungan->counter }}">
                                         <input type="hidden" name="kodekunjungan" id="kodekunjungan"
-                                            class="kodekunjungan-id" value="">
+                                            class="kodekunjungan-id" value="{{ $kunjungan->kode_kunjungan }}">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-4">
                                                 <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
                                                     label="Nomor SEP" placeholder="Nomor SEP"
                                                     value="{{ $kunjungan->no_sep }}" readonly>
@@ -200,10 +209,6 @@
                                                         </div>
                                                     </x-slot>
                                                 </x-adminlte-input>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
                                                 <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
                                                     value="{{ $pasien->no_Bpjs }}" igroup-size="sm" label="Nomor Kartu"
                                                     placeholder="Nomor Kartu" readonly />
@@ -213,14 +218,11 @@
                                                 <x-adminlte-input name="nama" class="nama-id"
                                                     value="{{ $pasien->nama_px }}" label="Nama Pasien" igroup-size="sm"
                                                     placeholder="Nama Pasien" readonly />
-                                                <x-adminlte-input name="tgllahir" class="tgllahir-id"
-                                                    label="Tanggal Lahir" igroup-size="sm" placeholder="Tanggal Lahir"
-                                                    readonly value="{{ $pasien->tgl_lahir }}" />
-                                                <x-adminlte-input name="gender" class="gender-id" label="Gender"
-                                                    igroup-size="sm" placeholder="Gender"
-                                                    value="{{ $pasien->jenis_kelamin }}" readonly />
                                                 <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
                                                     igroup-size="sm" placeholder="Nomor HP" />
+                                                <input type="hidden" name="gender"
+                                                    value="{{ $pasien->jenis_kelamin }}">
+                                                <input type="hidden" name="tgllahir" value="{{ $pasien->tgl_lahir }}">
                                             </div>
                                             <div class="col-md-4">
                                                 @php
@@ -321,9 +323,6 @@
                                         {{-- diagnosa --}}
                                         <div class="row">
                                             <div class="col-md-12">
-                                                {{-- multipe diagnosa --}}
-                                                <br><br>
-                                                <h6>Diagnosa & Tindakan</h6>
                                                 <label class=" mb-2">Diagnosa ICD-10</label>
                                                 <button id="rowAdder" type="button"
                                                     class="btn btn-xs btn-success  mb-2">
@@ -387,12 +386,9 @@
                                                 <div id="newTindakan"></div>
                                             </div>
                                         </div>
-                                        <x-slot name="footerSlot">
-                                            <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
-                                        </x-slot>
                                     </form>
                                     <x-adminlte-button theme="success" class="mr-auto withLoad" label="Groupper"
-                                        type="submit" form="formGroupper" />
+                                        type="submit" icon="fas fa-diagnose" form="formGroupper" />
                                 </div>
                             </div>
                         </div>

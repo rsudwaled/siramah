@@ -53,7 +53,9 @@ class RanapController extends Controller
     }
     public function pasienranapprofile(Request $request)
     {
-        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $kunjungan = Kunjungan::with([
+            'budget'
+        ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = Pasien::with([
             'kunjungans',
             'kunjungans.unit', 'kunjungans.assesmen_dokter',
@@ -63,7 +65,6 @@ class RanapController extends Controller
             'kunjungans.layanans.layanan_details.barang',
             'kunjungans.dokter', 'kunjungans.assesmen_perawat'
         ])->firstWhere('no_rm', $kunjungan->no_rm);
-
         $api = new IcareController();
         $request['nomorkartu'] = $pasien->no_Bpjs;
         $request['kodedokter'] = $kunjungan->dokter->kode_dokter_jkn;
