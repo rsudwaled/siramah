@@ -569,7 +569,8 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
-                                                        label="Nomor SEP" placeholder="Nomor SEP" readonly>
+                                                        label="Nomor SEP" value="{{ $kunjungan->no_sep }}"
+                                                        placeholder="Nomor SEP" readonly>
                                                         <x-slot name="appendSlot">
                                                             <div class="btn btn-primary btnCariSEP">
                                                                 <i class="fas fa-search"></i> Cari SEP
@@ -643,7 +644,61 @@
                             </a>
                             <div id="cPulang" class="collapse" role="tabpanel">
                                 <div class="card-body">
-                                    test
+                                    <form action="{{ route('pemulangan_sep_pasien') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="kodebooking" class="kodebooking-id">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
+                                                    value="{{ $pasien->no_Bpjs }}" igroup-size="sm" label="Nomor Kartu"
+                                                    placeholder="Nomor Kartu" readonly />
+                                                <x-adminlte-input name="norm" class="norm-id" label="No RM"
+                                                    igroup-size="sm" placeholder="No RM " value="{{ $pasien->no_rm }}"
+                                                    readonly />
+                                                <x-adminlte-input name="nama" class="nama-id"
+                                                    value="{{ $pasien->nama_px }}" label="Nama Pasien" igroup-size="sm"
+                                                    placeholder="Nama Pasien" readonly />
+                                                <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
+                                                    igroup-size="sm" placeholder="Nomor HP" />
+                                                <input type="hidden" name="gender"
+                                                    value="{{ $pasien->jenis_kelamin }}">
+                                                <input type="hidden" name="tgllahir" value="{{ $pasien->tgl_lahir }}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <x-adminlte-input name="noSep" class="nomorsep-id" igroup-size="sm"
+                                                    label="Nomor SEP" value="{{ $kunjungan->no_sep }}" placeholder="Nomor SEP" readonly>
+                                                    <x-slot name="appendSlot">
+                                                        <div class="btn btn-primary btnCariSEP">
+                                                            <i class="fas fa-search"></i> Cari SEP
+                                                        </div>
+                                                    </x-slot>
+                                                </x-adminlte-input>
+                                                <x-adminlte-select igroup-size="sm" name="statusPulang"
+                                                    label="Alasan Pulang">
+                                                    <option selected disabled>Pilih Alasan Pulang</option>
+                                                    <option value="1">Atas Persetujuan Dokter</option>
+                                                    <option value="3">Atas Permintaan Sendiri</option>
+                                                    <option value="4">Meninggal</option>
+                                                    <option value="5">Lain-lain</option>
+                                                </x-adminlte-select>
+                                                @php
+                                                    $config = ['format' => 'YYYY-MM-DD'];
+                                                @endphp
+                                                <x-adminlte-input-date name="tglPulang" igroup-size="sm"
+                                                    label="Tanggal Pulang" value="{{ now()->format('Y-m-d') }}"
+                                                    placeholder="Pilih Tanggal Pulang" :config="$config" />
+                                                <p class="text-danger">Isi Jika Pasien Meninggal</p>
+                                                <x-adminlte-input-date name="tglMeninggal" igroup-size="sm"
+                                                    label="Tanggal Meninggal" placeholder="Pilih Tanggal Meninggal"
+                                                    :config="$config" />
+                                                <x-adminlte-input name="noSuratMeninggal" class="suratmeninggal-id"
+                                                    igroup-size="sm" label="Nomor Surat Meninggal"
+                                                    placeholder="Nomor Surat Meninggal" />
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning withLoad">
+                                            <i class="fas fa-save"></i> Pulangkan Pasien</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

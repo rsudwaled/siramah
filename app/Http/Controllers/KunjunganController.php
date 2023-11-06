@@ -265,6 +265,7 @@ class KunjunganController extends APIController
     }
     public function pemulangan_sep_pasien(Request $request)
     {
+        dd($request->all());
         $api = new VclaimController();
         $request['user'] = Auth::user()->name;
         $response = $api->sep_update_pulang($request);
