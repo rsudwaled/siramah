@@ -1,0 +1,48 @@
+<div class="card card-primary card-outline">
+    <div class="card-body box-profile  p-3">
+        <h6 class="text-center">
+            IDENTITAS PASIEN
+        </h6>
+        <div class="row">
+            <div class="col-md-4">
+                <dl class="row">
+                    <dt class="col-sm-3 m-0">Nama</dt>
+                    <dd class="col-sm-9 m-0">{{ $pasien->nama_px }} ({{ $pasien->jenis_kelamin }})</dd>
+                    <dt class="col-sm-3 m-0">No RM</dt>
+                    <dd class="col-sm-9 m-0">{{ $pasien->no_rm }}</dd>
+                    <dt class="col-sm-3 m-0">NIK</dt>
+                    <dd class="col-sm-9 m-0">{{ $pasien->nik_bpjs }}</dd>
+                    <dt class="col-sm-3 m-0">No BPJS</dt>
+                    <dd class="col-sm-9 m-0">{{ $pasien->no_Bpjs }}</dd>
+                    <dt class="col-sm-3 m-0">Tgl Lahir</dt>
+                    <dd class="col-sm-9 m-0">{{ $pasien->tgl_lahir }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="row">
+                    <dt class="col-sm-3 m-0">Tgl Masuk</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->tgl_masuk }}</dd>
+                    <dt class="col-sm-3 m-0">Tgl Keluar</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->tgl_keluar }}</dd>
+                    <dt class="col-sm-3 m-0">Alasan Masuk</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->alasan_masuk->alasan_masuk }}</dd>
+                    <dt class="col-sm-3 m-0">Ruangan</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->unit->nama_unit }}</dd>
+                    <dt class="col-sm-3 m-0">Dokter DPJP</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->dokter->nama_paramedis }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="row">
+                    <dt class="col-sm-3 m-0">Kelas / Penjamin</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->kelas }} /  {{ $kunjungan->penjamin_simrs->nama_penjamin }}</dd>
+                    <dt class="col-sm-3 m-0">No SEP</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->no_sep }}</dd>
+                    <dt class="col-sm-3 m-0">Status</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->status->status_kunjungan }}</dd>
+
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

@@ -56,6 +56,14 @@ class Kunjungan extends Model
     {
         return $this->hasOne(AssesmenDokter::class, 'id_kunjungan', 'kode_kunjungan');
     }
+    public function assesmen_perawat()
+    {
+        return $this->hasOne(AsesmenPerawat::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function layanans()
+    {
+        return $this->hasMany(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function antrian()
     {
         return $this->belongsTo(Antrian::class, 'kode_kunjungan', 'kode_kunjungan');

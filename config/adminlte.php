@@ -480,12 +480,28 @@ return [
             'can' => 'ranap',
             'submenu' => [
                 [
+                    'text' => 'Kunjungan Ranap Aktif',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'kunjunganranapaktif',
+                    'active' => ['kunjunganranapaktif', 'pasienranapprofile'],
+                    'shift'   => 'ml-2',
+                    'can' => 'ranap',
+                ],
+                [
+                    'text' => 'Kunjungan Ranap',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'kunjunganranap',
+                    'shift'   => 'ml-2',
+                    'can' => 'ranap',
+                ],
+                [
                     'text' => 'Pasien Ranap Aktif',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'pasienRanapAktif',
                     'shift'   => 'ml-2',
                     'can' => 'ranap',
                 ],
+
                 [
                     'text' => 'Pasien Ranap',
                     'icon'    => 'fas fa-user-injured',

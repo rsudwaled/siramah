@@ -1463,21 +1463,18 @@
             else
                 $(".formbb").hide();
         }
-
         function covidFunc() {
             if ($('#covid').is(":checked"))
                 $(".checkCovid").show();
             else
                 $(".checkCovid").hide();
         }
-
         function tbFunc() {
             if ($('#tb').is(":checked"))
                 $(".checkTB").show();
             else
                 $(".checkTB").hide();
         }
-
         function perawatanIcuFunc() {
             if ($('#perawatan_icu').is(":checked")) {
                 $(".masuk_icu").show();
@@ -1489,7 +1486,6 @@
                 $(".pake_ventilator").hide();
             }
         }
-
         function pakeVentilatorFunc() {
             if ($('#ventilator').is(":checked"))
                 $(".pake_ventilator").show();

@@ -46,6 +46,7 @@ use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\RanapController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
@@ -150,6 +151,9 @@ Route::middleware('auth')->group(function () {
     Route::get('pasienRanap', [KunjunganController::class, 'pasienRanap'])->name('pasienRanap');
     Route::get('pasienRanapPasien', [KunjunganController::class, 'pasienRanapPasien'])->name('pasienRanapPasien');
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
+    Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
+    Route::get('kunjunganranapaktif', [RanapController::class, 'kunjunganranapaktif'])->name('kunjunganranapaktif');
+    Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
     Route::get('getAntrianFarmasi', [AntrianController::class, 'getAntrianFarmasi'])->name('getAntrianFarmasi');
