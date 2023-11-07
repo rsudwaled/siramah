@@ -4,6 +4,9 @@
     <h1>ERM Rawat Inap</h1>
 @stop
 @section('content')
+    @php
+        $total = 0;
+    @endphp
     <div class="row">
         <div class="col-md-12">
             @if ($errors->any())
@@ -159,6 +162,10 @@
                                 <h3 class="card-title">
                                     Rincian Biaya
                                 </h3>
+                                <div class="card-tools">
+                                    {{ money($biaya_rs, 'IDR') }}
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
                             </a>
                             <div id="cRincian" class="collapse" role="tabpanel">
                                 <div class="card-body">
@@ -174,9 +181,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @php
-                                                $total = 0;
-                                            @endphp
                                             @foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg)
                                                 @foreach ($kjg->layanans->where('status_retur', 'OPN') as $item)
                                                     <tr>
@@ -194,7 +198,7 @@
                                             <tr>
                                                 <td></td>
                                                 <td></td>
-                                                <td>{{ money($total, 'IDR') }}</td>
+                                                <td>{{ money($total, 'IDR') }} </td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>

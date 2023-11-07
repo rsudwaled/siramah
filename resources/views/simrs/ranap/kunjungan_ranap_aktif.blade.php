@@ -48,7 +48,7 @@
                                 <td>{{ $kunjungan->no_sep }}</td>
                                 <td>{{ $kunjungan->status->status_kunjungan }}</td>
                                 <td>
-                                    <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}" class="btn btn-primary btn-xs"><i class="fas fa-file-medical"></i> Lihat
+                                    <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}" class="btn btn-primary btn-xs withLoad"><i class="fas fa-file-medical"></i> Lihat
                                         ERM</a>
                                 </td>
                             </tr>

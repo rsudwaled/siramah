@@ -65,11 +65,14 @@ class RanapController extends Controller
             'kunjungans.layanans.layanan_details.barang',
             'kunjungans.dokter', 'kunjungans.assesmen_perawat'
         ])->firstWhere('no_rm', $kunjungan->no_rm);
+        $biaya_rs = 0;
+        foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
+            $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');
+        }
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
-            // 'urlicare',
-            // 'messageicare',
+            'biaya_rs',
         ]));
     }
     public function kunjunganranapaktif(Request $request)
