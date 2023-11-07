@@ -10,6 +10,7 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalOperasiController extends APIController
 {
@@ -71,7 +72,7 @@ class JadwalOperasiController extends APIController
         $request['tanggalawal'] = Carbon::parse($request->tanggalawal)->startOfDay();
         $request['tanggalakhir'] = Carbon::parse($request->tanggalakhir)->endOfDay();
         // end auth token
-        $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
+        $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->limit(5)->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
             $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
