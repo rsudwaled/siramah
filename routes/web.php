@@ -122,7 +122,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('obat', ObatController::class);
     Route::resource('kpo', KPOController::class);
-    Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('vclaim', VclaimController::class);
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');

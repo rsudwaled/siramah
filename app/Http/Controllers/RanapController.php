@@ -65,26 +65,11 @@ class RanapController extends Controller
             'kunjungans.layanans.layanan_details.barang',
             'kunjungans.dokter', 'kunjungans.assesmen_perawat'
         ])->firstWhere('no_rm', $kunjungan->no_rm);
-        $api = new IcareController();
-        $request['nomorkartu'] = $pasien->no_Bpjs;
-        $request['kodedokter'] = $kunjungan->dokter->kode_dokter_jkn;
-        $urlicare = null;
-        $messageicare = 'Kode Dokter JKN Tidak ada';
-        if ($request->kodedokter) {
-            $res = $api->icare($request);
-            if ($res->metadata->code == 200) {
-                $urlicare = $res->response->url;
-                $messageicare = $res->metadata->message;
-            } else {
-                $urlicare = null;
-                $messageicare = $res->metadata->message;
-            }
-        }
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
-            'urlicare',
-            'messageicare',
+            // 'urlicare',
+            // 'messageicare',
         ]));
     }
     public function kunjunganranapaktif(Request $request)

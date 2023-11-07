@@ -154,7 +154,7 @@
                             </x-slot>
                         </x-adminlte-modal>
                         {{-- icare --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <div class="card-header" role="tab">
                                 <h3 class="card-title">
                                     <a data-toggle="collapse" data-parent="#accordion" href="#cIcare" aria-expanded="true">
@@ -173,7 +173,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- groupping --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cGroupping">
@@ -428,7 +428,62 @@
                             </a>
                             <div id="cLaboratorium" class="collapse" role="tabpanel">
                                 <div class="card-body">
-                                    test
+                                    {{-- <table class="table table-sm table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Data Registrasi</th>
+                                                <th>Pemeriksaan Lab</th>
+                                                <th>Hasil Lab</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($pasien->kunjungans->sortByDesc('tgl_masuk') as $item)
+                                                @if ($item->layanans->where('kode_unit', 3002))
+                                                    <tr>
+                                                        <td>
+                                                            {{ $item->counter }} / {{ $item->kode_kunjungan }} <br>
+                                                            {{ \Carbon\Carbon::parse($item->tgl_masuk)->format('d/m/Y h:m:s') }}
+                                                            @if ($item->tgl_keluar)
+                                                                - {{ $item->tgl_keluar }}
+                                                            @endif <br>
+                                                            <b> {{ $item->unit->nama_unit }}</b><br>
+                                                            {{ $item->dokter->nama_paramedis }}<br>
+                                                            @if ($item->status_kunjungan == 1)
+                                                                <span class="badge badge-success">Kunjungan Aktif</span>
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @foreach ($item->layanans->where('kode_unit', 3002) as $lab)
+                                                                @foreach ($lab->layanan_details as $laydet)
+                                                                    - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
+                                                                @endforeach
+                                                            @endforeach
+                                                        </td>
+                                                        <td>
+                                                            @foreach ($item->layanans->where('kode_unit', 3002) as $lab)
+                                                                <div class="btn btn-xs btn-primary btnHasilLab"
+                                                                    data-fileurl="http://192.168.2.74/smartlab_waled/his/his_report?hisno={{ $lab->kode_layanan_header }}">
+                                                                    Hasil {{ $lab->kode_layanan_header }}</div>
+                                                                <br>
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table> --}}
+                                    <div class="row">
+                                        @foreach ($pasien->kunjungans->sortByDesc('tgl_masuk') as $item)
+                                            @foreach ($item->layanans->where('kode_unit', 3002) as $lab)
+                                                <div class="col-md-6">
+                                                    <iframe width="100%" height="400px"
+                                                        src="http://192.168.2.74/smartlab_waled/his/his_report?hisno={{ $lab->kode_layanan_header }}"
+                                                        frameborder="0"></iframe>
+                                                </div>
+                                            @endforeach
+                                        @endforeach
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -666,7 +721,8 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <x-adminlte-input name="noSep" class="nomorsep-id" igroup-size="sm"
-                                                    label="Nomor SEP" value="{{ $kunjungan->no_sep }}" placeholder="Nomor SEP" readonly>
+                                                    label="Nomor SEP" value="{{ $kunjungan->no_sep }}"
+                                                    placeholder="Nomor SEP" readonly>
                                                     <x-slot name="appendSlot">
                                                         <div class="btn btn-primary btnCariSEP">
                                                             <i class="fas fa-search"></i> Cari SEP
