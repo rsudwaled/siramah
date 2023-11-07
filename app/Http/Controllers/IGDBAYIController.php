@@ -16,6 +16,7 @@ use App\Models\Pendidikan;
 use App\Models\Pasien;
 use App\Models\PasienBayiIGD;
 use Carbon\Carbon;
+use Validator;
 
 
 class IGDBAYIController extends Controller
@@ -46,7 +47,7 @@ class IGDBAYIController extends Controller
     public function pasienBayiCreate(Request $request)
     {
         
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(),[
             "nik_ortu" => 'required',
             "nama_ortu" => 'required',
             "tempat_lahir_ortu" => 'required',
@@ -69,6 +70,10 @@ class IGDBAYIController extends Controller
             
         ]);
 
+        if ($validator->fails()){
+            return back()->withInput();
+        }
+
         $last_rm = Pasien::latest('no_rm')->first(); // 23982846
         $rm_last = substr($last_rm->no_rm, -6); //982846
         $add_rm_new = $rm_last + 1; //982847
@@ -78,8 +83,9 @@ class IGDBAYIController extends Controller
         $rmbayi_new = $th . $add_rmbayi_new;
 
         $kontak = $request->no_hp_ortu==null? $request->no_telp_ortu:$request->no_hp_ortu; 
-        $rm_ibu = $request->rm_ibu == null ? $add_rm_new : $request->rm_ibu;
+        $rm_ibu = $request->rm_ibu == null ? $rm_new : $request->rm_ibu;
         $rm_bayi = $request->rm_ibu == null ? $rmbayi_new: $rm_new;
+        $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu = $request->nik_ortu;
@@ -93,7 +99,7 @@ class IGDBAYIController extends Controller
         $bayi->rm_ibu   = $rm_ibu;
         $bayi->nama_bayi = $request->nama_bayi;
         $bayi->jk_bayi = $request->jk_bayi;
-        $bayi->tgl_lahir_bayi = $request->tgl_lahir_bayi;
+        $bayi->tgl_lahir_bayi = $tgl_lahir_bayi;
         $bayi->is_bpjs = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
         if($bayi->save())
@@ -117,6 +123,10 @@ class IGDBAYIController extends Controller
                 $ortuNew->pendidikan = $request->pendidikan_ortu;
                 $ortuNew->pekerjaan = $request->pekerjaan_ortu;
                 $ortuNew->kewarganegaraan = $request->kewarganegaraan_ortu;
+                $ortuNew->propinsi = $request->provinsi_ortu;
+                $ortuNew->kabupaten = $request->kab_ortu;
+                $ortuNew->kecamatan = $request->kec_ortu;
+                $ortuNew->desa = $request->desa_ortu;
                 $ortuNew->kode_propinsi = $request->provinsi_ortu;
                 $ortuNew->kode_kabupaten = $request->kab_ortu;
                 $ortuNew->kode_kecamatan = $request->kec_ortu;
@@ -129,6 +139,7 @@ class IGDBAYIController extends Controller
                     $pasienBayi->jenis_kelamin = $request->jk_bayi;
                     $pasienBayi->nama_px = $request->nama_bayi;
                     $pasienBayi->tempat_lahir = $request->tempat_lahir_bayi;
+                    $pasienBayi->tgl_lahir = $tgl_lahir_bayi;
                     $pasienBayi->alamat = $request->alamat_lengkap_ortu;
                     
                     $pasienBayi->agama = $request->agama_ortu;
@@ -137,6 +148,10 @@ class IGDBAYIController extends Controller
                     $pasienBayi->kode_kabupaten = $request->kab_ortu;
                     $pasienBayi->kode_kecamatan = $request->kec_ortu;
                     $pasienBayi->kode_desa = $request->desa_ortu;
+                    $pasienBayi->propinsi = $request->provinsi_ortu;
+                    $pasienBayi->kabupaten = $request->kab_ortu;
+                    $pasienBayi->kecamatan = $request->kec_ortu;
+                    $pasienBayi->desa = $request->desa_ortu;
                     $pasienBayi->negara = $request->negara_ortu;
                     if($pasienBayi->save()){
                         $hub =  $ortuNew->jenis_kelamin=='L'? 1 : 2 ;
@@ -157,6 +172,7 @@ class IGDBAYIController extends Controller
                 $pasienBayi->jenis_kelamin = $request->jk_bayi;
                 $pasienBayi->nama_px = $request->nama_bayi;
                 $pasienBayi->tempat_lahir = $request->tempat_lahir_bayi;
+                $pasienBayi->tgl_lahir = $tgl_lahir_bayi;
                 $pasienBayi->alamat = $request->alamat_lengkap_ortu;
                 
                 $pasienBayi->agama = $request->agama_ortu;
@@ -165,6 +181,10 @@ class IGDBAYIController extends Controller
                 $pasienBayi->kode_kabupaten = $request->kab_ortu;
                 $pasienBayi->kode_kecamatan = $request->kec_ortu;
                 $pasienBayi->kode_desa = $request->desa_ortu;
+                $pasienBayi->propinsi = $request->provinsi_ortu;
+                $pasienBayi->kabupaten = $request->kab_ortu;
+                $pasienBayi->kecamatan = $request->kec_ortu;
+                $pasienBayi->desa = $request->desa_ortu;
                 $pasienBayi->negara = $request->negara_ortu;
                 if($pasienBayi->save()){
                     $hub =  $ortuNew->jenis_kelamin=='L'? 1 : 2 ;
@@ -180,6 +200,6 @@ class IGDBAYIController extends Controller
                 }
             }
         }
-        return response()->json($bayi, 200);
+        return redirect()->route('ranapumum.bayi',['rm'=>$bayi->rm_bayi]);
     }
 }

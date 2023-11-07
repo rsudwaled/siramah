@@ -8,8 +8,20 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <div class="alert alert-danger" id="validation-errors" style="display:none;"></div>
-            <form id="form_pasien_bayi">
+            @if ($errors->any())
+                <div class="alert alert-danger alert-error" id="validation-errors">
+                    <ul>
+                        <li>
+                            <h5>DATA YANG WAJIB DIISI:</h5>
+                        </li>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <form id="form_pasien_bayi" method="post" action="{{ route('pasien_bayi.create') }}">
+                @csrf
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="alert alert-warning alert-dismissible">
@@ -29,7 +41,8 @@
 
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                             <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
-                                label="Tanggal Lahir" :config="$config">
+                                label="Tanggal Lahir" :config="$config"
+                                value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-calendar-alt"></i>
@@ -72,41 +85,42 @@
                                         placeholder="masukan bpjs" fgroup-class="col-md-6" disable-feedback />
                                     <x-adminlte-input name="nama_ortu" id="nama_ortu" label="Nama"
                                         placeholder="masukan nama orangtua" fgroup-class="col-md-12" disable-feedback />
-                                    <x-adminlte-input name="tempat_lahir" id="tempat_lahir_ortu" label="Tempat lahir"
+                                    <x-adminlte-input name="tempat_lahir_ortu" id="tempat_lahir_ortu" label="Tempat lahir"
                                         placeholder="masukan tempat" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-select name="jk" id="jk_ortu" label="Jenis Kelamin"
+                                    <x-adminlte-select name="jk_ortu" id="jk_ortu" label="Jenis Kelamin"
                                         fgroup-class="col-md-6">
-                                        <option value="L">
-                                            Laki-Laki
-                                        </option>
                                         <option value="P">
                                             Perempuan
                                         </option>
+                                        <option value="L">
+                                            Laki-Laki
+                                        </option>
                                     </x-adminlte-select>
                                     @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                                    <x-adminlte-input-date name="tgl_lahir" id="tgl_lahir_ortu" fgroup-class="col-md-6"
-                                        label="Tanggal Lahir" :config="$config">
+                                    <x-adminlte-input-date name="tgl_lahir_ortu" id="tgl_lahir_ortu" fgroup-class="col-md-6"
+                                        label="Tanggal Lahir" :config="$config"
+                                        value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
                                                 <i class="fas fa-calendar-alt"></i>
                                             </div>
                                         </x-slot>
                                     </x-adminlte-input-date>
-                                    <x-adminlte-select name="agama" id="agama_ortu" label="Agama"
+                                    <x-adminlte-select name="agama_ortu" id="agama_ortu" label="Agama"
                                         fgroup-class="col-md-6">
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->ID }}">
                                                 {{ $item->agama }}</option>
                                         @endforeach
                                     </x-adminlte-select>
-                                    <x-adminlte-select name="pekerjaan" id="pekerjaan_ortu" label="Pekerjaan"
+                                    <x-adminlte-select name="pekerjaan_ortu" id="pekerjaan_ortu" label="Pekerjaan"
                                         fgroup-class="col-md-6">
                                         @foreach ($pekerjaan as $item)
                                             <option value="{{ $item->ID }}">
                                                 {{ $item->pekerjaan }}</option>
                                         @endforeach
                                     </x-adminlte-select>
-                                    <x-adminlte-select name="pendidikan" id="pendidikan_ortu" label="Pendidikan"
+                                    <x-adminlte-select name="pendidikan_ortu" id="pendidikan_ortu" label="Pendidikan"
                                         fgroup-class="col-md-6">
                                         @foreach ($pendidikan as $item)
                                             <option value="{{ $item->ID }}">
@@ -118,53 +132,48 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="no_telp" id="no_telp_ortu" label="No Telpon"
+                                    <x-adminlte-input name="no_telp_ortu" id="no_telp_ortu" label="No Telpon"
                                         placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-input name="no_hp" id="no_hp_ortu" label="No Hp"
+                                    <x-adminlte-input name="no_hp_ortu" id="no_hp_ortu" label="No Hp"
                                         placeholder="masukan hp" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-select name="provinsi_pasien" label="Provinsi" id="provinsi_ortu"
+                                    <x-adminlte-select2 name="provinsi_ortu" label="Provinsi" id="provinsi_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($provinsi as $item)
                                             <option value="{{ $item->kode_provinsi }}">
                                                 {{ $item->nama_provinsi }}
                                             </option>
                                         @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="kabupaten_pasien" label="Kabupaten" id="kab_ortu"
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="kab_ortu" label="Kabupaten" id="kab_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($kab as $item)
                                             <option value="{{ $item->kode_kabupaten_kota }}">
                                                 {{ $item->nama_kabupaten_kota }}
                                             </option>
                                         @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="kecamatan_pasien" label="Kecamatan" id="kec_ortu"
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="kec_ortu" label="Kecamatan" id="kec_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($kec as $item)
                                             <option value="{{ $item->kode_kecamatan }}">
                                                 {{ $item->nama_kecamatan }}
                                             </option>
                                         @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="desa_pasien" label="Desa" id="desa_ortu"
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="desa_ortu" label="Desa" id="desa_ortu"
                                         fgroup-class="col-md-6">
-                                        @foreach ($desa as $item)
-                                            <option value="{{ $item->kode_desa_kelurahan }}">
-                                                {{ $item->nama_desa_kelurahan }}
-                                            </option>
-                                        @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select2 name="negara" label="Negara" id="negara_ortu"
+                                    </x-adminlte-select2>
+                                    <x-adminlte-select2 name="negara_ortu" label="Negara" id="negara_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($negara as $item)
                                             <option value="{{ strtoupper($item->nama_negara) }}">
                                                 {{ strtoupper($item->nama_negara) }}</option>
                                         @endforeach
                                     </x-adminlte-select2>
-                                    <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_ortu"
+                                    <x-adminlte-select name="kewarganegaraan_ortu" id="kewarganegaraan_ortu"
                                         label="Kewarganegaraan" fgroup-class="col-md-6">
-                                        <option value="0">WNA</option>
                                         <option value="1">WNI</option>
+                                        <option value="0">WNA</option>
                                     </x-adminlte-select>
                                     <x-adminlte-textarea name="alamat_lengkap_ortu" label="Alamat Lengkap (RT/RW)"
                                         fgroup-class="col-md-12"></x-adminlte-textarea>
@@ -175,7 +184,8 @@
 
                 </div>
 
-                <x-adminlte-button class="float-right btn-sm btn-flat simpan-data" theme="success" label="SIMPAN DATA" />
+                <x-adminlte-button class="float-right btn-sm btn-flat withLoad" type="submit" theme="success"
+                    label="SIMPAN DATA" />
                 <a href="{{ route('pendaftaran-pasien-igdbpjs') }}"
                     class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
@@ -195,12 +205,45 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
+        // document.getElementById("validation-errors").style.display = "block";
+        // setTimeout(function() {
+        //     document.getElementById("validation-errors").style.display = "none"
+        // }, 5000);
+        // $('.alert-error').remove();
         $(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+
+            $('#kec_ortu').change(function() {
+                var desa_kec_id = $("#kec_ortu").val();
+                if (desa_kec_id) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('desa-pasien.get') }}?desa_kec_id=" + desa_kec_id,
+                        dataType: 'JSON',
+                        success: function(desapasien) {
+                            console.log(desapasien);
+                            if (desapasien) {
+                                $('#desa_ortu').empty();
+                                $.each(desapasien, function(key, value) {
+                                    $('#desa_ortu').append('<option value="' + value
+                                        .kode_desa_kelurahan + '">' + value
+                                        .nama_desa_kelurahan + '</option>');
+                                });
+                            } else {
+                                $("#desa_ortu").append(' < option > --Pilih Desa-- < /option>');
+                            }
+                        }
+                    });
+                } else {
+                    $("#desa_ortu").append(' < option > --Pilih Desa-- < /option>');
+                }
+            });
+
 
             $('.cari_orangtua').click(function(e) {
                 $.LoadingOverlay("show");
@@ -241,6 +284,7 @@
                                 $('#kec_ortu').val(res.data.kode_kecamatan).trigger('change');
                                 $('#desa_ortu').val(res.data.kode_desa).trigger('change');
                                 $('#negara_ortu').val(res.data.negara).trigger('change');
+
                                 $.LoadingOverlay("hide", true);
 
                                 var date = new Date();
@@ -305,98 +349,13 @@
                     });
                 }
             });
-
             $('.reset_form').click(function(e) {
                 $.LoadingOverlay("show");
                 $("#form_pasien_bayi")[0].reset();
                 document.getElementById('card_desc_bpjs').style.display = "none";
                 $.LoadingOverlay("hide");
             });
-            $('.simpan-data').click(function(e) {
-                swal.fire({
-                    icon: 'question',
-                    title: 'ANDA YAKIN SIMPAN DATA INI ?',
-                    showDenyButton: true,
-                    confirmButtonText: 'Pilih',
-                    denyButtonText: `Batal`,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            data: {
-                                rm_ibu: $('#rm_ibu').val(),
-                                nik_ortu: $('#nik_ortu').val(),
-                                no_bpjs_ortu: $('#no_bpjs_ortu').val(),
-                                nama_ortu: $('#nama_ortu').val(),
-                                tempat_lahir_ortu: $('#tempat_lahir_ortu').val(),
-                                alamat_lengkap_ortu: $('#alamat_lengkap_ortu').val(),
-                                no_hp_ortu: $('#no_hp_ortu').val(),
-                                no_telp_ortu: $('#no_telp_ortu').val(),
-                                tgl_lahir_ortu: $('#tgl_lahir_ortu').val(),
-                                jk_ortu: $('#jk_ortu').val(),
-                                agama_ortu: $('#agama_ortu').val(),
-                                pendidikan_ortu: $('#pendidikan_ortu').val(),
-                                pekerjaan_ortu: $('#pekerjaan_ortu').val(),
-                                kewarganegaraan_ortu: $('#kewarganegaraan_ortu').val(),
-                                provinsi_ortu: $('#provinsi_ortu').val(),
-                                kab_ortu: $('#kab_ortu').val(),
-                                kec_ortu: $('#kec_ortu').val(),
-                                desa_ortu: $('#desa_ortu').val(),
-                                negara_ortu: $('#negara_ortu').val(),
-                                isbpjs: $('#isbpjs').val(),
-                                isbpjs_keterangan: $('#isbpjs_keterangan').val(),
 
-                                nama_bayi: $('#nama_bayi').val(),
-                                tempat_lahir_bayi: $('#tempat_lahir_bayi').val(),
-                                jk_bayi: $('#jk_bayi').val(),
-                                tgl_lahir_bayi: $('#tgl_lahir_bayi').val(),
-                            },
-                            url: "{{ route('pasien_bayi.create') }}",
-                            type: "POST",
-                            dataType: 'json',
-                            success: function(res) {
-                                console.log(res);
-                                console.log(res.rm_bayi);
-                                if (res.is_bpjs > 0) {
-                                    window.location.href =
-                                        "{{ route('ranapumum.bayi') }}?rmby=" + res
-                                        .rm_bayi;
-                                } else {
-                                    window.location.href =
-                                        "{{ route('ranapbpjs.bayi') }}?rmby=" + res
-                                        .rm_bayi + "&nomorkartu=" + res.no_bpjs_ortu;
-                                }
-                            },
-                            error: function(res) {
-                                heart();
-                                console.log(res);
-                                if (res.responseJSON) {
-                                    $.each(res.responseJSON.errors, function(index,
-                                        value) {
-                                        console.log(value);
-                                        console.log(index);
-                                        $('#validation-errors').append(
-                                            '<div class="alert-error"><h6>' +
-                                            index + ' : ' +
-                                            value + '</h6></div>');
-                                    });
-                                }
-                            }
-
-
-                        });
-                    }
-                })
-
-            });
         });
-    </script>
-    <script>
-        function heart() {
-            document.getElementById("validation-errors").style.display = "block"
-            setTimeout(function() {
-                document.getElementById("validation-errors").style.display = "none"
-            }, 5000);
-            $('.alert-error').remove();
-        }
     </script>
 @endsection

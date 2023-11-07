@@ -88,16 +88,16 @@
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kabupaten_pasien" label="Kabupaten" id="kab_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="kab_pasien_first">{{ $pasien->kabupatens->nama_kabupaten_kota }}
+                                        <option id="kab_pasien_first">{{ $pasien->kabupaten==null?'data belum diisi':$pasien->kabupatens->nama_kabupaten_kota }}
                                         </option>
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kecamatan_pasien" label="Kecamatan" id="kec_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="kec_pasien_first">{{ $pasien->kecamatans->nama_kecamatan }}</option>
+                                        <option id="kec_pasien_first">{{ $pasien->kecamatan==null?'data belum diisi':$pasien->kecamatans->nama_kecamatan }}</option>
                                     </x-adminlte-select>
                                     <x-adminlte-select name="desa_pasien" label="Desa" id="desa_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="desa_pasien_first">{{ $pasien->desas->nama_desa_kelurahan }}</option>
+                                        <option id="desa_pasien_first">{{ $pasien->desa==null?'data belum diisi':$pasien->desas->nama_desa_kelurahan }}</option>
                                     </x-adminlte-select>
                                     <x-adminlte-select2 name="negara" label="Negara" id="negara_pasien"
                                         fgroup-class="col-md-6">

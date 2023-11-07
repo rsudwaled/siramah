@@ -384,7 +384,8 @@ Route::middleware('auth')->group(function () {
     
     //RANAP BAYI
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\RanapIGDController::class, 'ranapBPJSBayi'])->name('ranapbpjs.bayi');
-    Route::get('/ranap-umum/pasien-bayi/', [App\Http\Controllers\RanapIGDController::class, 'ranapUMUMBayi'])->name('ranapumum.bayi');
+    Route::get('/ranap-umum/pasien-bayi/{rm}', [App\Http\Controllers\RanapIGDController::class, 'ranapUMUMBayi'])->name('ranapumum.bayi');
+    Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\RanapIGDController::class, 'ranapBayiStore'])->name('ranapbayi.store');
 
 
 });
