@@ -35,12 +35,16 @@
             <div class="col-md-4">
                 <dl class="row">
                     <dt class="col-sm-3 m-0">Kelas / Penjamin</dt>
-                    <dd class="col-sm-9 m-0">{{ $kunjungan->kelas }} /  {{ $kunjungan->penjamin_simrs->nama_penjamin }}</dd>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->kelas }} / {{ $kunjungan->penjamin_simrs->nama_penjamin }}
+                    </dd>
                     <dt class="col-sm-3 m-0">No SEP</dt>
                     <dd class="col-sm-9 m-0">{{ $kunjungan->no_sep }}</dd>
                     <dt class="col-sm-3 m-0">Status</dt>
                     <dd class="col-sm-9 m-0">{{ $kunjungan->status->status_kunjungan }}</dd>
-
+                    <dt class="col-sm-3 m-0">Groupping</dt>
+                    <dd class="col-sm-9 m-0">{{ $kunjungan->budget->kode_cbg ?? 'Belum Groupping' }}</dd>
+                    <dt class="col-sm-3 m-0">Tarif E-Klaim</dt>
+                    <dd class="col-sm-9 m-0">{{ money($kunjungan->budget->tarif_inacbg ?? 0, 'IDR') }}</dd>
                 </dl>
             </div>
         </div>

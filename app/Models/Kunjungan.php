@@ -48,10 +48,6 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Paramedis::class, 'kode_paramedis', 'kode_paramedis');
     }
-    public function layanan()
-    {
-        return $this->hasOne(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
-    }
     public function assesmen_dokter()
     {
         return $this->hasOne(AssesmenDokter::class, 'id_kunjungan', 'kode_kunjungan');
