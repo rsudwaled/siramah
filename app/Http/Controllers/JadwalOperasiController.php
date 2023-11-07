@@ -72,7 +72,7 @@ class JadwalOperasiController extends APIController
         $request['tanggalawal'] = Carbon::parse($request->tanggalawal)->startOfDay();
         $request['tanggalakhir'] = Carbon::parse($request->tanggalakhir)->endOfDay();
         // end auth token
-        $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->limit(5)->get();
+        $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
             $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
