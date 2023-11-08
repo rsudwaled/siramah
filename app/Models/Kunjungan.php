@@ -98,6 +98,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(TagihanPasien::class, 'rm_counter',   'rm_counter');
     }
+    public function ruanganRawat()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_ruangan',   'id_ruangan');
+    }
 
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()

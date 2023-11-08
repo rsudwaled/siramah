@@ -65,76 +65,7 @@
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
-                                {{-- <div class="col-lg-2">
-                                    @if ($knj_aktif > 0)
-                                        <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                            data-toggle="modal" data-target="#tutupKunjungan">Tutup
-                                            kunjungan</button>
-                                        <button type="button" class="btn btn-block bg-gradient-danger btn-sm mb-2">Ada
-                                            Kunjungan Yang Masih Aktif</button>
-                                    @else
-                                        <button type="button" class="btn btn-block bg-gradient-warning btn-sm mb-2"
-                                            data-toggle="modal" data-target="#bukaKunjungan">Buka
-                                            kunjungan</button>
-                                    @endif
-
-                                    <x-adminlte-modal id="tutupKunjungan" title="Tutup Kunjungan RM {{ $pasien->no_rm }}"
-                                        size="lg" theme="primary" v-centered static-backdrop>
-                                        <form action="{{ route('tutup-kunjungan-pigd') }}" id="tutupKunjunganbyCounter"
-                                            method="post">
-                                            @csrf
-                                            @method('PUT')
-                                            <div class="modal-body">
-                                                <div class="col-lg-12">
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <x-adminlte-input name="rm_tk" label="No RM"
-                                                                value="{{ $pasien->no_rm }}" disable-feedback disabled />
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
-                                                                placeholder="masukan kode kunjungan" disable-feedback />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <x-slot name="footerSlot">
-                                                <x-adminlte-button theme="danger" class="mr-auto" label="batal"
-                                                    data-dismiss="modal" />
-                                                <x-adminlte-button type="submit" form="tutupKunjunganbyCounter"
-                                                    class="btn btn-sm m-1 bg-green float-right" label="Tutup Kunjungan" />
-                                            </x-slot>
-                                        </form>
-                                    </x-adminlte-modal>
-                                    <x-adminlte-modal id="bukaKunjungan" title="Buka Kunjungan RM {{ $pasien->no_rm }}"
-                                        size="lg" theme="warning" v-centered static-backdrop>
-                                        <form action="{{ route('buka-kunjungan-pigd') }}" method="post"
-                                            id="bukaKunjunganbyCounter">
-                                            @csrf
-                                            @method('PUT')
-                                            <div class="modal-body">
-                                                <div class="col-lg-12">
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <x-adminlte-input name="rm_tk" label="No RM"
-                                                                value="{{ $pasien->no_rm }}" disable-feedback disabled />
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <x-adminlte-input name="kunjungan_tk" label="Kode Kunjungan"
-                                                                placeholder="masukan kode kunjungan" disable-feedback />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <x-slot name="footerSlot">
-                                                <x-adminlte-button theme="danger" class="mr-auto" label="batal"
-                                                    data-dismiss="modal" />
-                                                <x-adminlte-button theme="success" type="submit"
-                                                    form="bukaKunjunganbyCounter" label="Buka Kunjungan" />
-                                            </x-slot>
-                                        </form>
-                                    </x-adminlte-modal>
-                                </div> --}}
+                              
                             </div>
                         </div>
                     </x-adminlte-card>
@@ -189,7 +120,7 @@
                                             no bpjs</button>
                                     @endif
                                     @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
-                                    <a href="{{route('form-pasien-bpjs',['nik'=>$pasien->nik_bpjs,'no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>0])}}" class="btn btn-block btn-xl btn-warning btn-flat">daftarkan <b>dipasien bpjs</b></a>
+                                    <a href="{{route('form-pasien-bpjs',['nik'=>$pasien->nik_bpjs,'no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>0])}}" class="btn btn-block btn-xl btn-warning btn-flat withLoad">daftarkan <b>dipasien bpjs</b></a>
                                     @endif
                                 </div>
                             </div>

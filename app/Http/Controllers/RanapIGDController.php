@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use DB;
+use Auth;
 
 class RanapIGDController extends APIController
 {
@@ -554,7 +555,7 @@ class RanapIGDController extends APIController
         $createKunjungan->kelas = $request->kelas_rawat;
         $createKunjungan->hak_kelas = $request->hak_kelas;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
-        $createKunjungan->id_ruangan = $request->id_ruangan;
+        $createKunjungan->id_ruangan = $request->idRuangan;
         $createKunjungan->no_bed = $ruangan->no_bed;
         $createKunjungan->kamar = $ruangan->nama_kamar;
         $createKunjungan->pic = Auth::user()->id;

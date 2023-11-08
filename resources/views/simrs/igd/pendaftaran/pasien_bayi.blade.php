@@ -8,6 +8,100 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
+            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan UGK :">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @php
+                                $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
+                                $config['order'] = ['0', 'asc'];
+                                $config['paging'] = false;
+                                $config['info'] = false;
+                                $config['scrollY'] = '300px';
+                                $config['scrollCollapse'] = true;
+                                $config['scrollX'] = true;
+                            @endphp
+                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped
+                                bordered hoverable compressed>
+                                @foreach ($kunjungan_igd as $item)
+                                    <tr>
+                                        <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM : {{ $item->pasien->no_rm }}
+                                            <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
+                                            {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }}
+                                        </td>
+                                        <td>alamat : {{ $item->pasien->alamat }} / <br>
+                                            {{ $item->pasien->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $item->pasien->desas->nama_desa_kelurahan . ' , Kec. ' . $item->pasien->kecamatans->nama_kecamatan . ' - Kab. ' . $item->pasien->kabupatens->nama_kabupaten_kota }}
+                                        </td>
+                                        <td>{{ $item->counter }}</td>
+                                        <td>{{ $item->kode_kunjungan }}</td>
+                                        <td>{{ $item->unit->nama_unit }}</td>
+                                        <td>{{ $item->tgl_masuk }}</td>
+                                        <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
+                                        </td>
+                                        <td>{{ $item->kode_penjamin }}</td>
+                                        <td>
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-success btn-block btn-flat btn-xs show-formbayi"
+                                                data-kunjungan="{{ $item->kode_kunjungan }}"
+                                                data-rmibu="{{ $item->no_rm }}">daftarkan bayi</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </x-adminlte-datatable>
+                        </div>
+                        <div class="col-lg-12">
+                            <a href="{{ route('pendaftaran.pasien') }}"
+                                class="btn btn-secondary btn-sm btn-flat float-right">kembali ke pendaftaran</a>
+                        </div>
+                    </div>
+                </div>
+            </x-adminlte-card>
+            <x-adminlte-modal id="formBayi" title="Data Bayi" theme="success" size='lg' disable-animations>
+                <div class="col-lg-12">
+                    <div class="alert alert-warning alert-dismissible">
+                        <h5>
+                            <i class="icon fas fa-users"></i>Informasi Bayi :
+                        </h5>
+                    </div>
+                    <form id="form_pasien_bayi" method="post" action="{{ route('pasien_bayi.create') }}">
+                        @csrf
+                        <div class="row">
+                            <input type="hidden" name="isbpjs" id="isbpjs">
+                            <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
+                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *"
+                                placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
+
+                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir *"
+                                placeholder="masukan kota ketika bayi lahir" fgroup-class="col-md-12" disable-feedback />
+
+                            @php $config = ['format' => 'DD-MM-YYYY']; @endphp
+                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
+                                label="Tanggal Lahir *" :config="$config"
+                                value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input-date>
+                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *" id="jk_bayi"
+                                fgroup-class="col-md-6">
+                                <option value="L">Laki-Laki</option>
+                                <option value="P">Perempuan</option>
+                            </x-adminlte-select>
+
+                            <x-adminlte-input name="rm_ibu" id="rm_ibu" label="NIK ORANTUA **" type="text" disabled
+                                fgroup-class="col-md-12" disable-feedback />
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" />
+                                <x-adminlte-button class="float-right save-bayi" theme="success" label="Simpan Data" />
+                            </x-slot>
+                        </div>
+                    </form>
+                </div>
+            </x-adminlte-modal>
+        </div>
+        {{-- <div class="col-lg-12">
             @if ($errors->any())
                 <div class="alert alert-danger alert-error" id="validation-errors">
                     <ul>
@@ -33,15 +127,15 @@
                             <input type="hidden" name="isbpjs" id="isbpjs">
                             <input type="hidden" name="rm_ibu" id="rm_ibu">
                             <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
-                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi"
+                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *"
                                 placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
 
-                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir"
+                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir *"
                                 placeholder="masukan nik orangtua bayi" fgroup-class="col-md-12" disable-feedback />
 
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                             <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
-                                label="Tanggal Lahir" :config="$config"
+                                label="Tanggal Lahir *" :config="$config"
                                 value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
@@ -49,12 +143,13 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input-date>
-                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin" id="jk_bayi" fgroup-class="col-md-6">
+                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *" id="jk_bayi"
+                                fgroup-class="col-md-6">
                                 <option value="L">Laki-Laki</option>
                                 <option value="P">Perempuan</option>
                             </x-adminlte-select>
 
-                            <x-adminlte-input name="nik_orangtua" id="nik_orangtua" label="NIK ORANTUA" type="number"
+                            <x-adminlte-input name="nik_orangtua" id="nik_orangtua" label="NIK ORANTUA **" type="number"
                                 placeholder="masukan nik orangtua bayi" fgroup-class="col-md-12" disable-feedback />
                             <button type="button"
                                 class="btn btn-flat btn-block bg-gradient-primary btn-sm mr-2 mb-2 cari_orangtua">Cari Orang
@@ -79,15 +174,16 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="nik_ortu" id="nik_ortu" label="NIK"
+                                    <x-adminlte-input name="nik_ortu" id="nik_ortu" label="NIK *"
                                         placeholder="masukan nik" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-input name="no_bpjs_ortu" id="no_bpjs_ortu" label="BPJS"
+                                    <x-adminlte-input name="no_bpjs_ortu" id="no_bpjs_ortu" label="BPJS **"
                                         placeholder="masukan bpjs" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-input name="nama_ortu" id="nama_ortu" label="Nama"
+                                    <x-adminlte-input name="nama_ortu" id="nama_ortu" label="Nama *"
                                         placeholder="masukan nama orangtua" fgroup-class="col-md-12" disable-feedback />
-                                    <x-adminlte-input name="tempat_lahir_ortu" id="tempat_lahir_ortu" label="Tempat lahir"
-                                        placeholder="masukan tempat" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-select name="jk_ortu" id="jk_ortu" label="Jenis Kelamin"
+                                    <x-adminlte-input name="tempat_lahir_ortu" id="tempat_lahir_ortu"
+                                        label="Tempat lahir *" placeholder="masukan tempat" fgroup-class="col-md-6"
+                                        disable-feedback />
+                                    <x-adminlte-select name="jk_ortu" id="jk_ortu" label="Jenis Kelamin *"
                                         fgroup-class="col-md-6">
                                         <option value="P">
                                             Perempuan
@@ -97,8 +193,8 @@
                                         </option>
                                     </x-adminlte-select>
                                     @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                                    <x-adminlte-input-date name="tgl_lahir_ortu" id="tgl_lahir_ortu" fgroup-class="col-md-6"
-                                        label="Tanggal Lahir" :config="$config"
+                                    <x-adminlte-input-date name="tgl_lahir_ortu" id="tgl_lahir_ortu"
+                                        fgroup-class="col-md-6" label="Tanggal Lahir *" :config="$config"
                                         value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
@@ -106,21 +202,21 @@
                                             </div>
                                         </x-slot>
                                     </x-adminlte-input-date>
-                                    <x-adminlte-select name="agama_ortu" id="agama_ortu" label="Agama"
+                                    <x-adminlte-select name="agama_ortu" id="agama_ortu" label="Agama *"
                                         fgroup-class="col-md-6">
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->ID }}">
                                                 {{ $item->agama }}</option>
                                         @endforeach
                                     </x-adminlte-select>
-                                    <x-adminlte-select name="pekerjaan_ortu" id="pekerjaan_ortu" label="Pekerjaan"
+                                    <x-adminlte-select name="pekerjaan_ortu" id="pekerjaan_ortu" label="Pekerjaan *"
                                         fgroup-class="col-md-6">
                                         @foreach ($pekerjaan as $item)
                                             <option value="{{ $item->ID }}">
                                                 {{ $item->pekerjaan }}</option>
                                         @endforeach
                                     </x-adminlte-select>
-                                    <x-adminlte-select name="pendidikan_ortu" id="pendidikan_ortu" label="Pendidikan"
+                                    <x-adminlte-select name="pendidikan_ortu" id="pendidikan_ortu" label="Pendidikan *"
                                         fgroup-class="col-md-6">
                                         @foreach ($pendidikan as $item)
                                             <option value="{{ $item->ID }}">
@@ -132,11 +228,11 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="no_telp_ortu" id="no_telp_ortu" label="No Telpon"
+                                    <x-adminlte-input name="no_telp_ortu" id="no_telp_ortu" label="No Telpon **"
                                         placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-input name="no_hp_ortu" id="no_hp_ortu" label="No Hp"
+                                    <x-adminlte-input name="no_hp_ortu" id="no_hp_ortu" label="No Hp *"
                                         placeholder="masukan hp" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-select2 name="provinsi_ortu" label="Provinsi" id="provinsi_ortu"
+                                    <x-adminlte-select2 name="provinsi_ortu" label="Provinsi *" id="provinsi_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($provinsi as $item)
                                             <option value="{{ $item->kode_provinsi }}">
@@ -144,7 +240,7 @@
                                             </option>
                                         @endforeach
                                     </x-adminlte-select2>
-                                    <x-adminlte-select2 name="kab_ortu" label="Kabupaten" id="kab_ortu"
+                                    <x-adminlte-select2 name="kab_ortu" label="Kabupaten *" id="kab_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($kab as $item)
                                             <option value="{{ $item->kode_kabupaten_kota }}">
@@ -152,7 +248,7 @@
                                             </option>
                                         @endforeach
                                     </x-adminlte-select2>
-                                    <x-adminlte-select2 name="kec_ortu" label="Kecamatan" id="kec_ortu"
+                                    <x-adminlte-select2 name="kec_ortu" label="Kecamatan *" id="kec_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($kec as $item)
                                             <option value="{{ $item->kode_kecamatan }}">
@@ -160,10 +256,10 @@
                                             </option>
                                         @endforeach
                                     </x-adminlte-select2>
-                                    <x-adminlte-select2 name="desa_ortu" label="Desa" id="desa_ortu"
+                                    <x-adminlte-select2 name="desa_ortu" label="Desa *" id="desa_ortu"
                                         fgroup-class="col-md-6">
                                     </x-adminlte-select2>
-                                    <x-adminlte-select2 name="negara_ortu" label="Negara" id="negara_ortu"
+                                    <x-adminlte-select2 name="negara_ortu" label="Negara *" id="negara_ortu"
                                         fgroup-class="col-md-6">
                                         @foreach ($negara as $item)
                                             <option value="{{ strtoupper($item->nama_negara) }}">
@@ -171,11 +267,11 @@
                                         @endforeach
                                     </x-adminlte-select2>
                                     <x-adminlte-select name="kewarganegaraan_ortu" id="kewarganegaraan_ortu"
-                                        label="Kewarganegaraan" fgroup-class="col-md-6">
+                                        label="Kewarganegaraan *" fgroup-class="col-md-6">
                                         <option value="1">WNI</option>
                                         <option value="0">WNA</option>
                                     </x-adminlte-select>
-                                    <x-adminlte-textarea name="alamat_lengkap_ortu" label="Alamat Lengkap (RT/RW)"
+                                    <x-adminlte-textarea name="alamat_lengkap_ortu" label="Alamat Lengkap (RT/RW) *"
                                         fgroup-class="col-md-12"></x-adminlte-textarea>
                                 </div>
                             </div>
@@ -193,7 +289,7 @@
                 <x-adminlte-button label="Reset Form" class="btn btn-flat reset_form" theme="warning"
                     icon="fas fa-retweet" />
             </form>
-        </div>
+        </div> --}}
     </div>
 
 @stop
@@ -205,11 +301,6 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        // document.getElementById("validation-errors").style.display = "block";
-        // setTimeout(function() {
-        //     document.getElementById("validation-errors").style.display = "none"
-        // }, 5000);
-        // $('.alert-error').remove();
         $(function() {
             $.ajaxSetup({
                 headers: {
@@ -356,6 +447,20 @@
                 $.LoadingOverlay("hide");
             });
 
+
+            $('.show-formbayi').click(function(e) {
+                var kunjungan = $(this).data('kunjungan');
+                var rm = $(this).data('rmibu');
+                $("#rm_ibu").val($(this).data('rmibu'));
+                $('#formBayi').modal('show');
+            });
+            
+            $('.show-formbayi').click(function(e) {
+                var kunjungan = $(this).data('kunjungan');
+                var rm = $(this).data('rmibu');
+                $("#rm_ibu").val($(this).data('rmibu'));
+                $('#formBayi').modal('show');
+            });
         });
     </script>
 @endsection
