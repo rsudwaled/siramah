@@ -48,30 +48,28 @@ class IGDBAYIController extends Controller
 
     public function pasienBayiCreate(Request $request)
     {
-        
+        dd($request->all());
+        $ortubayi = Pasien::firstWhere('no_rm', $request->rm_ibu);
         $last_rm = Pasien::latest('no_rm')->first(); // 23982846
         $rm_last = substr($last_rm->no_rm, -6); //982846
         $add_rm_new = $rm_last + 1; //982847
-        $add_rmbayi_new = $rm_last + 2; //982847
         $th = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_new = $th . $add_rm_new;
-        $rmbayi_new = $th . $add_rmbayi_new;
+        $rm_bayi = $th . $add_rm_new;
 
-        $kontak = $request->no_hp_ortu==null? $request->no_telp_ortu:$request->no_hp_ortu; 
-        $rm_ibu = $request->rm_ibu == null ? $rm_new : $request->rm_ibu;
-        $rm_bayi = $request->rm_ibu == null ? $rmbayi_new: $rm_new;
+        $kontak = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $bayi = new PasienBayiIGD();
-        $bayi->nik_ortu = $request->nik_ortu;
-        $bayi->no_bpjs_ortu = $request->no_bpjs_ortu;
-        $bayi->nama_ortu = $request->nama_ortu;
-        $bayi->tempat_lahir_ortu = $request->tempat_lahir_ortu;
-        $bayi->alamat_lengkap_ortu = $request->alamat_lengkap_ortu;
+        $bayi->nik_ortu = $ortubayi->nik_bpjs;
+        $bayi->no_bpjs_ortu = $ortubayi->no_Bpjs;
+        $bayi->nama_ortu = $ortubayi->nama_px;
+        $bayi->tempat_lahir_ortu = $ortubayi->tempat_lahir;
+        $bayi->alamat_lengkap_ortu = $ortubayi->alamat;
         $bayi->no_hp_ortu = $kontak;
+        $bayi->kunjungan_ortu = $request->kunjungan;
         
         $bayi->rm_bayi  = $rm_bayi;
-        $bayi->rm_ibu   = $rm_ibu;
+        $bayi->rm_ibu   = $ortubayi->no_rm;
         $bayi->nama_bayi = $request->nama_bayi;
         $bayi->jk_bayi = $request->jk_bayi;
         $bayi->tgl_lahir_bayi = $tgl_lahir_bayi;
@@ -79,16 +77,19 @@ class IGDBAYIController extends Controller
         $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
         if($bayi->save())
         {
-            $hub =  $request->jk_ortu=='L'? 1 : 2 ;
-            $keluarga = KeluargaPasien::create([
-                'no_rm' => $rm_bayi,
-                'nama_keluarga' => $request->nama_ortu,
-                'hubungan_keluarga' => $hub,
-                'alamat_keluarga' => $request->alamat_lengkap_ortu,
-                'telp_keluarga' => $kontak,
-                'input_date' => Carbon::now(),
-                'Update_date' => Carbon::now(),
-            ]);
+            $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
+            $cekOrtu = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
+           if(!$cekOrtu){
+                $keluarga = KeluargaPasien::create([
+                    'no_rm' => $rm_bayi,
+                    'nama_keluarga' =>$ortubayi->nama_px,
+                    'hubungan_keluarga' => $hub,
+                    'alamat_keluarga' => $ortubayi->alamat,
+                    'telp_keluarga' => $kontak,
+                    'input_date' => Carbon::now(),
+                    'Update_date' => Carbon::now(),
+                ]);
+           }
         }
         return redirect()->route('ranapumum.bayi',['rm'=>$bayi->rm_bayi]);
     }

@@ -68,14 +68,14 @@
                         <div class="row">
                             <input type="hidden" name="isbpjs" id="isbpjs">
                             <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
-                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *"
+                            <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *" required
                                 placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
 
-                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir *"
+                            <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir *" required
                                 placeholder="masukan kota ketika bayi lahir" fgroup-class="col-md-12" disable-feedback />
 
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
+                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6" required
                                 label="Tanggal Lahir *" :config="$config"
                                 value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                 <x-slot name="prependSlot">
@@ -84,17 +84,19 @@
                                     </div>
                                 </x-slot>
                             </x-adminlte-input-date>
-                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *" id="jk_bayi"
+                            <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *" id="jk_bayi" required
                                 fgroup-class="col-md-6">
                                 <option value="L">Laki-Laki</option>
                                 <option value="P">Perempuan</option>
                             </x-adminlte-select>
 
                             <x-adminlte-input name="rm_ibu" id="rm_ibu" label="NIK ORANTUA **" type="text" disabled
-                                fgroup-class="col-md-12" disable-feedback />
+                                fgroup-class="col-md-6" disable-feedback />
+                            <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan **" type="text" disabled
+                                fgroup-class="col-md-6" disable-feedback />
                             <x-slot name="footerSlot">
                                 <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" />
-                                <x-adminlte-button class="float-right save-bayi" theme="success" label="Simpan Data" />
+                                <x-adminlte-button class="float-right save-bayi" type="submit" theme="success" label="Simpan Data" />
                             </x-slot>
                         </div>
                     </form>
@@ -336,110 +338,7 @@
             });
 
 
-            $('.cari_orangtua').click(function(e) {
-                $.LoadingOverlay("show");
-                var nikOrangtua = $('#nik_orangtua').val();
-                if (!nikOrangtua) {
-                    $.LoadingOverlay("hide");
-                    Swal.fire('NIK Orangtua tidak boleh kosong!',
-                        ' silahkan masukan nik orangtua yang akan dicari', 'error');
-                }
-
-                if (nikOrangtua) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('cari-ortu.bayi') }}?nik_ortu=" + nikOrangtua,
-                        dataType: 'JSON',
-                        success: function(res) {
-                            console.log(res);
-                            if (res.data != null) {
-                                $('#rm_ibu').val(res.data.no_rm);
-                                $('#nik_ortu').val(res.data.nik_bpjs);
-                                $('#no_bpjs_ortu').val(res.data.no_Bpjs);
-                                $('#nama_ortu').val(res.data.nama_px);
-                                $('#tempat_lahir_ortu').val(res.data.tempat_lahir);
-                                $('#alamat_lengkap_ortu').val(res.data.alamat);
-                                $('#no_hp_ortu').val(res.data.no_hp);
-                                $('#no_telp_ortu').val(res.data.no_telp);
-                                $('#tgl_lahir_ortu').val(res.data.tgl_lahir);
-                                $('#jk_ortu').val(res.data.jenis_kelamin).trigger('change');
-                                $('#agama_ortu').val(res.data.agama).trigger('change');
-                                $('#pendidikan_ortu').val(res.data.pendidikan).trigger(
-                                    'change');
-                                $('#pekerjaan_ortu').val(res.data.pekerjaan).trigger('change');
-                                $('#kewarganegaraan_ortu').val(res.data.kewarganegaraan)
-                                    .trigger('change');
-                                $('#provinsi_ortu').val(res.data.kode_propinsi).trigger(
-                                    'change');
-                                $('#kab_ortu').val(res.data.kode_kabupaten).trigger('change');
-                                $('#kec_ortu').val(res.data.kode_kecamatan).trigger('change');
-                                $('#desa_ortu').val(res.data.kode_desa).trigger('change');
-                                $('#negara_ortu').val(res.data.negara).trigger('change');
-
-                                $.LoadingOverlay("hide", true);
-
-                                var date = new Date();
-                                var tanggal = date.getFullYear() + "-" + (date.getMonth() + 1) +
-                                    "-" + date.getDate();
-                                $.ajax({
-                                    type: "GET",
-                                    url: "{{ route('peserta_nik') }}",
-                                    data: {
-                                        nik: nikOrangtua,
-                                        tanggal: tanggal,
-                                    },
-                                    dataType: 'JSON',
-                                    success: function(res) {
-                                        console.log(res);
-                                        if (res.metadata.code == 200) {
-                                            document.getElementById(
-                                                    'card_desc_bpjs').style
-                                                .display = "block";
-                                            $('#cek_bpjs').text('STATUS BPJS : ' +
-                                                res.response.peserta
-                                                .statusPeserta.keterangan)
-                                            $('#cek_keterangan_bpjs').text(
-                                                ' HAK KELAS : ' + res.response
-                                                .peserta.hakKelas.keterangan)
-                                            $('#cek_jenis_peserta').text(
-                                                ' Jenis Peserta : ' + res
-                                                .response.peserta.jenisPeserta
-                                                .keterangan)
-                                            if (res.response.peserta.statusPeserta
-                                                .kode == 0) {
-                                                $('#isbpjs').val(res.response
-                                                    .peserta.statusPeserta.kode);
-                                                $('#isbpjs_keterangan').val(res
-                                                    .response.peserta
-                                                    .statusPeserta.keterangan);
-                                                $('#cek_bpjs').css(
-                                                    'style:text-green');
-                                            } else {
-                                                $('#isbpjs').val(res.response
-                                                    .peserta.statusPeserta.kode);
-                                                $('#isbpjs_keterangan').val(res
-                                                    .response.peserta
-                                                    .statusPeserta.keterangan);
-                                            }
-                                        } else {
-                                            $('#cek_bpjs').css('style:text-green')
-                                        }
-                                    }
-                                });
-
-                            } else {
-                                Swal.fire('NIK Orangtua tidak ditemukan!',
-                                    ' silahkan masukan data orangtua baru / periksa kembali nik yang dimasukan',
-                                    'error');
-                                $.LoadingOverlay("hide", true);
-                                document.getElementById('card_desc_bpjs').style.display =
-                                    "none";
-                                $("#form_pasien_bayi")[0].reset()
-                            }
-                        }
-                    });
-                }
-            });
+            
             $('.reset_form').click(function(e) {
                 $.LoadingOverlay("show");
                 $("#form_pasien_bayi")[0].reset();
@@ -449,17 +348,30 @@
 
 
             $('.show-formbayi').click(function(e) {
-                var kunjungan = $(this).data('kunjungan');
-                var rm = $(this).data('rmibu');
                 $("#rm_ibu").val($(this).data('rmibu'));
+                $("#kunjungan").val($(this).data('kunjungan'));
                 $('#formBayi').modal('show');
             });
             
-            $('.show-formbayi').click(function(e) {
-                var kunjungan = $(this).data('kunjungan');
-                var rm = $(this).data('rmibu');
-                $("#rm_ibu").val($(this).data('rmibu'));
-                $('#formBayi').modal('show');
+            $('.save-bayi').click(function(e) {
+               
+                $.ajax({
+                        type: "post",
+                        url: "{{ route('pasien_bayi.create') }}",
+                        data:{
+                            rm:$("#rm_ibu").val(),
+                            kunjungan:$("#kunjungan").val(),
+                            nama_bayi:$("#nama_bayi").val(),
+                            jk_bayi:$("#jk_bayi").val(),
+                            tgl_lahir_bayi:$("#tgl_lahir_bayi").val(),
+                            tempat_lahir_bayi:$("#tempat_lahir_bayi").val(),
+                        },
+                        dataType: 'JSON',
+                        success: function(res) {
+                           
+                        }
+                    });
+                $('#formBayi').modal('hide');
             });
         });
     </script>
