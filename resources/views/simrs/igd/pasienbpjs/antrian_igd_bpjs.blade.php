@@ -139,11 +139,9 @@
                                                         <h3 class="card-title" id="no_antrian">No Antrian Belum dipilih?
                                                         </h3>
                                                     </span>
-                                                    <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                    </div>
+                                                    <span class="badge badge-success">
+                                                        <h3 class="card-title" id="tujuan_daftar">-</h3>
+                                                    </span>
                                                 </div>
                                                 <div class="card-body p-0" style="display: block;">
                                                     <div class="col-lg-12">
@@ -166,14 +164,14 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran"
-                                                            label="Pilih Pendaftaran">
-                                                            <option value="0">IGD</option>
-                                                            <option value="1">IGD KEBIDANAN</option>
+                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" disabled
+                                                            label="Tujuan Daftar Pendaftaran">
+                                                            <option value="1">IGD</option>
+                                                            <option value="0">IGD KEBIDANAN</option>
                                                         </x-adminlte-select>
                                                     </div>
                                                 </div>
-                                                <x-adminlte-button type="submit" id="lanjutDaftar" theme="primary"
+                                                <x-adminlte-button type="submit" id="lanjutDaftar" theme="primary" class="withLoad"
                                                     label="Lanjutkan Pendaftaran" />
                                                 <x-adminlte-button id="warningDaftar" theme="danger"
                                                     label="silahkan edit nik pasien terlebih dahulu" />
@@ -554,6 +552,18 @@
                     $.get(getNoAntrian, function(data) {
                         $('#no_antrian').text('No. Antrian : ' + data['no_antri']);
                         $('#send_id_antri').val(antrian_id);
+
+                        var jenis_antrian = data['no_antri'];
+                        var jp = jenis_antrian.substring(0, 1);
+                        var isAntrian = data['isNoAntrian'];
+                        
+                        if (isAntrian > 0) {
+                            $('#tujuan_daftar').text('Untuk Pasien IGD');
+                            $("#pilihPendaftaran").val(1).change();
+                        } else {
+                            $('#tujuan_daftar').text('Untuk Pasien IGD Kebidanan');
+                            $("#pilihPendaftaran").val(0).change();
+                        }
                     })
 
                     Swal.fire('no antrian sudah dipilih', '', 'success')

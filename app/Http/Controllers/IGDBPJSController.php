@@ -76,7 +76,6 @@ class IGDBPJSController extends APIController
                 ->orderBy('tgl_entry', 'desc')
                 ->get();
         }
-        // dd($s_bynik);
         if ($s_bynik) {
             $pasien = Pasien::whereNotNull('no_Bpjs')->where('nik_bpjs', $s_bynik)->limit(100)->get();
         }

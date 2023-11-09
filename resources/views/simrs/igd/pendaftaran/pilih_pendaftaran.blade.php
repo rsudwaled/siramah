@@ -13,8 +13,8 @@
                     <div class="info-box bg-gradient-info">
                         <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
                         <div class="info-box-content  m-4">
-                            <span class="info-box-text">PASIEN IGD UMUM</span>
-                            <span class="info-box-number">daftarkan Sebagai pasien igd umum</span>
+                            <span class="info-box-text">PASIEN IGD UMUM & KEBIDANAN</span>
+                            <span class="info-box-number">daftarkan Sebagai pasien igd umum dan kebidanan</span>
                             <div class="progress">
                                 <div class="progress-bar" style="width: 70%"></div>
                             </div>
@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 
-                <div class="col-sm-6 col-12 pasien-umum" style="cursor: pointer">
+                {{-- <div class="col-sm-6 col-12 pasien-kebidanan" style="cursor: pointer">
                     <div class="info-box bg-gradient-warning">
                         <span class="info-box-icon"><i class="fas fa-baby"></i></span>
                         <div class="info-box-content  m-4">
@@ -33,7 +33,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <div class="col-sm-6 col-12 pasien-bpjs" style="cursor: pointer">
                     <div class="info-box bg-gradient-success">
@@ -101,6 +101,10 @@
                 $.LoadingOverlay("show");
                 window.location.href ="{{route('pendaftaran-pasien-igdbpjs')}}";
             });
+            // $('.pasien-kebidanan').click(function(e) {
+            //     $.LoadingOverlay("show");
+            //     window.location.href ="#";
+            // });
             $('.pasien-bayi').click(function(e) {
                 $.LoadingOverlay("show");
                 window.location.href ="{{route('pendaftaranpasien.bayi')}}";

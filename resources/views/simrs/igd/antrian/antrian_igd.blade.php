@@ -71,16 +71,13 @@
                         </h4>
                         @if ($errors->any())
                             <div class="alert alert-danger">
-                                <h3 class="text-center">TAMBAH PASIEN ERROR!!</h3>
+                                <h6 class="text-center">ERROR INPUT DATA!!</h6>
                                 <ul>
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
                                     @endforeach
-                                    <li>jika pasien bpjs, maka no bpjs wajib diisi</li>
+                                    <li>silahkan lakukan proses input ulang dengan benar</li>
                                 </ul>
-                                <button type="button" class="btn btn-block bg-gradient-success btn-sm" data-toggle="modal"
-                                    data-target="#tambahPasien">Tambah Pasien
-                                    Baru</button>
                             </div>
                         @endif
                     </div>
@@ -152,11 +149,6 @@
                                                     <span class="badge badge-success">
                                                         <h3 class="card-title" id="tujuan_daftar">-</h3>
                                                     </span>
-                                                    <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool">
-                                                            <i class="fas fa-minus"></i>
-                                                        </button>
-                                                    </div>
                                                 </div>
                                                 <div class="card-body p-0" style="display: block;">
                                                     <div class="col-lg-12">
@@ -179,14 +171,14 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="jenisPendaftaran"
-                                                            label="Pilih Pendaftaran">
-                                                            <option value="0">IGD UMUM</option>
-                                                            <option value="1">IGD KEBIDANAN</option>
+                                                        <x-adminlte-select name="pendaftaran_id" id="pendaftaran_id" class="pendaftaran_id"
+                                                            label="Tujuan Pendaftaran">
+                                                            <option value="1">IGD UMUM</option>
+                                                            <option value="0">IGD KEBIDANAN</option>
                                                         </x-adminlte-select>
                                                     </div>
                                                 </div>
-                                                <x-adminlte-button type="submit" id="lanjutDaftar" theme="primary"
+                                                <x-adminlte-button type="submit" id="lanjutDaftar" class="withLoad" theme="primary"
                                                     label="Lanjutkan Pendaftaran" />
                                                 <x-adminlte-button id="warningDaftar" theme="danger"
                                                     label="silahkan edit nik pasien terlebih dahulu" />
@@ -226,27 +218,27 @@
                                                                         <div class="col-lg-6">
                                                                             <div class="row">
                                                                                 <x-adminlte-input name="nik_pasien_baru"
-                                                                                    label="NIK"
+                                                                                    label="NIK *"
                                                                                     placeholder="masukan nik"
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-input name="no_bpjs"
-                                                                                    label="BPJS"
+                                                                                    label="BPJS **"
                                                                                     placeholder="masukan bpjs"
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-input name="nama_pasien_baru"
-                                                                                    label="Nama"
+                                                                                    label="Nama *"
                                                                                     placeholder="masukan nama pasien"
                                                                                     fgroup-class="col-md-12"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-input name="tempat_lahir"
-                                                                                    label="Tempat lahir"
+                                                                                    label="Tempat lahir *"
                                                                                     placeholder="masukan tempat"
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-select name="jk"
-                                                                                    label="Jenis Kelamin"
+                                                                                    label="Jenis Kelamin *"
                                                                                     fgroup-class="col-md-6">
                                                                                     <option value="L">Laki-Laki
                                                                                     </option>
@@ -255,7 +247,7 @@
                                                                                 </x-adminlte-select> @php $config = ['format' => 'DD-MM-YYYY']; @endphp
                                                                                 <x-adminlte-input-date name="tgl_lahir"
                                                                                     fgroup-class="col-md-6"
-                                                                                    label="Tanggal Lahir"
+                                                                                    label="Tanggal Lahir *"
                                                                                     :config="$config">
                                                                                     <x-slot name="prependSlot">
                                                                                         <div
@@ -266,7 +258,7 @@
                                                                                     </x-slot>
                                                                                 </x-adminlte-input-date>
                                                                                 <x-adminlte-select name="agama"
-                                                                                    label="Agama"
+                                                                                    label="Agama *"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($agama as $item)
                                                                                         <option
@@ -275,7 +267,7 @@
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pekerjaan"
-                                                                                    label="Pekerjaan"
+                                                                                    label="Pekerjaan *"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($pekerjaan as $item)
                                                                                         <option
@@ -284,7 +276,7 @@
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="pendidikan"
-                                                                                    label="Pendidikan"
+                                                                                    label="Pendidikan *"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($pendidikan as $item)
                                                                                         <option
@@ -298,17 +290,17 @@
                                                                         <div class="col-lg-6">
                                                                             <div class="row">
                                                                                 <x-adminlte-input name="no_telp"
-                                                                                    label="No Telpon"
+                                                                                    label="No Telpon ***"
                                                                                     placeholder="masukan no tlp"
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-input name="no_hp"
-                                                                                    label="No Hp"
+                                                                                    label="No Hp ***"
                                                                                     placeholder="masukan hp"
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-select name="provinsi_pasien"
-                                                                                    label="Provinsi" id="provinsi_pasien"
+                                                                                    label="Provinsi *" id="provinsi_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($provinsi as $item)
                                                                                         <option
@@ -318,19 +310,19 @@
                                                                                     @endforeach
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="kabupaten_pasien"
-                                                                                    label="Kabupaten" id="kab_pasien"
+                                                                                    label="Kabupaten *" id="kab_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="kecamatan_pasien"
-                                                                                    label="Kecamatan" id="kec_pasien"
+                                                                                    label="Kecamatan *" id="kec_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select name="desa_pasien"
-                                                                                    label="Desa" id="desa_pasien"
+                                                                                    label="Desa *" id="desa_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-select2 name="negara"
-                                                                                    label="Negara" id="negara_pasien"
+                                                                                    label="Negara *" id="negara_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($negara as $item)
                                                                                         <option
@@ -341,14 +333,14 @@
                                                                                 </x-adminlte-select2>
                                                                                 <x-adminlte-select name="kewarganegaraan"
                                                                                     id="kewarganegaraan_pasien"
-                                                                                    label="Kewarganegaraan"
+                                                                                    label="Kewarganegaraan *"
                                                                                     fgroup-class="col-md-6">
                                                                                     <option value="1">WNI</option>
                                                                                     <option value="0">WNA</option>
                                                                                 </x-adminlte-select>
                                                                                 <x-adminlte-textarea
                                                                                     name="alamat_lengkap_pasien"
-                                                                                    label="Alamat Lengkap (RT/RW)"
+                                                                                    label="Alamat Lengkap (RT/RW) *"
                                                                                     placeholder="Alamat Lengkap (RT/RW)"
                                                                                     fgroup-class="col-md-12" />
                                                                             </div>
@@ -364,14 +356,14 @@
                                                                     </div>
                                                                     <div class="row">
                                                                         <x-adminlte-input name="nama_keluarga"
-                                                                            label="Nama Keluarga"
+                                                                            label="Nama Keluarga *"
                                                                             placeholder="masukan nama keluarga"
                                                                             fgroup-class="col-md-12" disable-feedback />
-                                                                        <x-adminlte-input name="kontak" label="Kontak"
+                                                                        <x-adminlte-input name="kontak" label="Kontak *"
                                                                             placeholder="no tlp" fgroup-class="col-md-6"
                                                                             disable-feedback />
                                                                         <x-adminlte-select name="hub_keluarga"
-                                                                            label="Hubungan Dengan Pasien"
+                                                                            label="Hubungan Dengan Pasien *" 
                                                                             fgroup-class="col-md-6">
                                                                             @foreach ($hb_keluarga as $item)
                                                                                 <option value="{{ $item->kode }}">
@@ -379,7 +371,7 @@
                                                                             @endforeach
                                                                         </x-adminlte-select>
                                                                         <x-adminlte-textarea name="alamat_lengkap_sodara"
-                                                                            label="Alamat Lengkap (RT/RW)"
+                                                                            label="Alamat Lengkap (RT/RW) *"
                                                                             placeholder="Alamat Lengkap (RT/RW)"
                                                                             fgroup-class="col-md-12" />
                                                                     </div>
@@ -390,7 +382,7 @@
                                                     <x-slot name="footerSlot">
                                                         <x-adminlte-button theme="danger" class="mr-auto" label="batal"
                                                             data-dismiss="modal" />
-                                                        <x-adminlte-button type="submit" class="float-right"
+                                                        <x-adminlte-button type="submit" class="float-right withLoad"
                                                             theme="info" label="simpan data" />
                                                     </x-slot>
                                                 </x-adminlte-modal>
@@ -429,6 +421,9 @@
 @section('js')
     <script>
         $(document).ready(function() {
+            setTimeout(function () {
+                $('.alert-danger').fadeOut();
+            }, 8000);
             $.LoadingOverlay("hide");
             $('#search').click(function(e) {
                 $.LoadingOverlay("show");
@@ -446,7 +441,7 @@
             var tglLahir = $('#tgl_lahir_search').val();
             var norm = $('#no_rm_search').val();
             if (nik == '' && nama == '' && alamat == '' && tglLahir == '' && norm == '') {
-                Swal.fire('silahkan pilih pencarian pasien berdasarkan kolom inputan yang tersedia, minimal 2 inputan data',
+                Swal.fire('silahkan pilih pencarian pasien berdasarkan prioritas kolom inputan',
                     '', 'info')
             }
             $.get('{{ route('pasien-igd-search') }}', {
@@ -555,12 +550,15 @@
                         $('#ket_no_antri').text('No. Antrian : ' + data['no_antri']);
                         var jenis_antrian = data['no_antri'];
                         var jp = jenis_antrian.substring(0, 1);
-                        if (jp === 'A') {
+                        var isAntrian = data['isNoAntrian'];
+                        
+                        if (isAntrian > 0) {
                             $('#tujuan_daftar').text('Untuk Pasien IGD');
-                            $("#pilihPendaftaran option:selected").val(0);
+                            $(".pendaftaran_id").val('1').change();
+                            $(".pendaftaran_id").val('1');
                         } else {
                             $('#tujuan_daftar').text('Untuk Pasien IGD Kebidanan');
-                            $("#pilihPendaftaran option:selected").val(1);
+                            $(".pendaftaran_id").val('0').change();
                         }
                         $('#tujuan_daftar').val(jp);
                         $('#send_id_antri').val(antrian_id);

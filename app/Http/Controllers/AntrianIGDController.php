@@ -129,14 +129,60 @@ class AntrianIGDController extends APIController
         $s_bydate = $request->tglLahir;
         // $s_bybpjs = $request->nobpjs;
         $s_byrm = $request->norm;
-        
-        if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_byrm){
-            $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");   
-        }
-        else{
+        if($s_bynik && $s_byname && $s_byaddress && $s_bydate && $s_byrm){
+            $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");
+        }else{
             $pasien = Pasien::limit(100)
-                ->orderBy('tgl_entry', 'desc')
-                ->get();
+            ->orderBy('tgl_entry', 'desc')
+            ->get();
+        }
+        
+        // if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_byrm){
+        //     $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");   
+        // }
+        // else{
+        //     $pasien = Pasien::limit(100)
+        //         ->orderBy('tgl_entry', 'desc')
+        //         ->get();
+        // }
+
+        if ($s_bynik) {
+            $pasien = Pasien::where('nik_bpjs', $s_bynik)->get();
+        }
+        if ($s_byrm) {
+            $pasien = Pasien::where('no_rm', $s_byrm)->get();
+        }
+        if ($s_byname) {
+            $pasien = Pasien::where('nama_px', $s_byname)->limit(100)->get();
+        }
+        if ($s_byaddress) {
+            $pasien = Pasien::where('alamat', 'LIKE', '%' . $s_byaddress . '%')->limit(100)->get();
+        }
+        if ($s_bydate) {
+            $pasien = Pasien::where('tgl_lahir', $s_bydate)->limit(100)->get();
+        }
+
+        if ($s_bynik && $s_byname) {
+            $pasien = Pasien::where('nik_bpjs', $s_bynik)
+                ->where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->limit(100)->get();
+        }
+        if ($s_byname && $s_bydate) {
+            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('tgl_lahir', $s_bydate)
+                ->limit(100)->get();
+        }
+        if ($s_byname && $s_byaddress) {
+            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
+                ->limit(100)->get();
+        }
+
+        if ($s_byname && $s_byaddress && $s_bydate) {
+            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $s_byname . '%')
+                ->where('alamat', 'LIKE', '%' . $s_byaddress . '%')
+                ->where('tgl_lahir', $s_bydate)
+                ->limit(100)->get();
         }
         return response()->json([
             'pasien' => $pasien,
@@ -259,8 +305,13 @@ class AntrianIGDController extends APIController
     }
     public function antrianPasienUMUMTerpilih(Request $request)
     {
-        // dd($request->all());
+        $validated = $request->validate([
+            'no_rm' => 'required',
+            'no_antri' => 'required',
+        ]);
+
         $pasien = Pasien::where('no_rm', $request->no_rm)->first();
+        
         $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
         $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
         $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
@@ -272,6 +323,7 @@ class AntrianIGDController extends APIController
         $upd_thp1->update();
 
         $jpdaftar = $request->pendaftaran_id;
+        dd($jpdaftar);
         return redirect()->route('form-pasien',['no'=>$upd_thp1->no_antri,'rm'=> $pasien->no_rm,'jp'=>$jpdaftar]);
     }
 
@@ -349,6 +401,7 @@ class AntrianIGDController extends APIController
         $pasien = Pasien::where('no_rm', $request->no_rm)->first();
         
         $upd_thp1bpjs =  AntrianPasienIGD::findOrFail($request->no_antri);
+        // dd($upd_thp1bpjs->no_antri);
         $upd_thp1bpjs->no_rm = $request->no_rm;
         $upd_thp1bpjs->is_px_daftar = $request->pendaftaran_id;
         $upd_thp1bpjs->update();
