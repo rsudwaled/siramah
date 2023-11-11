@@ -107,7 +107,7 @@
             </x-adminlte-modal>
             <x-adminlte-modal id="databayi" title="Data Bayi" theme="success" size='lg' disable-animations>
                 <div class="col-lg-12">
-                    <table class="table table-bordered table-bayi">
+                    <table class="table table-bordered table-bayi"  id="table1">
                         <thead>
                             <tr>
                                 <th>RM BAYI</th>
@@ -121,7 +121,8 @@
                     </table>
                 </div>
                 <x-slot name="footerSlot">
-                    <x-adminlte-button theme="danger" class="float-right clear-bayi" label="tutup" data-dismiss="modal" />
+                    <x-adminlte-button theme="danger" class="float-right clear-bayi" onclick="batalPilih()" label="tutup"
+                        data-dismiss="modal" />
                 </x-slot>
             </x-adminlte-modal>
         </div>
@@ -377,6 +378,7 @@
             });
 
             $('.detail-bayi').click(function(e) {
+               
                 var detail = $(this).data('rmortu');
                 if (detail) {
                     $.ajax({
@@ -388,30 +390,27 @@
                         dataType: 'json',
                         success: function(res) {
                             console.log(res);
-
+                            $('#table1').DataTable().ajax.reload();
                             $.each(res.data, function(key, value) {
                                 $('.show-databayi').append("<tr>\
-        										<td>" + value.rm_bayi + "</td>\
-        										<td>" + value.nama_bayi + "</td>\
-        										<td>" + value.jk_bayi + "</td>\
-        										<td>" + value.tgl_lahir_bayi + "</td>\
-        										</tr>");
+            										<td>" + value.rm_bayi + "</td>\
+            										<td>" + value.nama_bayi + "</td>\
+            										<td>" + value.jk_bayi + "</td>\
+            										<td>" + value.tgl_lahir_bayi + "</td>\
+            										</tr>");
                             })
 
                             $('#databayi').modal('show');
 
                         },
-                        error: function(data) {
-                            console.log('Error:', data);
+                        error: function(res) {
+                            console.log('Error:', res);
                         }
 
                     });
                     $('#databayi').modal('show');
                 }
             });
-            // $('.clear-bayi').click(function(e) {
-            //     $('.show-databayi').remove();
-            // });
 
             $('.save-bayi').click(function(e) {
                 $.ajax({
@@ -427,11 +426,22 @@
                     },
                     dataType: 'JSON',
                     success: function(res) {
-
+                        console.log(res);
+                        if (res.status == 200) {
+                            var rm_bayi = res.bayi.rm_bayi;
+                            window.location.href =
+                                "{{ route('ranapumum.bayi', ['rm' => '+rm_bayi+']) }}";
+                        }
+                        $('#formBayi').modal('hide');
                     }
                 });
-                $('#formBayi').modal('hide');
+
             });
         });
+
+        function batalPilih() {
+            var table = $('#table1').DataTable();
+            table.reload();
+        }
     </script>
 @endsection

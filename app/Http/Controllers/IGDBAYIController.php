@@ -40,22 +40,21 @@ class IGDBAYIController extends Controller
 
     public function bayiPerorangtua(Request $request)
     {
-        $data = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
+        $bayi = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
         return response()->json([
-            'data' => $data,
+            'data' => $bayi,
         ]);
     }
 
     public function pasienBayiCreate(Request $request)
     {
-        dd($request->all());
-        $ortubayi = Pasien::firstWhere('no_rm', $request->rm_ibu);
+        $ortubayi = Pasien::firstWhere('no_rm', $request->rm);
+        $cekOrtu = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
         $last_rm = Pasien::latest('no_rm')->first(); // 23982846
         $rm_last = substr($last_rm->no_rm, -6); //982846
         $add_rm_new = $rm_last + 1; //982847
         $th = substr(Carbon::now()->format('Y'), -2); //23
         $rm_bayi = $th . $add_rm_new;
-
         $kontak = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
@@ -72,14 +71,14 @@ class IGDBAYIController extends Controller
         $bayi->rm_ibu   = $ortubayi->no_rm;
         $bayi->nama_bayi = $request->nama_bayi;
         $bayi->jk_bayi = $request->jk_bayi;
+        $bayi->tempat_lahir = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi = $tgl_lahir_bayi;
         $bayi->is_bpjs = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
         if($bayi->save())
         {
             $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
-            $cekOrtu = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
-           if(!$cekOrtu){
+            if($cekOrtu){
                 $keluarga = KeluargaPasien::create([
                     'no_rm' => $rm_bayi,
                     'nama_keluarga' =>$ortubayi->nama_px,
@@ -89,8 +88,37 @@ class IGDBAYIController extends Controller
                     'input_date' => Carbon::now(),
                     'Update_date' => Carbon::now(),
                 ]);
-           }
+            }
+            $pasien = Pasien::create([
+                'no_rm' => $rm_bayi,
+                'no_Bpjs' => '',
+                'nama_px' => $request->nama_bayi,
+                'jenis_kelamin' => $request->jk_bayi,
+                'tempat_lahir' => $request->tempat_lahir_bayi,
+                'tgl_lahir' => $tgl_lahir_bayi,
+                'agama' => $ortubayi->agama,
+                'pendidikan' => '',
+                'pekerjaan' => '',
+                'kewarganegaraan' => $ortubayi->kewarganegaraan,
+                'negara' => $ortubayi->negara,
+                'propinsi' => $ortubayi->provinsi_pasien,
+                'kabupaten' => $ortubayi->kabupaten_pasien,
+                'kecamatan' => $ortubayi->kecamatan_pasien,
+                'desa' => $ortubayi->desa_pasien,
+                'alamat' => $ortubayi->alamat_lengkap_pasien,
+                'no_telp' => '',
+                'no_hp' => '',
+                'tgl_entry' => Carbon::now(),
+                'nik_bpjs' => '',
+                'update_date' => Carbon::now(),
+                'update_by' => Carbon::now(),
+                'kode_propinsi' => $ortubayi->provinsi_pasien,
+                'kode_kabupaten' => $ortubayi->kabupaten_pasien,
+                'kode_kecamatan' => $ortubayi->kecamatan_pasien,
+                'kode_desa' => $ortubayi->desa_pasien,
+                'no_ktp' => '',
+            ]);
         }
-        return redirect()->route('ranapumum.bayi',['rm'=>$bayi->rm_bayi]);
+        return response()->json(['bayi'=>$bayi, 'status'=>200]);
     }
 }
