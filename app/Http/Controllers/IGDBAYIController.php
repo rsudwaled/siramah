@@ -24,17 +24,9 @@ class IGDBAYIController extends Controller
 {
     public function pendaftaranPasienBayi()
     {
-        $negara = Negara::get();
-        $hb_keluarga = HubunganKeluarga::get();
-        $agama = Agama::get();
-        $pekerjaan = Pekerjaan::get();
-        $pendidikan = Pendidikan::get();
-        $provinsi = Provinsi::get();
-        $kab = Kabupaten::get();
-        $kec = Kecamatan::get();
-        $desa = Desa::get();
         $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')->get();
-        return view('simrs.igd.pendaftaran.pasien_bayi', compact('provinsi','kab','kec','desa','negara','hb_keluarga','agama','pekerjaan','pendidikan','kunjungan_igd'));
+        $bayi          = PasienBayiIGD::get();
+        return view('simrs.igd.pendaftaran.pasien_bayi', compact('kunjungan_igd','bayi'));
     }
 
     public function cariOrangtua(Request $request)
@@ -43,6 +35,14 @@ class IGDBAYIController extends Controller
         return response()->json([
             'data' => $data,
             'success' => true,
+        ]);
+    }
+
+    public function bayiPerorangtua(Request $request)
+    {
+        $data = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
+        return response()->json([
+            'data' => $data,
         ]);
     }
 

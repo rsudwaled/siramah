@@ -164,7 +164,7 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran" disabled
+                                                        <x-adminlte-select name="pendaftaran_id" id="pilihPendaftaran"
                                                             label="Tujuan Daftar Pendaftaran">
                                                             <option value="1">IGD</option>
                                                             <option value="0">IGD KEBIDANAN</option>

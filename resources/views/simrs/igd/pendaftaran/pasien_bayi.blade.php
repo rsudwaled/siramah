@@ -13,8 +13,8 @@
                     <div class="row">
                         <div class="col-lg-12">
                             @php
-                                $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
-                                $config['order'] = ['0', 'asc'];
+                                $heads = ['Tanggal Masuk', 'Orangtua Bayi', 'Alamat', 'Kode Kunjungan', 'Unit', 'Tanggal keluar', 'Penjamin', 'Status'];
+                                $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
                                 $config['scrollY'] = '300px';
@@ -25,6 +25,7 @@
                                 bordered hoverable compressed>
                                 @foreach ($kunjungan_igd as $item)
                                     <tr>
+                                        <td>{{ $item->tgl_masuk }}</td>
                                         <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM : {{ $item->pasien->no_rm }}
                                             <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
                                             {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }}
@@ -32,18 +33,19 @@
                                         <td>alamat : {{ $item->pasien->alamat }} / <br>
                                             {{ $item->pasien->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $item->pasien->desas->nama_desa_kelurahan . ' , Kec. ' . $item->pasien->kecamatans->nama_kecamatan . ' - Kab. ' . $item->pasien->kabupatens->nama_kabupaten_kota }}
                                         </td>
-                                        <td>{{ $item->counter }}</td>
-                                        <td>{{ $item->kode_kunjungan }}</td>
+                                        <td>{{ $item->kode_kunjungan }} (Counter: {{ $item->counter }})</td>
                                         <td>{{ $item->unit->nama_unit }}</td>
-                                        <td>{{ $item->tgl_masuk }}</td>
                                         <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
                                         </td>
-                                        <td>{{ $item->kode_penjamin }}</td>
+                                        <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
                                         <td>
                                             <button type="button"
                                                 class="btn btn-block bg-gradient-success btn-block btn-flat btn-xs show-formbayi"
                                                 data-kunjungan="{{ $item->kode_kunjungan }}"
                                                 data-rmibu="{{ $item->no_rm }}">daftarkan bayi</button>
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-warning btn-block btn-flat btn-xs detail-bayi"
+                                                data-rmortu="{{ $item->no_rm }}"><i class="fas fa-baby"></i></button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -75,8 +77,8 @@
                                 placeholder="masukan kota ketika bayi lahir" fgroup-class="col-md-12" disable-feedback />
 
                             @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6" required
-                                label="Tanggal Lahir *" :config="$config"
+                            <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" fgroup-class="col-md-6"
+                                required label="Tanggal Lahir *" :config="$config"
                                 value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
@@ -96,11 +98,31 @@
                                 fgroup-class="col-md-6" disable-feedback />
                             <x-slot name="footerSlot">
                                 <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" />
-                                <x-adminlte-button class="float-right save-bayi" type="submit" theme="success" label="Simpan Data" />
+                                <x-adminlte-button class="float-right save-bayi" type="submit" theme="success"
+                                    label="Simpan Data" />
                             </x-slot>
                         </div>
                     </form>
                 </div>
+            </x-adminlte-modal>
+            <x-adminlte-modal id="databayi" title="Data Bayi" theme="success" size='lg' disable-animations>
+                <div class="col-lg-12">
+                    <table class="table table-bordered table-bayi">
+                        <thead>
+                            <tr>
+                                <th>RM BAYI</th>
+                                <th>NAMA BAYI</th>
+                                <th>JENIS KELAMIN</th>
+                                <th>TGL LAHIR</th>
+                            </tr>
+                        </thead>
+                        <tbody class="show-databayi">
+                        </tbody>
+                    </table>
+                </div>
+                <x-slot name="footerSlot">
+                    <x-adminlte-button theme="danger" class="float-right clear-bayi" label="tutup" data-dismiss="modal" />
+                </x-slot>
             </x-adminlte-modal>
         </div>
         {{-- <div class="col-lg-12">
@@ -338,7 +360,7 @@
             });
 
 
-            
+
             $('.reset_form').click(function(e) {
                 $.LoadingOverlay("show");
                 $("#form_pasien_bayi")[0].reset();
@@ -351,26 +373,63 @@
                 $("#rm_ibu").val($(this).data('rmibu'));
                 $("#kunjungan").val($(this).data('kunjungan'));
                 $('#formBayi').modal('show');
+
             });
-            
-            $('.save-bayi').click(function(e) {
-               
-                $.ajax({
-                        type: "post",
-                        url: "{{ route('pasien_bayi.create') }}",
-                        data:{
-                            rm:$("#rm_ibu").val(),
-                            kunjungan:$("#kunjungan").val(),
-                            nama_bayi:$("#nama_bayi").val(),
-                            jk_bayi:$("#jk_bayi").val(),
-                            tgl_lahir_bayi:$("#tgl_lahir_bayi").val(),
-                            tempat_lahir_bayi:$("#tempat_lahir_bayi").val(),
+
+            $('.detail-bayi').click(function(e) {
+                var detail = $(this).data('rmortu');
+                if (detail) {
+                    $.ajax({
+                        type: 'get',
+                        url: "{{ route('detailbayi.byortu') }}",
+                        data: {
+                            detail: detail
                         },
-                        dataType: 'JSON',
+                        dataType: 'json',
                         success: function(res) {
-                           
+                            console.log(res);
+
+                            $.each(res.data, function(key, value) {
+                                $('.show-databayi').append("<tr>\
+        										<td>" + value.rm_bayi + "</td>\
+        										<td>" + value.nama_bayi + "</td>\
+        										<td>" + value.jk_bayi + "</td>\
+        										<td>" + value.tgl_lahir_bayi + "</td>\
+        										</tr>");
+                            })
+
+                            $('#databayi').modal('show');
+
+                        },
+                        error: function(data) {
+                            console.log('Error:', data);
                         }
+
                     });
+                    $('#databayi').modal('show');
+                }
+            });
+            // $('.clear-bayi').click(function(e) {
+            //     $('.show-databayi').remove();
+            // });
+
+            $('.save-bayi').click(function(e) {
+                $.ajax({
+                    type: "post",
+                    url: "{{ route('pasien_bayi.create') }}",
+                    data: {
+                        rm: $("#rm_ibu").val(),
+                        kunjungan: $("#kunjungan").val(),
+                        nama_bayi: $("#nama_bayi").val(),
+                        jk_bayi: $("#jk_bayi").val(),
+                        tgl_lahir_bayi: $("#tgl_lahir_bayi").val(),
+                        tempat_lahir_bayi: $("#tempat_lahir_bayi").val(),
+                    },
+                    dataType: 'JSON',
+                    success: function(res) {
+
+                    }
+                });
                 $('#formBayi').modal('hide');
             });
         });

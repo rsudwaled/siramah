@@ -14,11 +14,11 @@
     <div class="col-lg-12">
         <x-adminlte-card theme="primary" collapsible title="List Kunjungan dari RM: {{ $noRM }}">
             @php
-                $heads = ['Counter', 'No RM', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'Dokter', 'penjamin', 'action'];
-                $config['order'] = ['0', 'asc'];
+                $heads = ['Kunjungan', 'No RM', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'Dokter', 'penjamin','Status Kunjungan', 'action'];
+                $config['order'] = ['3', 'desc'];
                 $config['paging'] = false;
                 $config['info'] = false;
-                $config['scrollY'] = '300px';
+                $config['scrollY'] = '400px';
                 $config['scrollCollapse'] = true;
                 $config['scrollX'] = true;
             @endphp
@@ -26,7 +26,7 @@
                 hoverable compressed>
                 @foreach ($kunjungan as $item)
                     <tr>
-                        <td>{{ $item->counter }}</td>
+                        <td>{{$item->kode_kunjungan}} (counter : {{ $item->counter }})</td>
                         <td>{{ $item->no_rm }}</td>
                         <td>{{ $item->kode_unit }} || {{ $item->unit->nama_unit }}</td>
                         <td>{{ $item->tgl_masuk }}</td>
@@ -35,6 +35,17 @@
                         <td>{{ $item->no_sep }}</td>
                         <td>{{ $item->dokter->nama_paramedis }}</td>
                         <td>{{ $item->kode_penjamin == null ? '-' : $item->penjamin_simrs->nama_penjamin }}</td>
+                        <td>
+                            @if ($item->status_kunjungan == 1)
+                                <span class="btn btn-flat btn-success btn-xs">{{$item->status->status_kunjungan}}</span>
+                            @elseif ($item->status_kunjungan == 2)
+                                <span class="btn btn-flat btn-secondary btn-xs">{{$item->status->status_kunjungan}}</span>
+                            @elseif ($item->status_kunjungan == 8)
+                                <span class="btn btn-flat btn-danger btn-xs">{{$item->status->status_kunjungan}}</span>
+                            @else
+                                
+                            @endif
+                        </td>
                         <td>
                             <x-adminlte-button class="btn-xs modalKunjungan" data-counter="{{ $item->counter }}"
                                 data-rm="{{ $item->no_rm }}" theme="warning" icon="fas fa-edit"

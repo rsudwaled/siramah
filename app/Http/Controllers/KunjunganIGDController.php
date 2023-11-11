@@ -58,7 +58,8 @@ class KunjunganIGDController extends Controller
 
     public function editKunjungan(Request $request)
     {
-      $kunjungan = Kunjungan::where('no_rm', $request->no_rm)->get();
+      $kunjungan = Kunjungan::where('no_rm', $request->no_rm)->orderBy('tgl_masuk', 'desc')->get();
+      // dd($kunjungan);
       $noRM = $request->no_rm;
       $penjamin = PenjaminSimrs::get();
       return view('simrs.igd.kunjungan.list_edit_kunjungan', compact('kunjungan','noRM','penjamin'));
