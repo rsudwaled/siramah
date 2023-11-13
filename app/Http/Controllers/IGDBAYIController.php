@@ -24,7 +24,7 @@ class IGDBAYIController extends Controller
 {
     public function pendaftaranPasienBayi()
     {
-        $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')->get();
+        $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')->whereNull('tgl_keluar')->get();
         $bayi          = PasienBayiIGD::get();
         return view('simrs.igd.pendaftaran.pasien_bayi', compact('kunjungan_igd','bayi'));
     }
@@ -40,9 +40,9 @@ class IGDBAYIController extends Controller
 
     public function bayiPerorangtua(Request $request)
     {
-        $bayi = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
+        $data = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
         return response()->json([
-            'data' => $bayi,
+            'data' => $data,
         ]);
     }
 
@@ -101,21 +101,21 @@ class IGDBAYIController extends Controller
                 'pekerjaan' => '',
                 'kewarganegaraan' => $ortubayi->kewarganegaraan,
                 'negara' => $ortubayi->negara,
-                'propinsi' => $ortubayi->provinsi_pasien,
-                'kabupaten' => $ortubayi->kabupaten_pasien,
-                'kecamatan' => $ortubayi->kecamatan_pasien,
-                'desa' => $ortubayi->desa_pasien,
-                'alamat' => $ortubayi->alamat_lengkap_pasien,
+                'propinsi' => $ortubayi->propinsi==null?$ortubayi->kode_propinsi:$ortubayi->propinsi,
+                'kabupaten' => $ortubayi->kabupaten==null? $ortubayi->kode_kabupaten:$ortubayi->kabupaten,
+                'kecamatan' => $ortubayi->kecamatan==null?$ortubayi->kode_kecamatan:$ortubayi->kecamatan,
+                'desa' => $ortubayi->desa==null?$ortubayi->kode_desa:$ortubayi->desa,
+                'alamat' => $ortubayi->alamat,
                 'no_telp' => '',
                 'no_hp' => '',
                 'tgl_entry' => Carbon::now(),
                 'nik_bpjs' => '',
                 'update_date' => Carbon::now(),
                 'update_by' => Carbon::now(),
-                'kode_propinsi' => $ortubayi->provinsi_pasien,
-                'kode_kabupaten' => $ortubayi->kabupaten_pasien,
-                'kode_kecamatan' => $ortubayi->kecamatan_pasien,
-                'kode_desa' => $ortubayi->desa_pasien,
+                'kode_propinsi' => $ortubayi->kode_propinsi,
+                'kode_kabupaten' => $ortubayi->kode_kabupaten,
+                'kode_kecamatan' => $ortubayi->kode_kecamatan,
+                'kode_desa' => $ortubayi->kode_desa,
                 'no_ktp' => '',
             ]);
         }

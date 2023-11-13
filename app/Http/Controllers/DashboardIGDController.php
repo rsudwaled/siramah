@@ -34,6 +34,7 @@ class DashboardIGDController extends Controller
             ->whereNull('ts_kunjungan.diagx')
             ->whereIn('ts_kunjungan.prefix_kunjungan',['UGK','PRN','NCU'])->count();
         $pasienRanap = Kunjungan::whereNotNull('id_ruangan')->orderBy('tgl_masuk','desc')->get();
+        // dd($pasienRanap);
         return view('simrs.igd.dashboard_igd', compact('kunNow', 'igdbpjs_count','igkbpjs_count','pasienRanap'));
     }
 }

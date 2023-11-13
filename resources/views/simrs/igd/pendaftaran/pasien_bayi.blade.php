@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             @php
-                                $heads = ['Tanggal Masuk', 'Orangtua Bayi', 'Alamat', 'Kode Kunjungan', 'Unit', 'Tanggal keluar', 'Penjamin', 'Status'];
+                                $heads = ['Tanggal Masuk', 'Orangtua Bayi', 'Alamat', 'Kode Kunjungan', 'Unit', 'Alasan Daftar','Tanggal keluar', 'Penjamin', 'Status'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -35,6 +35,7 @@
                                         </td>
                                         <td>{{ $item->kode_kunjungan }} (Counter: {{ $item->counter }})</td>
                                         <td>{{ $item->unit->nama_unit }}</td>
+                                        <td>{{ $item->alasan_masuk->alasan_masuk }}</td>
                                         <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
                                         </td>
                                         <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
@@ -98,34 +99,43 @@
                                 fgroup-class="col-md-6" disable-feedback />
                             <x-slot name="footerSlot">
                                 <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" />
-                                <x-adminlte-button class="float-right save-bayi" type="submit" theme="success"
+                                <x-adminlte-button class="float-right save-bayi withLoad" type="submit" theme="success"
                                     label="Simpan Data" />
                             </x-slot>
                         </div>
                     </form>
                 </div>
             </x-adminlte-modal>
-            <x-adminlte-modal id="databayi" title="Data Bayi" theme="success" size='lg' disable-animations>
-                <div class="col-lg-12">
-                    <table class="table table-bordered table-bayi"  id="table1">
-                        <thead>
-                            <tr>
-                                <th>RM BAYI</th>
-                                <th>NAMA BAYI</th>
-                                <th>JENIS KELAMIN</th>
-                                <th>TGL LAHIR</th>
-                            </tr>
-                        </thead>
-                        <tbody class="show-databayi">
-                        </tbody>
-                    </table>
+            <div class="modal" tabindex="-1" role="dialog" id="databayi">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Data Bayi</h5>
+
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-bordered table-bayi" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th>RM BAYI</th>
+                                        <th>NAMA BAYI</th>
+                                        <th>JENIS KELAMIN</th>
+                                        <th>TGL LAHIR</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="show-databayi" id="show-databayi">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="batalPilih()"
+                                data-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
                 </div>
-                <x-slot name="footerSlot">
-                    <x-adminlte-button theme="danger" class="float-right clear-bayi" onclick="batalPilih()" label="tutup"
-                        data-dismiss="modal" />
-                </x-slot>
-            </x-adminlte-modal>
+            </div>
         </div>
+
         {{-- <div class="col-lg-12">
             @if ($errors->any())
                 <div class="alert alert-danger alert-error" id="validation-errors">
@@ -378,41 +388,41 @@
             });
 
             $('.detail-bayi').click(function(e) {
-               
                 var detail = $(this).data('rmortu');
-                if (detail) {
-                    $.ajax({
-                        type: 'get',
-                        url: "{{ route('detailbayi.byortu') }}",
-                        data: {
-                            detail: detail
-                        },
-                        dataType: 'json',
-                        success: function(res) {
-                            console.log(res);
-                            $('#table1').DataTable().ajax.reload();
-                            $.each(res.data, function(key, value) {
-                                $('.show-databayi').append("<tr>\
-            										<td>" + value.rm_bayi + "</td>\
-            										<td>" + value.nama_bayi + "</td>\
-            										<td>" + value.jk_bayi + "</td>\
-            										<td>" + value.tgl_lahir_bayi + "</td>\
-            										</tr>");
-                            })
+                $('.modal-title').text('Bayi dari RM : ' + detail);
+                $.ajax({
+                    type: 'get',
+                    url: "{{ route('detailbayi.byortu') }}",
+                    data: {
+                        detail: detail
+                    },
+                    dataType: 'json',
 
-                            $('#databayi').modal('show');
+                    success: function(data) {
+                        $.LoadingOverlay("show");
+                        $.each(data.data, function(key, value) {
+                            $('#table1').append("<tr>\
+                                        <td>" + value.rm_bayi + "</td>\
+                                        <td>" + value.nama_bayi + "</td>\
+                                        <td>" + value.jk_bayi + "</td>\
+                                        <td>" + value.tgl_lahir_bayi + "</td>\
+                                    </tr>");
+                        })
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(res) {
+                        console.log('Error:', res);
+                    }
 
-                        },
-                        error: function(res) {
-                            console.log('Error:', res);
-                        }
+                });
 
-                    });
-                    $('#databayi').modal('show');
-                }
+                $('#databayi').modal('show');
+
             });
 
             $('.save-bayi').click(function(e) {
+                $('#formBayi').modal('hide');
+                $.LoadingOverlay("show");
                 $.ajax({
                     type: "post",
                     url: "{{ route('pasien_bayi.create') }}",
@@ -430,18 +440,16 @@
                         if (res.status == 200) {
                             var rm_bayi = res.bayi.rm_bayi;
                             window.location.href =
-                                "{{ route('ranapumum.bayi', ['rm' => '+rm_bayi+']) }}";
+                                "{{ route('ranapumum.bayi') }}?rm="+rm_bayi;
                         }
-                        $('#formBayi').modal('hide');
                     }
                 });
-
-            });
+                $.LoadingOverlay("hide");
+            }); 
         });
 
         function batalPilih() {
-            var table = $('#table1').DataTable();
-            table.reload();
+            $("#show-databayi tr").remove();
         }
     </script>
 @endsection

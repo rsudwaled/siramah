@@ -134,6 +134,7 @@ class AntrianIGDController extends APIController
         }else{
             $pasien = Pasien::limit(100)
             ->orderBy('tgl_entry', 'desc')
+            ->where('tgl_lahir', '<=', now()->subMonth())
             ->get();
         }
         

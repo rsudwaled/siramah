@@ -541,6 +541,7 @@ class RanapIGDController extends APIController
             $c = $counter->counter + 1;
         }
         $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
+        dd($penjamin);
         $ruangan = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
         $createKunjungan = new Kunjungan();

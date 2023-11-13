@@ -123,8 +123,8 @@
                                 <div class="table-responsive">
                                     <div class="col-lg-12">
                                         @php
-                                            $heads = ['Unit', 'Tanggal', 'Ruangan', 'Data Pasien', 'alamat', 'action'];
-                                            $config['order'] = ['0', 'asc'];
+                                            $heads = ['Tanggal','Unit',  'Ruangan', 'Data Pasien', 'alamat', 'action'];
+                                            $config['order'] = false;
                                             $config['paging'] = true;
                                             $config['info'] = true;
                                             $config['scrollY'] = '450px';
@@ -135,14 +135,14 @@
                                             :config="$config" striped bordered hoverable compressed>
                                             @foreach ($pasienRanap as $item)
                                                 <tr>
-                                                    <td><span
-                                                            class="badge {{ $item->prefix_kunjungan == 'UGD' ? 'badge-warning' : 'badge-info' }}">{{ $item->prefix_kunjungan }}</span>
-                                                    </td>
                                                     <td><span class="badge badge-success">IN : </span>
                                                         {{ $item->tgl_masuk }}
                                                         <br><span class="badge badge-danger">OUT :
                                                         </span>
                                                         {{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
+                                                    </td>
+                                                    <td><span
+                                                            class="badge {{ $item->prefix_kunjungan == 'UGD' ? 'badge-warning' : 'badge-info' }}">{{ $item->prefix_kunjungan }}</span>
                                                     </td>
                                                     <td>{{ $item->ruanganRawat->nama_kamar }} / ( BED:
                                                         {{ $item->ruanganRawat->no_bed }} )</td>
