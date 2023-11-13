@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
@@ -120,6 +121,10 @@ Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif']
 Route::get('cari_jadwal_dokter', [JadwalDokterController::class, 'cari_jadwal_dokter'])->name('cari_jadwal_dokter');
 Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
 Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
+
+
+Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('disposisi');
+
 
 // Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 // Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');

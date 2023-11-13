@@ -410,7 +410,6 @@ return [
                 ],
             ],
         ],
-
         // POLIKLINIK
         [
             'text'    => 'Aplikasi Poliklinik',
@@ -473,7 +472,7 @@ return [
                 ],
             ],
         ],
-        // POLIKLINIK
+        // RANAP
         [
             'text'    => 'Aplikasi Rawat Inap',
             'icon'    => 'fas fa-clinic-medical',
@@ -574,7 +573,6 @@ return [
                 ],
             ],
         ],
-
         // YANMED
         [
             'text'    => 'Pelayanan Medis',

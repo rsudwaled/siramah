@@ -7,6 +7,7 @@ use App\Models\Pasien;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class RanapController extends Controller
 {
@@ -54,17 +55,26 @@ class RanapController extends Controller
     public function pasienranapprofile(Request $request)
     {
         $kunjungan = Kunjungan::with([
-            'budget'
+            'budget',
+            'alasan_masuk',
+            'unit',
+            'dokter',
+            'penjamin_simrs',
+            'status',
+            'surat_kontrol',
         ])->firstWhere('kode_kunjungan', $request->kode);
-        $pasien = Pasien::with([
-            'kunjungans',
-            'kunjungans.unit', 'kunjungans.assesmen_dokter',
-            'kunjungans.layanans', 'kunjungans.layanans.layanan_details',
-            'kunjungans.layanans.layanan_details.tarif_detail',
-            'kunjungans.layanans.layanan_details.tarif_detail.tarif',
-            'kunjungans.layanans.layanan_details.barang',
-            'kunjungans.dokter', 'kunjungans.assesmen_perawat'
-        ])->firstWhere('no_rm', $kunjungan->no_rm);
+        $norm = $kunjungan->no_rm;
+        $pasien = Cache::remember('pasien' . $kunjungan->no_rm, 30 * 60, function () use ($norm) {
+            return Pasien::with([
+                'kunjungans',
+                'kunjungans.unit', 'kunjungans.assesmen_dokter',
+                'kunjungans.layanans', 'kunjungans.layanans.layanan_details',
+                'kunjungans.layanans.layanan_details.tarif_detail',
+                'kunjungans.layanans.layanan_details.tarif_detail.tarif',
+                'kunjungans.layanans.layanan_details.barang',
+                'kunjungans.dokter', 'kunjungans.assesmen_perawat'
+            ])->firstWhere('no_rm', $norm);
+        });
         $biaya_rs = 0;
         foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
             $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');

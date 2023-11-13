@@ -256,7 +256,6 @@ class PendaftaranController extends APIController
                 'cek_tracer' => "N",
             ]);
             if ($res->metadata->code == 200) {
-
                 Alert::success('Success', 'OK');
             } else {
                 Alert::error('Error', $res->metadata->message);
