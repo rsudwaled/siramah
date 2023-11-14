@@ -310,12 +310,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/pasien-bayi-create', [App\Http\Controllers\IGDBAYIController::class, 'pasienBayiCreate'])->name('pasien_bayi.create');
     Route::get('/cari-detail-bayi', [App\Http\Controllers\IGDBAYIController::class, 'bayiPerorangtua'])->name('detailbayi.byortu');
 
+    // ROUTE PASIEN IGD
+    Route::post('/daftarkan-pasien-baru', [App\Http\Controllers\PasienIGDController::class, 'pasienBaruCreate'])->name('pasien-baru.create');
+    Route::get('/pasien-edit', [App\Http\Controllers\PasienIGDController::class, 'editPasien'])->name('edit-pasien');
+    Route::put('/pasien-update', [App\Http\Controllers\PasienIGDController::class, 'updatePasien'])->name('update-pasien.update');
+
     //ROUTE ANTRIAN IGD 
     Route::get('/pendaftaran-antrian-igd', [App\Http\Controllers\AntrianIGDController::class, 'antrianIGD'])->name('d-antrian-igd');
     Route::get('/cari-pasien', [App\Http\Controllers\AntrianIGDController::class, 'searchPasien'])->name('pasien-igd-search');
     Route::post('/cari-pasien-byname', [App\Http\Controllers\AntrianIGDController::class, 'searchPasienByName'])->name('pasien-igd-search-byname');
     Route::get('/get-no-antrian', [App\Http\Controllers\AntrianIGDController::class, 'getNoAntrian'])->name('get-no-antrian');
-    Route::post('/daftarkan-pasien-baru', [App\Http\Controllers\AntrianIGDController::class, 'pasienBaruCreate'])->name('pasien-baru.create');
     
     Route::post('/pasien-antrian/terpilih', [App\Http\Controllers\AntrianIGDController::class, 'antrianPasienUMUMTerpilih'])->name('pasien-antrian-terpilih');
     Route::post('/pasien-bpjs-antrian/terpilih', [App\Http\Controllers\AntrianIGDController::class, 'antrianPasienBPJSTerpilih'])->name('pasienbpjs-antrian-terpilih');
@@ -366,8 +370,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/provinsi-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getProvinsiBPJS'])->name('provinsi-bpjs');
     Route::get('/kabupaten-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getKabBPJS'])->name('kab-bpjs');
     Route::get('/kecamatan-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getKecBPJS'])->name('kec-bpjs');
-    Route::get('/pasien-bpjs/edit/', [App\Http\Controllers\IGDBPJSController::class, 'editPasienBPJS'])->name('edit-pasienbpjs');
-    Route::put('/pasien-update', [App\Http\Controllers\IGDBPJSController::class, 'updatePasien'])->name('update-pasien.update');
+    
 
     
     // RANAP IGD

@@ -152,6 +152,7 @@ class AntrianIGDController extends APIController
         }
         if ($s_byrm) {
             $pasien = Pasien::where('no_rm', $s_byrm)->get();
+            dd($pasien);
         }
         if ($s_byname) {
             $pasien = Pasien::where('nama_px', $s_byname)->limit(100)->get();
@@ -241,7 +242,7 @@ class AntrianIGDController extends APIController
             'nama_keluarga' => $request->nama_keluarga,
             'hubungan_keluarga' => $request->hub_keluarga,
             'alamat_keluarga' => $request->alamat_lengkap_sodara,
-            'telp_keluarga' => $request->kontak,
+            'tlp_keluarga' => $request->kontak,
             'input_date' => Carbon::now(),
             'Update_date' => Carbon::now(),
         ]);

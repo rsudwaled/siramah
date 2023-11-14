@@ -479,7 +479,7 @@
                           <td width="20%">
                               <button type="button" onclick="pilihPasien(` + rm +
                     `)" class="btn bg-maroon btn-sm btn-flat">` + rm +
-                    `</button> <a href="{{ route('edit-pasienbpjs') }}?rm=` + rm + `" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
+                    `</button> <a href="{{ route('edit-pasien') }}?rm=` + rm + `" class="btn btn-success btn-sm btn-flat withLoad"><i class="fas fa-edit"></i></a>
                           </td>
                           <td>` + res.pasien[i].nik_bpjs + `</td>
                           <td>` + res.pasien[i].no_Bpjs + `</td>

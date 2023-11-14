@@ -103,7 +103,7 @@
                                         fgroup-class="col-md-6">
                                         @foreach ($negara as $item)
                                             <option value="{{ $item->id }}"
-                                                {{ ucfirst(strtolower($pasien->negara)) == $item->nama_negara ? 'selected' : '' }}>
+                                                {{ ucfirst(strtolower($pasien->negara)) == $item->nama_negara ? 'selected' : ($pasien->negara == $item->id ? 'selected' : '') }}>
                                                 {{ $item->nama_negara }}
                                             </option>
                                         @endforeach
@@ -150,7 +150,7 @@
                     </div>
                 </div>
                 <x-adminlte-button id="updatePasien" class="float-right btn-sm btn-flat" theme="success" label="update data" />
-                <a href="{{ route('pendaftaran-pasien-igdbpjs') }}" class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
+                <a href="{{ route('pendaftaran.pasien') }}" class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
             </form>
@@ -308,8 +308,7 @@
                         success: function(res) {
                             if (res.status == 200) {
                                 Swal.fire('data pasien berhasil diupdate', '', 'success');
-                                window.location.href =
-                                    "{{ route('pendaftaran-pasien-igdbpjs') }}"
+                                window.location.href ="{{ route('pendaftaran.pasien') }}"
                             }else{
                                 Swal.fire('data keluarga harus dilengkapi', '', 'error');
                             }
