@@ -122,66 +122,6 @@ class IGDBPJSController extends APIController
         ]);
     }
 
-    // public function pasienBPJSCREATE(Request $request)
-    // {
-    //     if ($request->no_antri == null || $request->pasien_id == null) {
-    //         Alert::warning('INFORMASI!', 'silahkan pilih no antrian dan pasien yang akan di daftarkan!');
-    //         return back();
-    //     }
-    //     // get provinsi bpjs
-    //     $data = new VclaimController();
-    //     $provinsibpjs = $data->ref_provinsi_api($request);
-    //     $provinsibpjs = $provinsibpjs->original;
-
-    //     $antrian = AntrianPasienIGD::find($request->no_antri);
-    //     $status_pendaftaran = $request->pendaftaran_id;
-    //     $pasien = Pasien::where('no_rm', $request->pasien_id)->first();
-    //     $icd = Icd10::limit(10)->get();
-    //     // cek status bpjs aktif atau tidak
-    //     $api = new VclaimController();
-    //     $request['nik'] = $pasien->nik_bpjs;
-    //     $request['tanggal'] = now()->format('Y-m-d');
-    //     $resdescrtipt = $api->peserta_nik($request);
-    //     // dd($resdescrtipt);
-    //     if ($resdescrtipt->metadata->code != 200) {
-    //         Alert::warning('ERROR!', 'PASIEN BERMASALAH DENGAN :' . $resdescrtipt->metadata->message);
-    //         return back();
-    //     }
-    //     $kelasBPJS = null;
-    //     $ketkelasBPJS = null;
-    //     $jpBpjs = null;
-    //     $ket_jpBpjs = null;
-    //     $statusBPJS = null;
-    //     if ($resdescrtipt->metadata->code == 200) {
-    //         $kelasBPJS = $resdescrtipt->response->peserta->hakKelas->kode;
-    //         $$statusBPJS = $resdescrtipt->response->peserta->statusPeserta->kode;
-    //         $ketkelasBPJS = $resdescrtipt->response->peserta->hakKelas->keterangan;
-    //         //jenis peserta bpjs
-    //         $jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->kode;
-    //         $ket_jpBpjs = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
-    //     }
-    //     // dd($statusBPJS);
-    //     $keluarga = KeluargaPasien::where('no_rm', $pasien->no_rm)->first();
-    //     $hb_keluarga = HubunganKeluarga::all();
-    //     $kunjungan = Kunjungan::where('no_rm', $request->pasien_id)->get();
-    //     $knj_aktif = Kunjungan::where('no_rm', $request->pasien_id)
-    //         ->where('status_kunjungan', 1)
-    //         ->count();
-
-    //     $unit = Unit::limit(10)->get();
-    //     $alasanmasuk = AlasanMasuk::limit(10)->get();
-    //     $paramedis = Paramedis::where('spesialis', 'UMUM')
-    //         ->where('act', 1)
-    //         ->get();
-        // $penjamin = PenjaminSimrs::limit(10)
-        //     ->where('act', 1)
-        //     ->get();
-    //     return view('simrs.igd.pasienbpjs.p_bpjs_rajal', compact(
-    //         'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk', 
-    //         'antrian', 'status_pendaftaran', 'keluarga', 'hb_keluarga', 'resdescrtipt', 'kelasBPJS','statusBPJS', 
-    //         'ketkelasBPJS', 'jpBpjs', 'ket_jpBpjs', 'icd', 'provinsibpjs', 'knj_aktif'));
-    // }
-   
     // API FUNCTION
     public function signature()
     {
@@ -238,55 +178,48 @@ class IGDBPJSController extends APIController
         ];
         return json_decode(json_encode($response));
     }
-    // API FUNCTION END
+
     public function pasienBPJSSTORE(Request $request)
     {
         // dd($request->all());
-        if ($request->diagAwal ==null) {
-            Alert::error('Error', 'Diagnosa tidak boleh kosong!');
-            return back();
-        }
-        if ($request->dpjpLayan ==null) {
-            Alert::error('Error', 'DPJP tidak boleh kosong!');
-            return back();
-        }
-        if ($request->alasan_masuk_id ==null) {
-            Alert::error('Error', 'Alasan tidak boleh kosong!');
-            return back();
-        }
-        if ($request->lakaLantas ==null) {
-            Alert::error('Error', 'Status Kecelakaan tidak boleh kosong!');
-            return back();
-        }
-        if ($request->asalRujukan ==null) {
-            Alert::error('Error', 'Alasan Rujukan tidak boleh kosong!');
-            return back();
-        }
-        if ($request->noTelp ==null) {
-            Alert::error('Error', 'No Telepon tidak boleh kosong!');
-            return back();
+        $request->validate([
+            'noMR' => 'required',
+            'dpjpLayan' => 'required',
+            'alasan_masuk_id' => 'required',
+            'lakaLantas' => 'required',
+            'asalRujukan' => 'required',
+            'noTelp' => 'required',
+            'isBridging' => 'required',
+        ],[
+            'dpjpLayan' => 'Dokter DPJP Wajib dipilih, Tidak Boleh Kosong',
+            'alasan_masuk_id' => 'Alasan Pasien Daftar Wajib dipilih dan tidak boleh kosong',
+            'lakaLantas' => 'Status Kecelakaan Wajib dipilih, dan lengkapi data selanjutnya yang diperlukan',
+            'asalRujukan' => 'Asal Rujukan Wajib dipilih, Faskes 2 (RS) - Faskes 1 (puskes)',
+            'noTelp' => 'No Telepon Wajib Diisi dengan baik dan benar',
+        ]);
+        if ($request->isBridging == 1) {
+            if($request->diagAwal==null){
+                Alert::error('Error', 'bridging bpjs gagal, diagnosa wajib diisi!');
+                return back();
+            }
         }
         $pasien = Pasien::firstwhere('no_rm', $request->noMR);
         $user = Auth::user()->name;
-
-        $validator = Validator::make(request()->all(), [
-            'noKartu' => 'required',
-            'tglSep' => 'required',
-            // "ppkPelayanan" => "required",
-            'asalRujukan' => 'required',
-            'jnsPelayanan' => 'required',
-            'diagAwal' => 'required',
-            'dpjpLayan' => 'required',
-            'noTelp' => 'required',
-            // "user" => "required",
-        ]);
-        if ($validator->fails()) {
-            Alert::error('Error', 'data yang dikirimkan tidak lengkap!');
-            return back();
-        }
-
-        if($request->isBridging > 0)
+        if($request->isBridging == 1)
         {
+            $validator = Validator::make(request()->all(), [
+                'noKartu' => 'required',
+                'tglSep' => 'required',
+                'asalRujukan' => 'required',
+                'jnsPelayanan' => 'required',
+                'diagAwal' => 'required',
+                'dpjpLayan' => 'required',
+                'noTelp' => 'required',
+            ]);
+            if ($validator->fails()) {
+                Alert::error('Error', 'data yang dikirimkan tidak lengkap!');
+                return back();
+            }
             $vclaim = new VclaimController();
             $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
             $signature = $this->signature();

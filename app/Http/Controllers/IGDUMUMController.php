@@ -369,8 +369,8 @@ class IGDUMUMController extends Controller
     public function batalDaftarIGD(Request $request)
     {
         $data =  AntrianPasienIGD::findOrFail($request->id);
-        $data->no_rm = (Null);
-        $data->is_px_daftar = (Null);
+        $data->no_rm = null; 
+        $data->is_px_daftar = null;
         $data->update();
         return response()->json($data, 200);
     }

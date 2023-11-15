@@ -152,7 +152,6 @@ class AntrianIGDController extends APIController
         }
         if ($s_byrm) {
             $pasien = Pasien::where('no_rm', $s_byrm)->get();
-            dd($pasien);
         }
         if ($s_byname) {
             $pasien = Pasien::where('nama_px', $s_byname)->limit(100)->get();

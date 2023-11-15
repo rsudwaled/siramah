@@ -65,7 +65,7 @@
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
-                              
+
                             </div>
                         </div>
                     </x-adminlte-card>
@@ -120,7 +120,9 @@
                                             no bpjs</button>
                                     @endif
                                     @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
-                                    <a href="{{route('form-pasien-bpjs',['nik'=>$pasien->nik_bpjs,'no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>0])}}" class="btn btn-block btn-xl btn-warning btn-flat withLoad">daftarkan <b>dipasien bpjs</b></a>
+                                        <a href="{{ route('form-pasien-bpjs', ['nik' => $pasien->nik_bpjs, 'no' => $antrian->no_antri, 'rm' => $pasien->no_rm, 'jp' => 0]) }}"
+                                            class="btn btn-block btn-xl btn-warning btn-flat withLoad">daftarkan <b>dipasien
+                                                bpjs</b></a>
                                     @endif
                                 </div>
                             </div>
@@ -143,8 +145,8 @@
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="nama_pasien"
-                                                                value="{{ $pasien->nama_px }}" disabled
-                                                                label="Nama Pasien" enable-old-support>
+                                                                value="{{ $pasien->nama_px }}" disabled label="Nama Pasien"
+                                                                enable-old-support>
                                                                 <x-slot name="prependSlot">
                                                                     <div class="input-group-text text-olive">
                                                                         {{ $pasien->no_rm }}</div>
@@ -381,6 +383,7 @@
 
         function batalDaftar(id, no) {
             var no = no;
+            let token = $("meta[name='csrf-token']").attr("content");
             // alert(id);
             swal.fire({
                 icon: 'question',
@@ -390,22 +393,27 @@
                 denyButtonText: `Tidak`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranigd') }}/?id=" + id;
+                    var url = "{{ route('batalkan.pendaftaranigd') }}";
                     $.ajax({
                         type: "put",
                         url: url,
+                        data: {
+                            id:id,
+                            _token: token,
+                        },
                         success: function(data) {
                             console.log(data);
+                            Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '',
+                                'success');
+                            window.location.href = "{{ route('d-antrian-igd') }}"
                         }
                     });
-                    Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '', 'success');
-                    window.location.href = "{{ route('d-antrian-igd') }}"
                 }
             })
         }
 
         function backAndDelete(id) {
-            // alert(id);
+            let token = $("meta[name='csrf-token']").attr("content");
             swal.fire({
                 icon: 'question',
                 title: 'Apakah Anda Yakin akan kembali? ',
@@ -414,15 +422,19 @@
                 denyButtonText: `Batal`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranigd') }}/?id=" + id;
+                    var url = "{{ route('batalkan.pendaftaranigd') }}";
                     $.ajax({
                         type: "put",
                         url: url,
+                        data: {
+                            id:id,
+                            _token: token,
+                        },
                         success: function(data) {
                             console.log(data);
+                            window.location.href = "{{ route('d-antrian-igd') }}"
                         }
                     });
-                    window.location.href = "{{ route('d-antrian-igd') }}"
                 }
             })
         }

@@ -394,16 +394,16 @@
                             <div class="col-lg-9">
                                 @php
                                     $heads = ['NO RM', 'NIK', 'NO BPJS', 'NAMA', 'TGL Lahir', 'ALAMAT'];
-                                    $config['order'] = ['0', 'asc'];
+                                    $config['order'] = false;
                                     $config['ordering'] = false;
-                                    $config['paging'] = true;
+                                    $config['paging'] = false;
                                     $config['info'] = false;
                                     $config['searching'] = false;
-                                    $config['scrollY'] = '600px';
+                                    $config['scrollY'] = '700px';
                                     $config['scrollCollapse'] = true;
                                     $config['scrollX'] = true;
                                 @endphp
-                                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads"
+                                <x-adminlte-datatable id="table1" class="nowrap text-xs table-stript" :heads="$heads"
                                     :config="$config" striped bordered hoverable compressed></x-adminlte-datatable>
                             </div>
 

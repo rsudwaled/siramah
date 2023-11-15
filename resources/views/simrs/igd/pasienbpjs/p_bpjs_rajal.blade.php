@@ -120,15 +120,6 @@
                                         <div class="col-md-12">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select2 name="diagAwal" label="Diagnosa">
-                                                        <option value="">--Pilih Diagnosa--</option>
-                                                        @foreach ($icd as $item)
-                                                            <option value="{{ $item->diag }}">
-                                                                {{ $item->diag }} {{ $item->nama }}</option>
-                                                        @endforeach
-                                                    </x-adminlte-select2>
-                                                </div>
-                                                <div class="col-md-6">
                                                     @php
                                                         $config = ['format' => 'YYYY-MM-DD'];
                                                     @endphp
@@ -136,11 +127,21 @@
                                                         value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                                         :config="$config" />
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select2 name="diagAwal" label="Diagnosa BPJS ICD-10" data-placeholder="Pilih beberapa diagnosa...">
+                                                    </x-adminlte-select2>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="col-md-12">
                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select name="asalRujukan" label="Pilih Rujukan">
+                                                        <option value="2">Faskes 2</option>
+                                                        <option value="1">Faskes 1</option>
+                                                    </x-adminlte-select>
+                                                </div>
                                                 <div class="col-md-6">
                                                     <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Pendaftaran">
                                                         <option value="">--Pilih Alasan--</option>
@@ -149,14 +150,6 @@
                                                                 {{ $item->alasan_masuk }}</option>
                                                         @endforeach
                                                     </x-adminlte-select2>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <x-adminlte-select name="asalRujukan" label="Pilih Rujukan">
-                                                        <option value="null">--pilih Rujukan--</option>
-                                                        <option value="1">Faskes 1</option>
-                                                        <option value="2">Faskes 2</option>
-                                                    </x-adminlte-select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <x-adminlte-select name="isBridging" label="Pilih Bridging / Tidak">
@@ -177,8 +170,13 @@
                                                     </x-adminlte-select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <x-adminlte-input name="noTelp" label="No Telepon"
-                                                        placeholder="08xxxx" disable-feedback />
+                                                    <x-adminlte-input name="noTelp" label="No Telepon" maxlength="13"
+                                                        minlength="11" placeholder="08xxxx" />
+                                                    <div class="invalid-feedback">
+                                                        @error('noTelp')
+                                                            {{ $message }}
+                                                        @enderror
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -239,17 +237,17 @@
                                             label="Batalkan Pendaftaran"
                                             onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
                                     @else
-                                        <a href="{{route('form-pasien',['no'=>$antrian->no_antri,'rm'=> $pasien->no_rm,'jp'=>$status_pendaftaran])}}"
+                                        <a href="{{ route('form-pasien', ['no' => $antrian->no_antri, 'rm' => $pasien->no_rm, 'jp' => $status_pendaftaran]) }}"
                                             class="float-right">
                                             <div class="alert alert-danger alert-dismissible">
                                                 <h5><i class="icon fas fa-ban"></i> BPJS BERMASALAH!</h5>
                                                 Pasien Bermasalah dengan bpjs, daftarkan sebagai pasien umum
-                                                </div>
+                                            </div>
                                         </a>
                                     @endif
                                 @else
                                     <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
-                                        label="Kembali" onclick="backAndDelete({{ $antrian->id }})"/>
+                                        label="Kembali" onclick="backAndDelete({{ $antrian->id }})" />
 
                                     <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
                                         label="tidak bisa lanjut daftar (pasien memilki kunjungan yang masih aktif)" />
@@ -304,6 +302,7 @@
                 }
             })
         }
+
         function backAndDelete(id) {
             swal.fire({
                 icon: 'question',
@@ -330,6 +329,26 @@
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $("#diagAwal").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_diagnosa_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            diagnosa: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
                 }
             });
 
