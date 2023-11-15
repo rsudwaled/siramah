@@ -26,7 +26,7 @@ class RanapController extends Controller
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->with(['pasien','budget', 'unit', 'status'])
+                    ->with(['pasien', 'budget', 'unit', 'status'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
@@ -34,7 +34,7 @@ class RanapController extends Controller
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->where('kode_unit', $request->kodeunit)
-                    ->with(['pasien','budget', 'unit', 'status'])
+                    ->with(['pasien', 'budget', 'unit', 'status'])
                     ->get();
             }
         }
@@ -47,24 +47,33 @@ class RanapController extends Controller
     public function pasienranapprofile(Request $request)
     {
         $kunjungan = Kunjungan::with([
-            'budget',
-            'alasan_masuk',
-            'unit',
+            'pasien',
             'dokter',
+            'unit',
+            'alasan_masuk',
             'penjamin_simrs',
             'status',
+            'budget',
+            'alasan_pulang',
             'surat_kontrol',
+            // 'layanans', 'layanans.layanan_details',
+            // 'layanans.layanan_details.tarif_detail',
+            // 'layanans.layanan_details.tarif_detail.tarif',
+            // 'layanans.layanan_details.barang',
         ])->firstWhere('kode_kunjungan', $request->kode);
-        $norm = $kunjungan->no_rm;
-        $pasien = Pasien::with([
-            'kunjungans',
-            'kunjungans.unit', 'kunjungans.assesmen_dokter',
-            'kunjungans.layanans', 'kunjungans.layanans.layanan_details',
-            'kunjungans.layanans.layanan_details.tarif_detail',
-            'kunjungans.layanans.layanan_details.tarif_detail.tarif',
-            'kunjungans.layanans.layanan_details.barang',
-            'kunjungans.dokter', 'kunjungans.assesmen_perawat'
-        ])->firstWhere('no_rm', $norm);
+        $pasien = $kunjungan->pasien;
+        $kunjungans = null;
+        $kunjungans = Kunjungan::where('no_rm', $kunjungan->no_rm)
+            ->with([
+                'unit', 'assesmen_dokter',
+                'layanans', 'layanans.layanan_details',
+                'layanans.layanan_details.tarif_detail',
+                'layanans.layanan_details.tarif_detail.tarif',
+                'layanans.layanan_details.barang',
+                'dokter', 'assesmen_perawat'
+            ])
+            ->orderBy('tgl_masuk', 'desc')
+            ->limit(10)->get();
         $biaya_rs = 0;
         foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
             $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');
@@ -72,6 +81,7 @@ class RanapController extends Controller
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
+            'kunjungans',
             'biaya_rs',
         ]));
     }

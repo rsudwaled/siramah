@@ -35,7 +35,17 @@
                     <dt class="col-sm-4 m-0">No SEP</dt>
                     <dd class="col-sm-8 m-0">{{ $kunjungan->no_sep }}</dd>
                     <dt class="col-sm-4 m-0">Tarif RS</dt>
-                    <dd class="col-sm-8 m-0">{{ money($total, 'IDR') }}</dd>
+                    <dd class="col-sm-8 m-0">{{ money($biaya_rs, 'IDR') }}
+                        @if ($kunjungan->budget)
+                            @if ($biaya_rs > $kunjungan->budget->tarif_inacbg)
+                                <span class="badge badge-danger">Over Budget</span>
+                            @else
+                                <span class="badge badge-success">Safe Budget</span>
+                            @endif
+                        @else
+                            <span class="badge badge-danger">Belum Groupping</span>
+                        @endif
+                    </dd>
                     <dt class="col-sm-4 m-0">Tarif E-Klaim</dt>
                     <dd class="col-sm-8 m-0">{{ money($kunjungan->budget->tarif_inacbg ?? 0, 'IDR') }}</dd>
                     <dt class="col-sm-4 m-0">Groupping</dt>
@@ -45,13 +55,19 @@
             <div class="col-md-4">
                 <dl class="row">
                     <dt class="col-sm-4 m-0">Status</dt>
-                    <dd class="col-sm-8 m-0">{{ $kunjungan->status->status_kunjungan }}</dd>
+                    <dd class="col-sm-8 m-0">
+                        @if ($kunjungan->status_kunjungan == 1)
+                            <span class="badge badge-success">{{ $kunjungan->status->status_kunjungan }}</span>
+                        @else
+                            <span class="badge badge-danger">{{ $kunjungan->status->status_kunjungan }}</span>
+                        @endif
+                    </dd>
                     <dt class="col-sm-4 m-0">Tgl Keluar</dt>
-                    <dd class="col-sm-8 m-0">{{ $kunjungan->tgl_keluar }}</dd>
+                    <dd class="col-sm-8 m-0">{{ $kunjungan->tgl_keluar ?? '-' }}</dd>
                     <dt class="col-sm-4 m-0">Alasan Pulang</dt>
-                    <dd class="col-sm-8 m-0">{{ $kunjungan->tgl_keluar }}</dd>
+                    <dd class="col-sm-8 m-0">{{ $kunjungan->alasan_pulang->alasan_pulang ?? '-' }}</dd>
                     <dt class="col-sm-4 m-0">Surat Kontrol</dt>
-                    <dd class="col-sm-8 m-0">{{ $kunjungan->tgl_keluar }}</dd>
+                    <dd class="col-sm-8 m-0">{{ $kunjungan->surat_kontrol->noSuratKontrol ?? '-' }}</dd>
                 </dl>
             </div>
         </div>
