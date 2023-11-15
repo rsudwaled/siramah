@@ -18,31 +18,23 @@ class RanapController extends Controller
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
         if ($request->tanggal) {
-            $request['tgl_awal'] = Carbon::parse(explode('-', $request->tanggal)[0])->startOfDay();
-            $request['tgl_akhir'] = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
-            $status = $request->status;
-            if ($request->jenistanggal == 'tgl_keluar') {
+            $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
+            $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
+            if ($request->kodeunit == '-') {
                 $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->whereBetween('tgl_keluar', [$request->tgl_awal, $request->tgl_akhir])
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->whereRelation('unit', 'kelas_unit', '=', 2)
                     ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status'])
                     ->get();
             } else {
-                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->whereBetween('tgl_masuk', [$request->tgl_awal, $request->tgl_akhir])
+                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->where('kode_unit', $request->kodeunit)
                     ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status'])
-                    ->where(function ($query) use ($status) {
-                        switch ($status) {
-                            case '1':
-                                $query->where('status_kunjungan', '=', 1);
-                                break;
-                            case '2':
-                                $query->where('status_kunjungan', '!=', 1);
-                                break;
-                            default:
-                                # code...
-                                break;
-                        }
-                    })
                     ->get();
             }
         }
@@ -64,17 +56,15 @@ class RanapController extends Controller
             'surat_kontrol',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $norm = $kunjungan->no_rm;
-        $pasien = Cache::remember('pasien' . $kunjungan->no_rm, 30 * 60, function () use ($norm) {
-            return Pasien::with([
-                'kunjungans',
-                'kunjungans.unit', 'kunjungans.assesmen_dokter',
-                'kunjungans.layanans', 'kunjungans.layanans.layanan_details',
-                'kunjungans.layanans.layanan_details.tarif_detail',
-                'kunjungans.layanans.layanan_details.tarif_detail.tarif',
-                'kunjungans.layanans.layanan_details.barang',
-                'kunjungans.dokter', 'kunjungans.assesmen_perawat'
-            ])->firstWhere('no_rm', $norm);
-        });
+        $pasien = Pasien::with([
+            'kunjungans',
+            'kunjungans.unit', 'kunjungans.assesmen_dokter',
+            'kunjungans.layanans', 'kunjungans.layanans.layanan_details',
+            'kunjungans.layanans.layanan_details.tarif_detail',
+            'kunjungans.layanans.layanan_details.tarif_detail.tarif',
+            'kunjungans.layanans.layanan_details.barang',
+            'kunjungans.dokter', 'kunjungans.assesmen_perawat'
+        ])->firstWhere('no_rm', $norm);
         $biaya_rs = 0;
         foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
             $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');

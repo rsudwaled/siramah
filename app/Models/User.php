@@ -33,7 +33,7 @@ class User extends Authenticatable
         if ($this->avatar) {
             return $this->avatar;
         } else {
-            return 'https://picsum.photos/300/300';
+            return asset('vendor/adminlte/dist/img/AdminLTELogo.png');
         }
     }
 }
