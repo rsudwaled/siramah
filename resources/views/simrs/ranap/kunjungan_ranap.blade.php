@@ -14,7 +14,7 @@
                             $config = ['format' => 'YYYY-MM-DD'];
                         @endphp
                         <x-adminlte-input-date fgroup-class="col-md-3" igroup-size="sm" name="tanggal" label="Tanggal Antrian"
-                            :config="$config" value="{{ $request->tanggal }}" />
+                            :config="$config" value="{{ $request->tanggal ?? now()->format('Y-m-d') }}" />
                         <x-adminlte-select2 fgroup-class="col-md-3" name="kodeunit" label="Ruangan">
                             <option value="-" {{ $request->kodeunit ? '-' : 'selected' }}>SEMUA RUANGAN (-)
                             </option>
@@ -46,28 +46,33 @@
                     <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
                         hoverable compressed>
                         @foreach ($kunjungans as $kunjungan)
-                            <tr>
-                                <td>{{ $kunjungan->tgl_masuk }}</td>
-                                <td>{{ $kunjungan->tgl_keluar }}</td>
-                                <td>{{ $kunjungan->counter }} / {{ $kunjungan->kode_kunjungan }}</td>
-                                <td>{{ $kunjungan->no_rm }} {{ $kunjungan->pasien->nama_px }}</td>
-                                <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
-                                <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                <td>{{ $kunjungan->no_sep }}</td>
-                                <td>
-                                    @if ($kunjungan->status_kunjungan == 1)
-                                        <span class="badge badge-success">{{ $kunjungan->status_kunjungan }}.
-                                            {{ $kunjungan->status->status_kunjungan }}</span>
-                                    @else
-                                        <span class="badge badge-danger">{{ $kunjungan->status_kunjungan }}.
-                                            {{ $kunjungan->status->status_kunjungan }}</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
-                                        class="btn btn-primary btn-xs"><i class="fas fa-file-medical"></i> Lihat
-                                        ERM</a>
-                                </td>
+                            @if ($kunjungan->budget)
+                                <tr >
+                                @else
+                                <tr class="table-danger">
+                            @endif
+                            <td>{{ $kunjungan->tgl_masuk }}</td>
+                            <td>{{ $kunjungan->tgl_keluar }}</td>
+                            <td>{{ $kunjungan->counter }} / {{ $kunjungan->kode_kunjungan }}</td>
+                            <td>{{ $kunjungan->no_rm }} {{ $kunjungan->pasien->nama_px }}</td>
+                            <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
+                            <td>{{ $kunjungan->unit->nama_unit }}</td>
+                            <td>{{ $kunjungan->no_sep }}</td>
+                            <td>
+                                @if ($kunjungan->status_kunjungan == 1)
+                                    <span class="badge badge-success">{{ $kunjungan->status_kunjungan }}.
+                                        {{ $kunjungan->status->status_kunjungan }}</span>
+                                @else
+                                    <span class="badge badge-danger">{{ $kunjungan->status_kunjungan }}.
+                                        {{ $kunjungan->status->status_kunjungan }}</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
+                                    class="btn btn-primary btn-xs"><i class="fas fa-file-medical"></i> Lihat
+                                    ERM</a>
+                            </td>
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>

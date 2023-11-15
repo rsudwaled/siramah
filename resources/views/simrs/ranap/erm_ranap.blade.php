@@ -18,7 +18,7 @@
                     </ul>
                 </x-adminlte-alert>
             @endif
-            <a href="{{ route('kunjunganranapaktif') }}?kodeunit={{ $kunjungan->kode_unit }}"
+            <a href="{{ route('kunjunganranap') }}?tanggal={{ \Carbon\Carbon::parse($kunjungan->tgl_masuk)->format('Y-m-d') }}&kodeunit={{ $kunjungan->kode_unit }}"
                 class="btn btn-sm mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
             @include('simrs.ranap.erm_ranap_profil')
         </div>
@@ -202,22 +202,6 @@
                                                 <td></td>
                                                 <td></td>
                                             </tr>
-                                            {{-- @foreach ($kjg->layanans as $item)
-                                                <tr>
-                                                    <td>{{ $item->tgl_entry }}</td>
-                                                    <td>{{ $item->kode_layanan_header }}</td>
-                                                    <td>{{ money($item->total_layanan, 'IDR') }}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>
-                                            @endforeach
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td>{{ money($kunjungan->layanans->sum('total_layanan'), 'IDR') }}</td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr> --}}
                                         </tbody>
                                     </table>
                                 </div>
@@ -244,6 +228,43 @@
                                 </div>
                             </div>
                         </div> --}}
+                        {{-- administrasi --}}
+                        <div class="card card-info mb-1">
+                            <div class="card-header" role="tab">
+                                <h3 class="card-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi"
+                                        aria-expanded="true">
+                                        Administrasi Kunjungan
+                                    </a>
+                                </h3>
+                            </div>
+                            <div id="cAdministrasi" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    <form action="" name="formAdm" id="formAdm" method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        @php
+                                            $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                                        @endphp
+                                        <x-adminlte-input-date name="tgl_masuk" class="tgl_masuk-id" label="Tgl Masuk"
+                                            value="{{ $kunjungan->tgl_masuk }}" igroup-size="sm" :config="$config"
+                                            readonly />
+                                        <x-adminlte-input-date name="tgl_keluar" class="tgl_keluar-id" label="Tgl Keluar"
+                                            value="{{ $kunjungan->tgl_keluar }}" igroup-size="sm" :config="$config"
+                                            readonly />
+                                        <input type="hidden" name="kodekunjungan"
+                                            value="{{ $kunjungan->kode_kunjungan }}">
+
+
+                                        <x-adminlte-input name="no_sep" placeholder="No SEP" igroup-size="sm"
+                                            label="No SEP" enable-old-support required value="{{ $kunjungan->no_sep }}" />
+                                        <button type="submit" form="formAdm" class="btn btn-success">
+                                            <i class="fas fa-edit"></i> Update Administrasi
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         {{-- groupping --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cGroupping">
@@ -857,8 +878,8 @@
             $config['order'] = ['0', 'desc'];
             $config['info'] = false;
         @endphp
-        <x-adminlte-datatable id="tableSEP" class="nowrap text-xs" :heads="$heads" :config="$config" bordered hoverable
-            compressed>
+        <x-adminlte-datatable id="tableSEP" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
         </x-adminlte-datatable>
     </x-adminlte-modal>
 @stop

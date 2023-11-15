@@ -26,7 +26,7 @@ class RanapController extends Controller
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status'])
+                    ->with(['pasien','budget', 'unit', 'status'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
@@ -34,7 +34,7 @@ class RanapController extends Controller
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->where('kode_unit', $request->kodeunit)
-                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status'])
+                    ->with(['pasien','budget', 'unit', 'status'])
                     ->get();
             }
         }
