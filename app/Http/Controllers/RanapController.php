@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ErmRanap;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RanapController extends Controller
 {
@@ -56,6 +58,7 @@ class RanapController extends Controller
             'budget',
             'alasan_pulang',
             'surat_kontrol',
+            'erm_ranap',
             // 'layanans', 'layanans.layanan_details',
             // 'layanans.layanan_details.tarif_detail',
             // 'layanans.layanan_details.tarif_detail.tarif',
@@ -111,5 +114,19 @@ class RanapController extends Controller
             'units',
             'kunjungans',
         ]));
+    }
+    public function simpan_resume_ranap(Request $request)
+    {
+
+        $erm = ErmRanap::updateOrCreate(
+            [
+                'kode_kunjungan' => $request->kode_kunjungan,
+                'norm' => $request->norm,
+                'counter' => $request->counter,
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
+        return redirect()->back();
     }
 }
