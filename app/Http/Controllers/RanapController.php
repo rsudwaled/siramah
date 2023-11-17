@@ -129,4 +129,15 @@ class RanapController extends Controller
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
         return redirect()->back();
     }
+    public function print_resume_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $erm = $kunjungan->erm_ranap;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_resume_ranap', compact([
+            'kunjungan',
+            'erm',
+            'pasien',
+        ]));
+    }
 }
