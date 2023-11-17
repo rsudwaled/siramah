@@ -330,7 +330,7 @@ class AntrianIGDController extends APIController
     public function formPasienIGD(Request $request,$no, $rm, $jp)
     {
         
-        $antrian = AntrianPasienIGD::firstWhere('no_antri',$no);
+        $antrian = AntrianPasienIGD::with('isTriase')->firstWhere('no_antri',$no);
         $pasien = Pasien::firstWhere('no_rm', $rm);
         $tanggal =now()->format('Y-m-d');
 

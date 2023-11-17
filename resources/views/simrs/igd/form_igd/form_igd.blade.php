@@ -174,7 +174,7 @@
                                                             <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
                                                                 <option value="">--Pilih Dokter--</option>
                                                                 @foreach ($paramedis as $item)
-                                                                    <option value="{{ $item->kode_paramedis }}">
+                                                                    <option value="{{ $item->kode_paramedis }}" {{is_null($antrian->isTriase) ? 'asdas': ($item->kode_paramedis == $antrian->triase->kode_paramedis?'selected':'')}}>
                                                                         {{ $item->nama_paramedis }}</option>
                                                                 @endforeach
                                                             </x-adminlte-select2>

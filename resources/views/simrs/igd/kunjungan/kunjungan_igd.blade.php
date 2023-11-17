@@ -210,7 +210,7 @@
     <div class="col-lg-12">
         <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan :">
             @php
-                $heads = ['No RM', 'kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'status kunjungan', 'action'];
+                $heads = ['Pasien', 'kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Diagnosa', 'No SEP', 'status kunjungan', 'action'];
                 $config['order'] = ['0', 'asc'];
                 $config['paging'] = true;
                 $config['info'] = false;
@@ -222,7 +222,7 @@
                 hoverable compressed>
                 @foreach ($kunjungan as $item)
                     <tr>
-                        <td>{{ $item->no_rm }}</td>
+                        <td><b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->no_rm }} <br>NIK : {{ $item->pasien->nik_bpjs }}</td>
                         <td>{{ $item->kode_kunjungan }}</td>
                         <td>{{ $item->kode_unit }} ({{ $item->unit->nama_unit }})</td>
                         <td>{{ $item->tgl_masuk }}</td>
