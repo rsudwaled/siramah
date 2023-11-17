@@ -92,11 +92,11 @@
         }
     </script>
     <script type="text/javascript">
-        // $(document).ready(function() {
-        //     window.print();
-        // });
-        // setTimeout(function() {
-        //     window.top.close();
-        // }, 2000);
+        $(document).ready(function() {
+            window.print();
+        });
+        setTimeout(function() {
+            window.top.close();
+        }, 2000);
     </script>
 @endsection

@@ -16,67 +16,67 @@
                     <div class="col-md-4">
                         <x-adminlte-textarea name="ringkasan_perawatan" label="Ringkasan Perawatan" rows="3"
                             igroup-size="sm" placeholder="Ringkasan Perawatan">
-                            {{ $kunjungan->erm_ranap->ringkasan_perawatan }}
+                            {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="riwayat_penyakit" label="Riwayat Penyakit" rows="2"
                             igroup-size="sm" placeholder="Riwayat Penyakit">
-                            {{ $kunjungan->erm_ranap->riwayat_penyakit }}
+                            {{ $kunjungan->erm_ranap->riwayat_penyakit ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="indikasi_ranap" label="Indikasi Ranap" rows="2"
                             igroup-size="sm" placeholder="Indikasi Ranap">
-                            {{ $kunjungan->erm_ranap->indikasi_ranap }}
+                            {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="pemeriksaan_fisik" label="Pemeriksaan Fisik" rows="4"
                             igroup-size="sm" placeholder="Pemeriksaan Fisik">
-                            {{ $kunjungan->erm_ranap->pemeriksaan_fisik }}
+                            {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
                         </x-adminlte-textarea>
                     </div>
                     <div class="col-md-4">
                         <x-adminlte-textarea name="catatan_laboratorium" label="Pemeriksaan Laboratorium" rows="3"
                             igroup-size="sm" placeholder="Pemeriksaan Laboratorium">
-                            {{ $kunjungan->erm_ranap->catatan_laboratorium }}
+                            {{ $kunjungan->erm_ranap->catatan_laboratorium ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="catatan_radiologi" label="Pemeriksaan Radiologi" rows="3"
                             igroup-size="sm" placeholder="Pemeriksaan Radiologi">
-                            {{ $kunjungan->erm_ranap->catatan_radiologi }}
+                            {{ $kunjungan->erm_ranap->catatan_radiologi ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="catatan_penunjang" label="Pemeriksaan Penunjang Lainnya"
                             rows="3" igroup-size="sm" placeholder="Pemeriksaan Penunjang Lainnya">
-                            {{ $kunjungan->erm_ranap->catatan_penunjang }}
+                            {{ $kunjungan->erm_ranap->catatan_penunjang ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="hasil_konsultasi" label="Hasil Konsultasi" rows="3"
                             igroup-size="sm" placeholder="Hasil Konsultasi">
-                            {{ $kunjungan->erm_ranap->hasil_konsultasi }}
+                            {{ $kunjungan->erm_ranap->hasil_konsultasi ?? null }}
                         </x-adminlte-textarea>
                     </div>
                     <div class="col-md-4">
                         <x-adminlte-textarea name="diagnosa_masuk" label="Diagnosa Masuk" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Masuk">
-                            {{ $kunjungan->erm_ranap->diagnosa_masuk }}
+                            {{ $kunjungan->erm_ranap->diagnosa_masuk ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="diagnosa_utama" label="Diagnosa Utama" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Utama">
-                            {{ $kunjungan->erm_ranap->diagnosa_utama }}
+                            {{ $kunjungan->erm_ranap->diagnosa_utama ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="diagnosa_sekunder" label="Diagnosa Sekunder" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Sekunder">
-                            {{ $kunjungan->erm_ranap->diagnosa_sekunder }}
+                            {{ $kunjungan->erm_ranap->diagnosa_sekunder ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="komplikasi" label="Komplikasi" rows="3" igroup-size="sm"
                             placeholder="Komplikasi">
-                            {{ $kunjungan->erm_ranap->komplikasi }}
+                            {{ $kunjungan->erm_ranap->komplikasi ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="3"
                             igroup-size="sm" placeholder="Diagnosa ICD-10">
-                            {{ $kunjungan->erm_ranap->diagnosa_icd10 }}
+                            {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="tindakan" label="Tindakan" rows="3" igroup-size="sm"
                             placeholder="Tindakan">
-                            {{ $kunjungan->erm_ranap->tindakan }}
+                            {{ $kunjungan->erm_ranap->tindakan ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="tindakan_icd9" label="Tindakan ICD-9" rows="3"
                             igroup-size="sm" placeholder="Tindakan ICD-9">
-                            {{ $kunjungan->erm_ranap->tindakan_icd9 }}
+                            {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
                         </x-adminlte-textarea>
                     </div>
                 </div>
