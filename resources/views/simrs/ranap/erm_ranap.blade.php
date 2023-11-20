@@ -30,37 +30,13 @@
                         @include('simrs.ranap.erm_ranap_riwayat')
                         {{-- rincian --}}
                         @include('simrs.ranap.erm_ranap_biaya')
-                        {{-- icare --}}
-                        {{-- <div class="card card-info mb-1">
-                                <div class="card-header" role="tab">
-                                    <h3 class="card-title">
-                                        <a data-toggle="collapse" data-parent="#accordion" href="#cIcare" aria-expanded="true">
-                                            I-Care JKN
-                                        </a>
-                                    </h3>
-                                </div>
-                                <div id="cIcare" class="collapse" role="tabpanel">
-                                    <div class="card-body">
-                                        @if ($urlicare)
-                                            <iframe src="{{ $urlicare }}" width="100%" height="500px"
-                                                frameborder="0"></iframe>
-                                            {{ $messageicare }}
-                                        @else
-                                            Mohon Maaf ! {{ $messageicare }}
-                                        @endif
-                                    </div>
-                                </div>
-                            </div> --}}
                         {{-- administrasi --}}
                         <div class="card card-info mb-1">
-                            <div class="card-header" role="tab">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
                                 <h3 class="card-title">
-                                    <a data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi"
-                                        aria-expanded="true">
-                                        Administrasi Kunjungan
-                                    </a>
+                                    Administrasi Kunjungan
                                 </h3>
-                            </div>
+                            </a>
                             <div id="cAdministrasi" class="collapse" role="tabpanel">
                                 <div class="card-body">
                                     <form action="" name="formAdm" id="formAdm" method="POST"
@@ -105,7 +81,7 @@
                             </div>
                         </div>
                         {{-- laboratorium --}}
-                        {{-- @include('simrs.ranap.erm_ranap_lab') --}}
+                        @include('simrs.ranap.erm_ranap_lab')
                         {{-- radiologi --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRadiologi">

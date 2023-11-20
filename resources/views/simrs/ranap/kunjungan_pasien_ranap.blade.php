@@ -7,7 +7,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
+            <x-adminlte-card icon="fas fa-filter" title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
                         @php

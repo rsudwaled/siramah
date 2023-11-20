@@ -1,13 +1,13 @@
 @extends('adminlte::page')
-@section('title', 'Kunjungan Rawat Inap')
+@section('title', 'Pasien Rawat Inap')
 @section('content_header')
-    <h1>Kunjungan Rawat Inap</h1>
+    <h1>Pasien Rawat Inap</h1>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
+            <x-adminlte-card icon="fas fa-filter" title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
                         @php

@@ -211,7 +211,7 @@ return [
     */
 
     'sidebar_mini' => 'lg',
-    'sidebar_collapse' => false,
+    'sidebar_collapse' => true,
     'sidebar_collapse_auto_size' => false,
     'sidebar_collapse_remember' => false,
     'sidebar_collapse_remember_no_transition' => true,
@@ -478,13 +478,6 @@ return [
             'icon'    => 'fas fa-clinic-medical',
             'can' => 'ranap',
             'submenu' => [
-                [
-                    'text' => 'Kunjungan Ranap Aktif',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'kunjunganranapaktif',
-                    'shift'   => 'ml-2',
-                    'can' => 'ranap',
-                ],
                 [
                     'text' => 'Kunjungan Ranap',
                     'icon'    => 'fas fa-user-injured',
