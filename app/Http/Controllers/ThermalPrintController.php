@@ -23,21 +23,20 @@ class ThermalPrintController extends Controller
     public function cekPrinter(Request $request)
     {
         Log::notice('Test Printer ip : ' . $request->ip());
-        try {
-            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
-            $connector = new WindowsPrintConnector($printer);
-            $printer = new Printer($connector);
-            $printer->text("Connector Printer :\n");
-            $printer->text($printer . "\n");
-            $printer->text("Test Printer Berhasil.\n");
-            $printer->cut();
-            $printer->close();
-            Alert::success('Success', 'Mesin menyala dan siap digunakan. ' . $printer);
-            return redirect()->route('antrianConsole');
-        } catch (\Throwable $th) {
-            // throw $th;
-            Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
-            return redirect()->route('antrianConsole');
-        }
+        // try {
+        $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+        $connector = new WindowsPrintConnector($printer);
+        $printer = new Printer($connector);
+        $printer->text("Connector Printer :\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->cut();
+        $printer->close();
+        Alert::success('Success', 'Mesin menyala dan siap digunakan. ' . $printer);
+        return redirect()->route('antrianConsole');
+        // } catch (\Throwable $th) {
+        //     // throw $th;
+        //     Alert::error('Error', 'Mesin antrian tidak menyala. Silahkan hubungi admin.');
+        //     return redirect()->route('antrianConsole');
+        // }
     }
 }
