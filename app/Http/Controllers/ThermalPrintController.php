@@ -23,8 +23,12 @@ class ThermalPrintController extends Controller
     public function cekPrinter(Request $request)
     {
         Log::notice('Test Printer ip : ' . $request->ip());
+        if ($request->ip() == "192.168.2.51") {
+            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+        } else {
+            $printer = env('PRINTER_CHECKIN');
+        }
         // try {
-        $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
         $printer->text("Connector Printer :\n");
