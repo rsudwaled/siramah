@@ -1,6 +1,5 @@
 <div class="card card-info mb-1">
-    <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRiwayat"
-        aria-expanded="true">
+    <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRiwayat" aria-expanded="true">
         <h3 class="card-title">
             Riwayat Kunjungan
         </h3>
@@ -15,8 +14,7 @@
                 $config['info'] = false;
                 $config['scrollY'] = '500px';
             @endphp
-            <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" bordered
-                hoverable compressed>
+            <x-adminlte-datatable id="table1" :heads="$heads" :config="$config" bordered hoverable compressed>
                 @foreach ($kunjungans->sortByDesc('tgl_masuk') as $item)
                     <tr>
                         <td width="10%">
@@ -118,12 +116,11 @@
     </div>
 </div>
 <x-adminlte-modal id="modalHasilLab" name="modalHasilLab" title="Hasil Laboratorium" theme="success"
-icon="fas fa-file-medical" size="xl">
-<iframe id="dataHasilLab" src="" height="600px" width="100%"
-    title="Iframe Example"></iframe>
-<x-slot name="footerSlot">
-    <a href="" id="urlHasilLab" target="_blank" class="btn btn-primary mr-auto">
-        <i class="fas fa-download "></i>Download</a>
-    <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
-</x-slot>
+    icon="fas fa-file-medical" size="xl">
+    <iframe id="dataHasilLab" src="" height="600px" width="100%" title="Iframe Example"></iframe>
+    <x-slot name="footerSlot">
+        <a href="" id="urlHasilLab" target="_blank" class="btn btn-primary mr-auto">
+            <i class="fas fa-download "></i>Download</a>
+        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+    </x-slot>
 </x-adminlte-modal>

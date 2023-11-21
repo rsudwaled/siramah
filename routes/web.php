@@ -45,6 +45,7 @@ use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
+use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\RanapController;
 use App\Http\Livewire\Users;
@@ -159,6 +160,8 @@ Route::middleware('auth')->group(function () {
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::post('simpan_resume_ranap', [RanapController::class, 'simpan_resume_ranap'])->name('simpan_resume_ranap');
     Route::get('print_resume_ranap', [RanapController::class, 'print_resume_ranap'])->name('print_resume_ranap');
+    // laboratorium
+    Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
 
 
     // farmasi

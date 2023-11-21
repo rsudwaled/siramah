@@ -19,8 +19,9 @@ class ThermalPrintController extends Controller
             'request',
         ]));
     }
-    public function cekPrinter()
+    public function cekPrinter(Request $request)
     {
+        dd($request->ip());
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);

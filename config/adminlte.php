@@ -670,6 +670,27 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'Hasil Laboratorium',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'hasillaboratorium',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Hasil Radiologi',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'hasilradiologi',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Hasil Lab Patologi Anatomi',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'hasillabpa',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'CPPT',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'cppt',
