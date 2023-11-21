@@ -31,7 +31,7 @@ class ThermalPrintController extends Controller
         $printer->text("Test Printer Berhasil.\n");
         $printer->cut();
         $printer->close();
-        Alert::success('Success', 'Mesin menyala dan siap digunakan. ' . $printer);
+        Alert::success('Success', 'Mesin menyala dan siap digunakan.');
         return redirect()->route('antrianConsole');
         // } catch (\Throwable $th) {
         //     // throw $th;
