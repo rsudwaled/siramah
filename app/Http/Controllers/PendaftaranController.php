@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
@@ -496,6 +497,7 @@ class PendaftaranController extends APIController
     public function daftarBpjsOffline(Request $request)
     {
         try {
+            Log::notice('Antrian Printer ip : ' . $request->ip());
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->close();
@@ -529,6 +531,7 @@ class PendaftaranController extends APIController
         if ($response->metadata->code == 200) {
             // cek printer
             try {
+                Log::notice('Antrian Printer ip : ' . $request->ip());
                 $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
                 $printer = new Printer($connector);
                 $printer->close();
@@ -547,6 +550,8 @@ class PendaftaranController extends APIController
     public function daftarUmumOffline(Request $request)
     {
         try {
+            Log::notice('Antrian Printer ip : ' . $request->ip());
+
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->close();
@@ -706,6 +711,8 @@ class PendaftaranController extends APIController
             Carbon::setLocale('id');
             date_default_timezone_set('Asia/Jakarta');
             $now = Carbon::now();
+            Log::notice('Antrian Printer ip : ' . $request->ip());
+
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->setEmphasis(true);
@@ -810,6 +817,8 @@ class PendaftaranController extends APIController
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
+            Log::notice('Antrian Printer ip : ' . $request->ip());
+
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->setEmphasis(true);
@@ -857,6 +866,8 @@ class PendaftaranController extends APIController
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
+            Log::notice('Antrian Printer ip : ' . $request->ip());
+
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->setEmphasis(true);

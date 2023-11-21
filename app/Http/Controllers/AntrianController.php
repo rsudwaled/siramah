@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
@@ -2139,6 +2140,7 @@ class AntrianController extends APIController
         // cek printer
         return $this->sendError("Silahkan lakukan checkin di anjungan antrian RSUD Waled", 500);
         try {
+            Log::notice('Checkin Printer ip : ' . $request->ip());
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->close();

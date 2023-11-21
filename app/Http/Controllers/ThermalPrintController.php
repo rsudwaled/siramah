@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
@@ -21,7 +22,7 @@ class ThermalPrintController extends Controller
     }
     public function cekPrinter(Request $request)
     {
-        dd($request->ip());
+        Log::notice('Test Printer ip : ' . $request->ip());
         try {
             $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
