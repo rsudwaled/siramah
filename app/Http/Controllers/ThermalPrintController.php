@@ -23,15 +23,42 @@ class ThermalPrintController extends Controller
     public function cekPrinter(Request $request)
     {
         Log::notice('Test Printer ip : ' . $request->ip());
-        if ($request->ip() == "192.168.2.51") {
-            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
-        } else {
+        if ($request->ip() == "192.168.2.133") {
             $printer = env('PRINTER_CHECKIN');
+        } else {
+            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
         }
         // try {
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
         $printer->text("Connector Printer :\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
+        $printer->text("Test Printer Berhasil.\n");
         $printer->text("Test Printer Berhasil.\n");
         $printer->cut();
         $printer->close();
