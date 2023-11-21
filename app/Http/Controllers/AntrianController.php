@@ -2141,8 +2141,7 @@ class AntrianController extends APIController
         return $this->sendError("Silahkan lakukan checkin di anjungan antrian RSUD Waled", 500);
         try {
             Log::notice('Checkin Printer ip : ' . $request->ip());
-            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
-            $connector = new WindowsPrintConnector($printer);
+            $connector = new WindowsPrintConnector(env('PRINTER_CHECKIN'));
             $printer = new Printer($connector);
             $printer->close();
         } catch (\Throwable $th) {
