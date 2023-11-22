@@ -521,13 +521,6 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
-                    'text' => 'Jadwal Dokter Poliklinik',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'shift'   => 'ml-2',
-                    'url'  => 'jadwalDokterPoliklinik',
-                    'can' =>  ['pelayanan-medis', 'pendaftaran','poliklinik'],
-                ],
-                [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
                     'url'  => 'dokter',
@@ -560,7 +553,14 @@ return [
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
                     'url'  => 'jadwaldokter',
-                    'can' =>  ['pelayanan-medis', 'pendaftaran','poliklinik'],
+                    'can' =>  ['pelayanan-medis', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Jadwal Dokter Poliklinik',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'shift'   => 'ml-2',
+                    'url'  => 'jadwalDokterPoliklinik',
+                    'can' =>  ['pelayanan-medis', 'poliklinik'],
                 ],
                 [
                     'text' => 'Tarif Layanan',
