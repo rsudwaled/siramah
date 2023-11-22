@@ -528,13 +528,6 @@ return [
                     'can' =>  ['pelayanan-medis', 'pendaftaran','poliklinik'],
                 ],
                 [
-                    'text' => 'Data Pasien',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'pasienPoliklinik',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                ],
-                [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
                     'url'  => 'dokter',
