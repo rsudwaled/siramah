@@ -525,7 +525,7 @@ return [
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
                     'url'  => 'jadwalDokterPoliklinik',
-                    'can' => 'poliklinik',
+                    'can' =>  ['pelayanan-medis', 'pendaftaran','poliklinik'],
                 ],
                 [
                     'text' => 'Data Pasien',
@@ -567,7 +567,7 @@ return [
                     'icon'    => 'fas fa-calendar-alt',
                     'shift'   => 'ml-2',
                     'url'  => 'jadwaldokter',
-                    'can' => 'pelayanan-medis',
+                    'can' =>  ['pelayanan-medis', 'pendaftaran','poliklinik'],
                 ],
                 [
                     'text' => 'Tarif Layanan',
