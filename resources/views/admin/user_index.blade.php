@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Id', 'Nama', 'Username', 'Phone', 'Email', 'Role', 'Verify', 'Created_at', 'Action'];
+                    $heads = ['Id', 'Nama', 'Username', 'Phone', 'Email', 'Role', 'Verify', 'Updated_at', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -79,7 +79,7 @@
                                     {{ $item->verificator->name }}
                                 @endisset
                             </td>
-                            <td>{{ $item->created_at }}</td>
+                            <td>{{ $item->updated_at }}</td>
                             <td>
                                 <x-adminlte-button class="btn-xs btnEdit" theme="warning" icon="fas fa-edit"
                                     title="Edit User {{ $item->name }}" data-id="{{ $item->id }}"
@@ -95,10 +95,10 @@
                                     <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-user-check"
                                         title="Verify User {{ $item->name }}"
                                         onclick="window.location='{{ route('user_verifikasi', $item) }}'" />
+                                    <x-adminlte-button class="btn-xs btnDelete" theme="danger" icon="fas fa-trash-alt"
+                                        title="Hapus User {{ $item->name }} " data-id="{{ $item->id }}"
+                                        data-name="{{ $item->name }}" />
                                 @endif
-                                <x-adminlte-button class="btn-xs btnDelete" theme="danger" icon="fas fa-trash-alt"
-                                    title="Hapus User {{ $item->name }} " data-id="{{ $item->id }}"
-                                    data-name="{{ $item->name }}" />
                             </td>
                         </tr>
                     @endforeach

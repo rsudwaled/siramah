@@ -21,11 +21,11 @@ class UserController extends Controller
                 ->latest()
                 ->where('name', "like", "%" . $request->search . "%")
                 ->orWhere('email', "like", "%" . $request->search . "%")
-                ->simplePaginate();
+                ->simplePaginate(50);
         } else {
             $users = User::with(['roles', 'verificator'])
                 ->latest()
-                ->simplePaginate();
+                ->simplePaginate(50);
         }
         $users_total = User::count();
         $roles = Role::pluck('name');
@@ -117,15 +117,27 @@ class UserController extends Controller
     }
     public function user_verifikasi(User $user, Request $request)
     {
-        $user->update([
-            'email_verified_at' => Carbon::now(),
-            'user_verify' => Auth::user()->id,
-        ]);
-        $wa = new WhatsappController();
-        $request['message'] = "*Verifikasi Akun Sistem* \nAkun anda telah diverifikasi. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan gunakan akun ini baik-baik.";
-        $request['number'] = $user->phone;
-        $wa->send_message($request);
-        Alert::success('Success', 'Akun telah diverifikasi');
+        if ($user->email_verified_at) {
+            $user->update([
+                'email_verified_at' =>  null,
+                'user_verify' => null,
+            ]);
+            $wa = new WhatsappController();
+            $request['message'] = "*Nonaktif Akun Sistem* \nAkun anda telah dinonaktifkan. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nTerima kasih telah bijak menggunakan sistem.";
+            $request['number'] = $user->phone;
+            $wa->send_message($request);
+            Alert::success('Success', 'Akun telah dinonaktifkan');
+        } else {
+            $user->update([
+                'email_verified_at' => Carbon::now(),
+                'user_verify' => Auth::user()->id,
+            ]);
+            $wa = new WhatsappController();
+            $request['message'] = "*Verifikasi Akun Sistem* \nAkun anda telah diverifikasi. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan gunakan akun ini baik-baik.";
+            $request['number'] = $user->phone;
+            $wa->send_message($request);
+            Alert::success('Success', 'Akun telah diverifikasi');
+        }
         return redirect()->back();
     }
 }

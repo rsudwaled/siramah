@@ -1,5 +1,5 @@
 <div class="card card-primary card-outline">
-    <div class="card-body box-profile  p-3">
+    <div class="card-body box-profile p-3">
         <h6 class="text-center">
             IDENTITAS PASIEN
         </h6>

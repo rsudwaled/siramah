@@ -11,13 +11,24 @@ class RoleController extends Controller
 {
     public function index(Request $request)
     {
-        $roles = Role::with(['permissions','users'])->get();
-        $permissions = Permission::with(['roles'])->get();
+        if ($request->role) {
+            $roles = Role::with(['permissions', 'users'])
+                ->where('name', "LIKE",  "%" . $request->role . "%")
+                ->get();
+        } else {
+            $roles = Role::with(['permissions', 'users'])->get();
+        }
+        if ($request->permission) {
+            $permissions = Permission::with(['roles'])
+                ->where('name', "LIKE",  "%" . $request->permission . "%")
+                ->get();
+        } else {
+            $permissions = Permission::with(['roles'])->get();
+        }
         return view('admin.role_index', compact(['roles', 'permissions', 'request']));
     }
     public function edit(Role $role)
     {
-        // $role = Role::with('permissions')->firstWhere('name', $name);
         $permissions = Permission::pluck('name', 'id');
         return view('admin.role_edit', compact(['role', 'permissions']));
     }

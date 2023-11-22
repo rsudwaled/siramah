@@ -47,7 +47,6 @@
                                 <td>{{ $item->counter }} / {{ $item->kode_kunjungan }}</td>
                                 <td>{{ $item->pasien->no_rm }} / {{ $item->pasien->nama_px }}</td>
                                 <td>{{ $item->unit->nama_unit }}</td>
-                                <td>{{ $item->unit->nama_unit }}</td>
                                 <td>
                                     @foreach ($item->layanans->where('kode_unit', 3002) as $lab)
                                         @foreach ($lab->layanan_details as $laydet)
@@ -55,6 +54,7 @@
                                         @endforeach
                                     @endforeach
                                 </td>
+                                <td></td>
                                 <td>
                                     @foreach ($item->layanans->where('kode_unit', 3002) as $lab)
                                         <div class="btn btn-xs btn-primary btnHasilLab"

@@ -28,7 +28,7 @@ class PermissionController extends Controller
     {
         // $permission = Permission::find($id);
         if ($permission->roles()->exists()) {
-            Alert::error('Gagal Menghapus', 'Permission masih memiliki permission');
+            Alert::error('Gagal Menghapus', 'Permission masih memiliki role');
         } else {
             $permission->delete();
             Alert::success('Success', 'Permission Telah Dihapus');
