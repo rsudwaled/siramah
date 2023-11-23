@@ -196,13 +196,14 @@ class IGDBPJSController extends APIController
             'lakaLantas' => 'Status Kecelakaan Wajib dipilih, dan lengkapi data selanjutnya yang diperlukan',
             'asalRujukan' => 'Asal Rujukan Wajib dipilih, Faskes 2 (RS) - Faskes 1 (puskes)',
             'noTelp' => 'No Telepon Wajib Diisi dengan baik dan benar',
+            'isBridging' => 'Silahkan pilih status pendaftaran pada bpjs brigding /  tidak',
         ]);
-        if ($request->isBridging == 1) {
-            if($request->diagAwal==null){
-                Alert::error('Error', 'bridging bpjs gagal, diagnosa wajib diisi!');
-                return back();
-            }
-        }
+        // if ($request->isBridging == 1) {
+        //     if($request->diagAwal==null){
+        //         Alert::error('Error', 'bridging bpjs gagal, diagnosa wajib diisi!');
+        //         return back();
+        //     }
+        // }
         $pasien = Pasien::firstwhere('no_rm', $request->noMR);
         $user = Auth::user()->name;
         if($request->isBridging == 1)

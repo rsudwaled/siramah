@@ -98,14 +98,18 @@ class PasienIGDController extends Controller
         $pasien = Pasien::firstWhere('no_rm',$request->rm);
         $klp = KeluargaPasien::firstWhere('no_rm',$request->rm);
         $provinsi = Provinsi::get();
+        $kota = Kabupaten::where('kode_provinsi', $pasien->kode_propinsi)->get();
+        $kecamatan = Kecamatan::where('kode_kabupaten_kota', $pasien->kode_kabupaten)->get();
+        $desa = Desa::where('kode_kecamatan', $pasien->kode_kecamatan)->get();
         $negara = Negara::get();
         $hb_keluarga = HubunganKeluarga::get();
         $agama = Agama::get();
         $pekerjaan = Pekerjaan::get();
         $pendidikan = Pendidikan::get();
-        return view('simrs.igd.pasienbpjs.edit_pasienbpjs',compact(
+        return view('simrs.igd.pasienigd.edit_pasien',compact(
             'klp','pasien','provinsi','negara',
             'hb_keluarga','agama','pekerjaan','pendidikan',
+            'kota','kecamatan','desa'
         ));
     }
 

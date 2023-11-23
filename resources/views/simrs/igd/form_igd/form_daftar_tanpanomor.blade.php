@@ -26,7 +26,7 @@
                                         {{ $pasien->no_telp == null ? $pasien->no_hp : $pasien->no_telp }}</b></li>
                             </ul>
                             <a class="btn btn-primary bg-gradient-primary btn-block"><b>No Antri :
-                                    {{ $antrian->no_antri }}</b></a>
+                                    -</b></a>
                         </div>
                     </div>
                 </div>
@@ -75,74 +75,38 @@
             <div class="row">
                 <div class="col-md-3">
 
-                    @if ($pasien->no_Bpjs == null && $resdescrtipt->metadata->code != 200)
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Status Pasien :</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <a class="btn btn-app btn-block bg-maroon"><i class="fas fa-user-tag"></i>
-                                                PASIEN UMUM </a>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <a class="btn btn-app btn-block bg-success"><i class="fas fa-users"></i>
-                                                {{ $antrian->no_antri }}</a>
-                                        </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Status Pasien :</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <a class="btn btn-app btn-block bg-maroon"><i class="fas fa-user-tag"></i>
+                                            PASIEN UMUM </a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a class="btn btn-app btn-block bg-success"><i class="fas fa-users"></i>
+                                            -</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @else
-                        <div
-                            class="card {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'card-success' : 'card-danger' }} card-outline">
-                            <div class="card-body box-profile">
-                                <div class="card-header">
-                                    <b>
-                                        <p>
-                                            STATUS BPJS : {{ $resdescrtipt->response->peserta->noKartu }}
-                                            ({{ $resdescrtipt->response->peserta->statusPeserta->keterangan }})
-                                        </p>
-                                        @if ($resdescrtipt->metadata->code == 200)
-                                            <p>
-                                                PENJAMIN : {{ $jpBpjs }} - ({{ $ket_jpBpjs }})
-                                            </p>
-                                        @endif
-                                    </b>
-                                    <button type="button"
-                                        class="btn btn-block {{ $resdescrtipt->response->peserta->statusPeserta->kode == 0 ? 'bg-gradient-success' : 'bg-gradient-danger' }} btn-sm mb-2">BPJS
-                                        :
-                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}</button>
-                                    @if ($pasien->no_Bpjs == null)
-                                        <button type="button" class="btn btn-block bg-gradient-primary btn-sm mb-2"
-                                            onclick="updateNOBPJS({{ $pasien->nik_bpjs }}, '{{ $resdescrtipt->response->peserta->noKartu }}')">update
-                                            no bpjs</button>
-                                    @endif
-                                    @if ($resdescrtipt->response->peserta->statusPeserta->kode == 0)
-                                        <a href="{{ route('form-pasien-bpjs', ['nik' => $pasien->nik_bpjs, 'no' => $antrian->no_antri, 'rm' => $pasien->no_rm, 'jp' => 0]) }}"
-                                            class="btn btn-block btn-xl btn-warning btn-flat withLoad">daftarkan <b>dipasien
-                                                bpjs</b></a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    </div>
                 </div>
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-lg-12">
-                            <x-adminlte-card theme="success" size="sm" id="div_rajal" icon="fas fa-info-circle"
+                            <x-adminlte-card theme="success" size="sm" icon="fas fa-info-circle"
                                 collapsible title="Form Pendaftaran">
-                                <form action="{{ route('pendaftaran-igd.igdstore') }}" id="formPendaftaranIGD"
+                                <form action="{{ route('store.tanpaAntrianIgd') }}" id="formPendaftaranIGD"
                                     method="post">
                                     @csrf
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="col-md-12">
-                                                    <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <x-adminlte-input name="nama_pasien"
@@ -175,7 +139,7 @@
                                                             <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
                                                                 <option value="">--Pilih Dokter--</option>
                                                                 @foreach ($paramedis as $item)
-                                                                    <option value="{{ $item->kode_paramedis }}" {{(is_null($antrian->isTriase) ? 'asdas': ($item->kode_paramedis == $antrian->isTriase->kode_paramedis?'selected':''))}}>
+                                                                    <option value="{{ $item->kode_paramedis }}">
                                                                         {{ $item->nama_paramedis }}</option>
                                                                 @endforeach
                                                             </x-adminlte-select2>
@@ -220,14 +184,12 @@
                                             <x-adminlte-button type="submit"
                                                 class="withLoad btn btn-sm m-1 bg-green float-right" id="submitPasien"
                                                 label="Simpan Data" />
-                                            <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
-                                                label="Batalkan Pendaftaran"
-                                                onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
+                                            <a href="{{ route('d-antrian-igd') }}" class=" btn btn-sm btn-flat m-1 bg-danger float-right">Batalkan Pendaftaran</a>
                                         @else
                                             <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
                                                 label="tidak bisa lanjut daftar" />
                                             <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
-                                                label="Kembali" onclick="backAndDelete({{ $antrian->id }})" />
+                                                label="Kembali"  />
                                         @endif
                                     </div>
                                 </form>
@@ -246,164 +208,5 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 @section('js')
-    <script>
-
-        function getID(rID, pasien_id) {
-            var ruangan_terpilih = rID;
-            var pasien_id = pasien_id;
-            swal.fire({
-                title: 'YAKIN PILIH RUANGAN INI?',
-                showDenyButton: true,
-                confirmButtonText: 'Pilih Sekarang',
-                denyButtonText: `Batal`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('pilih-ruangan') }}",
-                        data: {
-                            ruangan_id: ruangan_terpilih,
-                            pasien_id: pasien_id
-                        },
-                        success: function(data) {
-                            // alert(data.success);
-                        },
-                    });
-                    Swal.fire('Ruangan Sudah di Pilih!', '', 'success')
-                    $('.modalruangan').modal('hide')
-
-
-                } else if (result.isDenied) {
-                    Swal.fire('Pilih Ruangan dibatalkan', '', 'info')
-                }
-            })
-        }
-
-        $("#submitPernyataan").click(function(e) {
-
-            e.preventDefault();
-
-            var nama_keluarga_sp = $("#nama_keluarga_sp").val();
-            var rm_sp = $("#rm_sp").val();
-            var alamat_keluarga_sp = $("#alamat_keluarga_sp").val();
-            var tlp_keluarga_sp = $("#tlp_keluarga_sp").val();
-            var tgl_surat_pernyataan_sp = $("#tgl_surat_pernyataan").val();
-            var hub_keluarga_sp = $("#hub_keluarga_sp").val();
-            let token = $("meta[name='csrf-token']").attr("content");
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('surat-pernyataan.bpjsproses') }}",
-                data: {
-                    rm_sp: rm_sp,
-                    nama_keluarga_sp: nama_keluarga_sp,
-                    tlp_keluarga_sp: tlp_keluarga_sp,
-                    tgl_surat_pernyataan_sp: tgl_surat_pernyataan_sp,
-                    hub_keluarga_sp: hub_keluarga_sp,
-                    alamat_keluarga_sp: alamat_keluarga_sp,
-                    _token: token,
-                },
-                success: function(data) {
-                    $('#modalBPJSPROSES').modal('hide');
-                    $.LoadingOverlay("hide");
-                    Swal.fire('pernyataan berhasil dibuat', '', 'success');
-                }
-            });
-
-        });
-
-
-        function updateNOBPJS(nik_pas, noKartu) {
-            var nik_pas = nik_pas;
-            var no_bpjs = noKartu;
-            swal.fire({
-                icon: 'question',
-                title: 'UPDATE NO BPJS PASIEN DENGAN NIK ' + nik_pas,
-                showDenyButton: true,
-                confirmButtonText: 'Update',
-                denyButtonText: `Batal`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('update-nobpjs.pasien') }}";
-                    $.ajax({
-                        type: "put",
-                        url: url,
-                        data: {
-                            "_token": "{{ csrf_token() }}",
-                            nik_pas: nik_pas,
-                            no_bpjs: no_bpjs,
-                        },
-                        success: function(data) {
-
-                        }
-                    });
-                    Swal.fire('nobpjs sudah diupdate', '', 'success');
-                    location.reload();
-                }
-            })
-        }
-
-        function batalDaftar(id, no) {
-            var no = no;
-            let token = $("meta[name='csrf-token']").attr("content");
-            // alert(id);
-            swal.fire({
-                icon: 'question',
-                title: 'BATALKAN PENDAFTARAN DENGAN NO ' + no,
-                showDenyButton: true,
-                confirmButtonText: 'Batalkan',
-                denyButtonText: `Tidak`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranigd') }}";
-                    $.ajax({
-                        type: "put",
-                        url: url,
-                        data: {
-                            id:id,
-                            _token: token,
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '',
-                                'success');
-                            window.location.href = "{{ route('d-antrian-igd') }}"
-                        }
-                    });
-                }
-            })
-        }
-
-        function backAndDelete(id) {
-            let token = $("meta[name='csrf-token']").attr("content");
-            swal.fire({
-                icon: 'question',
-                title: 'Apakah Anda Yakin akan kembali? ',
-                showDenyButton: true,
-                confirmButtonText: 'Kembali',
-                denyButtonText: `Batal`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranigd') }}";
-                    $.ajax({
-                        type: "put",
-                        url: url,
-                        data: {
-                            id:id,
-                            _token: token,
-                        },
-                        success: function(data) {
-                            console.log(data);
-                            window.location.href = "{{ route('d-antrian-igd') }}"
-                        }
-                    });
-                }
-            })
-        }
-    </script>
+  
 @endsection

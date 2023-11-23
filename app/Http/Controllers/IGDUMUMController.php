@@ -78,15 +78,7 @@ class IGDUMUMController extends Controller
 
     public function pendaftaranIGDStore(Request $request)
     {
-        // dd($request->all());
-        $data = Kunjungan::where('no_rm', $request->rm)
-            ->where('status_kunjungan', 1)
-            ->get();
-        if ($data->count() > 0) {
-            Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
-            return back();
-        }
-        $request->validate([
+       $request->validate([
             'nik' => 'required',
             'rm' => 'required',
             'unit' => 'required',
@@ -95,6 +87,14 @@ class IGDUMUMController extends Controller
             'penjamin_id' => 'required',
             'alasan_masuk_id' => 'required',
         ]);
+        $data = Kunjungan::where('no_rm', $request->rm)
+            ->where('status_kunjungan', 1)
+            ->get();
+        if ($data->count() > 0) {
+            Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
+            return back();
+        }
+        
         // counter increment
         $counter = Kunjungan::latest('counter')
             ->where('no_rm', $request->rm)
@@ -361,6 +361,151 @@ class IGDUMUMController extends Controller
                 }
             } 
             // dd($createKunjungan,  $ant_upd, $createLH, $createKarcis, $createAdm);
+        }
+        Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
+        return redirect()->route('d-antrian-igd');
+    }
+
+    public function storeDaftarTanpaAntri(Request $request)
+    {
+        // dd($request->all());
+        $request->validate(
+                [
+                    'nik' => 'required',
+                    'rm' => 'required',
+                    'unit' => 'required',
+                    'dokter_id' => 'required',
+                    'tanggal' => 'required',
+                    'penjamin_id' => 'required',
+                    'alasan_masuk_id' => 'required',
+                ],
+                [
+                    'dokter_id' => 'DPJP wajib dipilih!',
+                    'tanggal' => 'Tanggal Pendaftaran wajib diisi',
+                    'penjamin_id' => 'Penjamin Wajib dipilih!',
+                    'alasan_masuk_id' => 'Alasan daftar wajib diisi',
+                ]
+        );
+        $data = Kunjungan::where('no_rm', $request->rm)
+            ->where('status_kunjungan', 1)
+            ->get();
+        if ($data->count() > 0) {
+            Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
+            return back();
+        }
+        
+        // counter increment
+        $counter = Kunjungan::latest('counter')
+            ->where('no_rm', $request->rm)
+            ->where('status_kunjungan', 2)
+            ->first();
+        if ($counter == null) {
+            $c = 1;
+        } else {
+            $c = $counter->counter + 1;
+        }
+        $unit = Unit::findOrFail($request->unit);
+        $pasien = Pasien::where('no_rm', $request->rm)->first();
+        $desa = 'Desa ' . $pasien->desas->nama_desa_kelurahan;
+        $kec = 'Kec. ' . $pasien->kecamatans->nama_kecamatan;
+        $kab = 'Kab. ' . $pasien->kabupatens->nama_kabupaten_kota;
+        $alamat = $pasien->alamat . ' ( ' . $desa . ' - ' . $kec . ' - ' . $kab . ' )';
+        
+        $createKunjungan = new Kunjungan();
+        $createKunjungan->counter = $c;
+        $createKunjungan->no_rm = $request->rm;
+        $createKunjungan->kode_unit = $unit->kode_unit;
+        $createKunjungan->tgl_masuk = now();
+        $createKunjungan->kode_paramedis = $request->dokter_id;
+        $createKunjungan->status_kunjungan = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+        $createKunjungan->prefix_kunjungan = $unit->prefix_unit;
+        $createKunjungan->kode_penjamin = $request->penjamin_id;
+        $createKunjungan->kelas = 3;
+        $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+        $createKunjungan->pic = Auth::user()->id;
+        if ($createKunjungan->save()) {
+            $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+            if ($kodelayanan == null) {
+                $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+            }
+
+            $tarif_karcis = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
+            $tarif_adm = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
+            $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+            // create layanan header
+            $createLH = new Layanan();
+            $createLH->kode_layanan_header = $kodelayanan;
+            $createLH->tgl_entry = now();
+            $createLH->kode_kunjungan = $createKunjungan->kode_kunjungan;
+            $createLH->kode_unit = $unit->kode_unit;
+            $createLH->pic = Auth::user()->id;
+            $createLH->status_pembayaran = 'OPN';
+            if ($unit->kelas_unit == 1) {
+                $createLH->kode_tipe_transaksi = 1;
+                $createLH->status_layanan = 3; // status 3 nanti di update jadi 1
+                $createLH->total_layanan = $total_bayar_k_a;
+
+                if ($request->penjamin_id == 'P01') {
+                    $createLH->tagihan_pribadi = $total_bayar_k_a;
+                } else {
+                    $createLH->tagihan_penjamin = $total_bayar_k_a;
+                }
+                // header create
+                if ($createLH->save()) {
+                    // create layanan detail
+                    $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+                    $nomorlayanandetkarc = substr($layanandet->id_layanan_detail, 9) + 1;
+                    $nomorlayanandetadm = substr($layanandet->id_layanan_detail, 9) + 2;
+
+                    // create detail karcis
+                    $createKarcis = new LayananDetail();
+                    $createKarcis->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
+                    $createKarcis->kode_layanan_header = $createLH->kode_layanan_header;
+                    $createKarcis->kode_tarif_detail = $unit->kode_tarif_karcis;
+                    $createKarcis->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    $createKarcis->jumlah_layanan = 1;
+                    $createKarcis->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    $createKarcis->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    $createKarcis->status_layanan_detail = 'OPN';
+                    $createKarcis->tgl_layanan_detail = now();
+                    $createKarcis->tgl_layanan_detail_2 = now();
+                    $createKarcis->row_id_header = $createLH->id;
+                    if ($request->penjamin_id == 'P01') {
+                        $createKarcis->tagihan_pribadi = $total_bayar_k_a;
+                    } else {
+                        $createKarcis->tagihan_penjamin = $total_bayar_k_a;
+                    }
+                    if ($createKarcis->save()) {
+                        // create detail karcis
+                        $createAdm = new LayananDetail();
+                        $createAdm->id_layanan_detail = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+                        $createAdm->kode_layanan_header = $createLH->kode_layanan_header;
+                        $createAdm->kode_tarif_detail = $unit->kode_tarif_karcis;
+                        $createAdm->total_tarif = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createAdm->jumlah_layanan = 1;
+                        $createAdm->total_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createAdm->grantotal_layanan = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createAdm->status_layanan_detail = 'OPN';
+                        $createAdm->tgl_layanan_detail = now();
+                        $createAdm->tgl_layanan_detail_2 = now();
+                        $createAdm->row_id_header = $createLH->id;
+                        if ($request->penjamin_id == 'P01') {
+                            $createAdm->tagihan_pribadi = $total_bayar_k_a;
+                        } else {
+                            $createAdm->tagihan_penjamin = $total_bayar_k_a;
+                        }
+                        
+                        if($createAdm->save())
+                        {
+                            $createKunjungan->status_kunjungan =1;  //status 8 nanti update setelah header dan detail selesai jadi 1
+                            $createKunjungan->update();
+
+                            $createLH->status_layanan =1; // status 3 nanti di update jadi 1
+                            $createLH->update();
+                        }
+                    }
+                }
+            } 
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
         return redirect()->route('d-antrian-igd');

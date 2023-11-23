@@ -88,16 +88,21 @@
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kabupaten_pasien" label="Kabupaten" id="kab_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="kab_pasien_first">{{ $pasien->kabupaten==null?'data belum diisi':$pasien->kabupatens->nama_kabupaten_kota }}
-                                        </option>
+                                        @foreach ($kota as $item)
+                                            <option value="{{$item->kode_kabupaten_kota}}" {{$item->kode_kabupaten_kota==$pasien->kode_kabupaten ?'selected':''}}>{{$item->nama_kabupaten_kota}}</option>
+                                        @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kecamatan_pasien" label="Kecamatan" id="kec_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="kec_pasien_first">{{ $pasien->kecamatan==null?'data belum diisi':$pasien->kecamatans->nama_kecamatan }}</option>
+                                        @foreach ($kecamatan as $item)
+                                            <option value="{{$item->kode_kecamatan}}" {{$item->kode_kecamatan == $pasien->kode_kecamatan ? 'selected':''}}>{{$item->nama_kecamatan}}</option>
+                                        @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select name="desa_pasien" label="Desa" id="desa_pasien"
                                         fgroup-class="col-md-6">
-                                        <option id="desa_pasien_first">{{ $pasien->desa==null?'data belum diisi':$pasien->desas->nama_desa_kelurahan }}</option>
+                                        @foreach ($desa as $item)
+                                            <option value="{{$item->kode_desa_kelurahan}}" {{$item->kode_desa_kelurahan == $pasien->kode_desa? 'selected':''}}>{{$item->nama_desa_kelurahan}}</option>
+                                        @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select2 name="negara" label="Negara" id="negara_pasien"
                                         fgroup-class="col-md-6">

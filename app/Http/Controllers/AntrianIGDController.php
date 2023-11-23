@@ -281,12 +281,12 @@ class AntrianIGDController extends APIController
     public function antrianIGD()
     {
         // test
-        $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
-            ->paginate(32);
-        // dd($antrian);
-        // $antrian = AntrianPasienIGD::whereDate('tgl', now())
-        //     ->where('status', 1)
+        // $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
         //     ->paginate(32);
+        // dd($antrian);
+        $antrian = AntrianPasienIGD::whereDate('tgl', now())
+            ->where('status', 1)
+            ->paginate(32);
         $pasien = Pasien::limit(200)
             ->orderBy('tgl_entry', 'desc')
             ->get();
@@ -304,6 +304,46 @@ class AntrianIGDController extends APIController
         $antrian = AntrianPasienIGD::find($request->id);
         return response()->json($antrian);
     }
+
+    public function daftarTanpaNomor(Request $request)
+    {
+        // dd($request->all());
+        if(!$request->rm && !$request->pendaftaran_id)
+        {
+            Alert::warning('INFORMASI!', 'anda belum memilih pasien dan jenis pendaftaran!');
+            return back();
+        }else{
+            return redirect()->route('form.daftarTanpaNomor',['rm'=> $request->no_rm,'jp'=>$request->pendaftaran_id]);
+        }
+    }
+
+    public function formDaftarTanpaNomor($rm, $jp)
+    {
+        // dd($rm, $jp);
+        $pasien = Pasien::firstWhere('no_rm', $rm);
+        if(!$pasien)
+        {
+            Alert::warning('INFORMASI!', 'pasien tidak terdaftara dalam sistem!');
+            return back();
+        }
+        $kunjungan = Kunjungan::where('no_rm', $rm)->get();
+        $knj_aktif = Kunjungan::where('no_rm', $rm)
+            ->where('status_kunjungan', 1)
+            ->count();
+        $unit = Unit::limit(10)->get();
+        $alasanmasuk = AlasanMasuk::limit(10)->get();
+        $paramedis = Paramedis::where('act', 1)
+            ->get();
+        $penjamin = PenjaminSimrs::limit(10)
+            ->where('act', 1)
+            ->get();
+        return view('simrs.igd.form_igd.form_daftar_tanpanomor', compact(
+            'pasien', 'kunjungan', 'unit', 'paramedis', 'penjamin', 'alasanmasuk','knj_aktif'
+        ));
+        
+    }
+    
+
     public function antrianPasienUMUMTerpilih(Request $request)
     {
         $validated = $request->validate([
@@ -329,8 +369,9 @@ class AntrianIGDController extends APIController
 
     public function formPasienIGD(Request $request,$no, $rm, $jp)
     {
-        
+        // dd($request->all());
         $antrian = AntrianPasienIGD::with('isTriase')->firstWhere('no_antri',$no);
+        // dd($antrian->isTriase);
         $pasien = Pasien::firstWhere('no_rm', $rm);
         $tanggal =now()->format('Y-m-d');
 

@@ -85,10 +85,35 @@
                         <form action="{{ route('pasien-igdbpjs-store') }}" id="formPendaftaranIGD" method="post">
                             @csrf
                             <div class="col-lg-12">
+                                <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
+                                <input type="hidden" name="unit" value="1002">
+                                <input type="hidden" name="noKartu" value="{{ $pasien->no_Bpjs }}">
+                                <input type="hidden" name="noMR" value="{{ $pasien->no_rm }}">
+                                <input type="hidden" name="jnsPelayanan" value="2">
+                                <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
+                                <input type="hidden" name="klsRawatHak" value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
                                 <div class="row">
+                                    <div class="col-lg-6">
+                                        <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}"
+                                            disabled label="Nama Pasien" enable-old-support>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-olive">
+                                                    {{ $pasien->no_rm }}</div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
+                                            <option value="">--Pilih Dokter--</option>
+                                            @foreach ($paramedis as $item)
+                                                <option value="{{ $item->kode_dokter_jkn }}">
+                                                    {{ $item->nama_paramedis }}</option>
+                                            @endforeach
+                                        </x-adminlte-select2>
+                                    </div>
                                     <div class="col-lg-12">
                                         <div class="col-md-12">
-                                            <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
+                                            
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}"
@@ -98,22 +123,10 @@
                                                                 {{ $pasien->no_rm }}</div>
                                                         </x-slot>
                                                     </x-adminlte-input>
-                                                    <input type="hidden" name="unit" value="1002">
-                                                    <input type="hidden" name="noKartu" value="{{ $pasien->no_Bpjs }}">
-                                                    <input type="hidden" name="noMR" value="{{ $pasien->no_rm }}">
-                                                    <input type="hidden" name="jnsPelayanan" value="2">
-                                                    <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
-                                                    <input type="hidden" name="klsRawatHak"
-                                                        value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
+                                                    
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
-                                                        <option value="">--Pilih Dokter--</option>
-                                                        @foreach ($paramedis as $item)
-                                                            <option value="{{ $item->kode_dokter_jkn }}">
-                                                                {{ $item->nama_paramedis }}</option>
-                                                        @endforeach
-                                                    </x-adminlte-select2>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -127,8 +140,9 @@
                                                         value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                                         :config="$config" />
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <x-adminlte-select2 name="diagAwal" label="Diagnosa BPJS ICD-10" data-placeholder="Pilih beberapa diagnosa...">
+                                                <div class="col-md-6" id="selectDiagnosa" style="display: none;">
+                                                    <x-adminlte-select2 name="diagAwal" label="Diagnosa BPJS ICD-10"
+                                                        data-placeholder="Pilih beberapa diagnosa...">
                                                     </x-adminlte-select2>
                                                 </div>
                                             </div>
@@ -152,7 +166,9 @@
                                                     </x-adminlte-select2>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select name="isBridging" label="Pilih Bridging / Tidak">
+                                                    <x-adminlte-select name="isBridging" id="isBridging"
+                                                        onchange="bridgingCheck(this.value)" label="Pilih Bridging / Tidak">
+                                                        <option value="">--Status BPJS--</option>
                                                         <option value="1">Bridging</option>
                                                         <option value="0">Tidak Bridging</option>
                                                     </x-adminlte-select>
@@ -269,6 +285,7 @@
 @section('js')
     <script>
         const select = document.getElementById('status_kecelakaan');
+        const isBridging = document.getElementById('isBridging');
         const pilihUnit = document.getElementById('div_stts_kecelakaan');
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
@@ -278,6 +295,14 @@
             }
 
         });
+
+        function bridgingCheck(value) {
+            if (value == "") {
+                Swal.fire('silahkan pilih status pendaftaran bpjs bridging atau tidak', '', 'info');
+            }
+            const diagx = document.getElementById('selectDiagnosa');
+            diagx.style.display = value == 1 ? 'block' : 'none';
+        }
 
         function batalDaftar(id, no) {
             var no = no;

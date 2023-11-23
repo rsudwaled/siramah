@@ -132,10 +132,13 @@
                                     </div>
                                     <div class="col-lg-12">
 
-                                        <form action="" method="get">
+                                        <form action="{{ route('pasien-antrian-terpilih') }}" method="post">
                                             @csrf
                                             <input type="hidden" id="send_id_antri" name="no_antri">
                                             <input type="hidden" id="no_rm" name="no_rm">
+                                            <input type="hidden" id="nik" name="nik">
+                                            <input type="hidden" id="tanggal" name="tanggal"
+                                                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                                             <div class="card">
                                                 <div class="card-header">
                                                     <span class="badge badge-danger">
@@ -168,21 +171,17 @@
                                                         </ul>
                                                     </div>
                                                     <div class="col-lg-12">
-                                                        <x-adminlte-select name="pendaftaran_id" id="pendaftaran_id"
-                                                            class="pendaftaran_id" label="Tujuan Pendaftaran">
+                                                        <x-adminlte-select name="pendaftaran_id" id="pendaftaran_id" class="pendaftaran_id"
+                                                            label="Tujuan Pendaftaran">
                                                             <option value="1">IGD UMUM</option>
                                                             <option value="0">IGD KEBIDANAN</option>
                                                         </x-adminlte-select>
                                                     </div>
                                                 </div>
-                                                <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('pasien-antrian-terpilih') }}';" id="lanjutDaftar" class="withLoad"
-                                                    theme="primary" label="Lanjutkan Pendaftaran" />
-                                                <button type="submit"
-                                                    onclick="javascript: form.action='{{ route('daftarTanpaNomor') }}';" class="btn btn-success btn-sm mt-2">
-                                                    daftar tanpa antrian
-                                                </button>
+                                                <x-adminlte-button type="submit" id="lanjutDaftar" class="withLoad" theme="primary"
+                                                    label="Lanjutkan Pendaftaran" />
                                                 <x-adminlte-button id="warningDaftar" theme="danger"
-                                                    label="silahkan edit nik pasien terlebih dahulu" class="btn btn-success btn-sm mt-2"/>
+                                                    label="silahkan edit nik pasien terlebih dahulu" />
                                             </div>
                                         </form>
                                     </div>
@@ -301,8 +300,7 @@
                                                                                     fgroup-class="col-md-6"
                                                                                     disable-feedback />
                                                                                 <x-adminlte-select name="provinsi_pasien"
-                                                                                    label="Provinsi *"
-                                                                                    id="provinsi_pasien"
+                                                                                    label="Provinsi *" id="provinsi_pasien"
                                                                                     fgroup-class="col-md-6">
                                                                                     @foreach ($provinsi as $item)
                                                                                         <option
@@ -365,7 +363,7 @@
                                                                             placeholder="no tlp" fgroup-class="col-md-6"
                                                                             disable-feedback />
                                                                         <x-adminlte-select name="hub_keluarga"
-                                                                            label="Hubungan Dengan Pasien *"
+                                                                            label="Hubungan Dengan Pasien *" 
                                                                             fgroup-class="col-md-6">
                                                                             @foreach ($hb_keluarga as $item)
                                                                                 <option value="{{ $item->kode }}">
@@ -423,7 +421,7 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert-danger').fadeOut();
             }, 8000);
             $.LoadingOverlay("hide");
@@ -510,7 +508,7 @@
                         console.log(pasien);
                         var nik = pasien.pasien['nik_bpjs'];
                         if (!nik) {
-                            Swal.fire('pasien tidak memiliki nik!', ' silahkan edit terlebih dahulu. JIKA PASIEN BAYI, DAFTAR DI MENU PASIEN BAYI',
+                            Swal.fire('pasien tidak memiliki nik. silahkan edit terlebih dahulu', '',
                                 'error')
                             $('#lanjutDaftar').hide();
                             $('#warningDaftar').show();
@@ -553,7 +551,7 @@
                         var jenis_antrian = data['no_antri'];
                         var jp = jenis_antrian.substring(0, 1);
                         var isAntrian = data['isNoAntrian'];
-
+                        
                         if (isAntrian > 0) {
                             $('#tujuan_daftar').text('Untuk Pasien IGD');
                             $(".pendaftaran_id").val('1').change();

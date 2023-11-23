@@ -326,8 +326,13 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar-umum/pasien-igd/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGD'])->name('form-pasien');
     Route::get('daftar-bpjs/pasien-igd/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienBPJS'])->name('form-pasien-bpjs');
     
+    //ROUTE PASIEN DAFTAR TANPA NO ANTRIAN 
+    Route::get('/pasien-daftar/tanpa-antri', [App\Http\Controllers\AntrianIGDController::class, 'daftarTanpaNomor'])->name('daftarTanpaNomor');
+    Route::get('/daftar-tanpa-nomor/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formDaftarTanpaNomor'])->name('form.daftarTanpaNomor');
+   
+    
     // Route::get('daftar/pasien-igd-bpjs/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGDFromBPJS'])->name('form-pasien-idgtobpjs');
-
+    
     Route::get('/get-pasien-terpilih', [App\Http\Controllers\AntrianIGDController::class, 'getpasienTerpilih'])->name('pasien-terpilih.get');
     Route::get('/pendaftaran-antrian-pasien-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasiendiDaftarkan'])->name('pasien-didaftarkan');
     Route::get('/pendaftaran-antrian-pasien-bpjs-igd', [App\Http\Controllers\AntrianIGDController::class, 'pasienBPJSDiDaftarkan'])->name('pasien-bpjs-didaftarkan');
@@ -350,6 +355,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/daftar-kunjungan-byuser', [App\Http\Controllers\IGDUMUMController::class, 'listPasienDaftar'])->name('kunjungan-pasien.byuser');
     Route::put('/pendaftaran-igd-batal', [App\Http\Controllers\IGDUMUMController::class, 'batalDaftarIGD'])->name('batalkan.pendaftaranigd');
     Route::get('/pendaftaran-antrian-pasien-igds', [App\Http\Controllers\IGDUMUMController::class, 'bpjsToUmum'])->name('bpjstoumum');
+    // Store Daftar Tanpa antri
+    Route::post('/daftar-tanpa-nomor/store', [App\Http\Controllers\IGDUMUMController::class, 'storeDaftarTanpaAntri'])->name('store.tanpaAntrianIgd');
     
     // pilih ruangan
     Route::post('/pilih-ruangan', [App\Http\Controllers\IGDUMUMController::class, 'pilihRuangan'])->name('pilih-ruangan');
