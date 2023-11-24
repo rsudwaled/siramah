@@ -281,12 +281,12 @@ class AntrianIGDController extends APIController
     public function antrianIGD()
     {
         // test
-        // $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
-        //     ->paginate(32);
-        // dd($antrian);
-        $antrian = AntrianPasienIGD::whereDate('tgl', now())
-            ->where('status', 1)
+        $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
             ->paginate(32);
+        // dd($antrian);
+        // $antrian = AntrianPasienIGD::whereDate('tgl', now())
+        //     ->where('status', 1)
+        //     ->paginate(32);
         $pasien = Pasien::limit(200)
             ->orderBy('tgl_entry', 'desc')
             ->get();
@@ -308,7 +308,7 @@ class AntrianIGDController extends APIController
     public function daftarTanpaNomor(Request $request)
     {
         // dd($request->all());
-        if(!$request->rm && !$request->pendaftaran_id)
+        if(!$request->no_rm)
         {
             Alert::warning('INFORMASI!', 'anda belum memilih pasien dan jenis pendaftaran!');
             return back();

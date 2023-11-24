@@ -274,41 +274,7 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        const select = document.getElementById('pilihPendaftaran');
-        const pilihUnit = document.getElementById('pilihUnit');
-
-        function showDiv(select) {
-            if (select.value == 0) {
-                document.getElementById('div_rajal').style.display = "block";
-                document.getElementById('div_ranap').style.display = "none";
-                document.getElementById('div_ruangan').style.display = "none";
-            } else {
-                document.getElementById('div_ranap').style.display = "block";
-                document.getElementById('div_ruangan').style.display = "block";
-                document.getElementById('div_rajal').style.display = "none";
-            }
-        }
-
-        function showUnit(pilihUnit) {
-            if (pilihUnit.value == 0) {
-                document.getElementById('ugd').style.display = "block";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 1) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "block";
-                document.getElementById('umum').style.display = "none";
-            } else if (pilihUnit.value == 2) {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "block";
-            } else {
-                document.getElementById('ugd').style.display = "none";
-                document.getElementById('ugd_keb').style.display = "none";
-                document.getElementById('umum').style.display = "none";
-            }
-        }
-
+    
         function getID(rID, pasien_id) {
             var ruangan_terpilih = rID;
             var pasien_id = pasien_id;

@@ -189,10 +189,10 @@
                                     <div class="col-lg-12">
                                         <div class="alert alert-warning alert-dismissible">
                                             <h5>
-                                                <i class="icon fas fa-info-circle"></i> form untuk mendaftarkan pasien baru
+                                                <i class="icon fas fa-info-circle"></i>Pasien Baru
                                                 :
                                             </h5> jika pasien tidak terdaftar dalam sistem, silahkan masukan data pasien
-                                            baru dengan cara klik tombol berikut : <br>
+                                            baru dengan cara klik tombol berikut : <br><br>
                                             <button type="button" class="btn btn-block bg-gradient-success btn-sm"
                                                 data-toggle="modal" data-target="#tambahPasien">Tambah Pasien
                                                 Baru</button>

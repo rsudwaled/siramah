@@ -321,7 +321,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cari-pasien-byname', [App\Http\Controllers\AntrianIGDController::class, 'searchPasienByName'])->name('pasien-igd-search-byname');
     Route::get('/get-no-antrian', [App\Http\Controllers\AntrianIGDController::class, 'getNoAntrian'])->name('get-no-antrian');
     
-    Route::post('/pasien-antrian/terpilih', [App\Http\Controllers\AntrianIGDController::class, 'antrianPasienUMUMTerpilih'])->name('pasien-antrian-terpilih');
+    Route::get('/pasien-antrian/terpilih', [App\Http\Controllers\AntrianIGDController::class, 'antrianPasienUMUMTerpilih'])->name('pasien-antrian-terpilih');
     Route::post('/pasien-bpjs-antrian/terpilih', [App\Http\Controllers\AntrianIGDController::class, 'antrianPasienBPJSTerpilih'])->name('pasienbpjs-antrian-terpilih');
     Route::get('daftar-umum/pasien-igd/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienIGD'])->name('form-pasien');
     Route::get('daftar-bpjs/pasien-igd/{nik}/{no}/{rm}/{jp}', [App\Http\Controllers\AntrianIGDController::class, 'formPasienBPJS'])->name('form-pasien-bpjs');
@@ -368,6 +368,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjungan'])->name('kunjungan-pasien.edit');
     Route::get('/edit-kunjungan-terpilih', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjunganTerpilih'])->name('kunjungan-terpilih.edit');
     Route::put('/edit-kunjungan-status-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'updateKunjunganTerpilih'])->name('statuskunjungan-terpilih.update');
+    Route::put('/diagnosa-update', [App\Http\Controllers\KunjunganIGDController::class, 'diagnosaPasien'])->name('diagnosa-fr.update');
     
     //ROUTE IGD BPJS
     Route::get('/pendaftaran-igd-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getDataAntrianPasienBPJS'])->name('pendaftaran-pasien-igdbpjs');
