@@ -54,8 +54,8 @@
                             <td>{{ $kunjungan->tgl_masuk }}</td>
                             <td>{{ $kunjungan->tgl_keluar }}</td>
                             <td>{{ $kunjungan->counter }} / {{ $kunjungan->kode_kunjungan }}</td>
-                            <td>{{ $kunjungan->no_rm }} {{ $kunjungan->pasien->nama_px }}</td>
-                            <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
+                            <td>{{ $kunjungan->no_rm }} {{ $kunjungan->pasien->nama_px ?? '-' }}</td>
+                            <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
                             <td>{{ $kunjungan->unit->nama_unit }}</td>
                             <td>{{ $kunjungan->no_sep }}</td>
                             <td>

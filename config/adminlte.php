@@ -408,27 +408,7 @@ return [
                     'active' => ['pasienRanapPasien', 'pasienRanap'],
                     'can' => 'ranap',
                 ],
-                [
-                    'text' => 'Pelayanan Laboratorium',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'hasillaboratorium',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Pelayanan Radiologi',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'hasilradiologi',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Pelayanan Lab Patologi Anatomi',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'hasillabpa',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
+
             ],
         ],
         // IGD
@@ -474,13 +454,7 @@ return [
                     'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
                 ],
-                [
-                    'text' => 'Obat',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'obat',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
+
                 [
                     'text' => 'Kunjungan',
                     'icon'    => 'fas fa-hospital-user',
@@ -488,13 +462,6 @@ return [
                     'shift'   => 'ml-2',
                     'active'  => ['kunjungan', 'kunjungan/create', 'regex:@^kunjungan(\/[0-9]+)?+$@', 'regex:@^kunjungan(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Buku Tamu',
-                    'icon'    => 'fas fa-book',
-                    'url'  => 'bukutamu',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
                 ],
                 [
                     'text' => 'E-File Rekam Medis',
@@ -505,20 +472,6 @@ return [
                     // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
                     'active'  => ['efilerm', 'efilerm/create'],
 
-                ],
-                [
-                    'text' => 'Diagnosa ICD-10',
-                    'icon'    => 'fas fa-diagnoses',
-                    'url'  => 'icd10',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'Tindankan Prosedur',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'tindakan',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
                 ],
                 [
                     'text' => 'Dokter',
@@ -571,6 +524,13 @@ return [
 
                 ],
                 [
+                    'text' => 'Obat',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'obat',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
                     'text' => 'Surat Masuk',
                     'icon'    => 'fas fa-envelope',
                     'url'  => 'suratmasuk',
@@ -620,6 +580,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
+                [
+                    'text' => 'Buku Tamu',
+                    'icon'    => 'fas fa-book',
+                    'url'  => 'bukutamu',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
 
             ],
         ],
@@ -628,6 +595,27 @@ return [
             'text'    => 'Hasil & Laporan',
             'icon'    => 'fas fa-file',
             'submenu' => [
+                [
+                    'text' => 'Hasil Laboratorium',
+                    'icon'    => 'fas fa-vials',
+                    'url'  => 'hasillaboratorium',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Hasil Radiologi',
+                    'icon'    => 'fas fa-x-ray',
+                    'url'  => 'hasilradiologi',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Hasil Lab Patologi Anatomi',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'hasillabpa',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
                 [
                     'text' => 'Capaian Antrian Pertanggal',
                     'icon'    => 'fas fa-chart-line',

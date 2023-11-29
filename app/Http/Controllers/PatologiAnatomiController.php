@@ -7,11 +7,12 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class LaboratoriumController extends Controller
+class PatologiAnatomiController extends Controller
 {
-    public function hasillaboratorium(Request $request)
+
+    public function hasillabpa(Request $request)
     {
-        $kodeunit = '3002';
+        $kodeunit = '3020';
         $kunjungans = null;
         if ($request->tanggal) {
             $request['tgl'] = Carbon::parse($request->tanggal)->startOfDay();
@@ -32,40 +33,10 @@ class LaboratoriumController extends Controller
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
-        return view('simrs.laboratorium.kunjungan_lab', compact([
+        return view('simrs.patologi.hasillabpa', compact([
             'request',
             'units',
             'kunjungans',
         ]));
-    }
-
-    public function create()
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(string $id)
-    {
-        //
-    }
-
-    public function edit(string $id)
-    {
-        //
-    }
-
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    public function destroy(string $id)
-    {
-        //
     }
 }

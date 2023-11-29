@@ -9,9 +9,6 @@
             <x-adminlte-small-box title="{{ $total_pasien }}" text="Total Pasien" theme="success" icon="fas fa-users" />
         </div>
         <div class="col-12">
-            <x-adminlte-card title="Grafik Pasien" theme="secondary" collapsible="collapsed">
-                asdasd
-            </x-adminlte-card>
             <x-adminlte-card title="Data Pasien" theme="secondary" collapsible>
                 <div class="row">
                     <div class="col-md-8">
@@ -70,6 +67,8 @@
                                     data-tgllahir="{{ $item->tgl_lahir }}" data-tempatlahir="{{ $item->tempat_lahir }}"
                                     data-nohp="{{ $item->no_hp }}" data-telp="{{ $item->no_tlp }}"
                                     data-gender="{{ $item->jenis_kelamin }}" />
+                                <a href="{{ route('pasien.show', $item->no_rm) }}" class="btn btn-xs btn-primary"><i
+                                        class="fas fa-file-medical" title="Riwayat Pasien {{ $item->nama_px }}"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -158,6 +157,15 @@
                 $('#modalPasien').modal('show');
                 $.LoadingOverlay("hide");
             });
+            $('#btnStore').click(function(e) {
+                $.LoadingOverlay("show");
+                e.preventDefault();
+                var url = "{{ route('pasien.store') }}";
+                $('#formPasien').attr('action', url);
+                $("#method").prop('', true);
+                $('#formPasien').submit();
+
+            });
             $('.btnEdit').click(function() {
                 $.LoadingOverlay("show");
                 $('#btnStore').hide();
@@ -177,15 +185,6 @@
                 $('#gender').val($(this).data("gender")).change();
                 $('#modalPasien').modal('show');
                 $.LoadingOverlay("hide");
-            });
-            $('#btnStore').click(function(e) {
-                $.LoadingOverlay("show");
-                e.preventDefault();
-                var url = "{{ route('pasien.store') }}";
-                $('#formPasien').attr('action', url);
-                $("#method").prop('', true);
-                $('#formPasien').submit();
-
             });
             $('#btnUpdate').click(function(e) {
                 $.LoadingOverlay("show");

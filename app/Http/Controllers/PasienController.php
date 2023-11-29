@@ -12,26 +12,22 @@ class PasienController extends APIController
 {
     public function index(Request $request)
     {
-        $pasiens = Pasien::with(['kecamatans'])->latest()
-            ->where('no_rm', 'LIKE', "%{$request->search}%")
-            ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
-            ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
-            ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
-            ->simplePaginate(20);
-
+        if ($request->search) {
+            $pasiens = Pasien::with(['kecamatans'])->latest()
+                ->where('no_rm', 'LIKE', "%{$request->search}%")
+                ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
+                ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
+                ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
+                ->simplePaginate(20);
+        } else {
+            $pasiens = Pasien::with(['kecamatans'])->latest()
+                ->simplePaginate(20);
+        }
         $total_pasien = Pasien::count();
-        // $pasien_jkn = Pasien::where('no_Bpjs', '!=', '')->count();
-        // $pasien_nik = Pasien::where('nik_bpjs', '!=', '')->count();
-        // $pasien_laki = Pasien::where('jenis_kelamin', 'L')->count();
-        // $pasien_perempuan = Pasien::where('jenis_kelamin', 'P')->count();
         return view('simrs.pasien_index', compact([
             'pasiens',
             'request',
             'total_pasien',
-            // 'pasien_jkn',
-            // 'pasien_nik',
-            // 'pasien_laki',
-            // 'pasien_perempuan',
         ]));
     }
     public function edit($no_rm)
@@ -46,7 +42,6 @@ class PasienController extends APIController
             'nama' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
-            'no_rm' => 'required',
             'no_rm' => 'required',
         ]);
         $request['username'] = $request->nik;
@@ -74,10 +69,17 @@ class PasienController extends APIController
         Alert::success('Success', 'Data Pasien Diperbaharui.');
         return redirect()->back();
     }
+    // public function show($no_rm)
+    // {
+    //     $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
+    //     return response()->json($pasien);
+    // }
     public function show($no_rm)
     {
-        $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
-        return response()->json($pasien);
+        $pasien = Pasien::firstWhere('no_rm', $no_rm);
+        return view('simrs.pasien_show', compact([
+            'pasien'
+        ]));
     }
     public function cari_pasien(Request $request)
     {
@@ -117,7 +119,8 @@ class PasienController extends APIController
     public function destroy($no_rm)
     {
         $pasien = Pasien::firstWhere('no_rm', $no_rm);
-        $pasien->delete();
+        dd($pasien);
+        // $pasien->delete();
         Alert::success('Success', 'Data Pasien Telah Dihapus');
         return redirect()->route('simrs.pasien.index');
     }

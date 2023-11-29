@@ -25,7 +25,7 @@ class EklaimController extends Controller
             $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
             $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
                 ->whereDate('tgl_keluar',  $request->tgl_akhir)
-                ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                ->with(['pasien', 'budget', 'tagihan', 'unit', 'dokter',  'alasan_pulang', 'status'])
                 ->get();
         }
         $units = Unit::whereIn('kelas_unit', ['2'])

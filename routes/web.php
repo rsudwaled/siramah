@@ -47,7 +47,9 @@ use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Controllers\LaboratoriumController;
+use App\Http\Controllers\PatologiAnatomiController;
 use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
@@ -165,6 +167,10 @@ Route::middleware('auth')->group(function () {
     Route::get('print_resume_ranap', [RanapController::class, 'print_resume_ranap'])->name('print_resume_ranap');
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
+    // radiologi
+    Route::get('hasilradiologi', [RadiologiController::class, 'hasilradiologi'])->name('hasilradiologi');
+    // patologi
+    Route::get('hasillabpa', [PatologiAnatomiController::class, 'hasillabpa'])->name('hasillabpa');
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
     Route::get('getAntrianFarmasi', [AntrianController::class, 'getAntrianFarmasi'])->name('getAntrianFarmasi');

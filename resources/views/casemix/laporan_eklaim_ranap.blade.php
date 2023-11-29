@@ -47,7 +47,15 @@
                         hoverable compressed>
                         @foreach ($kunjungans as $item)
                             <tr class="btnDetail" data-norm="{{ $item->pasien->no_rm }}"
-                                data-counter="{{ $item->counter }}">
+                                data-nama="{{ $item->pasien->nama_px }}" data-nomorkartu="{{ $item->pasien->no_Bpjs }}"
+                                data-nik="{{ $item->pasien->nik_bpjs }}" data-tgllahir="{{ $item->pasien->tgl_lahir }}"
+                                data-jeniskelamin="{{ $item->pasien->jenis_kelamin }}" data-counter="{{ $item->counter }}"
+                                data-tglmasuk="{{ $item->tgl_masuk }}" data-kodekunjungan="{{ $item->kode_kunjungan }}"
+                                data-tglkeluar="{{ $item->tgl_keluar }}" data-unit="{{ $item->unit->nama_unit }}"
+                                data-dokter="{{ $item->dokter->nama_paramedis }}" data-kelasrawat="{{ $item->kelas }}"
+                                data-status="{{ $item->status->status_kunjungan }}"
+                                data-kodeinacbg="{{ $item->budget->kode_cbg ?? '-' }}"
+                                data-tarifinacbg="{{ $item->budget ? money($item->budget->tarif_inacbg, 'IDR') : '-' }}">
                                 <td>{{ $item->tgl_masuk }}</td>
                                 <td>{{ $item->tgl_keluar }}</td>
                                 <td>{{ $item->pasien->no_rm }} {{ $item->pasien->nama_px }}</td>
@@ -65,9 +73,60 @@
     <x-adminlte-modal id="modalDetail" name="modalDetail" title="Detail Kunjungan" theme="success"
         icon="fas fa-file-medical" size="xl">
         <x-adminlte-card theme="primary" theme-mode="outline">
-            A card without header...
+            <div class="row">
+                <div class="col-md-4">
+                    <dl class="row">
+                        <dt class="col-sm-4">No RM</dt>
+                        <dd class="col-sm-8">: <span class="norm"></span></dd>
+                        <dt class="col-sm-4">Nama</dt>
+                        <dd class="col-sm-8">: <span class="nama"></span> (<span class="jeniskelamin"></span>)</dd>
+                        <dt class="col-sm-4">No BPJS</dt>
+                        <dd class="col-sm-8">: <span class="nomorkartu"></span></dd>
+                        <dt class="col-sm-4">NIK</dt>
+                        <dd class="col-sm-8">: <span class="nik"></span></dd>
+                        <dt class="col-sm-4">Tgl Lahir</dt>
+                        <dd class="col-sm-8">: <span class="tgllahir"></span></dd>
+                        <dt class="col-sm-4">Hak Kelas</dt>
+                        <dd class="col-sm-8">: <span class="hakkelas"></span></dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl class="row">
+                        <dt class="col-sm-4">Kunjungan</dt>
+                        <dd class="col-sm-8">: <span class="counter"></span>/<span class="kodekunjungan"></span></dd>
+                        <dt class="col-sm-4">Tgl Masuk</dt>
+                        <dd class="col-sm-8">: <span class="tglmasuk"></span></dd>
+                        <dt class="col-sm-4">Tgl Keluar</dt>
+                        <dd class="col-sm-8">: <span class="tglkeluar"></span></dd>
+                        <dt class="col-sm-4">Unit</dt>
+                        <dd class="col-sm-8">: <span class="unit"></span></dd>
+                        <dt class="col-sm-4">Dokter DPJP</dt>
+                        <dd class="col-sm-8">: <span class="dokter"></span></dd>
+                        <dt class="col-sm-4">Kelas Rawat</dt>
+                        <dd class="col-sm-8">: <span class="kelasrawat"></span></dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl class="row">
+                        <dt class="col-sm-4">Status</dt>
+                        <dd class="col-sm-8">: <span class="status"></span></dd>
+                        <dt class="col-sm-4">Alasan Pulang</dt>
+                        <dd class="col-sm-8">: <span class="nama"></span></dd>
+                        <dt class="col-sm-4">Diag. Utama</dt>
+                        <dd class="col-sm-8">: <span class="norm"></span></dd>
+                        <dt class="col-sm-4">Diag. Sekunder</dt>
+                        <dd class="col-sm-8">: <span class="nama"></span></dd>
+                        <dt class="col-sm-4">Kode INACBG</dt>
+                        <dd class="col-sm-8">: <span class="kodeinacbg"></span></dd>
+                        <dt class="col-sm-4">Tarif E-Klaim</dt>
+                        <dd class="col-sm-8">: <span class="tarifinacbg"></span></dd>
+                        <dt class="col-sm-4">Tarif RS</dt>
+                        <dd class="col-sm-8">: <span class="tarif_rs"></span></dd>
+                    </dl>
+                </div>
+            </div>
         </x-adminlte-card>
-        <x-adminlte-card theme="primary" theme-mode="outline">
+        <x-adminlte-card theme="primary" title="Rincian Biaya Pasien">
             <div class="row">
                 <div class="col-md-4">
                     <dl class="row">
@@ -142,6 +201,36 @@
                 $.LoadingOverlay("show");
                 var norm = $(this).data('norm');
                 var counter = $(this).data('counter');
+
+                $('.norm').html($(this).data('norm'));
+                $('.nama').html($(this).data('nama'));
+                $('.nomorkartu').html($(this).data('nomorkartu'));
+                $('.nik').html($(this).data('nik'));
+                $('.tgllahir').html($(this).data('tgllahir'));
+                $('.hakkelas').html($(this).data('hakkelas'));
+                $('.jeniskelamin').html($(this).data('jeniskelamin'));
+
+                $('.counter').html($(this).data('counter'));
+                $('.kodekunjungan').html($(this).data('kodekunjungan'));
+                $('.tglmasuk').html($(this).data('tglmasuk'));
+                $('.tglkeluar').html($(this).data('tglkeluar'));
+                $('.unit').html($(this).data('unit'));
+                $('.dokter').html($(this).data('dokter'));
+                $('.kelasrawat').html($(this).data('kelasrawat'));
+
+                $('.status').html($(this).data('status'));
+                $('.alasanpulang').html($(this).data('alasanpulang'));
+                $('.sep').html($(this).data('sep'));
+                $('.tarifinacbg').html($(this).data('tarifinacbg'));
+                $('.kodeinacbg').html($(this).data('kodeinacbg'));
+
+
+
+
+
+
+
+
                 var urlRincian = "{{ route('api.eclaim.rincian_biaya_pasien') }}?counter=" +
                     counter + "&norm=" + norm;
                 var table = $('#tableRincian')
@@ -419,7 +508,6 @@
                 });
                 $('#modalDetail').modal('show');
             });
-
         });
     </script>
 @endsection
