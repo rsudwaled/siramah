@@ -69,18 +69,18 @@ class PasienController extends APIController
         Alert::success('Success', 'Data Pasien Diperbaharui.');
         return redirect()->back();
     }
-    // public function show($no_rm)
-    // {
-    //     $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
-    //     return response()->json($pasien);
-    // }
     public function show($no_rm)
     {
-        $pasien = Pasien::firstWhere('no_rm', $no_rm);
-        return view('simrs.pasien_show', compact([
-            'pasien'
-        ]));
+        $pasien = Pasien::where('no_rm', 'LIKE', '%' . $no_rm . '%')->first();
+        return response()->json($pasien);
     }
+    // public function show($no_rm)
+    // {
+    //     $pasien = Pasien::firstWhere('no_rm', $no_rm);
+    //     return view('simrs.pasien_show', compact([
+    //         'pasien'
+    //     ]));
+    // }
     public function cari_pasien(Request $request)
     {
         $validator = Validator::make(request()->all(), [
