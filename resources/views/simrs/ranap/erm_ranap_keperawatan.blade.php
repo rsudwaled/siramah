@@ -8,14 +8,16 @@
         <div class="card-body">
             <x-adminlte-modal id="modalInputKeperawatan" title="Implementasi & Evaluasi Keperawatan" theme="warning"
                 icon="fas fa-file-medical" size='lg'>
-                @php
-                    $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
-                @endphp
-                <x-adminlte-input-date name="tanggal" label="Tanggal & Waktu" :config="$config"
-                    value="{{ now() }}" />
-                <x-adminlte-textarea igroup-size="sm" name="keperawatan" label="Implementasi & Evaluasi Keperawatan"
-                    placeholder="Implementasi & Evaluasi Keperawatan" rows=5>
-                </x-adminlte-textarea>
+                <form action="">
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                    @endphp
+                    <x-adminlte-input-date name="tanggal" label="Tanggal & Waktu" :config="$config"
+                        value="{{ now() }}" />
+                    <x-adminlte-textarea igroup-size="sm" name="keperawatan" label="Implementasi & Evaluasi Keperawatan"
+                        placeholder="Implementasi & Evaluasi Keperawatan" rows=5>
+                    </x-adminlte-textarea>
+                </form>
             </x-adminlte-modal>
             <x-adminlte-button label="Input Keperawatan" icon="fas fa-plus" data-toggle="modal"
                 data-target="#modalInputKeperawatan" theme="success" class="btn-xs" />

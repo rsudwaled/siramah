@@ -25,19 +25,20 @@
                 <x-slot name="footerSlot">
                     <x-adminlte-button class="btn-xs btnModalPasien" theme="warning" label="Riwayat Kunjungan"
                         icon="fas fa-search" />
-                    <x-adminlte-button class="btn-xs btnCariRujukanFKTP" theme="warning" label="Rujukan FKTP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariRujukanRS" theme="warning" label="Rujukan RS"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariSEP" theme="warning" label="SEP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariSuratKontrol" theme="warning" label="Surat Kontrol"
-                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Groupping Eklaim" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Rincian Biaya" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Laboratorium" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Radiologi" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Patologi Anatomi" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariRujukanRS" theme="primary" label="Rujukan RS"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariSEP" theme="primary" label="SEP"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariSuratKontrol" theme="primary" label="Surat Kontrol"
+                        icon="fas fa-file-medical" />
                 </x-slot>
             </x-adminlte-card>
         </div>
@@ -46,9 +47,9 @@
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         {{-- riwayat --}}
-                        @include('simrs.ranap.erm_ranap_riwayat')
+                        {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
                         {{-- rincian --}}
-                        @include('simrs.ranap.erm_ranap_biaya')
+                        {{-- @include('simrs.ranap.erm_ranap_biaya') --}}
                         {{-- administrasi --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
@@ -102,7 +103,7 @@
                             </div>
                         </div>
                         {{-- laboratorium --}}
-                        @include('simrs.ranap.erm_ranap_lab')
+                        {{-- @include('simrs.ranap.erm_ranap_lab') --}}
                         {{-- radiologi --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRadiologi">
