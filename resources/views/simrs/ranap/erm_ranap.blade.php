@@ -22,11 +22,28 @@
                 class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
+                <x-slot name="footerSlot">
+                    <x-adminlte-button class="btn-xs btnModalPasien" theme="warning" label="Riwayat Kunjungan"
+                        icon="fas fa-search" />
+                    <x-adminlte-button class="btn-xs btnCariRujukanFKTP" theme="warning" label="Rujukan FKTP"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariRujukanRS" theme="warning" label="Rujukan RS"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariSEP" theme="warning" label="SEP"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnCariSuratKontrol" theme="warning" label="Surat Kontrol"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Rincian Biaya" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Laboratorium" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Radiologi" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs" theme="warning" label="Patologi Anatomi" icon="fas fa-file-medical" />
+                </x-slot>
             </x-adminlte-card>
         </div>
         <div class="col-md-12">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile p-3">
+                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         {{-- riwayat --}}
                         @include('simrs.ranap.erm_ranap_riwayat')
@@ -127,7 +144,8 @@
                         </div>
                         {{-- suratkontrol --}}
                         <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cSuratKontrol">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion"
+                                href="#cSuratKontrol">
                                 <h3 class="card-title">
                                     Surat Kontrol
                                 </h3>
