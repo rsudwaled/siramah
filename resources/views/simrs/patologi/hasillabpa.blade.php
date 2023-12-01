@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Kunjungan Radiologi')
+@section('title', 'Kunjungan Patologi Anatomi')
 @section('content_header')
-    <h1>Kunjungan Radiologi</h1>
+    <h1>Kunjungan Patologi Anatomi</h1>
 @stop
 
 @section('content')
@@ -49,7 +49,6 @@
                                 <td>{{ $item->unit->nama_unit }}</td>
                                 <td>
                                     @foreach ($item->layanans->where('kode_unit', 3020) as $lab)
-
                                         @foreach ($lab->layanan_details as $laydet)
                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
                                         @endforeach
@@ -58,7 +57,7 @@
                                 <td></td>
                                 <td>
                                     <div class="btn btn-xs btn-primary btnHasilLab"
-                                        data-fileurl="http://192.168.10.17/ZFP?mode=proxy&lights=on&titlebar=on#View&ris_pat_id={{ $item->pasien->no_rm }}&un=radiologi&pw=YnanEegSoQr0lxvKr59DTyTO44qTbzbn9koNCrajqCRwHCVhfQAddGf%2f4PNjqOaV">
+                                        data-fileurl="http://192.168.2.212:81/simrswaled/SimrsPrint/printEX/{{ $laydet->id }}">
                                         Lihat Hasil</div>
                                 </td>
                             </tr>

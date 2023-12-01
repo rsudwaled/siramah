@@ -4,17 +4,12 @@
             Groupping E-Klaim
         </h3>
         <div class="card-tools">
-            @if ($kunjungan->budget)
-                Sudah Groupping
-                {{ $kunjungan->budget->updated_at }}
-                <i class="fas fa-check-circle"></i>
-            @else
-                Belum Groupping <i class="fas fa-times-circle"></i>
-            @endif
+            <i class="fas fa-file-medical"></i>
         </div>
     </a>
     <div id="cGroupping" class="collapse" role="tabpanel">
         <div class="card-body">
+
             <form action="{{ route('claim_ranap_v2') }}" id="formGroupper" method="POST">
                 @csrf
                 <input type="hidden" name="counter" id="counter" class="counter-id"

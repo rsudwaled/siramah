@@ -19,8 +19,10 @@
                 </x-adminlte-alert>
             @endif
             <a href="{{ route('kunjunganranap') }}?tanggal={{ \Carbon\Carbon::parse($kunjungan->tgl_masuk)->format('Y-m-d') }}&kodeunit={{ $kunjungan->kode_unit }}"
-                class="btn btn-sm mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
-            @include('simrs.ranap.erm_ranap_profil')
+                class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
+            <x-adminlte-card theme="primary" theme-mode="outline">
+                @include('simrs.ranap.erm_ranap_profil')
+            </x-adminlte-card>
         </div>
         <div class="col-md-12">
             <div class="card card-primary card-outline">
@@ -65,6 +67,8 @@
                         </div>
                         {{-- groupping --}}
                         @include('simrs.ranap.erm_ranap_groupping')
+                        {{-- keperawatan --}}
+                        @include('simrs.ranap.erm_ranap_keperawatan')
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- dokter --}}
