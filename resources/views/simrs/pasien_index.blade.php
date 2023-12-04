@@ -14,6 +14,9 @@
                     <div class="col-md-8">
                         <x-adminlte-button label="Tambah" class="btn-sm" theme="success" title="Tambah Pasien"
                             icon="fas fa-plus" data-toggle="modal" data-target="#modalCustom" />
+                        <a href="{{ route('pasienexport') }}" class="btn btn-sm btn-primary"><i class="fas fa-print"></i>
+                            Export</a>
+                        <div class="btn btn-sm btn-primary btnModalImport"><i class="fas fa-file-medical"></i> Import</div>
                     </div>
                     <div class="col-md-4">
                         <form action="{{ route('pasien.index') }}" method="get">

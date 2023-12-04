@@ -25,6 +25,9 @@
                             title="Tambah User" icon="fas fa-plus" />
                         <x-adminlte-button label="Refresh" class="btn-sm" theme="warning" title="Refresh User"
                             icon="fas fa-sync" onclick="window.location='{{ route('user.index') }}'" />
+                        <a href="{{ route('userexport') }}" class="btn btn-sm btn-primary"><i class="fas fa-print"></i>
+                            Export</a>
+                        <div class="btn btn-sm btn-primary btnModalImport"><i class="fas fa-file-medical"></i> Import</div>
                     </div>
                     <div class="col-md-4">
                         <form action="{{ route('user.index') }}" method="get">
@@ -223,4 +226,29 @@
             });
         });
     </script>
+
+
+    <x-adminlte-modal id="modalImport" title="Import User" icon="fas fa-user-injured" theme="success" static-backdrop>
+        <form action="{{ route('userimport') }}" id="formImport" name="formImport" method="POST"
+            enctype="multipart/form-data">
+            @csrf
+            <x-adminlte-input-file name="file" placeholder="Pilih file Import" igroup-size="sm"
+                label="File Import Obat" />
+            <x-slot name="footerSlot">
+                <x-adminlte-button form="formImport" class="mr-auto withLoad" type="submit" icon="fas fa-save"
+                    theme="success" label="Import" />
+                <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
+    <script>
+        $(function() {
+            $('.btnModalImport').click(function() {
+                $.LoadingOverlay("show");
+                $('#modalImport').modal('show');
+                $.LoadingOverlay("hide");
+            });
+        });
+    </script>
+
 @endsection

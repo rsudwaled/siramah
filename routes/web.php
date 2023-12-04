@@ -104,6 +104,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('permission:admin')->group(function () {
         Route::resource('user', UserController::class);
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
+        Route::get('pasienexport', [UserController::class, 'pasienexport'])->name('pasienexport');
+        Route::post('userimport', [UserController::class, 'userimport'])->name('userimport');
+        Route::get('userexport', [UserController::class, 'userexport'])->name('userexport');
+
         Route::resource('role', RoleController::class);
         Route::resource('permission', PermissionController::class);
         Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');

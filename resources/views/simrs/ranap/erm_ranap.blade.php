@@ -105,7 +105,7 @@
                         {{-- laboratorium --}}
                         {{-- @include('simrs.ranap.erm_ranap_lab') --}}
                         {{-- radiologi --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRadiologi">
                                 <h3 class="card-title">
                                     Radiologi
@@ -116,9 +116,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- tindakan --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakan">
                                 <h3 class="card-title">
                                     Tindakan
@@ -129,9 +129,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- resep --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cResepObat">
                                 <h3 class="card-title">
                                     Resep Obat
@@ -142,9 +142,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- suratkontrol --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion"
                                 href="#cSuratKontrol">
                                 <h3 class="card-title">
@@ -298,9 +298,9 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- pemulangan --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cPulang">
                                 <h3 class="card-title">
                                     Pemulangan Pasien
@@ -374,9 +374,9 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- filepenunjang --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#collapseFile">
                                 <h3 class="card-title">
                                     File Penunjang
@@ -387,7 +387,7 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="card-footer">

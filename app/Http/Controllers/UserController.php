@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
+use App\Imports\UserImport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class UserController extends Controller
 {
@@ -139,5 +143,20 @@ class UserController extends Controller
             Alert::success('Success', 'Akun telah diverifikasi');
         }
         return redirect()->back();
+    }
+    public function userexport(Request $request)
+    {
+        $time = now()->format('Y-m-d');
+        return Excel::download(new UserExport, 'user_rsudwaled_backup_' . $time . '.xlsx');
+    }
+    public function userimport(Request $request)
+    {
+        try {
+            Excel::import(new UserImport, $request->file);
+            Alert::success('Success', 'Import User Berhasil.');
+        } catch (\Throwable $th) {
+            Alert::error('Error', $th->getMessage());
+        }
+        return redirect()->route('user.index');
     }
 }
