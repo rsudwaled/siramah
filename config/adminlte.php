@@ -454,25 +454,6 @@ return [
                     'active'  => ['pasien', 'pasien/create', 'regex:@^pasien(\/[0-9]+)?+$@', 'regex:@^pasien(\/[0-9]+)?\/edit+$@',],
                     'can' => 'rekam-medis',
                 ],
-
-                [
-                    'text' => 'Kunjungan',
-                    'icon'    => 'fas fa-hospital-user',
-                    'url'  => 'kunjungan',
-                    'shift'   => 'ml-2',
-                    'active'  => ['kunjungan', 'kunjungan/create', 'regex:@^kunjungan(\/[0-9]+)?+$@', 'regex:@^kunjungan(\/[0-9]+)?\/edit+$@',],
-                    'can' => 'rekam-medis',
-                ],
-                [
-                    'text' => 'E-File Rekam Medis',
-                    'icon'    => 'fas fa-diagnoses',
-                    'shift'   => 'ml-2',
-                    'can' => 'rekam-medis',
-                    'url'  => 'efilerm',
-                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
-                    'active'  => ['efilerm', 'efilerm/create'],
-
-                ],
                 [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
@@ -514,6 +495,24 @@ return [
                     'shift'   => 'ml-2',
                     'url'  => 'jadwalDokterPoliklinik',
                     'can' =>  ['pelayanan-medis', 'poliklinik'],
+                ],
+                [
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'kunjungan',
+                    'shift'   => 'ml-2',
+                    'active'  => ['kunjungan', 'kunjungan/create', 'regex:@^kunjungan(\/[0-9]+)?+$@', 'regex:@^kunjungan(\/[0-9]+)?\/edit+$@',],
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'E-File Rekam Medis',
+                    'icon'    => 'fas fa-diagnoses',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                    'url'  => 'efilerm',
+                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
+                    'active'  => ['efilerm', 'efilerm/create'],
+
                 ],
                 [
                     'text' => 'Tarif Layanan',

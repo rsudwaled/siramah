@@ -169,6 +169,10 @@ Route::middleware('auth')->group(function () {
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::post('simpan_resume_ranap', [RanapController::class, 'simpan_resume_ranap'])->name('simpan_resume_ranap');
     Route::get('print_resume_ranap', [RanapController::class, 'print_resume_ranap'])->name('print_resume_ranap');
+    Route::post('simpan_implementasi_evaluasi_keperawatan', [RanapController::class, 'simpan_implementasi_evaluasi_keperawatan'])->name('simpan_implementasi_evaluasi_keperawatan');
+    Route::get('hapus_implementasi_evaluasi_keperawatan', [RanapController::class, 'hapus_implementasi_evaluasi_keperawatan'])->name('hapus_implementasi_evaluasi_keperawatan');
+    Route::get('print_implementasi_evaluasi_keperawatan', [RanapController::class, 'print_implementasi_evaluasi_keperawatan'])->name('print_implementasi_evaluasi_keperawatan');
+
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi

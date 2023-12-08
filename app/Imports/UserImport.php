@@ -15,10 +15,10 @@ class UserImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             User::updateOrCreate(
                 [
-                    'username' => strtoupper($row['username']),
-                    'email' => strtoupper($row['email']),
+                    'username' => $row['username'],
                 ],
                 [
+                    'email' => $row['email'],
                     'name' => $row['name'],
                     'phone' => $row['phone'],
                     'google_id' => $row['google_id'],

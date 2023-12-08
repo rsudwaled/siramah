@@ -97,24 +97,38 @@
             <input type="hidden" name="_method" id="method">
             <div class="row">
                 <div class="col-md-6">
-                    <x-adminlte-input name="norm" label="Nomor RM" placeholder="Nomor Rekam Medis" enable-old-support
-                        required readonly />
-                    <x-adminlte-input name="nokartu" label="Nomor Kartu BPJS" placeholder="Nomor Kartu BPJS"
+                    <x-adminlte-input name="norm" igroup-size="sm" label="Nomor RM" placeholder="Nomor RM"
+                        enable-old-support required readonly />
+                    <x-adminlte-input name="nokartu" igroup-size="sm" label="Nomor Kartu BPJS"
+                        placeholder="Nomor Kartu BPJS" enable-old-support>
+                        <x-slot name="appendSlot">
+                            <div class="btn btn-primary btnCariKartu">
+                                <i class="fas fa-sync"></i> Sync
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input>
+                    <x-adminlte-input name="nik" igroup-size="sm" label="NIK" placeholder="Nomor Induk Kependudukan"
+                        enable-old-support>
+                        <x-slot name="appendSlot">
+                            <div class="btn btn-primary btnCariNIK">
+                                <i class="fas fa-sync"></i> Sync
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input>
+                    <x-adminlte-input name="nama" igroup-size="sm" label="Nama" placeholder="Nama Lengkap"
                         enable-old-support />
-                    <x-adminlte-input name="nik" label="NIK" placeholder="Nomor Induk Kependudukan"
+                    <x-adminlte-input name="nohp" igroup-size="sm" label="Nomor HP" placeholder="Nomor HP"
                         enable-old-support />
-                    <x-adminlte-input name="nama" label="Nama" placeholder="Nama Lengkap" enable-old-support />
-                    <x-adminlte-input name="nohp" label="Nomor HP" placeholder="Nomor HP" enable-old-support />
-                    <x-adminlte-select name="gender" label="Jenis Kelamin" enable-old-support>
+                    <x-adminlte-select name="gender" igroup-size="sm" label="Jenis Kelamin" enable-old-support>
                         <x-adminlte-options :options="['L' => 'Laki-Laki', 'P' => 'Perempuan']" placeholder="Jenis Kelamin" />
                     </x-adminlte-select>
-                    <x-adminlte-input name="tempat_lahir" label="Tempat Lahir" placeholder="Tempat Lahir"
-                        enable-old-support />
+                    <x-adminlte-input name="tempat_lahir" igroup-size="sm" label="Tempat Lahir"
+                        placeholder="Tempat Lahir" enable-old-support />
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
                     @endphp
-                    <x-adminlte-input-date name="tanggal_lahir" label="Tanggal Lahir" placeholder="Tanggal Lahir"
-                        :config="$config" enable-old-support />
+                    <x-adminlte-input-date name="tanggal_lahir" igroup-size="sm" label="Tanggal Lahir"
+                        placeholder="Tanggal Lahir" :config="$config" enable-old-support />
                 </div>
                 {{-- <div class="col-md-6">
                     <x-adminlte-select name="Agama" label="Agama" enable-old-support>
@@ -148,6 +162,7 @@
 
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.Sweetalert2', true)
 @section('js')
     <script>
         $(function() {
@@ -216,6 +231,105 @@
                         $('#formDelete').submit();
                     }
                 })
+            });
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            $('.btnCariKartu').click(function() {
+                $.LoadingOverlay("show");
+                var nomorkartu = $("#nokartu").val();
+                var url = "{{ route('peserta_nomorkartu') }}?nomorkartu=" + nomorkartu +
+                    "&tanggal={{ now()->format('Y-m-d') }}";
+                $.get(url, function(data, status) {
+                    if (status == "success") {
+                        if (data.metadata.code == 200) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Pasien Ditemukan'
+                            });
+                            var pasien = data.response.peserta;
+                            $("#nama").val(pasien.nama);
+                            $("#nik").val(pasien.nik);
+                            $("#nokartu").val(pasien.noKartu);
+                            $("#tanggal_lahir").val(pasien.tglLahir);
+                            $("#gender").val(pasien.sex).change();
+                            $("#jenispeserta").val(pasien.jenisPeserta.keterangan);
+                            $("#fktp").val(pasien.provUmum.nmProvider);
+                            $("#hakkelas").val(pasien.hakKelas.kode).change();
+                            if (pasien.mr.noMR == null) {
+                                Swal.fire(
+                                    'Mohon Maaf !',
+                                    "Pasien baru belum memiliki no RM",
+                                    'error'
+                                )
+                            }
+                            console.log(pasien);
+                        } else {
+                            // alert(data.metadata.message);
+                            Swal.fire(
+                                'Mohon Maaf !',
+                                data.metadata.message,
+                                'error'
+                            )
+                        }
+                    } else {
+                        console.log(data);
+                        alert("Error Status: " + status);
+                    }
+                });
+                $.LoadingOverlay("hide");
+            });
+            $('.btnCariNIK').click(function() {
+                $.LoadingOverlay("show");
+                var nik = $("#nik").val();
+                var url = "{{ route('peserta_nik') }}?nik=" + nik +
+                    "&tanggal={{ now()->format('Y-m-d') }}";
+                $.get(url, function(data, status) {
+                    if (status == "success") {
+                        if (data.metadata.code == 200) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Pasien Ditemukan'
+                            });
+                            var pasien = data.response.peserta;
+                            $("#nama").val(pasien.nama);
+                            $("#nik").val(pasien.nik);
+                            $("#nokartu").val(pasien.noKartu);
+                            $("#tanggal_lahir").val(pasien.tglLahir);
+                            $("#gender").val(pasien.sex).change();
+                            $("#jenispeserta").val(pasien.jenisPeserta.keterangan);
+                            $("#fktp").val(pasien.provUmum.nmProvider);
+                            $("#hakkelas").val(pasien.hakKelas.kode).change();
+                            if (pasien.mr.noMR == null) {
+                                Swal.fire(
+                                    'Mohon Maaf !',
+                                    "Pasien baru belum memiliki no RM",
+                                    'error'
+                                )
+                            }
+                            console.log(pasien);
+                        } else {
+                            // alert(data.metadata.message);
+                            Swal.fire(
+                                'Mohon Maaf !',
+                                data.metadata.message,
+                                'error'
+                            )
+                        }
+                    } else {
+                        console.log(data);
+                        alert("Error Status: " + status);
+                    }
+                });
+                $.LoadingOverlay("hide");
             });
         });
     </script>
