@@ -87,6 +87,8 @@
                         @include('simrs.ranap.erm_ranap_groupping')
                         {{-- keperawatan --}}
                         @include('simrs.ranap.erm_ranap_keperawatan')
+                        {{-- observasi --}}
+                        @include('simrs.ranap.erm_ranap_observasi')
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- dokter --}}
