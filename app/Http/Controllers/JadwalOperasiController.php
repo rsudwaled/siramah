@@ -85,11 +85,11 @@ class JadwalOperasiController extends APIController
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" =>  $unit->KDPOLI ?? 'BED',
+                "kodepoli" =>  'BED',
                 // "namapoli" => $jadwalop->ruangan_asal,
                 "namapoli" => 'BEDAH',
                 "terlaksana" => 0,
-                "nopeserta" => $jadwalop->nomor_bpjs,
+                "nopeserta" => $jadwalop->nomor_bpjs == '' ?  '0000067026778' : $jadwalop->nomor_bpjs,
                 "lastupdate" => now()->timestamp * 1000,
             ];
         }
