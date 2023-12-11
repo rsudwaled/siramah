@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-12">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
+                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 650px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
@@ -87,6 +87,8 @@
                         @include('simrs.ranap.erm_ranap_groupping')
                         {{-- keperawatan --}}
                         @include('simrs.ranap.erm_ranap_keperawatan')
+                        {{-- observasi --}}
+                        @include('simrs.ranap.erm_ranap_observasi')
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- dokter --}}
@@ -802,4 +804,27 @@
             });
         });
     </script>
+    {{-- suratkontrol --}}
+    <script>
+        $(function() {
+            $('.btnEditKeperawatan').click(function(e) {
+                $.LoadingOverlay("show");
+                $(".tanggal_input-keperawatan").val($(this).data('tanggal_input'));
+                $(".kode_kunjungan-keperawatan").val($(this).data('kode_kunjungan'));
+                $(".keperawatan-keperawatan").val($(this).data('keperawatan'));
+                $('#modalInputKeperawatan').modal('show');
+                $.LoadingOverlay("hide");
+            });
+            $('.btnHapusKeperawatan').click(function(e) {
+                $.LoadingOverlay("show");
+                var id = $(this).data('id');
+                var user = $(this).data('user');
+                var url = '{{ route('hapus_implementasi_evaluasi_keperawatan') }}?user=' + user + '&id=' +
+                    id;
+                window.location.replace(url);
+            });
+        });
+    </script>
+
+
 @endsection

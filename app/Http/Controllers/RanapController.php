@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\ErmRanap;
+use App\Models\ErmRanapKeperawatan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -59,6 +61,7 @@ class RanapController extends Controller
             'alasan_pulang',
             'surat_kontrol',
             'erm_ranap',
+            'erm_ranap_keperawatan',
             // 'layanans', 'layanans.layanan_details',
             // 'layanans.layanan_details.tarif_detail',
             // 'layanans.layanan_details.tarif_detail.tarif',
@@ -137,6 +140,40 @@ class RanapController extends Controller
             'kunjungan',
             'erm',
             'pasien',
+        ]));
+    }
+    public function simpan_implementasi_evaluasi_keperawatan(Request $request)
+    {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
+        $keperawatan = ErmRanapKeperawatan::updateOrCreate(
+            [
+                'tanggal_input' => $request->tanggal_input,
+                'kode_kunjungan' => $request->kode_kunjungan,
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Implementasi Evaluasi Keperawatan disimpan');
+        return redirect()->back();
+    }
+    public function hapus_implementasi_evaluasi_keperawatan(Request $request)
+    {
+        $keperawatan = ErmRanapKeperawatan::find($request->id);
+        if ($keperawatan->user_id == $request->user) {
+            $keperawatan->delete();
+            Alert::success('Success', 'Implementasi Evaluasi Keperawatan dihapus');
+        }
+        return redirect()->back();
+    }
+    public function print_implementasi_evaluasi_keperawatan(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
+        $keperawatan = $kunjungan->erm_ranap_keperawatan;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_ranap_keperawatan', compact([
+            'kunjungan',
+            'pasien',
+            'keperawatan',
         ]));
     }
 }

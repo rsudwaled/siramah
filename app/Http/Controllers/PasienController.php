@@ -13,14 +13,14 @@ class PasienController extends APIController
     public function index(Request $request)
     {
         if ($request->search) {
-            $pasiens = Pasien::with(['kecamatans'])->latest()
+            $pasiens = Pasien::with(['kecamatans'])->orderBy('tgl_entry', 'desc')
                 ->where('no_rm', 'LIKE', "%{$request->search}%")
                 ->orWhere('nama_px', 'LIKE', "%{$request->search}%")
                 ->orWhere('no_Bpjs', 'LIKE', "%{$request->search}%")
                 ->orWhere('nik_bpjs', 'LIKE', "%{$request->search}%")
                 ->simplePaginate(20);
         } else {
-            $pasiens = Pasien::with(['kecamatans'])->latest()
+            $pasiens = Pasien::with(['kecamatans'])->orderBy('tgl_entry', 'desc')
                 ->simplePaginate(20);
         }
         $total_pasien = Pasien::count();
@@ -65,6 +65,8 @@ class PasienController extends APIController
             'nik_bpjs' => $request->nik,
             'no_Bpjs' => $request->nokartu,
             'nama_px' => $request->nama,
+            'jenis_kelamin' => $request->gender,
+            'tgl_lahir' => $request->tanggal_lahir,
         ]);
         Alert::success('Success', 'Data Pasien Diperbaharui.');
         return redirect()->back();

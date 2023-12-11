@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ErmRanapKeperawatan extends Model
 {
     use HasFactory;
+    protected $connection = 'mysql2';
+    protected $table = 'erm_ranap_keperawatan';
+    protected $guarded = ['id'];
 }
