@@ -23,6 +23,7 @@ class HomeController extends Controller
     public function landingpage()
     {
         $jadwal = JadwalDokter::get();
+        // asd
         return view('vendor.medilab.landingpage', compact([
             'jadwal'
         ]));
