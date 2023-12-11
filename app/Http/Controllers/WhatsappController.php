@@ -122,15 +122,7 @@ class WhatsappController extends Controller
         $pesan = strtoupper($request->message);
         switch ($pesan) {
             default:
-                // $request['fileurl'] = asset('rsudwaled/daftar.jpg');
-                // $request['caption'] = "Web SIRAMAH-RS Waled";
-                // $this->send_image($request);
                 $request['message'] = "Layanan pendaftaran rawat jalan RSUD Waled dapat melalui dua aplikasi beriku \n\n1. Web SIRAMAH-RS Waled : https://siramah.rsudwaled.id\n\n2. Aplikasi JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
-                // return $this->send_message($request);
-                // $this->send_message($request);
-                // $sholawat = "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ، طِبِّ الْقُلُوْبِ وَدَوَائِهَا، وَعَافِيَةِ الْاَبْدَانِ وَشِفَائِهَا، وَنُوْرِ الْاَبْصَارِ وَضِيَائِهَا، وَعَلٰى اٰلِهِ وَصَحْبِهِ وَسَلِّمْ";
-                // $request['message'] = $sholawat;
-                // $request['number'] = '6289529909036@c.us';
                 return $this->send_message($request);
                 break;
         }
