@@ -29,21 +29,6 @@ class WhatsappController extends Controller
         return view('admin.whatsapp', compact(['request']));
         // return $response;
     }
-    public function send_message_perangkap(Request $request)
-    {
-        $request->validate([
-            'message' => 'required',
-            'number' => 'required',
-        ]);
-        $url = env('WHATASAPP_URL') . "send-message";
-        $response = Http::post($url, [
-            'number' => "089529909036",
-            'message' => $request->message . " IP : " . $request . ' : ' . $request->number,
-            'username' => env('WHATASAPP_USERNAME'),
-        ]);
-        $response = json_decode($response->getBody());
-        return $response;
-    }
     public function send_message(Request $request)
     {
         $request->validate([
@@ -142,39 +127,16 @@ class WhatsappController extends Controller
     {
         $pesan = strtoupper($request->message);
         switch ($pesan) {
-            case 'NOTIF':
-                $request['notif'] = "Test Send Notif";
-                return $this->send_notif($request);
-                break;
-            case 'MESSAGE':
-                $request['message'] = "Test Send Message";
-                return $this->send_message($request);
-                break;
-            case 'BUTTON':
-                $request['contenttext'] = "contenttext";
-                $request['footertext'] = 'footertext';
-                $request['buttontext'] = 'buttontext1,buttontext2,buttontext3';
-                return $this->send_button($request);
-                break;
-            case 'LIST':
-                $request['contenttext'] = "contenttext";
-                $request['titletext'] = "titletext";
-                $request['buttontext'] = 'buttontext';
-                $request['rowtitle'] = 'rowtitle1,rowtitle2,rowtitle3';
-                $request['rowdescription'] = 'rowdescription1,rowdescription2,rowdescription3';
-                return $this->send_list($request);
-                break;
             default:
                 // $request['fileurl'] = asset('rsudwaled/daftar.jpg');
                 // $request['caption'] = "Web SIRAMAH-RS Waled";
                 // $this->send_image($request);
                 $request['message'] = "Layanan pendaftaran rawat jalan RSUD Waled dapat melalui dua aplikasi beriku \n\n1. Web SIRAMAH-RS Waled : https://siramah.rsudwaled.id\n\n2. Aplikasi JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
                 // return $this->send_message($request);
-                $this->send_message($request);
-
-                $sholawat = "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ، طِبِّ الْقُلُوْبِ وَدَوَائِهَا، وَعَافِيَةِ الْاَبْدَانِ وَشِفَائِهَا، وَنُوْرِ الْاَبْصَارِ وَضِيَائِهَا، وَعَلٰى اٰلِهِ وَصَحْبِهِ وَسَلِّمْ";
-                $request['message'] = $sholawat;
-                $request['number'] = '6289529909036@c.us';
+                // $this->send_message($request);
+                // $sholawat = "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ، طِبِّ الْقُلُوْبِ وَدَوَائِهَا، وَعَافِيَةِ الْاَبْدَانِ وَشِفَائِهَا، وَنُوْرِ الْاَبْصَارِ وَضِيَائِهَا، وَعَلٰى اٰلِهِ وَصَحْبِهِ وَسَلِّمْ";
+                // $request['message'] = $sholawat;
+                // $request['number'] = '6289529909036@c.us';
                 return $this->send_message($request);
                 break;
         }
