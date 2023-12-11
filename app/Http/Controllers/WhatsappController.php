@@ -9,12 +9,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 class WhatsappController extends Controller
 {
     public $hari = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
-    public function test(Request $request)
-    {
-        $request['message']  = "DAFTAR KONTROL_1018R0011222K001074#504#2022-12-06";
-        $request['number'] = '6289529909036@c.us';
-        $sk = $this->callback($request);
-    }
     public function whatsapp(Request $request)
     {
         $request['number'] = "089529909036";

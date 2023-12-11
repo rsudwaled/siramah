@@ -132,7 +132,6 @@ Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('dispos
 
 // API SIMRS
 Route::prefix('wa')->group(function () {
-    Route::get('test', [WhatsappController::class, 'test']);
     Route::post('webhook', [WhatsappController::class, 'webhook']);
     Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
 });
