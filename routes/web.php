@@ -165,6 +165,8 @@ Route::middleware('auth')->group(function () {
     Route::post('claim_ranap_v2', [InacbgController::class, 'claim_ranap_v2'])->name('claim_ranap_v2');
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
+    Route::get('get_pasien_ranap', [RanapController::class, 'get_pasien_ranap'])->name('get_pasien_ranap');
+
     Route::get('kunjunganranapaktif', [RanapController::class, 'kunjunganranapaktif'])->name('kunjunganranapaktif');
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::post('simpan_resume_ranap', [RanapController::class, 'simpan_resume_ranap'])->name('simpan_resume_ranap');
@@ -172,6 +174,12 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan_implementasi_evaluasi_keperawatan', [RanapController::class, 'simpan_implementasi_evaluasi_keperawatan'])->name('simpan_implementasi_evaluasi_keperawatan');
     Route::get('hapus_implementasi_evaluasi_keperawatan', [RanapController::class, 'hapus_implementasi_evaluasi_keperawatan'])->name('hapus_implementasi_evaluasi_keperawatan');
     Route::get('print_implementasi_evaluasi_keperawatan', [RanapController::class, 'print_implementasi_evaluasi_keperawatan'])->name('print_implementasi_evaluasi_keperawatan');
+    Route::post('simpan_observasi_ranap', [RanapController::class, 'simpan_observasi_ranap'])->name('simpan_observasi_ranap');
+    Route::post('hapus_obaservasi_ranap', [RanapController::class, 'hapus_obaservasi_ranap'])->name('hapus_obaservasi_ranap');
+    Route::get('get_observasi_ranap', [RanapController::class, 'get_observasi_ranap'])->name('get_observasi_ranap');
+    Route::get('print_obaservasi_ranap', [RanapController::class, 'print_obaservasi_ranap'])->name('print_obaservasi_ranap');
+
+
 
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');

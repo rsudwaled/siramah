@@ -8,46 +8,49 @@
     <div class="row">
         <div class="col-md-12">
             <x-adminlte-card icon="fas fa-filter" title="Filter Pasien Rawat Inap" theme="secondary" collapsible>
-                <form action="" method="get">
-                    <div class="row">
-                        @php
-                            $config = ['format' => 'YYYY-MM-DD'];
-                        @endphp
-                        <x-adminlte-input-date fgroup-class="col-md-3" igroup-size="sm" name="tanggal" label="Tanggal Antrian"
-                            :config="$config" value="{{ $request->tanggal ?? now()->format('Y-m-d') }}" />
-                        <x-adminlte-select2 fgroup-class="col-md-3" name="kodeunit" label="Ruangan">
-                            <option value="-" {{ $request->kodeunit ? '-' : 'selected' }}>SEMUA RUANGAN (-)
+                <div class="row">
+                    <x-adminlte-select2 fgroup-class="col-md-4" name="kodeunit" label="Ruangan">
+                        @foreach ($units as $key => $item)
+                            <option value="{{ $key }}" {{ $key == $request->kodeunit ? 'selected' : null }}>
+                                {{ $item }} ({{ $key }})
                             </option>
-                            @foreach ($units as $key => $item)
-                                <option value="{{ $key }}" {{ $key == $request->kodeunit ? 'selected' : null }}>
-                                    {{ $item }} ({{ $key }})
-                                </option>
-                            @endforeach
-                        </x-adminlte-select2>
-                    </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
-                </form>
+                        @endforeach
+                        <option value="-">SEMUA RUANGAN (-)
+                        </option>
+                    </x-adminlte-select2>
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date fgroup-class="col-md-4" igroup-size="sm" name="tanggal" label="Tanggal Antrian"
+                        :config="$config" value="{{ now()->format('Y-m-d') }}">
+                        <x-slot name="appendSlot">
+                            <x-adminlte-button class="btn-sm btnGetObservasi" icon="fas fa-search" theme="primary"
+                                label="Submit Pencarian" />
+                        </x-slot>
+                    </x-adminlte-input-date>
+                </div>
             </x-adminlte-card>
         </div>
-        @if ($kunjungans)
-            <div class="col-md-3">
+        {{-- <div class="col-md-3">
                 <x-adminlte-small-box title="{{ $kunjungans->where('status_kunjungan', 1)->count() }}"
                     text="Pasien Ranap Aktif" theme="warning" icon="fas fa-user-injured" />
-            </div>
-            <div class="col-md-12">
-                <x-adminlte-card theme="secondary" icon="fas fa-info-circle"
-                    title="Total Pasien ({{ $kunjungans ? $kunjungans->count() : 0 }} Orang)">
-                    @php
-                        $heads = ['Tgl Masuk', 'Tgl Keluar (LOS)', 'Kunjungan', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Status', 'Action'];
-                        $config['order'] = [['7', 'asc']];
-                        $config['paging'] = false;
-                        $config['scrollY'] = '400px';
-                    @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
-                        hoverable compressed>
+            </div> --}}
+        <div class="col-md-12">
+            <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Data Pasien Rawat Inap">
+                @php
+                    $heads = ['Tgl Masuk', 'Tgl Keluar (LOS)', 'Kunjungan', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Status', 'Action'];
+                    $config['order'] = [['7', 'asc']];
+                    $config['paging'] = false;
+                    $config['processing'] = true;
+                    $config['serverside'] = true;
+                    $config['scrollY'] = '400px';
+                @endphp
+                <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+                    hoverable compressed>
+                    {{-- @if ($kunjungans)
                         @foreach ($kunjungans as $kunjungan)
                             @if ($kunjungan->budget)
-                                <tr >
+                                <tr>
                                 @else
                                 <tr class="table-danger">
                             @endif
@@ -67,7 +70,6 @@
                                         {{ $kunjungan->status->status_kunjungan }}</span>
                                 @endif
                             </td>
-
                             <td>
                                 <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
                                     class="btn btn-primary btn-xs"><i class="fas fa-file-medical"></i> Lihat
@@ -75,10 +77,10 @@
                             </td>
                             </tr>
                         @endforeach
-                    </x-adminlte-datatable>
-                </x-adminlte-card>
-            </div>
-        @endif
+                    @endif --}}
+                </x-adminlte-datatable>
+            </x-adminlte-card>
+        </div>
     </div>
 @stop
 
@@ -87,3 +89,76 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
+
+@section('js')
+    {{-- js observasi --}}
+    <script>
+        $(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            $('.btnGetObservasi').click(function() {
+                getPasienRanap();
+            });
+
+            function getPasienRanap() {
+                var ruangan = $("#kodeunit").val();
+                var tanggal = $("#tanggal").val();
+                var url = "{{ route('get_pasien_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
+                var table = $('#table1').DataTable();
+                table.rows().remove().draw();
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                }).done(function(data) {
+                    if (data.metadata.code == 200) {
+                        $.each(data.response, function(key, value) {
+                            var btn = "<a href='{{ route('pasienranapprofile') }}?kode=" + value
+                                .kode_kunjungan +
+                                "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical'></i> Lihat ERM</a>";
+                            var addedRow = table.row.add([
+                                value.tgl_masuk,
+                                value.tgl_keluar,
+                                value.counter + ' / ' + value.kode_kunjungan,
+                                value.no_rm + ' ' + value.pasien.nama_px,
+                                value.pasien.no_Bpjs,
+                                value.unit.nama_unit,
+                                value.no_sep,
+                                value.status.status_kunjungan,
+                                btn,
+                            ]).draw(false);
+                            if (value.budget) {
+                                if (!value.budget.kode_cbg) {
+                                    var addedRowNode = addedRow.node();
+                                    $(addedRowNode).addClass('table-danger');
+                                }
+                            } else {
+                                var addedRowNode = addedRow.node();
+                                $(addedRowNode).addClass('table-danger');
+                            }
+
+                        });
+                    } else {
+                        Swal.fire(
+                            'Mohon Maaf !',
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                });
+            }
+            var kodeinit = "{{ $request->kodeunit }}";
+            if (kodeinit) {
+                getPasienRanap();
+            }
+        });
+    </script>
+@endsection

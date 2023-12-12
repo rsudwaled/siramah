@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
+use App\Models\ErmRanapObservasi;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\Unit;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class RanapController extends Controller
+class RanapController extends APIController
 {
     public function kunjunganranap(Request $request)
     {
@@ -21,10 +22,40 @@ class RanapController extends Controller
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
+        // if ($request->tanggal) {
+        //     $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
+        //     $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
+        //     if ($request->kodeunit == '-') {
+        //         $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
+        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
+        //             ->orWhere('status_kunjungan', 1)
+        //             ->whereRelation('unit', 'kelas_unit', '=', 2)
+        //             ->with(['pasien', 'budget', 'unit', 'status'])
+        //             ->get();
+        //     } else {
+        //         $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
+        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
+        //             ->orWhere('status_kunjungan', 1)
+        //             ->where('kode_unit', $request->kodeunit)
+        //             ->with(['pasien', 'budget', 'unit', 'status'])
+        //             ->get();
+        //     }
+        // }
+        return view('simrs.ranap.kunjungan_ranap', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
+    }
+    public function get_pasien_ranap(Request $request)
+    {
+        $kunjungans = null;
         if ($request->tanggal) {
             $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
             $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
-            if ($request->kodeunit == '-') {
+            if ($request->ruangan == '-') {
                 $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
                     ->where('tgl_masuk', '<=', $request->tgl_awal)
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
@@ -33,20 +64,16 @@ class RanapController extends Controller
                     ->with(['pasien', 'budget', 'unit', 'status'])
                     ->get();
             } else {
-                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                $kunjungans = Kunjungan::where('kode_unit', $request->ruangan)
                     ->where('tgl_masuk', '<=', $request->tgl_awal)
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
-                    ->where('kode_unit', $request->kodeunit)
+                    ->where('kode_unit', $request->ruangan)
                     ->with(['pasien', 'budget', 'unit', 'status'])
                     ->get();
             }
         }
-        return view('simrs.ranap.kunjungan_ranap', compact([
-            'request',
-            'units',
-            'kunjungans',
-        ]));
+        return $this->sendResponse($kunjungans);
     }
     public function pasienranapprofile(Request $request)
     {
@@ -175,5 +202,34 @@ class RanapController extends Controller
             'pasien',
             'keperawatan',
         ]));
+    }
+    public function simpan_observasi_ranap(Request $request)
+    {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
+        $observasi = ErmRanapObservasi::updateOrCreate(
+            [
+                'tanggal_input' => $request->tanggal_input,
+                'kode_kunjungan' => $request->kode_kunjungan,
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Observasi Pasien disimpan');
+        return redirect()->back();
+    }
+    public function get_observasi_ranap(Request $request)
+    {
+        $observasi = ErmRanapObservasi::where('kode_kunjungan', $request->kode)->get();
+        return $this->sendResponse($observasi);
+    }
+    public function hapus_obaservasi_ranap(Request $request)
+    {
+        $observasi = ErmRanapObservasi::find($request->id);
+        if ($observasi->user_id == Auth::user()->id) {
+            $observasi->delete();
+            return $this->sendResponse('Berhasil dihapus');
+        } else {
+            return $this->sendError('Tidak Bisa Dihapus oleh anda.', 405);
+        }
     }
 }
