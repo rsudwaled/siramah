@@ -102,6 +102,18 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Ruangan::class, 'id_ruangan',   'id_ruangan');
     }
+    public function ermCpptDokter()
+    {
+        return $this->belongsTo(ErmCpptDokter::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function jpDaftar()
+    {
+        return $this->belongsTo(JPasienIGD::class, 'kode_kunjungan', 'kunjungan');
+    }
+    public function diagnosaIGD()
+    {
+        return $this->belongsTo(Icd10::class, 'diagx', 'diag');
+    }
 
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()

@@ -83,7 +83,7 @@
                                                 $config = ['format' => 'YYYY-MM-DD'];
                                             @endphp
                                             <x-adminlte-input-date name="tglRencanaKontrol" id="tglRencanaKontrol"
-                                                value="{{ $spri->tglRencanaKontrol == null ? Carbon\Carbon::now()->format('Y-m-d') : $spri->tglRencanaKontrol }}"
+                                                {{-- value="{{ $spri->tglRencanaKontrol == null ? Carbon\Carbon::now()->format('Y-m-d') : $spri->tglRencanaKontrol }}" --}}
                                                 label="Tanggal Masuk" :config="$config" />
                                         </div>
                                         <div class="col-md-6">

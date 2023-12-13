@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Ranap Umum')
+@section('title', 'Ranap Bayi')
 @section('content_header')
-    <h1>Ranap Umum : {{ $pasien->nama_px }}</h1>
+    <h1>Ranap Bayi : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -12,6 +12,15 @@
                 <div class="col-md-4">
                     <div class="card card-success card-outline">
                         <div class="card-body">
+                            <div class="col-lg-12 mb-2">
+                                <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
+                                <a href="#" class="btn bg-teal mb-2" id="showBed" style="display: none">
+                                    <i class="fas fa-bed"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary mb-2" id="showRuangan" style="display: none">
+                                    <i class="fas fa-bed"></i> Tidak ada 
+                                </a>
+                            </div>
                             <div class="col-md-12">
                                 <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                     @foreach ($unit as $item)
@@ -33,12 +42,6 @@
                         <div class="card-footer">
                             <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
                                 id="cariRuangan" class="bg-purple" />
-                            <a href="#" class="btn bg-teal" id="showBed" style="display: none">
-                                <i class="fas fa-bed"></i>
-                            </a>
-                            <a href="#" class="btn btn-primary" id="showRuangan" style="display: none">
-                                <i class="fas fa-bed"></i> Tidak ada 
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -48,7 +51,7 @@
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
                                 title="Form Pendaftaran">
-                                <form action="{{ route('ranapbayi.store') }}" method="post" id="submitRanap">
+                                <form action="{{ route('ranap-bayi.store') }}" method="post" id="submitRanap">
                                     @csrf
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
@@ -68,13 +71,7 @@
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-input name="nik_pasien"
-                                                                value="{{ $pasien->nik_bpjs }}" disabled label="NIK Pasien"
-                                                                enable-old-support>
-                                                                <x-slot name="prependSlot">
-                                                                    <div class="input-group-text text-olive">
-                                                                        NIK PASIEN</div>
-                                                                </x-slot>
+                                                            <x-adminlte-input name="ruangan_bayi" id="ruanganBayiTerpilih" readonly label="Ruangan Bayi">
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
@@ -85,10 +82,6 @@
                                                                 value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                                                 label="Tanggal Masuk" :config="$config" />
                                                         </div>
-                                                        {{-- <div class="col-md-6">
-                                                            <x-adminlte-input name="hak_kelas" label="Hak Kelas"
-                                                                id="hakKelas" disabled />
-                                                        </div> --}}
                                                         <div class="col-md-6">
                                                             <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
                                                                 <option value="">--Pilih Penjamin--</option>
@@ -124,7 +117,7 @@
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="submitRanap"
                                             label="Simpan Data" />
-                                        <a href="{{ route('kunjungan.ranap') }}"
+                                        <a href="{{ route('pasien-bayi.cari') }}"
                                             class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
@@ -161,7 +154,7 @@
             if (kelas) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
+                    url: "{{ route('get-bedruangan-bayi') }}?unit=" + unit + '&kelas=' + kelas,
                     dataType: 'JSON',
                     success: function(res) {
                         if (res) {
@@ -201,6 +194,10 @@
                     $("#showRuangan").css("display", "block");
                     $("#showBed").css("display", "block");
                     $(".ruanganCheck").remove();
+
+                    $("#ruanganBayiTerpilih").val(nama+' - '+ bed);
+
+                    $("#infoRuangan").css("display", "none");
                 }
             })
         }

@@ -362,13 +362,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/pilih-ruangan', [App\Http\Controllers\IGDUMUMController::class, 'pilihRuangan'])->name('pilih-ruangan');
 
     // Menu Kunjungan
+    Route::get('/pilih-kunjungan', [App\Http\Controllers\KunjunganIGDController::class, 'pilihKunjungan'])->name('pilihKunjungan');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\KunjunganIGDController::class, 'kunjunganPasienHariIni'])->name('kunjungan-pasien.today');
     Route::put('/tutup-kunjungan-bykode', [App\Http\Controllers\KunjunganIGDController::class, 'tutupKunjunganByKode'])->name('tutup-kunjungan-bykode');
     Route::put('/buka-kunjungan-bykode', [App\Http\Controllers\KunjunganIGDController::class, 'bukaKunjunganByKode'])->name('buka-kunjungan-bykode');
     Route::get('/edit-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjungan'])->name('kunjungan-pasien.edit');
     Route::get('/edit-kunjungan-terpilih', [App\Http\Controllers\KunjunganIGDController::class, 'editKunjunganTerpilih'])->name('kunjungan-terpilih.edit');
     Route::put('/edit-kunjungan-status-penjamin', [App\Http\Controllers\KunjunganIGDController::class, 'updateKunjunganTerpilih'])->name('statuskunjungan-terpilih.update');
-    Route::put('/diagnosa-update', [App\Http\Controllers\KunjunganIGDController::class, 'diagnosaPasien'])->name('diagnosa-fr.update');
+    Route::put('/diagnosa-update', [App\Http\Controllers\KunjunganIGDController::class, 'updateDiagnosa'])->name('diagnosa-pasien.update');
     
     //ROUTE IGD BPJS
     Route::get('/pendaftaran-igd-bpjs', [App\Http\Controllers\IGDBPJSController::class, 'getDataAntrianPasienBPJS'])->name('pendaftaran-pasien-igdbpjs');
@@ -398,6 +399,52 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\RanapIGDController::class, 'ranapBPJSBayi'])->name('ranapbpjs.bayi');
     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\RanapIGDController::class, 'ranapUMUMBayi'])->name('ranapumum.bayi');
     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\RanapIGDController::class, 'ranapBayiStore'])->name('ranapbayi.store');
+    
 
 
+
+
+
+
+
+
+    
+    // VIEW TERBARU
+    // antrian terbaru
+    Route::get('/list-antrian', [App\Http\Controllers\IGD\Antrian\AntrianController::class, 'listAntrian'])->name('list.antrian');
+    Route::get('/antrian/{no}/{jp}/', [App\Http\Controllers\IGD\Antrian\AntrianController::class, 'terpilihAntrian'])->name('terpilih.antrian');
+
+    // daftar igd
+    Route::get('/daftar/form-igd/{no}/{rm}/{jp}/', [App\Http\Controllers\IGD\Daftar\DaftarIGDController::class, 'formIGD'])->name('form.daftar-igd');
+    Route::post('/daftar/form-igd/store', [App\Http\Controllers\IGD\Daftar\DaftarIGDController::class, 'store'])->name('form.daftar-create');
+
+    // daftar igk
+    Route::get('/daftar/form-igk/{no}/{rm}/{jp}/', [App\Http\Controllers\IGD\Daftar\DaftarIGKController::class, 'formIGK'])->name('form.daftar-igk');
+    Route::post('/daftar/form-igk/store', [App\Http\Controllers\IGD\Daftar\DaftarIGKController::class, 'store'])->name('form-igk.daftar-create');
+
+    // daftar tanpa nomor antrian
+    Route::get('/daftar/tanpa-nomor', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'vTanpaNomor'])->name('v.tanpa-nomor');
+    Route::get('/form-daftar/tanpa-nomor/{rm}', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'formDaftarTanpaNomor'])->name('form-daftar.tanpa-nomor');
+    Route::post('/daftar/tanpa-nomor/store', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'daftarTanpaNomorStore'])->name('form-tanpanomor.store');
+    
+    // pasien baru
+    Route::get('/pasien-igd/baru', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'index'])->name('pasien-baru.create');
+    Route::post('/pasien-igd/baru/store', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'pasienBaruIGD'])->name('pasien-baru.store');
+    // pasien bayi
+    Route::get('/pasien-bayi/kunjungan-igk', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
+    Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
+    Route::get('/pasien-bayi/cari-data', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'cariBayi'])->name('pasien-bayi.cari');
+     //RANAP BAYI
+     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
+     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
+     Route::get('/ranap-umum/pasien-bayi/ruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('get-bedruangan-bayi');
+     Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
+     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
+
+    // synch diagnosa
+    Route::get('/daftar-diagnosa/synch-diagnosa-assesment', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'vDiagnosaAssesment'])->name('v.diagnosa');
+    Route::put('/diagnosa/synch-diagnosa-assesment/post', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'synchDiagnosa'])->name('synch.diagnosa');
+    
+    // Kunjungan
+    Route::get('/daftar-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'daftarKunjungan'])->name('daftar.kunjungan');
 });

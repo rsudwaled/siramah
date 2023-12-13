@@ -2,7 +2,7 @@
 
 @section('title', 'Pasien BPJS')
 @section('content_header')
-    <h1>Pasien BPJS: {{ $pasien->nama_px }}</h1>
+    <h1>Pasien BPJS : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -85,102 +85,97 @@
                         <form action="{{ route('pasien-igdbpjs-store') }}" id="formPendaftaranIGD" method="post">
                             @csrf
                             <div class="col-lg-12">
-                                <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
-                                <input type="hidden" name="unit" value="1002">
-                                <input type="hidden" name="dpjpLayan" value="{{ $antrian->isTriase==NULL?'': ($antrian->isTriase->kode_paramedis == null ? '' : $antrian->isTriase->kode_paramedis) }}">
-                                <input type="hidden" name="noKartu" value="{{ $pasien->no_Bpjs }}">
-                                <input type="hidden" name="noMR" value="{{ $pasien->no_rm }}">
-                                <input type="hidden" name="jnsPelayanan" value="2">
-                                <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
-                                <input type="hidden" name="klsRawatHak"
-                                    value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
                                 <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <x-adminlte-input name="nama_pasien" value="{{ old('title', $pasien->nama_px) }}" disabled
-                                                label="Nama Pasien"  >
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text text-olive">
-                                                        {{ $pasien->no_rm }}</div>
-                                                </x-slot>
-                                                <div class="invalid-feedback">
-                                                    @error('nama_pasien')
-                                                        {{ $message }}
-                                                    @enderror
-                                                </div>
-                                            </x-adminlte-input>
-                                        </div>
-                                        <div class="form-group">
-                                            @php
-                                                $config = ['format' => 'YYYY-MM-DD'];
-                                            @endphp
-                                            <x-adminlte-input-date name="tglSep" 
-                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
-                                                :config="$config" />
-                                            <div class="invalid-feedback">
-                                                @error('tglSep')
-                                                    {{ $message }}
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Pendaftaran">
-                                                <option value="">--Pilih Alasan--</option>
-                                                @foreach ($alasanmasuk as $item)
-                                                    <option value="{{ $item->id }}">
-                                                        {{ $item->alasan_masuk }}</option>
-                                                @endforeach
-                                            </x-adminlte-select2>
-                                            <div class="invalid-feedback">
-                                                @error('alasan_masuk_id')
-                                                    {{ $message }}
-                                                @enderror
-                                            </div>
-                                        </div>
-                                       
-
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{-- <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
-                                            <option value="">--Pilih Dokter--</option>
-                                            @foreach ($paramedis as $item)
-                                                <option value="{{ $item->kode_dokter_jkn }}"
-                                                    {{ $antrian->isTriase->kode_paramedis == null ? '' : ($item->kode_paramedis == $antrian->isTriase->kode_paramedis ? 'selected' : '') }}>
-                                                    {{ $item->nama_paramedis }}</option>
-                                            @endforeach
-                                        </x-adminlte-select2> --}}
-
-                                        <x-adminlte-input name="dpjpLayanan"
-                                            value="{{ $antrian->isTriase==NULL?'': ($antrian->isTriase->kode_paramedis == null ? '' : $antrian->isTriase->kode_paramedis) }}"
-                                            disabled label="Dpjp" enable-old-support>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-olive">
-                                                    {{ $antrian->isTriase==NULL?'': ($antrian->isTriase->kode_paramedis == null ? '' : $antrian->isTriase->nama_dokter) }}
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-
-                                        {{-- <x-adminlte-select2 name="diagAwal" label="Diagnosa BPJS ICD-10" id="selectDiagnosa"
-                                            style="display: none;" data-placeholder="Pilih beberapa diagnosa...">
-                                        </x-adminlte-select2> --}}
-
-                                        {{-- <x-adminlte-select name="asalRujukan" label="Pilih Rujukan">
-                                            <option value="2">Faskes 2</option>
-                                            <option value="1">Faskes 1</option>
-                                        </x-adminlte-select> --}}
-                                        <x-adminlte-input name="noTelp" label="No Telepon" maxlength="13" minlength="11"
-                                            placeholder="08xxxx" />
-
-                                        <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
-                                            label="Status Kecelakaan">
-                                            <option value="">--Status Kecelakaan--</option>
-                                            <option value="0">BUKAN KECELAKAAN LALU LINTAS (BKLL)</option>
-                                            <option value="1">KLL & BUKAN KECELAKAAN KERJA (BKK)</option>
-                                            <option value="2">KLL & KK</option>
-                                            <option value="3">KECELAKAAN KERJA</option>
-                                        </x-adminlte-select>
-                                    </div>
                                     <div class="col-lg-12">
+                                        <div class="col-md-12">
+                                            <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}"
+                                                        disabled label="Nama Pasien" enable-old-support>
+                                                        <x-slot name="prependSlot">
+                                                            <div class="input-group-text text-olive">
+                                                                {{ $pasien->no_rm }}</div>
+                                                        </x-slot>
+                                                    </x-adminlte-input>
+                                                    <input type="hidden" name="unit" value="1023">
+                                                    <input type="hidden" name="noKartu" value="{{ $pasien->no_Bpjs }}">
+                                                    <input type="hidden" name="noMR" value="{{ $pasien->no_rm }}">
+                                                    <input type="hidden" name="jnsPelayanan" value="2">
+                                                    <input type="hidden" name="penjamin" value="{{ $ket_jpBpjs }}">
+                                                    <input type="hidden" name="klsRawatHak"
+                                                        value="{{ $resdescrtipt->response->peserta->hakKelas->kode }}">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select2 name="dpjpLayan" id="dpjpLayan" label="Pilih DPJP">
+                                                        <option value="">--Pilih Dokter--</option>
+                                                        @foreach ($paramedis as $item)
+                                                            <option value="{{ $item->kode_dokter_jkn }}">
+                                                                {{ $item->nama_paramedis }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select2 name="diagAwal" label="Diagnosa">
+                                                        <option value="">--Pilih Diagnosa--</option>
+                                                        @foreach ($icd as $item)
+                                                            <option value="{{ $item->diag }}">
+                                                                {{ $item->diag }} {{ $item->nama }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    @php
+                                                        $config = ['format' => 'YYYY-MM-DD'];
+                                                    @endphp
+                                                    <x-adminlte-input-date name="tglSep"
+                                                        value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
+                                                        :config="$config" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Pendaftaran">
+                                                        <option value="">--Pilih Alasan--</option>
+                                                        @foreach ($alasanmasuk as $item)
+                                                            <option value="{{ $item->id }}">
+                                                                {{ $item->alasan_masuk }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select name="asalRujukan" label="Pilih Rujukan">
+                                                        <option value="null">--pilih Rujukan--</option>
+                                                        <option value="1">Faskes 1</option>
+                                                        <option value="2">Faskes 2</option>
+                                                    </x-adminlte-select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
+                                                        label="Status Kecelakaan">
+                                                        <option value="">--Status Kecelakaan--</option>
+                                                        <option value="0">BUKAN KECELAKAAN LALU LINTAS (BKLL)
+                                                        </option>
+                                                        <option value="1">KLL & BUKAN KECELAKAAN KERJA (BKK)
+                                                        </option>
+                                                        <option value="2">KLL & KK</option>
+                                                        <option value="3">KECELAKAAN KERJA</option>
+                                                    </x-adminlte-select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <x-adminlte-input name="noTelp" label="No Telepon"
+                                                        placeholder="08xxxx" disable-feedback />
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-md-12" id="div_stts_kecelakaan" style="display: none;">
                                             <div class="card card-danger card-outline">
                                                 @if ($knj_aktif > 0)
@@ -193,28 +188,35 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select2 name="provinsi" label="Provinsi">
-                                                                <option selected disabled>Cari Provinsi</option>
-                                                            </x-adminlte-select2>
-                                                            <x-adminlte-select2 name="kabupaten" label="Kota / Kabupaten">
-                                                                <option selected disabled>Cari Kota / Kabupaten</option>
-                                                            </x-adminlte-select2>
-                                                            <x-adminlte-select2 name="kecamatan" label="Kecamatan">
-                                                                <option selected disabled>Cari Kecamatan</option>
-                                                            </x-adminlte-select2>
-
-                                                        </div>
-                                                        <div class="col-md-6">
                                                             <x-adminlte-input name="noLP" label="NO LP"
                                                                 placeholder="no laporan polisi" disable-feedback />
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             <x-adminlte-input name="keterangan" label="Keterangan"
                                                                 placeholder="keterangan kecelakaan" disable-feedback />
+                                                        </div>
+                                                        <div class="col-md-6">
                                                             @php
                                                                 $config = ['format' => 'YYYY-MM-DD'];
                                                             @endphp
                                                             <x-adminlte-input-date name="tglKejadian"
                                                                 value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                                                 label="Tanggal Kejadian" :config="$config" />
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <x-adminlte-select2 name="provinsi" label="Provinsi">
+                                                                <option selected disabled>Cari Provinsi</option>
+                                                            </x-adminlte-select2>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <x-adminlte-select2 name="kabupaten" label="Kota / Kabupaten">
+                                                                <option selected disabled>Cari Kota / Kabupaten</option>
+                                                            </x-adminlte-select2>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <x-adminlte-select2 name="kecamatan" label="Kecamatan">
+                                                                <option selected disabled>Cari Kecamatan</option>
+                                                            </x-adminlte-select2>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -227,22 +229,14 @@
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="formPendaftaranIGD"
                                             label="Simpan Data" />
-                                        <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
-                                            label="Batalkan Pendaftaran"
-                                            onclick="batalDaftar({{ $antrian->id }},'{{ $antrian->no_antri }}')" />
                                     @else
-                                        <a href="{{ route('form-pasien', ['no' => $antrian->no_antri, 'rm' => $pasien->no_rm, 'jp' => $status_pendaftaran]) }}"
-                                            class="float-right">
-                                            <div class="alert alert-danger alert-dismissible">
-                                                <h5><i class="icon fas fa-ban"></i> BPJS BERMASALAH!</h5>
-                                                Pasien Bermasalah dengan bpjs, daftarkan sebagai pasien umum
-                                            </div>
-                                        </a>
+                                        <a href="{{ route('bpjstoumum')}}/?par={{$pasien->no_rm}}{{$antrian->no_antri}}"
+                                            class="btn btn-danger btn-sm btn-flat float-right m-1">pasien bermasalah
+                                            dengan bpjs</a>
                                     @endif
                                 @else
-                                    <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-secondary float-right"
-                                        label="Kembali" onclick="backAndDelete({{ $antrian->id }})" />
-
+                                    <a href="{{ route('pendaftaran-pasien-igdbpjs') }}"
+                                        class="btn btn-secondary btn-sm btn-flat float-right m-1">Kembali</a>
                                     <x-adminlte-button class=" btn btn-sm btn-flat m-1 bg-danger float-right"
                                         label="tidak bisa lanjut daftar (pasien memilki kunjungan yang masih aktif)" />
                                 @endif
@@ -263,7 +257,6 @@
 @section('js')
     <script>
         const select = document.getElementById('status_kecelakaan');
-        const isBridging = document.getElementById('isBridging');
         const pilihUnit = document.getElementById('div_stts_kecelakaan');
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
@@ -274,84 +267,15 @@
 
         });
 
-        // function bridgingCheck(value) {
-        //     if (value == "") {
-        //         Swal.fire('silahkan pilih status pendaftaran bpjs bridging atau tidak', '', 'info');
-        //     }
-        //     const diagx = document.getElementById('selectDiagnosa');
-        //     diagx.style.display = value == 1 ? 'block' : 'none';
-        // }
-
-        function batalDaftar(id, no) {
-            var no = no;
-            swal.fire({
-                icon: 'question',
-                title: 'BATALKAN PENDAFTARAN DENGAN NO ' + no,
-                showDenyButton: true,
-                confirmButtonText: 'Batalkan',
-                denyButtonText: `Tidak`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranbpjs') }}/?id=" + id;
-                    $.ajax({
-                        type: "put",
-                        url: url,
-                        success: function(data) {
-                            console.log(data);
-                        }
-                    });
-                    Swal.fire('pendaftaran untuk no ' + no + ' berhasil dibatalkan', '', 'success');
-                    window.location.href = "{{ route('pendaftaran-pasien-igdbpjs') }}"
-                }
-            })
-        }
-
-        function backAndDelete(id) {
-            swal.fire({
-                icon: 'question',
-                title: 'Apakah Anda Yakin akan kembali? ',
-                showDenyButton: true,
-                confirmButtonText: 'Batalkan',
-                denyButtonText: `Tidak`,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    var url = "{{ route('batalkan.pendaftaranbpjs') }}/?id=" + id;
-                    $.ajax({
-                        type: "put",
-                        url: url,
-                        success: function(data) {
-                            console.log(data);
-                        }
-                    });
-                    window.location.href = "{{ route('pendaftaran-pasien-igdbpjs') }}"
-                }
-            })
+        function submitPasien(dpjpLayan) {
+            var dpjpLayan = ('#dpjpLayan').val();
+            alert(dpjpLayan);
         }
 
         $(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $("#diagAwal").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_diagnosa_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            diagnosa: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
                 }
             });
 

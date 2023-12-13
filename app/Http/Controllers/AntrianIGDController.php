@@ -127,7 +127,6 @@ class AntrianIGDController extends APIController
         $s_byname = $request->nama;
         $s_byaddress = $request->alamat;
         $s_bydate = $request->tglLahir;
-        // $s_bybpjs = $request->nobpjs;
         $s_byrm = $request->norm;
         if($s_bynik && $s_byname && $s_byaddress && $s_bydate && $s_byrm){
             $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");
@@ -137,16 +136,6 @@ class AntrianIGDController extends APIController
             ->where('tgl_lahir', '<=', now()->subMonth())
             ->get();
         }
-        
-        // if($s_bynik || $s_byname || $s_byaddress || $s_bydate || $s_byrm){
-        //     $pasien =\DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RS_23('$s_byrm' ,'$s_byname' ,'$s_byaddress' , '' ,'$s_bynik' ,'$s_bydate')");   
-        // }
-        // else{
-        //     $pasien = Pasien::limit(100)
-        //         ->orderBy('tgl_entry', 'desc')
-        //         ->get();
-        // }
-
         if ($s_bynik) {
             $pasien = Pasien::where('nik_bpjs', $s_bynik)->get();
         }
@@ -207,8 +196,7 @@ class AntrianIGDController extends APIController
 
     public function pasienBaruCreate(Request $request)
     {
-        
-        
+                
         $validated = $request->validate([
             'nik_pasien_baru' =>'required',
             'nama_pasien_baru' =>'required',
@@ -280,13 +268,10 @@ class AntrianIGDController extends APIController
 
     public function antrianIGD()
     {
-        // test
-        $antrian = AntrianPasienIGD::with('isTriase')->where('status', 1)->where('kode_kunjungan', null)
+        $antrian = AntrianPasienIGD::with('isTriase')->whereDate('tgl', now())
+            ->where('status', 1)
+            ->where('kode_kunjungan', null)
             ->paginate(32);
-        // dd($antrian);
-        // $antrian = AntrianPasienIGD::whereDate('tgl', now())
-        //     ->where('status', 1)
-        //     ->paginate(32);
         $pasien = Pasien::limit(200)
             ->orderBy('tgl_entry', 'desc')
             ->get();
@@ -307,7 +292,6 @@ class AntrianIGDController extends APIController
 
     public function daftarTanpaNomor(Request $request)
     {
-        // dd($request->all());
         if(!$request->no_rm)
         {
             Alert::warning('INFORMASI!', 'anda belum memilih pasien dan jenis pendaftaran!');
@@ -458,7 +442,7 @@ class AntrianIGDController extends APIController
         $provinsibpjs = $data->ref_provinsi_api($request);
         $provinsibpjs = $provinsibpjs->original;
 
-        $antrian = AntrianPasienIGD::firstWhere('no_antri',$no);
+        $antrian = AntrianPasienIGD::with('isTriase')->Where('no_antri',$no)->first();
         $status_pendaftaran = $request->jp;
         $pasien = Pasien::where('no_rm', $rm)->first();
         $icd = Icd10::limit(10)->get();

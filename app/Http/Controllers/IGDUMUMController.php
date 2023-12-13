@@ -368,7 +368,6 @@ class IGDUMUMController extends Controller
 
     public function storeDaftarTanpaAntri(Request $request)
     {
-        // dd($request->all());
         $request->validate(
                 [
                     'nik' => 'required',

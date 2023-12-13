@@ -379,6 +379,27 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
+                    'text' => 'Daftar Antrian*',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'list-antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Update Diagnosa*',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'daftar-diagnosa/synch-diagnosa-assesment',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Kunjungan*',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'daftar-kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Dashboard IGD',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'dashboard-igd',
@@ -392,13 +413,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                // [
-                //     'text' => 'Pendaftaran Pasien*',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'pendaftaran-antrian-igd',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
                 
                 // [
                 //     'text' => 'Pendaftaran Rawat Inap',
@@ -410,7 +424,7 @@ return [
                 [
                     'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'daftar-kunjungan',
+                    'url'  => 'pilih-kunjungan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

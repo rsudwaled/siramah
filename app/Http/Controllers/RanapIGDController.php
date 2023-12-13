@@ -32,6 +32,7 @@ use App\Models\Poliklinik;
 use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use App\Models\PasienBayiIGD;
+use App\Models\ErmCpptDokter;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Validator;
@@ -44,9 +45,22 @@ class RanapIGDController extends APIController
 {
     public function getKunjunganNow()
     {
-        $kunjungan = Kunjungan::with('pasien')
-            ->where('status_kunjungan', 2)
-            ->get();
+        $kunjungan = DB::connection('mysql2')->table('ts_kunjungan')
+                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
+                    ->join('erm_cppt_dokter', 'ts_kunjungan.kode_kunjungan', '=', 'erm_cppt_dokter.kode_kunjungan')
+                    ->join('di_pasien_diagnosa_frunit', 'ts_kunjungan.kode_kunjungan', '=', 'di_pasien_diagnosa_frunit.kode_kunjungan')
+                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+                    ->select(
+                        'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien',
+                        'erm_cppt_dokter.is_ranap as is_ranap','erm_cppt_dokter.kode_paramedis as kode_dokter','erm_cppt_dokter.tgl_input as tgl_assesment',
+                        'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep',
+                        'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit',
+                        'di_pasien_diagnosa_frunit.diag_00 as diagnosa_assesment',
+                        'mt_unit.nama_unit as nama_unit',
+                    )
+                    ->orderBy('tgl_kunjungan', 'desc')
+                    ->get();
+        // dd($kunjungan);
         $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         return view('simrs.igd.ranap.data_kunjungan', compact('kunjungan', 'paramedis'));
     }
@@ -90,6 +104,7 @@ class RanapIGDController extends APIController
             ->where('tglRencanaKontrol', now()->format('Y-m-d'))
             ->first();
         // dd($spri);
+        $spri = '000000';
         return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli', 'refKunj', 'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis'));
     }
     public function getUnit(Request $request)
@@ -107,7 +122,6 @@ class RanapIGDController extends APIController
             ->where('status', 1)
             ->where('status_incharge', 0)
             ->get();
-        // dd($bed);
         return response()->json([
             'bed' => $bed,
         ]);
@@ -115,7 +129,7 @@ class RanapIGDController extends APIController
 
     public function pasienRanapStore(Request $request)
     {
-        // dd($request->all());
+        
         $validator = $request->validate([
             'tanggal_daftar' => 'required|date',
             'kodeKunjungan' => 'required',

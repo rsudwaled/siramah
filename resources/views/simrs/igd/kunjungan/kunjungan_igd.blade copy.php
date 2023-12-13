@@ -223,7 +223,7 @@
                         <td>{{ $item->diagx }}</td>
                         <td>{{ $item->no_sep }}</td>
                         <td>
-                           xx
+                            -
                         </td>
                         <td>
                             <x-adminlte-button type="button" 

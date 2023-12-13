@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DiagnosaFrunit extends Model
+class ErmCpptDokter extends Model
 {
     use HasFactory;
     protected $connection = 'mysql2';
-    protected $table = 'di_pasien_diagnosa_frunit';
-    protected $guarded = ["id"];
+    protected $table = 'erm_cppt_dokter';
+    protected $guarded = ['id'];
 
     public function pasien()
     {
@@ -20,10 +20,9 @@ class DiagnosaFrunit extends Model
     {
         return $this->belongsTo(Unit::class, 'kode_unit', 'kode_unit');
     }
-    public function jpDaftar()
+    public function paramedis()
     {
-        return $this->belongsTo(JPasienIGD::class, 'kode_kunjungan', 'kunjungan');
+        return $this->hasOne(Paramedis::class, 'kode_dokter_jkn', 'kodedokter');
     }
+
 }
-
-
