@@ -23,10 +23,11 @@
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
                 <x-slot name="footerSlot">
-                    <x-adminlte-button class="btn-xs btnModalPasien" theme="warning" label="Riwayat Kunjungan"
+                    <x-adminlte-button class="btn-xs btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
                         icon="fas fa-search" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Groupping Eklaim" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs" theme="warning" label="Rincian Biaya" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs btnRincianBiaya" theme="warning" label="Rincian Biaya"
+                        icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Laboratorium" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs" theme="warning" label="Radiologi" icon="fas fa-file-medical" />
@@ -416,6 +417,20 @@
 @section('plugins.Select2', true)
 
 @section('js')
+    {{-- toast --}}
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
     {{-- gorupping --}}
     <script>
         $(function() {
@@ -693,6 +708,134 @@
             });
         });
     </script>
+    {{-- riwayat kunjungan --}}
+    <x-adminlte-modal id="modalKunjungan" name="modalKunjungan" title="Kunjungan Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl">
+        @php
+            $heads = ['Tgl Masuk', 'Tgl Keluar', 'Kunjungan', 'Jenis Pelayanan', 'Unit', 'Diagnosa', 'SEP'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+        @endphp
+        <x-adminlte-datatable id="tableKunjungan" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
+    <script>
+        $(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            $('.btnRiwayatKunjungan').click(function(e) {
+                $.LoadingOverlay("show");
+                getKunjunganPasien();
+                $('#modalKunjungan').modal('show');
+                $.LoadingOverlay("hide");
+            });
+
+            function getKunjunganPasien() {
+                var url = "{{ route('get_kunjungan_pasien') }}?norm={{ $kunjungan->no_rm }}";
+                var table = $('#tableKunjungan').DataTable();
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                }).done(function(data) {
+                    table.rows().remove().draw();
+                    if (data.metadata.code == 200) {
+                        $.each(data.response, function(key, value) {
+                            table.row.add([
+                                value.tgl_masuk,
+                                value.tgl_keluar,
+                                value.counter + " / " + value.kode_kunjungan,
+                                value.tgl_keluar,
+                                value.unit.nama_unit,
+                                value.tgl_keluar,
+                                value.tgl_keluar,
+                            ]).draw(false);
+                        });
+                    } else {
+                        Swal.fire(
+                            'Mohon Maaf !',
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    </script>
+    {{-- rincian biaya kunjungan --}}
+    <x-adminlte-modal id="modalRincianBiaya" name="modalRincianBiaya" title="Rincian Biaya Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl">
+        @php
+            $heads = ['Tgl Masuk', 'Tgl Keluar', 'Kunjungan', 'Jenis Pelayanan', 'Unit', 'Diagnosa', 'SEP'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+        @endphp
+        <x-adminlte-datatable id="tableRincianBiaya" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
+    <script>
+        $(function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+            $('.btnRincianBiaya').click(function(e) {
+                $.LoadingOverlay("show");
+                getRincianBiaya();
+                $('#modalRincianBiaya').modal('show');
+                $.LoadingOverlay("hide");
+            });
+
+            function getRincianBiaya() {
+                var url = "{{ route('get_kunjungan_pasien') }}?norm={{ $kunjungan->no_rm }}";
+                var table = $('#tableKunjungan').DataTable();
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                }).done(function(data) {
+                    table.rows().remove().draw();
+                    if (data.metadata.code == 200) {
+                        $.each(data.response, function(key, value) {
+                            table.row.add([
+                                value.tgl_masuk,
+                                value.tgl_keluar,
+                                value.counter + " / " + value.kode_kunjungan,
+                                value.tgl_keluar,
+                                value.unit.nama_unit,
+                                value.tgl_keluar,
+                                value.tgl_keluar,
+                            ]).draw(false);
+                        });
+                    } else {
+                        Swal.fire(
+                            'Mohon Maaf !',
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    </script>
     {{-- suratkontrol --}}
     <script>
         $(function() {
@@ -803,61 +946,153 @@
         });
     </script>
     {{-- keperawatan --}}
+    <x-adminlte-modal id="modalInputKeperawatan" title="Implementasi & Evaluasi Keperawatan" theme="warning"
+        icon="fas fa-file-medical" size='lg'>
+        <form id="formKeperawatan" name="formKeperawatan" method="POST">
+            @csrf
+            @php
+                $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+            @endphp
+            <input type="hidden" class="kode_kunjungan-keperawatan" name="kode_kunjungan"
+                value="{{ $kunjungan->kode_kunjungan }}">
+            <input type="hidden" class="counter-keperawatan" name="counter" value="{{ $kunjungan->counter }}">
+            <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
+            <x-adminlte-input-date id="tanggal_input-keperawatan" name="tanggal_input" label="Tanggal & Waktu"
+                :config="$config" />
+            <x-adminlte-textarea igroup-size="sm" class="keperawatan-keperawatan" name="keperawatan"
+                label="Implementasi & Evaluasi Keperawatan" placeholder="Implementasi & Evaluasi Keperawatan" rows=5>
+            </x-adminlte-textarea>
+        </form>
+        <x-slot name="footerSlot">
+            <button class="btn btn-success mr-auto" onclick="tambahKeperawatan()"><i class="fas fa-save"></i>
+                Simpan</button>
+            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
     <script>
         $(function() {
-            $('.btnEditKeperawatan').click(function(e) {
-                $.LoadingOverlay("show");
-                $(".tanggal_input-keperawatan").val($(this).data('tanggal_input'));
-                $(".kode_kunjungan-keperawatan").val($(this).data('kode_kunjungan'));
-                $(".keperawatan-keperawatan").val($(this).data('keperawatan'));
-                $('#modalInputKeperawatan').modal('show');
+            $('#tableKeperawatan').DataTable({
+                info: false,
+                ordering: false,
+                paging: false
+            });
+            getKeperawatanRanap();
+        });
+
+        function btnInputKeperawatan() {
+            $.LoadingOverlay("show");
+            let today = moment().format('yyyy-MM-DD HH:mm:ss');
+            $('#tanggal_input-keperawatan').val(today);
+            $('#modalInputKeperawatan').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function getKeperawatanRanap() {
+            var url = "{{ route('get_keperawatan_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            var table = $('#tableKeperawatan').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        var btn =
+                            '<button class="btn btn-xs btn-warning" onclick="editKeperawatan(this)" data-id="' +
+                            value.id +
+                            '" data-tglinput="' + value.tanggal_input +
+                            '" data-keperawatan="' + value.keperawatan +
+                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger" onclick="hapusKeperawatan(this)" data-id="' +
+                            value.id +
+                            '"><i class="fas fa-trash"></i> Hapus</button>';
+                        table.row.add([
+                            value.tanggal_input,
+                            '<pre>' + value.keperawatan + '</pre>',
+                            value.pic,
+                            btn,
+                        ]).draw(false);
+                    });
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function tambahKeperawatan() {
+            $.LoadingOverlay("show");
+            $.ajax({
+                type: "POST",
+                url: "{{ route('simpan_keperawatan_ranap') }}",
+                data: $("#formKeperawatan").serialize(),
+                dataType: "json",
+                encode: true,
+            }).done(function(data) {
+                console.log(data);
+                if (data.metadata.code == 200) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Tarif layanan & tindakan telah ditambahkan',
+                    });
+                    $("#formKeperawatan").trigger('reset');
+                    getKeperawatanRanap();
+                    $('#modalInputKeperawatan').modal('hide');
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Tambah tarif layanan & tindakan error',
+                    });
+                }
                 $.LoadingOverlay("hide");
             });
-            $('.btnHapusKeperawatan').click(function(e) {
-                $.LoadingOverlay("show");
-                var id = $(this).data('id');
-                var user = $(this).data('user');
-                var url = '{{ route('hapus_implementasi_evaluasi_keperawatan') }}?user=' + user + '&id=' +
-                    id;
-                window.location.replace(url);
+
+        }
+
+        function editKeperawatan(button) {
+            $.LoadingOverlay("show");
+            $("#tanggal_input-keperawatan").val($(button).data('tglinput'));
+            $(".keperawatan-keperawatan").val($(button).data('keperawatan'));
+            $('#modalInputKeperawatan').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function hapusKeperawatan(button) {
+            $.LoadingOverlay("show");
+            $.ajax({
+                type: "POST",
+                url: "{{ route('hapus_keperawatan_ranap') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": tarif = $(button).data('id')
+                },
+                dataType: "json",
+                encode: true,
+            }).done(function(data) {
+                console.log(data);
+                if (data.metadata.code == 200) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Keperawatan Ranap telah dihapuskan',
+                    });
+                    $("#formKeperawatan").trigger('reset');
+                    getKeperawatanRanap();
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Keperawatan Ranap gagal dihapuskan',
+                    });
+                }
+                $.LoadingOverlay("hide");
             });
-        });
+            $.LoadingOverlay("hide");
+        }
     </script>
     {{-- observasi --}}
     <script>
         $(function() {
-            $('.btnEditKeperawatan').click(function(e) {
-                $.LoadingOverlay("show");
-                $(".tanggal_input-keperawatan").val($(this).data('tanggal_input'));
-                $(".kode_kunjungan-keperawatan").val($(this).data('kode_kunjungan'));
-                $(".keperawatan-keperawatan").val($(this).data('keperawatan'));
-                $('#modalInputKeperawatan').modal('show');
-                $.LoadingOverlay("hide");
-            });
-            $('.btnHapusKeperawatan').click(function(e) {
-                $.LoadingOverlay("show");
-                var id = $(this).data('id');
-                var user = $(this).data('user');
-                var url = '{{ route('hapus_implementasi_evaluasi_keperawatan') }}?user=' + user + '&id=' +
-                    id;
-                window.location.replace(url);
-            });
-        });
-    </script>
-    {{-- js observasi --}}
-    <script>
-        $(function() {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
             $('#tableObservasi').DataTable({
                 info: false,
                 ordering: false,
@@ -867,83 +1102,88 @@
                 getObservasiRanap();
             });
             getObservasiRanap();
-
-            function getObservasiRanap() {
-                var url = "{{ route('get_observasi_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
-                var table = $('#tableObservasi').DataTable();
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                }).done(function(data) {
-                    table.rows().remove().draw();
-                    if (data.metadata.code == 200) {
-                        $.each(data.response, function(key, value) {
-                            console.log(value);
-                            var btn =
-                                '<button class="btn btn-xs btn-warning btnEditObservasi" data-tanggal_input="' +
-                                value.tanggal_input + '" data-tensi="' + value.tensi +
-                                '" data-nadi="' +
-                                value.nadi +
-                                '" data-rr="' +
-                                value.rr +
-                                '" data-suhu="' +
-                                value.suhu +
-                                '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger btnHapusObservasi" data-id="' +
-                                value.id +
-                                '"><i class="fas fa-trash"></i> Hapus</button>';
-                            table.row.add([
-                                value.tanggal_input,
-                                value.tensi,
-                                value.nadi,
-                                value.rr,
-                                value.suhu,
-                                value.gds,
-                                value.kesadaran,
-                                value.pupilkiri + value.pupilkanan,
-                                value.ecg,
-                                value.keterangan,
-                                btn,
-                            ]).draw(false);
-                        });
-                        $('.btnHapusObservasi').click(function() {
-                            $.LoadingOverlay("show");
-                            $.ajax({
-                                type: "POST",
-                                url: "{{ route('hapus_obaservasi_ranap') }}",
-                                data: {
-                                    "_token": "{{ csrf_token() }}",
-                                    "id": tarif = $(this).data('id')
-                                },
-                                dataType: "json",
-                                encode: true,
-                            }).done(function(data) {
-                                console.log(data);
-                                if (data.metadata.code == 200) {
-                                    Toast.fire({
-                                        icon: 'success',
-                                        title: 'Tarif layanan & tindakan telah dihapuskan',
-                                    });
-                                    $("#formObservasi").trigger('reset');
-                                    getObservasiRanap();
-                                } else {
-                                    Toast.fire({
-                                        icon: 'error',
-                                        title: 'Tarif layanan & tindakan gagal dihapuskan',
-                                    });
-                                }
-                                $.LoadingOverlay("hide");
-                            });
-                            $.LoadingOverlay("hide");
-                        });
-                    } else {
-                        Swal.fire(
-                            'Mohon Maaf !',
-                            data.metadata.message,
-                            'error'
-                        );
-                    }
-                });
-            }
         });
+
+        function getObservasiRanap() {
+            var url = "{{ route('get_observasi_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            var table = $('#tableObservasi').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        console.log(value);
+                        var btn =
+                            '<button class="btn btn-xs btn-warning btnEditObservasi" data-tanggal_input="' +
+                            value.tanggal_input + '" data-tensi="' + value.tensi +
+                            '" data-nadi="' +
+                            value.nadi +
+                            '" data-rr="' +
+                            value.rr +
+                            '" data-suhu="' +
+                            value.suhu +
+                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger btnHapusObservasi" data-id="' +
+                            value.id +
+                            '"><i class="fas fa-trash"></i> Hapus</button>';
+                        table.row.add([
+                            value.tanggal_input,
+                            value.tensi,
+                            value.nadi,
+                            value.rr,
+                            value.suhu,
+                            value.gds,
+                            value.kesadaran,
+                            value.pupilkiri + value.pupilkanan,
+                            value.ecg,
+                            value.keterangan,
+                            btn,
+                        ]).draw(false);
+                    });
+                    hapusObservasiRanap();
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function hapusObservasiRanap() {
+            $('.btnHapusObservasi').click(function() {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('hapus_obaservasi_ranap') }}",
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "id": tarif = $(this).data('id')
+                    },
+                    dataType: "json",
+                    encode: true,
+                }).done(function(data) {
+                    console.log(data);
+                    if (data.metadata.code == 200) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Tarif layanan & tindakan telah dihapuskan',
+                        });
+                        $("#formObservasi").trigger('reset');
+                        getObservasiRanap();
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Tarif layanan & tindakan gagal dihapuskan',
+                        });
+                    }
+                    $.LoadingOverlay("hide");
+                });
+                $.LoadingOverlay("hide");
+            });
+
+        }
     </script>
 @endsection

@@ -4,7 +4,7 @@
             Observasi 24 Jam
         </h3>
     </a>
-    <div id="colObservasi" class="show collapse">
+    <div id="colObservasi" class="collapse">
         <div class="card-body">
             <x-adminlte-button label="Input Observasi" icon="fas fa-plus" data-toggle="modal"
                 data-target="#modalObservasi" theme="success" class="btn-xs" />
@@ -12,8 +12,6 @@
                 class="btn-xs btnGetObservasi" />
             <a href="{{ route('print_obaservasi_ranap') }}?kunjungan={{ $kunjungan->kode_kunjungan }}" target="_blank"
                 class="btn btn-xs btn-warning"><i class="fas fa-print"></i> Print</a>
-
-
             <table class="table table-sm table-bordered table-hover" id="tableObservasi">
                 <thead>
                     <tr>

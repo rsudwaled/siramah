@@ -16,6 +16,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class RanapController extends APIController
 {
+    // daftar pasien ranap
     public function kunjunganranap(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])
@@ -75,6 +76,7 @@ class RanapController extends APIController
         }
         return $this->sendResponse($kunjungans);
     }
+    // erm pasien ranap
     public function pasienranapprofile(Request $request)
     {
         $kunjungan = Kunjungan::with([
@@ -87,8 +89,6 @@ class RanapController extends APIController
             'budget',
             'alasan_pulang',
             'surat_kontrol',
-            'erm_ranap',
-            'erm_ranap_keperawatan',
             // 'layanans', 'layanans.layanan_details',
             // 'layanans.layanan_details.tarif_detail',
             // 'layanans.layanan_details.tarif_detail.tarif',
@@ -116,6 +116,13 @@ class RanapController extends APIController
             'pasien',
             'biaya_rs',
         ]));
+    }
+    public function get_kunjungan_pasien(Request $request)
+    {
+        $kunjungans = Kunjungan::where('no_rm', $request->norm)
+            ->with(['unit'])
+            ->get();
+        return $this->sendResponse($kunjungans);
     }
     public function kunjunganranapaktif(Request $request)
     {
@@ -169,6 +176,7 @@ class RanapController extends APIController
             'pasien',
         ]));
     }
+    // implementasi
     public function simpan_implementasi_evaluasi_keperawatan(Request $request)
     {
         $request['pic'] = Auth::user()->name;
@@ -183,6 +191,36 @@ class RanapController extends APIController
         Alert::success('Success', 'Implementasi Evaluasi Keperawatan disimpan');
         return redirect()->back();
     }
+    public function simpan_keperawatan_ranap(Request $request)
+    {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
+        $keperawatan = ErmRanapKeperawatan::updateOrCreate(
+            [
+                'tanggal_input' => $request->tanggal_input,
+                'kode_kunjungan' => $request->kode_kunjungan,
+            ],
+            $request->all()
+        );
+        return $this->sendResponse($keperawatan);
+    }
+    public function hapus_keperawatan_ranap(Request $request)
+    {
+        $keperawatan = ErmRanapKeperawatan::find($request->id);
+        if ($keperawatan->user_id == Auth::user()->id) {
+            $keperawatan->delete();
+            return $this->sendResponse('Berhasil dihapus');
+        } else {
+            return $this->sendError('Tidak Bisa Dihapus oleh anda.', 405);
+        }
+    }
+    // observasi
+    public function get_keperawatan_ranap(Request $request)
+    {
+        $observasi = ErmRanapKeperawatan::where('kode_kunjungan', $request->kode)->get();
+        return $this->sendResponse($observasi);
+    }
+
     public function hapus_implementasi_evaluasi_keperawatan(Request $request)
     {
         $keperawatan = ErmRanapKeperawatan::find($request->id);
@@ -192,6 +230,7 @@ class RanapController extends APIController
         }
         return redirect()->back();
     }
+
     public function print_implementasi_evaluasi_keperawatan(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
@@ -217,6 +256,7 @@ class RanapController extends APIController
         Alert::success('Success', 'Observasi Pasien disimpan');
         return redirect()->back();
     }
+    // observasi
     public function get_observasi_ranap(Request $request)
     {
         $observasi = ErmRanapObservasi::where('kode_kunjungan', $request->kode)->get();

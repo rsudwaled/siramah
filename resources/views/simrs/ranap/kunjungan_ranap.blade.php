@@ -3,7 +3,6 @@
 @section('content_header')
     <h1>Pasien Rawat Inap</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -31,10 +30,9 @@
                 </div>
             </x-adminlte-card>
         </div>
-        {{-- <div class="col-md-3">
-                <x-adminlte-small-box title="{{ $kunjungans->where('status_kunjungan', 1)->count() }}"
-                    text="Pasien Ranap Aktif" theme="warning" icon="fas fa-user-injured" />
-            </div> --}}
+        <div class="col-md-3">
+            <x-adminlte-small-box title="-" text="Pasien Ranap Aktif" theme="warning" icon="fas fa-user-injured" />
+        </div>
         <div class="col-md-12">
             <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Data Pasien Rawat Inap">
                 @php
@@ -83,15 +81,13 @@
         </div>
     </div>
 @stop
-
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
-
 @section('js')
-    {{-- js observasi --}}
+    {{-- pasien rawat inap --}}
     <script>
         $(function() {
             const Toast = Swal.mixin({
