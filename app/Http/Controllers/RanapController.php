@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
 use App\Models\ErmRanapObservasi;
+use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\Unit;
@@ -244,5 +245,57 @@ class RanapController extends APIController
         } else {
             return $this->sendError('Tidak Bisa Dihapus oleh anda.', 405);
         }
+    }
+    public function print_obaservasi_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
+        $keperawatan = $kunjungan->erm_ranap_observasi;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_ranap_observasi', compact([
+            'kunjungan',
+            'pasien',
+            'keperawatan',
+        ]));
+    }
+
+    // perkembangan
+    public function simpan_perkembangan_ranap(Request $request)
+    {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
+        $observasi = ErmRanapPerkembangan::updateOrCreate(
+            [
+                'tanggal_input' => $request->tanggal_input,
+                'kode_kunjungan' => $request->kode_kunjungan,
+            ],
+            $request->all()
+        );
+        return $this->sendResponse($observasi);
+    }
+    public function get_perkembangan_ranap(Request $request)
+    {
+        $observasi = ErmRanapPerkembangan::where('kode_kunjungan', $request->kode)->get();
+        return $this->sendResponse($observasi);
+    }
+    public function hapus_perkembangan_ranap(Request $request)
+    {
+        $observasi = ErmRanapPerkembangan::find($request->id);
+        if ($observasi->user_id == Auth::user()->id) {
+            $observasi->delete();
+            return $this->sendResponse('Berhasil dihapus');
+        } else {
+            return $this->sendError('Tidak Bisa Dihapus oleh anda.', 405);
+        }
+    }
+    public function print_perkembangan_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
+        $keperawatan = $kunjungan->erm_ranap_perkembangan;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_ranap_perkembangan', compact([
+            'kunjungan',
+            'pasien',
+            'keperawatan',
+        ]));
     }
 }

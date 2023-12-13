@@ -72,6 +72,14 @@ class Kunjungan extends Model
     {
         return $this->hasMany(ErmRanapKeperawatan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function erm_ranap_observasi()
+    {
+        return $this->hasMany(ErmRanapObservasi::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_perkembangan()
+    {
+        return $this->hasMany(ErmRanapPerkembangan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function antrian()
     {
         return $this->belongsTo(Antrian::class, 'kode_kunjungan', 'kode_kunjungan');
