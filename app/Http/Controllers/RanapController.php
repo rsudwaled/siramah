@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
 use App\Models\ErmRanapObservasi;
@@ -13,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class RanapController extends APIController
@@ -90,10 +92,10 @@ class RanapController extends APIController
             'budget',
             'alasan_pulang',
             'surat_kontrol',
-            // 'layanans', 'layanans.layanan_details',
-            // 'layanans.layanan_details.tarif_detail',
-            // 'layanans.layanan_details.tarif_detail.tarif',
-            // 'layanans.layanan_details.barang',
+            'layanans', 'layanans.layanan_details',
+            'layanans.layanan_details.tarif_detail',
+            'layanans.layanan_details.tarif_detail.tarif',
+            'layanans.layanan_details.barang',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $kunjungans = null;
@@ -109,9 +111,9 @@ class RanapController extends APIController
         //     ->orderBy('tgl_masuk', 'desc')
         //     ->limit(10)->get();
         $biaya_rs = 0;
-        // foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
-        //     $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');
-        // }
+        foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
+            $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');
+        }
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
@@ -124,6 +126,38 @@ class RanapController extends APIController
             ->with(['unit'])
             ->get();
         return $this->sendResponse($kunjungans);
+    }
+    public function get_rincian_biaya(Request $request)
+    {
+        $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
+        $budget = BudgetControl::find($request->norm . '|' . $request->counter);
+        $data = [
+            "rincian" => $response,
+            "budget" => $budget,
+            "pasien" => $budget->pasien ?? null,
+            "rangkuman" => [
+                "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
+                "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
+                "prosedur_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE BEDAH")->sum("GRANTOTAL_LAYANAN")),
+                "tenaga_ahli" => round($response->where('nama_group_vclaim', "TENAGA AHLI")->sum("GRANTOTAL_LAYANAN")),
+                "radiologi" => round($response->where('nama_group_vclaim', "RADIOLOGI")->sum("GRANTOTAL_LAYANAN")),
+                "laboratorium" => round($response->where('nama_group_vclaim', "LABORATORIUM")->sum("GRANTOTAL_LAYANAN")),
+                "rehabilitasi" => round($response->where('nama_group_vclaim', "REHABILITASI MEDIK")->sum("GRANTOTAL_LAYANAN")),
+                "sewa_alat" => round($response->where('nama_group_vclaim', "SEWA ALAT")->sum("GRANTOTAL_LAYANAN")),
+                "keperawatan" => round($response->where('nama_group_vclaim', "KEPERAWATAN")->sum("GRANTOTAL_LAYANAN")),
+                "kamar_akomodasi" => round($response->where('nama_group_vclaim', "KAMAR/AKOMODASI")->sum("GRANTOTAL_LAYANAN")),
+                "penunjang" => round($response->where('nama_group_vclaim', "PENUNJANG MEDIS")->sum("GRANTOTAL_LAYANAN")),
+                "konsultasi" => round($response->where('nama_group_vclaim', "KONSULTASI")->sum("GRANTOTAL_LAYANAN")),
+                "pelayanan_darah" => round($response->where('nama_group_vclaim', "PELAYANAN DARAH")->sum("GRANTOTAL_LAYANAN")),
+                "rawat_intensif" => round($response->where('nama_group_vclaim', "RAWAT INTENSIF")->sum("GRANTOTAL_LAYANAN")),
+                "obat" => round($response->where('nama_group_vclaim', "OBAT")->sum("GRANTOTAL_LAYANAN")),
+                "alkes" => round($response->where('nama_group_vclaim', "ALKES")->sum("GRANTOTAL_LAYANAN")),
+                "bmhp" => round($response->where('nama_group_vclaim', "BMHP")->sum("GRANTOTAL_LAYANAN")),
+                "obat_kronis" => round($response->where('nama_group_vclaim', "OBAT KRONIS")->sum("GRANTOTAL_LAYANAN")),
+                "obat_kemo" => round($response->where('nama_group_vclaim', "OBAT KEMOTERAPI")->sum("GRANTOTAL_LAYANAN")),
+            ],
+        ];
+        return $this->sendResponse($data, 200);
     }
     public function kunjunganranapaktif(Request $request)
     {
