@@ -159,6 +159,97 @@ class RanapController extends APIController
         ];
         return $this->sendResponse($data, 200);
     }
+    public function get_hasil_laboratorium(Request $request)
+    {
+        $kodeunit = '3002';
+        $data = [];
+        if ($request->norm) {
+            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
+                ->whereHas('layanans', function ($query) use ($kodeunit) {
+                    $query->where('kode_unit', $kodeunit);
+                })
+                ->with([
+                    'unit',
+                    'pasien',
+                    'layanans', 'layanans.layanan_details',
+                    'layanans.layanan_details.tarif_detail',
+                    'layanans.layanan_details.tarif_detail.tarif',
+                ])
+                ->limit(10)->get();
+
+            foreach ($kunjungans as $key => $kunjungan) {
+                $lab = [];
+                $pemeriksaan = [];
+                foreach ($kunjungan->layanans->where('kode_unit', 3002) as $key => $value) {
+                    $lab[] = $value->kode_layanan_header;
+                    //   @foreach ($lab->layanan_details as $laydet)
+                    //                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
+                    //                                         @endforeach
+
+                    //                     $pemeriksaan = [];
+                }
+
+
+                $data[] = [
+                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    'tgl_masuk' => $kunjungan->tgl_masuk,
+                    'counter' => $kunjungan->counter,
+                    'no_rm' => $kunjungan->no_rm,
+                    'nama_px' => $kunjungan->pasien->nama_px,
+                    'nama_unit' => $kunjungan->unit->nama_unit,
+                    'laboratorium' =>  $lab,
+
+
+                ];
+            }
+        }
+        return $this->sendResponse($data);
+    }
+    public function get_hasil_radiologi(Request $request)
+    {
+        $kodeunit = '3003';
+        $data = [];
+        if ($request->norm) {
+            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
+                ->whereHas('layanans', function ($query) use ($kodeunit) {
+                    $query->where('kode_unit', $kodeunit);
+                })
+                ->with([
+                    'unit',
+                    'pasien',
+                    'layanans', 'layanans.layanan_details',
+                    'layanans.layanan_details.tarif_detail',
+                    'layanans.layanan_details.tarif_detail.tarif',
+                ])
+                ->limit(10)->get();
+
+            foreach ($kunjungans as $key => $kunjungan) {
+                $lab = [];
+                $pemeriksaan = [];
+                foreach ($kunjungan->layanans->where('kode_unit', 3002) as $key => $value) {
+                    $lab[] = $value->kode_layanan_header;
+                    //   @foreach ($lab->layanan_details as $laydet)
+                    //                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
+                    //                                         @endforeach
+
+                    //                     $pemeriksaan = [];
+                }
+                $data[] = [
+                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    'tgl_masuk' => $kunjungan->tgl_masuk,
+                    'counter' => $kunjungan->counter,
+                    'no_rm' => $kunjungan->no_rm,
+                    'nama_px' => $kunjungan->pasien->nama_px,
+                    'nama_unit' => $kunjungan->unit->nama_unit,
+                    'laboratorium' =>  $lab,
+
+
+                ];
+            }
+        }
+        return $this->sendResponse($data);
+    }
+
     public function kunjunganranapaktif(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])
