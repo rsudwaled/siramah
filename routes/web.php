@@ -303,7 +303,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/karcis-igd-create', [App\Http\Controllers\KarcisAntrianIGDController::class, 'createKarcisAntrian'])->name('d-karcis-igd-create');
 
     //DASHBOARD IGD
-    Route::get('/dashboard-igd', [App\Http\Controllers\DashboardIGDController::class, 'getDataAll'])->name('dashboard-igd');
     Route::get('/pendaftaran-pasien-igd', [App\Http\Controllers\PendaftaranPasienIGDController::class, 'pilihPasienPendaftaran'])->name('pendaftaran.pasien');
     Route::get('/pendaftaran-pasien-bayi', [App\Http\Controllers\IGDBAYIController::class, 'pendaftaranPasienBayi'])->name('pendaftaranpasien.bayi');
     Route::get('/cari-orangtua-bayi', [App\Http\Controllers\IGDBAYIController::class, 'cariOrangtua'])->name('cari-ortu.bayi');
@@ -410,6 +409,8 @@ Route::middleware('auth')->group(function () {
 
     
     // VIEW TERBARU
+    Route::get('/dashboard-igd', [App\Http\Controllers\IGD\Dashboard\DashboardController::class, 'getDataAll'])->name('dashboard-igd');
+    
     // antrian terbaru
     Route::get('/list-antrian', [App\Http\Controllers\IGD\Antrian\AntrianController::class, 'listAntrian'])->name('list.antrian');
     Route::get('/antrian/{no}/{jp}/', [App\Http\Controllers\IGD\Antrian\AntrianController::class, 'terpilihAntrian'])->name('terpilih.antrian');
@@ -430,16 +431,24 @@ Route::middleware('auth')->group(function () {
     // pasien baru
     Route::get('/pasien-igd/baru', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'index'])->name('pasien-baru.create');
     Route::post('/pasien-igd/baru/store', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'pasienBaruIGD'])->name('pasien-baru.store');
+    
     // pasien bayi
     Route::get('/pasien-bayi/kunjungan-igk', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
     Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
     Route::get('/pasien-bayi/cari-data', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'cariBayi'])->name('pasien-bayi.cari');
-     //RANAP BAYI
-     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
-     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
-     Route::get('/ranap-umum/pasien-bayi/ruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('get-bedruangan-bayi');
-     Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
-     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
+    
+    //RANAP BAYI
+    Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
+    Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
+    Route::get('/ranap-umum/pasien-bayi/ruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('get-bedruangan-bayi');
+    Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
+    Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
+     
+    //  list assesment ranap
+    Route::get('/list-pasien/assesment-ranap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'listPasienRanap'])->name('list-assesment.ranap');
+    Route::get('/list-pasien/form-ranap/{rm}/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUmum'])->name('form-umum.pasien-ranap');
+    Route::post('/ranap-umum/pasien/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'pasienRanapStore'])->name('pasien-ranap-umum.store');
+    Route::post('/ranap-umum/pasien/spri', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'createSPRI'])->name('pasien-ranap.createspri');
 
     // synch diagnosa
     Route::get('/daftar-diagnosa/synch-diagnosa-assesment', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'vDiagnosaAssesment'])->name('v.diagnosa');

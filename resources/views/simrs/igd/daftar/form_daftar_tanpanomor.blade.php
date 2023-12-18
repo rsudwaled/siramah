@@ -33,15 +33,15 @@
                                             <input type="hidden" name="rm" value="{{ $pasien->no_rm }}">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select name="jp" label="Pilih Unit Daftar">
+                                                    <x-adminlte-select name="jp" label="Pilih Unit">
                                                         <option value="">--Pilih Unit--</option>
                                                         <option value="1">IGD</option>
                                                         <option value="0">IGK</option>
                                                     </x-adminlte-select>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select name="isBpjs" label="Jenis Pendaftaran">
-                                                        <option value="">--Pilih Jenis Daftar--</option>
+                                                    <x-adminlte-select name="isBpjs" label="Jenis Pasien">
+                                                        <option value="">--Pilih Jenis Pasien--</option>
                                                         <option value="0">Pasien UMUM</option>
                                                         <option value="1">Pasien BPJS</option>
                                                     </x-adminlte-select>
@@ -82,7 +82,7 @@
                                                     </x-adminlte-select2>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Pendaftaran">
+                                                    <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                                         <option value="">--Pilih Alasan--</option>
                                                         @foreach ($alasanmasuk as $item)
                                                             <option value="{{ $item->id }}">

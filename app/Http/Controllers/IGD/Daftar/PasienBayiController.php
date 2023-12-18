@@ -14,8 +14,10 @@ class PasienBayiController extends Controller
 {
     public function index(Request $request)
     {
-        $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')->whereNull('tgl_keluar')->get();
+        $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')
+                        ->whereNull('tgl_keluar')->get();
         $bayi          = PasienBayiIGD::get();
+        
         return view('simrs.igd.daftar.pasien_bayi.pasien_bayi', compact('kunjungan_igd','bayi','request'));
     }
 
@@ -31,17 +33,17 @@ class PasienBayiController extends Controller
             $query->whereDate('tgl_lahir','<=', $request->tanggal); 
         }
         if ($request->rm && !empty($request->rm)) {
-            $bayi = PasienBayiIGD::where('rm_ibu', $request->rm)->get();
+            $query->where('rm_ibu', $request->rm);
         }
         if ($request->nama && !empty($request->nama)) {
-            $bayi = PasienBayiIGD::where('nama_ortu', 'LIKE', '%' . $request->nama . '%')->limit(50)->get();
+            $query->where('nama_ortu', 'LIKE', '%' . $request->nama . '%')->limit(50);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $bayi = PasienBayiIGD::where('no_bpjs_ortu', $request->nomorkartu)->get();
+            $query->where('no_bpjs_ortu', $request->nomorkartu);
         }
         if($request->nik && !empty($request->nik))
         {
-            $bayi = PasienBayiIGD::where('nik_ortu', $request->nik)->get();
+            $query->where('nik_ortu', $request->nik);
         }
         $bayi = $query->get();
         return view('simrs.igd.daftar.pasien_bayi.bayi_luar', compact('request','bayi'));
@@ -49,6 +51,15 @@ class PasienBayiController extends Controller
 
     public function bayiStore(Request $request)
     {
+        $request->validate(
+            [
+                'nama_bayi' => 'required',
+                'tempat_lahir_bayi' => 'required',
+            ],
+            [
+                'nama_bayi' => 'Nama bayi wajib diisi !',
+                'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
+            ]);
         $ortubayi = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
         $cekOrtu = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
 

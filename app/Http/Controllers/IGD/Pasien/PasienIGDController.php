@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\IGD\Pasien;
 
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\Pasien;
 use App\Models\Desa;
 use App\Models\Negara;
 use App\Models\HubunganKeluarga;
@@ -14,6 +16,7 @@ use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\KeluargaPasien;
+use Carbon\Carbon;
 
 class PasienIGDController extends Controller
 {
@@ -34,7 +37,7 @@ class PasienIGDController extends Controller
        
         $request->validate(
             [
-                'nik_pasien_baru' =>'required|numeric|min:16|max:16',
+                'nik_pasien_baru' =>'required|numeric|digits_between:16,16',
                 'nama_pasien_baru' =>'required',
                 'tempat_lahir' =>'required',
                 'jk' =>'required',
@@ -42,7 +45,7 @@ class PasienIGDController extends Controller
                 'agama' =>'required',
                 'pekerjaan' =>'required',
                 'pendidikan' =>'required',
-                'no_telp' =>'required|numeric|min:12|max:13',
+                'no_telp' =>'required|numeric|digits_between:10,13',
                 'provinsi_pasien' =>'required',
                 'negara' =>'required',
                 'kewarganegaraan' =>'required',

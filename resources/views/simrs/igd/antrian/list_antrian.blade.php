@@ -12,6 +12,7 @@
                             Tanpa Antrian</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}" class="btn btn-sm btn-success">Daftar
                             Pasien Bayi</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}" class="btn btn-sm btn-danger">Refresh</a></li>
                 </ol>
             </div>
         </div>

@@ -217,6 +217,7 @@ class DaftarIGKController extends Controller
         $createKunjungan->kode_penjamin = $request->penjamin_id;
         $createKunjungan->kelas = 3;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+        // $createKunjungan->pic2 = Auth::user()->id;
         $createKunjungan->pic = Auth::user()->id;
         if ($createKunjungan->save()) {
             $ant_upd = AntrianPasienIGD::find($request->id_antrian);

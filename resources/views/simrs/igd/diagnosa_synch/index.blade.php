@@ -51,14 +51,14 @@
         </div>
         <div class="col-lg-12">
             <div class="row">
-                <div class="col-lg-7">
+                <div class="col-lg-8">
                     <x-adminlte-card theme="primary" collapsible title="Assesment Diagnosa Dokter">
                         @php
                             $heads = ['Pasien', 'alamat', 'diagnosa', 'daftar', 'pelayanan', 'action'];
                             $config['order'] = false;
                             $config['paging'] = true;
                             $config['info'] = false;
-                            $config['scrollY'] = '500px';
+                            $config['scrollY'] = '600px';
                             $config['scrollCollapse'] = true;
                             $config['scrollX'] = true;
                         @endphp
@@ -99,7 +99,7 @@
                         </x-adminlte-datatable>
                     </x-adminlte-card>
                 </div>
-                <div class="col-lg-5">
+                <div class="col-lg-4">
                     <div class="card card-widget widget-user-2">
                         <div class="widget-user-header bg-success">
                             <h3 id="nama_pasien">Nama Pasien</h3>
@@ -107,12 +107,11 @@
                         </div>
                         <div class="card-footer mt-3">
                             <div class="col-lg-12">
-                                <form action="{{ route('synch.diagnosa') }}" method="post">
+                                <form id="formSynch" method="post">
                                     @csrf
                                     @method('PUT')
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <x-adminlte-input name="noMR" id="noMR" label="RM"
+                                    <div class="col-lg-12">
+                                        <x-adminlte-input name="noMR" id="noMR" label="RM"
                                                 label-class="primary">
                                                 <x-slot name="prependSlot">
                                                     <div class="input-group-text">
@@ -128,8 +127,6 @@
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-input>
-                                        </div>
-                                        <div class="col-md-6">
                                             <x-adminlte-input name="refDiagnosa" id="refDiagnosa" label="Diagnosa Dokter"
                                                 label-class="primary">
                                                 <x-slot name="prependSlot">
@@ -145,9 +142,8 @@
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-select2>
-                                        </div>
                                     </div>
-                                    <x-adminlte-button type="submit" class="btn btn-sm m-1 bg-primary float-right"
+                                    <x-adminlte-button type="button" class="btn btn-sm m-1 bg-primary float-right btn-synchronize" form="formSynch"
                                         label="update diagnosa" />
                                 </form>
                             </div>
@@ -155,50 +151,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="col-lg-12">
-            <x-adminlte-card theme="primary" collapsible title="Kunjungan Bridging">
-                @php
-                    $heads = ['Pasien', 'Alamat', 'kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'status', 'detail'];
-                    $config['order'] = ['3', 'desc'];
-                    $config['paging'] = true;
-                    $config['info'] = false;
-                    $config['scrollY'] = '500px';
-                    $config['scrollCollapse'] = true;
-                    $config['scrollX'] = true;
-                @endphp
-                <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped bordered
-                    hoverable compressed>
-                    @foreach ($kunjungan as $item)
-                        <tr>
-                            <td><b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
-                                {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}</td>
-                            <td width="20%" >alamat : {{ $item->alamat }} / <br>
-                            </td>
-                            <td>{{ $item->kunjungan }} <br> ({{ $item->nama_unit }})</td>
-                            <td>{{ $item->tgl_kunjungan }}</td>
-                            <td>{{ $item->diagx }}</td>
-                            <td>{{ $item->sep }}</td>
-                            <td>{{ $item->status }}</td>
-                            <td>
-                                <x-adminlte-button type="button" data-rm="{{ $item->rm }}"
-                                    data-nama="{{ $item->pasien }}" data-jk="{{ $item->jk }}"
-                                    data-kunjungan="{{ $item->kunjungan }}" data-diagx="{{ $item->diagx }}"
-                                    theme="success" class="btn-flat btn-xs" label="detail" />
-                                @if (!empty($item->sep))
-                                    <x-adminlte-button type="button"
-                                        data-nik="{{ $item->nik }}"
-                                        data-kunjungan="{{ $item->kunjungan }}"
-                                        data-nokartu="{{ $item->noKartu }}"
-                                        theme="danger" class="btn-flat btn-xs" label="hapus sep" />
-                                @endif
-
-                            </td>
-                        </tr>
-                    @endforeach
-                </x-adminlte-datatable>
-            </x-adminlte-card>
         </div>
     </div>
 
@@ -251,6 +203,35 @@
                     cache: true
                 }
             });
+
+            $('.btn-synchronize').click(function(e) {
+            var url = "{{ route('synch.diagnosa') }}";
+            // $.LoadingOverlay("show");
+            $.ajax({
+                type: 'PUT',
+                url: url,
+                dataType: 'json',
+                data: {
+                    noMR: $('#noMR').val(),
+                    kunjungan: $('#kunjungan').val(),
+                    refDiagnosa: $('#refDiagnosa').val(),
+                    diagAwal: $('#diagnosa').val(),
+                },
+                success: function(data) {
+                    if (data.metadata.code == 200) {
+                        Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
+                        $("#createSPRI").modal('toggle');
+                        location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
+                        $.LoadingOverlay("hide");
+                    } else {
+                        Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
+                            .code + ')', '', 'error');
+                        $.LoadingOverlay("hide");
+                    }
+                },
+
+            });
+        });
         });
     </script>
 @endsection

@@ -379,6 +379,13 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
+                    'text' => 'Dashboard IGD',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'dashboard-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Daftar Antrian*',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'list-antrian',
@@ -393,26 +400,27 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Assesment Ranap*',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'list-pasien/assesment-ranap',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Kunjungan*',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'daftar-kunjungan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                [
-                    'text' => 'Dashboard IGD',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'dashboard-igd',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
-                [
-                    'text' => 'Pendaftaran Pasien',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pendaftaran-pasien-igd',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
+                
+                // [
+                //     'text' => 'Pendaftaran Pasien',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pendaftaran-pasien-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 
                 // [
                 //     'text' => 'Pendaftaran Rawat Inap',
@@ -421,13 +429,13 @@ return [
                 //     'shift'   => 'ml-2',
                 //     'can' => 'pendaftaran-igd',
                 // ],
-                [
-                    'text' => 'Kunjungan Pasien',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'pilih-kunjungan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
+                // [
+                //     'text' => 'Kunjungan Pasien',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pilih-kunjungan',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',

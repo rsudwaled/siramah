@@ -43,28 +43,36 @@ use Auth;
 
 class RanapIGDController extends APIController
 {
+    // public function getKunjunganNow()
+    // {
+    //     $kunjungan = DB::connection('mysql2')->table('ts_kunjungan')
+    //                 ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
+    //                 ->join('erm_cppt_dokter', 'ts_kunjungan.kode_kunjungan', '=', 'erm_cppt_dokter.kode_kunjungan')
+    //                 ->join('di_pasien_diagnosa_frunit', 'ts_kunjungan.kode_kunjungan', '=', 'di_pasien_diagnosa_frunit.kode_kunjungan')
+    //                 ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+    //                 ->select(
+    //                     'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien',
+    //                     'erm_cppt_dokter.is_ranap as is_ranap','erm_cppt_dokter.kode_paramedis as kode_dokter','erm_cppt_dokter.tgl_input as tgl_assesment',
+    //                     'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep',
+    //                     'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit',
+    //                     'di_pasien_diagnosa_frunit.diag_00 as diagnosa_assesment',
+    //                     'mt_unit.nama_unit as nama_unit',
+    //                 )
+    //                 ->orderBy('tgl_kunjungan', 'desc')
+    //                 ->get();
+    //     // dd($kunjungan);
+    //     $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+    //     return view('simrs.igd.ranap.data_kunjungan', compact('kunjungan', 'paramedis'));
+    // }
+
     public function getKunjunganNow()
     {
-        $kunjungan = DB::connection('mysql2')->table('ts_kunjungan')
-                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
-                    ->join('erm_cppt_dokter', 'ts_kunjungan.kode_kunjungan', '=', 'erm_cppt_dokter.kode_kunjungan')
-                    ->join('di_pasien_diagnosa_frunit', 'ts_kunjungan.kode_kunjungan', '=', 'di_pasien_diagnosa_frunit.kode_kunjungan')
-                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
-                    ->select(
-                        'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien',
-                        'erm_cppt_dokter.is_ranap as is_ranap','erm_cppt_dokter.kode_paramedis as kode_dokter','erm_cppt_dokter.tgl_input as tgl_assesment',
-                        'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep',
-                        'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit',
-                        'di_pasien_diagnosa_frunit.diag_00 as diagnosa_assesment',
-                        'mt_unit.nama_unit as nama_unit',
-                    )
-                    ->orderBy('tgl_kunjungan', 'desc')
-                    ->get();
-        // dd($kunjungan);
+        $kunjungan = Kunjungan::with('pasien')
+            ->where('status_kunjungan', 2)
+            ->get();
         $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         return view('simrs.igd.ranap.data_kunjungan', compact('kunjungan', 'paramedis'));
     }
-
     public function ranapUmum(Request $request)
     {
         $refKunj = $request->kun;

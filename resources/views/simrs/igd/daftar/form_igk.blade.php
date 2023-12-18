@@ -95,7 +95,7 @@
                                                             </x-adminlte-input>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select2 name="isBpjs" label="Jenis Pendaftaran">
+                                                            <x-adminlte-select2 name="isBpjs" label="Jenis Pasien">
                                                                 <option value="0">--Pasien UMUM--</option>
                                                                 <option value="1">--Pasien BPJS--</option>
                                                             </x-adminlte-select2>
@@ -137,7 +137,7 @@
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-select2 name="alasan_masuk_id"
-                                                                label="Alasan Pendaftaran">
+                                                                label="Alasan Masuk">
                                                                 <option value="">--Pilih Alasan--</option>
                                                                 @foreach ($alasanmasuk as $item)
                                                                     <option value="{{ $item->id }}">

@@ -27,7 +27,7 @@
 
                 <div class="col-lg-12">
                     <div class="row">
-                        <form action="" method="get">
+                        {{-- <form action="" method="get">
                             <div class="row">
                                 <div class="col-md-6">
                                     <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
@@ -82,7 +82,7 @@
                                     </x-adminlte-input>
                                 </div>
                             </div>
-                        </form>
+                        </form> --}}
                         <div class="col-lg-12">
                             @php
                                 $heads = ['Masuk', 'keluar', 'Orangtua', 'Alamat', 'Kunjungan','Alasan', 'Penjamin', 'Status'];
@@ -118,9 +118,6 @@
                                                 class="btn btn-block bg-gradient-success btn-block btn-flat btn-xs show-formbayi"
                                                 data-kunjungan="{{ $item->kode_kunjungan }}"
                                                 data-rmibu="{{ $item->no_rm }}">daftarkan bayi</button>
-                                            {{-- <button type="button"
-                                                class="btn btn-block bg-gradient-warning btn-block btn-flat btn-xs detail-bayi"
-                                                data-rmortu="{{ $item->no_rm }}"><i class="fas fa-baby"></i></button> --}}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -171,41 +168,13 @@
                                 fgroup-class="col-md-6" disable-feedback />
                             <x-slot name="footerSlot">
                                 <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" class="btn-sm" />
-                                <x-adminlte-button form="form_pasien_bayi" class="float-right withLoad btn-sm" type="submit" theme="success"
+                                <x-adminlte-button form="form_pasien_bayi" class="float-right btn-sm" type="submit" theme="success"
                                     label="Simpan Data" />
                             </x-slot>
                         </div>
                     </form>
                 </div>
             </x-adminlte-modal>
-            {{-- <div class="modal" tabindex="-1" role="dialog" id="databayi">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Data Bayi</h5>
-
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-bordered table-bayi" id="table1">
-                                <thead>
-                                    <tr>
-                                        <th>RM BAYI</th>
-                                        <th>NAMA BAYI</th>
-                                        <th>JENIS KELAMIN</th>
-                                        <th>TGL LAHIR</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="show-databayi" id="show-databayi">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="batalPilih()"
-                                data-dismiss="modal">Tutup</button>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
 
     </div>
@@ -305,31 +274,31 @@
 
             });
 
-            $('.save-bayi').click(function(e) {
-                $('#formBayi').modal('hide');
-                $.LoadingOverlay("show");
-                $.ajax({
-                    type: "post",
-                    url: "{{ route('pasien-bayi.store') }}",
-                    data: {
-                        rm: $("#rm_ibu").val(),
-                        kunjungan: $("#kunjungan").val(),
-                        nama_bayi: $("#nama_bayi").val(),
-                        jk_bayi: $("#jk_bayi").val(),
-                        tgl_lahir_bayi: $("#tgl_lahir_bayi").val(),
-                        tempat_lahir_bayi: $("#tempat_lahir_bayi").val(),
-                        _token: "{{ csrf_token() }}",
-                    },
-                    dataType: 'JSON',
-                    success: function(res) {
-                        console.log(res);
-                        if (res.status == 200) {
-                            var rm_bayi = res.bayi.rm_bayi;
-                        }
-                    }
-                });
-                $.LoadingOverlay("hide");
-            });
+            // $('.save-bayi').click(function(e) {
+            //     $('#formBayi').modal('hide');
+            //     // $.LoadingOverlay("show");
+            //     $.ajax({
+            //         type: "post",
+            //         url: "{{ route('pasien-bayi.store') }}",
+            //         data: {
+            //             rm: $("#rm_ibu").val(),
+            //             kunjungan: $("#kunjungan").val(),
+            //             nama_bayi: $("#nama_bayi").val(),
+            //             jk_bayi: $("#jk_bayi").val(),
+            //             tgl_lahir_bayi: $("#tgl_lahir_bayi").val(),
+            //             tempat_lahir_bayi: $("#tempat_lahir_bayi").val(),
+            //             _token: "{{ csrf_token() }}",
+            //         },
+            //         dataType: 'JSON',
+            //         success: function(res) {
+            //             console.log(res);
+            //             if (res.status == 200) {
+            //                 var rm_bayi = res.bayi.rm_bayi;
+            //             }
+            //         }
+            //     });
+            //     $.LoadingOverlay("hide");
+            // });
         });
 
         function batalPilih() {

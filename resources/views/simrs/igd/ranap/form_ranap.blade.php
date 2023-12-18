@@ -8,75 +8,19 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            {{-- <div class="row">
-                <div class="col-md-3">
-                    <div class="card card-primary card-outline">
-                        <div class="card-body box-profile">
-                            <h3 class="profile-username text-center">{{ $pasien->nama_px }}</h3>
-                            <p class="text-muted text-center">RM : {{ $pasien->no_rm }}</p>
-                            <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item"><b>Jrnis Kelamin :
-                                        {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</b></li>
-                                <li class="list-group-item"><b>Alamat : {{ $pasien->alamat }}</b></li>
-                                <li class="list-group-item"><b>NIK : {{ $pasien->nik_bpjs }}</b></li>
-                                <li class="list-group-item"><b>BPJS :
-                                        {{ $pasien->no_Bpjs == null ? 'tidak punya bpjs' : $pasien->no_Bpjs }}</b></li>
-                            </ul>
-                            <a class="btn btn-primary bg-gradient-primary btn-block"><b>--</b></a>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-9">
-                    <x-adminlte-card theme="primary" collapsible title="Riwayat Kunjungan Hari Ini:">
-                        @php
-                            $heads = ['Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Petugas'];
-                            $config['order'] = ['0', 'asc'];
-                            $config['paging'] = false;
-                            $config['info'] = false;
-                            $config['scrollY'] = '450px';
-                            $config['scrollCollapse'] = true;
-                            $config['scrollX'] = true;
-                        @endphp
-                        <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" striped
-                            bordered hoverable compressed>
-                            @foreach ($kunjungan as $item)
-                                <tr>
-                                    <td>{{ $item->counter }}</td>
-                                    <td>{{ $item->kode_kunjungan }}</td>
-                                    <td>{{ $item->unit->nama_unit }}</td>
-                                    <td>{{ $item->tgl_masuk }}</td>
-                                    <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}</td>
-                                    <td>{{ $item->nama_penjamin }}</td>
-                                    <td>{{ $item->nama_user }}</td>
-                                </tr>
-                            @endforeach
-                        </x-adminlte-datatable>
-                    </x-adminlte-card>
-                </div>
-            </div> --}}
             <div class="row">
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-body">
-                            {{-- <div class="col-md-12">
-                                <x-adminlte-select name="naikKelasPembiyaan" label="Pembiayaan">
-                                    <option value="0">--Pilih Pembiayaan--</option>
-                                    <option value="1">Pribadi</option>
-                                    <option value="2">Pemberi Kerja</option>
-                                    <option value="3">Asuransi Kesehatan Tambahan</option>
-                                </x-adminlte-select>
+                            <div class="col-lg-12 mb-2">
+                                <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
+                                <a href="#" class="btn bg-teal mb-2" id="showBed" style="display: none">
+                                    <i class="fas fa-bed"></i>
+                                </a>
+                                <a href="#" class="btn btn-primary mb-2" id="showRuangan" style="display: none">
+                                    <i class="fas fa-bed"></i> Tidak ada 
+                                </a>
                             </div>
-                            <div class="col-md-12">
-                                <x-adminlte-input name="nama_pj" label="Nama PenanggungJawab"
-                                    placeholder="masukan nama pj" label-class="text-black">
-                                    <x-slot name="prependSlot">
-                                        <div class="input-group-text">
-                                            <i class="fas fa-user text-black"></i>
-                                        </div>
-                                    </x-slot>
-                                </x-adminlte-input>
-                            </div> --}}
                             <div class="col-md-12">
                                 <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                     @foreach ($unit as $item)
@@ -113,9 +57,9 @@
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
                                 title="Form Pendaftaran">
-                                <form action="{{ route('pasienranap.store') }}" method="post" id="submitRanap">
+                                <form action="{{ route('pasien-ranap-umum.store') }}" method="post" id="submitRanap">
                                     @csrf
-                                    <input type="hidden" name="kodeKunjungan" value=" {{ $refKunj }}">
+                                    <input type="hidden" name="kodeKunjungan" value=" {{ $kunjungan->kode_kunjungan }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <div class="col-lg-12">
@@ -244,9 +188,9 @@
                             $.each(res.bed, function(key, value) {
                                 $("#idRuangan").append(
                                     '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
-                                    value.id_ruangan + ', `' + value.nama_kamar + '`, ' +
+                                    value.id_ruangan + ', `' + value.nama_kamar + '`, `' +
                                     value.no_bed +
-                                    ')" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
+                                    '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
                                     value.nama_kamar + '"</h6> <br> NO BED : "' + value
                                     .no_bed + '"<br></div></div></div>');
                             });
@@ -277,6 +221,8 @@
                     $("#showRuangan").css("display", "block");
                     $("#showBed").css("display", "block");
                     $(".ruanganCheck").remove();
+
+                    $("#infoRuangan").css("display", "none");
                 }
             })
         }

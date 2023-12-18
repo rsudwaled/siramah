@@ -29,7 +29,8 @@ class IGDUMUMController extends Controller
     // route yang dipake
     public function listPasienDaftar(Request $request)
     {
-        $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
+        $yesterday = now()->subDays(2)->format('Y-m-d');
+        $kunjungan = Kunjungan::where('pic', Auth::user()->id)->whereDate('tgl_masuk','>=', $yesterday)->whereDate('tgl_masuk','<=', $yesterday)->get();
         return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 

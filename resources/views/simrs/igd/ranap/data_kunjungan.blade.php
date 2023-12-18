@@ -2,15 +2,15 @@
 
 @section('title', 'Data Kunjungan')
 @section('content_header')
-    <h1>Data Pasien Rawat Inap</h1>
+    <h1>Data Kunjungan : {{ \Carbon\Carbon::now()->format('Y-m-d') }}</h1>
 @stop
 
 @section('content')
     <div class="col-lg-12">
-        <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan Rawat Inap :">
+        <x-adminlte-card theme="primary" collapsible title="Daftar Kunjungan :">
             @php
-                $heads = ['Pasien', 'Kunjungan', 'Tgl Masuk', 'Diagnosa Assesment', 'No SEP', 'Status', 'Aksi'];
-                $config['order'] = false;
+                $heads = ['Pasien', 'Kartu', 'Kunjungan', 'Unit', 'Tgl Masuk', 'Tgl keluar', 'Diagnosa', 'No SEP', 'stts kunj', 'daftar'];
+                $config['order'] = ['0', 'asc'];
                 $config['paging'] = true;
                 $config['info'] = false;
                 $config['scrollY'] = '450px';
@@ -20,29 +20,31 @@
             <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped bordered
                 hoverable compressed>
                 @foreach ($kunjungan as $item)
-                    <tr style="background-color:{{ $item->noKartu == null ? 'rgb(213, 171, 171)' : 'rgb(152, 200, 152)' }};">
-                        <td><b>{{ $item->rm }} </b><br>{{ $item->pasien }} <br>BPJS : {{ $item->noKartu }}<br>NIK :
-                            {{ $item->nik }}</td>
-                        <td>{{ $item->kunjungan }} ({{ $item->nama_unit }})</td>
-                        <td>{{ $item->tgl_kunjungan }}</td>
-                        <td>{{ $item->diagnosa_assesment }}</td>
-                        <td>{{ $item->sep }}</td>
-                        <td>
-                            <button type="button"
-                                class="btn {{ $item->stts_kunjungan == 2 ? 'btn-block bg-gradient-danger disabled' : ($item->stts_kunjungan == 1 ? 'btn-success' : 'btn-block bg-gradient-danger disabled') }} btn-block btn-flat btn-xs">{{ $item->stts_kunjungan == 2 ? 'ditutup' : ($item->stts_kunjungan == 1 ? 'aktif' : 'kunjungan dibatalkan') }}</button>
+                    <tr
+                        >
+                        <td>{{ $item->no_rm }} <br>{{ $item->pasien->nama_px }}</td>
+                        <td>BPJS : {{ $item->pasien->no_Bpjs }}<br>NIK : {{ $item->pasien->nik_bpjs }}</td>
+                        <td>{{ $item->kode_kunjungan }}</td>
+                        <td>{{ $item->kode_unit }} ({{ $item->unit->nama_unit }})</td>
+                        <td>{{ $item->tgl_masuk }}</td>
+                        <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}</td>
+                        <td>{{ $item->diagx }}</td>
+                        <td>{{ $item->no_sep }}</td>
+                        <td><button type="button"
+                                class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-danger disabled' : ($item->status_kunjungan == 1 ? 'btn-success' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'ditutup' : ($item->status_kunjungan == 1 ? 'aktif' : 'kunjungan dibatalkan') }}</button>
                         </td>
                         <td>
-                            @if ($item->stts_kunjungan == 1)
-                                <a href="{{ route('ranapumum') }}/?no={{ $item->rm }}&kun={{ $item->kunjungan }}"
-                                    class="btn btn-block btn-primary btn-xs btn-flat ">Umum</a>
-                                @if ($item->noKartu)
-                                    <button href="#" data-toggle="modal" data-target="modalSPRI"
-                                        data-id="{{ $item->kunjungan }}" data-nomorkartu="{{ $item->noKartu }}"
-                                        class="btn btn-block btn-success btn-xs btn-flat btnModalSPRI">BPJS</button>
-                                @endif
-                                <button href="#" data-toggle="modal" data-target="detailRanap"
-                                    data-id="{{ $item->kunjungan }}" data-nomorkartu="{{ $item->noKartu }}"
-                                    class="btn btn-block bg-purple btn-xs btn-flat btnDetailRanap">Detail</button>
+                            <a href="{{ route('ranapumum') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}"
+                                class="btn btn-block btn-primary btn-xs btn-flat ">Umum</a>
+                            {{-- <a href="{{ route('ranapbpjs') }}/?no={{ $item->no_rm }}&kun={{ $item->kode_kunjungan }}&nobp={{ $item->pasien->no_Bpjs }}"
+                                    class="btn btn-block btn-success btn-xs btn-flat ">BPJS</a> --}}
+                            @if ($item->pasien->no_Bpjs)
+                                <button href="#" data-toggle="modal" data-target="modalSPRI"
+                                    data-id="{{ $item->kode_kunjungan }}" data-nomorkartu="{{ $item->pasien->no_Bpjs }}"
+                                    class="btn btn-block btn-success btn-xs btn-flat btnModalSPRI">BPJS</button>
+                            @endif
+                            @if (!$item->no_sep)
+                                <a href="#" class="btn btn-block btn-warning btn-xs btn-flat "><b>SEP</b></a>
                             @endif
                         </td>
                     </tr>
@@ -86,16 +88,6 @@
                 <x-adminlte-button class="btn bg-gradient-maroon btn-md lanjutkanPROSESDAFTAR"
                     label="ADA PROSES YANG BELUM SELESAI, LANJUTKAN PROSES SEKARANG !!" />
             </x-slot>
-        </form>
-    </x-adminlte-modal>
-    <x-adminlte-modal id="detailRanap" title="Detail Kunjungan" theme="success" size='xl' disable-animations>
-        <form>
-            <div class="row">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Reprehenderit porro alias nisi error natus et culpa dolorum maxime, quae, harum repudiandae sequi voluptatum
-                reiciendis laborum libero?
-                Vitae sit neque optio!
-            </div>
         </form>
     </x-adminlte-modal>
 @stop
@@ -148,26 +140,23 @@
                         dataType: 'JSON',
                         success: function(data) {
                             console.log(data.cekSPRI);
-                            if (data.cekSPRI == null) {
-                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
-                                    'info');
-                            } else {
+                            if(data.cekSPRI==null)
+                            {
+                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '', 'info');
+                            }else{
                                 $('.lanjutkanPROSESDAFTAR').show();
                                 $('.btnCreateSPRI').hide();
                                 $('.btnCreateSPRIBatal').hide();
                                 $('.lanjutkanPROSESDAFTAR').click(function(e) {
-                                    location.href =
-                                        "{{ route('ranapbpjs') }}/?no_kartu=" + data
-                                        .cekSPRI.noKartu;
+                                    location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + data.cekSPRI.noKartu;
                                 });
                             }
                         }
                     });
                 }
                 $('#modalSPRI').modal('toggle');
-            });
-            $('.btnDetailRanap').click(function(e) {
-                $('#detailRanap').modal('toggle');
+
+
             });
             $('.btnCreateSPRI').click(function(e) {
                 var kodeKunjungan = $("#kodeKunjungan").val();
@@ -192,14 +181,15 @@
                     success: function(data) {
 
                         if (data.metadata.code == 200) {
+                            $.LoadingOverlay("hide");
                             Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
                             $("#createSPRI").modal('toggle');
                             location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
                             $.LoadingOverlay("hide");
                         } else {
+                            $.LoadingOverlay("hide");
                             Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
                                 .code + ')', '', 'error');
-                            $.LoadingOverlay("hide");
                         }
                     },
 

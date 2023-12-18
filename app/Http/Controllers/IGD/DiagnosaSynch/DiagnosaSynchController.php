@@ -49,6 +49,14 @@ class DiagnosaSynchController extends APIController
             $query->whereDate('ts_kunjungan.tgl_masuk','<=', $request->tanggal); 
             $query2->whereDate('input_date','>=', $yesterday); 
             $query2->whereDate('input_date','<=', $request->tanggal); 
+        }else{
+            $dataYesterday = now();
+            $yesterday = $dataYesterday->subDays(1)->format('Y-m-d');
+
+            $query->whereDate('ts_kunjungan.tgl_masuk','>=', $yesterday); 
+            $query->whereDate('ts_kunjungan.tgl_masuk','<=', now()); 
+            $query2->whereDate('input_date','>=', $yesterday); 
+            $query2->whereDate('input_date','<=', now()); 
         }
         if($request->unit && !empty($request->unit))
         {
