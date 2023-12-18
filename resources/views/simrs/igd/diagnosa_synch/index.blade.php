@@ -56,14 +56,14 @@
                         @php
                             $heads = ['Pasien', 'alamat', 'diagnosa', 'daftar', 'pelayanan', 'action'];
                             $config['order'] = false;
-                            $config['paging'] = true;
+                            $config['paging'] = false;
                             $config['info'] = false;
                             $config['scrollY'] = '600px';
                             $config['scrollCollapse'] = true;
                             $config['scrollX'] = true;
                         @endphp
-                        <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" :config="$config" striped
-                            bordered hoverable compressed>
+                        <x-adminlte-datatable id="table2" class="text-xs" :heads="$heads" head-theme="dark"
+                            :config="$config" striped bordered hoverable compressed>
                             @foreach ($pasien_fr as $item)
                                 <tr>
                                     <td>
@@ -80,7 +80,8 @@
                                     </td>
                                     <td>{{ $item->diag_00 }}</td>
                                     <td>
-                                        <span class="btn-xs btn-flat {{ $item->jpDaftar == null ? '' : ($item->jpDaftar->is_bpjs == 1 ? 'btn-success' : 'btn-secondary') }}">{{ $item->jpDaftar == null ? '-' : ($item->jpDaftar->is_bpjs == 1 ? 'BPJS' : 'UMUM') }}</span>
+                                        <span
+                                            class="btn-xs btn-flat {{ $item->jpDaftar == null ? '' : ($item->jpDaftar->is_bpjs == 1 ? 'btn-success' : 'btn-secondary') }}">{{ $item->jpDaftar == null ? '-' : ($item->jpDaftar->is_bpjs == 1 ? 'BPJS' : 'UMUM') }}</span>
                                     </td>
                                     <td>
                                         <span
@@ -109,41 +110,36 @@
                             <div class="col-lg-12">
                                 <form id="formSynch" method="post">
                                     @csrf
-                                    @method('PUT')
                                     <div class="col-lg-12">
                                         <x-adminlte-input name="noMR" id="noMR" label="RM"
-                                                label-class="primary">
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-file-alt"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                            <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan"
-                                                label-class="primary">
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-person-booth"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                            <x-adminlte-input name="refDiagnosa" id="refDiagnosa" label="Diagnosa Dokter"
-                                                label-class="primary">
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-user-md"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                            <x-adminlte-select2 name="diagAwal" id="diagnosa" label="Pilih Diagnosa">
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text">
-                                                        <i class="fas fa-stethoscope"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-select2>
+                                            label-class="primary">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan"
+                                            label-class="primary">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-person-booth"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="refDiagnosa" id="refDiagnosa" label="Diagnosa Dokter"
+                                            label-class="primary">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-user-md"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-select2 name="diagAwal" id="diagnosa" label="Pilih Diagnosa">
+                                        </x-adminlte-select2>
                                     </div>
-                                    <x-adminlte-button type="button" class="btn btn-sm m-1 bg-primary float-right btn-synchronize" form="formSynch"
+                                    <x-adminlte-button type="button"
+                                        class="btn btn-sm m-1 bg-success float-right btn-synchronize-sep" form="formSynch"
                                         label="update diagnosa" />
                                 </form>
                             </div>
@@ -204,34 +200,129 @@
                 }
             });
 
-            $('.btn-synchronize').click(function(e) {
-            var url = "{{ route('synch.diagnosa') }}";
-            // $.LoadingOverlay("show");
-            $.ajax({
-                type: 'PUT',
-                url: url,
-                dataType: 'json',
-                data: {
-                    noMR: $('#noMR').val(),
-                    kunjungan: $('#kunjungan').val(),
-                    refDiagnosa: $('#refDiagnosa').val(),
-                    diagAwal: $('#diagnosa').val(),
-                },
-                success: function(data) {
-                    if (data.metadata.code == 200) {
-                        Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
-                        $("#createSPRI").modal('toggle');
-                        location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
-                        $.LoadingOverlay("hide");
-                    } else {
-                        Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
-                            .code + ')', '', 'error');
-                        $.LoadingOverlay("hide");
+            $('.btn-synchronize-sep').click(function(e) {
+                var urlBridging = "{{ route('synch.diagnosa') }}";
+                var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
+                // $.LoadingOverlay("show");
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success m-2",
+                        cancelButton: "btn btn-danger m-2"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "Update Diagnosa dan Briding SEP!",
+                    icon: "warning",
+                    padding: "3em",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Bridging!",
+                    cancelButtonText: "Only, Update!",
+                    reverseButtons: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlBridging,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                console.info(data.code);
+                                if (data.code == 400) {
+                                    Swal.fire('Data yang dikirimkan tidak lengkap', '',
+                                        'info');
+                                    $.LoadingOverlay("hide");
+                                }
+                                if (data.code == 401) {
+                                    Swal.fire(data.message, '',
+                                        'info');
+                                    $.LoadingOverlay("hide");
+                                }
+                                console.info(data.data);
+                                if (data.data.metaData.code == 200) {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Bridging Success!",
+                                        text: data.data.metaData.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Bridging Gagal!",
+                                        text: data.data.metaData.message +
+                                            '( ERROR : ' + data.data.metaData
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+
+                    ) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateOnly,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Update Diagnosa Success!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Update Gagal!",
+                                        text: data.message + '( ERROR : ' + data
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
                     }
-                },
+                });
 
             });
-        });
         });
     </script>
 @endsection

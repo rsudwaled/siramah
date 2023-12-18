@@ -108,7 +108,7 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" striped
+                            <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
                                 bordered hoverable compressed>
                                 @foreach ($pasien as $data)
                                     <tr>

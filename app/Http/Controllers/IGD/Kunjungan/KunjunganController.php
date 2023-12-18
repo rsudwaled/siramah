@@ -39,11 +39,6 @@ class KunjunganController extends Controller
         )
         ->orderBy('tgl_kunjungan', 'desc');
 
-
-        $query2 = DiagnosaFrunit::whereBetween('input_date', ['2023-11-01', now()])
-            ->where('status_bridging', 0)->orderBy('input_date','desc');
-            
-       
         if($request->tanggal && !empty($request->tanggal))
         {
             $dataYesterday = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
@@ -54,12 +49,10 @@ class KunjunganController extends Controller
         if($request->unit && !empty($request->unit))
         {
             $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
-            $query2->whereIn('kode_unit', [$request->unit]); 
         }
 
         $kunjungan = $query->get();
-        $pasien_fr = $query2->get();
         $unit = Unit::all();
-        return view('simrs.igd.kunjungan.kunjungan_now', compact('kunjungan','request','unit','pasien_fr'));
+        return view('simrs.igd.kunjungan.kunjungan_now', compact('kunjungan','request','unit'));
     }
 }

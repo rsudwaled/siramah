@@ -22,20 +22,6 @@ class DiagnosaSynchController extends APIController
 {
     public function vDiagnosaAssesment(Request $request)
     {
-        $query = DB::connection('mysql2')->table('ts_kunjungan')
-                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
-                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
-                    ->join('ts_jp_igd', 'ts_kunjungan.kode_kunjungan', '=', 'ts_jp_igd.kunjungan')
-                    ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
-                    ->select(
-                        'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jk',
-                        'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep',
-                        'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit', 'ts_kunjungan.diagx as diagx',
-                        'mt_unit.nama_unit as nama_unit',
-                        'mt_status_kunjungan.status_kunjungan as status',
-                    )
-                    ->orderBy('tgl_kunjungan', 'desc');
-
         
         $query2 = DiagnosaFrunit::with(['pasien','jpDaftar'])->where('status_bridging', 0)
                   ->where('isSynch', 0)->orderBy('input_date','desc');
@@ -45,30 +31,24 @@ class DiagnosaSynchController extends APIController
             $dataYesterday = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
             $yesterday = $dataYesterday->subDays(2)->format('Y-m-d');
 
-            $query->whereDate('ts_kunjungan.tgl_masuk','>=', $yesterday); 
-            $query->whereDate('ts_kunjungan.tgl_masuk','<=', $request->tanggal); 
             $query2->whereDate('input_date','>=', $yesterday); 
             $query2->whereDate('input_date','<=', $request->tanggal); 
         }else{
             $dataYesterday = now();
             $yesterday = $dataYesterday->subDays(1)->format('Y-m-d');
 
-            $query->whereDate('ts_kunjungan.tgl_masuk','>=', $yesterday); 
-            $query->whereDate('ts_kunjungan.tgl_masuk','<=', now()); 
             $query2->whereDate('input_date','>=', $yesterday); 
             $query2->whereDate('input_date','<=', now()); 
         }
         if($request->unit && !empty($request->unit))
         {
-            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
             $query2->whereIn('kode_unit', [$request->unit]); 
         }
 
-        $kunjungan = $query->get();
         $pasien_fr = $query2->get();
         $unit = Unit::whereIn('kode_unit',['1002','1023','1010','2004','2013'])->get();
         $requestUnit = Unit::firstWhere('kode_unit', $request->unit);
-        return view('simrs.igd.diagnosa_synch.index', compact('kunjungan','request','pasien_fr','unit','requestUnit'));
+        return view('simrs.igd.diagnosa_synch.index', compact('request','pasien_fr','unit','requestUnit'));
     }
 
     // API FUNCTION
@@ -131,9 +111,9 @@ class DiagnosaSynchController extends APIController
        return json_decode(json_encode($response));
    }
 
-    public function synchDiagnosa(Request $request)
+    public function synchDiagnosaAndBridging(Request $request)
     {
-        
+        // dd($request->all());
         $validator = Validator::make(request()->all(), [
             'noMR' => 'required',
             'diagAwal' => 'required',
@@ -141,12 +121,15 @@ class DiagnosaSynchController extends APIController
         ]);
         
         if ($validator->fails()) {
-            Alert::error('Error', 'data yang dikirimkan tidak lengkap!');
-            return back();
+            return response()->json(['data'=>$validator,'code'=>400]);
         }
     
         $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
         $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
+        if($kunjungan->jpDaftar->is_bpjs ==0)
+        {
+            return response()->json(['data'=>$kunjungan,'code'=>401, 'message'=>'MOHON MAAF BUKAN PASIEN BPJS!!. silahkan pilih tombol only update untuk pasien umum']);
+        }
         $icd        = Icd10::firstWhere('diag', $request->diagAwal);
         $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
         if($kunjungan->jpDaftar->is_bpjs ==1)
@@ -236,23 +219,46 @@ class DiagnosaSynchController extends APIController
               $isSynch->status_bridging = 1;
               $isSynch->isSynch = 1;
               $isSynch->save();
-              Alert::success('success', 'Diagnosa pada kunjungan sudah di synchronize' );
-              return back();
+              return response()->json(['data'=>$callback]);
             }
             else{
-              Alert::error('Error', $callback->metaData->message);
-              return back();
+                return response()->json(['data'=>$callback]);
             }
         }else{
-            $kunjungan->diagx   = $request->diagAwal;
-            $kunjungan->save();
-
-            $isSynch->status_bridging = 1;
-            $isSynch->isSynch = 1;
-            $isSynch->save();
-            Alert::success('success', 'Diagnosa pada kunjungan sudah di synchronize' );
-            return back();
+            return response()->json(['data'=>$callback]);
         }
         
+    }
+
+    public function synchDiagnosa(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'noMR' => 'required',
+            'diagAwal' => 'required',
+            'kunjungan' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['data'=>$validator,'code'=>400, 'message'=>'Data yang dikirim tidak lengkap!']);
+        }
+
+        $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
+        if(empty($kunjungan))
+        {
+            return response()->json(['data'=>$kunjungan,'code'=>401,'message'=>'Kunjungan Tidak Ada!']);
+        }
+        $icd        = Icd10::firstWhere('diag', $request->diagAwal);
+        $kunjungan->diagx   = $request->diagAwal.' - '.$icd->nama ;
+        $kunjungan->save();
+
+        $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
+        if(empty($kunjungan))
+        {
+            return response()->json(['data'=>$kunjungan,'code'=>402,'message'=>'Kunjungan Belum di Assesment Dokter!']);
+        }
+        $isSynch->isSynch = 1;
+        $isSynch->save();
+
+        return response()->json(['data'=>$kunjungan,'code'=>200,'message'=>'Diagnosa Kunjungan : '.$kunjungan->kode_kunjungan.' berhasil diupdate']);
     }
 }

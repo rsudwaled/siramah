@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>List Assesment Ranap</h5>
+                
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -20,7 +20,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible>
+            <x-adminlte-card theme="primary" size="sm" collapsible title="List Assesment Ranap">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
@@ -33,7 +33,7 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped
+                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
                                 bordered hoverable compressed>
                                 @foreach ($assesmentRanap as $ranap)
                                     <tr>

@@ -21,17 +21,17 @@
 @section('content')
     <div class="row">
         <div class="col-md-6">
-            <x-adminlte-card theme="primary" collapsible title="Antrian IGD">
+            <x-adminlte-card theme="primary" collapsible title="Antrian Instalasi Gawat Darurat">
                 @php
                     $heads = ['No Antrian', 'Triase', 'Aksi'];
                     $config['order'] = false;
-                    $config['paging'] = true;
+                    $config['paging'] = false;
                     $config['info'] = false;
-                    $config['scrollY'] = '500px';
+                    $config['scrollY'] = '600px';
                     $config['scrollCollapse'] = true;
                     $config['scrollX'] = true;
                 @endphp
-                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" striped bordered
+                <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped bordered
                     hoverable compressed>
                     @foreach ($antrian->where('isNoAntrian', 1) as $item)
                         <tr>
@@ -56,17 +56,17 @@
             </x-adminlte-card>
         </div>
         <div class="col-md-6">
-            <x-adminlte-card theme="purple" collapsible title="Antrian IGK">
+            <x-adminlte-card theme="purple" collapsible title="Antrian Kebidanan">
                 @php
                     $heads = ['No Antrian', 'Triase', 'Aksi'];
                     $config['order'] = false;
-                    $config['paging'] = true;
+                    $config['paging'] = false;
                     $config['info'] = false;
-                    $config['scrollY'] = '500px';
+                    $config['scrollY'] = '600px';
                     $config['scrollCollapse'] = true;
                     $config['scrollX'] = true;
                 @endphp
-                <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped bordered
+                <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped bordered
                     hoverable compressed>
                     @foreach ($antrian->where('isNoAntrian', 0) as $item)
                         <tr>
