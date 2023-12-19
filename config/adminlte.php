@@ -351,6 +351,13 @@ return [
                     'can' => 'kasir',
                 ],
                 [
+                    'text' => 'Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'kunjungan_rajal',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Antrian Poliklinik',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'antrianPoliklinik',

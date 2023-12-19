@@ -117,12 +117,11 @@ Route::prefix('antrian')->group(function () {
 });
 // API SIMRS
 Route::get('cari_pasien', [PasienController::class, 'cari_pasien'])->name('cari_pasien');
+Route::get('pasien_nomorkartu', [PasienController::class, 'pasien_nomorkartu'])->name('pasien_nomorkartu');
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('poliklinik_aktif');
 Route::get('cari_jadwal_dokter', [JadwalDokterController::class, 'cari_jadwal_dokter'])->name('cari_jadwal_dokter');
 Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
 Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
-
-
 Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('disposisi');
 
 
@@ -137,57 +136,57 @@ Route::prefix('wa')->group(function () {
 });
 // APP.RSUDWALED.ID
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-Route::prefix('simrs')->name('api.simrs.')->group(function () {
-    Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
-    Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
-    Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
-    Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
-});
+// Route::prefix('simrs')->name('api.simrs.')->group(function () {
+//     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
+//     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
+//     Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
+//     Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
+// });
 // API SATU SEHAT
-Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
-    Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
-    Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
-    Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');
-    Route::get('patient/name', [PatientController::class, 'patient_by_name'])->name('patient_by_name');
+// Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
+//     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
+//     Route::get('patient/nik/{nik}', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
+//     Route::get('patient/id/{id}', [PatientController::class, 'patient_by_id'])->name('patient_by_id');
+//     Route::get('patient/name', [PatientController::class, 'patient_by_name'])->name('patient_by_name');
 
-    Route::get('practitioner/', [PractitionerController::class, 'index'])->name('practitioner_index');
-    Route::get('practitioner/nik/{nik}', [PractitionerController::class, 'practitioner_by_nik'])->name('practitioner_by_nik');
-    Route::get('practitioner/id/{id}', [PractitionerController::class, 'practitioner_by_id'])->name('practitioner_by_id');
-    Route::get('practitioner/name', [PractitionerController::class, 'practitioner_by_name'])->name('practitioner_by_name');
+//     Route::get('practitioner/', [PractitionerController::class, 'index'])->name('practitioner_index');
+//     Route::get('practitioner/nik/{nik}', [PractitionerController::class, 'practitioner_by_nik'])->name('practitioner_by_nik');
+//     Route::get('practitioner/id/{id}', [PractitionerController::class, 'practitioner_by_id'])->name('practitioner_by_id');
+//     Route::get('practitioner/name', [PractitionerController::class, 'practitioner_by_name'])->name('practitioner_by_name');
 
-    Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
-    Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
-    Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
-    Route::put('organization/update/{id}', [OrganizationController::class, 'organization_update_api'])->name('organization_update_api');
+//     Route::get('organization/', [OrganizationController::class, 'index'])->name('organization_index');
+//     Route::get('organization/{id}', [OrganizationController::class, 'organization_by_id'])->name('organization_by_id');
+//     Route::post('organization/store', [OrganizationController::class, 'organization_store_api'])->name('organization_store_api');
+//     Route::put('organization/update/{id}', [OrganizationController::class, 'organization_update_api'])->name('organization_update_api');
 
-    Route::get('location/', [LocationController::class, 'index'])->name('location_index');
-    // Route::get('location/show/{id}', [LocationController::class, 'edit'])->name('location_id');
-    Route::post('location/store', [LocationController::class, 'location_store_api'])->name('location_store_api');
-    Route::put('location/update/{id}', [LocationController::class, 'location_update_api'])->name('location_update_api');
+//     Route::get('location/', [LocationController::class, 'index'])->name('location_index');
+//     // Route::get('location/show/{id}', [LocationController::class, 'edit'])->name('location_id');
+//     Route::post('location/store', [LocationController::class, 'location_store_api'])->name('location_store_api');
+//     Route::put('location/update/{id}', [LocationController::class, 'location_update_api'])->name('location_update_api');
 
-    Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
-    Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
-});
+//     Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
+//     Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
+// });
 // PENUNJANG
-Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
-    Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
-    Route::get('cari_dokter', [PenunjangController::class, 'cari_dokter'])->name('cari_dokter');
-    Route::get('get_tarif_laboratorium', [PenunjangController::class, 'get_tarif_laboratorium'])->name('get_tarif_laboratorium');
-    Route::get('get_order_layanan', [PenunjangController::class, 'get_order_layanan'])->name('get_order_layanan');
-    Route::get('get_kunjungan_pasien', [PenunjangController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
-    Route::get('get_ris_order', [PenunjangController::class, 'get_ris_order'])->name('get_ris_order');
-    Route::post('insert_layanan', [PenunjangController::class, 'insert_layanan'])->name('insert_layanan');
-});
+// Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
+//     Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
+//     Route::get('cari_dokter', [PenunjangController::class, 'cari_dokter'])->name('cari_dokter');
+//     Route::get('get_tarif_laboratorium', [PenunjangController::class, 'get_tarif_laboratorium'])->name('get_tarif_laboratorium');
+//     Route::get('get_order_layanan', [PenunjangController::class, 'get_order_layanan'])->name('get_order_layanan');
+//     Route::get('get_kunjungan_pasien', [PenunjangController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
+//     Route::get('get_ris_order', [PenunjangController::class, 'get_ris_order'])->name('get_ris_order');
+//     Route::post('insert_layanan', [PenunjangController::class, 'insert_layanan'])->name('insert_layanan');
+// });
 // RIS
-Route::prefix('ris')->name('api.ris.')->group(function () {
-    Route::get('pasien_get', [RISController::class, 'pasien_get'])->name('pasien_get');
-    Route::post('pasien_add', [RISController::class, 'pasien_add'])->name('pasien_add');
-    Route::get('dokter_get', [RISController::class, 'dokter_get'])->name('dokter_get');
-    Route::get('asuransi_get', [RISController::class, 'asuransi_get'])->name('asuransi_get');
-    Route::get('jenispemeriksaan_get', [RISController::class, 'jenispemeriksaan_get'])->name('jenispemeriksaan_get');
-    Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
-    Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
-});
+// Route::prefix('ris')->name('api.ris.')->group(function () {
+//     Route::get('pasien_get', [RISController::class, 'pasien_get'])->name('pasien_get');
+//     Route::post('pasien_add', [RISController::class, 'pasien_add'])->name('pasien_add');
+//     Route::get('dokter_get', [RISController::class, 'dokter_get'])->name('dokter_get');
+//     Route::get('asuransi_get', [RISController::class, 'asuransi_get'])->name('asuransi_get');
+//     Route::get('jenispemeriksaan_get', [RISController::class, 'jenispemeriksaan_get'])->name('jenispemeriksaan_get');
+//     Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
+//     Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
+// });
 // INACBG
 Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::get('search_diagnosis', [InacbgController::class, 'search_diagnosis'])->name('search_diagnosis');

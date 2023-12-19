@@ -175,7 +175,7 @@ class RanapController extends APIController
                     'layanans.layanan_details.tarif_detail',
                     'layanans.layanan_details.tarif_detail.tarif',
                 ])
-                ->limit(10)->get();
+                ->get();
 
             foreach ($kunjungans as $key => $kunjungan) {
                 $lab = [];
@@ -185,7 +185,6 @@ class RanapController extends APIController
                     //   @foreach ($lab->layanan_details as $laydet)
                     //                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
                     //                                         @endforeach
-
                     //                     $pemeriksaan = [];
                 }
 
@@ -209,6 +208,8 @@ class RanapController extends APIController
     {
         $kodeunit = '3003';
         $data = [];
+        $rad = [];
+        $detail = [];
         if ($request->norm) {
             $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
                 ->whereHas('layanans', function ($query) use ($kodeunit) {
@@ -221,18 +222,16 @@ class RanapController extends APIController
                     'layanans.layanan_details.tarif_detail',
                     'layanans.layanan_details.tarif_detail.tarif',
                 ])
-                ->limit(10)->get();
-
+                ->get();
             foreach ($kunjungans as $key => $kunjungan) {
-                $lab = [];
                 $pemeriksaan = [];
-                foreach ($kunjungan->layanans->where('kode_unit', 3002) as $key => $value) {
-                    $lab[] = $value->kode_layanan_header;
-                    //   @foreach ($lab->layanan_details as $laydet)
-                    //                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
-                    //                                         @endforeach
-
-                    //                     $pemeriksaan = [];
+                foreach ($kunjungan->layanans->where('kode_unit', 3003) as $key => $value) {
+                    foreach ($value->layanan_details as $key => $laydet) {
+                        $rad[] = [
+                            'lh_id' => $value->id,
+                            'ld_id' => $laydet->id,
+                        ];
+                    }
                 }
                 $data[] = [
                     'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -241,9 +240,7 @@ class RanapController extends APIController
                     'no_rm' => $kunjungan->no_rm,
                     'nama_px' => $kunjungan->pasien->nama_px,
                     'nama_unit' => $kunjungan->unit->nama_unit,
-                    'laboratorium' =>  $lab,
-
-
+                    'radiologi' =>  $rad,
                 ];
             }
         }

@@ -27,7 +27,7 @@ class LaboratoriumController extends Controller
                     'layanans.layanan_details.tarif_detail',
                     'layanans.layanan_details.tarif_detail.tarif',
                 ])
-                ->limit(10)->get();
+                ->get();
         }
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')

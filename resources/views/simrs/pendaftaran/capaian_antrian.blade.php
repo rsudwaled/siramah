@@ -8,7 +8,6 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Capaian Antrain" theme="primary" icon="fas fa-info-circle" collapsible>
-
                 @php
                     $heads = ['Bulan', 'Kunjungan', 'Antrol', 'Anrol Selesai (QR)', 'Whatsapp', 'MJKN', 'Offline'];
                     // $config['order'] = ['2', 'asc'];
