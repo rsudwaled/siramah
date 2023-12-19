@@ -1216,6 +1216,92 @@ class AntrianController extends APIController
             'surat_kontrols',
         ]));
     }
+    public function kunjungan_rajal(Request $request)
+    {
+        $kunjungans = null;
+        $surat_kontrols = null;
+        $unit = Unit::where('KDPOLI', "!=", null)
+            ->where('KDPOLI', "!=", "")
+            ->get();
+        $dokters = Paramedis::where('kode_dokter_jkn', "!=", null)
+            ->where('unit', "!=", null)
+            ->get();
+        // if ($request->kodepoli == null) {
+        // } else {
+        //     $unit = Unit::where('KDPOLI', "!=", null)
+        //         ->where('KDPOLI', "!=", "")
+        //         ->get();
+        //     $poli =   Unit::firstWhere('KDPOLI', $request->kodepoli);
+        //     $dokters = Paramedis::where('unit', $poli->kode_unit)
+        //         ->where('kode_dokter_jkn', "!=", null)
+        //         ->get();
+        // }
+        // if ($request->tanggal) {
+        //     if ($request->kodepoli != null) {
+        //         $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+        //             ->where('kode_unit', $poli->kode_unit)
+        //             ->where('status_kunjungan', "!=", 8)
+        //             ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+        //             ->get();
+        //     } else {
+        //         $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+        //             ->where('status_kunjungan', "!=", 8)
+        //             ->where('kode_unit', "!=", null)
+        //             ->where('kode_unit', 'LIKE', '10%')
+        //             ->where('kode_unit', "!=", 1002)
+        //             ->where('kode_unit', "!=", 1023)
+        //             ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+        //             ->get();
+        //     }
+        // }
+        return view('simrs.poliklinik.kunjungan_rajal', compact([
+            'kunjungans',
+            'request',
+            'unit',
+            'dokters',
+            'surat_kontrols',
+        ]));
+    }
+    public function get_kunjungan_rajal(Request $request)
+    {
+        $data = [];
+        if ($request->tgl_masuk) {
+            if ($request->kode_unit != null) {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tgl_masuk)
+                    ->where('kode_unit', $request->kode_unit)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->with(['unit', 'pasien', 'surat_kontrol', 'penjamin_simrs', 'antrian'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tgl_masuk)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->where('kode_unit', "!=", null)
+                    ->where('kode_unit', 'LIKE', '10%')
+                    ->where('kode_unit', "!=", 1002)
+                    ->where('kode_unit', "!=", 1023)
+                    ->with(['unit', 'pasien', 'surat_kontrol', 'penjamin_simrs', 'antrian'])
+                    ->get();
+            }
+        }
+        if ($kunjungans) {
+            foreach ($kunjungans as $key => $kunjungan) {
+                $data[] = [
+                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    'tgl_masuk' => $kunjungan->tgl_masuk,
+                    'nama_px' => $kunjungan->pasien->nama_px,
+                    'no_rm' => $kunjungan->pasien->no_rm,
+                    'no_Bpjs' => $kunjungan->pasien->no_Bpjs,
+                    'no_sep' => $kunjungan->no_sep,
+                    'nama_unit' => $kunjungan->unit->nama_unit,
+                    'penjamin' => $kunjungan->penjamin_simrs->nama_penjamin,
+                    // 'antrian' => $kunjungan->antrian,
+                    'kodebooking' => $kunjungan->antrian->kodebooking ?? null,
+                    'surat_kontrol' => $kunjungan->surat_kontrol,
+                ];
+            }
+        }
+        return $this->sendResponse($data);
+    }
     // API FUNCTION
     public function signature()
     {

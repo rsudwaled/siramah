@@ -103,6 +103,21 @@ class PasienController extends APIController
             return $this->sendError('Pasien tidak ditemukan', 404);
         }
     }
+    public function pasien_nomorkartu(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "nomorkartu" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(),  400);
+        }
+        $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)->first();
+        if ($pasien) {
+            return $this->sendResponse($pasien, 200);
+        } else {
+            return $this->sendError('Pasien tidak ditemukan', 404);
+        }
+    }
     public function cekPasien(Request $request)
     {
         $validator = Validator::make(request()->all(), [

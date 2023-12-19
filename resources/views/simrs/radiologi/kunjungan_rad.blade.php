@@ -59,8 +59,6 @@
                                     <div class="btn btn-xs btn-primary btnHasilLab"
                                         data-fileurl="http://192.168.10.17/ZFP?mode=proxy&lights=on&titlebar=on#View&ris_pat_id={{ $item->pasien->no_rm }}&un=radiologi&pw=YnanEegSoQr0lxvKr59DTyTO44qTbzbn9koNCrajqCRwHCVhfQAddGf%2f4PNjqOaV">
                                         Lihat Hasil</div>
-
-
                                     <a
                                         href="https://192.168.2.233/expertise/cetak0.php?IDs={{ $lab->id }}&IDd={{ $laydet->id }}&tgl_cetak={{ now()->format('Y-m-d') }}">Hasil</a>
 

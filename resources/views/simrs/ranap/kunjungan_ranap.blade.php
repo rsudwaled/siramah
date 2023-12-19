@@ -119,7 +119,7 @@
                         $.each(data.response, function(key, value) {
                             var btn = "<a href='{{ route('pasienranapprofile') }}?kode=" + value
                                 .kode_kunjungan +
-                                "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical'></i> Lihat ERM</a>";
+                                "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical withLoad'></i> Lihat ERM</a>";
                             var addedRow = table.row.add([
                                 value.tgl_masuk,
                                 value.tgl_keluar,
