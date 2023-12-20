@@ -731,13 +731,13 @@ class AntrianController extends APIController
         if ($request->tanggal) {
             $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal);
             if ($request->kodepoli != null) {
-                $antrians = $antrians->where('method', '!=', 'Offline')->where('kodepoli', $request->kodepoli)->get();
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->where('kodepoli', $request->kodepoli)->get();
             }
             if ($request->kodedokter != null) {
-                $antrians = $antrians->where('method', '!=', 'Offline')->where('kodedokter', $request->kodedokter)->get();
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->where('kodepoli', $request->kodepoli)->where('kodedokter', $request->kodedokter)->get();
             }
             if ($request->kodepoli == null && $request->kodedokter == null) {
-                $antrians = $antrians->where('method', '!=', 'Offline')->get();
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->get();
             }
         }
         $polis = Poliklinik::where('status', 1)->get();
@@ -1967,19 +1967,19 @@ class AntrianController extends APIController
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline",  201);
             }
             // Cek pasien kronis
-            // $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
-            //     ->where('catatan', 'KRONIS')
-            //     ->orderBy('tgl_masuk', 'DESC')
-            //     ->first();
+            $kunjungan_kronis = Kunjungan::where("no_rm", $request->norm)
+                ->where('catatan', 'KRONIS')
+                ->orderBy('tgl_masuk', 'DESC')
+                ->first();
             // cek pasien kronis 30 hari dan beda poli
-            // if (isset($kunjungan_kronis)) {
-            //     $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
-            //     if ($unit->KDPOLI ==  $request->kodepoli) {
-            //         if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(20)) {
-            //             return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
-            //         }
-            //     }
-            // }
+            if (isset($kunjungan_kronis)) {
+                $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
+                if ($unit->KDPOLI ==  $request->kodepoli) {
+                    if (now() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addDay(20)) {
+                        return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
+                    }
+                }
+            }
             // cek jika jkn
             if (isset($request->nomorreferensi)) {
                 $request['jenispasien'] = 'JKN';
