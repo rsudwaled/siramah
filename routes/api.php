@@ -136,12 +136,12 @@ Route::prefix('wa')->group(function () {
 });
 // APP.RSUDWALED.ID
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');
-// Route::prefix('simrs')->name('api.simrs.')->group(function () {
-//     Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
-//     Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
-//     Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
-//     Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
-// });
+Route::prefix('simrs')->name('api.simrs.')->group(function () {
+    Route::get('get_icd10', [ICD10Controller::class, 'get_icd10'])->name('get_icd10');
+    Route::get('get_icd9', [ICD9Controller::class, 'get_icd9'])->name('get_icd9');
+    Route::get('get_obats', [ObatController::class, 'get_obats'])->name('get_obats');
+    Route::get('get_layanans', [LayananController::class, 'get_layanans'])->name('get_layanans');
+});
 // API SATU SEHAT
 // Route::prefix('satusehat')->name('api.satusehat.')->group(function () {
 //     Route::get('patient/', [PatientController::class, 'index'])->name('patient_index');
