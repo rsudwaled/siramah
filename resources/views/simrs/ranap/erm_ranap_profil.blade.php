@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-3">
         <dl class="row">
             <dt class="col-sm-4 m-0">Nama</dt>
             <dd class="col-sm-8 m-0">{{ $pasien->nama_px }} ({{ $pasien->jenis_kelamin }})</dd>
@@ -10,8 +10,11 @@
             <dt class="col-sm-4 m-0">No BPJS</dt>
             <dd class="col-sm-8 m-0">{{ $pasien->no_Bpjs }}</dd>
             <dt class="col-sm-4 m-0">Tgl Lahir</dt>
-            <dd class="col-sm-8 m-0">{{ \Carbon\Carbon::parse( $pasien->tgl_lahir)->format('Y-m-d') }}</dd>
-            <br><br>
+            <dd class="col-sm-8 m-0">{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') }}</dd>
+        </dl>
+    </div>
+    <div class="col-md-3">
+        <dl class="row">
             <dt class="col-sm-4 m-0">Tgl Masuk</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->tgl_masuk }}</dd>
             <dt class="col-sm-4 m-0">Alasan Masuk</dt>
@@ -22,7 +25,7 @@
             <dd class="col-sm-8 m-0">{{ $kunjungan->dokter->nama_paramedis }}</dd>
         </dl>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <dl class="row">
             <dt class="col-sm-4 m-0">Penjamin</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->penjamin_simrs->nama_penjamin }}
@@ -30,24 +33,14 @@
             <dt class="col-sm-4 m-0">No SEP</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->no_sep }}</dd>
             <dt class="col-sm-4 m-0">Tarif RS</dt>
-            <dd class="col-sm-8 m-0">{{ money($biaya_rs, 'IDR') }}
-                @if ($kunjungan->budget)
-                    @if ($biaya_rs > $kunjungan->budget->tarif_inacbg)
-                        <span class="badge badge-danger">Over Budget</span>
-                    @else
-                        <span class="badge badge-success">Safe Budget</span>
-                    @endif
-                @else
-                    <span class="badge badge-danger">Belum Groupping</span>
-                @endif
-            </dd>
+            <dd class="col-sm-8 m-0"> Rp. <span class="biaya_rs_html">-</span></dd>
             <dt class="col-sm-4 m-0">Tarif E-Klaim</dt>
-            <dd class="col-sm-8 m-0">{{ money($kunjungan->budget->tarif_inacbg ?? 0, 'IDR') }}</dd>
+            <dd class="col-sm-8 m-0">Rp. <span class="tarif_eklaim_html">-</span></dd>
             <dt class="col-sm-4 m-0">Groupping</dt>
-            <dd class="col-sm-8 m-0">{{ $kunjungan->budget->kode_cbg ?? 'Belum Groupping' }}</dd>
+            <dd class="col-sm-8 m-0"><span class="code_cbg_html">-</span></dd>
         </dl>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <dl class="row">
             <dt class="col-sm-4 m-0">Status</dt>
             <dd class="col-sm-8 m-0">

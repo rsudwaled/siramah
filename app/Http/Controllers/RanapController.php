@@ -89,13 +89,8 @@ class RanapController extends APIController
             'alasan_masuk',
             'penjamin_simrs',
             'status',
-            'budget',
             'alasan_pulang',
             'surat_kontrol',
-            'layanans', 'layanans.layanan_details',
-            'layanans.layanan_details.tarif_detail',
-            'layanans.layanan_details.tarif_detail.tarif',
-            'layanans.layanan_details.barang',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $kunjungans = null;
@@ -110,14 +105,9 @@ class RanapController extends APIController
         //     ])
         //     ->orderBy('tgl_masuk', 'desc')
         //     ->limit(10)->get();
-        $biaya_rs = 0;
-        foreach ($pasien->kunjungans->where('counter', $kunjungan->counter) as $kjg) {
-            $biaya_rs = $biaya_rs + $kjg->layanans->where('status_retur', 'OPN')->sum('total_layanan');
-        }
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
-            'biaya_rs',
         ]));
     }
     public function get_kunjungan_pasien(Request $request)
