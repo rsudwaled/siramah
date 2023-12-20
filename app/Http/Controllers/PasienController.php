@@ -111,12 +111,34 @@ class PasienController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  400);
         }
-        $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)->first();
-        if ($pasien) {
-            return $this->sendResponse($pasien, 200);
+        $vclaim = new VclaimController();
+        $res = $vclaim->peserta_nomorkartu($request);
+        if ($res->metadata->code == 200) {
+            $peserta = $res->response->peserta;
+            $pasien = Pasien::where('no_rm', $peserta->mr->noMR)
+                ->orWhere('nik_bpjs', $peserta->nik)
+                ->orWhere('no_Bpjs', $peserta->noKartu)
+                ->first();
+            if ($pasien) {
+                $data = [
+                    "nama" => $peserta->nama,
+                    "nik" => $peserta->nik,
+                    "nomorkartu" => $peserta->noKartu,
+                    "norm" => $pasien->no_rm,
+                ];
+                return $this->sendResponse($data, 200);
+            } else {
+                return $this->sendError('Anda termasuk pasien baru / Data tidak ditermukan. Silahkan mendaftar secara offline.', 404);
+            }
         } else {
-            return $this->sendError('Pasien tidak ditemukan', 404);
+            return $this->sendError($res->metadata->message, $res->metadata->code);
         }
+        // $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)->first();
+        // if ($pasien) {
+        //     return $this->sendResponse($pasien, 200);
+        // } else {
+        //     return $this->sendError('Pasien tidak ditemukan', 404);
+        // }
     }
     public function cekPasien(Request $request)
     {

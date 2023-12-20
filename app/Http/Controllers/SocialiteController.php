@@ -28,7 +28,6 @@ class SocialiteController extends Controller
                     'avatar' => $user_google->avatar,
                     'avatar_original' => $user_google->avatar_original,
                 ]);
-                auth()->login($user, true);
             }
             //jika user tidak ada maka simpan ke database
             else {

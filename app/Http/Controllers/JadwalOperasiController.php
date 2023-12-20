@@ -85,7 +85,7 @@ class JadwalOperasiController extends APIController
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" =>  'BED',
+                "kodepoli" => $unit->KDPOLI ?? 'BED',
                 // "namapoli" => $jadwalop->ruangan_asal,
                 "namapoli" => 'BEDAH',
                 "terlaksana" => 0,
