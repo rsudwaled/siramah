@@ -106,7 +106,6 @@
                         @include('simrs.ranap.erm_ranap_keperawatan')
                         {{-- observasi --}}
                         @include('simrs.ranap.erm_ranap_observasi')
-
                         {{-- KPO --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKPO">
@@ -121,21 +120,60 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- resume --}}
-                        @include('simrs.ranap.erm_ranap_resume')
-                        {{-- dokter --}}
+                        {{-- tindakan --}}
                         <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cDokter">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakanDokter">
                                 <h3 class="card-title">
-                                    Pemeriksaan Spesialistik
+                                    Pemberian Tindakan Kedokteran
                                 </h3>
                             </a>
-                            <div id="cDokter" class="collapse" role="tabpanel">
+                            <div id="cTindakanDokter" class="collapse" role="tabpanel">
                                 <div class="card-body">
                                     test
                                 </div>
                             </div>
                         </div>
+                        {{-- konsultasi --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKonsultasi">
+                                <h3 class="card-title">
+                                    Pemeriksaan Konsultasi
+                                </h3>
+                            </a>
+                            <div id="cKonsultasi" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    test
+                                </div>
+                            </div>
+                        </div>
+                        {{-- nyeri --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cNyeri">
+                                <h3 class="card-title">
+                                    Pengkajian Nyeri
+                                </h3>
+                            </a>
+                            <div id="cNyeri" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    test
+                                </div>
+                            </div>
+                        </div>
+                        {{-- jatuh --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cJatuh">
+                                <h3 class="card-title">
+                                    Pengkajian Resiko Jatuh
+                                </h3>
+                            </a>
+                            <div id="cJatuh" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    test
+                                </div>
+                            </div>
+                        </div>
+                        {{-- resume --}}
+                        @include('simrs.ranap.erm_ranap_resume')
                         {{-- laboratorium --}}
                         {{-- @include('simrs.ranap.erm_ranap_lab') --}}
                         {{-- radiologi --}}
@@ -1767,7 +1805,7 @@
                             value.ecg,
                             value.kesadaran,
                             '<pre>' + fisik + '</pre>',
-                            '<pre>' + ket+ '</pre>',
+                            '<pre>' + ket + '</pre>',
                             value.pic,
                         ]).draw(false);
                     });
