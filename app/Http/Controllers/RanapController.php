@@ -229,7 +229,6 @@ class RanapController extends APIController
         }
         return $this->sendResponse($data);
     }
-
     public function kunjunganranapaktif(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])

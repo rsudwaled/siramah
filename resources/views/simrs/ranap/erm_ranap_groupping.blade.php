@@ -4,12 +4,12 @@
             Groupping E-Klaim
         </h3>
         <div class="card-tools">
-            <i class="fas fa-file-medical"></i>
+            Rp. <span class="tarif_eklaim_html">-</span> <i class="fas fa-file-medical"></i>
         </div>
     </a>
     <div id="cGroupping" class="collapse" role="tabpanel">
         <div class="card-body">
-            <form action="{{ route('claim_ranap_v2') }}" id="formGroupper" method="POST">
+            <form action="{{ route('claim_ranap_v3') }}" id="formGroupper" method="POST">
                 @csrf
                 <input type="hidden" name="counter" id="counter" class="counter-id"
                     value="{{ $kunjungan->counter }}">
@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="perawatan_icu"
-                                    value="1" onchange="perawatanIcuFunc();">
+                                    value="1" onchange="checkIcu();">
                                 <label for="perawatan_icu" class="custom-control-label">Perawatan
                                     ICU</label>
                             </div>
@@ -84,24 +84,24 @@
                                 igroup-size="sm" placeholder="Lama hari ICU" type="number" />
                             <div class="custom-control custom-checkbox checkVentilator">
                                 <input class="custom-control-input" type="checkbox" id="ventilator" value="1"
-                                    onchange="pakeVentilatorFunc();">
+                                    onchange="checkVenti();">
                                 <label for="ventilator" class="custom-control-label">Ventilator
                                     ICU</label>
                             </div>
-                            <x-adminlte-input name="intubasi" label="Tgl Intubasi"
+                            <x-adminlte-input name="inkubasi" label="Tgl Inubasi"
                                 fgroup-class="col-md-4 masuk_icu pake_ventilator" igroup-size="sm" />
                             <x-adminlte-input name="ekstubasi" label="Tgl Ekstubasi"
                                 fgroup-class="col-md-4 masuk_icu pake_ventilator" igroup-size="sm" />
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="bayi" value="1"
-                                    onchange="bayiFunc();">
+                                    onchange="checkBayi();">
                                 <label for="bayi" class="custom-control-label">Bayi</label>
                             </div>
                             <x-adminlte-input name="berat_badan" label="Berat Badan" fgroup-class="formbb"
                                 igroup-size="sm" placeholder="Berat Badan" />
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="tb" value="1"
-                                    onchange="tbFunc();">
+                                    onchange="checkTB();">
                                 <label for="tb" class="custom-control-label">Pasien
                                     TB</label>
                             </div>
@@ -109,7 +109,7 @@
                                 placeholder="No Register TB" igroup-size="sm" />
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="covid" value="1"
-                                    onchange="covidFunc();">
+                                    onchange="checkCovid();">
                                 <label for="covid" class="custom-control-label">Pasien
                                     COVID-19</label>
                             </div>
