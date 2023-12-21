@@ -54,7 +54,7 @@
                         {{-- rincian --}}
                         @include('simrs.ranap.erm_ranap_biaya')
                         {{-- administrasi --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
                                 <h3 class="card-title">
                                     Administrasi Kunjungan
@@ -83,7 +83,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- groupping --}}
                         @include('simrs.ranap.erm_ranap_groupping')
                         {{-- keperawatan --}}

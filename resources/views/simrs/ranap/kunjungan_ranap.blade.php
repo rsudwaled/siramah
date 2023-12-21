@@ -36,8 +36,8 @@
         <div class="col-md-12">
             <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Data Pasien Rawat Inap">
                 @php
-                    $heads = ['Tgl Masuk', 'Tgl Keluar (LOS)', 'Kunjungan', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Status', 'Action'];
-                    $config['order'] = [['7', 'asc']];
+                    $heads = ['Tgl Masuk', 'Tgl Keluar (LOS)', 'Kunjungan', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Tarif Eklaim', 'Tagihan RS', '%', 'Status'];
+                    $config['order'] = [['9', 'asc']];
                     $config['paging'] = false;
                     $config['processing'] = true;
                     $config['serverside'] = true;
@@ -117,21 +117,27 @@
                 type: "GET",
                 url: url,
             }).done(function(data) {
+                console.log(data);
                 if (data.metadata.code == 200) {
                     $.each(data.response, function(key, value) {
+                        var tarifeklaim = value.budget ? value.budget.tarif_inacbg : 0;
+                        var tagihanrs = value.tagihan ? value.tagihan.total_biaya : 0;
+                        var persentase = (tagihanrs / tarifeklaim) * 100;
                         var btn = "<a href='{{ route('pasienranapprofile') }}?kode=" + value
                             .kode_kunjungan +
-                            "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical withLoad'></i> Lihat ERM</a>";
+                            "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical withLoad'></i> ERM</a>";
                         var addedRow = table.row.add([
                             value.tgl_masuk,
                             value.tgl_keluar,
-                            value.counter + ' / ' + value.kode_kunjungan,
+                            value.counter + ' / ' + value.kode_kunjungan + ' ' + btn,
                             value.no_rm + ' ' + value.pasien.nama_px,
                             value.pasien.no_Bpjs,
                             value.unit.nama_unit,
                             value.no_sep,
+                            'Rp ' + tarifeklaim.toLocaleString('id-ID'),
+                            'Rp ' + tagihanrs.toLocaleString('id-ID'),
+                            persentase.toFixed(1) + '%',
                             value.status.status_kunjungan,
-                            btn,
                         ]).draw(false);
                         if (value.budget) {
                             if (!value.budget.kode_cbg) {
