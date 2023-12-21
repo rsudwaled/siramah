@@ -68,6 +68,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(ErmRanap::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function groupping()
+    {
+        return $this->hasOne(ErmGroupping::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function erm_ranap_keperawatan()
     {
         return $this->hasMany(ErmRanapKeperawatan::class, 'kode_kunjungan', 'kode_kunjungan');

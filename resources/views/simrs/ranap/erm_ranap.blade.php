@@ -216,7 +216,7 @@
                             </div>
                         </div> --}}
                         {{-- suratkontrol --}}
-                        {{-- <div class="card card-info mb-1">
+                        <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion"
                                 href="#cSuratKontrol">
                                 <h3 class="card-title">
@@ -370,9 +370,9 @@
                                     @endif
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                         {{-- pemulangan --}}
-                        {{-- <div class="card card-info mb-1">
+                        <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cPulang">
                                 <h3 class="card-title">
                                     Pemulangan Pasien
@@ -446,7 +446,7 @@
                                     </form>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                         {{-- filepenunjang --}}
                         {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#collapseFile">
@@ -512,6 +512,48 @@
             $(".checkTB").hide();
             $(".checkCovid").hide();
             $(".formbb").hide();
+            $(".diagnosaID").select2({
+                placeholder: 'Silahkan pilih Diagnosa ICD-10',
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('get_diagnosis_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $(".procedure").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('get_procedure_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
             $('.btnCariSEP').click(function(e) {
                 var nomorkartu = $('.nomorkartu-id').val();
                 $('#modalSEP').modal('show');
@@ -614,62 +656,17 @@
                 $(".pake_ventilator").hide();
         }
     </script>
-    {{-- search select2 --}}
-    <script>
-        $(function() {
-            $(".diagnosaID").select2({
-                placeholder: 'Silahkan pilih Diagnosa ICD-10',
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('get_diagnosis_eclaim') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            keyword: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-            $(".procedure").select2({
-                placeholder: 'Silahkan pilih Tindakan ICD-9',
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('api.eclaim.search_procedures') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            keyword: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-        });
-    </script>
     {{-- dynamic input --}}
     <script>
         // row select diagnosa
         $("#rowAdder").click(function() {
             newRowAdd =
                 '<div id="row"><div class="form-group"><div class="input-group">' +
+                '<div class="input-group-prepend"><span class="input-group-text">' +
+                '<i class="fas fa-diagnoses "></i></span></div>' +
                 '<select name="diagnosa[]" class="form-control diagnosaID"></select>' +
                 '<div class="input-group-append"><button type="button" class="btn btn-xs btn-danger" id="DeleteRow">' +
-                '<i class="fas fa-trash "></i> Hapus </button></div>' +
+                '<i class="fas fa-trash "></i> Hapus</button></div>' +
                 '</div></div></div>';
             $('#newinput').append(newRowAdd);
             $(".diagnosaID").select2({
@@ -704,16 +701,16 @@
                 '<div class="input-group-prepend"><span class="input-group-text">' +
                 '<i class="fas fa-hand-holding-medical "></i></span></div>' +
                 '<select name="procedure[]" class="form-control procedure "></select></div></div></div>' +
-                '<div class="col-md-3"><div class="form-group"><div class="input-group"><div class="input-group-prepend">' +
+                '<div class="col-md-3"><div class="form-group"><div class="input-group input-group-sm"><div class="input-group-prepend">' +
                 '<span class="input-group-text"><b>@</b></span></div><input type="number" class="form-control" value="1">' +
-                '</div></div></div><div class="col-md-2"><button type="button" class="btn btn-danger" id="deleteRowTindakan"> ' +
-                '<i class="fas fa-trash "></i> </button></div></div>';
+                '</div></div></div><div class="col-md-2"><button type="button" class="btn btn-sm btn-danger" id="deleteRowTindakan"> ' +
+                '<i class="fas fa-trash "></i> Hapus</button></div></div>';
             $('#newTindakan').append(newRowAdd);
             $(".procedure").select2({
                 placeholder: 'Silahkan pilih Tindakan ICD-9',
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('api.eclaim.search_procedures') }}",
+                    url: "{{ route('get_procedure_eclaim') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 100,

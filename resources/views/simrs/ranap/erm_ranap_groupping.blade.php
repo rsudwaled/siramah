@@ -116,71 +116,149 @@
                             <x-adminlte-input name="no_claim_covid" label="No Claim COVID-19"
                                 fgroup-class="checkCovid" placeholder="No Claim COVID-19" igroup-size="sm" />
                         </div>
-                        <x-adminlte-input name="sistole" label="Sistole" igroup-size="sm" placeholder="Sistole"
-                            type="number" />
-                        <x-adminlte-input name="distole" label="Diastole" igroup-size="sm" placeholder="Diastole"
-                            type="number" />
+                        <x-adminlte-input name="sistole" value="{{ $groupping->sistole ?? null }}" label="Sistole"
+                            igroup-size="sm" placeholder="Sistole" type="number" />
+                        <x-adminlte-input name="diastole" value="{{ $groupping->diastole ?? null }}"
+                            label="Diastole" igroup-size="sm" placeholder="Diastole" type="number" />
                     </div>
                 </div>
-                {{-- diagnosa --}}
                 <div class="row">
-                    <div class="col-md-12">
+                    {{-- diagnosa --}}
+                    <div class="col-md-6">
                         <label class=" mb-2">Diagnosa ICD-10</label>
                         <button id="rowAdder" type="button" class="btn btn-xs btn-success  mb-2">
                             <span class="fas fa-plus">
                             </span> Tambah Diagnosa
                         </button>
-                        <div id="row">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <select name="diagnosa[]" class="form-control diagnosaID ">
-                                    </select>
-                                    <div class="input-group-append"><button type="button"
-                                            class="btn btn-xs btn-warning ">
-                                            <i class="fas fa-diagnoses "></i> Diagnosa
-                                            Utama </button></div>
+                        @if ($groupping)
+                            @if (is_array(json_decode($groupping->diagnosa)) || is_object(json_decode($groupping->diagnosa)))
+                                @foreach (json_decode($groupping->diagnosa) as $item)
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fas fa-diagnoses "></i>
+                                                    </span>
+                                                </div>
+                                                <select name="diagnosa[]" class="form-control diagnosaID ">
+                                                    <option value="{{ $item }}" selected>{{ $item }}</option>
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-xs btn-danger "
+                                                        id="DeleteRow">
+                                                        <i class="fas fa-trash "></i> Hapus
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        @else
+                            <div id="row">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-diagnoses "></i>
+                                            </span>
+                                        </div>
+                                        <select name="diagnosa[]" class="form-control diagnosaID ">
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-xs btn-danger " id="DeleteRow">
+                                                <i class="fas fa-trash "></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                         <div id="newinput"></div>
-                        {{-- multipe tindakan --}}
+                    </div>
+                    {{-- tindakan --}}
+                    <div class="col-md-6">
                         <label class="mb-2">Tindakan ICD-9</label>
                         <button id="rowAddTindakan" type="button" class="btn btn-xs btn-success  mb-2">
                             <span class="fas fa-plus">
                             </span> Tambah Tindakan
                         </button>
-                        <div id="rowTindakan" class="row">
-                            <div class="col-md-7">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-hand-holding-medical "></i>
-                                            </span>
+                        @if ($groupping)
+                            @if (is_array(json_decode($groupping->procedure)) || is_object(json_decode($groupping->procedure)))
+                                @foreach (json_decode($groupping->procedure) as $item)
+                                    <div id="row" class="row">
+                                        <div class="col-md-7">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fas fa-hand-holding-medical "></i>
+                                                        </span>
+                                                    </div>
+                                                    <select name="procedure[]" class="form-control procedure ">
+                                                        <option value="{{ $item }}" selected>
+                                                            {{ $item }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <select name="procedure[]" class="form-control procedure ">
-                                        </select>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="input-group input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <b>@</b>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" class="form-control" value="1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                id="deleteRowTindakan">
+                                                <i class="fas fa-trash"></i> Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        @else
+                            <div id="row" class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-hand-holding-medical "></i>
+                                                </span>
+                                            </div>
+                                            <select name="procedure[]" class="form-control procedure ">
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <div class="input-group input-group-sm">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <b>@</b>
-                                            </span>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <b>@</b>
+                                                </span>
+                                            </div>
+                                            <input type="number" class="form-control" value="1">
                                         </div>
-                                        <input type="number" class="form-control" value="1">
                                     </div>
                                 </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-sm btn-danger" id="deleteRowTindakan">
+                                        <i class="fas fa-trash"></i> Hapus
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col-md-2">
-                                <button type="button" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-hand-holding-medical "></i>
-                                </button>
-                            </div>
-                        </div>
+                        @endif
+
                         <div id="newTindakan"></div>
                     </div>
                 </div>

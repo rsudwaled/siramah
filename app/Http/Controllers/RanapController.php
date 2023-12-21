@@ -91,23 +91,14 @@ class RanapController extends APIController
             'status',
             'alasan_pulang',
             'surat_kontrol',
+            'groupping',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
-        $kunjungans = null;
-        // $kunjungans = Kunjungan::where('no_rm', $kunjungan->no_rm)
-        //     ->with([
-        //         'unit', 'assesmen_dokter',
-        //         'layanans', 'layanans.layanan_details',
-        //         'layanans.layanan_details.tarif_detail',
-        //         'layanans.layanan_details.tarif_detail.tarif',
-        //         'layanans.layanan_details.barang',
-        //         'dokter', 'assesmen_perawat'
-        //     ])
-        //     ->orderBy('tgl_masuk', 'desc')
-        //     ->limit(10)->get();
+        $groupping = $kunjungan->groupping;
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
+            'groupping',
         ]));
     }
     public function get_kunjungan_pasien(Request $request)

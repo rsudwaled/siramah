@@ -129,6 +129,43 @@ class InacbgController extends APIController
             return $response;
         }
     }
+    public function get_procedure_eclaim(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "keyword" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $request_data = [
+            "metadata" => [
+                "method" => "search_procedures",
+            ],
+            "data" => [
+                "keyword" => $request->keyword,
+            ]
+        ];
+        $json_request = json_encode($request_data);
+        $response =  $this->send_request($json_request);
+        $datarray = array();
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
+            if ($count == 0) {
+            } else {
+                foreach ($data as  $item) {
+                    $datarray[] = array(
+                        "id" => $item[1] . '|' . $item[0],
+                        "text" => $item[1] . ' ' . $item[0]
+                    );
+                }
+            }
+            return response()->json($datarray);
+        } else {
+            return $response;
+        }
+    }
+
     public function search_diagnosis_inagrouper(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -490,7 +527,8 @@ class InacbgController extends APIController
             "noSEP" =>  "required",
             "diagnosa" =>  "required",
         ]);
-        $request['diagnosa'] = json_encode($request->diagnosa);
+        $request['diagnosa'] = $request->diagnosa ? json_encode($request->diagnosa) : null;
+        $request['procedure'] = $request->procedure ? json_encode($request->procedure) : null;
         $groupping = ErmGroupping::updateOrCreate(
             [
                 'nosep' => $request->noSEP,
@@ -830,13 +868,12 @@ class InacbgController extends APIController
         }
         $icd9 = "#";
         if ($request->procedure) {
-            $icd9 = $request->procedure[0];
-            $jumlah_diag = count($request->procedure) - 1;
+            $icd9 = explode('|', json_decode($request->procedure)[0])[0];
+            $jumlah_diag = count(json_decode($request->procedure)) - 1;
             for ($i = 1; $i  <= $jumlah_diag; $i++) {
-                $icd9 = $icd9 . '#' . $request->procedure[$i];
+                $icd9 = $icd9 . '#' . explode('|', json_decode($request->procedure)[$i])[0];
             }
         }
-        $request['procedure'] = $icd9;
         $request_data = [
             "metadata" => [
                 "method" => "set_claim_data",
