@@ -369,8 +369,7 @@ class RanapController extends APIController
             'keperawatan',
         ]));
     }
-
-    // perkembangan
+    // soap
     public function simpan_perkembangan_ranap(Request $request)
     {
         $request['pic'] = Auth::user()->name;
@@ -397,6 +396,21 @@ class RanapController extends APIController
             return $this->sendResponse('Berhasil dihapus');
         } else {
             return $this->sendError('Tidak Bisa Dihapus oleh anda.', 405);
+        }
+    }
+    public function verifikasi_soap_ranap(Request $request)
+    {
+        $observasi = ErmRanapPerkembangan::find($request->id);
+        if ($observasi) {
+            # code...
+            $observasi->update([
+                'verifikasi_at' => now(),
+                'verifikasi_by' => Auth::user()->name,
+            ]);
+            return $this->sendResponse('Berhasil diverifikasi');
+        } else {
+            return $this->sendError('Catatan tidak ditemukan');
+
         }
     }
     public function print_perkembangan_ranap(Request $request)

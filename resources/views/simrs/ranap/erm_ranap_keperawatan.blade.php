@@ -8,8 +8,7 @@
         <div class="card-body">
             <x-adminlte-button label="Input Keperawatan" icon="fas fa-plus" theme="success" class="btn-xs"
                 onclick="btnInputKeperawatan()" />
-            <x-adminlte-button label="Get Keperawatan" icon="fas fa-sync" theme="primary" class="btn-xs"
-                onclick="getKeperawatanRanap()" />
+            <x-adminlte-button icon="fas fa-sync" theme="primary" class="btn-xs" onclick="getKeperawatanRanap()" />
             <a href="{{ route('print_implementasi_evaluasi_keperawatan') }}?kunjungan={{ $kunjungan->kode_kunjungan }}"
                 target="_blank" class="btn btn-xs btn-warning"><i class="fas fa-print"></i> Print</a>
             <style>
@@ -23,10 +22,10 @@
             <table class="table table-sm table-bordered table-hover" id="tableKeperawatan">
                 <thead>
                     <tr>
+                        <th>Action</th>
                         <th>Tanggal Jam</th>
                         <th>Implementasi & Evaluasi Keperawatan</th>
-                        <th>Ttd,</th>
-                        <th>Action</th>
+                        <th>Ttd Pengisi,</th>
                     </tr>
                 </thead>
             </table>

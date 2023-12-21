@@ -9,7 +9,6 @@
     </a>
     <div id="cGroupping" class="collapse" role="tabpanel">
         <div class="card-body">
-
             <form action="{{ route('claim_ranap_v2') }}" id="formGroupper" method="POST">
                 @csrf
                 <input type="hidden" name="counter" id="counter" class="counter-id"

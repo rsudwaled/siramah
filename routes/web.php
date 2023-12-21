@@ -190,6 +190,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print_obaservasi_ranap', [RanapController::class, 'print_obaservasi_ranap'])->name('print_obaservasi_ranap');
     Route::post('simpan_perkembangan_ranap', [RanapController::class, 'simpan_perkembangan_ranap'])->name('simpan_perkembangan_ranap');
     Route::post('hapus_perkembangan_ranap', [RanapController::class, 'hapus_perkembangan_ranap'])->name('hapus_perkembangan_ranap');
+    Route::post('verifikasi_soap_ranap', [RanapController::class, 'verifikasi_soap_ranap'])->name('verifikasi_soap_ranap');
     Route::get('get_perkembangan_ranap', [RanapController::class, 'get_perkembangan_ranap'])->name('get_perkembangan_ranap');
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
 

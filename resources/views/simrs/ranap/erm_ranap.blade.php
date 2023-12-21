@@ -25,15 +25,14 @@
                 <x-slot name="footerSlot">
                     <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
                         icon="fas fa-search" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Groupping Eklaim" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnRincianBiaya" theme="warning" label="Rincian Biaya"
+                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
                         label="Laboratorium" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Patologi Anatomi" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Patologi Anatomi"
+                        icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanRS" theme="primary" label="Rujukan RS"
@@ -60,8 +59,9 @@
                             </a>
                             <div id="cIGD" class="collapse" role="tabpanel">
                                 <div class="card-body p-0">
-                                    <iframe src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf" height="780" width="100%"
-                                        frameborder="0"></iframe>
+                                    <iframe
+                                        src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
+                                        height="780" width="100%" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -100,12 +100,13 @@
                         </div> --}}
                         {{-- groupping --}}
                         @include('simrs.ranap.erm_ranap_groupping')
+                        {{-- perkembangan --}}
+                        @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
                         {{-- keperawatan --}}
                         @include('simrs.ranap.erm_ranap_keperawatan')
                         {{-- observasi --}}
                         @include('simrs.ranap.erm_ranap_observasi')
-                        {{-- perkembangan --}}
-                        @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
+
                         {{-- KPO --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKPO">
@@ -1087,7 +1088,6 @@
                 table.rows().remove().draw();
                 if (data.metadata.code == 200) {
                     $.each(data.response, function(key, value) {
-                        console.log(value.laboratorium);
                         var btnlab = '';
                         $.each(value.laboratorium, function(key, value) {
                             var btn =
@@ -1300,6 +1300,194 @@
             });
         });
     </script>
+    {{-- perkembangan pasien soap --}}
+    <x-adminlte-modal id="modalPerkembanganPasien" title="Catatan Perkembangan Pasien Rawat Inap" theme="warning"
+        icon="fas fa-file-medical" size='lg'>
+        <form id="formPerkembangan" name="formPerkembangan" method="POST">
+            @csrf
+            @php
+                $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+            @endphp
+            <input type="hidden" class="kode_kunjungan-perkembangan" name="kode_kunjungan"
+                value="{{ $kunjungan->kode_kunjungan }}">
+            <input type="hidden" class="counter-keperawatan" name="counter" value="{{ $kunjungan->counter }}">
+            <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
+            <x-adminlte-input-date id="tanggal_input-perkembangan" name="tanggal_input" label="Tanggal & Waktu"
+                :config="$config" />
+            <x-adminlte-textarea igroup-size="sm" class="perkembangan-perkembangan" name="perkembangan"
+                label="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya "
+                placeholder="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya " rows=7>
+            </x-adminlte-textarea>
+            <x-adminlte-textarea igroup-size="sm" class="instruksi_medis-perkembangan" name="instruksi_medis"
+                label="Instruksi Medis" placeholder="Instruksi Medis termasuk Procedur / Pasca Bedah" rows=5>
+            </x-adminlte-textarea>
+        </form>
+        <x-slot name="footerSlot">
+            <button class="btn btn-success mr-auto" onclick="tambahPerkembangan()"><i class="fas fa-save"></i>
+                Simpan</button>
+            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
+    <script>
+        $(function() {
+            $('#tablePerkembanganPasien').DataTable({
+                info: false,
+                ordering: false,
+                paging: false
+            });
+            getPerkembanganPasien();
+        });
+
+        function btnInputPerkembangan() {
+            $.LoadingOverlay("show");
+            $("#formPerkembangan").trigger('reset');
+            let today = moment().format('yyyy-MM-DD HH:mm:ss');
+            $('#tanggal_input-perkembangan').val(today);
+            $('#modalPerkembanganPasien').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function tambahPerkembangan() {
+            $.LoadingOverlay("show");
+            $.ajax({
+                type: "POST",
+                url: "{{ route('simpan_perkembangan_ranap') }}",
+                data: $("#formPerkembangan").serialize(),
+                dataType: "json",
+                encode: true,
+            }).done(function(data) {
+                if (data.metadata.code == 200) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Tarif layanan & tindakan telah ditambahkan',
+                    });
+                    $("#formPerkembangan").trigger('reset');
+                    getPerkembanganPasien();
+                    $('#modalPerkembanganPasien').modal('hide');
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Tambah tarif layanan & tindakan error',
+                    });
+                }
+                $.LoadingOverlay("hide");
+            });
+
+        }
+
+        function getPerkembanganPasien() {
+            var url = "{{ route('get_perkembangan_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            var table = $('#tablePerkembanganPasien').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        var btn =
+                            '<button class="btn btn-xs mb-1 btn-warning" onclick="editPerkembangan(this)" data-id="' +
+                            value.id +
+                            '" data-tglinput="' + value.tanggal_input +
+                            '" data-perkembangan="' + value.perkembangan +
+                            '" data-instruksimedis="' + value.instruksi_medis +
+                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-success btn-xs mb-1" onclick="verifikasiSoap(this)" data-id="' +
+                            value.id +
+                            '"><i class="fas fa-check"></i> Verifikasi</button>  <button class="btn btn-xs mb-1 btn-danger" onclick="hapusPerkembangan(this)" data-id="' +
+                            value.id +
+                            '"><i class="fas fa-trash"></i> Hapus</button>';
+                        table.row.add([
+                            btn,
+                            value.tanggal_input,
+                            '<pre>' + value.perkembangan + '</pre>',
+                            '<pre>' + value.instruksi_medis + '</pre>',
+                            value.pic,
+                            value.verifikasi_by,
+                        ]).draw(false);
+                    });
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function editPerkembangan(button) {
+            $.LoadingOverlay("show");
+            $("#tanggal_input-perkembangan").val($(button).data('tglinput'));
+            $(".instruksi_medis-perkembangan").val($(button).data('instruksimedis'));
+            $(".perkembangan-perkembangan").val($(button).data('perkembangan'));
+            $('#modalPerkembanganPasien').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function hapusPerkembangan(button) {
+            $.LoadingOverlay("show");
+            $.ajax({
+                type: "POST",
+                url: "{{ route('hapus_perkembangan_ranap') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": tarif = $(button).data('id')
+                },
+                dataType: "json",
+                encode: true,
+            }).done(function(data) {
+                if (data.metadata.code == 200) {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Perkembangan Ranap telah dihapuskan',
+                    });
+                    $("#formPerkembangan").trigger('reset');
+                    getPerkembanganPasien();
+                } else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Keperawatan Ranap gagal dihapuskan',
+                    });
+                }
+                $.LoadingOverlay("hide");
+            });
+        }
+
+        function verifikasiSoap(button) {
+            $.LoadingOverlay("show");
+            $.ajax({
+                type: "POST",
+                url: "{{ route('verifikasi_soap_ranap') }}",
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": $(button).data('id')
+                },
+                dataType: "json",
+                encode: true,
+                success: function(data) {
+                    console.log(data);
+                    if (data.metadata.code == 200) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Perkembangan Ranap telah diverifikasi',
+                        });
+                        $("#formPerkembangan").trigger('reset');
+                        getPerkembanganPasien();
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Keperawatan Ranap gagal diverifikasi',
+                        });
+                    }
+                    $.LoadingOverlay("hide");
+                },
+                error: function(data) {
+                    console.log(data);
+                    $.LoadingOverlay("hide");
+                }
+            });
+        }
+    </script>
     {{-- keperawatan --}}
     <x-adminlte-modal id="modalInputKeperawatan" title="Implementasi & Evaluasi Keperawatan" theme="warning"
         icon="fas fa-file-medical" size='lg'>
@@ -1351,7 +1539,6 @@
                 dataType: "json",
                 encode: true,
             }).done(function(data) {
-                console.log(data);
                 if (data.metadata.code == 200) {
                     Toast.fire({
                         icon: 'success',
@@ -1382,18 +1569,18 @@
                 if (data.metadata.code == 200) {
                     $.each(data.response, function(key, value) {
                         var btn =
-                            '<button class="btn btn-xs btn-warning" onclick="editKeperawatan(this)" data-id="' +
+                            '<button class="btn btn-xs mb-1 btn-warning" onclick="editKeperawatan(this)" data-id="' +
                             value.id +
                             '" data-tglinput="' + value.tanggal_input +
                             '" data-keperawatan="' + value.keperawatan +
-                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger" onclick="hapusKeperawatan(this)" data-id="' +
+                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs mb-1 btn-danger" onclick="hapusKeperawatan(this)" data-id="' +
                             value.id +
                             '"><i class="fas fa-trash"></i> Hapus</button>';
                         table.row.add([
+                            btn,
                             value.tanggal_input,
                             '<pre>' + value.keperawatan + '</pre>',
                             value.pic,
-                            btn,
                         ]).draw(false);
                     });
                 } else {
@@ -1426,7 +1613,6 @@
                 dataType: "json",
                 encode: true,
             }).done(function(data) {
-                console.log(data);
                 if (data.metadata.code == 200) {
                     Toast.fire({
                         icon: 'success',
@@ -1468,57 +1654,17 @@
                     <x-adminlte-input name="rr" class="rr-id" igroup-size="sm" label="RR" placeholder="RR" />
                     <x-adminlte-input name="suhu" class="suhu-id" igroup-size="sm" label="Suhu"
                         placeholder="Suhu" />
-                    <x-adminlte-input name="gds" class="gds-id" igroup-size="sm" label="GDS"
-                        placeholder="GDS" />
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran1" name="kesadaran"
-                                value="Sadar baik">
-                            <label for="kesadaran1" class="custom-control-label">Sadar
-                                baik</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran2" name="kesadaran"
-                                value="Berespon dengan kata-kata">
-                            <label for="kesadaran2" class="custom-control-label">Berespon
-                                dengan
-                                kata-kata</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran3" name="kesadaran"
-                                value="Hanya berespons jika dirangsang nyeri/pain">
-                            <label for="kesadaran3" class="custom-control-label">Hanya
-                                berespons jika
-                                dirangsang nyeri/pain</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran4" name="kesadaran"
-                                value="Pasien tidak sadar/unresponsive">
-                            <label for="kesadaran4" class="custom-control-label">Pasien tidak
-                                sadar/unresponsive</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran5" name="kesadaran"
-                                value="Gelisah / bingung">
-                            <label for="kesadaran5" class="custom-control-label">Gelisah /
-                                bingung</label>
-                        </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="kesadaran6" name="kesadaran"
-                                value="Acute Confusional State">
-                            <label for="kesadaran6" class="custom-control-label">Acute
-                                Confusional
-                                State</label>
-                        </div>
-                    </div>
-                    <x-adminlte-input name="pupilkanan" class="pupilkanan-id" igroup-size="sm" label="Pupil Kanan"
-                        placeholder="Pupil Kanan" />
-                    <x-adminlte-input name="pupilkiri" class="pupilkiri-id" igroup-size="sm" label="Pupil Kiri"
-                        placeholder="Pupil Kiri" />
+                    <x-adminlte-input name="gds" class="gds-id" igroup-size="sm" label="Gula Darah Sewaktu (GDS)"
+                        placeholder="Gula Darah Sewaktu (GDS)" />
                     <x-adminlte-input name="ecg" class="ecg-id" igroup-size="sm" label="ECG"
                         placeholder="ECG" />
+                </div>
+                <div class="col-md-6">
+                    <x-adminlte-input name="kesadaran" class="kesadaran-id" igroup-size="sm" label="Kesadaran"
+                        placeholder="Kesadaran" />
+                    <x-adminlte-textarea igroup-size="sm" class="pemeriksaanfisik-observasi" name="pemeriksaanfisik"
+                        label="Pemeriksaan Fisik" placeholder="Pemeriksaan Fisik" rows=3>
+                    </x-adminlte-textarea>
                     <x-adminlte-textarea igroup-size="sm" class="keterangan-observasi" name="keterangan"
                         label="Keterangan" placeholder="Keterangan" rows=3>
                     </x-adminlte-textarea>
@@ -1558,7 +1704,6 @@
                 dataType: "json",
                 encode: true,
             }).done(function(data) {
-                console.log(data);
                 if (data.metadata.code == 200) {
                     Toast.fire({
                         icon: 'success',
@@ -1587,7 +1732,8 @@
                 table.rows().remove().draw();
                 if (data.metadata.code == 200) {
                     $.each(data.response, function(key, value) {
-                        console.log(value);
+                        var fisik = value.pemeriksaanfisik ? value.pemeriksaanfisik : '';
+                        var ket = value.keterangan ? value.keterangan : '';
                         var btn =
                             '<button class="btn btn-xs btn-warning" onclick="editObservasiRanap(this)" data-tanggal_input="' +
                             value.tanggal_input + '" data-tensi="' + value.tensi +
@@ -1601,27 +1747,28 @@
                             value.gds +
                             '" data-ecg="' +
                             value.ecg +
-                            '" data-pupilkanan="' +
-                            value.pupilkanan +
-                            '" data-pupilkiri="' +
-                            value.pupilkiri +
+                            '" data-kesadaran="' +
+                            value.kesadaran +
+                            '" data-pemeriksaanfisik="' +
+                            value.pemeriksaanfisik +
                             '" data-keterangan="' +
                             value.keterangan +
                             '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger" onclick="hapusObservasiRanap(this)" data-id="' +
                             value.id +
                             '"><i class="fas fa-trash"></i> Hapus</button>';
                         table.row.add([
+                            btn,
                             value.tanggal_input,
                             value.tensi,
                             value.nadi,
                             value.rr,
                             value.suhu,
                             value.gds,
-                            value.kesadaran,
-                            value.pupilkiri + value.pupilkanan,
                             value.ecg,
-                            value.keterangan,
-                            btn,
+                            value.kesadaran,
+                            '<pre>' + fisik + '</pre>',
+                            '<pre>' + ket+ '</pre>',
+                            value.pic,
                         ]).draw(false);
                     });
                 } else {
@@ -1642,9 +1789,9 @@
             $("#rr").val($(button).data('rr'));
             $("#suhu").val($(button).data('suhu'));
             $("#gds").val($(button).data('gds'));
-            $("#pupilkanan").val($(button).data('pupilkanan'));
-            $("#pupilkiri").val($(button).data('pupilkiri'));
             $("#ecg").val($(button).data('ecg'));
+            $("#pemeriksaanfisik").val($(button).data('pemeriksaanfisik'));
+            $("#kesadaran").val($(button).data('kesadaran'));
             $(".keterangan-observasi").val($(button).data('keterangan'));
             $('#modalObservasi').modal('show');
             $.LoadingOverlay("hide");
@@ -1662,7 +1809,6 @@
                 dataType: "json",
                 encode: true,
             }).done(function(data) {
-                console.log(data);
                 if (data.metadata.code == 200) {
                     Toast.fire({
                         icon: 'success',
@@ -1681,156 +1827,5 @@
             $.LoadingOverlay("hide");
         }
     </script>
-    {{-- perkembangan pasien --}}
-    <x-adminlte-modal id="modalPerkembanganPasien" title="Catatan Perkembangan Pasien Rawat Inap" theme="warning"
-        icon="fas fa-file-medical" size='lg'>
-        <form id="formPerkembangan" name="formPerkembangan" method="POST">
-            @csrf
-            @php
-                $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
-            @endphp
-            <input type="hidden" class="kode_kunjungan-perkembangan" name="kode_kunjungan"
-                value="{{ $kunjungan->kode_kunjungan }}">
-            <input type="hidden" class="counter-keperawatan" name="counter" value="{{ $kunjungan->counter }}">
-            <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
-            <x-adminlte-input-date id="tanggal_input-perkembangan" name="tanggal_input" label="Tanggal & Waktu"
-                :config="$config" />
-            <x-adminlte-textarea igroup-size="sm" class="perkembangan-perkembangan" name="perkembangan"
-                label="Hasil Pemeriksaan, Analisis, SOAP, & Catatan Lainnya "
-                placeholder="Hasil Pemeriksaan, Analisis, SOAP, & Catatan Lainnya " rows=5>
-            </x-adminlte-textarea>
-            <x-adminlte-textarea igroup-size="sm" class="instruksi_medis-perkembangan" name="instruksi_medis"
-                label="Instruksi Medis" placeholder="Instruksi Medis termasuk Procedur / Pasca Bedah" rows=5>
-            </x-adminlte-textarea>
-        </form>
-        <x-slot name="footerSlot">
-            <button class="btn btn-success mr-auto" onclick="tambahPerkembangan()"><i class="fas fa-save"></i>
-                Simpan</button>
-            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
-        </x-slot>
-    </x-adminlte-modal>
-    <script>
-        $(function() {
-            $('#tablePerkembanganPasien').DataTable({
-                info: false,
-                ordering: false,
-                paging: false
-            });
-            getPerkembanganPasien();
-        });
 
-        function btnInputPerkembangan() {
-            $.LoadingOverlay("show");
-            let today = moment().format('yyyy-MM-DD HH:mm:ss');
-            $('#tanggal_input-perkembangan').val(today);
-            $('#modalPerkembanganPasien').modal('show');
-            $.LoadingOverlay("hide");
-        }
-
-        function tambahPerkembangan() {
-            $.LoadingOverlay("show");
-            $.ajax({
-                type: "POST",
-                url: "{{ route('simpan_perkembangan_ranap') }}",
-                data: $("#formPerkembangan").serialize(),
-                dataType: "json",
-                encode: true,
-            }).done(function(data) {
-                console.log(data);
-                if (data.metadata.code == 200) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Tarif layanan & tindakan telah ditambahkan',
-                    });
-                    $("#formPerkembangan").trigger('reset');
-                    getPerkembanganPasien();
-                    $('#modalPerkembanganPasien').modal('hide');
-                } else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Tambah tarif layanan & tindakan error',
-                    });
-                }
-                $.LoadingOverlay("hide");
-            });
-
-        }
-
-        function getPerkembanganPasien() {
-            var url = "{{ route('get_perkembangan_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
-            var table = $('#tablePerkembanganPasien').DataTable();
-            $.ajax({
-                type: "GET",
-                url: url,
-            }).done(function(data) {
-                table.rows().remove().draw();
-                if (data.metadata.code == 200) {
-                    $.each(data.response, function(key, value) {
-                        var btn =
-                            '<button class="btn btn-xs btn-warning" onclick="editPerkembangan(this)" data-id="' +
-                            value.id +
-                            '" data-tglinput="' + value.tanggal_input +
-                            '" data-perkembangan="' + value.perkembangan +
-                            '" data-instruksimedis="' + value.instruksi_medis +
-                            '"><i class="fas fa-edit"></i> Edit</button> <button class="btn btn-xs btn-danger" onclick="hapusPerkembangan(this)" data-id="' +
-                            value.id +
-                            '"><i class="fas fa-trash"></i> Hapus</button>';
-                        table.row.add([
-                            value.tanggal_input,
-                            '<pre>' + value.perkembangan + '</pre>',
-                            '<pre>' + value.instruksi_medis + '</pre>',
-                            value.pic,
-                            btn,
-                        ]).draw(false);
-                    });
-                } else {
-                    Swal.fire(
-                        'Mohon Maaf !',
-                        data.metadata.message,
-                        'error'
-                    );
-                }
-            });
-        }
-
-        function editPerkembangan(button) {
-            $.LoadingOverlay("show");
-            $("#tanggal_input-perkembangan").val($(button).data('tglinput'));
-            $(".instruksi_medis-perkembangan").val($(button).data('instruksimedis'));
-            $(".perkembangan-perkembangan").val($(button).data('perkembangan'));
-            $('#modalPerkembanganPasien').modal('show');
-            $.LoadingOverlay("hide");
-        }
-
-        function hapusPerkembangan(button) {
-            $.LoadingOverlay("show");
-            $.ajax({
-                type: "POST",
-                url: "{{ route('hapus_perkembangan_ranap') }}",
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "id": tarif = $(button).data('id')
-                },
-                dataType: "json",
-                encode: true,
-            }).done(function(data) {
-                console.log(data);
-                if (data.metadata.code == 200) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Perkembangan Ranap telah dihapuskan',
-                    });
-                    $("#formPerkembangan").trigger('reset');
-                    getPerkembanganPasien();
-                } else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Keperawatan Ranap gagal dihapuskan',
-                    });
-                }
-                $.LoadingOverlay("hide");
-            });
-            $.LoadingOverlay("hide");
-        }
-    </script>
 @endsection
