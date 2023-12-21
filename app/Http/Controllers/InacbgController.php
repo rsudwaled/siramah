@@ -444,6 +444,66 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
     }
+    public function claim_ranap_v3(Request $request)
+    {
+        $request->validate([
+            "kodekunjungan" =>  "required",
+            "counter" =>  "required",
+            "norm" =>  "required",
+            "noSEP" =>  "required",
+        ]);
+        $diag = null;
+        $diag_utama = null;
+        foreach ($request->diagnosa as $key => $value) {
+            $diagnosa = Icd10::where('diag', $value)->first();
+            if ($key == 0) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag_utama =  $value . " | " . $a;
+            } else if ($key == 1) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . " | " . $a;
+            } else {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . " | " . $a;
+            }
+        }
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap($request);
+        $res = $this->grouper($request);
+        if ($res->metadata->code == 200) {
+            $rmcounter = $request->norm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+                    'no_rm' => $request->norm,
+                    'counter' => $request->counter,
+
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
+                    'kelas' => $res->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->response->cbg->description,
+                    "pic" => 1,
+                ]
+            );
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->noSEP,
+            ]);
+            Alert::success('Success', 'Groupping berhasil');
+        } else {
+            Alert::error('Gagal', 'Groupping gagal');
+        }
+        return redirect()->back();
+    }
     public function set_claim_rajal(Request $request)
     {
         $validator = Validator::make(request()->all(), [

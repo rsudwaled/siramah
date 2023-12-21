@@ -23,34 +23,48 @@
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
                 <x-slot name="footerSlot">
-                    <x-adminlte-button class="btn-xs btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
+                    <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
                         icon="fas fa-search" />
-                    <x-adminlte-button class="btn-xs" theme="warning" label="Groupping Eklaim" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnRincianBiaya" theme="warning" label="Rincian Biaya"
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Groupping Eklaim" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1 btnRincianBiaya" theme="warning" label="Rincian Biaya"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs " theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs" onclick="lihatHasilLaboratorium()" theme="warning"
+                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
                         label="Laboratorium" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
+                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs" theme="warning" label="Patologi Anatomi" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Patologi Anatomi" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariRujukanRS" theme="primary" label="Rujukan RS"
+                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanRS" theme="primary" label="Rujukan RS"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariSEP" theme="primary" label="SEP"
+                    <x-adminlte-button class="btn-xs mb-1 btnCariSEP" theme="primary" label="SEP"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs btnCariSuratKontrol" theme="primary" label="Surat Kontrol"
+                    <x-adminlte-button class="btn-xs mb-1 btnCariSuratKontrol" theme="primary" label="Surat Kontrol"
                         icon="fas fa-file-medical" />
                 </x-slot>
             </x-adminlte-card>
         </div>
         <div class="col-md-12">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 650px ;">
+                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 800px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
+                        {{-- IGD --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cIGD">
+                                <h3 class="card-title">
+                                    Riwayat & Triase IGD
+                                </h3>
+                            </a>
+                            <div id="cIGD" class="collapse" role="tabpanel">
+                                <div class="card-body p-0">
+                                    <iframe src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf" height="780" width="100%"
+                                        frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
                         {{-- rincian --}}
                         @include('simrs.ranap.erm_ranap_biaya')
                         {{-- administrasi --}}
@@ -92,6 +106,20 @@
                         @include('simrs.ranap.erm_ranap_observasi')
                         {{-- perkembangan --}}
                         @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
+                        {{-- KPO --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKPO">
+                                <h3 class="card-title">
+                                    KPO Elektronik
+                                </h3>
+                            </a>
+                            <div id="cKPO" class="collapse" role="tabpanel">
+                                <div class="card-body p-0">
+                                    <iframe src="http://192.168.2.125/kpoelektronik/" height="780" width="100%"
+                                        frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- dokter --}}
