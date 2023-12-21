@@ -165,6 +165,9 @@ Route::middleware('auth')->group(function () {
     Route::get('pasienRanap', [KunjunganController::class, 'pasienRanap'])->name('pasienRanap');
     Route::get('pasienRanapPasien', [KunjunganController::class, 'pasienRanapPasien'])->name('pasienRanapPasien');
     Route::post('claim_ranap_v2', [InacbgController::class, 'claim_ranap_v2'])->name('claim_ranap_v2');
+    Route::post('claim_ranap_v3', [InacbgController::class, 'claim_ranap_v3'])->name('claim_ranap_v3');
+    Route::get('get_diagnosis_eclaim', [InacbgController::class, 'get_diagnosis_eclaim'])->name('get_diagnosis_eclaim');
+
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
     Route::get('get_pasien_ranap', [RanapController::class, 'get_pasien_ranap'])->name('get_pasien_ranap');

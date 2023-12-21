@@ -573,31 +573,29 @@
                 });
             });
         });
-    </script>
-    {{-- checkbox --}}
-    <script>
-        function bayiFunc() {
+
+        function checkBayi() {
             if ($('#bayi').is(":checked"))
                 $(".formbb").show();
             else
                 $(".formbb").hide();
         }
 
-        function covidFunc() {
+        function checkCovid() {
             if ($('#covid').is(":checked"))
                 $(".checkCovid").show();
             else
                 $(".checkCovid").hide();
         }
 
-        function tbFunc() {
+        function checkTB() {
             if ($('#tb').is(":checked"))
                 $(".checkTB").show();
             else
                 $(".checkTB").hide();
         }
 
-        function perawatanIcuFunc() {
+        function checkIcu() {
             if ($('#perawatan_icu').is(":checked")) {
                 $(".masuk_icu").show();
                 $(".checkVentilator").show();
@@ -609,7 +607,7 @@
             }
         }
 
-        function pakeVentilatorFunc() {
+        function checkVenti() {
             if ($('#ventilator').is(":checked"))
                 $(".pake_ventilator").show();
             else
@@ -623,7 +621,7 @@
                 placeholder: 'Silahkan pilih Diagnosa ICD-10',
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('api.eclaim.search_diagnosis') }}",
+                    url: "{{ route('get_diagnosis_eclaim') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 100,
@@ -661,27 +659,6 @@
                     cache: true
                 }
             });
-            // $("#obat").select2({
-            //     placeholder: 'Silahkan pilih obat',
-            //     theme: "bootstrap4",
-            //     ajax: {
-            //         url: "{{ route('api.simrs.get_obats') }}",
-            //         type: "get",
-            //         dataType: 'json',
-            //         delay: 100,
-            //         data: function(params) {
-            //             return {
-            //                 search: params.term // search term
-            //             };
-            //         },
-            //         processResults: function(response) {
-            //             return {
-            //                 results: response
-            //             };
-            //         },
-            //         cache: true
-            //     }
-            // });
         });
     </script>
     {{-- dynamic input --}}
@@ -699,7 +676,7 @@
                 placeholder: 'Silahkan pilih Diagnosa ICD-10',
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('api.eclaim.search_diagnosis') }}",
+                    url: "{{ route('get_diagnosis_eclaim') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 100,
