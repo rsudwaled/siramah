@@ -1126,20 +1126,20 @@
                 table.rows().remove().draw();
                 if (data.metadata.code == 200) {
                     $.each(data.response, function(key, value) {
-                        var btnlab = '';
-                        $.each(value.laboratorium, function(key, value) {
-                            var btn =
-                                '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
-                                value + '">Lihat</button> ';
-                            btnlab = btnlab + btn;
+                        var periksa = '';
+                        var btn =
+                            '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
+                            value.laboratorium + '">Lihat</button> ';
+                        $.each(value.pemeriksaan, function(key, value) {
+                            periksa = periksa + value + '<br>';
                         });
                         table.row.add([
                             value.tgl_masuk,
                             value.counter + " / " + value.kode_kunjungan,
                             value.no_rm + " / " + value.nama_px,
                             value.nama_unit,
-                            value.tgl_masuk,
-                            btnlab,
+                            periksa,
+                            btn,
                         ]).draw(false);
                     });
                 } else {
@@ -1192,7 +1192,6 @@
         function getHasilRadiologi() {
             var url = "{{ route('get_hasil_radiologi') }}?norm={{ $kunjungan->no_rm }}";
             var table = $('#tableRadiologi').DataTable();
-            alert(url);
             $.ajax({
                 type: "GET",
                 url: url,
@@ -1203,13 +1202,16 @@
                         var btnrongsen =
                             '<button class="btn btn-xs btn-primary" onclick="lihatHasilRongsen(this)"  data-norm="' +
                             value.no_rm + '">Rongsen</button> ';
+                        var btnexpertise =
+                            '<button class="btn btn-xs btn-primary" onclick="lihatExpertiseRad(this)"  data-header="' +
+                            value.header_id + '" data-detail="' + value.detail_id + '">Expertise</button> ';
                         table.row.add([
                             value.tgl_masuk,
                             value.counter + " / " + value.kode_kunjungan,
                             value.no_rm + " / " + value.nama_px,
                             value.nama_unit,
-                            value.tgl_masuk,
-                            btnrongsen,
+                            value.pemeriksaan,
+                            btnrongsen + ' ' + btnexpertise,
                         ]).draw(false);
                     });
                 } else {
@@ -1227,6 +1229,15 @@
             var norm = $(button).data('norm');
             var url = "http://192.168.10.17/ZFP?mode=proxy&lights=on&titlebar=on#View&ris_pat_id=" + norm +
                 "&un=radiologi&pw=YnanEegSoQr0lxvKr59DTyTO44qTbzbn9koNCrajqCRwHCVhfQAddGf%2f4PNjqOaV";
+            $('#dataUrlRongsen').attr('src', url);
+            $('#modalRongsen').modal('show');
+        }
+
+        function lihatExpertiseRad(button) {
+            var header = $(button).data('header');
+            var detail = $(button).data('detail');
+            var url = "https://192.168.2.233/expertise/cetak0.php?IDs=" + header + "&IDd=" + detail +
+                "&tgl_cetak={{ now()->format('Y-m-d') }}";
             $('#dataUrlRongsen').attr('src', url);
             $('#modalRongsen').modal('show');
         }

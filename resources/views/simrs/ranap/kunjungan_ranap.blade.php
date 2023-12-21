@@ -129,7 +129,7 @@
                         var addedRow = table.row.add([
                             value.tgl_masuk,
                             value.tgl_keluar,
-                            value.counter + ' / ' + value.kode_kunjungan + ' ' + btn,
+                            btn + ' ' + value.counter + ' / ' + value.kode_kunjungan,
                             value.no_rm + ' ' + value.pasien.nama_px,
                             value.pasien.no_Bpjs,
                             value.unit.nama_unit,

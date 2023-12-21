@@ -171,25 +171,20 @@ class RanapController extends APIController
                 $lab = [];
                 $pemeriksaan = [];
                 foreach ($kunjungan->layanans->where('kode_unit', 3002) as $key => $value) {
-                    $lab[] = $value->kode_layanan_header;
-                    //   @foreach ($lab->layanan_details as $laydet)
-                    //                                             - {{ $laydet->tarif_detail->tarif->NAMA_TARIF }} <br>
-                    //                                         @endforeach
-                    //                     $pemeriksaan = [];
+                    foreach ($value->layanan_details as $key => $laydet) {
+                        $pemeriksaan[] = $laydet->tarif_detail->tarif->NAMA_TARIF;
+                    }
+                    $data[] = [
+                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                        'tgl_masuk' => $kunjungan->tgl_masuk,
+                        'counter' => $kunjungan->counter,
+                        'no_rm' => $kunjungan->no_rm,
+                        'nama_px' => $kunjungan->pasien->nama_px,
+                        'nama_unit' => $kunjungan->unit->nama_unit,
+                        'laboratorium' =>  $value->kode_layanan_header,
+                        'pemeriksaan' =>  $pemeriksaan,
+                    ];
                 }
-
-
-                $data[] = [
-                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                    'tgl_masuk' => $kunjungan->tgl_masuk,
-                    'counter' => $kunjungan->counter,
-                    'no_rm' => $kunjungan->no_rm,
-                    'nama_px' => $kunjungan->pasien->nama_px,
-                    'nama_unit' => $kunjungan->unit->nama_unit,
-                    'laboratorium' =>  $lab,
-
-
-                ];
             }
         }
         return $this->sendResponse($data);
@@ -217,21 +212,19 @@ class RanapController extends APIController
                 $pemeriksaan = [];
                 foreach ($kunjungan->layanans->where('kode_unit', 3003) as $key => $value) {
                     foreach ($value->layanan_details as $key => $laydet) {
-                        $rad[] = [
-                            'lh_id' => $value->id,
-                            'ld_id' => $laydet->id,
+                        $data[] = [
+                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                            'tgl_masuk' => $kunjungan->tgl_masuk,
+                            'counter' => $kunjungan->counter,
+                            'no_rm' => $kunjungan->no_rm,
+                            'nama_px' => $kunjungan->pasien->nama_px,
+                            'nama_unit' => $kunjungan->unit->nama_unit,
+                            'header_id' =>   $value->id,
+                            'detail_id' =>   $laydet->id,
+                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
                         ];
                     }
                 }
-                $data[] = [
-                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                    'tgl_masuk' => $kunjungan->tgl_masuk,
-                    'counter' => $kunjungan->counter,
-                    'no_rm' => $kunjungan->no_rm,
-                    'nama_px' => $kunjungan->pasien->nama_px,
-                    'nama_unit' => $kunjungan->unit->nama_unit,
-                    'radiologi' =>  $rad,
-                ];
             }
         }
         return $this->sendResponse($data);
@@ -410,7 +403,6 @@ class RanapController extends APIController
             return $this->sendResponse('Berhasil diverifikasi');
         } else {
             return $this->sendError('Catatan tidak ditemukan');
-
         }
     }
     public function print_perkembangan_ranap(Request $request)
