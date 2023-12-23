@@ -347,7 +347,19 @@ class SuratKontrolController extends APIController
             $data = $response->response->histori;
             return $this->sendResponse($data, 200);
         } else {
-            return $this->sendError($response->metadate->message);
+            return $this->sendError($response->metadata->message);
+        }
+    }
+    public function get_surat_kontrol(Request $request)
+    {
+        $request['tahun'] = explode('-', $request->bulan)[0];
+        $request['bulan'] = explode('-', $request->bulan)[1];
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_peserta($request);
+        if ($response->metadata->code == 200) {
+            return $this->sendResponse($response->response->list, 200);
+        } else {
+            return $this->sendError($response->metadata->message);
         }
     }
 }

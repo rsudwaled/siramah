@@ -220,6 +220,46 @@ class RanapController extends APIController
         }
         return $this->sendResponse($data);
     }
+    public function get_hasil_patologi(Request $request)
+    {
+        $kodeunit = '3020';
+        $data = [];
+        $rad = [];
+        $detail = [];
+        if ($request->norm) {
+            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
+                ->whereHas('layanans', function ($query) use ($kodeunit) {
+                    $query->where('kode_unit', $kodeunit);
+                })
+                ->with([
+                    'unit',
+                    'pasien',
+                    'layanans', 'layanans.layanan_details',
+                    'layanans.layanan_details.tarif_detail',
+                    'layanans.layanan_details.tarif_detail.tarif',
+                ])
+                ->get();
+            foreach ($kunjungans as $key => $kunjungan) {
+                $pemeriksaan = [];
+                foreach ($kunjungan->layanans->where('kode_unit', 3020) as $key => $value) {
+                    foreach ($value->layanan_details as $key => $laydet) {
+                        $data[] = [
+                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                            'tgl_masuk' => $kunjungan->tgl_masuk,
+                            'counter' => $kunjungan->counter,
+                            'no_rm' => $kunjungan->no_rm,
+                            'nama_px' => $kunjungan->pasien->nama_px,
+                            'nama_unit' => $kunjungan->unit->nama_unit,
+                            'header_id' =>   $value->id,
+                            'detail_id' =>   $laydet->id,
+                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
+                        ];
+                    }
+                }
+            }
+        }
+        return $this->sendResponse($data);
+    }
     public function kunjunganranapaktif(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])

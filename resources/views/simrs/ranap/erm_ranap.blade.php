@@ -25,13 +25,13 @@
                 <x-slot name="footerSlot">
                     <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
                         icon="fas fa-search" />
-                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload"
-                        icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
                         label="Laboratorium" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Patologi Anatomi"
+                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatLabPa()" theme="warning" label="Patologi Anatomi"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload"
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
@@ -39,8 +39,8 @@
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 btnCariSEP" theme="primary" label="SEP"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnCariSuratKontrol" theme="primary" label="Surat Kontrol"
-                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" onclick="cariSuratKontrol()" theme="primary"
+                        label="Surat Kontrol" icon="fas fa-file-medical" />
                 </x-slot>
             </x-adminlte-card>
         </div>
@@ -255,8 +255,7 @@
                                                 <div class="col-md-6">
                                                     <x-adminlte-input name="noSuratKontrol" igroup-size="sm"
                                                         label="Nomor Surat Kontrol" placeholder="Nomor SEP"
-                                                        value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}"
-                                                        readonly />
+                                                        value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}" readonly />
                                                     <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
                                                         label="Nomor SEP" placeholder="Nomor SEP"
                                                         value="{{ $kunjungan->surat_kontrol->noSepAsalKontrol }}"
@@ -655,9 +654,6 @@
             else
                 $(".pake_ventilator").hide();
         }
-    </script>
-    {{-- dynamic input --}}
-    <script>
         // row select diagnosa
         $("#rowAdder").click(function() {
             newRowAdd =
@@ -747,17 +743,6 @@
     </x-adminlte-modal>
     <script>
         $(function() {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
             $('.btnRiwayatKunjungan').click(function(e) {
                 $.LoadingOverlay("show");
                 getKunjunganPasien();
@@ -796,68 +781,7 @@
             }
         });
     </script>
-    {{-- rincian biaya kunjungan --}}
-    {{-- <x-adminlte-modal id="modalRincianBiaya" name="modalRincianBiaya" title="Rincian Biaya Pasien" theme="success"
-        icon="fas fa-file-medical" size="xl">
-        <div class="row">
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-5">Prosedur Bedah</dt>
-                    <dd class="col-sm-7">: <span class="prosedur_non_bedah"></span></dd>
-                    <dt class="col-sm-5">Prosedur Non Bedah</dt>
-                    <dd class="col-sm-7">: <span class="prosedur_bedah"></span></dd>
-                    <dt class="col-sm-5">Tenaga Ahli</dt>
-                    <dd class="col-sm-7">: <span class="tenaga_ahli"></span></dd>
-                    <dt class="col-sm-5">radiologi</dt>
-                    <dd class="col-sm-7">: <span class="radiologi"></span></dd>
-                    <dt class="col-sm-5">laboratorium</dt>
-                    <dd class="col-sm-7">: <span class="laboratorium"></span></dd>
-                    <dt class="col-sm-5">rehabilitasi</dt>
-                    <dd class="col-sm-7">: <span class="rehabilitasi"></span></dd>
-                    <dt class="col-sm-5">sewa_alat</dt>
-                    <dd class="col-sm-7">: <span class="sewa_alat"></span></dd>
-                    <dt class="col-sm-5">keperawatan</dt>
-                    <dd class="col-sm-7">: <span class="keperawatan"></span></dd>
-                    <dt class="col-sm-5">kamar_akomodasi</dt>
-                    <dd class="col-sm-7">: <span class="kamar_akomodasi"></span></dd>
-                </dl>
-            </div>
-            <div class="col-md-6">
-                <dl class="row">
-                    <dt class="col-sm-5">penunjang</dt>
-                    <dd class="col-sm-7">: <span class="penunjang"></span></dd>
-                    <dt class="col-sm-5">konsultasi</dt>
-                    <dd class="col-sm-7">: <span class="konsultasi"></span></dd>
-                    <dt class="col-sm-5">pelayanan_darah</dt>
-                    <dd class="col-sm-7">: <span class="pelayanan_darah"></span></dd>
-                    <dt class="col-sm-5">rawat_intensif</dt>
-                    <dd class="col-sm-7">: <span class="rawat_intensif"></span></dd>
-                    <dt class="col-sm-5">obat</dt>
-                    <dd class="col-sm-7">: <span class="obat"></span></dd>
-                    <dt class="col-sm-5">alkes</dt>
-                    <dd class="col-sm-7">: <span class="alkes"></span></dd>
-                    <dt class="col-sm-5">bmhp</dt>
-                    <dd class="col-sm-7">: <span class="bmhp"></span></dd>
-                    <dt class="col-sm-5">obat_kronis</dt>
-                    <dd class="col-sm-7">: <span class="obat_kronis"></span></dd>
-                    <dt class="col-sm-5">obat_kemo</dt>
-                    <dd class="col-sm-7">: <span class="obat_kemo"></span></dd>
-                    <dt class="col-sm-5">tarif_rs</dt>
-                    <dd class="col-sm-7">: <span class="tarif_rs"></span></dd>
-                </dl>
-            </div>
-            <div class="col-md-12">
-                @php
-                    $heads = ['Tgl', 'Unit', 'Group Vclaim', 'Nama Tarif', 'Grandtotal'];
-                    $config['paging'] = false;
-                    $config['info'] = false;
-                @endphp
-                <x-adminlte-datatable id="tableRincianBiaya" class="nowrap text-xs" :heads="$heads" :config="$config"
-                    bordered hoverable compressed>
-                </x-adminlte-datatable>
-            </div>
-        </div>
-    </x-adminlte-modal> --}}
+    {{-- rincian biaya --}}
     <script>
         $(function() {
             getRincianBiaya();
@@ -1216,20 +1140,179 @@
             $('#modalRongsen').modal('show');
         }
     </script>
+    {{-- laboratorium --}}
+    <x-adminlte-modal id="modalPatologi" name="modalPatologi" title="Hasil Patologi Anatomi Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl">
+        @php
+            $heads = ['Tgl Masuk', 'Kunjungan', 'Pasien', 'Unit', 'Pemeriksaan', 'Action'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+        @endphp
+        <x-adminlte-datatable id="tablePatologi" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
+    <x-adminlte-modal id="modalLabPA" name="modalLabPA" title="Hasil Patologi Anatomi Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl">
+        <iframe id="dataHasilLabPa" src="" height="600px" width="100%" title="Iframe Example"></iframe>
+        <x-slot name="footerSlot">
+            <a href="" id="urlHasilLabPa" target="_blank" class="btn btn-primary mr-auto">
+                <i class="fas fa-download "></i>Download</a>
+            <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+        </x-slot>
+    </x-adminlte-modal>
+    <script>
+        function lihatLabPa() {
+            $.LoadingOverlay("show");
+            getLabPatologi();
+            $('#modalPatologi').modal('show');
+        }
+
+        function getLabPatologi() {
+            var url = "{{ route('get_hasil_patologi') }}?norm={{ $kunjungan->no_rm }}";
+            var table = $('#tablePatologi').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        var periksa = '';
+                        var btn =
+                            '<button class="btn btn-xs btn-primary" onclick="showHasilPa(this)"  data-kode="' +
+                            value.detail_id + '">Lihat</button> ';
+                        table.row.add([
+                            value.tgl_masuk,
+                            value.counter + " / " + value.kode_kunjungan,
+                            value.no_rm + " / " + value.nama_px,
+                            value.nama_unit,
+                            value.pemeriksaan,
+                            btn,
+                        ]).draw(false);
+                    });
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+                $.LoadingOverlay("hide");
+            });
+        }
+
+        function showHasilPa(button) {
+            var kode = $(button).data('kode');
+            var url = "http://192.168.2.212:81/simrswaled/SimrsPrint/printEX/" +
+                kode;
+            $('#dataHasilLabPa').attr('src', url);
+            $('#urlHasilLabPa').attr('href', url);
+            $('#modalLabPA').modal('show');
+        }
+    </script>
     {{-- suratkontrol --}}
+    <x-adminlte-modal id="modalCariSuratKontrol" name="modalCariSuratKontrol" title="Surat Kontrol Pasien"
+        theme="success" icon="fas fa-file-medical" size="xl">
+        <form name="formCariSuratKontrol" id="formCariSuratKontrol">
+            <div class="row">
+                <div class="col-4">
+                    @php
+                        $config = ['format' => 'YYYY-MM'];
+                    @endphp
+                    <x-adminlte-input-date igroup-size="sm" name="bulan" label="Tanggal Antrian" :config="$config"
+                        value="{{ now()->format('Y-m') }}" placeholder="Pilih Bulan">
+                    </x-adminlte-input-date>
+                </div>
+                <div class="col-4">
+                    <x-adminlte-input igroup-size="sm" name="nomorkartu" label="Nomor Kartu"
+                        value="{{ $pasien->no_Bpjs }}" placeholder="Pencarian Berdasarkan Nomor Kartu BPJS">
+                    </x-adminlte-input>
+                </div>
+                <div class="col-4">
+                    <x-adminlte-select2 igroup-size="sm" name="formatfilter" label="Format Filter">
+                        <option value="1">Tanggal Entri</option>
+                        <option value="2" selected>Tanggal Kontrol </option>
+                    </x-adminlte-select2>
+                </div>
+            </div>
+            <x-adminlte-button theme="primary" class="btn btn-sm mb-2" icon="fas fa-search" label="Submit Pencarian"
+                onclick="getSuratKontrol()" />
+            <x-adminlte-button theme="success" class="btn btn-sm mb-2" icon="fas fa-plus" label="Buat Surat Kontrol" />
+        </form>
+        @php
+            $heads = ['Tgl Kontrol', 'No S.Kontrol', 'Jenis Surat', 'Poliklinik', 'Dokter', 'No SEP Asal', 'Terbit SEP', 'Action'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+            $config['searching'] = false;
+        @endphp
+        <x-adminlte-datatable id="tableSuratKontrol" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
+    <x-adminlte-modal id="modalSuratKontrol" name="modalSuratKontrol" size="lg" title="Surat Kontrol Pasien"
+        theme="success" icon="fas fa-file-medical">
+        <form id="formSuratKontrol" name="formSuratKontrol">
+            @csrf
+            {{-- <x-adminlte-input name="nama_suratkontrol" label="Nama Pasien" readonly />
+            <x-adminlte-input name="nomorkartu_suratkontrol" label="Nomor BPJS" readonly />
+            <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP" readonly>
+                <x-slot name="appendSlot">
+                    <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
+                </x-slot>
+                <x-slot name="prependSlot">
+                    <div class="input-group-text text-primary">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </x-slot>
+            </x-adminlte-input>
+            <x-adminlte-input name="nomor_suratkontrol" placeholder="Nomor Surat Kontrol" label="Nomor Surat Kontrol"
+                readonly />
+            @php
+                $config = [
+                    'format' => 'YYYY-MM-DD',
+                    'dayViewHeaderFormat' => 'MMMM YYYY',
+                    'minDate' => 'js:moment()',
+                    'daysOfWeekDisabled' => [0],
+                ];
+            @endphp
+            <x-adminlte-input-date name="tanggal_suratkontrol" label="Tanggal Rencana Surat Kontrol" :config="$config"
+                placeholder="Pilih Tanggal Surat Kontrol ..." value="">
+                <x-slot name="prependSlot">
+                    <div class="input-group-text bg-primary">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </x-slot>
+            </x-adminlte-input-date>
+            <x-adminlte-select2 name="kodepoli_suratkontrol" label="Poliklinik">
+                @foreach ($unit as $item)
+                    <option value="{{ $item->KDPOLI }}" {{ $item->KDPOLI == $request->kodepoli ? 'selected' : null }}>
+                        {{ $item->nama_unit }} ({{ $item->KDPOLI }})
+                    </option>
+                @endforeach
+            </x-adminlte-select2>
+            <x-adminlte-select2 name="kodedokter_suratkontrol" label="DPJP Surat Kontrol">
+                @foreach ($dokters as $item)
+                    <option value="{{ $item->kode_dokter_jkn }}"
+                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
+                        {{ $item->nama_paramedis }} ({{ $item->kode_dokter_jkn }})
+                    </option>
+                @endforeach
+            </x-adminlte-select2> --}}
+            <x-slot name="footerSlot">
+                <x-adminlte-button id="btnStore" class="mr-auto" icon="fas fa-file-plus" theme="success"
+                    label="Buat Surat Kontrol" />
+                <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning"
+                    label="Update Surat Kontrol" />
+                <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
+
     <script>
         $(function() {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
             $('.btnCariPoli').click(function(e) {
                 e.preventDefault();
                 $.LoadingOverlay("show");
@@ -1322,6 +1405,70 @@
                 $.LoadingOverlay("hide");
             });
         });
+
+        function cariSuratKontrol() {
+            $('#modalCariSuratKontrol').modal('show');
+        }
+
+        function getSuratKontrol() {
+            $.LoadingOverlay("show");
+            var data = $('#formCariSuratKontrol').serialize();
+            var url = "{{ route('get_surat_kontrol') }}?" + data;
+            var table = $('#tableSuratKontrol').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        btnprint =
+                            '<button class="btn btn-xs btn-success" onclick="printSuratKontrol(this)" data-nomorsuratkontrol="' +
+                            value.noSuratKontrol + '"><i class="fas fa-print"></i></button> ';
+                        btnedit =
+                            '<button class="btn btn-xs btn-warning"  onclick="editSuratKontrol(this)"><i class="fas fa-edit"></i></button> ';
+                        btndelete =
+                            '<button class="btn btn-xs btn-danger"  onclick="deleteSuratKontrol(this)"><i class="fas fa-trash"></i></button> ';
+                        if (value.terbitSEP == "Belum") {
+                            var btn = btnprint + btnedit + btndelete;
+                        } else {
+                            var btn = btnprint;
+                        }
+                        table.row.add([
+                            value.tglRencanaKontrol,
+                            value.noSuratKontrol,
+                            value.namaJnsKontrol,
+                            value.namaPoliTujuan,
+                            value.namaDokter,
+                            value.noSepAsalKontrol,
+                            value.terbitSEP,
+                            btn,
+                        ]).draw(false);
+                    });
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+                $.LoadingOverlay("hide");
+            });
+        }
+
+        function printSuratKontrol(button) {
+            var nomorsuratkontrol = $(button).data('nomorsuratkontrol');
+            var url = "{{ route('suratkontrol_print') }}?nomorsuratkontrol=" + nomorsuratkontrol;
+            window.open(url, '_blank');
+        }
+
+        function editSuratKontrol(button) {
+            $('#modalSuratKontrol').modal('show');
+        }
+
+        function deleteSuratKontrol(button) {
+            alert('delete');
+        }
     </script>
     {{-- perkembangan pasien soap --}}
     <x-adminlte-modal id="modalPerkembanganPasien" title="Catatan Perkembangan Pasien Rawat Inap" theme="warning"
@@ -1850,5 +1997,4 @@
             $.LoadingOverlay("hide");
         }
     </script>
-
 @endsection
