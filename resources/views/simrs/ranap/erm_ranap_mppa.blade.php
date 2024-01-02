@@ -55,7 +55,6 @@
                     <x-adminlte-textarea name="identifikasi" label="e. Lingkungan tempat tinggal" rows="3"
                         igroup-size="sm">
                     </x-adminlte-textarea>
-
                 </div>
                 <div class="col-md-4">
                     <b>f. Dukungan keluarga, kemampuan merawat dari pemberi asuhan</b>

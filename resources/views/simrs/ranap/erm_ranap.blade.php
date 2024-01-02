@@ -175,18 +175,7 @@
                         {{-- mpp form a --}}
                         @include('simrs.ranap.erm_ranap_mppa')
                         {{-- mpp form b --}}
-                        <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" href="#mppformb">
-                                <h3 class="card-title">
-                                    Catatan Implementasi MPP (Form B)
-                                </h3>
-                            </a>
-                            <div id="mppformb" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div>
+                        @include('simrs.ranap.erm_ranap_mppb')
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- laboratorium --}}
