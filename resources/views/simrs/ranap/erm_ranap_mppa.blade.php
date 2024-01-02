@@ -55,6 +55,9 @@
                     <x-adminlte-textarea name="identifikasi" label="e. Lingkungan tempat tinggal" rows="3"
                         igroup-size="sm">
                     </x-adminlte-textarea>
+
+                </div>
+                <div class="col-md-4">
                     <b>f. Dukungan keluarga, kemampuan merawat dari pemberi asuhan</b>
                     <div class="form-group">
                         <div class="custom-control custom-radio">
@@ -130,10 +133,113 @@
                         </div>
                     </div>
                     <b>i. Riwayat Trauma / Kekerasan</b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidaktrauma"
+                                name="trauma">
+                            <label for="tidaktrauma" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adatrauma" value="Ada"
+                                name="trauma">
+                            <label for="adatrauma" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
                     <b>j. Pemahaman Tentang Kesehatan</b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak Tahu" id="tidaktahu"
+                                name="pahamkesehatan">
+                            <label for="tidaktahu" class="custom-control-label">Tidak Tahu</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="tahu1" value="Tahu"
+                                name="pahamkesehatan">
+                            <label for="tahu1" class="custom-control-label">Tahu</label>
+                        </div>
+                    </div>
                     <b>k. Harapan terhadap hasil asuhan, kemampuan menerima perubahan</b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
+                    <x-adminlte-input name="perkiraanranap" igroup-size="sm" label="l. Perkiraan Lama Ranap (Hari)"
+                        placeholder="Perkiraan Lama Ranap" />
+                    <b>m. Discharge Plan </b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
+                    <b>n. Perencanaan Lanjutan </b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
+                    <b>o. Aspek Legal </b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
+                    <b>3. Identifikasi Masalah - Resiko - Kesempatan </b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-4">
+                    <b>4. Perencanaan MPP </b>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
+                                name="harapan">
+                            <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
+                                name="harapan">
+                            <label for="adaberubah" class="custom-control-label">Ada</label>
+                        </div>
+                    </div>
                     <x-adminlte-textarea name="identifikasi" label="Jangka Pendek" rows="3" igroup-size="sm"
                         placeholder="Ya , ...">
                     </x-adminlte-textarea>
