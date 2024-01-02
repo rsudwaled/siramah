@@ -393,7 +393,7 @@ return [
                     'can' => 'farmasi',
                 ],
                 [
-                    'text' => 'Pasien Ranap Inap',
+                    'text' => 'Pasien Ranap Aktif',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'kunjunganranap',
                     'active' => ['kunjunganranap', 'pasienranapprofile'],

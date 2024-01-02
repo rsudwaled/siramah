@@ -172,6 +172,21 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- mpp form a --}}
+                        @include('simrs.ranap.erm_ranap_mppa')
+                        {{-- mpp form b --}}
+                        <div class="card card-info mb-1">
+                            <a class="card-header" data-toggle="collapse" href="#mppformb">
+                                <h3 class="card-title">
+                                    Catatan Implementasi MPP (Form B)
+                                </h3>
+                            </a>
+                            <div id="mppformb" class="collapse" role="tabpanel">
+                                <div class="card-body">
+                                    test
+                                </div>
+                            </div>
+                        </div>
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
                         {{-- laboratorium --}}
@@ -216,7 +231,7 @@
                             </div>
                         </div> --}}
                         {{-- suratkontrol --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion"
                                 href="#cSuratKontrol">
                                 <h3 class="card-title">
@@ -369,7 +384,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- pemulangan --}}
                         <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cPulang">
@@ -467,18 +482,7 @@
             </div>
         </div>
     </div>
-    <x-adminlte-modal id="modalSEP" name="modalSEP" title="SEP Peserta" theme="success" icon="fas fa-file-medical"
-        size="xl">
-        @php
-            $heads = ['tglSep', 'tglPlgSep', 'noSep', 'jnsPelayanan', 'poli', 'diagnosa', 'Action'];
-            $config['paging'] = false;
-            $config['order'] = ['0', 'desc'];
-            $config['info'] = false;
-        @endphp
-        <x-adminlte-datatable id="tableSEP" class="nowrap text-xs" :heads="$heads" :config="$config" bordered hoverable
-            compressed>
-        </x-adminlte-datatable>
-    </x-adminlte-modal>
+
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
@@ -1239,7 +1243,8 @@
             </div>
             <x-adminlte-button theme="primary" class="btn btn-sm mb-2" icon="fas fa-search" label="Submit Pencarian"
                 onclick="getSuratKontrol()" />
-            <x-adminlte-button theme="success" class="btn btn-sm mb-2" icon="fas fa-plus" label="Buat Surat Kontrol" />
+            <x-adminlte-button theme="success" onclick="buatSuratKontrol()" class="btn btn-sm mb-2" icon="fas fa-plus"
+                label="Buat Surat Kontrol" />
         </form>
         @php
             $heads = ['Tgl Kontrol', 'No S.Kontrol', 'Jenis Surat', 'Poliklinik', 'Dokter', 'No SEP Asal', 'Terbit SEP', 'Action'];
@@ -1256,61 +1261,73 @@
         theme="success" icon="fas fa-file-medical">
         <form id="formSuratKontrol" name="formSuratKontrol">
             @csrf
-            {{-- <x-adminlte-input name="nama_suratkontrol" label="Nama Pasien" readonly />
-            <x-adminlte-input name="nomorkartu_suratkontrol" label="Nomor BPJS" readonly />
-            <x-adminlte-input name="nomorsep_suratkontrol" label="Nomor SEP" placeholder="Cari nomor SEP" readonly>
-                <x-slot name="appendSlot">
-                    <x-adminlte-button theme="primary" id="btnCariSEP" label="Cari!" />
-                </x-slot>
-                <x-slot name="prependSlot">
-                    <div class="input-group-text text-primary">
-                        <i class="fas fa-search"></i>
-                    </div>
-                </x-slot>
-            </x-adminlte-input>
-            <x-adminlte-input name="nomor_suratkontrol" placeholder="Nomor Surat Kontrol" label="Nomor Surat Kontrol"
-                readonly />
-            @php
-                $config = [
-                    'format' => 'YYYY-MM-DD',
-                    'dayViewHeaderFormat' => 'MMMM YYYY',
-                    'minDate' => 'js:moment()',
-                    'daysOfWeekDisabled' => [0],
-                ];
-            @endphp
-            <x-adminlte-input-date name="tanggal_suratkontrol" label="Tanggal Rencana Surat Kontrol" :config="$config"
-                placeholder="Pilih Tanggal Surat Kontrol ..." value="">
-                <x-slot name="prependSlot">
-                    <div class="input-group-text bg-primary">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                </x-slot>
-            </x-adminlte-input-date>
-            <x-adminlte-select2 name="kodepoli_suratkontrol" label="Poliklinik">
-                @foreach ($unit as $item)
-                    <option value="{{ $item->KDPOLI }}" {{ $item->KDPOLI == $request->kodepoli ? 'selected' : null }}>
-                        {{ $item->nama_unit }} ({{ $item->KDPOLI }})
-                    </option>
-                @endforeach
-            </x-adminlte-select2>
-            <x-adminlte-select2 name="kodedokter_suratkontrol" label="DPJP Surat Kontrol">
-                @foreach ($dokters as $item)
-                    <option value="{{ $item->kode_dokter_jkn }}"
-                        {{ $item->kode_dokter_jkn == $request->kodedokter ? 'selected' : null }}>
-                        {{ $item->nama_paramedis }} ({{ $item->kode_dokter_jkn }})
-                    </option>
-                @endforeach
-            </x-adminlte-select2> --}}
+            <div class="row">
+                <div class="col-md-6">
+                    <x-adminlte-input name="noSep" class="nomorsep-id" igroup-size="sm" label="Nomor SEP"
+                        value="{{ $kunjungan->no_sep }}" placeholder="Nomor SEP" readonly>
+                        <x-slot name="appendSlot">
+                            <div class="btn btn-primary" onclick="cariSEP()">
+                                <i class="fas fa-search"></i> Cari SEP
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input>
+                    <x-adminlte-input name="nomorkartu" class="nomorkartu-id" value="{{ $pasien->no_Bpjs }}"
+                        igroup-size="sm" label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
+                    <x-adminlte-input name="norm" class="norm-id" label="No RM" igroup-size="sm"
+                        placeholder="No RM " value="{{ $pasien->no_rm }}" readonly />
+                    <x-adminlte-input name="nama" class="nama-id" value="{{ $pasien->nama_px }}" label="Nama Pasien"
+                        igroup-size="sm" placeholder="Nama Pasien" readonly />
+                    <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP" igroup-size="sm"
+                        placeholder="Nomor HP" />
+                </div>
+                <div class="col-md-6">
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm" label="Tanggal Rencana Kontrol"
+                        placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
+                        <x-slot name="appendSlot">
+                            <div class="btn btn-primary btnCariPoli">
+                                <i class="fas fa-search"></i> Cari Poli
+                            </div>
+                        </x-slot>
+                    </x-adminlte-input-date>
+                    <x-adminlte-select igroup-size="sm" name="poliKontrol" label="Poliklinik">
+                        <option selected disabled>Silahkan Klik Cari Poliklinik</option>
+                        <x-slot name="appendSlot">
+                            <div class="btn btn-primary btnCariDokter">
+                                <i class="fas fa-search"></i> Cari Dokter
+                            </div>
+                        </x-slot>
+                    </x-adminlte-select>
+                    <x-adminlte-select igroup-size="sm" name="kodeDokter" label="Dokter">
+                        <option selected disabled>Silahkan Klik Cari Dokter</option>
+                    </x-adminlte-select>
+                    <x-adminlte-textarea igroup-size="sm" label="Catatan" name="catatan" placeholder="Catatan Pasien" />
+                    <input type="hidden" name="user" value="{{ Auth::user()->name }}">
+                </div>
+            </div>
             <x-slot name="footerSlot">
-                <x-adminlte-button id="btnStore" class="mr-auto" icon="fas fa-file-plus" theme="success"
-                    label="Buat Surat Kontrol" />
-                <x-adminlte-button id="btnUpdate" class="mr-auto" icon="fas fa-edit" theme="warning"
+                <x-adminlte-button id="btnStoreSuratKontrol" class="mr-auto" icon="fas fa-file-plus" theme="success"
+                    label="Buat Surat Kontrol" onclick="simpanSuratKontrol()" />
+                <x-adminlte-button id="btnUpdateSuratKontrol" class="mr-auto" icon="fas fa-edit" theme="warning"
                     label="Update Surat Kontrol" />
                 <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
             </x-slot>
         </form>
     </x-adminlte-modal>
-
+    <x-adminlte-modal id="modalSEP" name="modalSEP" title="SEP Peserta" theme="success" icon="fas fa-file-medical"
+        size="xl">
+        @php
+            $heads = ['tglSep', 'tglPlgSep', 'noSep', 'jnsPelayanan', 'poli', 'diagnosa', 'Action'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+        @endphp
+        <x-adminlte-datatable id="tableSEP" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
     <script>
         $(function() {
             $('.btnCariPoli').click(function(e) {
@@ -1406,6 +1423,66 @@
             });
         });
 
+        function cariSEP() {
+            var nomorkartu = $('.nomorkartu-id').val();
+            $('#modalSEP').modal('show');
+            var table = $('#tableSEP').DataTable();
+            table.rows().remove().draw();
+            $.LoadingOverlay("show");
+            var url = "{{ route('suratkontrol_sep') }}?nomorkartu=" + nomorkartu;
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: 'json',
+                success: function(data) {
+                    if (data.metadata.code == 200) {
+                        $.each(data.response, function(key, value) {
+                            if (value.jnsPelayanan == 1) {
+                                var jenispelayanan = "Rawat Inap";
+                            }
+                            if (value.jnsPelayanan == 2) {
+                                var jenispelayanan = "Rawat Jalan";
+                            }
+                            table.row.add([
+                                value.tglSep,
+                                value.tglPlgSep,
+                                value.noSep,
+                                jenispelayanan,
+                                value.poli,
+                                value.diagnosa,
+                                "<button class='btnPilihSEP btn btn-success btn-xs' data-id=" +
+                                value.noSep +
+                                ">Pilih</button>",
+                            ]).draw(false);
+
+                        });
+                        $('.btnPilihSEP').click(function() {
+                            var nomorsep = $(this).data('id');
+                            $.LoadingOverlay("show");
+                            $('.nomorsep-id').val(nomorsep);
+                            $('#modalSEP').modal('hide');
+                            $.LoadingOverlay("hide");
+                        });
+                    } else {
+                        swal.fire(
+                            'Error ' + data.metadata.code,
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                    $.LoadingOverlay("hide");
+                },
+                error: function(data) {
+                    // swal.fire(
+                    //     'Error ' + data.metadata.code,
+                    //     data.metadata.message,
+                    //     'error'
+                    // );
+                    $.LoadingOverlay("hide");
+                }
+            });
+        }
+
         function cariSuratKontrol() {
             $('#modalCariSuratKontrol').modal('show');
         }
@@ -1462,7 +1539,45 @@
             window.open(url, '_blank');
         }
 
+        function buatSuratKontrol(button) {
+            $('#btnStoreSuratKontrol').show();
+            $('#btnUpdateSuratKontrol').hide();
+            $('#modalSuratKontrol').modal('show');
+        }
+
+        function simpanSuratKontrol() {
+            $.LoadingOverlay("show");
+            var data = $('#formSuratKontrol').serialize();
+            console.log(data);
+            var url = "{{ route('api.suratkontrol_insert') }}";
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data,
+            }).done(function(data) {
+                console.log(data);
+                // table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    Swal.fire(
+                        'Berhasil Buat Surat Kontrol',
+                        data.metadata.message,
+                        'success'
+                    );
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+                $.LoadingOverlay("hide");
+            });
+
+        }
+
         function editSuratKontrol(button) {
+            $('#btnStoreSuratKontrol').hide();
+            $('#btnUpdateSuratKontrol').show();
             $('#modalSuratKontrol').modal('show');
         }
 

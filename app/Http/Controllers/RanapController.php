@@ -83,7 +83,6 @@ class RanapController extends APIController
     public function pasienranapprofile(Request $request)
     {
         $kunjungan = Kunjungan::with([
-            'pasien',
             'dokter',
             'unit',
             'alasan_masuk',
