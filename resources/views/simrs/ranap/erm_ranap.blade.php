@@ -46,7 +46,7 @@
         </div>
         <div class="col-md-12">
             <div class="card card-primary card-outline">
-                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 800px ;">
+                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
@@ -1127,7 +1127,7 @@
         function lihatExpertiseRad(button) {
             var header = $(button).data('header');
             var detail = $(button).data('detail');
-            var url = "https://192.168.2.233/expertise/cetak0.php?IDs=" + header + "&IDd=" + detail +
+            var url = "http://192.168.2.233/expertise/cetak0.php?IDs=" + header + "&IDd=" + detail +
                 "&tgl_cetak={{ now()->format('Y-m-d') }}";
             $('#dataUrlRongsen').attr('src', url);
             $('#modalRongsen').modal('show');

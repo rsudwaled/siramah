@@ -288,7 +288,6 @@ class RanapController extends APIController
     }
     public function simpan_resume_ranap(Request $request)
     {
-
         $erm = ErmRanap::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,

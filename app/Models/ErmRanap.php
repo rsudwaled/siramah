@@ -9,6 +9,6 @@ class ErmRanap extends Model
 {
     use HasFactory;
     protected $connection = 'mysql2';
-    protected $table = 'erm_ranap';
+    protected $table = 'erm_ranap_resume';
     protected $guarded = ['id'];
 }

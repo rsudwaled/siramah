@@ -13,7 +13,7 @@
                 <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
                 <input type="hidden" name="counter" value="{{ $kunjungan->counter }}">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <x-adminlte-textarea name="ringkasan_perawatan" label="Ringkasan Perawatan" rows="3"
                             igroup-size="sm" placeholder="Ringkasan Perawatan">
                             {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
@@ -30,8 +30,6 @@
                             igroup-size="sm" placeholder="Pemeriksaan Fisik">
                             {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
                         </x-adminlte-textarea>
-                    </div>
-                    <div class="col-md-4">
                         <x-adminlte-textarea name="catatan_laboratorium" label="Pemeriksaan Laboratorium" rows="3"
                             igroup-size="sm" placeholder="Pemeriksaan Laboratorium">
                             {{ $kunjungan->erm_ranap->catatan_laboratorium ?? null }}
@@ -49,7 +47,8 @@
                             {{ $kunjungan->erm_ranap->hasil_konsultasi ?? null }}
                         </x-adminlte-textarea>
                     </div>
-                    <div class="col-md-4">
+
+                    <div class="col-md-3">
                         <x-adminlte-textarea name="diagnosa_masuk" label="Diagnosa Masuk" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Masuk">
                             {{ $kunjungan->erm_ranap->diagnosa_masuk ?? null }}
@@ -70,14 +69,21 @@
                             igroup-size="sm" placeholder="Diagnosa ICD-10">
                             {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="tindakan" label="Tindakan" rows="3" igroup-size="sm"
-                            placeholder="Tindakan">
+                        <x-adminlte-textarea name="tindakan" label="Tindakan Operasi" rows="3" igroup-size="sm"
+                            placeholder="Tindakan Operasi">
+                            {{ $kunjungan->erm_ranap->tindakan ?? null }}
+                        </x-adminlte-textarea>
+                        <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3"
+                            igroup-size="sm" placeholder="Tindakan / Prosedur">
                             {{ $kunjungan->erm_ranap->tindakan ?? null }}
                         </x-adminlte-textarea>
                         <x-adminlte-textarea name="tindakan_icd9" label="Tindakan ICD-9" rows="3"
                             igroup-size="sm" placeholder="Tindakan ICD-9">
                             {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
                         </x-adminlte-textarea>
+                    </div>
+                    <div class="col-md-3">
+
                     </div>
                 </div>
                 <button type="submit" form="formResume" class="btn btn-success">
