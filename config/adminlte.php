@@ -320,7 +320,7 @@ return [
         // PELAYANAN
         [
             'text'    => 'Aplikasi Pelayanan',
-            'icon'    => 'fas fa-hand-holding-medical',
+            'icon'    => 'fas fa-clinic-medical',
             'submenu' => [
                 [
                     'text' => 'Aplikasi Mesin Antrian',
