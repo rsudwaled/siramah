@@ -394,7 +394,7 @@ return [
                 ],
                 [
                     'text' => 'Pasien Ranap Aktif',
-                    'icon'    => 'fas fa-user-injured',
+                    'icon'    => 'fas fa-procedures',
                     'url'  => 'kunjunganranap',
                     'active' => ['kunjunganranap', 'pasienranapprofile'],
                     'shift'   => 'ml-2',

@@ -688,7 +688,7 @@
             newRowAdd =
                 '<div id="row" class="row"><div class="col-md-7"><div class="form-group"><div class="input-group">' +
                 '<div class="input-group-prepend"><span class="input-group-text">' +
-                '<i class="fas fa-hand-holding-medical "></i></span></div>' +
+                '<i class="fas fa-procedures "></i></span></div>' +
                 '<select name="procedure[]" class="form-control procedure "></select></div></div></div>' +
                 '<div class="col-md-3"><div class="form-group"><div class="input-group input-group-sm"><div class="input-group-prepend">' +
                 '<span class="input-group-text"><b>@</b></span></div><input type="number" class="form-control" value="1">' +
@@ -1494,7 +1494,8 @@
                         btnedit =
                             '<button class="btn btn-xs btn-warning"  onclick="editSuratKontrol(this)"><i class="fas fa-edit"></i></button> ';
                         btndelete =
-                            '<button class="btn btn-xs btn-danger"  onclick="deleteSuratKontrol(this)"><i class="fas fa-trash"></i></button> ';
+                            '<button class="btn btn-xs btn-danger"  onclick="deleteSuratKontrol(this)" data-nomorsurat="' +
+                            value.noSuratKontrol + '"><i class="fas fa-trash"></i></button> ';
                         if (value.terbitSEP == "Belum") {
                             var btn = btnprint + btnedit + btndelete;
                         } else {
@@ -1546,19 +1547,19 @@
             }).done(function(data) {
                 console.log(data);
                 // table.rows().remove().draw();
-                if (data.metadata.code == 200) {
-                    Swal.fire(
-                        'Berhasil Buat Surat Kontrol',
-                        data.metadata.message,
-                        'success'
-                    );
-                } else {
-                    Swal.fire(
-                        'Mohon Maaf !',
-                        data.metadata.message,
-                        'error'
-                    );
-                }
+                // if (data.metadata.code == 200) {
+                //     Swal.fire(
+                //         'Berhasil Buat Surat Kontrol',
+                //         data.metadata.message,
+                //         'success'
+                //     );
+                // } else {
+                //     Swal.fire(
+                //         'Mohon Maaf !',
+                //         data.metadata.message,
+                //         'error'
+                //     );
+                // }
                 $.LoadingOverlay("hide");
             });
 
@@ -1571,7 +1572,22 @@
         }
 
         function deleteSuratKontrol(button) {
-            alert('delete');
+            var nomorsurat = $(button).data('nomorsurat');
+            var url = "{{ route('api.suratkontrol_delete') }}";
+            var datax = {
+                noSuratKontrol: nomorsurat,
+                user: "sistem"
+            };
+            console.log(datax);
+            $.ajax({
+                type: "DELETE",
+                url: url,
+                data: datax,
+            }).done(function(data) {
+                console.log(data);
+                $.LoadingOverlay("hide");
+            });
+
         }
     </script>
     {{-- perkembangan pasien soap --}}

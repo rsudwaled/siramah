@@ -142,7 +142,8 @@
                                                     </span>
                                                 </div>
                                                 <select name="diagnosa[]" class="form-control diagnosaID ">
-                                                    <option value="{{ $item }}" selected>{{ $item }}</option>
+                                                    <option value="{{ $item }}" selected>{{ $item }}
+                                                    </option>
                                                 </select>
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-xs btn-danger "
@@ -158,19 +159,12 @@
                         @else
                             <div id="row">
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-diagnoses "></i>
-                                            </span>
-                                        </div>
-                                        <select name="diagnosa[]" class="form-control diagnosaID ">
-                                        </select>
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-xs btn-danger " id="DeleteRow">
-                                                <i class="fas fa-trash "></i> Hapus
-                                            </button>
-                                        </div>
+                                    <select name="diagnosa[]" class="form-control diagnosaID ">
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-xs btn-danger " id="DeleteRow">
+                                            <i class="fas fa-trash "></i> Hapus
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -190,17 +184,10 @@
                                     <div id="row" class="row">
                                         <div class="col-md-7">
                                             <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">
-                                                            <i class="fas fa-hand-holding-medical "></i>
-                                                        </span>
-                                                    </div>
-                                                    <select name="procedure[]" class="form-control procedure ">
-                                                        <option value="{{ $item }}" selected>
-                                                            {{ $item }}</option>
-                                                    </select>
-                                                </div>
+                                                <select name="procedure[]" class="form-control procedure ">
+                                                    <option value="{{ $item }}" selected>
+                                                        {{ $item }}</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
