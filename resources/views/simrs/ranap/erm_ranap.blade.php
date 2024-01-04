@@ -1545,21 +1545,21 @@
                 url: url,
                 data: data,
             }).done(function(data) {
-                console.log(data);
-                // table.rows().remove().draw();
-                // if (data.metadata.code == 200) {
-                //     Swal.fire(
-                //         'Berhasil Buat Surat Kontrol',
-                //         data.metadata.message,
-                //         'success'
-                //     );
-                // } else {
-                //     Swal.fire(
-                //         'Mohon Maaf !',
-                //         data.metadata.message,
-                //         'error'
-                //     );
-                // }
+                $('#modalSuratKontrol').modal('hide');
+                if (data.metadata.code == 200) {
+                    Swal.fire(
+                        'Berhasil Buat Surat Kontrol',
+                        data.metadata.message,
+                        'success'
+                    );
+                    getSuratKontrol();
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
                 $.LoadingOverlay("hide");
             });
 
@@ -1572,19 +1572,33 @@
         }
 
         function deleteSuratKontrol(button) {
+            $.LoadingOverlay("show");
             var nomorsurat = $(button).data('nomorsurat');
             var url = "{{ route('api.suratkontrol_delete') }}";
             var datax = {
                 noSuratKontrol: nomorsurat,
                 user: "sistem"
             };
-            console.log(datax);
             $.ajax({
                 type: "DELETE",
                 url: url,
                 data: datax,
             }).done(function(data) {
                 console.log(data);
+                if (data.metadata.code == 200) {
+                    Swal.fire(
+                        'Berhasil Buat Surat Kontrol',
+                        data.metadata.message,
+                        'success'
+                    );
+                    getSuratKontrol();
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
                 $.LoadingOverlay("hide");
             });
 
