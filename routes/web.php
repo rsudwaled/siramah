@@ -201,6 +201,8 @@ Route::middleware('auth')->group(function () {
     Route::post('verifikasi_soap_ranap', [RanapController::class, 'verifikasi_soap_ranap'])->name('verifikasi_soap_ranap');
     Route::get('get_perkembangan_ranap', [RanapController::class, 'get_perkembangan_ranap'])->name('get_perkembangan_ranap');
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
+    Route::post('simpan_mppa', [RanapController::class, 'simpan_mppa'])->name('simpan_mppa');
+
 
 
 

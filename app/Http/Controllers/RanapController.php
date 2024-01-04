@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
+use App\Models\ErmRanapMppa;
 use App\Models\ErmRanapObservasi;
 use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
@@ -299,6 +300,19 @@ class RanapController extends APIController
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
         return redirect()->back();
     }
+    public function simpan_mppa(Request $request)
+    {
+        $erm = ErmRanapMppa::updateOrCreate(
+            [
+                'kode_kunjungan' => $request->kode_kunjungan,
+                'norm' => $request->norm,
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Data MPP Form A Berhasil Disimpan');
+        return redirect()->back();
+    }
+
     public function print_resume_ranap(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
