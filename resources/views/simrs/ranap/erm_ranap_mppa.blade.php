@@ -22,21 +22,21 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Mandiri Penuh"
                                     id="mandiripenuh" name="kemampuan"
-                                    {{ $kunjungan->erm_ranap_mppa->kemampuan == 'Mandiri Penuh' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->kemampuan == 'Mandiri Penuh' ? 'checked' : null) : null }}>
                                 <label for="mandiripenuh" class="custom-control-label">Mandiri
                                     Penuh</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="mandirisebagian"
                                     value="Mandiri Sebagian" name="kemampuan"
-                                    {{ $kunjungan->erm_ranap_mppa->kemampuan == 'Mandiri Sebagian' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->kemampuan == 'Mandiri Sebagian' ? 'checked' : null) : null }}>
                                 <label for="mandirisebagian" class="custom-control-label">Mandiri
                                     Sebagian</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" value="Total Bantuan" type="radio" id="bantuan"
                                     name="kemampuan"
-                                    {{ $kunjungan->erm_ranap_mppa->kemampuan == 'Total Bantuan' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->kemampuan == 'Total Bantuan' ? 'checked' : null) : null }}>
                                 <label for="bantuan" class="custom-control-label">Total
                                     Bantuan</label>
                             </div>
@@ -146,12 +146,14 @@
                         <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak" id="tidaktrauma"
-                                    name="trauma">
+                                    name="trauma"
+                                    {{ $kunjungan->erm_ranap_mppa->trauma == 'Tidak' ? 'checked' : null }}>
                                 <label for="tidaktrauma" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="adatrauma" value="Ada"
-                                    name="trauma">
+                                    name="trauma"
+                                    {{ $kunjungan->erm_ranap_mppa->trauma == 'Ada' ? 'checked' : null }}>
                                 <label for="adatrauma" class="custom-control-label">Ada</label>
                             </div>
                         </div>
@@ -159,12 +161,14 @@
                         <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak Tahu" id="tidaktahu"
-                                    name="pahamkesehatan">
+                                    name="paham"
+                                    {{ $kunjungan->erm_ranap_mppa->paham == 'Tidak Tahu' ? 'checked' : null }}>
                                 <label for="tidaktahu" class="custom-control-label">Tidak Tahu</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="tahu1" value="Tahu"
-                                    name="pahamkesehatan">
+                                    name="paham"
+                                    {{ $kunjungan->erm_ranap_mppa->paham == 'Tahu' ? 'checked' : null }}>
                                 <label for="tahu1" class="custom-control-label">Tahu</label>
                             </div>
                         </div>
@@ -172,17 +176,20 @@
                         <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
+                                    name="harapan"
+                                    {{ $kunjungan->erm_ranap_mppa->harapan == 'Tidak' ? 'checked' : null }}>
                                 <label for="tidakberubah" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
+                                    name="harapan"
+                                    {{ $kunjungan->erm_ranap_mppa->harapan == 'Ada' ? 'checked' : null }}>
                                 <label for="adaberubah" class="custom-control-label">Ada</label>
                             </div>
                         </div>
-                        <x-adminlte-input name="perkiraanranap" igroup-size="sm"
-                            label="l. Perkiraan Lama Ranap (Hari)" placeholder="Perkiraan Lama Ranap" />
+                        <x-adminlte-input name="perkiraan_inap" igroup-size="sm"
+                            label="l. Perkiraan Lama Ranap (Hari)" type="number" placeholder="Perkiraan Lama Ranap"
+                            value="{{ $kunjungan->erm_ranap_mppa->perkiraan_inap }}" />
                         <b>m. Discharge Plan </b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">

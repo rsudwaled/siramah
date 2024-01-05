@@ -39,6 +39,22 @@ class PendaftaranController extends APIController
             ]
         ));
     }
+    public function mesinantrian()
+    {
+        $jadwals = JadwalDokter::where('hari',  now()->dayOfWeek)
+            ->orderBy('namasubspesialis', 'asc')->get();
+        $antrians = Antrian::whereDate('tanggalperiksa', now()->format('Y-m-d'))->get();
+        return view('simrs.antrian_mesin', compact(
+            [
+                'jadwals',
+                'antrians',
+            ]
+        ));
+    }
+    public function testmesinantrian(Request $request)
+    {
+        return view('simrs.antrian_testprint');
+    }
     public function checkinAntrian(Request $request)
     {
         $antrian = null;
@@ -605,6 +621,79 @@ class PendaftaranController extends APIController
             Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
             return redirect()->route('antrianConsole');
         }
+    }
+    public function ambil_antrian_offline_bpjs(Request $request)
+    {
+        $request['tanggalperiksa'] = now()->format('Y-m-d');
+        $request['kodepoli'] = $request->kodesubspesialis;
+        $validator = Validator::make(request()->all(), [
+            "kodesubspesialis" => "required",
+            "kodedokter" => "required",
+        ]);
+        if ($validator->fails()) {
+            Alert::error('Error', $validator->errors()->first());
+            return redirect()->route('antrianConsole');
+        }
+        // get jadwal
+        $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrianConsole');
+        }
+        $request['jampraktek'] = $jadwal->jadwal;
+        $request['jenispasien'] = 'JKN';
+        $request['method'] = 'Offline';
+        // ambil antrian offline
+        $response = $this->ambil_antrian_offline($request);
+        if ($response->metadata->code == 200) {
+            $antrian = $response->response;
+            return $this->print_karcis_antrian($request, $antrian);
+        } else {
+            Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
+            return redirect()->route('mesinantrian');
+        }
+    }
+    public function ambil_antrian_offline_umum(Request $request)
+    {
+        $request['tanggalperiksa'] = now()->format('Y-m-d');
+        $request['kodepoli'] = $request->kodesubspesialis;
+        $validator = Validator::make(request()->all(), [
+            "kodesubspesialis" => "required",
+            "kodedokter" => "required",
+        ]);
+        if ($validator->fails()) {
+            Alert::error('Error', $validator->errors()->first());
+            return redirect()->route('antrianConsole');
+        }
+        // get jadwal
+        $jadwal = JadwalDokter::where('kodesubspesialis', $request->kodesubspesialis)
+            ->where('kodedokter', $request->kodedokter)
+            ->where('hari', now()->dayOfWeek)->first();
+        if ($jadwal == null) {
+            Alert::error('Error',  "Jadwal tidak ditemukan");
+            return redirect()->route('antrianConsole');
+        }
+        $request['jampraktek'] = $jadwal->jadwal;
+        $request['jenispasien'] = 'NON-JKN';
+        $request['method'] = 'Offline';
+        // ambil antrian offline
+        $response = $this->ambil_antrian_offline($request);
+        if ($response->metadata->code == 200) {
+            $antrian = $response->response;
+            return $this->print_karcis_antrian($request, $antrian);
+        } else {
+            Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
+            return redirect()->route('mesinantrian');
+        }
+    }
+    public function print_karcis_antrian(Request $request, $antrian)
+    {
+        return view('simrs.antrian_karcis_print', compact([
+            'request',
+            'antrian',
+        ]));
     }
     public function ambil_antrian_offline(Request $request) #ambil antrian mesin antrian
     {

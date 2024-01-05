@@ -79,6 +79,14 @@ Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_st
 Route::get('jadwaloperasi_info', [JadwalOperasiController::class, 'jadwaloperasi_info'])->name('jadwaloperasi_info');
 Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
 // mesin antrian
+Route::get('mesinantrian', [PendaftaranController::class, 'mesinantrian'])->name('mesinantrian');
+Route::get('testmesinantrian', [PendaftaranController::class, 'testmesinantrian'])->name('testmesinantrian');
+Route::get('ambil_antrian_offline_bpjs', [PendaftaranController::class, 'ambil_antrian_offline_bpjs'])->name('ambil_antrian_offline_bpjs');
+Route::get('ambil_antrian_offline_umum', [PendaftaranController::class, 'ambil_antrian_offline_umum'])->name('ambil_antrian_offline_umum');
+Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_antrian'])->name('print_karcis_antrian');
+
+
+
 Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
@@ -202,13 +210,6 @@ Route::middleware('auth')->group(function () {
     Route::get('get_perkembangan_ranap', [RanapController::class, 'get_perkembangan_ranap'])->name('get_perkembangan_ranap');
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
     Route::post('simpan_mppa', [RanapController::class, 'simpan_mppa'])->name('simpan_mppa');
-
-
-
-
-
-
-
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
