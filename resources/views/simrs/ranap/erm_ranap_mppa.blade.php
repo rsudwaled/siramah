@@ -68,13 +68,13 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Ya" id="dukunganya"
                                     name="dukungan"
-                                    {{ $kunjungan->erm_ranap_mppa->dukungan == 'Ya' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->dukungan == 'Ya' ? 'checked' : null) : null }}>
                                 <label for="dukunganya" class="custom-control-label">Ya</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="dukunganno" value="Tidak"
                                     name="dukungan"
-                                    {{ $kunjungan->erm_ranap_mppa->dukungan == 'Tidak' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->dukungan == 'Tidak' ? 'checked' : null) : null }}>
                                 <label for="dukunganno" class="custom-control-label">Tidak</label>
                             </div>
                         </div>
@@ -85,19 +85,19 @@
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" value="Baik" id="fbaik"
                                             name="finansial"
-                                            {{ $kunjungan->erm_ranap_mppa->finansial == 'Baik' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->finansial == 'Baik' ? 'checked' : null) : null }}>
                                         <label for="fbaik" class="custom-control-label">Baik</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" id="fsedang"
                                             value="Sedang" name="finansial"
-                                            {{ $kunjungan->erm_ranap_mppa->finansial == 'Sedang' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->finansial == 'Sedang' ? 'checked' : null) : null }}>
                                         <label for="fsedang" class="custom-control-label">Sedang</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" id="fburuk"
                                             value="Buruk" name="finansial"
-                                            {{ $kunjungan->erm_ranap_mppa->finansial == 'Buruk' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->finansial == 'Buruk' ? 'checked' : null) : null }}>
                                         <label for="fburuk" class="custom-control-label">Buruk</label>
                                     </div>
                                 </div>
@@ -108,19 +108,19 @@
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" value="Pribadi"
                                             id="jpribadi" name="jaminan"
-                                            {{ $kunjungan->erm_ranap_mppa->jaminan == 'Pribadi' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->jaminan == 'Pribadi' ? 'checked' : null) : null }}>
                                         <label for="jpribadi" class="custom-control-label">Pribadi</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" id="jasuransi"
                                             value="Asuransi" name="jaminan"
-                                            {{ $kunjungan->erm_ranap_mppa->jaminan == 'Asuransi' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->jaminan == 'Asuransi' ? 'checked' : null) : null }}>
                                         <label for="jasuransi" class="custom-control-label">Asuransi</label>
                                     </div>
                                     <div class="custom-control custom-radio">
                                         <input class="custom-control-input" type="radio" id="jbpjs"
                                             value="JKN / BPJS" name="jaminan"
-                                            {{ $kunjungan->erm_ranap_mppa->jaminan == 'JKN / BPJS' ? 'checked' : null }}>
+                                            {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->jaminan == 'JKN / BPJS' ? 'checked' : null) : null }}>
                                         <label for="jbpjs" class="custom-control-label">JKN / BPJS</label>
                                     </div>
                                 </div>
@@ -132,13 +132,13 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Ya"
                                     id="obatalternatifya" name="pengobatan_alt"
-                                    {{ $kunjungan->erm_ranap_mppa->pengobatan_alt == 'Ya' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->pengobatan_alt == 'Ya' ? 'checked' : null) : null }}>
                                 <label for="obatalternatifya" class="custom-control-label">Ya</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="obatalternatiftidak"
                                     value="Tidak" name="pengobatan_alt"
-                                    {{ $kunjungan->erm_ranap_mppa->pengobatan_alt == 'Tidak' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->pengobatan_alt == 'Tidak' ? 'checked' : null) : null }}>
                                 <label for="obatalternatiftidak" class="custom-control-label">Tidak</label>
                             </div>
                         </div>
@@ -147,13 +147,13 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak" id="tidaktrauma"
                                     name="trauma"
-                                    {{ $kunjungan->erm_ranap_mppa->trauma == 'Tidak' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->trauma == 'Tidak' ? 'checked' : null) : null }}>
                                 <label for="tidaktrauma" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="adatrauma" value="Ada"
                                     name="trauma"
-                                    {{ $kunjungan->erm_ranap_mppa->trauma == 'Ada' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->trauma == 'Ada' ? 'checked' : null) : null }}>
                                 <label for="adatrauma" class="custom-control-label">Ada</label>
                             </div>
                         </div>
@@ -162,13 +162,13 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak Tahu" id="tidaktahu"
                                     name="paham"
-                                    {{ $kunjungan->erm_ranap_mppa->paham == 'Tidak Tahu' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->paham == 'Tidak Tahu' ? 'checked' : null) : null }}>
                                 <label for="tidaktahu" class="custom-control-label">Tidak Tahu</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="tahu1" value="Tahu"
                                     name="paham"
-                                    {{ $kunjungan->erm_ranap_mppa->paham == 'Tahu' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->paham == 'Tahu' ? 'checked' : null) : null }}>
                                 <label for="tahu1" class="custom-control-label">Tahu</label>
                             </div>
                         </div>
@@ -177,19 +177,19 @@
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
                                     name="harapan"
-                                    {{ $kunjungan->erm_ranap_mppa->harapan == 'Tidak' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->harapan == 'Tidak' ? 'checked' : null) : null }}>
                                 <label for="tidakberubah" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
                                     name="harapan"
-                                    {{ $kunjungan->erm_ranap_mppa->harapan == 'Ada' ? 'checked' : null }}>
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->harapan == 'Ada' ? 'checked' : null) : null }}>
                                 <label for="adaberubah" class="custom-control-label">Ada</label>
                             </div>
                         </div>
                         <x-adminlte-input name="perkiraan_inap" igroup-size="sm"
                             label="l. Perkiraan Lama Ranap (Hari)" type="number" placeholder="Perkiraan Lama Ranap"
-                            value="{{ $kunjungan->erm_ranap_mppa->perkiraan_inap }}" />
+                            value="{{ $kunjungan->erm_ranap_mppa ? $kunjungan->erm_ranap_mppa->perkiraan_inap : null }}" />
                         <b>m. Discharge Plan </b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
