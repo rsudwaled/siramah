@@ -297,6 +297,23 @@ class JadwalDokterController extends BaseController
             return $this->sendError('Jadwal dokter tidak tersedia', 404);
         }
     }
+    public function poliklinik_by_hari(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'hari' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $jadwal = JadwalDokter::where('hari', $request->hari)
+            ->groupBy('namasubspesialis')
+            ->get();
+        if ($jadwal->count() != 0) {
+            return $this->sendResponse($jadwal, 200);
+        } else {
+            return $this->sendError('Jadwal dokter tidak tersedia', 404);
+        }
+    }
     public function jadwal_poliklinik(Request $request)
     {
         $validator = Validator::make(request()->all(), [
