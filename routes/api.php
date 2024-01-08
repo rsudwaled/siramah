@@ -124,6 +124,7 @@ Route::get('jadwal_dokter', [JadwalDokterController::class, 'jadwal_dokter'])->n
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('poliklinik_aktif');
 Route::get('cari_jadwal_dokter', [JadwalDokterController::class, 'cari_jadwal_dokter'])->name('cari_jadwal_dokter');
 Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name('api.cekKodebooking');
+Route::get('poliklinik_by_hari', [JadwalDokterController::class, 'poliklinik_by_hari'])->name('poliklinik_by_hari');
 Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
 Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('disposisi');
 
