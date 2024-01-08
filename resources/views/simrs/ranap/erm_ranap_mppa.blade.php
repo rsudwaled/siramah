@@ -250,7 +250,6 @@
                     </div>
                     <div class="col-md-4">
                         <b>3. Identifikasi Masalah - Resiko - Kesempatan </b>
-
                         <div class="form-group">
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
@@ -349,7 +348,7 @@
                     <i class="fas fa-edit"></i> Simpan
                 </button>
                 <a class="btn btn-warning" target="_blank"
-                    href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}">Print</a>
+                    href="{{ route('print_mppa') }}?kode={{ $kunjungan->kode_kunjungan }}">Print</a>
             </form>
         </div>
     </div>

@@ -302,6 +302,8 @@ class RanapController extends APIController
     }
     public function simpan_mppa(Request $request)
     {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
         $erm = ErmRanapMppa::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,
@@ -312,7 +314,17 @@ class RanapController extends APIController
         Alert::success('Success', 'Data MPP Form A Berhasil Disimpan');
         return redirect()->back();
     }
-
+    public function print_mppa(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $mppa = $kunjungan->erm_ranap_mppa;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_mppa', compact([
+            'kunjungan',
+            'mppa',
+            'pasien',
+        ]));
+    }
     public function print_resume_ranap(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);

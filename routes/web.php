@@ -210,6 +210,7 @@ Route::middleware('auth')->group(function () {
     Route::get('get_perkembangan_ranap', [RanapController::class, 'get_perkembangan_ranap'])->name('get_perkembangan_ranap');
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
     Route::post('simpan_mppa', [RanapController::class, 'simpan_mppa'])->name('simpan_mppa');
+    Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
