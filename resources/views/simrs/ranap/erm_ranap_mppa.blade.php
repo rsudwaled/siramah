@@ -193,81 +193,155 @@
                         <b>m. Discharge Plan </b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
-                                <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                                <input class="custom-control-input" type="radio" value="Tidak"
+                                    id="tidakdischarge" name="discharge_plan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->discharge_plan == 'Tidak' ? 'checked' : null) : null }}>
+                                <label for="tidakdischarge" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
-                                <label for="adaberubah" class="custom-control-label">Ada</label>
+                                <input class="custom-control-input" type="radio" id="adadischarge" value="Ada"
+                                    name="discharge_plan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->discharge_plan == 'Ada' ? 'checked' : null) : null }}>
+                                <label for="adadischarge" class="custom-control-label">Ada</label>
                             </div>
                         </div>
                         <b>n. Perencanaan Lanjutan </b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
-                                <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                                <input class="custom-control-input" type="radio" value="Home Care" id="homecare"
+                                    name="rencana_lanjutan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->rencana_lanjutan == 'Home Care' ? 'checked' : null) : null }}>
+                                <label for="homecare" class="custom-control-label">Home Care</label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
-                                <label for="adaberubah" class="custom-control-label">Ada</label>
+                                <input class="custom-control-input" type="radio" id="rujuk" value="Rujuk"
+                                    name="rencana_lanjutan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->rencana_lanjutan == 'Rujuk' ? 'checked' : null) : null }}>
+                                <label for="rujuk" class="custom-control-label">Rujuk</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="obatrawat"
+                                    value="Pengobatan/Perawatan" name="rencana_lanjutan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->rencana_lanjutan == 'Pengobatan/Perawatan' ? 'checked' : null) : null }}>
+                                <label for="obatrawat" class="custom-control-label">Pengobatan/Perawatan</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="komunitas" value="Komunitas"
+                                    name="rencana_lanjutan"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->rencana_lanjutan == 'Komunitas' ? 'checked' : null) : null }}>
+                                <label for="komunitas" class="custom-control-label">Komunitas</label>
                             </div>
                         </div>
                         <b>o. Aspek Legal </b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
-                                <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                                <input class="custom-control-input" type="radio" value="Tidak" id="tidaklegal"
+                                    name="legalitas"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->legalitas == 'Tidak' ? 'checked' : null) : null }}>
+                                <label for="tidaklegal" class="custom-control-label">Tidak</label>
                             </div>
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
-                                <label for="adaberubah" class="custom-control-label">Ada</label>
-                            </div>
-                        </div>
-                        <b>3. Identifikasi Masalah - Resiko - Kesempatan </b>
-                        <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
-                                <label for="tidakberubah" class="custom-control-label">Tidak</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
-                                <label for="adaberubah" class="custom-control-label">Ada</label>
+                                <input class="custom-control-input" type="radio" id="adalegal" value="Ada"
+                                    name="legalitas"
+                                    {{ $kunjungan->erm_ranap_mppa ? ($kunjungan->erm_ranap_mppa->legalitas == 'Ada' ? 'checked' : null) : null }}>
+                                <label for="adalegal" class="custom-control-label">Ada</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <b>4. Perencanaan MPP </b>
+                        <b>3. Identifikasi Masalah - Resiko - Kesempatan </b>
+
                         <div class="form-group">
-                            <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak" id="tidakberubah"
-                                    name="harapan">
-                                <label for="tidakberubah" class="custom-control-label">Tidak</label>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="tidakseusaicp" value="Tidak sesuai dengan CP / PPK"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Tidak sesuai dengan CP / PPK', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}>
+                                <label for="tidakseusaicp" class="custom-control-label">Tidak sesuai dengan CP /
+                                    PPK</label>
                             </div>
-                            <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" id="adaberubah" value="Ada"
-                                    name="harapan">
-                                <label for="adaberubah" class="custom-control-label">Ada</label>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="kompilikasi" value="Adanya Komplikasi"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Adanya Komplikasi', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}>
+                                <label for="kompilikasi" class="custom-control-label">Adanya Komplikasi</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="kurangpaham"
+                                    value="Pemahaman pasien kurang tentang penyakit, kondisi terkini, obat-obatan"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Pemahaman pasien kurang tentang penyakit, kondisi terkini, obat-obatan', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}>
+                                <label for="kurangpaham" class="custom-control-label">Pemahaman pasien kurang tentang
+                                    penyakit, kondisi terkini, obat-obatan</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="tidakpatuh"
+                                    value="Ketidakpatuhan pasien kendala keuangan ketika keparahan / komplikasi meningkat"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Ketidakpatuhan pasien kendala keuangan ketika keparahan / komplikasi meningkat', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}>
+                                <label for="tidakpatuh" class="custom-control-label">Ketidakpatuhan pasien kendala
+                                    keuangan ketika keparahan / komplikasi meningkat</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="konflik"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Terjadi Konflik', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}
+                                    value="Terjadi Konflik">
+                                <label for="konflik" class="custom-control-label">Terjadi Konflik</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="pemulangand"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Pemulangan / rujukan belum memenuhi kriteria / sebaliknya / ditunda', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}
+                                    value="Pemulangan / rujukan belum memenuhi kriteria / sebaliknya / ditunda">
+                                <label for="pemulangand" class="custom-control-label">Pemulangan / rujukan belum
+                                    memenuhi kriteria / sebaliknya / ditunda</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="identifisikasimasalah[]" type="checkbox"
+                                    id="tindakan"
+                                    {{ $kunjungan->erm_ranap_mppa ? (in_array('Tindakan / pengobatan yang tertunda / dibatalkan', json_decode($kunjungan->erm_ranap_mppa->identifisikasimasalah)) ? 'checked' : null) : null }}
+                                    value="Tindakan / pengobatan yang tertunda / dibatalkan">
+                                <label for="tindakan" class="custom-control-label">Tindakan / pengobatan yang tertunda
+                                    / dibatalkan</label>
                             </div>
                         </div>
-                        <x-adminlte-textarea name="identifikasi" label="Jangka Pendek" rows="3"
-                            igroup-size="sm" placeholder="Ya , ...">
+                        <b>4. Perencanaan MPP </b>
+                        <div class="form-group">
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="rencana_mpp[]" type="checkbox"
+                                    id="kebutuhanasuhanp" {{ $kunjungan->erm_ranap_mppa ? (in_array('Kebutuhan asuhan', json_decode($kunjungan->erm_ranap_mppa->rencana_mpp)) ? 'checked' : null) : null }} value="Kebutuhan asuhan">
+                                <label for="kebutuhanasuhanp" class="custom-control-label">Kebutuhan asuhan</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="rencana_mpp[]" type="checkbox"
+                                    id="edukasip" {{ $kunjungan->erm_ranap_mppa ? (in_array('Kebutuhan edukasi', json_decode($kunjungan->erm_ranap_mppa->rencana_mpp)) ? 'checked' : null) : null }} value="Kebutuhan edukasi">
+                                <label for="edukasip" class="custom-control-label">Kebutuhan edukasi</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="rencana_mpp[]" type="checkbox"
+                                    id="solusikonflikp" {{ $kunjungan->erm_ranap_mppa ? (in_array('Solusi konflik', json_decode($kunjungan->erm_ranap_mppa->rencana_mpp)) ? 'checked' : null) : null }} value="Solusi konflik">
+                                <label for="solusikonflikp" class="custom-control-label">Solusi konflik</label>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" name="rencana_mpp[]" type="checkbox"
+                                    id="diagnosisp" {{ $kunjungan->erm_ranap_mppa ? (in_array('Diagnosis', json_decode($kunjungan->erm_ranap_mppa->rencana_mpp)) ? 'checked' : null) : null }} value="Diagnosis">
+                                <label for="diagnosisp" class="custom-control-label">Diagnosis</label>
+                            </div>
+                        </div>
+                        <x-adminlte-textarea name="jangka_pendek" label="Jangka Pendek" rows="3"
+                            igroup-size="sm">
+                            {{ $kunjungan->erm_ranap_mppa->jangka_pendek ?? '' }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="identifikasi" label="Jangka Panjang" rows="3"
-                            igroup-size="sm" placeholder="Ya , ...">
+                        <x-adminlte-textarea name="jangka_panjang" label="Jangka Panjang" rows="3"
+                            igroup-size="sm">
+                            {{ $kunjungan->erm_ranap_mppa->jangka_panjang ?? '' }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="identifikasi" label="Kebutuhan Berjalan" rows="3"
-                            igroup-size="sm" placeholder="Ya , ...">
+                        <x-adminlte-textarea name="kebutuhan_berjalan" label="Kebutuhan Berjalan" rows="3"
+                            igroup-size="sm">
+                            {{ $kunjungan->erm_ranap_mppa->kebutuhan_berjalan ?? '' }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="identifikasi" label="Lain-lain" rows="3" igroup-size="sm"
-                            placeholder="Ya , ...">
+                        <x-adminlte-textarea name="lain_lain" label="Lain-lain" rows="3" igroup-size="sm">
+                            {{ $kunjungan->erm_ranap_mppa->lain_lain ?? '' }}
                         </x-adminlte-textarea>
                     </div>
                 </div>
