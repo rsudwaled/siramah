@@ -67,10 +67,12 @@
                             @foreach ($pasien_fr as $item)
                                 <tr>
                                     <td>
-                                        <b>RM : {{ $item->no_rm }}<br>
-                                            {{ $item->pasien->nama_px }} <br></b>
-                                        KUNJUNGAN : {{ $item->kode_kunjungan }} <br>
-                                        ({{ $item->unit->nama_unit }})
+                                        <a href="{{route('edit-pasien', ['rm'=>$item->no_rm])}}">
+                                            <b>RM : {{ $item->no_rm }}<br>
+                                                {{ $item->pasien->nama_px }} <br></b>
+                                            KUNJUNGAN : {{ $item->kode_kunjungan }} <br>
+                                            ({{ $item->unit->nama_unit }})
+                                        </a>
                                     </td>
                                     <td>
                                         <small>

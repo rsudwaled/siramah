@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers\IGD\Ranap;
 
-use App\Http\Controllers\Controller;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\PenjaminSimrs;
 use App\Models\PasienBayiIGD;
@@ -16,9 +12,8 @@ use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Unit;
 use App\Models\Spri;
+use App\Models\Icd10;
 use App\Models\Ruangan;
-use App\Models\RuanganTerpilihIGD;
-use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
@@ -45,7 +40,7 @@ class RanapController extends APIController
                         'ts_jp_igd.is_bpjs as status_pasien_daftar',
                         'di_pasien_diagnosa_frunit.is_ranap as status_ranap',
                     )
-                    ->where('ts_kunjungan.is_daftar_ranap', 0)
+                    ->where('ts_kunjungan.is_ranap_daftar', 0)
                     ->where('di_pasien_diagnosa_frunit.is_ranap', 1)
                     ->orderBy('tgl_kunjungan', 'desc')->get();
         // dd($assesmentRanap);
@@ -178,6 +173,35 @@ class RanapController extends APIController
         return redirect()->route('list-assesment.ranap');
     }
 
+    public function ranapBPJS(Request $request)
+    {
+        if ($request->no_kartu == null) {
+            Alert::error('Error!!', 'pasien tidak memiliki no bpjs');
+            return back();
+        }
+        $vlcaim = new VclaimController();
+        $request['nomorkartu'] = $request->no_kartu;
+        $request['tanggal'] = now()->format('Y-m-d');
+        $res = $vlcaim->peserta_nomorkartu($request);
+        $kodeKelas = $res->response->peserta->hakKelas->kode;
+        $kelas = $res->response->peserta->hakKelas->keterangan;
+        $refKunj = $request->kodeKunjungan;
+        $pasien = Pasien::firstWhere('no_Bpjs', $request->no_kartu);
+        $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
+        $unit = Unit::where('kelas_unit', 2)->get();
+        $poli = Unit::whereNotNull('KDPOLI')->get();
+        $alasanmasuk = AlasanMasuk::limit(10)->get();
+        $icd = Icd10::limit(15)->get();
+        $penjamin = PenjaminSimrs::get();
+        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+        $spri = Spri::where('noKartu', $request->no_kartu)
+            ->where('tglRencanaKontrol', now()->format('Y-m-d'))
+            ->first();
+        // dd($spri);
+        $spri = '000000';
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli', 'refKunj', 'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis'));
+    }
+
     public function createSPRI(Request $request)
     {
         dd($request->all());
@@ -203,6 +227,40 @@ class RanapController extends APIController
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
         }
         return $response;
+    }
+    public function getSPRI(Request $request)
+    {
+        $spri = Spri::firstWhere('noSPRI', $request->noSuratKontrol);
+        return response()->json([
+            'spri' => $spri,
+        ]);
+    }
+    public function updateSPRI(Request $request)
+    {
+        $vclaim = new VclaimController();
+        $res = $vclaim->spri_update($request);
+        if ($res->metadata->code == 200) {
+            $updateSPRI = Spri::firstWhere('noSPRI', $request->noSPRI);
+            $updateSPRI->tglRencanaKontrol = $request->tglRencanaKontrol;
+            $updateSPRI->kodeDokter = $request->kodeDokter;
+            $updateSPRI->poliKontrol = $request->poliKontrol;
+            $updateSPRI->user = $request->user;
+            $updateSPRI->update();
+        }
+        return response()->json([
+            'res' => $res,
+        ]);
+    }
+
+    public function cekProsesDaftarSPRI(Request $request)
+    {
+        $cekSPRI = Spri::where('noKartu', $request->noKartu)
+            ->where('tglRencanaKontrol', now()->format('Y-m-d'))
+            ->first();
+        // dd($cekSPRI);
+        return response()->json([
+            'cekSPRI' => $cekSPRI,
+        ]);
     }
 
 

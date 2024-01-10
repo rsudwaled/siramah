@@ -13,15 +13,11 @@ use App\Models\Paramedis;
 use App\Models\PenjaminSimrs;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
-use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use App\Models\JPasienIGD;
 use App\Models\HistoriesIGDBPJS;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
 class DaftarIGDController extends Controller
 {
@@ -219,6 +215,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->kode_penjamin = $request->penjamin_id;
         $createKunjungan->kelas = 3;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+        $createKunjungan->perujuk = $request->nama_perujuk??null;
         // $createKunjungan->pic2 = Auth::user()->id;
         $createKunjungan->pic = Auth::user()->id;
         if ($createKunjungan->save()) {

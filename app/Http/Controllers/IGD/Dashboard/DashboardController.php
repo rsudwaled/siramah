@@ -4,9 +4,6 @@ namespace App\Http\Controllers\IGD\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Kunjungan;
-use App\Models\PenjaminSimrs;
-use Carbon\Carbon;
 use DB;
 class DashboardController extends Controller
 {
@@ -42,7 +39,7 @@ class DashboardController extends Controller
                 'ts_jp_igd.is_bpjs as status_pasien_daftar',
                 'di_pasien_diagnosa_frunit.is_ranap as status_ranap',
             )
-            ->where('ts_kunjungan.is_daftar_ranap', 0)
+            ->where('ts_kunjungan.is_ranap_daftar', 0)
             ->where('di_pasien_diagnosa_frunit.is_ranap', 1)
             ->orderBy('tgl_kunjungan', 'desc')->get();
         $kunjungan = $query->get();

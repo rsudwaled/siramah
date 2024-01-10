@@ -6,9 +6,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Models\Unit;
 use App\Models\Pasien;
 use App\Models\Kunjungan;
@@ -17,7 +15,6 @@ use App\Models\Paramedis;
 use App\Models\PenjaminSimrs;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
-use App\Models\TarifLayanan;
 use App\Models\TarifLayananDetail;
 use App\Models\JPasienIGD;
 use App\Models\HistoriesIGDBPJS;
@@ -106,7 +103,13 @@ class DaftarTanpaNomorController extends Controller
        ];
        return json_decode(json_encode($response));
    }
-
+   public function updateNOBPJS(Request $request)
+   {
+       $data = Pasien::where('nik_bpjs', $request->nik_pas)->first();
+       $data->no_Bpjs = $request->no_bpjs;
+       $data->update();
+       return response()->json($data, 200);
+   }
     public function vTanpaNomor(Request $request)
     {
         $pasien = null;
@@ -232,6 +235,7 @@ class DaftarTanpaNomorController extends Controller
         $createKunjungan->kode_penjamin = $request->penjamin_id;
         $createKunjungan->kelas = 3;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
+        $createKunjungan->perujuk = $request->nama_perujuk??null;
         // $createKunjungan->pic2 = Auth::user()->id;
         $createKunjungan->pic = Auth::user()->id;
         if ($createKunjungan->save()) {

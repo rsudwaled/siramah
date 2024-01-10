@@ -58,8 +58,12 @@
                         :config="$config" striped bordered hoverable compressed>
                         @foreach ($kunjungan as $item)
                             <tr>
-                                <td><b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
-                                    {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}</td>
+                                <td>
+                                    <a href="{{route('edit-pasien', ['rm'=>$item->rm])}}">
+                                        <b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
+                                        {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
+                                    </a>
+                                </td>
                                 <td>alamat : {{ $item->alamat }} / <br>
                                 </td>
                                 <td>{{ $item->kunjungan }} <br> ({{ $item->nama_unit }})</td>

@@ -36,7 +36,6 @@ class IGDUMUMController extends Controller
 
     public function updateNOBPJS(Request $request)
     {
-        // dd($request->all());
         $data = Pasien::where('nik_bpjs', $request->nik_pas)->first();
         $data->no_Bpjs = $request->no_bpjs;
         $data->update();

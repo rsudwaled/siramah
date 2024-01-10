@@ -35,7 +35,7 @@
                 <form action="{{ route('pasien-baru.store') }}" method="post">
                     @csrf
                     <div class="row">
-                        <div class="col-lg-8">
+                        <div class="col-lg-12">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="alert bg-purple alert-dismissible">
@@ -139,7 +139,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-12">
                             <div class="alert alert-success alert-dismissible">
                                 <h5>
                                     <i class="icon fas fa-users"></i>Info Keluarga

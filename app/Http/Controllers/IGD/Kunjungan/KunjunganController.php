@@ -4,16 +4,8 @@ namespace App\Http\Controllers\IGD\Kunjungan;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Kunjungan;
 use Carbon\Carbon;
 use App\Models\Unit;
-use App\Models\PenjaminSimrs;
-use App\Models\DiagnosaFrunit;
-use App\Models\HistoriesIGDBPJS;
-use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Http;
-use Auth;
 use DB;
 
 class KunjunganController extends Controller

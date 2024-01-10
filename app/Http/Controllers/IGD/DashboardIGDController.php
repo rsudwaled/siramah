@@ -2,9 +2,8 @@
 
 namespace  App\Http\Controllers\IGD;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Kunjungan;
-use App\Models\PenjaminSimrs;
 use Carbon\Carbon;
 use DB;
 

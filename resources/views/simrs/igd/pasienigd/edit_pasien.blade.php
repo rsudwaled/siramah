@@ -10,7 +10,7 @@
         <div class="col-lg-12">
             <form>
                 <div class="row">
-                    <div class="col-lg-8">
+                    <div class="col-lg-12">
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="alert alert-success alert-dismissible">
@@ -126,7 +126,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-12">
                         <div class="alert alert-warning alert-dismissible">
                             <h5>
                                 <i class="icon fas fa-users"></i>Info Keluarga
@@ -155,7 +155,7 @@
                     </div>
                 </div>
                 <x-adminlte-button id="updatePasien" class="float-right btn-sm btn-flat" theme="success" label="update data" />
-                <a href="{{ route('pendaftaran.pasien') }}" class="btn btn-secondary btn-sm btn-flat float-right">kembali</a>
+                <button onclick="window.history.back()" class="btn btn-secondary btn-sm btn-flat float-right">kembali</button>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
             </form>
@@ -313,7 +313,7 @@
                         success: function(res) {
                             if (res.status == 200) {
                                 Swal.fire('data pasien berhasil diupdate', '', 'success');
-                                window.location.href ="{{ route('pendaftaran.pasien') }}"
+                                window.history.back()
                             }else{
                                 Swal.fire('data keluarga harus dilengkapi', '', 'error');
                             }

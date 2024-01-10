@@ -39,11 +39,13 @@
                                     <tr>
                                         <td>{{ $ranap->tgl_kunjungan }}</td>
                                         <td>
-                                            <b>NAMA : {{ $ranap->pasien }}</b> <br>
-                                            RM : {{ $ranap->rm }} <br>
-                                            BPJS : {{ $ranap->noKartu }} <br>
-                                            NIK : {{ $ranap->nik }} <br>
-                                            Gender : {{ $ranap->jk == 'P' ? 'Perempuan' : 'Laki-Laki' }}
+                                            <a href="{{route('edit-pasien',['rm'=>$ranap->rm])}}">
+                                                <b>NAMA : {{ $ranap->pasien }}</b> <br>
+                                                RM : {{ $ranap->rm }} <br>
+                                                BPJS : {{ $ranap->noKartu }} <br>
+                                                NIK : {{ $ranap->nik }} <br>
+                                                Gender : {{ $ranap->jk == 'P' ? 'Perempuan' : 'Laki-Laki' }}
+                                            </a>
                                         </td>
                                         <td width="15%">
                                             <small>{{ $ranap->alamat }}</small>
