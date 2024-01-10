@@ -61,7 +61,7 @@
                                                 <h5 class="description-headers">
                                                     NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }}
                                                     <br>
-                                                    BPJS : {{ $pasien->no_Bpjs == null ? 'tidak ada' : $pasien->no_Bpjs }}
+                                                    BPJS : {{ trim($pasien->no_Bpjs) == null ? 'tidak ada' : trim($pasien->no_Bpjs) }}
                                                 </h5>
                                                 <span class="description-text">-NIK & BPJS-</span>
                                             </div>
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-lg-12">
                                     @php
-                                        $heads = ['Tgl Masuk / Unit','Kunjungan', 'Diagnosa',  'Penjamin', 'Status'];
+                                        $heads = ['Tgl Masuk / Unit', 'Kunjungan', 'Diagnosa', 'Penjamin', 'Status'];
                                         $config['order'] = ['0', 'asc'];
                                         $config['paging'] = false;
                                         $config['info'] = false;
@@ -94,9 +94,9 @@
                                                         Counter : {{ $item->counter }} <br>
                                                     </b>
                                                 </td>
-                                                <td>{{$item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA'}}</td>
+                                                <td>{{ $item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}</td>
                                                 <td>{{ $item->penjamin->nama_penjamin_bpjs }}</td>
-                                                <td>{{$item->status->status_kunjungan}}</td>
+                                                <td>{{ $item->status->status_kunjungan }}</td>
                                             </tr>
                                         @endforeach
                                     </x-adminlte-datatable>
@@ -114,7 +114,7 @@
                             <div class="card card-success card-outline">
                                 <div class="card-body">
                                     <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i
-                                        class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
+                                            class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
                                     <div class="col-md-12">
                                         <x-adminlte-select2 name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                             @foreach ($unit as $item)
@@ -124,8 +124,7 @@
                                         </x-adminlte-select2>
                                     </div>
                                     <div class="col-md-12">
-                                        <x-adminlte-select name="kelas_rawat" id="r_kelas_id" label="Kelas Rawat"
-                                            disabled>
+                                        <x-adminlte-select name="kelas_rawat" id="r_kelas_id" label="Kelas Rawat" disabled>
                                             <option value="1" {{ $kodeKelas == 1 ? 'selected' : '' }}>KELAS 1
                                             </option>
                                             <option value="2" {{ $kodeKelas == 2 ? 'selected' : '' }}>KELAS 2
@@ -138,8 +137,7 @@
                                     </div>
                                     <div class="col-md-12">
                                         <div class="icheck-primary d-inline ml-2">
-                                            <input type="checkbox" value="0" name="naikKelasRawat"
-                                                id="naikKelasRawat">
+                                            <input type="checkbox" value="0" name="naikKelasRawat" id="naikKelasRawat">
                                             <label for="naikKelasRawat"></label>
                                         </div>
 
@@ -149,16 +147,8 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
-                                    <x-adminlte-button label="Cari Ruangan" data-toggle="modal"
-                                        data-target="#pilihRuangan" id="cariRuangan" class="bg-purple btn-block" />
-                                    <a href="#" class="btn bg-teal btn-block" id="showBed"
-                                        style="display: none">
-                                        <i class="fas fa-bed"></i>
-                                    </a>
-                                    <a href="#" class="btn btn-primary btn-block" id="showRuangan"
-                                        style="display: none">
-                                        <i class="fas fa-bed"></i> Tidak ada
-                                    </a>
+                                    <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
+                                        id="cariRuangan" class="bg-purple btn-block" />
                                 </div>
                             </div>
                         </div>
@@ -168,15 +158,15 @@
                 <div class="col-md-9">
                     <div class="row">
                         <div class="col-lg-12">
-                            <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
+                            <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                                 title="Daftarkan : {{ $pasien->nama_px }} ( {{ $pasien->no_rm }} )">
-                                <form action="{{route('create-sepigd.ranap-bpjs')}}" method="post" id="submitRanap">
+                                <form action="{{ route('store.ranap-bpjs') }}" method="post" id="submitRanap">
                                     @csrf
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
                                     <input type="hidden" name="noKartuBPJS" id="noKartuBPJS"
-                                        value="{{ $pasien->no_Bpjs }}">
+                                        value="{{ trim($pasien->no_Bpjs) }}">
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-6">
@@ -191,16 +181,16 @@
                                                 </x-adminlte-input>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <x-adminlte-input name="ruangan" label="Ruangan" id="ruanganTerpilih" readonly
-                                                    disabled />
+                                                        <x-adminlte-input name="ruangan" label="Ruangan"
+                                                            id="ruanganTerpilih" readonly disabled />
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <x-adminlte-input name="bed" label="No Bed" id="bedTerpilih" readonly
-                                                    disabled />
+                                                        <x-adminlte-input name="bed" label="No Bed" id="bedTerpilih"
+                                                            readonly disabled />
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <x-adminlte-input name="hak_kelas" label="Hak Kelas" id="hakKelas"
-                                                            disabled />
+                                                        <x-adminlte-input name="hak_kelas" label="Hak Kelas"
+                                                            id="hakKelas" disabled />
                                                     </div>
                                                 </div>
                                                 <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
@@ -220,6 +210,14 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
+                                                
+                                                <x-adminlte-select2 name="kode_paramedis" label="Pilih DPJP">
+                                                    <option value="">--Pilih Dokter--</option>
+                                                    @foreach ($paramedis as $item)
+                                                        <option value="{{ $item->kode_dokter_jkn }}">
+                                                            {{ $item->nama_paramedis }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
                                                 <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)
@@ -227,13 +225,10 @@
                                                             {{ $item->nama_penjamin }}</option>
                                                     @endforeach
                                                 </x-adminlte-select>
-                                                
+
                                                 <x-adminlte-select2 name="diagAwal" id="diagnosa"
                                                     label="Pilih Diagnosa">
                                                 </x-adminlte-select2>
-                                                <x-adminlte-input label="Pilih DPJP" name="dpjpBySPRI" value=""
-                                                    label-class="text-black" disabled>
-                                                </x-adminlte-input>
 
                                                 <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
                                                     label="Status Kecelakaan">
@@ -245,13 +240,11 @@
                                                     <option value="2">KLL & KK</option>
                                                     <option value="3">KECELAKAAN KERJA</option>
                                                 </x-adminlte-select>
+
                                             </div>
                                             <div class="col-lg-12">
                                                 <div class="col-md-12">
                                                     <div class="row">
-                                                        <div class="col-md-6">
-
-                                                        </div>
                                                         <div class="col-md-12" id="div_stts_kecelakaan"
                                                             style="display: none;">
                                                             <div class="card card-danger card-outline">
@@ -322,10 +315,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green float-right btn-flat"
+                                        <x-adminlte-button type="button"
+                                            class="withLoad btn btn-sm m-1 bg-green float-right btn-flat btn-simpan"
                                             form="submitRanap" label="Simpan Data" />
-                                        <a href="#"
+                                        <a href="{{route('list-assesment.ranap')}}"
                                             class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
@@ -414,76 +407,7 @@
                     cache: true
                 }
             });
-            $('.btnModalSPRI').click(function(e) {
-                var kunjungan = $(this).data('id');
-                var noKartu = $(this).data('nomorkartu');
-                $('#noKartu').val(noKartu);
-                $('#kodeKunjungan').val(kunjungan);
-                $('.lanjutkanPROSESDAFTAR').hide();
-                if ($('#modalSPRI').show()) {
-                    var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        dataType: 'JSON',
-                        success: function(data) {
-                            console.log(data.cekSPRI);
-                            if (data.cekSPRI == null) {
-                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
-                                    'info');
-                            } else {
-                                $('.lanjutkanPROSESDAFTAR').show();
-                                $('.btnCreateSPRI').hide();
-                                $('.btnCreateSPRIBatal').hide();
-                                $('.lanjutkanPROSESDAFTAR').click(function(e) {
-                                    location.href =
-                                        "{{ route('ranapbpjs') }}/?no_kartu=" + data
-                                        .cekSPRI.noKartu;
-                                });
-                            }
-                        }
-                    });
-                }
-                $('#modalSPRI').modal('toggle');
-            });
 
-            $('.btnCreateSPRI').click(function(e) {
-                var kodeKunjungan = $("#kodeKunjungan").val();
-                var noKartu = $("#noKartu").val();
-                var kodeDokter = $("#dokter").val();
-                var poliKontrol = $("#poliklinik option:selected").val();
-                var tglRencanaKontrol = $("#tanggal").val();
-                var user = $("#user").val();
-                var url = "{{ route('pasien-ranap.createspri') }}";
-                $.LoadingOverlay("show");
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    dataType: 'json',
-                    data: {
-                        noKartu: noKartu,
-                        kodeDokter: kodeDokter,
-                        poliKontrol: poliKontrol,
-                        tglRencanaKontrol: tglRencanaKontrol,
-                        kodeKunjungan: kodeKunjungan,
-                        user: user,
-                    },
-                    success: function(data) {
-
-                        if (data.metadata.code == 200) {
-                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
-                            $("#createSPRI").modal('toggle');
-                            location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
-                            $.LoadingOverlay("hide");
-                        } else {
-                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
-                                .code + ')', '', 'error');
-                            $.LoadingOverlay("hide");
-                        }
-                    },
-
-                });
-            });
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -552,142 +476,6 @@
                     $("#naikKelasDesc2").hide();
                 }
             });
-            $('#editSPRI').click(function(e) {
-                var nomorsuratkontrol = $('#noSPRI').val();
-                var url = "{{ route('spri.get') }}?noSuratKontrol=" + nomorsuratkontrol;
-                $.LoadingOverlay("show");
-                $.get(url, function(data) {
-                    $('#tglRencanaKontrol').val(data.spri.tglRencanaKontrol);
-                    $('#poliKontrol').val(data.spri.poliKontrol).trigger('change');
-                    $('#dokter').val(data.spri.kodeDokter).trigger('change');
-                    $('#updateSPRI').modal('show');
-                    $.LoadingOverlay("hide", true);
-                });
-
-
-            });
-            // $('.ranapCreateData').click(function(e) {
-            //     var noKartu = $('#noKartuBPJS').val();
-            //     var tglSep = $('#tanggal_daftar').val();
-            //     var klsRawatHak = $('#klsRawatHak').val();
-            //     var idRuangan = $('#ruanganSend').val();
-            //     var diagAwal = $('#diagAwal').val();
-            //     var tujuan = $('').val();
-            //     var eksekutif = $('').val();
-            //     var dpjpLayan = $('').val();
-            //     var noTelp = $('').val();
-            //     var user = $('').val();
-            //     var noSurat = $('').val();
-            //     var kodeDPJP = $('').val();
-            //     $.ajax({
-            //         data: $('#submitRanap').serialize(),
-            //         url: url,
-            //         type: "POST",
-            //         data: {
-            //             noKartu = required,
-            //             tglSep = required,
-            //             klsRawatHak = required,
-            //             catatan = required,
-            //             diagAwal = required,
-            //             tujuan = required,
-            //             eksekutif = required,
-            //             dpjpLayan = required,
-            //             noTelp = required,
-            //             user = required,
-            //             noSurat = required,
-            //             kodeDPJP = required,
-            //         },
-            //         success: function(data) {
-            //             console.log(data);
-
-            //             $.LoadingOverlay("hide");
-            //         },
-            //         error: function(data) {
-            //             console.log(data);
-            //             alert('error jaringan');
-            //             $.LoadingOverlay("hide");
-            //         }
-            //     });
-            // });
-            $('#btnUpdateSPRI').click(function(e) {
-                var noSPRI = $('#noSPRI').val();
-                var tglRencanaKontrol = $('#tglRencanaKontrol').val();
-                var poliKontrol = $('#poliKontrol').val();
-                var kodeDokter = $('#dokter').val();
-                var user = $('#user').val();
-                swal.fire({
-                    icon: 'question',
-                    title: 'ANDA YAKIN UPDATE SPRI ' + noSPRI + ' ?',
-                    showDenyButton: true,
-                    confirmButtonText: 'YA',
-                    denyButtonText: `Tidak`,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var url = "{{ route('spri.update') }}?noSPRI=" + noSPRI;
-                        $.LoadingOverlay("show");
-                        $.ajax({
-                            type: 'PUT',
-                            url: url,
-                            data: {
-                                noSPRI: noSPRI,
-                                tglRencanaKontrol: tglRencanaKontrol,
-                                poliKontrol: poliKontrol,
-                                kodeDokter: kodeDokter,
-                                user: user,
-                            },
-                            success: function(data) {
-                                console.log(data)
-                                if (data.res.metadata.code == 200) {
-                                    Swal.fire('SPRI BERHASIL DIUPDATE', '', 'success');
-                                    location.reload();
-                                    $.LoadingOverlay("hide");
-                                } else {
-                                    Swal.fire(data.res.metadata.message + '( ERROR : ' +
-                                        data.res.metadata.code + ')', '', 'error');
-                                    $.LoadingOverlay("hide");
-                                }
-
-                            },
-
-                        });
-                    }
-                })
-            });
-            $("#hapusSPRI").hide();
-            $('#hapusSPRI').click(function(e) {
-                var noSPRI = $('#noSuratKontrol').val();
-                swal.fire({
-                    icon: 'question',
-                    title: 'ANDA YAKIN HAPUS NO SPRI ' + noSPRI + ' ?',
-                    showDenyButton: true,
-                    confirmButtonText: 'Hapus',
-                    denyButtonText: `Batal`,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        var url = "{{ route('spri_delete') }}";
-                        $.ajax({
-                            type: 'DELETE',
-                            url: url,
-                            data: {
-                                noSuratKontrol: noSPRI,
-                                user: 'coba',
-                            },
-                            success: function(data) {
-
-                                if (data.metadata.code == 200) {
-                                    Swal.fire('SPRI BERHASIL DIHAPUS', '', 'success');
-                                    location.reload();
-                                } else {
-                                    Swal.fire(data.metadata.message + '( ERROR : ' +
-                                        data.metadata
-                                        .code + ')', '', 'error');
-                                }
-                            },
-
-                        });
-                    }
-                })
-            });
 
             $("#provinsi").select2({
                 theme: "bootstrap4",
@@ -752,7 +540,61 @@
                 }
             });
 
-
+            $('.btn-simpan').click(function(e) {
+                var urlUpdateOnly = "{{ route('create-sepigd.ranap-bpjs') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin Simpan?",
+                    text: "simpan data pendaftaran rawat inap!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Simpan!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateOnly,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: "Success!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "Gagal!",
+                                        text: data.message + '( ERROR : ' + data
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
+            });
         });
 
 
@@ -780,5 +622,6 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
+
     </script>
 @endsection

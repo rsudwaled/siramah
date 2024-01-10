@@ -94,8 +94,8 @@
                                             data-nama="{{ $item->pasien->nama_px }}"
                                             data-jk="{{ $item->pasien->jenis_kelamin }}"
                                             data-kunjungan="{{ $item->kode_kunjungan }}" data-diagx="{{ $item->diag_00 }}"
-                                            theme="primary" class="btn-flat btn-xs btn-singkron" id="btn-singkron"
-                                            label="Synch Diagnosa" />
+                                            data-pelayanan="{{ $item->is_ranap }}" theme="primary"
+                                            class="btn-flat btn-xs btn-singkron" id="btn-singkron" label="Synch Diagnosa" />
                                     </td>
                                 </tr>
                             @endforeach
@@ -113,6 +113,14 @@
                                 <form id="formSynch" method="post">
                                     @csrf
                                     <div class="col-lg-12">
+                                        <x-adminlte-input name="pelayanan" id="pelayanan" label="Pelayanan"
+                                            label-class="primary">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text">
+                                                    <i class="fas fa-file-alt"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
                                         <x-adminlte-input name="noMR" id="noMR" label="RM"
                                             label-class="primary">
                                             <x-slot name="prependSlot">
@@ -141,8 +149,11 @@
                                         </x-adminlte-select2>
                                     </div>
                                     <x-adminlte-button type="button"
-                                        class="btn btn-sm m-1 bg-success float-right btn-synchronize-sep" form="formSynch"
-                                        label="update diagnosa" />
+                                        class="btn btn-sm m-1 bg-primary btn-block btn-synchronize-sep" id="btnNonRanap"
+                                        form="formSynch" label="Update Diagnosa Pasien" />
+                                    <x-adminlte-button type="button"
+                                        class="btn btn-sm m-1 bg-purple btn-block btn-synchronize-ranap" id="btnRanap"
+                                        form="formSynch" label="Update Diagnosa Rawat Inap" />
                                 </form>
                             </div>
                         </div>
@@ -167,6 +178,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $('.btn-synchronize-sep').show();
+            $('.btn-synchronize-ranap').hide();
             $('.btn-singkron').on('click', function() {
                 let diag = $(this).data('diagx');
                 let kunj = $(this).data('kunjungan');
@@ -174,11 +187,22 @@
                 let nama = $(this).data('nama');
                 let jk = $(this).data('jk');
                 let jk_dsc = jk == 'P' ? 'perempuan' : 'laki-laki';
+                let pelayanan = $(this).data('pelayanan');
+                let pelayanan_desc = pelayanan == '1' ? 'Rawat Inap' : 'Rawat Jalan';
                 $('#refDiagnosa').val(diag);
+                $('#pelayanan').val(pelayanan_desc);
                 $('#kunjungan').val(kunj);
                 $('#noMR').val(rm);
                 $('#nama_pasien').text(nama);
                 $('#jk').text(jk_dsc);
+
+                if (pelayanan == '1') {
+                    $('.btn-synchronize-sep').hide();
+                    $('.btn-synchronize-ranap').show();
+                } else {
+                    $('.btn-synchronize-sep').show();
+                    $('.btn-synchronize-ranap').hide();
+                }
             });
 
             $("#diagnosa").select2({
@@ -205,7 +229,6 @@
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";
                 var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
-                // $.LoadingOverlay("show");
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
                         confirmButton: "btn btn-success m-2",
@@ -324,6 +347,61 @@
                     }
                 });
 
+            });
+            $('.btn-synchronize-ranap').click(function(e) {
+                var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "Update Diagnosa Pasien Rawat Inap!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Update Diagnosa!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateOnly,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: "Update Diagnosa Success!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "Update Gagal!",
+                                        text: data.message + '( ERROR : ' + data
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
             });
         });
     </script>

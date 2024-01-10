@@ -96,7 +96,7 @@
                                             Pasien : {{ $ranap->status_ranap == 1 ? 'Rawat Inap' : 'Pasien Umum' }} <br>
                                         </td>
                                         <td>
-                                            @if ($ranap->status_pasien_daftar == 1)
+                                            {{-- @if ($ranap->status_pasien_daftar == 1)
                                                 <button href="#" data-toggle="modal" data-target="modalSPRI"
                                                     data-id="{{ $ranap->kunjungan }}"
                                                     data-nomorkartu="{{ $ranap->noKartu }}"
@@ -106,9 +106,11 @@
                                             @else
                                                 <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
                                                     class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
-                                            @endif
-
-                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $ranap->noKartu,'kode'=>$ranap->kunjungan]) }}"
+                                            @endif --}}
+                                            @php
+                                                $nomorKartu = trim($ranap->noKartu);
+                                            @endphp
+                                            <a href="{{ route('daftar.ranap-bpjs',['nomorkartu'=>$nomorKartu,'kode'=>$ranap->kunjungan]) }}"
                                                 class="btn btn-xs btn-block btn-primary btn-flat mr-5 withLoad">DAFTARKAN</a>
                                         </td>
                                     </tr>

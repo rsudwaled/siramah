@@ -66,28 +66,28 @@
                                 <div class="row ">
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header ">ANGGREK</h5>
+                                            <h5 class="description-header ">RUANGAN : {{ $kunjungan->kamar }}</h5>
                                             <span class="description-text">- RUANGAN - </span>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header ">05</h5>
+                                            <h5 class="description-header ">NO : {{ $kunjungan->no_bed }}</h5>
                                             <span class="description-text">- NO BED -</span>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header "> KELAS : 1</h5>
+                                            <h5 class="description-header ">KELAS : {{ $kunjungan->kelas }}</h5>
                                             <span class="description-text">- KELAS -</span>
                                         </div>
                                     </div>
 
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block">
-                                            <h5 class="description-header ">HAK KELAS : 1</h5>
+                                            <h5 class="description-header ">HAK KELAS : {{ $kunjungan->hak_kelas }}</h5>
                                             <span class="description-text">- HAK KELAS -</span>
                                         </div>
                                     </div>
@@ -144,32 +144,34 @@
 
                 <div class="row no-print">
                     <div class="col-12">
-                        @if (empty($kunjungan->no_spri))
-                            <button type="button" class="btn btn-primary float-right m-1 btnModalSPRI"  
-                                data-id="{{ $kunjungan->kode_kunjungan }}"
-                                data-nomorkartu="{{ $kunjungan->kode_kunjungan }}"
-                                data-toggle="modal"
-                                data-target="modalSPRI"><i class="fas fa-file-contract"></i>
-                                BUAT SPRI </button>
-                        @elseif(empty($kunjungan->no_sep))
+                        <button type="button" class="btn btn-success float-right m-1" style="margin-right: 5px;">
+                            <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
+                        </button>
+                        @if (empty($kunjungan->no_sep))
                             <button type="button" class="btn bg-purple float-right m-1"><i
                                     class="fas fa-file-contract"></i>
                                 Generate SEP</button>
-                        @else
-                            <button type="button" class="btn btn-success float-right" style="margin-right: 5px;">
-                                <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
-                            </button>
                         @endif
+                        @if (empty($kunjungan->no_spri))
+                            <button type="button" class="btn btn-primary float-right m-1 btnModalSPRI"
+                                data-id="{{ $kunjungan->kode_kunjungan }}"
+                                data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}" data-toggle="modal"
+                                data-target="modalSPRI"><i class="fas fa-file-contract"></i>
+                                BUAT SPRI </button>
+                        @endif
+
+
                     </div>
                     <x-adminlte-modal id="modalSPRI" title="Buat SPRI terlebih dahulu" theme="primary" size='lg'
                         disable-animations>
                         <form>
-                            <input type="hidden" name="user" id="user" value="{{ Auth::user()->name }}">
-                            <input type="hidden" name="kodeKunjungan" id="kodeKunjungan" >
+                            {{-- <input type="hidden" name="user" id="user" value="{{ Auth::user()->name }}"> --}}
+                            <input type="hidden" name="user" id="user" value="test">
+                            <input type="hidden" name="kodeKunjungan" id="kodeKunjungan">
                             <input type="hidden" name="jenispelayanan" id="jenispelayanan" value="1">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <x-adminlte-input name="noKartu" id="noKartu" value="{{$kunjungan->pasien->no_Bpjs}}" placeholder="{{$kunjungan->pasien->no_Bpjs}}" label="No Kartu" readonly />
+                                    <x-adminlte-input name="noKartu" id="noKartu" label="No Kartu" readonly />
                                 </div>
                                 <div class="col-md-6">
                                     @php
@@ -218,133 +220,133 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 @section('js')
-<script>
-    $(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $("#poliklinik").select2({
-            theme: "bootstrap4",
-            ajax: {
-                url: "{{ route('ref_poliklinik_api') }}",
-                type: "get",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    console.log(params);
-                    return {
-                        poliklinik: params.term // search term
-                    };
-                },
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $("#dokter").select2({
-            theme: "bootstrap4",
-            ajax: {
-                url: "{{ route('ref_dpjp_api') }}",
-                type: "get",
-                dataType: 'json',
-                delay: 250,
-                data: function(params) {
-                    return {
-                        jenispelayanan: $("#jenispelayanan").val(),
-                        kodespesialis: $("#poliklinik option:selected").val(),
-                        tanggal: $("#tanggal").val(),
-                        nama: params.term // search term
-                    };
-                },
-                processResults: function(response) {
-                    return {
-                        results: response
-                    };
-                },
-                cache: true
-            }
-        });
-        $('.btnModalSPRI').click(function(e) {
-            var kunjungan = $(this).data('id');
-            var noKartu = $(this).data('nomorkartu');
-            $('#noKartu').val(noKartu);
-            $('#kodeKunjungan').val(kunjungan);
-            $('.lanjutkanPROSESDAFTAR').hide();
-            if ($('#modalSPRI').show()) {
-                var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
-                $.ajax({
-                    type: "GET",
-                    url: url,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        console.log(data.cekSPRI);
-                        if (data.cekSPRI == null) {
-                            Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
-                                'info');
-                        } else {
-                            $('.lanjutkanPROSESDAFTAR').show();
-                            $('.btnCreateSPRI').hide();
-                            $('.btnCreateSPRIBatal').hide();
-                            $('.lanjutkanPROSESDAFTAR').click(function(e) {
-                                location.href =
-                                    "{{ route('ranapbpjs') }}/?no_kartu=" + data
-                                    .cekSPRI.noKartu;
-                            });
-                        }
-                    }
-                });
-            }
-            $('#modalSPRI').modal('toggle');
-        });
-
-        $('.btnCreateSPRI').click(function(e) {
-            var kodeKunjungan = $("#kodeKunjungan").val();
-            var noKartu = $("#noKartu").val();
-            var kodeDokter = $("#dokter").val();
-            var poliKontrol = $("#poliklinik option:selected").val();
-            var tglRencanaKontrol = $("#tanggal").val();
-            var user = $("#user").val();
-            var url = "{{ route('pasien-ranap.createspri') }}";
-            $.LoadingOverlay("show");
-            $.ajax({
-                type: 'POST',
-                url: url,
-                dataType: 'json',
-                data: {
-                    noKartu: noKartu,
-                    kodeDokter: kodeDokter,
-                    poliKontrol: poliKontrol,
-                    tglRencanaKontrol: tglRencanaKontrol,
-                    kodeKunjungan: kodeKunjungan,
-                    user: user,
-                },
-                success: function(data) {
-
-                    if (data.metadata.code == 200) {
-                        Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
-                        $("#createSPRI").modal('toggle');
-                        window.location.reload();
-                        $.LoadingOverlay("hide");
-                    } else {
-                        Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
-                            .code + ')', '', 'error');
-                        $.LoadingOverlay("hide");
-                    }
-                },
-
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
             });
-        });
 
-        $('.btnDetailRanap').click(function(e) {
-            $('#detailRanap').modal('toggle');
-        });
+            $("#poliklinik").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_poliklinik_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        console.log(params);
+                        return {
+                            poliklinik: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $("#dokter").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_dpjp_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            jenispelayanan: $("#jenispelayanan").val(),
+                            kodespesialis: $("#poliklinik option:selected").val(),
+                            tanggal: $("#tanggal").val(),
+                            nama: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+            $('.btnModalSPRI').click(function(e) {
+                var kunjungan = $(this).data('id');
+                var noKartu = $(this).data('nomorkartu');
+                $('#noKartu').val(noKartu);
+                $('#kodeKunjungan').val(kunjungan);
+                $('.lanjutkanPROSESDAFTAR').hide();
+                if ($('#modalSPRI').show()) {
+                    var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        dataType: 'JSON',
+                        success: function(data) {
+                            console.log(data.cekSPRI);
+                            if (data.cekSPRI == null) {
+                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
+                                    'info');
+                            } else {
+                                $('.lanjutkanPROSESDAFTAR').show();
+                                $('.btnCreateSPRI').hide();
+                                $('.btnCreateSPRIBatal').hide();
+                                $('.lanjutkanPROSESDAFTAR').click(function(e) {
+                                    location.href =
+                                        "{{ route('ranapbpjs') }}/?no_kartu=" + data
+                                        .cekSPRI.noKartu;
+                                });
+                            }
+                        }
+                    });
+                }
+                $('#modalSPRI').modal('toggle');
+            });
 
-    });
-</script>
+            $('.btnCreateSPRI').click(function(e) {
+                var kodeKunjungan = $("#kodeKunjungan").val();
+                var noKartu = $("#noKartu").val();
+                var kodeDokter = $("#dokter").val();
+                var poliKontrol = $("#poliklinik option:selected").val();
+                var tglRencanaKontrol = $("#tanggal").val();
+                var user = $("#user").val();
+                var url = "{{ route('pasien-ranap.createspri') }}";
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {
+                        noKartu: noKartu,
+                        kodeDokter: kodeDokter,
+                        poliKontrol: poliKontrol,
+                        tglRencanaKontrol: tglRencanaKontrol,
+                        kodeKunjungan: kodeKunjungan,
+                        user: user,
+                    },
+                    success: function(data) {
+
+                        if (data.metadata.code == 200) {
+                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
+                            $("#createSPRI").modal('toggle');
+                            window.location.reload();
+                            $.LoadingOverlay("hide");
+                        } else {
+                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
+                                .code + ')', '', 'error');
+                            $.LoadingOverlay("hide");
+                        }
+                    },
+
+                });
+            });
+
+            $('.btnDetailRanap').click(function(e) {
+                $('#detailRanap').modal('toggle');
+            });
+
+        });
+    </script>
 @endsection
