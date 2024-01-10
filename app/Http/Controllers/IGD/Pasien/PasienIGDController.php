@@ -182,7 +182,6 @@ class PasienIGDController extends Controller
 
     public function updatePasien(Request $request)
     {
-        // dd($request->all());
         $pasien = Pasien::firstWhere('no_rm',$request->rm);
         $kabUpdate = is_numeric($request->kabupaten_pasien);
         $kecUpdate = is_numeric($request->kecamatan_pasien);

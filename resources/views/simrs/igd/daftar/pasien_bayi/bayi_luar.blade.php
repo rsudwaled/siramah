@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Kunjungan IGK</h5>
+                <h5>Kunjungan Kebidanan</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -24,7 +24,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan UGK :">
+            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan Kebidinanan :">
                 <div class="col-lg-12">
                     <div class="row">
                         <form action="" method="get">
@@ -97,7 +97,7 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped
+                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
                                 bordered hoverable compressed>
                                 @foreach ($bayi as $item)
                                     <tr>

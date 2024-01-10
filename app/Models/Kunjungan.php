@@ -32,6 +32,12 @@ class Kunjungan extends Model
         'diagx',
         'created_at',
         'keterangan2',
+        'is_ranap_daftar',
+        'form_send_by',
+        'jp_daftar',
+        'perujuk',
+        'no_spri',
+        'alasan_edit',
     ];
     protected $appends = ['rm_counter'];
     public function getRmCounterAttribute()

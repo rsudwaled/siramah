@@ -25,7 +25,7 @@ class RanapController extends APIController
 
     public function listPasienRanap(Request $request)
     {
-        $assesmentRanap = DB::connection('mysql2')->table('ts_kunjungan')
+        $query = DB::connection('mysql2')->table('ts_kunjungan')
                     ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
                     ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
                     ->join('ts_jp_igd', 'ts_kunjungan.kode_kunjungan', '=', 'ts_jp_igd.kunjungan')
@@ -42,29 +42,50 @@ class RanapController extends APIController
                     )
                     ->where('ts_kunjungan.is_ranap_daftar', 0)
                     ->where('di_pasien_diagnosa_frunit.is_ranap', 1)
-                    ->orderBy('tgl_kunjungan', 'desc')->get();
-        // dd($assesmentRanap);
-        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')
+                    ->orderBy('tgl_kunjungan', 'desc');
+        if($request->tanggal && !empty($request->tanggal))
+        {
+            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
+        }
+
+        if($request->unit && !empty($request->unit))
+        {
+            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        }
+
+        if(empty($request->tanggal) && empty($request->unit)){
+            $query->whereDate('ts_kunjungan.tgl_masuk', now());
+        }
+        $assesmentRanap = $query->get();
+        $unit           = Unit::whereIn('kode_unit', ['1002','1023'])->get();
+        return view('simrs.igd.ranap.assesment_ranap', compact('request','assesmentRanap','unit'));
+    }
+
+    public function dataPasienRanap(Request $request)
+    {
+        $kunjungan = Kunjungan::where([
+                ['status_kunjungan','!=', 8],
+                ['is_ranap_daftar', 1],
+            ])
+            ->whereDate('tgl_masuk', now())
             ->get();
-        return view('simrs.igd.ranap.assesment_ranap', compact('request','assesmentRanap','paramedis'));
+        $unit = Unit::where('kelas_unit', 1)->get();
+        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan','unit'));
     }
 
     public function ranapUmum(Request $request, $rm, $kunjungan)
     {
-        $pasien = Pasien::where('no_rm', $rm)->first();
-        $kunjungan = Kunjungan::where('kode_kunjungan', $kunjungan)->first();
-        $paramedis = Paramedis::where('spesialis', 'UMUM')
-            ->where('act', 1)
-            ->get();
-        $unit = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $penjamin = PenjaminSimrs::get();
+        $pasien         = Pasien::where('no_rm', $rm)->first();
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->first();
+        $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
+        $unit           = Unit::where('kelas_unit', 2)->get();
+        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $penjamin       = PenjaminSimrs::get();
         return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis'));
     }
-
+    
     public function pasienRanapStore(Request $request)
     {
-        
         $validator = $request->validate([
             'tanggal_daftar' => 'required|date',
             'kodeKunjungan' => 'required',
@@ -97,12 +118,15 @@ class RanapController extends APIController
         $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin_simrs;
+        $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->kelas             = $ruangan->id_kelas;
         $createKunjungan->hak_kelas         = $ruangan->id_kelas;
-        $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->id_ruangan        = $request->id_ruangan;
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
+        $createKunjungan->is_ranap_daftar   = 1;
+        $createKunjungan->form_send_by      = 1;
+        $createKunjungan->jp_daftar         = 0;
         $createKunjungan->pic               = Auth::user()->id;
         if ($createKunjungan->save()) {
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
@@ -159,8 +183,8 @@ class RanapController extends APIController
                     }
 
                     if ($createAdm->save()) {
-                        $createKunjungan->status_kunjungan = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_daftar_ranap = 1; //status 1 pasien sudah di daftarkan ranap
+                        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
+                        $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
@@ -179,32 +203,56 @@ class RanapController extends APIController
             Alert::error('Error!!', 'pasien tidak memiliki no bpjs');
             return back();
         }
-        $vlcaim = new VclaimController();
-        $request['nomorkartu'] = $request->no_kartu;
-        $request['tanggal'] = now()->format('Y-m-d');
-        $res = $vlcaim->peserta_nomorkartu($request);
-        $kodeKelas = $res->response->peserta->hakKelas->kode;
-        $kelas = $res->response->peserta->hakKelas->keterangan;
-        $refKunj = $request->kodeKunjungan;
-        $pasien = Pasien::firstWhere('no_Bpjs', $request->no_kartu);
-        $kunjungan = Kunjungan::where('kode_kunjungan', $refKunj)->get();
-        $unit = Unit::where('kelas_unit', 2)->get();
-        $poli = Unit::whereNotNull('KDPOLI')->get();
-        $alasanmasuk = AlasanMasuk::limit(10)->get();
-        $icd = Icd10::limit(15)->get();
-        $penjamin = PenjaminSimrs::get();
-        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-        $spri = Spri::where('noKartu', $request->no_kartu)
-            ->where('tglRencanaKontrol', now()->format('Y-m-d'))
-            ->first();
-        // dd($spri);
-        $spri = '000000';
+        $vlcaim                     = new VclaimController();
+        $request['nomorkartu']      = $request->no_kartu;
+        $request['tanggal']         = now()->format('Y-m-d');
+        $res                        = $vlcaim->peserta_nomorkartu($request);
+        $kodeKelas                  = $res->response->peserta->hakKelas->kode;
+        $kelas                      = $res->response->peserta->hakKelas->keterangan;
+        $refKunj                    = $request->kodeKunjungan;
+
+        $pasien         = Pasien::firstWhere('no_Bpjs', $request->no_kartu);
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $refKunj)->get();
+        $unit           = Unit::where('kelas_unit', 2)->get();
+        $poli           = Unit::whereNotNull('KDPOLI')->get();
+        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $icd            = Icd10::limit(15)->get();
+        $penjamin       = PenjaminSimrs::get();
+        $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+        $spri           = Spri::where('noKartu', $request->no_kartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
         return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli', 'refKunj', 'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis'));
+    }
+
+    public function daftarRanapBPJS(Request $request, $nomorkartu, $kode)
+    {
+        $vlcaim                 = new VclaimController();
+        $request['nomorkartu']  = $nomorkartu;
+        $request['tanggal']     = now()->format('Y-m-d');
+        $res                    = $vlcaim->peserta_nomorkartu($request);
+        $kodeKelas              = $res->response->peserta->hakKelas->kode;
+        $kelas                  = $res->response->peserta->hakKelas->keterangan;
+
+        $pasien         = Pasien::firstWhere('no_Bpjs', $nomorkartu);
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->get();
+        $unit           = Unit::where('kelas_unit', 2)->get();
+        $poli           = Unit::whereNotNull('KDPOLI')->get();
+        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $icd            = Icd10::limit(15)->get();
+        $penjamin       = PenjaminSimrs::get();
+        $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+        $spri           = Spri::where('noKartu', $nomorkartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
+
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request'));
+    }
+
+    public function ranapCreateSEPRanap(Request $request)
+    {
+        $kunjungan      = Kunjungan::where('kode_kunjungan', '22237488')->first();
+        return view('simrs.igd.ranap.selesaikan_ranap', compact('kunjungan', 'request'));
     }
 
     public function createSPRI(Request $request)
     {
-        dd($request->all());
         $vclaim = new VclaimController();
         $response = $vclaim->spri_insert($request);
         if ($response->metadata->code == 200) {
@@ -223,6 +271,10 @@ class RanapController extends APIController
                 'poliKontrol' => $request->poliKontrol,
                 'user' => $request->user,
             ]);
+
+            // $kunjungan = Kunjungan::where('kode_kunjungan', $request->kodeKunjungan)->first();
+            // $kunjungan->no_spri = $spri->noSPRI;
+            // $kunjungan->save();
         } else {
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
         }
@@ -412,7 +464,9 @@ class RanapController extends APIController
 
                     if ($createAdm->save()) {
                         $createKunjungan->status_kunjungan = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_daftar_ranap = 1; //status 1 pasien sudah di daftarkan ranap
+                        $createKunjungan->is_ranap_daftar = 1; //status 1 pasien sudah di daftarkan ranap
+                        $createKunjungan->form_send_by = 1; //status 1 pasien sudah di daftarkan ranap
+                        $createKunjungan->jp_daftar = 0; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1

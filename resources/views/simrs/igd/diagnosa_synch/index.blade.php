@@ -67,7 +67,7 @@
                             @foreach ($pasien_fr as $item)
                                 <tr>
                                     <td>
-                                        <a href="{{route('edit-pasien', ['rm'=>$item->no_rm])}}">
+                                        <a href="{{ route('edit-pasien', ['rm' => $item->no_rm]) }}">
                                             <b>RM : {{ $item->no_rm }}<br>
                                                 {{ $item->pasien->nama_px }} <br></b>
                                             KUNJUNGAN : {{ $item->kode_kunjungan }} <br>

@@ -4,13 +4,12 @@
 <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h5>Data Kunjungan</h5>
+            <h5>Pasien Rawat Inap</h5>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a onClick="window.location.reload();" 
                         class="btn btn-sm btn-flat btn-warning">refresh</a></li>
-                
             </ol>
         </div>
     </div>
@@ -55,7 +54,7 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Pasien', 'Alamat', 'kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'status', 'detail'];
+                        $heads = ['Tgl Masuk / Kunjungan','Pasien', 'Alamat',  'status', 'detail'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -68,21 +67,22 @@
                         @foreach ($kunjungan as $item)
                             <tr>
                                 <td>
-                                    <a href="{{route('edit-pasien', ['rm'=>$item->rm])}}" target="__blank">
-                                        <b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
-                                        {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
+                                    <b>
+                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }})
+                                    </b> <br>
+                                    {{ $item->tgl_masuk }}
+                                </td>
+                                <td>
+                                    <a href="{{route('edit-pasien', ['rm'=>$item->no_rm])}}" target="__blank">
+                                        <b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->no_rm }} <br>NIK :
+                                        {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
                                     </a>
                                 </td>
-                                <td>alamat : {{ $item->alamat }} / <br>
-                                </td>
-                                <td>{{ $item->kunjungan }} <br> ({{ $item->nama_unit }})</td>
-                                <td>{{ $item->tgl_kunjungan }}</td>
-                                <td>{{ $item->diagx }}</td>
-                                <td>{{ $item->sep }}</td>
-                                <td>{{ $item->status }}</td>
+                                <td>alamat : {{ $item->pasien->alamat }} / <br></td>
+                                
+                                <td>{{ $item->status->status_kunjungan }}</td>
                                 <td>
-                                    <a href="{{route('detail.kunjungan',['kunjungan'=>$item->kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
-
+                                    <a href="{{route('detail.kunjungan', ['kunjungan'=>$item->kode_kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -101,47 +101,5 @@
 @section('plugins.Sweetalert2', true)
 
 @section('js')
-    <script>
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('.btn-singkron').on('click', function() {
-                let diag = $(this).data('diagx');
-                let kunj = $(this).data('kunjungan');
-                let rm = $(this).data('rm');
-                let nama = $(this).data('nama');
-                let jk = $(this).data('jk');
-                let jk_dsc = jk == 'P' ? 'perempuan' : 'laki-laki';
-                $('#refDiagnosa').val(diag);
-                $('#kunjungan').val(kunj);
-                $('#noMR').val(rm);
-                $('#nama_pasien').text(nama);
-                $('#jk').text(jk_dsc);
-            });
-
-            $("#diagnosa").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_diagnosa_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            diagnosa: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-        });
-    </script>
+   
 @endsection

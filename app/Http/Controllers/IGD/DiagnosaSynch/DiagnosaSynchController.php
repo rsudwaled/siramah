@@ -2,20 +2,15 @@
 
 namespace App\Http\Controllers\IGD\DiagnosaSynch;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Kunjungan;
 use Carbon\Carbon;
 use App\Models\Unit;
 use App\Models\Icd10;
 use Illuminate\Http\Request;
-use App\Models\PenjaminSimrs;
 use App\Models\DiagnosaFrunit;
 use App\Models\HistoriesIGDBPJS;
-use Auth;
-use DB;
 
 
 class DiagnosaSynchController extends APIController
@@ -23,7 +18,7 @@ class DiagnosaSynchController extends APIController
     public function vDiagnosaAssesment(Request $request)
     {
         
-        $query2 = DiagnosaFrunit::with(['pasien','jpDaftar'])->where('status_bridging', 0)
+        $query = DiagnosaFrunit::with(['pasien','jpDaftar'])->where('status_bridging', 0)
                   ->where('isSynch', 0)->orderBy('input_date','desc');
                 
         if($request->tanggal && !empty($request->tanggal))
@@ -31,21 +26,18 @@ class DiagnosaSynchController extends APIController
             $dataYesterday = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
             $yesterday = $dataYesterday->subDays(2)->format('Y-m-d');
 
-            $query2->whereDate('input_date','>=', $yesterday); 
-            $query2->whereDate('input_date','<=', $request->tanggal); 
-        }else{
-            $dataYesterday = now();
-            $yesterday = $dataYesterday->subDays(1)->format('Y-m-d');
-
-            $query2->whereDate('input_date','>=', $yesterday); 
-            $query2->whereDate('input_date','<=', now()); 
+            $query->whereDate('input_date','>=', $yesterday); 
+            $query->whereDate('input_date','<=', $request->tanggal); 
         }
         if($request->unit && !empty($request->unit))
         {
-            $query2->whereIn('kode_unit', [$request->unit]); 
+            $query->whereIn('kode_unit', [$request->unit]); 
+        }
+        if(empty($request->tanggal) && empty($request->unit)){
+            $query->whereDate('input_date', now());
         }
 
-        $pasien_fr = $query2->get();
+        $pasien_fr = $query->get();
         $unit = Unit::whereIn('kode_unit',['1002','1023','1010','2004','2013'])->get();
         $requestUnit = Unit::firstWhere('kode_unit', $request->unit);
         return view('simrs.igd.diagnosa_synch.index', compact('request','pasien_fr','unit','requestUnit'));

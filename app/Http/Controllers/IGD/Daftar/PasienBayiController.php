@@ -14,13 +14,35 @@ class PasienBayiController extends Controller
 {
     public function index(Request $request)
     {
-        $kunjungan_igd = Kunjungan::where('prefix_kunjungan','UGK')
-                        ->whereNull('tgl_keluar')->get();
+        $start         = Carbon::parse($request->start)->format('Y-m-d');
+        $finish        = Carbon::parse($request->finish)->format('Y-m-d');
         $bayi          = PasienBayiIGD::get();
-        
-        return view('simrs.igd.daftar.pasien_bayi.pasien_bayi', compact('kunjungan_igd','bayi','request'));
-    }
+        $query         = Kunjungan::where('prefix_kunjungan','UGK')
+                        ->whereNull('tgl_keluar');
+                        
+        if(!empty($request->start) && !empty($request->finish))
+        {
+            $query->whereDate('tgl_masuk', '>=', $request->start );
+            $query->whereDate('tgl_masuk', '<=', $request->finish );
+        }else{
+            $now = Carbon::now();
+            $weekStartDate  = $now->startOfWeek()->format('Y-m-d H:i');
+            $weekEndDate    = $now->endOfWeek()->format('Y-m-d H:i');
 
+            $query->whereDate('tgl_masuk', '>=', $weekStartDate );
+            $query->whereDate('tgl_masuk', '<=',  $weekEndDate );
+        }
+
+        $kunjungan_igd = $query->get();
+        return view('simrs.igd.daftar.pasien_bayi.pasien_bayi', compact('kunjungan_igd','bayi','request','start','finish'));
+    }
+    public function bayiPerorangtua(Request $request)
+    {
+        $data = PasienBayiIGD::where('rm_ibu', $request->detail)->get();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
     public function cariBayi(Request $request)
     {
         $query = PasienBayiIGD::query();

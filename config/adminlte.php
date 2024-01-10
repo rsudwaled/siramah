@@ -407,6 +407,13 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Pasien Ranap*',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'pasien-rawat-inap',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Kunjungan*',
                     'icon'    => 'fas fa-address-book',
                     'url'  => 'daftar-kunjungan',

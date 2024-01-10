@@ -18,6 +18,7 @@ use App\Models\JPasienIGD;
 use App\Models\HistoriesIGDBPJS;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Http;
 
 class DaftarIGDController extends Controller
 {
@@ -110,7 +111,7 @@ class DaftarIGDController extends Controller
     {
         $antrian = AntrianPasienIGD::firstWhere('no_antri', $no);
         $pasien = Pasien::firstWhere('no_rm', $rm);
-        $kunjungan = Kunjungan::where('no_rm', $rm)->get();
+        $kunjungan = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
         $knj_aktif = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)
             ->count();
@@ -120,7 +121,14 @@ class DaftarIGDController extends Controller
         $penjamin = PenjaminSimrs::limit(10)
             ->where('act', 1)
             ->get();
-        return view('simrs.igd.daftar.form_igd', compact('antrian','pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif'));
+        $tanggal =now()->format('Y-m-d');
+        // cek status bpjs aktif atau tidak
+        $url = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $resdescrtipt = $this->response_decrypt($response, $signature);
+        // dd($resdescrtipt);
+        return view('simrs.igd.daftar.form_igd', compact('antrian','pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function store(Request $request)
@@ -174,36 +182,14 @@ class DaftarIGDController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien tidak memiliki nomor kartu. silahkan edit pasien terlebih dahulu!');
             return back();
         }
-        // if(!empty($pasien->no_Bpjs) && $request->isBpjs == 1)
-        // {
-        //     $tanggal =now()->format('Y-m-d');
-        //     $url = env('VCLAIM_URL') . "Peserta/nokartu/" . $pasien->no_Bpjs . "/tglSEP/" . $tanggal;
-        //     $signature = $this->signature();
-        //     $response = Http::withHeaders($signature)->get($url);
-        //     dd($response, $request->all());
-        //     $repon_desc = $this->response_decrypt($response, $signature);
 
-        //     if($repon_desc->metadata->code != 200)
-        //     {
-        //         Alert::error('Daftar Gagal!!', 'pasien memiliki masalah dengan bpjs : '.$repon_desc->metadata->message.'-'.($repon_desc->metadata->code));
-        //         return back();
-        //     }
-        //     if($repon_desc->metadata->code == 200 && $repon_desc->response->peserta->statusPeserta->kode == 0)
-        //     {
-        //         $hakKelas = $repon_desc->response->peserta->hakKelas->kode;
-        //     }else{
-        //         Alert::error('Daftar Gagal!!', 'status pasien bpjs : '.$repon_desc->response->peserta->statusPeserta->keterangan);
-        //         return back();
-        //     }
-        // }
-
-        $desa = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
-        $kec = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
-        $kab = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
+        $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
+        $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
+        $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
         $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , '.' kec: ' . $kec . ' , '.' Kab: ' . $kab . ' )';
       
         $dokter = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-        // dd($dokter);
+   
         $createKunjungan = new Kunjungan();
         $createKunjungan->counter = $c;
         $createKunjungan->no_rm = $request->rm;
@@ -216,6 +202,9 @@ class DaftarIGDController extends Controller
         $createKunjungan->kelas = 3;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
         $createKunjungan->perujuk = $request->nama_perujuk??null;
+        $createKunjungan->is_ranap_daftar   = 0;
+        $createKunjungan->form_send_by      = 0;
+        $createKunjungan->jp_daftar         =  $request->isBpjs;
         // $createKunjungan->pic2 = Auth::user()->id;
         $createKunjungan->pic = Auth::user()->id;
         if ($createKunjungan->save()) {

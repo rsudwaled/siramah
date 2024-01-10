@@ -155,7 +155,7 @@
                     </div>
                 </div>
                 <x-adminlte-button id="updatePasien" class="float-right btn-sm btn-flat" theme="success" label="update data" />
-                <button onclick="window.history.back()" class="btn btn-secondary btn-sm btn-flat float-right">kembali</button>
+                <button type="button" id="selesaiEdit" class="btn btn-primary btn-sm btn-flat float-right">Selesai Edit</button>
                 <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
             </form>
@@ -313,13 +313,27 @@
                         success: function(res) {
                             if (res.status == 200) {
                                 Swal.fire('data pasien berhasil diupdate', '', 'success');
-                                window.history.back()
+                                window.location.reload(history.back());
                             }else{
                                 Swal.fire('data keluarga harus dilengkapi', '', 'error');
                             }
                         }
                     });
 
+                }
+            })
+
+        });
+        $('#selesaiEdit').on('click', function() {
+            swal.fire({
+                icon: 'question',
+                title: 'SELESAI EDIT DATA INI ?',
+                showDenyButton: true,
+                confirmButtonText: 'IYA',
+                denyButtonText: `Batal`,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.close()
                 }
             })
 

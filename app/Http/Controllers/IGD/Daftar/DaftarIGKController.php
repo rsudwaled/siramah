@@ -120,7 +120,13 @@ class DaftarIGKController extends Controller
         $penjamin = PenjaminSimrs::limit(10)
             ->where('act', 1)
             ->get();
-        return view('simrs.igd.daftar.form_igk', compact('antrian','pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif'));
+        $tanggal =now()->format('Y-m-d');
+        // cek status bpjs aktif atau tidak
+        $url = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $resdescrtipt = $this->response_decrypt($response, $signature);
+        return view('simrs.igd.daftar.form_igk', compact('antrian','pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function store(Request $request)
@@ -215,6 +221,9 @@ class DaftarIGKController extends Controller
         $createKunjungan->kelas = 3;
         $createKunjungan->id_alasan_masuk = $request->alasan_masuk_id;
         $createKunjungan->perujuk = $request->nama_perujuk??null;
+        $createKunjungan->is_ranap_daftar   = 0;
+        $createKunjungan->form_send_by      = 0;
+        $createKunjungan->jp_daftar         =  $request->isBpjs;
         // $createKunjungan->pic2 = Auth::user()->id;
         $createKunjungan->pic = Auth::user()->id;
         if ($createKunjungan->save()) {

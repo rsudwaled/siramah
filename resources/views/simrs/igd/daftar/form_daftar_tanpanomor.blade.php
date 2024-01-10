@@ -21,10 +21,129 @@
     <div class="row">
         <div class="col-12">
             <div class="row">
+                <div class="col-md-12 ">
+                    <div class="card card-primary card-outline">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div class="row bg-primary">
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-headers">{{ $pasien->nama_px }}</h5>
+                                                <small>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</small> <br>
+                                                <span class="description-text">-Pasien-</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-headers">{{ date('d F Y', strtotime($pasien->tgl_lahir))}}</h5>
+                                                <span class="description-text">-Tanggal Lahir-</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-headers">{{ $pasien->no_rm }}</h5>
+                                                <span class="description-text">-No RM-</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block">
+                                                <h5 class="description-headers">
+                                                    NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }} <br>
+                                                    BPJS : {{ $pasien->no_Bpjs == null ? 'tidak ada' : $pasien->no_Bpjs }}
+                                                </h5>
+                                                <span class="description-text">-NIK & BPJS-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    @php
+                                        $heads = ['Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
+                                        $config['order'] = ['0', 'asc'];
+                                        $config['paging'] = false;
+                                        $config['info'] = false;
+                                        $config['scrollY'] = '300px';
+                                        $config['scrollCollapse'] = true;
+                                        $config['scrollX'] = true;
+                                    @endphp
+                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config"
+                                        striped bordered hoverable compressed>
+                                        @foreach ($kunjungan as $item)
+                                            <tr>
+                                                <td>{{ $item->counter }}</td>
+                                                <td>{{ $item->kode_kunjungan }}</td>
+                                                <td>{{ $item->unit->nama_unit }}</td>
+                                                <td>{{ $item->tgl_masuk }}</td>
+                                                <td>{{ $item->tgl_keluar == null ? 'pasien belum keluar' : $item->tgl_keluar }}
+                                                </td>
+                                                <td>{{ $item->kode_penjamin }}</td>
+                                                <td>
+                                                    <button type="button"
+                                                        class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-success disabled' : ($item->status_kunjungan == 1 ? 'btn-danger' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
+
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
+                                    </x-adminlte-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-lg-12">
                     <x-adminlte-card theme="success" size="sm" id="div_rajal" icon="fas fa-info-circle" collapsible
                         title="Daftarkan : {{ $pasien->nama_px }} ({{ $pasien->no_rm }})">
-                        <form action="{{ route('form-tanpanomor.store') }}" id="formPendaftaranIGD" method="post">
+                        @if (!empty($resdescrtipt->response))
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body bg-success disabled color-palette">
+                                    <div class="row ">
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">- {{$resdescrtipt->response->peserta->statusPeserta->keterangan}} -</h5>
+                                                <span class="description-text">STATUS BPJS </span>
+                                            </div>
+                        
+                                        </div>
+                        
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->jenisPeserta->keterangan}}</h5>
+                                                <span class="description-text">JENIS PESERTA</span>
+                                            </div>
+                        
+                                        </div>
+                        
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->hakKelas->keterangan}}</h5>
+                                                <span class="description-text">HAK KELAS</span>
+                                            </div>
+                        
+                                        </div>
+                        
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block">
+                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->noKartu}}</h5>
+                                                <span class="description-text">NO KARTU</span>
+                                            </div>
+                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                        @endif
+                        
+                        <form action="" id="formPendaftaranIGD" method="post">
                             @csrf
                             <div class="col-lg-12">
                                 <input type="hidden" name="rm" value="{{ $pasien->no_rm }}">
@@ -135,8 +254,15 @@
                                     </div>
                                 </div>
                                 @if ($knj_aktif == 0)
-                                    <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right"
-                                        id="submitPasien" label="Simpan Data" />
+                                    @if (!empty($resdescrtipt->response))
+                                        @if ($resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF')
+                                        <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                        from="formPendaftaranIGD" label="Simpan Data" />
+                                        @else
+                                        <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                        from="formPendaftaranIGD" label="Simpan" />
+                                        @endif
+                                    @endif
                                 @else
                                     <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
                                         label="tidak bisa lanjut daftar" />

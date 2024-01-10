@@ -2,38 +2,73 @@
 
 @section('title', 'Pasien IGD KEBIDANAN')
 @section('content_header')
-    <h5>Pasien IGK : {{ $pasien->nama_px }}</h5>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h5>Form Daftar</h5>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><b>
+                            <h5>ANTRIAN : {{ $antrian->no_antri }}</h5>
+                        </b></li>
+                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
+                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('content')
     <div class="row">
         <div class="col-12">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12 ">
                     <div class="card card-primary card-outline">
-                        <div class="card-body box-profile">
-                            <h3 class="profile-username text-center">RM : {{ $pasien->no_rm }}</h3>
-                            <p class="text-muted text-center">Nama : {{ $pasien->nama_px }}</p>
-                            <ul class="list-group list-group-unbordered mb-3">
-                                <li class="list-group-item"><b>Jenis Kelamin :
-                                        {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</b></li>
-                                <li class="list-group-item"><b>Alamat : {{ $pasien->alamat }}</b></li>
-                                <li class="list-group-item"><b>NIK : {{ $pasien->nik_bpjs }}</b></li>
-                                <li class="list-group-item"><b>BPJS :
-                                        {{ $pasien->no_Bpjs == null ? 'tidak punya bpjs' : $pasien->no_Bpjs }}</b></li>
-                                <li class="list-group-item"><b>Telp :
-                                        {{ $pasien->no_telp == null ? $pasien->no_hp : $pasien->no_telp }}</b></li>
-                            </ul>
-                            <a class="btn btn-primary bg-gradient-primary btn-block"><b>No Antri :
-                                    {{ $antrian->no_antri }}</b></a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-9">
-                    <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan :">
-                        <div class="col-lg-12">
+                        <div class="card-body">
                             <div class="row">
+                                <div class="col-lg-12 mb-3">
+                                    <div class="row bg-primary">
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <a href="{{ route('edit-pasien', ['rm' => $pasien->no_rm]) }}" target="__blank"
+                                                    class="form-group text-white">
+                                                    <h5 class="description-headers">{{ $pasien->nama_px }}</h5>
+                                                    <small>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</small>
+                                                    <br>
+                                                    <span class="description-text">-Pasien-</span> <br>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-headers">
+                                                    {{ date('d F Y', strtotime($pasien->tgl_lahir)) }}</h5>
+                                                <span class="description-text">-Tanggal Lahir-</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-headers">{{ $pasien->no_rm }}</h5>
+                                                <span class="description-text">-No RM-</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block">
+                                                <h5 class="description-headers">
+                                                    NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }}
+                                                    <br>
+                                                    BPJS : {{ $pasien->no_Bpjs == null ? 'tidak ada' : $pasien->no_Bpjs }}
+                                                </h5>
+                                                <span class="description-text">-NIK & BPJS-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-lg-12">
                                     @php
                                         $heads = ['Kunjungan', 'Kode Kunjungan', 'Unit', 'Tanggal Masuk', 'Tanggal keluar', 'Penjamin', 'Status'];
@@ -58,14 +93,17 @@
                                                 <td>
                                                     <button type="button"
                                                         class="btn {{ $item->status_kunjungan == 2 ? 'btn-block bg-gradient-success disabled' : ($item->status_kunjungan == 1 ? 'btn-danger' : 'btn-success') }} btn-block btn-flat btn-xs">{{ $item->status_kunjungan == 2 ? 'kunjungan ditutup' : ($item->status_kunjungan == 1 ? 'kunjungan aktif' : 'kunjungan dibatalkan') }}</button>
+
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </x-adminlte-datatable>
                                 </div>
                             </div>
                         </div>
-                    </x-adminlte-card>
+                    </div>
+
                 </div>
             </div>
             <div class="row">
@@ -73,7 +111,51 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" size="sm" id="div_rajal" icon="fas fa-info-circle"
-                                collapsible title="Form Pendaftaran">
+                                collapsible title="Daftarkan Pasien: {{ $pasien->nama_px }} ({{ $pasien->no_rm }})">
+                                @if (!empty($resdescrtipt->response))
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-body bg-success">
+                                                <div class="row ">
+                                                    <div class="col-sm-3 col-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header ">-
+                                                                {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }}
+                                                                -</h5>
+                                                            <span class="description-text">- STATUS BPJS - </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-3 col-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header ">
+                                                                {{ $resdescrtipt->response->peserta->jenisPeserta->keterangan }}
+                                                            </h5>
+                                                            <span class="description-text">- JENIS PESERTA -</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-3 col-6">
+                                                        <div class="description-block border-right">
+                                                            <h5 class="description-header ">
+                                                                {{ $resdescrtipt->response->peserta->hakKelas->keterangan }}
+                                                            </h5>
+                                                            <span class="description-text">- HAK KELAS -</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-3 col-6">
+                                                        <div class="description-block">
+                                                            <h5 class="description-header ">
+                                                                {{ $resdescrtipt->response->peserta->noKartu }}</h5>
+                                                            <span class="description-text">- NO KARTU -</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
                                 <form action="{{ route('form-igk.daftar-create') }}" id="formPendaftaranIGD"
                                     method="post">
                                     @csrf
@@ -99,15 +181,17 @@
                                                 <x-adminlte-input name="noTelp" type="number" label="No Telpon" />
                                                 <div class="form-group">
                                                     <label for="exampleInputBorderWidth2">Perujuk
-                                                        <code>(jika pasien memiliki referensi instansi yang merujuk)</code></label>
-                                                        <select name="isPerujuk" id="isPerujuk" class="form-control">
-                                                            <option value="0">Tanpa Perujuk</option>
-                                                            <option value="1">Tambah Perujuk</option>
-                                                        </select>
-                                                    </div>
+                                                        <code>(jika pasien memiliki referensi instansi yang
+                                                            merujuk)</code></label>
+                                                    <select name="isPerujuk" id="isPerujuk" class="form-control">
+                                                        <option value="0">Tanpa Perujuk</option>
+                                                        <option value="1">Tambah Perujuk</option>
+                                                    </select>
+                                                </div>
                                                 <div class="form-group" id="perujuk">
                                                     <label for="exampleInputBorderWidth2">Nama Perujuk</label>
-                                                    <input type="text" name="nama_perujuk" class="form-control" id="nama_perujuk">
+                                                    <input type="text" name="nama_perujuk" class="form-control"
+                                                        id="nama_perujuk">
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
@@ -148,8 +232,7 @@
                                                 </x-adminlte-select>
                                             </div>
                                             <div class="col-lg-12">
-                                                <div class="col-md-12" id="div_stts_kecelakaan"
-                                                    style="display: none;">
+                                                <div class="col-md-12" id="div_stts_kecelakaan" style="display: none;">
                                                     <div class="card card-danger card-outline">
                                                         <div class="card-body">
                                                             <div class="row">
@@ -174,8 +257,8 @@
                                                                     <x-adminlte-input name="noLP" label="NO LP"
                                                                         placeholder="no laporan polisi" id="noLP"
                                                                         disable-feedback />
-                                                                    <x-adminlte-input name="keterangan"
-                                                                        id="keterangan" label="Keterangan"
+                                                                    <x-adminlte-input name="keterangan" id="keterangan"
+                                                                        label="Keterangan"
                                                                         placeholder="keterangan kecelakaan"
                                                                         disable-feedback />
                                                                     @php

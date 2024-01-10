@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Kunjungan IGK</h5>
+                <h5>Kunjungan Kebidanan</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -23,69 +23,51 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan UGK :">
-
+            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan Kebidanan :">
+                <div class="col-lg-12 rounded">
+                    <div class="card">
+                        <div class="card-body bg-success">
+                            <form action="" method="get">
+                                <div class="row ">
+                                    <div class="col-md-4">
+                                        @php
+                                            $config = ['format' => 'YYYY-MM-DD'];
+                                        @endphp
+                                        <x-adminlte-input-date name="start" label="Tanggal Awal" :config="$config"
+                                            value="{{ \Carbon\Carbon::parse($request->start)->format('Y-m-d') }}">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text bg-primary">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input-date>
+                                    </div>
+                                    <div class="col-md-4">
+                                        @php
+                                            $config = ['format' => 'YYYY-MM-DD'];
+                                        @endphp
+                                        <x-adminlte-input-date name="finish" label="Tanggal Akhir " :config="$config"
+                                            value="{{ \Carbon\Carbon::parse($request->finish)->format('Y-m-d') }}">
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text bg-primary">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input-date>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <x-adminlte-button type="submit" class="withLoad mt-4 float-right" theme="primary" label="Submit Pencarian" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-lg-12">
                     <div class="row">
-                        {{-- <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
-                                        placeholder="Cari Berdasarkan NIK">
-                                        <x-slot name="appendSlot">
-                                            <x-adminlte-button theme="success" class="withLoad" type="submit" label="Cari!" />
-                                        </x-slot>
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text text-success">
-                                                <i class="fas fa-search"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <x-adminlte-input name="nomorkartu" label="Nomor Kartu" value="{{ $request->nomorkartu }}"
-                                        placeholder="Berdasarkan Nomor Kartu BPJS">
-                                        <x-slot name="appendSlot">
-                                            <x-adminlte-button theme="success" class="withLoad" type="submit" label="Cari!" />
-                                        </x-slot>
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text text-success">
-                                                <i class="fas fa-search"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $request->nama }}"
-                                        placeholder="Berdasarkan Nama Pasien">
-                                        <x-slot name="appendSlot">
-                                            <x-adminlte-button theme="success" class="withLoad" type="submit" label="Cari!" />
-                                        </x-slot>
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text text-success">
-                                                <i class="fas fa-search"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input>
-                                </div>
-                                <div class="col-md-6">
-                                    <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
-                                        placeholder="Berdasarkan Nomor RM">
-                                        <x-slot name="appendSlot">
-                                            <x-adminlte-button theme="success" class="withLoad" type="submit" label="Cari!" />
-                                        </x-slot>
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text text-success">
-                                                <i class="fas fa-search"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input>
-                                </div>
-                            </div>
-                        </form> --}}
                         <div class="col-lg-12">
                             @php
-                                $heads = ['Masuk', 'keluar', 'Orangtua', 'Alamat', 'Kunjungan','Alasan', 'Penjamin', 'Status'];
+                                $heads = ['Tgl Masuk / Kunjungan', 'keluar', 'Orangtua', 'Alamat','Alasan', 'Penjamin', 'Status'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -93,11 +75,16 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config" striped
+                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
                                 bordered hoverable compressed>
                                 @foreach ($kunjungan_igd as $item)
                                     <tr>
-                                        <td>{{ $item->tgl_masuk }}</td>
+                                        <td>
+                                            <b>
+                                                {{ $item->kode_kunjungan }}<br>({{ $item->unit->nama_unit }})<br>(Counter: {{ $item->counter }})
+                                            </b> <br><br>
+                                            <small class="text-red"> <b>{{ $item->tgl_masuk }}</b></small>
+                                        </td>
                                         <td>{{ $item->tgl_keluar == null ? 'belum keluar' : $item->tgl_keluar }}
                                         <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM : {{ $item->pasien->no_rm }}
                                             <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
@@ -109,7 +96,6 @@
                                                 {{ $item->pasien->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $item->pasien->desas->nama_desa_kelurahan . ' , Kec. ' . $item->pasien->kecamatans->nama_kecamatan . ' - Kab. ' . $item->pasien->kabupatens->nama_kabupaten_kota }}
                                             </small>
                                         </td>
-                                        <td>{{ $item->kode_kunjungan }}<br>({{ $item->unit->nama_unit }})<br>(Counter: {{ $item->counter }})</td>
                                         <td>{{ $item->alasan_masuk->alasan_masuk }}</td>
                                         </td>
                                         <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
