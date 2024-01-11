@@ -211,6 +211,8 @@ Route::middleware('auth')->group(function () {
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
     Route::post('simpan_mppa', [RanapController::class, 'simpan_mppa'])->name('simpan_mppa');
     Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
+    Route::post('simpan_mppb', [RanapController::class, 'simpan_mppb'])->name('simpan_mppb');
+    Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
