@@ -8,6 +8,10 @@ use App\Models\Pasien;
 use App\Models\Kunjungan;
 use App\Models\PasienBayiIGD;
 use App\Models\KeluargaPasien;
+use App\Models\Unit;
+use App\Models\PenjaminSimrs;
+use App\Models\Paramedis;
+use App\Models\AlasanMasuk;
 use Carbon\Carbon;
 
 class PasienBayiController extends Controller
@@ -48,8 +52,8 @@ class PasienBayiController extends Controller
         $query = PasienBayiIGD::query();
         if($request->tanggal && !empty($request->tanggal))
         {
-            $dataYesterday = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
-            $yesterday = $dataYesterday->subDays(2)->format('Y-m-d');
+            $dataYesterday  = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
+            $yesterday      = $dataYesterday->subDays(2)->format('Y-m-d');
 
             $query->whereDate('tgl_lahir','>=', $yesterday); 
             $query->whereDate('tgl_lahir','<=', $request->tanggal); 
@@ -75,42 +79,42 @@ class PasienBayiController extends Controller
     {
         $request->validate(
             [
-                'nama_bayi' => 'required',
+                'nama_bayi'         => 'required',
                 'tempat_lahir_bayi' => 'required',
             ],
             [
-                'nama_bayi' => 'Nama bayi wajib diisi !',
+                'nama_bayi'         => 'Nama bayi wajib diisi !',
                 'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
             ]);
-        $ortubayi = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
-        $cekOrtu = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
+        $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
+        $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
 
-        $last_rm = Pasien::latest('no_rm')->first(); // 23982846
-        $rm_last = substr($last_rm->no_rm, -6); //982846
+        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
+        $rm_last    = substr($last_rm->no_rm, -6); //982846
         $add_rm_new = $rm_last + 1; //982847
-        $th = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_bayi = $th . $add_rm_new;
+        $th         = substr(Carbon::now()->format('Y'), -2); //23
+        $rm_bayi    = $th . $add_rm_new;
 
-        $kontak = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
+        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $bayi = new PasienBayiIGD();
-        $bayi->nik_ortu = $ortubayi->nik_bpjs;
-        $bayi->no_bpjs_ortu = $ortubayi->no_Bpjs;
-        $bayi->nama_ortu = $ortubayi->nama_px;
-        $bayi->tempat_lahir_ortu = $ortubayi->tempat_lahir;
-        $bayi->alamat_lengkap_ortu = $ortubayi->alamat;
-        $bayi->no_hp_ortu = $kontak;
-        $bayi->kunjungan_ortu = $request->kunjungan_ortu;
+        $bayi->nik_ortu             = $ortubayi->nik_bpjs;
+        $bayi->no_bpjs_ortu         = $ortubayi->no_Bpjs;
+        $bayi->nama_ortu            = $ortubayi->nama_px;
+        $bayi->tempat_lahir_ortu    = $ortubayi->tempat_lahir;
+        $bayi->alamat_lengkap_ortu  = $ortubayi->alamat;
+        $bayi->no_hp_ortu           = $kontak;
+        $bayi->kunjungan_ortu       = $request->kunjungan_ortu;
         
-        $bayi->rm_bayi  = $rm_bayi;
-        $bayi->rm_ibu   = $ortubayi->no_rm;
-        $bayi->nama_bayi = strtoupper($request->nama_bayi.' binti '. $ortubayi->nama_px);
-        $bayi->jk_bayi = $request->jk_bayi;
-        $bayi->tempat_lahir = $request->tempat_lahir_bayi;
-        $bayi->tgl_lahir_bayi = $tgl_lahir_bayi;
-        $bayi->is_bpjs = (int) $request->isbpjs;
-        $bayi->isbpjs_keterangan = $request->isbpjs_keterangan;
+        $bayi->rm_bayi              = $rm_bayi;
+        $bayi->rm_ibu               = $ortubayi->no_rm;
+        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' binti '. $ortubayi->nama_px);
+        $bayi->jk_bayi              = $request->jk_bayi;
+        $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
+        $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
+        $bayi->is_bpjs              = (int) $request->isbpjs;
+        $bayi->isbpjs_keterangan    = $request->isbpjs_keterangan;
         if($bayi->save())
         {
             $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
@@ -161,11 +165,11 @@ class PasienBayiController extends Controller
 
     public function ranapUMUMBayi(Request $request)
     {
-        $pasien = Pasien::firstWhere('no_rm', $request->rm);
-        $unit = Unit::whereIn('kode_unit', [2004, 2013])->get();
-        $penjamin = PenjaminSimrs::get();
-        $paramedis = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-        $alasanmasuk = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->get();
+        $pasien         = Pasien::firstWhere('no_rm', $request->rm);
+        $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
+        $penjamin       = PenjaminSimrs::get();
+        $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+        $alasanmasuk    = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->get();
         return view('simrs.igd.ranapbayi.bayi_umum', compact('pasien', 'unit','penjamin','paramedis','alasanmasuk'));
     }
 }

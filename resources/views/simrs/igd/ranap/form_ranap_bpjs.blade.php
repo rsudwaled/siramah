@@ -162,6 +162,7 @@
                                 title="Daftarkan : {{ $pasien->nama_px }} ( {{ $pasien->no_rm }} )">
                                 <form action="{{ route('store.ranap-bpjs') }}" method="post" id="submitRanap">
                                     @csrf
+                                    <input type="hidden" name="kodeKunjungan" value="{{$kodeKunjungan}}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
@@ -176,21 +177,21 @@
                                                 <x-adminlte-input-date name="tanggal_daftar" id="tanggal_daftar"
                                                     value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                                     label="Tanggal Masuk" :config="$config" />
-                                                <x-adminlte-input name="noTelp" label="No Telp"
+                                                <x-adminlte-input name="noTelp" value="{{$pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}" label="No Telp"
                                                     placeholder="masukan no telp" label-class="text-black">
                                                 </x-adminlte-input>
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <x-adminlte-input name="ruangan" label="Ruangan"
-                                                            id="ruanganTerpilih" readonly disabled />
+                                                            id="ruanganTerpilih" readonly />
                                                     </div>
                                                     <div class="col-md-4">
                                                         <x-adminlte-input name="bed" label="No Bed" id="bedTerpilih"
-                                                            readonly disabled />
+                                                            readonly />
                                                     </div>
                                                     <div class="col-md-4">
                                                         <x-adminlte-input name="hak_kelas" label="Hak Kelas"
-                                                            id="hakKelas" disabled />
+                                                            id="hakKelas" readonly />
                                                     </div>
                                                 </div>
                                                 <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
@@ -315,7 +316,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <x-adminlte-button type="button"
+                                        <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right btn-flat btn-simpan"
                                             form="submitRanap" label="Simpan Data" />
                                         <a href="{{route('list-assesment.ranap')}}"
@@ -540,61 +541,7 @@
                 }
             });
 
-            $('.btn-simpan').click(function(e) {
-                var urlUpdateOnly = "{{ route('create-sepigd.ranap-bpjs') }}";
-                Swal.fire({
-                    title: "Apakah Anda Yakin Simpan?",
-                    text: "simpan data pendaftaran rawat inap!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Simpan!",
-                    cancelButtonText: "Batal!",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'POST',
-                            url: urlUpdateOnly,
-                            dataType: 'json',
-                            data: {
-                                noMR: $('#noMR').val(),
-                                kunjungan: $('#kunjungan').val(),
-                                refDiagnosa: $('#refDiagnosa').val(),
-                                diagAwal: $('#diagnosa').val(),
-                            },
-                            success: function(data) {
-                                if (data.code == 200) {
-                                    Swal.fire({
-                                        title: "Success!",
-                                        text: data.message,
-                                        icon: "success",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                } else {
-                                    Swal.fire({
-                                        title: "Gagal!",
-                                        text: data.message + '( ERROR : ' + data
-                                            .code + ')',
-                                        icon: "error",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                }
-                            },
-                        });
-                    }
-                });
-            });
+           
         });
 
 

@@ -146,6 +146,7 @@
                             <div class="col-lg-12">
                                 <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
                                 <input type="hidden" name="rm" value="{{ $pasien->no_rm }}">
+                                <input type="hidden" name="kelasRawatHak" value="{{$resdescrtipt->response != NULL ? $resdescrtipt->response->peserta->hakKelas->kode :''}}">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}" disabled
@@ -178,7 +179,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <x-adminlte-select2 name="isBpjs" label="Jenis Pasien">
+                                        <x-adminlte-select2 name="isBpjs" id="isBpjs" label="Jenis Pasien">
                                             <option value="0">--Pasien UMUM--</option>
                                             <option value="1">--Pasien BPJS--</option>
                                         </x-adminlte-select2>
@@ -256,10 +257,10 @@
                                     </div>
                                 </div>
                                 @if ($knj_aktif == 0)
-                                    <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right"
+                                    <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right btn-flat "
                                         id="submitPasien" label="Simpan Data" />
                                 @else
-                                    <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
+                                    <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right btn-flat "
                                         label="tidak bisa lanjut daftar" />
                                 @endif
                                 <a href="{{ route('list.antrian') }}"

@@ -138,7 +138,7 @@ class DaftarTanpaNomorController extends Controller
             ->count();
         $alasanmasuk    = AlasanMasuk::limit(10)->get();
         $paramedis      = Paramedis::where('act', 1)->get();
-        $penjamin       = PenjaminSimrs::limit(10)->where('act', 1)->get();
+        $penjamin       = PenjaminSimrs::get();
         $tanggal        = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
         $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;

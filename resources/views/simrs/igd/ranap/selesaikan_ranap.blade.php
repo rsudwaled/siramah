@@ -29,7 +29,7 @@
                     <div class="col-12">
                         <h5> Pendaftaran Rawat Inap Pasien : {{ $kunjungan->pasien->nama_px }}.
                             <small class="float-right">Tgl Masuk :
-                                {{ date('d F Y', strtotime($kunjungan->tgl_masuk)) }}</small>
+                                {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}</small>
                         </h5>
                     </div>
                 </div>
@@ -148,9 +148,13 @@
                             <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
                         </button>
                         @if (empty($kunjungan->no_sep))
-                            <button type="button" class="btn bg-purple float-right m-1"><i
-                                    class="fas fa-file-contract"></i>
-                                Generate SEP</button>
+                            <button type="button" class="btn bg-purple float-right m-1 btnSEPIGD" 
+                                data-spri="{{ $kunjungan->no_spri }}"
+                                data-kunjungan="{{ $kunjungan->kode_kunjungan }}"
+                                data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}">
+                                <i class="fas fa-file-contract"></i>
+                                Generate SEP
+                            </button>
                         @endif
                         @if (empty($kunjungan->no_spri))
                             <button type="button" class="btn btn-primary float-right m-1 btnModalSPRI"
@@ -345,6 +349,61 @@
 
             $('.btnDetailRanap').click(function(e) {
                 $('#detailRanap').modal('toggle');
+            });
+
+            $('.btnSEPIGD').click(function(e) {
+                var kunjungan = $(this).data('kunjungan');
+                var noKartu = $(this).data('nomorkartu');
+                var urlSEP = "{{ route('bridging.sepigd') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "Generate SEP IGD!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Generate!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlSEP,
+                            dataType: 'json',
+                            data: {
+                                kunjungan: kunjungan,
+                                nomorkartu: noKartu,
+                            },
+                            success: function(data) {
+                                if (data.data.metaData.code == 200) {
+                                    Swal.fire({
+                                        title: "Generate Success!",
+                                        text: data.data.metaData.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "Generate Gagal!",
+                                        text: data.data.metaData.message + '( ERROR : ' + data.data.metaData.code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
             });
 
         });

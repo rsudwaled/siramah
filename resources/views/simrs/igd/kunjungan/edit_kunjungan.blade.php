@@ -75,7 +75,7 @@
                                         class="withLoad btn-flat btn btn-sm m-1 bg-primary float-right" id="submitPasien"
                                         label="Simpan Data" />
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                                        class="btn btn-sm btn-flat btn-secondary float-right m-1">kembali</a>
+                                        class="btn btn-sm btn-flat btn-secondary float-right m-1 withLoad">kembali</a>
                                 </div>
                             </form>
                         </div>

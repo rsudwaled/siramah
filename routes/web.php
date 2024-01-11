@@ -466,7 +466,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/ranap/pasien-bpjs/{nomorkartu}/{kode}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJS'])->name('daftar.ranap-bpjs');
     Route::post('/ranap/pasien-bpjs/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJSStore'])->name('store.ranap-bpjs');
-    Route::get('/ranap/pasien-bpjs/bridging-steps/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapCreateSEPRanap'])->name('create-sepigd.ranap-bpjs');
+    Route::get('bridging-steps/ranap/pasien-bpjs/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapCreateSEPRanap'])->name('create-sepigd.ranap-bpjs');
+    Route::post('bridging/sep-igd', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'bridgingSEPIGD'])->name('bridging.sepigd');
    
     // synch diagnosa
     Route::get('/daftar-diagnosa/synch-diagnosa-assesment', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'vDiagnosaAssesment'])->name('v.diagnosa');

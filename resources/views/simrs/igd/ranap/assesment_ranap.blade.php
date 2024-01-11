@@ -11,9 +11,9 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
                             class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
-                    <li class="breadcrumb-item"><a onClick="window.location.reload();" 
+                    <li class="breadcrumb-item"><a onClick="window.location.reload();"
                             class="btn btn-sm btn-flat btn-warning">refresh</a></li>
-                    
+
                 </ol>
             </div>
         </div>
@@ -47,20 +47,22 @@
                                             <option value="">Semua Unit</option>
                                             @foreach ($unit as $item)
                                                 <option value="{{ $item->kode_unit }}"
-                                                    {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>{{ $item->nama_unit }}
+                                                    {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
+                                                    {{ $item->nama_unit }}
                                                 </option>
                                             @endforeach
                                         </x-adminlte-select>
                                     </div>
                                     <div class="col-md-4">
-                                        <x-adminlte-button type="submit" class="withLoad mt-4 btn-md" theme="primary" label="Submit Pencarian" />
+                                        <x-adminlte-button type="submit" class="withLoad mt-4 btn-md" theme="primary"
+                                            label="Submit Pencarian" />
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="col-lg-12">
                             @php
-                                $heads = ['TANGGAL MASUK/ KUNJUNGAN', 'PASIEN', 'ALAMAT','STATUS', 'AKSI'];
+                                $heads = ['TANGGAL MASUK','KUNJUNGAN', 'PASIEN', 'ALAMAT', 'STATUS', 'AKSI'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -72,9 +74,13 @@
                                 :config="$config" striped bordered hoverable compressed>
                                 @foreach ($assesmentRanap as $ranap)
                                     <tr>
-                                        <td> 
+                                        <td>
                                             <b>
                                                 Tgl Masuk : {{ $ranap->tgl_kunjungan }} <br>
+                                            </b>
+                                        </td>
+                                        <td>
+                                            <b>
                                                 Kode : {{ $ranap->kunjungan }} ({{ $ranap->nama_unit }}) <br>
                                                 Status : {{ $ranap->status }}
                                             </b>
@@ -92,7 +98,8 @@
                                             <small>{{ $ranap->alamat }}</small>
                                         </td>
                                         <td>
-                                            <b>Daftar : {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : 'UMUM' }}</b><br>
+                                            <b>Daftar :
+                                                {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : 'UMUM' }}</b><br>
                                             Pasien : {{ $ranap->status_ranap == 1 ? 'Rawat Inap' : 'Pasien Umum' }} <br>
                                         </td>
                                         <td>
@@ -106,12 +113,16 @@
                                             @else
                                                 <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
                                                     class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
+                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
+                                                    class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
                                             @endif --}}
                                             @php
                                                 $nomorKartu = trim($ranap->noKartu);
                                             @endphp
-                                            <a href="{{ route('daftar.ranap-bpjs',['nomorkartu'=>$nomorKartu,'kode'=>$ranap->kunjungan]) }}"
-                                                class="btn btn-xs btn-block btn-primary btn-flat mr-5 withLoad">DAFTARKAN</a>
+                                            <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
+                                                class="btn btn-xs btn-block btn-primary btn-flat mr-5">DAFTARKAN PASIEN UMUM</a>
+                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $ranap->kunjungan]) }}"
+                                                class="btn btn-xs btn-block btn-success btn-flat mr-5 withLoad ">DAFTARKAN PASIEN BPJS</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -220,81 +231,7 @@
                     cache: true
                 }
             });
-            $('.btnModalSPRI').click(function(e) {
-                var kunjungan = $(this).data('id');
-                var noKartu = $(this).data('nomorkartu');
-                $('#noKartu').val(noKartu);
-                $('#kodeKunjungan').val(kunjungan);
-                $('.lanjutkanPROSESDAFTAR').hide();
-                if ($('#modalSPRI').show()) {
-                    var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        dataType: 'JSON',
-                        success: function(data) {
-                            console.log(data.cekSPRI);
-                            if (data.cekSPRI == null) {
-                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
-                                    'info');
-                            } else {
-                                $('.lanjutkanPROSESDAFTAR').show();
-                                $('.btnCreateSPRI').hide();
-                                $('.btnCreateSPRIBatal').hide();
-                                $('.lanjutkanPROSESDAFTAR').click(function(e) {
-                                    location.href =
-                                        "{{ route('ranapbpjs') }}/?no_kartu=" + data
-                                        .cekSPRI.noKartu;
-                                });
-                            }
-                        }
-                    });
-                }
-                $('#modalSPRI').modal('toggle');
-            });
-
-            $('.btnCreateSPRI').click(function(e) {
-                var kodeKunjungan = $("#kodeKunjungan").val();
-                var noKartu = $("#noKartu").val();
-                var kodeDokter = $("#dokter").val();
-                var poliKontrol = $("#poliklinik option:selected").val();
-                var tglRencanaKontrol = $("#tanggal").val();
-                var user = $("#user").val();
-                var url = "{{ route('pasien-ranap.createspri') }}";
-                $.LoadingOverlay("show");
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    dataType: 'json',
-                    data: {
-                        noKartu: noKartu,
-                        kodeDokter: kodeDokter,
-                        poliKontrol: poliKontrol,
-                        tglRencanaKontrol: tglRencanaKontrol,
-                        kodeKunjungan: kodeKunjungan,
-                        user: user,
-                    },
-                    success: function(data) {
-
-                        if (data.metadata.code == 200) {
-                            Swal.fire('SPRI BERHASIL DIBUAT', '', 'success');
-                            $("#createSPRI").modal('toggle');
-                            location.href = "{{ route('ranapbpjs') }}/?no_kartu=" + noKartu;
-                            $.LoadingOverlay("hide");
-                        } else {
-                            Swal.fire(data.metadata.message + '( ERROR : ' + data.metadata
-                                .code + ')', '', 'error');
-                            $.LoadingOverlay("hide");
-                        }
-                    },
-
-                });
-            });
-
-            $('.btnDetailRanap').click(function(e) {
-                $('#detailRanap').modal('toggle');
-            });
-
+           
         });
     </script>
 @endsection

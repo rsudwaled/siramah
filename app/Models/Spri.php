@@ -11,6 +11,7 @@ class Spri extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_spri_igd';
     protected $fillable = [
+        "kunjungan",
         "noSPRI",
         "tglRencanaKontrol",
         "namaDokter",

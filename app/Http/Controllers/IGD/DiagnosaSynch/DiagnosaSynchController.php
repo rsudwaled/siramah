@@ -197,19 +197,19 @@ class DiagnosaSynchController extends APIController
 
             if ($callback->metaData->code == 200) {
               $resdescrtipt = $this->response_decrypt($response, $signature);
-              $sep = $resdescrtipt->response->sep->noSep;
-              $histories->diagAwal= $request->diagAwal;
+              $sep          = $resdescrtipt->response->sep->noSep;
+              $histories->diagAwal      = $request->diagAwal;
               $histories->status_daftar = 1;
-              $histories->is_bridging = 1;
-              $histories->respon_nosep = $sep;
+              $histories->is_bridging   = 1;
+              $histories->respon_nosep  = $sep;
               $histories->save();
               
-              $kunjungan->diagx   = $request->diagAwal;
-              $kunjungan->no_sep = $sep;
+              $kunjungan->diagx     = $request->diagAwal;
+              $kunjungan->no_sep    = $sep;
               $kunjungan->save();
 
               $isSynch->status_bridging = 1;
-              $isSynch->isSynch = 1;
+              $isSynch->isSynch         = 1;
               $isSynch->save();
               return response()->json(['data'=>$callback]);
             }

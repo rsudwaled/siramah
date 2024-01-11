@@ -81,7 +81,7 @@
                                 <td>{{ $item->sep }}</td>
                                 <td>{{ $item->status }}</td>
                                 <td>
-                                    <a href="{{route('detail.kunjungan',['kunjungan'=>$item->kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
+                                    <a href="{{route('detail.kunjungan',['kunjungan'=>$item->kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat withLoad">Detail</a>
 
                                 </td>
                             </tr>

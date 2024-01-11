@@ -10,7 +10,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('daftar.kunjungan') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                            class="btn btn-sm btn-flat btn-secondary withLoad">kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
                             class="btn btn-sm btn-flat btn-warning withLoad">edit kunjungan</a></li>
@@ -28,8 +28,11 @@
                 <div class="row">
                     <div class="col-12">
                         <h5> Kunjungan dari {{ $kunjungan->pasien->nama_px }}.
-                            <small class="float-right">Tgl Masuk :
-                                {{ date('d F Y', strtotime($kunjungan->tgl_masuk)) }}</small>
+                            <small class="float-right">
+                                <b>
+                                    Tgl Masuk : {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}
+                                </b>
+                            </small>
                         </h5>
                     </div>
                 </div>
@@ -42,28 +45,28 @@
                                 <div class="row ">
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header ">- {{ $kunjungan->diagx ?? 'Tidak Ada' }} -</h5>
+                                            <h5 class="description-header ">{{ $kunjungan->diagx ?? 'Tidak Ada' }}</h5>
                                             <span class="description-text">- Diagnosa - </span>
                                         </div>
                                     </div>
                     
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header ">{{ $kunjungan->kamar ?? 'Tidak Ada' }}</h5>
+                                            <h5 class="description-header ">RUANGAN : {{ $kunjungan->kamar ?? 'Tidak Ada' }}</h5>
                                             <span class="description-text">- RUANGAN -</span>
                                         </div>
                                     </div>
                     
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
-                                            <h5 class="description-header ">{{ $kunjungan->no_bed ?? 'Tidak Ada' }}</h5>
+                                            <h5 class="description-header ">NO : {{ $kunjungan->no_bed ?? 'Tidak Ada' }}</h5>
                                             <span class="description-text">- NO BED -</span>
                                         </div>
                                     </div>
                     
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block">
-                                            <h5 class="description-header ">{{ $kunjungan->kelas ?? 'Tidak Ada' }}</h5>
+                                            <h5 class="description-header ">KELAS : {{ $kunjungan->kelas ?? 'Tidak Ada' }}</h5>
                                             <span class="description-text">- KELAS -</span>
                                         </div>
                                     </div>
@@ -117,6 +120,7 @@
                                     <th>Nomor</th>
                                     <th>Tanggal Lahir</th>
                                     <th>BPJS</th>
+                                    <th>Pasien Daftar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -128,9 +132,9 @@
                                         </b>
                                     </td>
                                     <td>
-                                        <b>RM : {{ $kunjungan->pasien->no_rm }}</b><br>
-                                        Pasien : {{ $kunjungan->pasien->nama_px }} <br>
-                                        
+                                        <b> RM : {{ $kunjungan->pasien->no_rm }}<br>
+                                            Pasien : {{ $kunjungan->pasien->nama_px }} <br>
+                                        </b>
                                     </td>
                                     <td>
                                         <b>
@@ -139,12 +143,19 @@
                                         </b>
                                     </td>
                                     <td>
-                                        {{ date('d F Y', strtotime($kunjungan->pasien->tgl_lahir)) }}
+                                        <b>
+                                            {{ date('d M Y', strtotime($kunjungan->pasien->tgl_lahir)) }}
+                                        </b>
                                     </td>
                                     <td>
                                        <b>
                                         SEP : {{ $kunjungan->no_sep ?? '-' }} <br>
                                         SPRI : {{ $kunjungan->no_spri ?? '-' }}
+                                       </b>
+                                    </td>
+                                    <td>
+                                       <b>
+                                        {{$kunjungan->jp_daftar==0 ? 'PASIEN UMUM' : 'PASIEN BPJS'}}
                                        </b>
                                     </td>
                                 </tr>
