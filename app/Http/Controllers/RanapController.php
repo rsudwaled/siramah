@@ -6,6 +6,7 @@ use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
 use App\Models\ErmRanapMppa;
+use App\Models\ErmRanapMppb;
 use App\Models\ErmRanapObservasi;
 use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
@@ -304,6 +305,8 @@ class RanapController extends APIController
     {
         $request['pic'] = Auth::user()->name;
         $request['user_id'] = Auth::user()->id;
+        $request['identifisikasimasalah'] = json_encode($request->identifisikasimasalah);
+        $request['rencana_mpp'] = json_encode($request->rencana_mpp);
         $erm = ErmRanapMppa::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,
@@ -322,6 +325,32 @@ class RanapController extends APIController
         return view('simrs.ranap.print_mppa', compact([
             'kunjungan',
             'mppa',
+            'pasien',
+        ]));
+    }
+    public function simpan_mppb(Request $request)
+    {
+        $request['pic'] = Auth::user()->name;
+        $request['user_id'] = Auth::user()->id;
+        $request['advokasi'] = json_encode($request->advokasi);
+        $erm = ErmRanapMppb::updateOrCreate(
+            [
+                'kode_kunjungan' => $request->kode_kunjungan,
+                'norm' => $request->norm,
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Data MPP Form B Berhasil Disimpan');
+        return redirect()->back();
+    }
+    public function print_mppb(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $mppb = $kunjungan->erm_ranap_mppb;
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.print_mppb', compact([
+            'kunjungan',
+            'mppb',
             'pasien',
         ]));
     }

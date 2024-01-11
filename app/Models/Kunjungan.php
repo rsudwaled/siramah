@@ -76,6 +76,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(ErmRanapMppa::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function erm_ranap_mppb()
+    {
+        return $this->hasOne(ErmRanapMppb::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function erm_ranap_keperawatan()
     {
         return $this->hasMany(ErmRanapKeperawatan::class, 'kode_kunjungan', 'kode_kunjungan');
