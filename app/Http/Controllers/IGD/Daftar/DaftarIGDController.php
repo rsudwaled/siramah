@@ -115,7 +115,7 @@ class DaftarIGDController extends Controller
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)
             ->count();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
         $tanggal        = now()->format('Y-m-d');

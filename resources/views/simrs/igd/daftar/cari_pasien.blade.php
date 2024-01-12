@@ -125,9 +125,9 @@
                                         </td>
                                         <td>
                                             @if ($jp==1)
-                                            <a href="{{route('form.daftar-igd', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary">daftarkan</a>
+                                            <a href="{{route('form.daftar-igd', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                             @else
-                                            <a href="{{route('form.daftar-igk', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary">daftarkan</a>
+                                            <a href="{{route('form.daftar-igk', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                             @endif
                                         </td>
                                     </tr>

@@ -163,7 +163,7 @@
                                         <x-adminlte-input-date name="tanggal"
                                             value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                             :config="$config" />
-                                        <x-adminlte-input name="noTelp" type="number" label="No Telpon" />
+                                        <x-adminlte-input name="noTelp" type="number" label="No Telpon" value="{{$pasien->no_tlp ==null? $pasien->no_hp:$pasien->no_tlp}}" />
                                         <div class="form-group">
                                             <label for="exampleInputBorderWidth2">Perujuk
                                                 <code>(jika pasien memiliki referensi instansi yang merujuk)</code></label>

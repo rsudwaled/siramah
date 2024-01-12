@@ -121,7 +121,7 @@
                                                     {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $data->desas->nama_desa_kelurahan . ' , Kec. ' . $data->kecamatans->nama_kecamatan . ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota }}</small>
                                             </td>
                                             <td>
-                                                <a href="{{route('form-daftar.tanpa-nomor',$data->no_rm)}}" class="btn btn-xs btn-primary">daftarkan</a>
+                                                <a href="{{route('form-daftar.tanpa-nomor',$data->no_rm)}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                             </td>
                                         </tr>
                                     @endforeach
