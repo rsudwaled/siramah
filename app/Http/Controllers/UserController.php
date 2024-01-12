@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UserExport;
+use App\Imports\UserImport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -11,24 +13,25 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $users_total = User::count();
         if ($request->search) {
             $users = User::with(['roles', 'verificator'])
                 ->latest()
-                ->where(function ($query) use ($request) {
-                    $query->where('name', "like", "%" . $request->search . "%");
-                })
-                ->simplePaginate();
+                ->where('name', "like", "%" . $request->search . "%")
+                ->orWhere('email', "like", "%" . $request->search . "%")
+                ->simplePaginate(50);
         } else {
             $users = User::with(['roles', 'verificator'])
                 ->latest()
-                ->simplePaginate();
+                ->simplePaginate(50);
         }
+        $users_total = User::count();
         $roles = Role::pluck('name');
         return view('admin.user_index', compact([
             'request',
@@ -45,10 +48,13 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|alpha_dash|unique:users,username,' . $request->id,
-            'email' => 'required|email|unique:users,email,' . $request->id,
             'name' => 'required',
             'role' => 'required',
+            'phone' => 'required|numeric',
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'username' => 'required|alpha_dash|unique:users,username,' . $request->id,
+            'password' => 'required|confirmed|min:6',
+            'password_confirmation' => 'required|min:6',
         ]);
         if (!empty($request['password'])) {
             $request['password'] = Hash::make($request['password']);
@@ -59,26 +65,41 @@ class UserController extends Controller
         DB::table('model_has_roles')->where('model_id', $request->id)->delete();
         $user->assignRole($request->role);
         Alert::success('Success', 'Data User Disimpan');
-        return redirect()->route('user.index');
+        return redirect()->back();
+    }
+    public function update($id, Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'role' => 'required',
+            'phone' => 'required|numeric',
+            'email' => 'required|email|unique:users,email,' . $request->id,
+            'username' => 'required|alpha_dash|unique:users,username,' . $request->id,
+            'password' => 'confirmed',
+        ]);
+        if (!empty($request['password'])) {
+            $request['password'] = Hash::make($request['password']);
+        } else {
+            $request = Arr::except($request, array('password'));
+        }
+        $user = User::find($id);
+        $user->update($request->all());
+        DB::table('model_has_roles')->where('model_id', $request->id)->delete();
+        $user->assignRole($request->role);
+        Alert::success('Success', 'Data User Diupdate');
+        return redirect()->back();
     }
     public function destroy(User $user)
     {
         $user->delete();
         Alert::success('Success', 'Data Telah Dihapus');
-        return redirect()->route('user.index');
+        return redirect()->back();
     }
     public function profile()
     {
         $user = Auth::user();
         $roles = Role::pluck('name', 'name')->all();
         $userRole = $user->roles->pluck('name', 'name')->all();
-        // $genders = Gender::pluck('name', 'name')->all();
-        // $agamas = Agama::pluck('name', 'name')->all();
-        // $perkawinans = Perkawinan::pluck('name', 'name')->all();
-        // $provinces = Province::pluck('name', 'id');
-        // $cities = City::where('province_code', $user->province_id)->pluck('name', 'id')->all();
-        // $districts = District::where('city_code', $user->city_id)->pluck('name', 'id')->all();
-        // $villages = Village::where('district_code', $user->district_id)->pluck('name', 'id')->all();
         return view('admin.user_profile', compact(
             'user',
             'roles',
@@ -87,7 +108,8 @@ class UserController extends Controller
     }
     public function profile_update(Request $request)
     {
-        $user = Auth::user();
+        $id = Auth::user()->id;
+        $user = User::find($id);
         $request->validate([
             'name' => 'required',
             'email' => 'unique:users,email,' . $user->id,
@@ -99,15 +121,42 @@ class UserController extends Controller
     }
     public function user_verifikasi(User $user, Request $request)
     {
-        $user->update([
-            'email_verified_at' => Carbon::now(),
-            'user_verify' => Auth::user()->id,
-        ]);
-        $wa = new WhatsappController();
-        $request['message'] = "*Verifikasi Akun SIMRS WALED* \nAkun anda telah diverifikasi. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan gunakan akun ini baik-baik.";
-        $request['number'] = $user->phone;
-        $wa->send_message($request);
-        Alert::success('Success', 'Akun telah diverifikasi');
-        return back();
+        if ($user->email_verified_at) {
+            $user->update([
+                'email_verified_at' =>  null,
+                'user_verify' => null,
+            ]);
+            $wa = new WhatsappController();
+            $request['message'] = "*Nonaktif Akun Sistem* \nAkun anda telah dinonaktifkan. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nTerima kasih telah bijak menggunakan sistem.";
+            $request['number'] = $user->phone;
+            $wa->send_message($request);
+            Alert::success('Success', 'Akun telah dinonaktifkan');
+        } else {
+            $user->update([
+                'email_verified_at' => Carbon::now(),
+                'user_verify' => Auth::user()->id,
+            ]);
+            $wa = new WhatsappController();
+            $request['message'] = "*Verifikasi Akun Sistem* \nAkun anda telah diverifikasi. Data akun anda sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan gunakan akun ini baik-baik.";
+            $request['number'] = $user->phone;
+            $wa->send_message($request);
+            Alert::success('Success', 'Akun telah diverifikasi');
+        }
+        return redirect()->back();
+    }
+    public function userexport(Request $request)
+    {
+        $time = now()->format('Y-m-d');
+        return Excel::download(new UserExport, 'user_rsudwaled_backup_' . $time . '.xlsx');
+    }
+    public function userimport(Request $request)
+    {
+        try {
+            Excel::import(new UserImport, $request->file);
+            Alert::success('Success', 'Import User Berhasil.');
+        } catch (\Throwable $th) {
+            Alert::error('Error', $th->getMessage());
+        }
+        return redirect()->route('user.index');
     }
 }

@@ -10,9 +10,22 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class JadwalOperasiController extends APIController
 {
+    public function index()
+    {
+        $dokters = Dokter::get();
+        $poli = Poliklinik::get();
+        $jadwals = JadwalOperasi::whereYear('tanggal', '=', 2023)
+            ->get();
+        return view('simrs.jadwaloperasi_index', [
+            'dokters' => $dokters,
+            'poli' => $poli,
+            'jadwals' => $jadwals
+        ]);
+    }
     public function jadwalOperasi()
     {
         $dokters = Dokter::get();
@@ -72,11 +85,11 @@ class JadwalOperasiController extends APIController
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" =>  $unit->KDPOLI ?? 'BED',
+                "kodepoli" => $unit->KDPOLI ?? 'BED',
                 // "namapoli" => $jadwalop->ruangan_asal,
                 "namapoli" => 'BEDAH',
                 "terlaksana" => 0,
-                "nopeserta" => $jadwalop->nomor_bpjs,
+                "nopeserta" => $jadwalop->nomor_bpjs == '' ?  '0000067026778' : $jadwalop->nomor_bpjs,
                 "lastupdate" => now()->timestamp * 1000,
             ];
         }

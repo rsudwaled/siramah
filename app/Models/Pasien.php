@@ -13,10 +13,8 @@ class Pasien extends Model
     protected $primaryKey = 'no_rm';
     public $timestamps = false;
     const CREATED_AT = 'tgl_entry';
-    // const UPDATED_AT = 'last_update';
-
+    const UPDATED_AT = 'update_date';
     protected $guarded = ["id"];
-
     public function kunjungans()
     {
         return $this->hasMany(Kunjungan::class, 'no_rm', 'no_rm');

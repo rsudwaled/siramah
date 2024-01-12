@@ -46,6 +46,11 @@ class JadwalDokterController extends BaseController
         $jadwal = JadwalDokter::find($id);
         return response()->json($jadwal);
     }
+    public function edit($id)
+    {
+        $jadwal = JadwalDokter::find($id);
+        return response()->json($jadwal);
+    }
     public function store(Request $request)
     {
         $request->validate([
@@ -71,7 +76,6 @@ class JadwalDokterController extends BaseController
             $request['namadokter'] = $dokter->namadokter;
         }
         $hari = ['MINGGU', 'SENIN', 'SELASA', 'RABU', 'KAMIS', 'JUMAT', 'SABTU'];
-
         JadwalDokter::updateOrCreate([
             'kodesubspesialis' => $request->kodesubspesialis,
             'kodedokter' => $request->kodedokter,
@@ -289,6 +293,73 @@ class JadwalDokterController extends BaseController
             ->get();
         if ($jadwal->count() != 0) {
             return $this->sendResponse($jadwal, 200);
+        } else {
+            return $this->sendError('Jadwal dokter tidak tersedia', 404);
+        }
+    }
+    public function poliklinik_by_hari(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'hari' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $jadwal = JadwalDokter::where('hari', $request->hari)
+            ->groupBy('namasubspesialis')
+            ->get();
+        if ($jadwal->count() != 0) {
+            return $this->sendResponse($jadwal, 200);
+        } else {
+            return $this->sendError('Jadwal dokter tidak tersedia', 404);
+        }
+    }
+    public function jadwal_poliklinik(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'tanggal' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+        $jadwal = JadwalDokter::where('hari', $hari)
+            ->orderBy('namasubspesialis', 'asc')
+            ->get();
+        if ($jadwal->count() != 0) {
+            foreach ($jadwal->groupBy('kodesubspesialis') as $key => $value) {
+                $data[] = [
+                    'kodepoli' => $key,
+                    'namapoli' => strtoupper($value->first()->namasubspesialis)
+                ];
+            }
+            return $this->sendResponse($data, 200);
+        } else {
+            return $this->sendError('Jadwal dokter tidak tersedia', 404);
+        }
+    }
+    public function jadwal_dokter(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            'tanggal' => 'required',
+            'kodepoli' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $hari = Carbon::parse($request->tanggal)->dayOfWeek;
+        $jadwal = JadwalDokter::where('hari', $hari)
+            ->where('kodesubspesialis', $request->kodepoli)
+            ->orderBy('kodedokter', 'asc')
+            ->get();
+        if ($jadwal->count() != 0) {
+            foreach ($jadwal->groupBy('kodedokter') as $key => $value) {
+                $data[] = [
+                    'kodedokter' => $key,
+                    'namadokter' => $value->first()->namadokter
+                ];
+            }
+            return $this->sendResponse($data, 200);
         } else {
             return $this->sendError('Jadwal dokter tidak tersedia', 404);
         }

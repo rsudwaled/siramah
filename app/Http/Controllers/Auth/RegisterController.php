@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -75,6 +76,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        Log::notice('Daftar Akun Gmail ' . $user->name . ' , ' . $user->email . ' , ' . $user->phone);
         $request = new Request();
         $wa = new WhatsappController();
         $request['message'] = "*Registrasi Akun SIRAMAH-RS WALED* \nAnda telah registrasi akun SIRAMAH-RS Waled dengan data sebagai berikut.\n\nNAMA : " . $user->name . "\nPHONE : " . $user->phone . "\nEMAIL : " . $user->email . "\n\nSilahkan menunggu Administrator atau Kepegawaian untuk memverifikasi anda.";

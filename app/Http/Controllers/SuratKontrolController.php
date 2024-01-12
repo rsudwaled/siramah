@@ -88,9 +88,9 @@ class SuratKontrolController extends APIController
             if ($response_peserta->metadata->code == 200) {
                 $peserta = $response_peserta->response->peserta;
                 $wa = new WhatsappController();
-                $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
-                $request['number'] = $peserta->mr->noTelepon;
-                $wa->send_message($request);
+                // $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nhttps://siramah.rsudwaled.id/suratkontrol?nomorsurat=" . $suratkontrol->noSuratKontrol;
+                // $request['number'] = $peserta->mr->noTelepon;
+                // $wa->send_message($request);
             }
         }
         return $response;
@@ -129,9 +129,9 @@ class SuratKontrolController extends APIController
                 "user" => Auth::user()->name,
             ]);
             $wa = new WhatsappController();
-            $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
-            $request['number'] = $request->nohp ?? '089529909036';
-            $wa->send_message($request);
+            // $request['message'] = "*Surat Kontrol Rawat Jalan*\nTelah berhasil pembuatan surat kontrol atas pasien sebagai berikut.\n\nNama : " . $suratkontrol->nama . "\nNo Surat Kontrol : " . $suratkontrol->noSuratKontrol . "\nTanggal Kontrol : " . $suratkontrol->tglRencanaKontrol . "\nPoliklinik : " . $poli->namasubspesialis . "\n\nUntuk surat kontrol online dapat diakses melalui link berikut.\nsim.rsudwaled.id/siramah/suratkontrol_print?nomorsuratkontrol=" . $suratkontrol->noSuratKontrol;
+            // $request['number'] = $request->nohp ?? '089529909036';
+            // $wa->send_message($request);
             Alert::success('Success', 'Surat Kontrol Berhasil Dibuatkan');
         } else {
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
@@ -192,6 +192,38 @@ class SuratKontrolController extends APIController
             return redirect()->back();
         }
     }
+    public function suratkontrol_update_v2(Request $request)
+    {
+        $request['user'] = Auth::user()->name;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_update($request);
+        if ($response->metadata->code == 200) {
+            $sk = SuratKontrol::firstWhere('noSuratKontrol', $request->noSuratKontrol);
+            $poli = Poliklinik::where('kodesubspesialis', $request->poliKontrol)->first();
+            $suratkontrol = $response->response;
+            $sk->update([
+                "tglRencanaKontrol" => $suratkontrol->tglRencanaKontrol,
+                "poliTujuan" => $request->poliKontrol,
+                "namaPoliTujuan" => $poli->namasubspesialis,
+                "kodeDokter" => $request->kodeDokter,
+                "namaDokter" => $suratkontrol->namaDokter,
+                "noSuratKontrol" => $suratkontrol->noSuratKontrol,
+                "namaJnsKontrol" => "Surat Kontrol",
+                "noSepAsalKontrol" => $request->noSEP,
+                "noKartu" => $suratkontrol->noKartu,
+                "nama" => $suratkontrol->nama,
+                "kelamin" => $suratkontrol->kelamin,
+                "tglLahir" => $suratkontrol->tglLahir,
+                "user" => $request->user
+            ]);
+            Alert::success('Success', "Surat Kontrol Berhasil Diupdate");
+            return redirect()->back();
+        } else {
+            Alert::error('Gagal', $response->metadata->message);
+            return redirect()->back();
+        }
+    }
+
     public function suratkontrol_delete(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomorsuratkontrol;
@@ -205,7 +237,7 @@ class SuratKontrolController extends APIController
         } else {
             Alert::error('Gagal', $response->metadata->message);
         }
-        return   "<script>window.close();</script>";
+        return redirect()->back();
     }
     public function update(Request $request)
     {
@@ -315,7 +347,19 @@ class SuratKontrolController extends APIController
             $data = $response->response->histori;
             return $this->sendResponse($data, 200);
         } else {
-            return $this->sendError($response->metadate->message);
+            return $this->sendError($response->metadata->message);
+        }
+    }
+    public function get_surat_kontrol(Request $request)
+    {
+        $request['tahun'] = explode('-', $request->bulan)[0];
+        $request['bulan'] = explode('-', $request->bulan)[1];
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_peserta($request);
+        if ($response->metadata->code == 200) {
+            return $this->sendResponse($response->response->list, 200);
+        } else {
+            return $this->sendError($response->metadata->message);
         }
     }
 }

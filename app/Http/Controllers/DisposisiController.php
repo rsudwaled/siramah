@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\SuratMasuk;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class DisposisiController extends Controller
+class DisposisiController extends APIController
 {
     public function index(Request $request)
     {
@@ -25,6 +26,18 @@ class DisposisiController extends Controller
             'request',
             'surats',
         ]));
+    }
+    public function disposisi(Request $request)
+    {
+        try {
+            $surats =  Cache::remember('surats' . $request->page, 60 * 60, function () {
+                return SuratMasuk::orderBy('id_surat_masuk', 'desc')
+                    ->paginate(1000);
+            });
+            return $this->sendResponse($surats);
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage(), 400);
+        }
     }
     public function create()
     {

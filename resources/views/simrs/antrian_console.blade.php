@@ -87,9 +87,6 @@
                         <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i
                                 class="fas fa-print"></i> Checkin
                             Antrian</a>
-                        <a href="{{ route('jadwalDokterAntrian') }}" target="_blank" class="btn btn-warning"><i
-                                class="fas fa-calendar-alt"></i> Jadwal
-                            Dokter</a>
                     </x-slot>
                 </x-adminlte-card>
             </div>
@@ -160,8 +157,7 @@
     </x-adminlte-modal>
 @stop
 @section('plugins.Datatables', true)
-@section('plugins.Sweetalert2', true)*
-@include('sweetalert::alert')
+
 @section('adminlte_css')
 @endsection
 @section('adminlte_js')
@@ -373,4 +369,6 @@
             location.reload();
         });
     </script>
+    @section('plugins.Sweetalert2', true)
+    @include('sweetalert::alert')
 @stop

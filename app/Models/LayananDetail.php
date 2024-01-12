@@ -17,6 +17,8 @@ class LayananDetail extends Model
     {
         return $this->hasOne(TarifLayananDetail::class, 'KODE_TARIF_DETAIL', 'kode_tarif_detail');
     }
-
-
+    public function barang()
+    {
+        return $this->hasOne(Barang::class, 'kode_barang', 'kode_barang');
+    }
 }

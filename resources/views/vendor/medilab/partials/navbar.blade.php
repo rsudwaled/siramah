@@ -1,7 +1,7 @@
 <div id="topbar" class="d-flex align-items-center fixed-top">
     <div class="container d-flex justify-content-between">
         <div class="contact-info d-flex align-items-center">
-            <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">brsud.waled@gmai.com</a>
+            <i class="bi bi-envelope"></i> <a href="mailto:contact@example.com">brsud.waled@gmail.com</a>
             <i class="bi bi-phone"></i>0898 3311 118
         </div>
         <div class="d-none d-lg-flex social-links align-items-center">
@@ -27,7 +27,7 @@
                 <li class="dropdown"><a href="#"><span>Jadwal</span> <i class="bi bi-chevron-down"></i></a>
                     <ul>
                         <li><a href="{{ route('landingpage') }}#jadwalrawatjalan">Jadwal Rawat Jalan</a></li>
-                        {{-- <li><a href="{{ route('jadwaloperasi_info') }}">Jadwal Operasi</a></li> --}}
+                        <li><a href="{{ route('jadwaloperasi_info') }}">Jadwal Operasi</a></li>
                     </ul>
                 </li>
                 <li><a class="nav-link scrollto" href="{{ route('bukutamu') }}#bukutamu">Buku Tamu</a></li>
@@ -41,7 +41,7 @@
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
         </nav>
-        <a href="https://www.siramah.rsudwaled.id/" class="appointment-btn scrollto">
+        <a href="https://www.siramah.rsudwaled.id/daftar" class="appointment-btn scrollto">
             Daftar
         </a>
 

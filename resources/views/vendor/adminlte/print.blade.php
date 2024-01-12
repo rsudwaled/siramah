@@ -1,50 +1,25 @@
-@extends('adminlte::master')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>
+        @yield('title')
+    </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
-@inject('layoutHelper', 'JeroenNoten\LaravelAdminLte\Helpers\LayoutHelper')
-
-@section('adminlte_css')
-    @stack('css')
     @yield('css')
-
-    <style>
-        body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .content-wrapper,
-        body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-footer,
-        body:not(.sidebar-mini-md):not(.sidebar-mini-xs):not(.layout-top-nav) .main-header {
-            margin-left: 0px;
-        }
-    </style>
-@stop
-
-@section('classes_body', $layoutHelper->makeBodyClasses())
-
-@section('body_data', $layoutHelper->makeBodyData())
-
-@section('body')
-    <div class="wrapper">
-        @include('adminlte::partials.cwrapper.cwrapper-default')
-        <footer class="main-footer">
-            <div class="float-right d-none d-sm-block">
-                <b>Version</b> 1.0.0
-            </div>
-            <strong>Copyright &copy; 2021-{{ \Carbon\Carbon::now()->year }} <a
-                    href="https://www.youtube.com/channel/UChC1vTX9iFXXavbwslx0kUA" target="_blank">SIM RSUD
-                    WALED</a>.</strong> All rights
-            reserved.
-        </footer>
-    </div>
-@stop
-
-@section('adminlte_js')
-    @stack('js')
+</head>
+<body>
+    @yield('content')
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+    <script src="{{ asset('vendor/adminlte/dist/js/adminlte.min.js') }}"></script>
     @yield('js')
-    @include('sweetalert::alert')
-    <script src="{{ asset('vendor/loading-overlay/loadingoverlay.min.js') }}"></script>
-    <script>
-        $(function() {
-            $(".withLoad").click(function() {
-                $.LoadingOverlay("show");
-            });
-        })
-    </script>
 
-@stop
+</body>
+</html>

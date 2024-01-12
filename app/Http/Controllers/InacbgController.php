@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\BudgetControl;
+use App\Models\ErmGroupping;
 use App\Models\Icd10;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class InacbgController extends APIController
 {
-    public $key_eclaim = "9f05163ca3a07fde41fea27f1b0319f277f334bcba0ad733e57e06c6763887c3";
+    public $key_eclaim = "03bcc1a95b10263d849cb3db524035f529c8a7e56cf8cfa9289d55916585f1af";
 
     public function search_diagnosis(Request $request)
     {
@@ -48,6 +49,42 @@ class InacbgController extends APIController
                     $datarray[] = array(
                         "id" => $item[1],
                         "text" => $item[1] . ' ' . $item[0]
+                    );
+                }
+            }
+            return response()->json($datarray);
+        } else {
+            return $response;
+        }
+    }
+    public function get_diagnosis_eclaim(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "keyword" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $request_data = [
+            "metadata" => [
+                "method" => "search_diagnosis",
+            ],
+            "data" => [
+                "keyword" => $request->keyword,
+            ]
+        ];
+        $json_request = json_encode($request_data);
+        $response =  $this->send_request($json_request);
+        $datarray = array();
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
+            if ($count == 0) {
+            } else {
+                foreach ($data as  $item) {
+                    $datarray[] = array(
+                        "id" => $item[1] . '|' . $item[0],
+                        "text" => $item[1] . ' ' . $item[0],
                     );
                 }
             }
@@ -92,6 +129,43 @@ class InacbgController extends APIController
             return $response;
         }
     }
+    public function get_procedure_eclaim(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "keyword" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $request_data = [
+            "metadata" => [
+                "method" => "search_procedures",
+            ],
+            "data" => [
+                "keyword" => $request->keyword,
+            ]
+        ];
+        $json_request = json_encode($request_data);
+        $response =  $this->send_request($json_request);
+        $datarray = array();
+        if ($response->metadata->code == 200) {
+            $data = $response->response->data;
+            $count = $response->response->count;
+            if ($count == 0) {
+            } else {
+                foreach ($data as  $item) {
+                    $datarray[] = array(
+                        "id" => $item[1] . '|' . $item[0],
+                        "text" => $item[1] . ' ' . $item[0]
+                    );
+                }
+            }
+            return response()->json($datarray);
+        } else {
+            return $response;
+        }
+    }
+
     public function search_diagnosis_inagrouper(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -202,7 +276,66 @@ class InacbgController extends APIController
                     'diagnosa' => $diag,
                     'prosedur' => $request->procedure, #kode | deskripsi
                     'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
+                    'kelas' => $res->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->response->cbg->description,
+                    "pic" => 1,
+                ]
+            );
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->noSEP,
+            ]);
+            Alert::success('Success', 'Groupping berhasil');
+        } else {
+            Alert::error('Gagal', 'Groupping gagal');
+        }
+        return redirect()->back();
+    }
+    public function claim_ranap_v2(Request $request)
+    {
+        $request->validate([
+            "kodekunjungan" =>  "required",
+            "counter" =>  "required",
+            "norm" =>  "required",
+            "noSEP" =>  "required",
+        ]);
+        $diag = null;
+        $diag_utama = null;
+        foreach ($request->diagnosa as $key => $value) {
+            $diagnosa = Icd10::where('diag', $value)->first();
+            if ($key == 0) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag_utama =  $value . " | " . $a;
+            } else if ($key == 1) {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag =  $value . " | " . $a;
+            } else {
+                $a = $diagnosa != null ? $diagnosa->nama : '-';
+                $diag = $diag . ";" .  $value . " | " . $a;
+            }
+        }
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap($request);
+        $res = $this->grouper($request);
+        if ($res->metadata->code == 200) {
+            $rmcounter = $request->norm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+                    'no_rm' => $request->norm,
+                    'counter' => $request->counter,
 
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
                     'kelas' => $res->response->kelas,
                     'tgl_grouper' => now(),
                     'tgl_edit' => now(),
@@ -385,6 +518,75 @@ class InacbgController extends APIController
         $json_request = json_encode($request_data);
         return $this->send_request($json_request);
     }
+    public function claim_ranap_v3(Request $request)
+    {
+        $request->validate([
+            "kodekunjungan" =>  "required",
+            "counter" =>  "required",
+            "norm" =>  "required",
+            "noSEP" =>  "required",
+            "diagnosa" =>  "required",
+        ]);
+        $request['diagnosa'] = $request->diagnosa ? json_encode($request->diagnosa) : null;
+        $request['procedure'] = $request->procedure ? json_encode($request->procedure) : null;
+        $groupping = ErmGroupping::updateOrCreate(
+            [
+                'nosep' => $request->noSEP,
+                'kode_kunjungan' => $request->kodekunjungan,
+                'counter' => $request->counter,
+                'nomorkartu' => $request->nomorkartu,
+                'norm' => $request->norm,
+                'nomorkartu' => $request->nomorkartu,
+            ],
+            $request->all()
+        );
+        $diag = null;
+        $diag_utama = null;
+
+        $request['diagnosa_utama'] = json_decode($request->diagnosa)[0];
+        $request['diagnosa_sekunder'] = array_slice(json_decode($request->diagnosa), 1);
+        $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
+        $res = $this->new_claim($request);
+        $res = $this->set_claim_ranap_v2($request);
+        $res = $this->grouper($request);
+        if ($res->metadata->code == 200) {
+            $rmcounter = $request->norm . '|' . $request->counter;
+            $budget = BudgetControl::updateOrCreate(
+                [
+                    'rm_counter' => $rmcounter
+                ],
+                [
+                    'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+                    'no_rm' => $request->norm,
+                    'counter' => $request->counter,
+
+                    'diagnosa_kode' => $request->diagnosa, #kode
+                    'diagnosa_utama' => $diag_utama,
+                    'diagnosa' => $diag,
+                    'prosedur' => $request->procedure, #kode | deskripsi
+                    'kode_cbg' => $res->response->cbg->code . " | " . $res->response->cbg->description,
+                    'kelas' => $res->response->kelas,
+                    'tgl_grouper' => now(),
+                    'tgl_edit' => now(),
+                    'deskripsi' => $res->response->cbg->description,
+                    "pic" => 1,
+                ]
+            );
+            $groupping->update([
+                'code_inacbg' => $res->response->cbg->code,
+                'description_inacbg' => $res->response->cbg->description,
+                'tarif_inacbg' => $res->response->cbg->tariff ?? '0',
+            ]);
+            $kunjungan = Kunjungan::find($request->kodekunjungan);
+            $kunjungan->update([
+                'no_sep' => $request->noSEP,
+            ]);
+            Alert::success('Success', 'Groupping berhasil');
+        } else {
+            Alert::error('Gagal', 'Groupping gagal');
+        }
+        return redirect()->back();
+    }
     public function set_claim_rajal(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -527,6 +729,183 @@ class InacbgController extends APIController
                 "birth_weight" => $request->berat_badan, #berat bayi
                 "sistole" => 120, #detak tensi
                 "diastole" => 70, #yg dbawah
+                "discharge_status" => $request->discharge_status, #kluar
+                "diagnosa" => $icd10,
+                "procedure" => $icd9,
+                "diagnosa_inagrouper" => $request->diagnosa_inagrouper,
+                "procedure_inagrouper" => $request->procedure_inagrouper,
+                "tarif_rs" => [
+                    "prosedur_non_bedah" => $request->prosedur_non_bedah,
+                    "prosedur_bedah" => $request->prosedur_bedah,
+                    "konsultasi" => $request->konsultasi,
+                    "tenaga_ahli" => $request->tenaga_ahli,
+                    "keperawatan" => $request->keperawatan,
+                    "penunjang" => $request->penunjang,
+                    "radiologi" => $request->radiologi,
+                    "laboratorium" => $request->laboratorium,
+                    "pelayanan_darah" => $request->pelayanan_darah,
+                    "rehabilitasi" => $request->rehabilitasi,
+                    "kamar" => $request->kamar_akomodasi,
+                    "rawat_intensif" => $request->rawat_intensif,
+                    "obat" => $request->obat,
+                    "obat_kronis" => $request->obat_kronis,
+                    "obat_kemoterapi" => $request->obat_kemoterapi,
+                    "alkes" => $request->alkes,
+                    "bmhp" => $request->bmhp,
+                    "sewa_alat" => $request->sewa_alat,
+                ],
+                "pemulasaraan_jenazah" => "0",
+                "kantong_jenazah" => "0",
+                "peti_jenazah" => "0",
+                "plastik_erat" => "0",
+                "desinfektan_jenazah" => "0",
+                "mobil_jenazah" => "0",
+                "desinfektan_mobil_jenazah" => "0",
+                "covid19_status_cd" => "0",
+                "nomor_kartu_t" => "nik",
+                "episodes" => "",
+                "covid19_cc_ind" => "0",
+                "covid19_rs_darurat_ind" => "0",
+                "covid19_co_insidense_ind" => "0",
+                // "covid19_penunjang_pengurang" => [
+                //     "lab_asam_laktat" => "1",
+                //     "lab_procalcitonin" => "1",
+                //     "lab_crp" => "1",
+                //     "lab_kultur" => "1",
+                //     "lab_d_dimer" => "1",
+                //     "lab_pt" => "1",
+                //     "lab_aptt" => "1",
+                //     "lab_waktu_pendarahan" => "1",
+                //     "lab_anti_hiv" => "1",
+                //     "lab_analisa_gas" => "1",
+                //     "lab_albumin" => "1",
+                //     "rad_thorax_ap_pa" => "0"
+                // ],
+                "terapi_konvalesen" => "0",
+                "akses_naat" => "C",
+                // "isoman_ind" => "0",
+                "bayi_lahir_status_cd" => 0,
+                "dializer_single_use" => "0", #hd setting multiple
+                "kantong_darah" => 0,
+                // "apgar" => [
+                //     "menit_1" =>
+                //     [
+                //         "appearance" => 1,
+                //         "pulse" => 2,
+                //         "grimace" => 1,
+                //         "activity" => 1,
+                //         "respiration" => 1
+                //     ],
+                //     "menit_5" => [
+                //         "appearance" => 2,
+                //         "pulse" => 2,
+                //         "grimace" => 2,
+                //         "activity" => 2,
+                //         "respiration" => 2
+                //     ],
+                // ],
+                // "persalinan" => [
+                //     "usia_kehamilan" => "22",
+                //     "gravida" => "2",
+                //     "partus" => "4",
+                //     "abortus" => "2",
+                //     "onset_kontraksi" => "induksi",
+                //     "delivery" => [
+                //         [
+                //             "delivery_sequence" => "1",
+                //             "delivery_method" => "vaginal",
+                //             "delivery_dttm" => "2023-01-21 17:01:33",
+                //             "letak_janin" => "kepala",
+                //             "kondisi" => "livebirth",
+                //             "use_manual" => "1",
+                //             "use_forcep" => "0",
+                //             "use_vacuum" => "1"
+                //         ],
+                //         [
+                //             "delivery_sequence" => "2",
+                //             "delivery_method" => "vaginal",
+                //             "delivery_dttm" => "2023-01-21 17:03:49",
+                //             "letak_janin" => "lintang",
+                //             "kondisi" => "livebirth",
+                //             "use_manual" => "1",
+                //             "use_forcep" => "0",
+                //             "use_vacuum" => "0"
+                //         ]
+                //     ]
+                // ],
+                "tarif_poli_eks" => "#",
+                "nama_dokter" => $request->dokter_dpjp,
+                "kode_tarif" => "BP",
+                "payor_id" => "3",
+                "payor_cd" => "JKN",
+                // "cob_cd" => "0001",
+                "coder_nik" => "123123123123",
+
+            ]
+        ];
+        $json_request = json_encode($request_data);
+        return $this->send_request($json_request);
+    }
+    public function set_claim_ranap_v2(Request $request)
+    {
+        $validator = Validator::make(request()->all(), [
+            "noSEP" =>  "required",
+            "nomorkartu" =>  "required",
+            "tglmasuk" =>  "required",
+            "cara_masuk" =>  "required",
+            "kelas_rawat" =>  "required",
+            "diagnosa" =>  "required",
+            "discharge_status" =>  "required",
+            "dokter_dpjp" =>  "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), null, 400);
+        }
+        $icd10 = explode('|', json_decode($request->diagnosa)[0])[0];
+        $jumlah_diag = count(json_decode($request->diagnosa)) - 1;
+        for ($i = 1; $i  <= $jumlah_diag; $i++) {
+            $icd10 = $icd10 . '#' . explode('|', json_decode($request->diagnosa)[$i])[0];
+        }
+        $icd9 = "#";
+        if ($request->procedure) {
+            $icd9 = explode('|', json_decode($request->procedure)[0])[0];
+            $jumlah_diag = count(json_decode($request->procedure)) - 1;
+            for ($i = 1; $i  <= $jumlah_diag; $i++) {
+                $icd9 = $icd9 . '#' . explode('|', json_decode($request->procedure)[$i])[0];
+            }
+        }
+        $request_data = [
+            "metadata" => [
+                "method" => "set_claim_data",
+                "nomor_sep" => $request->noSEP,
+
+            ],
+            "data" => [
+                "nomor_sep" =>  $request->noSEP,
+                "nomor_kartu" => $request->nomorkartu,
+                "tgl_masuk" => $request->tglmasuk,
+                "tgl_pulang" => $request->tgl_pulang,
+                "cara_masuk" => $request->cara_masuk, #isi
+                "jenis_rawat" => 1, #inap, jalan, igd
+                "kelas_rawat" => $request->kelas_rawat, #kelas rawat
+                "adl_sub_acute" => "0",
+                "adl_chronic" => "0",
+                "icu_indikator" => "0",
+                "icu_los" => "0",
+                "ventilator_hour" => "0",
+                // "ventilator" => [
+                //     "use_ind" => "1",
+                //     "start_dttm" => "2023-01-26 12:55:00",
+                //     "stop_dttm" => "2023-01-26 17:50:00"
+                // ],
+                // "upgrade_class_ind" => "0",
+                // "upgrade_class_class" => "0",
+                // "upgrade_cla ss_los" => "0",
+                // "upgrade_class_payor" => "0",
+                // "add_payment_pct" => "0",
+                "birth_weight" => $request->berat_badan, #berat bayi
+                "sistole" => $request->sistole ?? 120, #detak tensi
+                "diastole" => $request->diastole ?? 80, #yg dbawah
                 "discharge_status" => $request->discharge_status, #kluar
                 "diagnosa" => $icd10,
                 "procedure" => $icd9,

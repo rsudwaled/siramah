@@ -55,7 +55,7 @@ class SuratMasukController extends Controller
         ]);
         // notif wa
         $wa = new WhatsappController();
-        $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nhttp://sim.rsudwaled.id/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
+        $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nsim.rsudwaled.id:80/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
         $request['number'] = "628122350498@c.us"; #direktur
         $wa->send_message($request);
         $request['number'] = "6289529909036@c.us"; #marwan
@@ -79,7 +79,7 @@ class SuratMasukController extends Controller
         $nomor = str_pad($surat->no_urut, 3, '0', STR_PAD_LEFT) . '/' . $surat->kode . '/' . Carbon::parse($surat->tgl_disposisi)->translatedFormat('m/Y');
         if ($request->disposisi && $request->pengolah) {
             $wa = new WhatsappController();
-            $request['message'] = "Telah diupdate Disposisi oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $surat->no_surat . "\n*Asal Surat :* " . $surat->asal_surat . "\n*Perihal :* " . $surat->perihal . "\n\n*No Disposisi :* " . $nomor . "\n*Ditujukan Untuk :* " . $request->pengolah . "\n*Disposisi :* " . $request->disposisi . "\n\nSilahkan untuk mengeceknya dengan link berikut. \nhttp://sim.rsudwaled.id/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
+            $request['message'] = "Telah diupdate Disposisi oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $surat->no_surat . "\n*Asal Surat :* " . $surat->asal_surat . "\n*Perihal :* " . $surat->perihal . "\n\n*No Disposisi :* " . $nomor . "\n*Ditujukan Untuk :* " . $request->pengolah . "\n*Disposisi :* " . $request->disposisi . "\n\nSilahkan untuk mengeceknya dengan link berikut. \nsim.rsudwaled.id:80/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
             $request['number'] = "120363115261279867@g.us"; #group
             $wa->send_message_group($request);
             // $request['number'] = "089529909036@c.us";
@@ -94,7 +94,7 @@ class SuratMasukController extends Controller
         $surat = SuratMasuk::where('id_surat_masuk', $id)->first();
         $surat->delete();
         $wa = new WhatsappController();
-        $request['message'] = "Telah dihapus surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $surat->no_surat . "\n*Asal Surat :* " . $surat->asal_surat . "\n*Perihal :* " . $surat->perihal . "\n\nSilahkan untuk mengeceknya dengan link berikut. \nhttp://sim.rsudwaled.id/siramah/disposisi";
+        $request['message'] = "Telah dihapus surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $surat->no_surat . "\n*Asal Surat :* " . $surat->asal_surat . "\n*Perihal :* " . $surat->perihal . "\n\nSilahkan untuk mengeceknya dengan link berikut. \nsim.rsudwaled.id:80/siramah/disposisi";
         $request['number'] = "120363115261279867@g.us"; #group
         // $wa->send_message_group($request);
         // $wa->send_message($request);

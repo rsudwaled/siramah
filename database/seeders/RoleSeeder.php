@@ -30,6 +30,7 @@ class RoleSeeder extends Seeder
             'Pelayanan Medis',
             'Bagian Umum',
             'BPJS',
+            'Ranap',
             'Pendaftaran IGD',
         ];
         foreach ($roles as $item) {

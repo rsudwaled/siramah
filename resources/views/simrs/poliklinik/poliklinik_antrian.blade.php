@@ -10,7 +10,7 @@
             <x-adminlte-card title="Filter Antrian Pasien" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
@@ -23,7 +23,7 @@
                                 </x-slot>
                             </x-adminlte-input-date>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <x-adminlte-select2 name="kodepoli" label="Poliklinik">
                                 @foreach ($polis as $item)
                                     <option value="{{ $item->kodesubspesialis }}"
@@ -34,9 +34,8 @@
                                 <option value="" {{ $request->kodepoli ? '' : 'selected' }}>SEMUA POLIKLINIK (-)
                                 </option>
                             </x-adminlte-select2>
-
                         </div>
-                        {{-- <div class="col-md-4">
+                        <div class="col-md-4">
                             <x-adminlte-select2 name="kodedokter" label="Dokter">
                                 <option value="">SEMUA DOKTER (-)</option>
                                 @foreach ($dokters as $item)
@@ -46,7 +45,7 @@
                                     </option>
                                 @endforeach
                             </x-adminlte-select2>
-                        </div> --}}
+                        </div>
                     </div>
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>

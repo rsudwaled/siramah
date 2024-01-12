@@ -72,13 +72,49 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Paramedis::class, 'kode_paramedis', 'kode_paramedis');
     }
+    public function assesmen_dokter()
+    {
+        return $this->hasOne(AssesmenDokter::class, 'id_kunjungan', 'kode_kunjungan');
+    }
+    public function assesmen_perawat()
+    {
+        return $this->hasOne(AsesmenPerawat::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function layanan()
     {
         return $this->hasOne(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
-    public function assesmen_dokter()
+    public function layanans()
     {
-        return $this->hasOne(AssesmenDokter::class, 'id_kunjungan', 'kode_kunjungan');
+        return $this->hasMany(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap()
+    {
+        return $this->hasOne(ErmRanap::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function groupping()
+    {
+        return $this->hasOne(ErmGroupping::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_mppa()
+    {
+        return $this->hasOne(ErmRanapMppa::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_mppb()
+    {
+        return $this->hasOne(ErmRanapMppb::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_keperawatan()
+    {
+        return $this->hasMany(ErmRanapKeperawatan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_observasi()
+    {
+        return $this->hasMany(ErmRanapObservasi::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function erm_ranap_perkembangan()
+    {
+        return $this->hasMany(ErmRanapPerkembangan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
     public function antrian()
     {
@@ -91,6 +127,10 @@ class Kunjungan extends Model
     public function alasan_masuk()
     {
         return $this->hasOne(AlasanMasuk::class, 'id', 'id_alasan_masuk');
+    }
+    public function alasan_pulang()
+    {
+        return $this->hasOne(AlasanPulang::class, 'kode', 'id_alasan_pulang');
     }
     public function tracer()
     {

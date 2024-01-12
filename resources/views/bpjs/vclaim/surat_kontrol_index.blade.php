@@ -78,7 +78,6 @@
                             </x-adminlte-select2>
                         </div>
                     </div>
-
                 </form>
             </x-adminlte-card>
         </div>

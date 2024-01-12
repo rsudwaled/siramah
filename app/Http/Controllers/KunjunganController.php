@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KunjunganController extends APIController
@@ -135,8 +136,136 @@ class KunjunganController extends APIController
             'kunjungans',
         ]));
     }
+    public function pasienRanap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
+            $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
+            if ($request->kodeunit == '-') {
+                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->whereBetween('tgl_masuk', [$tanggalawal, $tanggalakhir])
+                    // ->where('status_kunjungan', 1)
+                    ->has('pasien')
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'status',  'tagihan', 'surat_kontrol'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                    ->whereBetween('tgl_masuk', [$tanggalawal, $tanggalakhir])
+                    // ->where('status_kunjungan', 1)
+                    ->has('pasien')
+                    ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'status',  'tagihan', 'surat_kontrol'])
+                    ->get();
+            }
+        }
+        return view('simrs.ranap.ranap_pasien', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
+    }
+    public function pasienRanapPasien(Request $request)
+    {
+
+        $kunjungan = Kunjungan::with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'budget', 'status',  'tagihan', 'surat_kontrol'])
+            ->find($request->kode);
+
+        $inacbg = new InacbgController();
+        $request['norm'] = $kunjungan->no_rm;
+        $request['counter'] = $kunjungan->counter;
+        $budget = $inacbg->rincian_biaya_pasien($request)->response;
+        // dd($budget);
+        // rincian_biaya_pasien
+
+        $vclaim = new VclaimController();
+        $res = $vclaim->sep_insert($request);
+        if ($res->metadata->code == 200) {
+            # code...
+        } else {
+            # code...
+        }
+        return view('simrs.ranap.ranap_detail_pasien', compact([
+            'request',
+            'kunjungan',
+            'budget',
+        ]));
+    }
+    public function pasienRanapPulang(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
+            $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
+            $kunjungans = collect(DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_PULANG('','" . $tanggalawal . "','" . $tanggalakhir . "','" . $request->kodeunit . "')"));
+        }
+        return view('simrs.ranap.ranap_pasien_pulang', compact([
+            'request',
+            'units',
+            'kunjungans',
+        ]));
+    }
+    public function kunjunganpasienranap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $kunjungans = null;
+        $kunjungan_aktif = null;
+        if ($request->tanggal) {
+            $tanggalawal = Carbon::parse(explode('-', $request->tanggal)[0]);
+            $tanggalakhir = Carbon::parse(explode('-', $request->tanggal)[1])->endOfDay();
+            $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                ->whereBetween('tgl_keluar', [$tanggalawal, $tanggalakhir])
+                ->has('pasien')
+                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status', 'alasan_pulang'])
+                ->get();
+            $kunjungan_aktif = Kunjungan::where('kode_unit', $request->kodeunit)
+                ->where('status_kunjungan', 1)
+                ->has('pasien')
+                ->with(['pasien', 'penjamin_simrs', 'dokter', 'unit', 'status', 'alasan_pulang'])
+                ->get();
+        }
+        return view('simrs.ranap.kunjungan_pasien_ranap', compact([
+            'request',
+            'units',
+            'kunjungans',
+            'kunjungan_aktif',
+        ]));
+    }
+    public function bukakunjungan(Request $request)
+    {
+        $kunjungan = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjungan->update([
+            'tgl_keluar' => null,
+            'catatan' => $kunjungan->tgl_keluar,
+            'status_kunjungan' => 1,
+            'cfar' => 1,
+            'cetak_label' => 1,
+        ]);
+        Alert::success('Succes', 'Kunjungan berhasil dibuka kembali. Lihat di pasien aktif');
+        return redirect()->back();
+    }
+    public function tutupkunjungan(Request $request)
+    {
+        $kunjungan = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjungan->update([
+            'tgl_keluar' => $kunjungan->catatan,
+            'status_kunjungan' => 2,
+            'cfar' => 1,
+            'cetak_label' => 1,
+        ]);
+        Alert::success('Succes', 'Kunjungan berhasil ditutup kembali. Lihat di pasien pulang.');
+        return redirect()->back();
+    }
     public function pemulangan_sep_pasien(Request $request)
     {
+        dd($request->all());
         $api = new VclaimController();
         $request['user'] = Auth::user()->name;
         $response = $api->sep_update_pulang($request);
