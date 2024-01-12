@@ -317,7 +317,6 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
-        // PELAYANAN
         [
             'text'    => 'Aplikasi Pelayanan',
             'icon'    => 'fas fa-clinic-medical',
@@ -344,31 +343,78 @@ return [
                     'can' => 'pendaftaran',
                 ],
                 [
-                    'text' => 'Capaian Antrian',
-                    'icon'    => 'fas fa-chart-bar',
-                    'url'  => 'antrianCapaian',
+                    'text' => 'Antrian Pembayaran',
+                    'icon'    => 'fas fa-hand-holding-usd',
+                    'url'  => 'antrian/pembayaran',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
+                    'can' => 'kasir',
                 ],
                 [
-                    'text' => 'Capaian Antrian Pertanggal',
-                    'icon'    => 'fas fa-chart-line',
+                    'text' => 'Kunjungan Poliklinik',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'kunjungan_rajal',
                     'shift'   => 'ml-2',
-                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                    'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Capaian Antrian Perbulan',
-                    'icon'    => 'fas fa-chart-line',
+                    'text' => 'Antrian Poliklinik',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'antrianPoliklinik',
                     'shift'   => 'ml-2',
-                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                    'can' => 'poliklinik',
                 ],
                 [
-                    'text' => 'Jadwal Dokter',
-                    'icon'    => 'fas fa-calendar-alt',
-                    'url'  => 'jadwalDokterAntrian',
+                    'text' => 'Surat Kontrol Poliklinik',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'kunjunganPoliklinik',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran',
+                    'can' => 'poliklinik',
                 ],
+                [
+                    'text' => 'Antrian Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrianFarmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'Order Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'orderFarmasi',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'Tracer Order Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'tracerOrderObat',
+                    'shift'   => 'ml-2',
+                    'can' => 'farmasi',
+                ],
+                [
+                    'text' => 'Pasien Ranap Aktif',
+                    'icon'    => 'fas fa-procedures',
+                    'url'  => 'kunjunganranap',
+                    'active' => ['kunjunganranap', 'pasienranapprofile'],
+                    'shift'   => 'ml-2',
+                    'can' => 'ranap',
+                ],
+                // [
+                //     'text' => 'Pasien Ranap Aktif',
+                //     'icon'    => 'fas fa-user-injured',
+                //     'url'  => 'pasienRanapAktif',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'ranap',
+                // ],
+                // [
+                //     'text' => 'Pasien Ranap',
+                //     'icon'    => 'fas fa-user-injured',
+                //     'url'  => 'pasienRanap',
+                //     'shift'   => 'ml-2',
+                //     'active' => ['pasienRanapPasien', 'pasienRanap'],
+                //     'can' => 'ranap',
+                // ],
+
             ],
         ],
          // IGD
@@ -419,7 +465,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                
+
                 // [
                 //     'text' => 'Pendaftaran Pasien',
                 //     'icon'    => 'fas fa-user-plus',
@@ -427,7 +473,7 @@ return [
                 //     'shift'   => 'ml-2',
                 //     'can' => 'pendaftaran-igd',
                 // ],
-                
+
                 // [
                 //     'text' => 'Pendaftaran Rawat Inap',
                 //     'icon'    => 'fas fa-user-plus',
@@ -449,7 +495,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                
+
             ],
         ],
         // KASIR
@@ -533,36 +579,6 @@ return [
 
             ],
         ],
-        // IGD
-        // [
-        //     'text'    => 'Aplikasi IGD',
-        //     'icon'    => 'fas fa-user-plus',
-        //     'can' => 'pendaftaran-igd',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Pendaftaran IGD',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'dashboard-antrian-igd',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Kunjungan Pasien',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'daftar-kunjungan',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Riwayat Pendaftaran byUser',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'daftar-kunjungan-byuser',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-
-        //     ],
-        // ],
         // PENGELOLAAN
         [
             'text'    => 'Pengelolaan',
