@@ -176,27 +176,27 @@ class DaftarIGKController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien tidak memiliki nomor kartu. silahkan edit pasien terlebih dahulu!');
             return back();
         }
-        if(!empty($pasien->no_Bpjs) && $request->isBpjs == 1)
-        {
-            $tanggal    = now()->format('Y-m-d');
-            $url        = env('VCLAIM_URL') . "Peserta/nokartu/" . $pasien->no_Bpjs . "/tglSEP/" . $tanggal;
-            $signature  = $this->signature();
-            $response   = Http::withHeaders($signature)->get($url);
-            $repon_desc = $this->response_decrypt($response, $signature);
+        // if(!empty($pasien->no_Bpjs) && $request->isBpjs == 1)
+        // {
+        //     $tanggal    = now()->format('Y-m-d');
+        //     $url        = env('VCLAIM_URL') . "Peserta/nokartu/" . $pasien->no_Bpjs . "/tglSEP/" . $tanggal;
+        //     $signature  = $this->signature();
+        //     $response   = Http::withHeaders($signature)->get($url);
+        //     $repon_desc = $this->response_decrypt($response, $signature);
             
-            if($repon_desc->metadata->code != 200)
-            {
-                Alert::error('Daftar Gagal!!', 'pasien memiliki masalah dengan bpjs : '.$repon_desc->metadata->message.'-'.($repon_desc->metadata->code));
-                return back();
-            }
-            if($repon_desc->metadata->code == 200 && $repon_desc->response->peserta->statusPeserta->kode == 0)
-            {
-                $hakKelas = $repon_desc->response->peserta->hakKelas->kode;
-            }else{
-                Alert::error('Daftar Gagal!!', 'status pasien bpjs : '.$repon_desc->response->peserta->statusPeserta->keterangan);
-                return back();
-            }
-        }
+        //     if($repon_desc->metadata->code != 200)
+        //     {
+        //         Alert::error('Daftar Gagal!!', 'pasien memiliki masalah dengan bpjs : '.$repon_desc->metadata->message.'-'.($repon_desc->metadata->code));
+        //         return back();
+        //     }
+        //     if($repon_desc->metadata->code == 200 && $repon_desc->response->peserta->statusPeserta->kode == 0)
+        //     {
+        //         $hakKelas = $repon_desc->response->peserta->hakKelas->kode;
+        //     }else{
+        //         Alert::error('Daftar Gagal!!', 'status pasien bpjs : '.$repon_desc->response->peserta->statusPeserta->keterangan);
+        //         return back();
+        //     }
+        // }
 
         $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
         $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
@@ -244,7 +244,7 @@ class DaftarIGKController extends Controller
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noAntrian       = $ant_upd->no_antri;
                 $histories->noMR            = $createKunjungan->no_rm;
-                $histories->noKartu         = $pasien->no_Bpjs;
+                $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
                 $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
                 $histories->user            = Auth::user()->name;

@@ -227,7 +227,7 @@ class DaftarIGDController extends Controller
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noAntrian       = $ant_upd->no_antri;
                 $histories->noMR            = $createKunjungan->no_rm;
-                $histories->noKartu         = $pasien->no_Bpjs;
+                $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
                 $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
                 $histories->user            = Auth::user()->name;

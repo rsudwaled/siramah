@@ -225,7 +225,7 @@ class DaftarTanpaNomorController extends Controller
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noMR            = $createKunjungan->no_rm;
-                $histories->noKartu         = $pasien->no_Bpjs;
+                $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
                 $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
                 $histories->user            = Auth::user()->name;

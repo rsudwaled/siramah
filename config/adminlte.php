@@ -407,7 +407,7 @@ return [
                 ],
                 [
                     'text' => 'Pasien Ranap',
-                    'icon'    => 'fas fa-hospital-user',
+                    'icon'    => 'fas fa-procedures',
                     'url'  => 'pasien-rawat-inap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
