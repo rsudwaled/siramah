@@ -375,7 +375,7 @@ return [
          // IGD
          [
             'text'    => 'Aplikasi IGD',
-            'icon'    => 'fas fa-user-plus',
+            'icon'    => 'fas fa-hospital-alt',
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
