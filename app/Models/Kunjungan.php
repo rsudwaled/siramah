@@ -11,9 +11,33 @@ class Kunjungan extends Model
     protected $connection = 'mysql2';
     protected $table = 'ts_kunjungan';
     protected $primaryKey = 'kode_kunjungan';
+    // public $incrementing = false;
     protected $keyType = 'string';
-    protected $guarded = [
-        'kode_kunjungan',
+    protected $fillable = [
+        'counter',
+        'no_rm',
+        'kode_unit',
+        'tgl_masuk',
+        'kode_paramedis',
+        'status_kunjungan',
+        'prefix_kunjungan',
+        'kode_penjamin',
+        'pic',
+        'id_alasan_masuk',
+        'pic2',
+        'kelas',
+        'hak_kelas',
+        'no_sep',
+        'no_rujukan',
+        'diagx',
+        'created_at',
+        'keterangan2',
+        'is_ranap_daftar',
+        'form_send_by',
+        'jp_daftar',
+        'perujuk',
+        'no_spri',
+        'alasan_edit',
     ];
     protected $appends = ['rm_counter'];
     public function getRmCounterAttribute()
@@ -119,6 +143,22 @@ class Kunjungan extends Model
     public function tagihan()
     {
         return $this->belongsTo(TagihanPasien::class, 'rm_counter',   'rm_counter');
+    }
+    public function ruanganRawat()
+    {
+        return $this->belongsTo(Ruangan::class, 'id_ruangan',   'id_ruangan');
+    }
+    public function ermCpptDokter()
+    {
+        return $this->belongsTo(ErmCpptDokter::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function jpDaftar()
+    {
+        return $this->belongsTo(JPasienIGD::class, 'kode_kunjungan', 'kunjungan');
+    }
+    public function diagnosaIGD()
+    {
+        return $this->belongsTo(Icd10::class, 'diagx', 'diag');
     }
 
     // protected $appends = ['nama_pasien'];

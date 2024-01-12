@@ -125,7 +125,6 @@
                 $("#kode_unit").empty();
             }
         });
-
         $('#kode_unit').change(function() {
             var id_kunjungan = $("#kode_unit").val();
             var rm = $("#rm").val();

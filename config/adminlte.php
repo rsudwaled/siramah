@@ -344,6 +344,121 @@ return [
                     'can' => 'pendaftaran',
                 ],
                 [
+                    'text' => 'Capaian Antrian',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'antrianCapaian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+                [
+                    'text' => 'Capaian Antrian Pertanggal',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardTanggalAntrianPoliklinik',
+                ],
+                [
+                    'text' => 'Capaian Antrian Perbulan',
+                    'icon'    => 'fas fa-chart-line',
+                    'shift'   => 'ml-2',
+                    'url'  => 'dashboardBulanAntrianPoliklinik',
+                ],
+                [
+                    'text' => 'Jadwal Dokter',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'jadwalDokterAntrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran',
+                ],
+            ],
+        ],
+         // IGD
+         [
+            'text'    => 'Aplikasi IGD',
+            'icon'    => 'fas fa-hospital-alt',
+            'can' => 'pendaftaran-igd',
+            'submenu' => [
+                [
+                    'text' => 'Dashboard IGD',
+                    'icon'    => 'fas fa-columns',
+                    'url'  => 'dashboard-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Daftar Antrian',
+                    'icon'    => 'fas fa-chalkboard-teacher',
+                    'url'  => 'list-antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Update Diagnosa',
+                    'icon'    => 'fas fa-stethoscope',
+                    'url'  => 'daftar-diagnosa/synch-diagnosa-assesment',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Assesment Ranap',
+                    'icon'    => 'fas fa-notes-medical',
+                    'url'  => 'list-pasien/assesment-ranap',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Pasien Ranap',
+                    'icon'    => 'fas fa-hospital-user',
+                    'url'  => 'pasien-rawat-inap',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Kunjungan',
+                    'icon'    => 'fas fa-address-book',
+                    'url'  => 'daftar-kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                
+                // [
+                //     'text' => 'Pendaftaran Pasien',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pendaftaran-pasien-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                
+                // [
+                //     'text' => 'Pendaftaran Rawat Inap',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pendaftaran-rawat-inap',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Kunjungan Pasien',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'pilih-kunjungan',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                [
+                    'text' => 'Riwayat Pendaftaran byUser',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'daftar-kunjungan-byuser',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                
+            ],
+        ],
+        // KASIR
+        [
+            'text'    => 'Aplikasi Kasir',
+            'icon'    => 'fas fa-cash-register',
+            'can' => 'kasir',
+            'submenu' => [
+                [
                     'text' => 'Antrian Pembayaran',
                     'icon'    => 'fas fa-hand-holding-usd',
                     'url'  => 'antrian/pembayaran',
