@@ -11,6 +11,7 @@ use App\Models\ErmRanapObservasi;
 use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\TagihanPasien;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -357,10 +358,14 @@ class RanapController extends APIController
     public function print_resume_ranap(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $kunjungans = Kunjungan::where('no_rm', $kunjungan->no_rm)
+            ->where('counter', $kunjungan->counter)
+            ->get();
         $erm = $kunjungan->erm_ranap;
         $pasien = $kunjungan->pasien;
         return view('simrs.ranap.print_resume_ranap', compact([
             'kunjungan',
+            'kunjungans',
             'erm',
             'pasien',
         ]));

@@ -13,78 +13,202 @@
                 <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
                 <input type="hidden" name="counter" value="{{ $kunjungan->counter }}">
                 <div class="row">
-                    <div class="col-md-3">
-                        <x-adminlte-textarea name="ringkasan_perawatan" label="Ringkasan Perawatan" rows="3"
-                            igroup-size="sm" placeholder="Ringkasan Perawatan">
-                            {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="riwayat_penyakit" label="Riwayat Penyakit" rows="2"
-                            igroup-size="sm" placeholder="Riwayat Penyakit">
-                            {{ $kunjungan->erm_ranap->riwayat_penyakit ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="indikasi_ranap" label="Indikasi Ranap" rows="2"
-                            igroup-size="sm" placeholder="Indikasi Ranap">
-                            {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="pemeriksaan_fisik" label="Pemeriksaan Fisik" rows="4"
-                            igroup-size="sm" placeholder="Pemeriksaan Fisik">
-                            {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="catatan_laboratorium" label="Pemeriksaan Laboratorium" rows="3"
-                            igroup-size="sm" placeholder="Pemeriksaan Laboratorium">
-                            {{ $kunjungan->erm_ranap->catatan_laboratorium ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="catatan_radiologi" label="Pemeriksaan Radiologi" rows="3"
-                            igroup-size="sm" placeholder="Pemeriksaan Radiologi">
-                            {{ $kunjungan->erm_ranap->catatan_radiologi ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="catatan_penunjang" label="Pemeriksaan Penunjang Lainnya"
-                            rows="3" igroup-size="sm" placeholder="Pemeriksaan Penunjang Lainnya">
-                            {{ $kunjungan->erm_ranap->catatan_penunjang ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="hasil_konsultasi" label="Hasil Konsultasi" rows="3"
-                            igroup-size="sm" placeholder="Hasil Konsultasi">
-                            {{ $kunjungan->erm_ranap->hasil_konsultasi ?? null }}
-                        </x-adminlte-textarea>
-                    </div>
-
-                    <div class="col-md-3">
+                    <x-adminlte-textarea name="ringkasan_perawatan" fgroup-class="col-md-4" label="Ringkasan Perawatan"
+                        rows="3" igroup-size="sm" placeholder="Ringkasan Perawatan">
+                        {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="riwayat_penyakit" fgroup-class="col-md-4" label="Riwayat Penyakit"
+                        rows="3" igroup-size="sm" placeholder="Riwayat Penyakit">
+                        {{ $kunjungan->erm_ranap->riwayat_penyakit ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="indikasi_ranap" fgroup-class="col-md-4" label="Indikasi Ranap"
+                        rows="3" igroup-size="sm" placeholder="Indikasi Ranap">
+                        {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-input name="tensi_darah" fgroup-class="col-md-3"
+                        value="{{ $kunjungan->erm_ranap->tensi_darah ?? null }}" label="Tensi Darah" igroup-size="sm"
+                        placeholder="Tensi Darah" />
+                    <x-adminlte-input name="denyut_nadi" fgroup-class="col-md-3"
+                        value="{{ $kunjungan->erm_ranap->denyut_nadi ?? null }}" label="Denyut Nadi" igroup-size="sm"
+                        placeholder="Denyut Nadi" />
+                    <x-adminlte-input name="pernapasan" fgroup-class="col-md-3"
+                        value="{{ $kunjungan->erm_ranap->pernapasan ?? null }}" label="Pernapasan" igroup-size="sm"
+                        placeholder="Pernapasan" />
+                    <x-adminlte-input name="suhu" fgroup-class="col-md-3"
+                        value="{{ $kunjungan->erm_ranap->suhu ?? null }}" label="Suhu Tubuh" igroup-size="sm"
+                        placeholder="Suhu Tubuh" />
+                    <x-adminlte-textarea name="pemeriksaan_fisik" fgroup-class="col-md-12" label="Pemeriksaan Fisik"
+                        rows="4" igroup-size="sm" placeholder="Pemeriksaan Fisik">
+                        {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="catatan_laboratorium" fgroup-class="col-md-3"
+                        label="Pemeriksaan Laboratorium" rows="3" igroup-size="sm"
+                        placeholder="Pemeriksaan Laboratorium">
+                        {{ $kunjungan->erm_ranap->catatan_laboratorium ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="catatan_radiologi" fgroup-class="col-md-3" label="Pemeriksaan Radiologi"
+                        rows="3" igroup-size="sm" placeholder="Pemeriksaan Radiologi">
+                        {{ $kunjungan->erm_ranap->catatan_radiologi ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="catatan_penunjang" fgroup-class="col-md-3"
+                        label="Pemeriksaan Penunjang Lainnya" rows="3" igroup-size="sm"
+                        placeholder="Pemeriksaan Penunjang Lainnya">
+                        {{ $kunjungan->erm_ranap->catatan_penunjang ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="hasil_konsultasi" fgroup-class="col-md-3" label="Hasil Konsultasi"
+                        rows="3" igroup-size="sm" placeholder="Hasil Konsultasi">
+                        {{ $kunjungan->erm_ranap->hasil_konsultasi ?? null }}
+                    </x-adminlte-textarea>
+                    <div class="col-md-4">
                         <x-adminlte-textarea name="diagnosa_masuk" label="Diagnosa Masuk" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Masuk">
                             {{ $kunjungan->erm_ranap->diagnosa_masuk ?? null }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="diagnosa_utama" label="Diagnosa Utama" rows="3"
+                        <x-adminlte-textarea name="diagnosa_utama" label="Diagnosa Utama" rows="1"
                             igroup-size="sm" placeholder="Diagnosa Utama">
                             {{ $kunjungan->erm_ranap->diagnosa_utama ?? null }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="diagnosa_sekunder" label="Diagnosa Sekunder" rows="3"
-                            igroup-size="sm" placeholder="Diagnosa Sekunder">
-                            {{ $kunjungan->erm_ranap->diagnosa_sekunder ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="komplikasi" label="Komplikasi" rows="3" igroup-size="sm"
-                            placeholder="Komplikasi">
-                            {{ $kunjungan->erm_ranap->komplikasi ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="3"
-                            igroup-size="sm" placeholder="Diagnosa ICD-10">
-                            {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="tindakan" label="Tindakan Operasi" rows="3" igroup-size="sm"
-                            placeholder="Tindakan Operasi">
-                            {{ $kunjungan->erm_ranap->tindakan ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3"
-                            igroup-size="sm" placeholder="Tindakan / Prosedur">
-                            {{ $kunjungan->erm_ranap->tindakan ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-textarea name="tindakan_icd9" label="Tindakan ICD-9" rows="3"
-                            igroup-size="sm" placeholder="Tindakan ICD-9">
-                            {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
-                        </x-adminlte-textarea>
                     </div>
-                    <div class="col-md-3">
+                    <x-adminlte-textarea name="diagnosa_sekunder" fgroup-class="col-md-4" label="Diagnosa Sekunder"
+                        rows="6" igroup-size="sm" placeholder="Diagnosa Sekunder">
+                        {{ $kunjungan->erm_ranap->diagnosa_sekunder ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="diagnosa_icd10" fgroup-class="col-md-4" label="Diagnosa ICD-10"
+                        rows="6" igroup-size="sm" placeholder="Diagnosa ICD-10">
+                        {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
+                    </x-adminlte-textarea>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <x-adminlte-textarea name="tindakan_operasi" label="Tindakan Operasi" rows="3"
+                                igroup-size="sm" placeholder="Tindakan Operasi" fgroup-class="col-md-12">
+                                {{ $kunjungan->erm_ranap->tindakan_operasi ?? null }}
+                            </x-adminlte-textarea>
+                            @php
+                                $config = ['format' => 'YYYY-MM-DD'];
+                            @endphp
+                            <x-adminlte-input-date name="tanggal_operasi" label="Tgl Operasi" value="{{ $kunjungan->erm_ranap->tanggal_operasi ?? null }}"
+                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
+                            @php
+                                $config = ['format' => 'HH:mm:ss'];
+                            @endphp
+                            <x-adminlte-input-date name="awal_operasi" label="Awal Operasi" value="{{ $kunjungan->erm_ranap->awal_operasi ?? null }}"
+                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
+                            <x-adminlte-input-date name="akhir_operasi" label="Akhir Operasi" value="{{ $kunjungan->erm_ranap->akhir_operasi ?? null }}"
+                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
+                        </div>
 
                     </div>
+                    <x-adminlte-textarea name="tindakan_prosedur" label="Tindakan Prosedur" fgroup-class="col-md-4"
+                        rows="6" igroup-size="sm" placeholder="Tindakan Operasi">
+                        {{ $kunjungan->erm_ranap->tindakan_prosedur ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="tindakan_icd9" fgroup-class="col-md-4" label="Tindakan Operasi ICD-9"
+                        rows="6" igroup-size="sm" placeholder="Tindakan ICD-9">
+                        {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                    </x-adminlte-textarea>
+                    <div class="col-md-3">
+                        <b>Cara Pulang</b>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Sembuh / Perbaikan"
+                                    id="psembuh" name="cara_pulang"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->cara_pulang == 'Sembuh / Perbaikan' ? 'checked' : null) : null }}>
+                                <label for="psembuh" class="custom-control-label">Sembuh / Perbaikan</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="ppindahrs" value="Pindah RS"
+                                    name="cara_pulang"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->cara_pulang == 'Pindah RS' ? 'checked' : null) : null }}>
+                                <label for="ppindahrs" class="custom-control-label">Pindah RS</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" value="Pulang Paksa" type="radio"
+                                    id="pplngpaksa" name="cara_pulang"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->cara_pulang == 'Pulang Paksa' ? 'checked' : null) : null }}>
+                                <label for="pplngpaksa" class="custom-control-label">Pulang Paksa</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" value="Meninggal" type="radio" id="pmninggal"
+                                    name="cara_pulang"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->cara_pulang == 'Meninggal' ? 'checked' : null) : null }}>
+                                <label for="pmninggal" class="custom-control-label">Meninggal</label>
+                            </div>
+                            <x-adminlte-textarea name="cara_pulang_text" rows="2" igroup-size="sm"
+                                placeholder="Keterangan Lainnya">
+                                {{ $kunjungan->erm_ranap->cara_pulang_text ?? '' }}
+                            </x-adminlte-textarea>
+                        </div>
+                    </div>
+                    <x-adminlte-textarea name="kondisi_umum" label="Keadaan Umum" fgroup-class="col-md-3"
+                        rows="5" igroup-size="sm" placeholder="Keadaan Umum">
+                        {{ $kunjungan->erm_ranap->kondisi_umum ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="kondisi_pulang" label="Kondisi Pulang" fgroup-class="col-md-3"
+                        rows="5" igroup-size="sm" placeholder="Kondisi Pulang">
+                        {{ $kunjungan->erm_ranap->kondisi_pulang ?? null }}
+                    </x-adminlte-textarea>
+                    <div class="col-md-3">
+                        <b>Pengobatan Dilanjutkan</b>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Poliklinik RSUD Waled"
+                                    id="ppoli" name="pengobatan_lanjutan"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Poliklinik RSUD Waled' ? 'checked' : null) : null }}>
+                                <label for="ppoli" class="custom-control-label">Poliklinik RSUD Waled</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" id="prslain" value="RS Lain"
+                                    name="pengobatan_lanjutan"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengobatan_lanjutan == 'RS Lain' ? 'checked' : null) : null }}>
+                                <label for="prslain" class="custom-control-label">RS Lain</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" value="Puskesmas" type="radio" id="ppuskesmas"
+                                    name="pengobatan_lanjutan"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Puskesmas' ? 'checked' : null) : null }}>
+                                <label for="ppuskesmas" class="custom-control-label">Puskesmas</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" value="Dokter Praktek" type="radio"
+                                    id="pdokterpraktek" name="pengobatan_lanjutan"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Dokter Praktek' ? 'checked' : null) : null }}>
+                                <label for="pdokterpraktek" class="custom-control-label">Dokter Praktek</label>
+                            </div>
+                            <x-adminlte-textarea name="pengobatan_lanjutan_text" rows="2" igroup-size="sm"
+                                placeholder="Keterangan Lainnya">
+                                {{ $kunjungan->erm_ranap->pengobatan_lanjutan_text ?? '' }}
+                            </x-adminlte-textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-textarea name="instruksi_pulang" label="Instruksi Pulang" rows="5"
+                            igroup-size="sm" placeholder="Instruksi Pulang">
+                            {{ $kunjungan->erm_ranap->instruksi_pulang ?? null }}
+                        </x-adminlte-textarea>
+                        <x-adminlte-input name="tanggal_kontrol" value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}"
+                            label="Tgl Kontrol" igroup-size="sm" placeholder="Tgl Kontrol" />
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-input name="diet" value="{{ $kunjungan->erm_ranap->diet ?? null }}"
+                            label="Diet" igroup-size="sm" placeholder="Diet" />
+                        <x-adminlte-input name="latihan" value="{{ $kunjungan->erm_ranap->latihan ?? null }}"
+                            label="Latihan" igroup-size="sm" placeholder="Latihan" />
+                        <x-adminlte-input name="nama_keluarga" value="{{ $kunjungan->erm_ranap->nama_keluarga ?? null }}"
+                            label="Nama Keluarga" igroup-size="sm" placeholder="Nama Keluarga" />
+                        <x-adminlte-input name="nik_keluarga" value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}"
+                            label="NIK Keluarga" igroup-size="sm" placeholder="NIK Keluarga" />
+                    </div>
+
+                    {{-- <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3" igroup-size="sm"
+                        placeholder="Tindakan / Prosedur">
+                        {{ $kunjungan->erm_ranap->tindakan ?? null }}
+                    </x-adminlte-textarea>
+                    <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9" rows="3"
+                        igroup-size="sm" placeholder="Tindakan ICD-9">
+                        {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                    </x-adminlte-textarea> --}}
+                    {{-- <div class="col-md-4">
+                    </div> --}}
                 </div>
                 <button type="submit" form="formResume" class="btn btn-success">
                     <i class="fas fa-edit"></i> Simpan Resume Ranap
