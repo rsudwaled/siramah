@@ -56,10 +56,8 @@ class KunjunganController extends Controller
     public function editKunjungan($kunjungan)
     {
         $kunjungan  = Kunjungan::with('pasien')->where('kode_kunjungan', $kunjungan)->first();
-        $penjamin   = PenjaminSimrs::limit(10)
-            ->where('act', 1)
-            ->get();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $penjamin   = PenjaminSimrs::where('act', 1)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         return view('simrs.igd.kunjungan.edit_kunjungan', compact('kunjungan','penjamin','alasanmasuk'));
     }
 

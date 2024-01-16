@@ -11,8 +11,8 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
                             class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}"
-                            class="btn btn-sm btn-flat bg-success">Tambah Pasien</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
+                            class="btn btn-sm btn-flat bg-success">Tambah Bayi Baru</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
                             class="btn btn-sm btn-flat bg-danger">refresh</a></li>
                 </ol>

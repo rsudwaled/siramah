@@ -515,10 +515,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/pasien-update', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'updatePasien'])->name('update-pasien.update');
 
     // pasien bayi
-    Route::get('/pasien-bayi/kunjungan-igk', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
+    Route::get('/pasien-bayi/kunjungan-kebidanan', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
     Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
     Route::get('/pasien-bayi/cari-data', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'cariBayi'])->name('pasien-bayi.cari');
     Route::get('/cari-detail-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiPerorangtua'])->name('detailbayi.byortu');
+    Route::get('/tambah/pasien-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formAddBayi'])->name('pasien-baru.bayi-baru');
+    Route::post('/store-bayi-baru', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formBayiStore'])->name('pasien-bayi.store-bayi');
     //RANAP BAYI
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
