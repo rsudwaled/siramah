@@ -317,6 +317,7 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
+        // PELAYANAN
         [
             'text'    => 'Aplikasi Pelayanan',
             'icon'    => 'fas fa-clinic-medical',
@@ -417,8 +418,8 @@ return [
 
             ],
         ],
-         // IGD
-         [
+        // IGD
+        [
             'text'    => 'Aplikasi IGD',
             'icon'    => 'fas fa-hospital-alt',
             'can' => 'pendaftaran-igd',
@@ -495,87 +496,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-
-            ],
-        ],
-        // KASIR
-        [
-            'text'    => 'Aplikasi Kasir',
-            'icon'    => 'fas fa-cash-register',
-            'can' => 'kasir',
-            'submenu' => [
-                [
-                    'text' => 'Antrian Pembayaran',
-                    'icon'    => 'fas fa-hand-holding-usd',
-                    'url'  => 'antrian/pembayaran',
-                    'shift'   => 'ml-2',
-                    'can' => 'kasir',
-                ],
-                [
-                    'text' => 'Kunjungan Poliklinik',
-                    'icon'    => 'fas fa-file-medical',
-                    'url'  => 'kunjungan_rajal',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                ],
-                [
-                    'text' => 'Antrian Poliklinik',
-                    'icon'    => 'fas fa-user-injured',
-                    'url'  => 'antrianPoliklinik',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                ],
-                [
-                    'text' => 'Surat Kontrol Poliklinik',
-                    'icon'    => 'fas fa-file-medical',
-                    'url'  => 'kunjunganPoliklinik',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
-                ],
-                [
-                    'text' => 'Antrian Farmasi',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'antrianFarmasi',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
-                [
-                    'text' => 'Order Farmasi',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'orderFarmasi',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
-                [
-                    'text' => 'Tracer Order Farmasi',
-                    'icon'    => 'fas fa-pills',
-                    'url'  => 'tracerOrderObat',
-                    'shift'   => 'ml-2',
-                    'can' => 'farmasi',
-                ],
-                [
-                    'text' => 'Pasien Ranap Aktif',
-                    'icon'    => 'fas fa-procedures',
-                    'url'  => 'kunjunganranap',
-                    'active' => ['kunjunganranap', 'pasienranapprofile'],
-                    'shift'   => 'ml-2',
-                    'can' => 'ranap',
-                ],
-                // [
-                //     'text' => 'Pasien Ranap Aktif',
-                //     'icon'    => 'fas fa-user-injured',
-                //     'url'  => 'pasienRanapAktif',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'ranap',
-                // ],
-                // [
-                //     'text' => 'Pasien Ranap',
-                //     'icon'    => 'fas fa-user-injured',
-                //     'url'  => 'pasienRanap',
-                //     'shift'   => 'ml-2',
-                //     'active' => ['pasienRanapPasien', 'pasienRanap'],
-                //     'can' => 'ranap',
-                // ],
 
             ],
         ],
@@ -750,6 +670,14 @@ return [
                     'text' => 'Hasil Lab Patologi Anatomi',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'hasillabpa',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Monitoring Resume Ranap',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'monitoring_resume_ranap',
+                    'active' => ['monitoring_resume_ranap','lihat_resume_ranap'],
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

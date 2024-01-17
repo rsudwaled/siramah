@@ -86,15 +86,18 @@
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
-                            <x-adminlte-input-date name="tanggal_operasi" label="Tgl Operasi" value="{{ $kunjungan->erm_ranap->tanggal_operasi ?? null }}"
-                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
+                            <x-adminlte-input-date name="tanggal_operasi" label="Tgl Operasi"
+                                value="{{ $kunjungan->erm_ranap->tanggal_operasi ?? null }}" igroup-size="sm"
+                                :config="$config" fgroup-class="col-md-4" />
                             @php
                                 $config = ['format' => 'HH:mm:ss'];
                             @endphp
-                            <x-adminlte-input-date name="awal_operasi" label="Awal Operasi" value="{{ $kunjungan->erm_ranap->awal_operasi ?? null }}"
-                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
-                            <x-adminlte-input-date name="akhir_operasi" label="Akhir Operasi" value="{{ $kunjungan->erm_ranap->akhir_operasi ?? null }}"
-                                igroup-size="sm" :config="$config" fgroup-class="col-md-4" />
+                            <x-adminlte-input-date name="awal_operasi" label="Awal Operasi"
+                                value="{{ $kunjungan->erm_ranap->awal_operasi ?? null }}" igroup-size="sm"
+                                :config="$config" fgroup-class="col-md-4" />
+                            <x-adminlte-input-date name="akhir_operasi" label="Akhir Operasi"
+                                value="{{ $kunjungan->erm_ranap->akhir_operasi ?? null }}" igroup-size="sm"
+                                :config="$config" fgroup-class="col-md-4" />
                         </div>
 
                     </div>
@@ -185,18 +188,21 @@
                             igroup-size="sm" placeholder="Instruksi Pulang">
                             {{ $kunjungan->erm_ranap->instruksi_pulang ?? null }}
                         </x-adminlte-textarea>
-                        <x-adminlte-input name="tanggal_kontrol" value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}"
-                            label="Tgl Kontrol" igroup-size="sm" placeholder="Tgl Kontrol" />
+                        <x-adminlte-input name="tanggal_kontrol"
+                            value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}" label="Tgl Kontrol"
+                            igroup-size="sm" placeholder="Tgl Kontrol" />
                     </div>
                     <div class="col-md-6">
                         <x-adminlte-input name="diet" value="{{ $kunjungan->erm_ranap->diet ?? null }}"
                             label="Diet" igroup-size="sm" placeholder="Diet" />
                         <x-adminlte-input name="latihan" value="{{ $kunjungan->erm_ranap->latihan ?? null }}"
                             label="Latihan" igroup-size="sm" placeholder="Latihan" />
-                        <x-adminlte-input name="nama_keluarga" value="{{ $kunjungan->erm_ranap->nama_keluarga ?? null }}"
-                            label="Nama Keluarga" igroup-size="sm" placeholder="Nama Keluarga" />
-                        <x-adminlte-input name="nik_keluarga" value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}"
-                            label="NIK Keluarga" igroup-size="sm" placeholder="NIK Keluarga" />
+                        <x-adminlte-input name="nama_keluarga"
+                            value="{{ $kunjungan->erm_ranap->nama_keluarga ?? null }}" label="Nama Keluarga"
+                            igroup-size="sm" placeholder="Nama Keluarga" />
+                        <x-adminlte-input name="nik_keluarga"
+                            value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}" label="NIK Keluarga"
+                            igroup-size="sm" placeholder="NIK Keluarga" />
                     </div>
 
                     {{-- <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3" igroup-size="sm"
@@ -211,11 +217,14 @@
                     </div> --}}
                 </div>
                 <button type="submit" form="formResume" class="btn btn-success">
-                    <i class="fas fa-edit"></i> Simpan Resume Ranap
+                    <i class="fas fa-edit"></i> Edit \ Simpan
                 </button>
-
+                <a class="btn btn-primary"
+                    href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i
+                        class="fas fa-save"></i> Final Resume</a>
                 <a class="btn btn-warning" target="_blank"
-                    href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}">Print</a>
+                    href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i
+                        class="fas fa-print"></i> Print</a>
             </form>
         </div>
     </div>

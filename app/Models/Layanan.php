@@ -16,4 +16,8 @@ class Layanan extends Model
     {
         return $this->hasMany(LayananDetail::class, 'row_id_header', 'id');
     }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kode_unit', 'kode_unit');
+    }
 }

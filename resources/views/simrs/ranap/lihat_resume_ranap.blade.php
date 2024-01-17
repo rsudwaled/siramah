@@ -1,18 +1,19 @@
-@extends('adminlte::print')
-@section('title', 'Print Resume Rawat Inap')
+@extends('adminlte::page')
+@section('title', 'Resume Ranap')
 @section('content_header')
-    <h1>Print Resume Rawat Inap</h1>
+    <h1>Resume Ranap</h1>
 @stop
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
             <div id="printMe">
                 <section class="invoice p-3 mb-1">
-                    <div class="row" style="font-size: 13px">
+                    <div class="row">
                         <div class="col-md-2 border border-dark">
                             <div class="m-2  text-center">
                                 <img class="" src="{{ asset('vendor/adminlte/dist/img/rswaled.png') }}"
-                                    style="height: 70px">
+                                    style="height: 80px">
                             </div>
                         </div>
                         <div class="col-md-6  border border-dark">
@@ -186,32 +187,16 @@
                             </dl>
                         </div>
                         <div class="col-md-12  border border-dark">
-                            <b>Pengobatan Selama Dirawat :</b> <br>
-                            <table>
-                                <thead>
-                                    <tr class="border-bottom border-dark">
-                                        <th>Nama Barang</th>
-                                        <th>Jml</th>
-                                        <th>Aturan Pakai</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($obat as $item)
-                                        <tr class="border-bottom border-dark">
-                                            <td>{{ $item['nama_barang'] }} </td>
-                                            <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
-                                            <td>{{ $item['aturan_pakai'] }} </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-
-                            {{-- <dl>
+                            <dl>
+                                <dt>Pengobatan Selama Dirawat :</dt>
+                                <dd>
+                                    <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
+                                </dd>
                                 <dt>Pengobatan Untuk Pulang :</dt>
                                 <dd>
                                     <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
                                 </dd>
-                            </dl> --}}
+                            </dl>
                         </div>
                         <div class="col-md-3  border border-dark">
                             <b>Cara Keluar :</b><br>
@@ -237,6 +222,7 @@
                             @endif <br>
                             <pre>{{ $kunjungan->erm_ranap->cara_pulang_text ?? '....' }}</pre>
                         </div>
+
                         <div class="col-md-3  border border-dark">
                             <dl>
                                 <dt>Kondisi Pulang :</dt>
@@ -327,8 +313,6 @@
                     </div>
                 </section>
             </div>
-            {{-- <button class="btn btn-success btnPrint" onclick="printDiv('printMe')"><i class="fas fa-print"> Print
-                    Laporan</i> --}}
         </div>
     </div>
 @stop
@@ -338,11 +322,7 @@
             border: none;
             outline: none;
             padding: 0 !important;
-            margin: 0 !important;
-            font-size: 13px;
-        }
-        dd {
-            margin-bottom: 0 !important;
+            font-size: 15px;
         }
     </style>
     <style type="text/css" media="print">
@@ -356,7 +336,7 @@
             border: none;
             outline: none;
             padding: 0 !important;
-            font-size: 13px;
+            font-size: 15px;
         }
 
         #resepobat {
@@ -374,22 +354,4 @@
             display: none !important;
         }
     </style>
-@endsection
-@section('js')
-    <script>
-        function printDiv(divName) {
-            var printContents = document.getElementById(divName).innerHTML;
-            var originalContents = document.body.innerHTML;
-            tampilan_print = document.body.innerHTML = printContents;
-            setTimeout('window.addEventListener("load", window.print());', 1000);
-        }
-    </script>
-    <script type="text/javascript">
-        // $(document).ready(function() {
-        //     window.print();
-        // });
-        // setTimeout(function() {
-        //     window.top.close();
-        // }, 2000);
-    </script>
 @endsection
