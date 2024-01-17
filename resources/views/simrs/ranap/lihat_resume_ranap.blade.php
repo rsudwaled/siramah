@@ -13,7 +13,7 @@
                         <div class="col-md-2 border border-dark">
                             <div class="m-2  text-center">
                                 <img class="" src="{{ asset('vendor/adminlte/dist/img/rswaled.png') }}"
-                                    style="height: 80px">
+                                    style="height: 70px">
                             </div>
                         </div>
                         <div class="col-md-6  border border-dark">
@@ -187,16 +187,32 @@
                             </dl>
                         </div>
                         <div class="col-md-12  border border-dark">
-                            <dl>
-                                <dt>Pengobatan Selama Dirawat :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
-                                </dd>
+                            <b>Pengobatan Selama Dirawat :</b> <br>
+                            <table>
+                                <thead>
+                                    <tr class="border-bottom border-dark">
+                                        <th>Nama Barang</th>
+                                        <th>Jml</th>
+                                        <th>Aturan Pakai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($obat as $item)
+                                        <tr class="border-bottom border-dark">
+                                            <td>{{ $item['nama_barang'] }} </td>
+                                            <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
+                                            <td>{{ $item['aturan_pakai'] }} </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
+                            {{-- <dl>
                                 <dt>Pengobatan Untuk Pulang :</dt>
                                 <dd>
                                     <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
                                 </dd>
-                            </dl>
+                            </dl> --}}
                         </div>
                         <div class="col-md-3  border border-dark">
                             <b>Cara Keluar :</b><br>
@@ -222,7 +238,6 @@
                             @endif <br>
                             <pre>{{ $kunjungan->erm_ranap->cara_pulang_text ?? '....' }}</pre>
                         </div>
-
                         <div class="col-md-3  border border-dark">
                             <dl>
                                 <dt>Kondisi Pulang :</dt>

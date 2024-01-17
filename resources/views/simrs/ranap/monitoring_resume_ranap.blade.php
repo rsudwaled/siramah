@@ -33,7 +33,7 @@
             <div class="col-md-12">
                 <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Total Pasien">
                     @php
-                        $heads = ['Tgl Masuk', 'Tgl Pulang', 'Kunjungan', 'No RM', 'Pasien', 'Unit', 'Status', 'Action'];
+                        $heads = ['Tgl Masuk', 'Tgl Pulang', 'Kunjungan', 'No RM', 'Pasien', 'Unit', 'PIC', 'Status', 'Action'];
                         // $config['order'] = [['7', 'asc']];
                         $config['paging'] = false;
                         $config['scrollY'] = '400px';
@@ -48,12 +48,35 @@
                                 <td>{{ $item->norm }}</td>
                                 <td>{{ $item->pasien->nama_px }}</td>
                                 <td>{{ $item->kunjungan->unit->nama_unit }}</td>
-                                <td>{{ $item->status }}</td>
+                                <td>{{ $item->pic1 }}</td>
                                 <td>
-                                    <a href="" class="btn btn-xs btn-success"><i class="fas fa-check"></i> Verif</a>
-                                    <a target="_blank" href="{{ route('lihat_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
+                                    @switch($item->status)
+                                        @case(1)
+                                            Perbaikan
+                                        @break
+
+                                        @case(2)
+                                            Verifikasi
+                                        @break
+
+                                        @default
+                                            Belum Dicheck
+                                    @endswitch
+                                </td>
+                                <td>
+                                    @if ($item->status == 2)
+                                        <a href="{{ route('verif_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
+                                            class="btn btn-xs btn-success"><i class="fas fa-check"></i> Verif</a>
+                                    @else
+                                        <a href="{{ route('verif_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
+                                            class="btn btn-xs btn-danger"><i class="fas fa-times"></i> Batal Verif</a>
+                                    @endif
+                                    <a target="_blank"
+                                        href="{{ route('lihat_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
                                         class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Lihat</a>
-                                    <a href="" class="btn btn-xs btn-warning"><i class="fas fa-edit"></i> Edit</a>
+                                    <a target="_blank"
+                                        href="{{ route('pasienranapprofile') }}?kode={{ $item->kode_kunjungan }}"
+                                        class="btn btn-xs btn-warning"><i class="fas fa-edit"></i> Edit</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -3,6 +3,13 @@
         <h3 class="card-title">
             Ringkasan Pasien Pulang
         </h3>
+        <div class="card-tools">
+            @if ($kunjungan->erm_ranap)
+                Diisi oleh {{ $kunjungan->erm_ranap->pic1 }} <i class="fas fa-check-circle"></i>
+            @else
+                Belum diisi <i class="fas fa-times-circle"></i>
+            @endif
+        </div>
     </a>
     <div id="colAnamnesa" class="collapse" role="tabpanel" aria-labelledby="hAnamnesa">
         <div class="card-body">
@@ -191,12 +198,12 @@
                         <x-adminlte-input name="tanggal_kontrol"
                             value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}" label="Tgl Kontrol"
                             igroup-size="sm" placeholder="Tgl Kontrol" />
-                    </div>
-                    <div class="col-md-6">
                         <x-adminlte-input name="diet" value="{{ $kunjungan->erm_ranap->diet ?? null }}"
                             label="Diet" igroup-size="sm" placeholder="Diet" />
                         <x-adminlte-input name="latihan" value="{{ $kunjungan->erm_ranap->latihan ?? null }}"
                             label="Latihan" igroup-size="sm" placeholder="Latihan" />
+                    </div>
+                    <div class="col-md-6">
                         <x-adminlte-input name="nama_keluarga"
                             value="{{ $kunjungan->erm_ranap->nama_keluarga ?? null }}" label="Nama Keluarga"
                             igroup-size="sm" placeholder="Nama Keluarga" />
@@ -204,7 +211,6 @@
                             value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}" label="NIK Keluarga"
                             igroup-size="sm" placeholder="NIK Keluarga" />
                     </div>
-
                     {{-- <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3" igroup-size="sm"
                         placeholder="Tindakan / Prosedur">
                         {{ $kunjungan->erm_ranap->tindakan ?? null }}
@@ -216,12 +222,24 @@
                     {{-- <div class="col-md-4">
                     </div> --}}
                 </div>
-                <button type="submit" form="formResume" class="btn btn-success">
-                    <i class="fas fa-edit"></i> Edit \ Simpan
-                </button>
-                <a class="btn btn-primary"
+                @if ($kunjungan->erm_ranap)
+                    @if ($kunjungan->erm_ranap->status == 2)
+                        <div class="btn btn-secondary"><i class="fas fa-check"></i> Sudah Diverifikasi</div>
+                    @else
+                        <button type="submit" form="formResume" class="btn btn-success">
+                            <i class="fas fa-edit"></i> Edit \ Simpan
+                        </button>
+                    @endif
+                @else
+                    <button type="submit" form="formResume" class="btn btn-success">
+                        <i class="fas fa-edit"></i> Edit \ Simpan
+                    </button>
+                @endif
+
+
+                {{-- <a class="btn btn-primary"
                     href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i
-                        class="fas fa-save"></i> Final Resume</a>
+                        class="fas fa-save"></i> Final Resume</a> --}}
                 <a class="btn btn-warning" target="_blank"
                     href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i
                         class="fas fa-print"></i> Print</a>

@@ -631,8 +631,8 @@ class InacbgController extends APIController
                 "cara_masuk" => $request->cara_masuk, #isi
                 "jenis_rawat" => $request->jenis_rawat, #inap, jalan, igd
                 "kelas_rawat" => $request->kelas_rawat, #kelas rawat
-                "sistole" => 120, #detak tensi
-                "diastole" => 70, #yg dbawah
+                "sistole" =>  $request->sistole, #detak tensi
+                "diastole" => $request->diastole, #yg dbawah
                 "discharge_status" => $request->discharge_status, #kluar
                 "diagnosa" => $icd10,
                 "procedure" => $icd9,
@@ -727,8 +727,8 @@ class InacbgController extends APIController
                 // "upgrade_class_payor" => "0",
                 // "add_payment_pct" => "0",
                 "birth_weight" => $request->berat_badan, #berat bayi
-                "sistole" => 120, #detak tensi
-                "diastole" => 70, #yg dbawah
+                "sistole" => $request->sistole, #detak tensi
+                "diastole" => $request->diastole, #yg dbawah
                 "discharge_status" => $request->discharge_status, #kluar
                 "diagnosa" => $icd10,
                 "procedure" => $icd9,
