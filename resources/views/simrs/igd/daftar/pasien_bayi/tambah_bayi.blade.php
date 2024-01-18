@@ -8,8 +8,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
+                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li> --}}
                 </ol>
             </div>
         </div>
@@ -201,12 +201,11 @@
                                                     <option value="L">Laki-Laki</option>
                                                     <option value="P">Perempuan</option>
                                                 </x-adminlte-select>
-
+                                                
                                                 <x-slot name="footerSlot">
-                                                    <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal"
-                                                        class="btn-sm" />
-                                                    <x-adminlte-button form="form_add_bayi" class="float-right btn-sm"
+                                                    <x-adminlte-button form="form_add_bayi" class="float-right ml-2 btn-sm btn-flat"
                                                         type="submit" theme="success" label="Simpan Data" />
+                                                    <a href="{{ route('list.antrian') }}" class="float-right btn btn-sm btn-flat btn-secondary">Kembali</a>
                                                 </x-slot>
                                             </div>
                                         </div>

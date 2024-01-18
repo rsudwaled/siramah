@@ -40,74 +40,92 @@
                 <div class="row">
                     <div class="col-12 table-responsive">
                         @if ($kunjungan->is_ranap_daftar == 1)
-                        <div class="card">
-                            <div class="card-body bg-success">
-                                <div class="row ">
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">{{ $kunjungan->diagx ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- Diagnosa - </span>
+                            <div class="card">
+                                <div class="card-body bg-success">
+                                    <div class="row ">
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">{{ $kunjungan->diagx ?? 'Tidak Ada' }}</h5>
+                                                <span class="description-text">- Diagnosa - </span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">RUANGAN : {{ $kunjungan->kamar ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- RUANGAN -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">RUANGAN :
+                                                    {{ $kunjungan->kamar ?? 'Tidak Ada' }}</h5>
+                                                <span class="description-text">- RUANGAN -</span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">NO : {{ $kunjungan->no_bed ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- NO BED -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">NO : {{ $kunjungan->no_bed ?? 'Tidak Ada' }}
+                                                </h5>
+                                                <span class="description-text">- NO BED -</span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block">
-                                            <h5 class="description-header ">KELAS : {{ $kunjungan->kelas ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- KELAS -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block">
+                                                <h5 class="description-header ">KELAS :
+                                                    {{ $kunjungan->kelas ?? 'Tidak Ada' }}</h5>
+                                                <span class="description-text">- KELAS -</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @else
-                        <div class="card">
-                            <div class="card-body bg-primary">
-                                <div class="row ">
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">- {{ $kunjungan->penjamin_simrs->nama_penjamin ?? 'Tidak Ada' }} -</h5>
-                                            <span class="description-text">- Penjamin - </span>
+                            <div class="card">
+                                <div class="card-body bg-primary">
+                                    <div class="row ">
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">-
+                                                    {{ $kunjungan->penjamin_simrs->nama_penjamin ?? 'Tidak Ada' }} -</h5>
+                                                <span class="description-text">- Penjamin - </span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">{{ $kunjungan->alasan_masuk->alasan_masuk ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- Alasan Masuk -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">
+                                                    {{ $kunjungan->alasan_masuk->alasan_masuk ?? 'Tidak Ada' }}</h5>
+                                                <span class="description-text">- Alasan Masuk -</span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block border-right">
-                                            <h5 class="description-header ">{{ $kunjungan->jp_daftar == 0 ? 'UMUM' : 'BPJS' }}</h5>
-                                            <span class="description-text">- Jenis Pasien Daftar -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block border-right">
+                                                <h5 class="description-header ">
+                                                    {{ $kunjungan->jp_daftar == 0 ? 'UMUM' : 'BPJS' }}</h5>
+                                                <span class="description-text">- Jenis Pasien Daftar -</span>
+                                            </div>
                                         </div>
-                                    </div>
-                    
-                                    <div class="col-sm-3 col-6">
-                                        <div class="description-block">
-                                            <h5 class="description-header ">{{ $kunjungan->perujuk ?? 'Tidak Ada' }}</h5>
-                                            <span class="description-text">- Perujuk -</span>
+
+                                        <div class="col-sm-3 col-6">
+                                            <div class="description-block">
+                                                <h5 class="description-header ">{{ $kunjungan->perujuk ?? 'Tidak Ada' }}
+                                                </h5>
+                                                <span class="description-text">- Perujuk -</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="alert alert-success alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-exclamation-triangle"></i> Kunjungan Sudah Di Perbaharui!</h5>
+                            @if (!empty($kunjungan->id_alasan_edit))
+                                kunjungan sudah di perbaharui dengan alasan perubahan : {{$kunjungan->id_alasan_edit != null ? $kunjungan->alasanEdit->nama_alasan :''}}
+                            @endif
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -148,32 +166,22 @@
                                         </b>
                                     </td>
                                     <td>
-                                       <b>
-                                        SEP : {{ $kunjungan->no_sep ?? '-' }} <br>
-                                        SPRI : {{ $kunjungan->no_spri ?? '-' }}
-                                       </b>
+                                        <b>
+                                            SEP : {{ $kunjungan->no_sep ?? '-' }} <br>
+                                            SPRI : {{ $kunjungan->no_spri ?? '-' }}
+                                        </b>
                                     </td>
                                     <td>
-                                       <b>
-                                        {{$kunjungan->jp_daftar==0 ? 'PASIEN UMUM' : 'PASIEN BPJS'}}
-                                       </b>
+                                        <b>
+                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
+                                        </b>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-                {{-- <div class="row no-print">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
-                            Payment
-                        </button>
-                        <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                            <i class="fas fa-download"></i> Generate PDF
-                        </button>
-                    </div>
-                </div> --}}
+                
             </div>
         </div>
     </div>

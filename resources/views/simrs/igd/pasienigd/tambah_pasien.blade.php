@@ -52,10 +52,16 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="row">
-                                        <x-adminlte-input name="nik_pasien_baru" type="number" label="NIK *" placeholder="masukan nik"
-                                            fgroup-class="col-md-6" disable-feedback />
-                                        <x-adminlte-input name="no_bpjs" label="BPJS **" placeholder="masukan bpjs"
-                                            fgroup-class="col-md-6" disable-feedback />
+                                        <div class="form-group col-md-6">
+                                            <label for="exampleInputRounded0">NIK <code>*<i>( maksimal 16 angka )</i></code></label>
+                                            <input class="form-control rounded-0" name="nik_pasien_baru" type="number" 
+                                            placeholder="masukan nik">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="exampleInputRounded0">BPJS <code>*<i>( maksimal 16 angka )</i></code></label>
+                                            <input class="form-control rounded-0" name="no_bpjs" type="number" 
+                                            placeholder="masukan bpjs">
+                                        </div>
                                         <x-adminlte-input name="nama_pasien_baru" label="Nama *"
                                             placeholder="masukan nama pasien" fgroup-class="col-md-12" disable-feedback />
                                         <x-adminlte-input name="tempat_lahir" label="Tempat lahir *"
@@ -101,8 +107,11 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="row">
-                                        <x-adminlte-input name="no_telp" label="No Telpon ***" placeholder="masukan no tlp"
-                                            fgroup-class="col-md-6" disable-feedback />
+                                        <div class="form-group col-md-6">
+                                            <label for="exampleInputRounded0">No Telpon <code>*<i>( maksimal 16 angka )</i></code></label>
+                                            <input class="form-control rounded-0" name="no_telp" type="number" 
+                                            placeholder="masukan no tlp">
+                                        </div>
                                         <x-adminlte-select name="provinsi_pasien" label="Provinsi *" id="provinsi_pasien"
                                             fgroup-class="col-md-6">
                                             @foreach ($provinsi as $item)

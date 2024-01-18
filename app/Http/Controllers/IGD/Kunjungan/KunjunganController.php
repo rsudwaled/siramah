@@ -8,6 +8,7 @@ use App\Models\Unit;
 use App\Models\Kunjungan;
 use App\Models\PenjaminSimrs;
 use App\Models\AlasanMasuk;
+use App\Models\MtAlasanEdit;
 use DB;
 
 class KunjunganController extends Controller
@@ -15,7 +16,7 @@ class KunjunganController extends Controller
     public function daftarKunjungan(Request $request)
     {
 
-        $query = \DB::connection('mysql2')->table('ts_kunjungan')
+        $query = DB::connection('mysql2')->table('ts_kunjungan')
             ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
             ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
             ->join('ts_jp_igd', 'ts_kunjungan.kode_kunjungan', '=', 'ts_jp_igd.kunjungan')
@@ -50,25 +51,33 @@ class KunjunganController extends Controller
 
     public function detailKunjungan($kunjungan)
     {
-        $kunjungan = Kunjungan::with('pasien')->where('kode_kunjungan', $kunjungan)->first();
+        $kunjungan = Kunjungan::with('pasien','alasanEdit')->where('kode_kunjungan', $kunjungan)->first();
         return view('simrs.igd.kunjungan.detail_kunjungan', compact('kunjungan'));
     }
     public function editKunjungan($kunjungan)
     {
-        $kunjungan  = Kunjungan::with('pasien')->where('kode_kunjungan', $kunjungan)->first();
-        $penjamin   = PenjaminSimrs::where('act', 1)->get();
+        $kunjungan      = Kunjungan::with('pasien')->where('kode_kunjungan', $kunjungan)->first();
+        $penjamin       = PenjaminSimrs::where('act', 1)->get();
         $alasanmasuk    = AlasanMasuk::get();
-        return view('simrs.igd.kunjungan.edit_kunjungan', compact('kunjungan','penjamin','alasanmasuk'));
+        $alasanedit     = MtAlasanEdit::get();
+        return view('simrs.igd.kunjungan.edit_kunjungan', compact('kunjungan','alasanedit','penjamin','alasanmasuk'));
     }
 
     public function updateKunjungan(Request $request, $kunjungan)
     {
         $kunjungan                      = Kunjungan::where('kode_kunjungan', $kunjungan)->first();
         $kunjungan->perujuk             = $request->nama_perujuk;
-        $kunjungan->jp_daftar           = $request->isBpjs;
         $kunjungan->kode_penjamin       = $request->penjamin_id;
         $kunjungan->id_alasan_masuk     = $request->alasan_masuk_id;
-        $kunjungan->alasan_edit         = $request->alasan_edit;
+        $kunjungan->id_alasan_edit      = $request->alasan_edit;
+        if($request->alasan_edit == 3)
+        {
+            $kunjungan->jp_daftar       = 1;
+        }
+        if($request->alasan_edit == 4)
+        {
+            $kunjungan->jp_daftar       = 0;
+        }
         $kunjungan->save();
         return redirect()->route('detail.kunjungan', ['kunjungan'=>$kunjungan]);
     }
