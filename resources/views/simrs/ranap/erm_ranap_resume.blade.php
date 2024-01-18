@@ -32,29 +32,82 @@
                         rows="3" igroup-size="sm" placeholder="Indikasi Ranap">
                         {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
                     </x-adminlte-textarea>
-                    <x-adminlte-input name="tensi_darah" fgroup-class="col-md-3"
-                        value="{{ $kunjungan->erm_ranap->tensi_darah ?? null }}" label="Tensi Darah" igroup-size="sm"
-                        placeholder="Tensi Darah" />
-                    <x-adminlte-input name="denyut_nadi" fgroup-class="col-md-3"
-                        value="{{ $kunjungan->erm_ranap->denyut_nadi ?? null }}" label="Denyut Nadi" igroup-size="sm"
-                        placeholder="Denyut Nadi" />
-                    <x-adminlte-input name="pernapasan" fgroup-class="col-md-3"
-                        value="{{ $kunjungan->erm_ranap->pernapasan ?? null }}" label="Pernapasan" igroup-size="sm"
-                        placeholder="Pernapasan" />
-                    <x-adminlte-input name="suhu" fgroup-class="col-md-3"
-                        value="{{ $kunjungan->erm_ranap->suhu ?? null }}" label="Suhu Tubuh" igroup-size="sm"
-                        placeholder="Suhu Tubuh" />
-                    <x-adminlte-textarea name="pemeriksaan_fisik" fgroup-class="col-md-12" label="Pemeriksaan Fisik"
+                    <x-adminlte-textarea name="pemeriksaan_fisik" fgroup-class="col-md-6" label="Pemeriksaan Fisik"
                         rows="4" igroup-size="sm" placeholder="Pemeriksaan Fisik">
                         {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
                     </x-adminlte-textarea>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="suhu" class="col-sm-4 col-form-label">Suhu Tubuh</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="suhu" id="suhu"
+                                            value="{{ $kunjungan->erm_ranap->suhu ?? null }}" placeholder="Suhu Tubuh">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="tensi_darah" class="col-sm-4 col-form-label">Tekanan Darah</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="tensi_darah" id="tensi_darah"
+                                            value="{{ $kunjungan->erm_ranap->tensi_darah ?? null }}"
+                                            placeholder="Tekanan Darah">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="denyut_nadi" class="col-sm-4 col-form-label">Denyut Nadi</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="denyut_nadi" id="denyut_nadi"
+                                            value="{{ $kunjungan->erm_ranap->denyut_nadi ?? null }}"
+                                            placeholder="Denyut Nadi">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="pernapasan" class="col-sm-4 col-form-label">Pernapasan</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="pernapasan" id="pernapasan"
+                                            value="{{ $kunjungan->erm_ranap->pernapasan ?? null }}"
+                                            placeholder="Pernapasan">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="berat_badan" class="col-sm-4 col-form-label">Berat Bdn Bayi</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="berat_badan" id="berat_badan"
+                                            value="{{ $kunjungan->erm_ranap->berat_badan ?? null }}"
+                                            placeholder="Berat Bdn Bayi">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="kesadaran" class="col-sm-4 col-form-label">Kesadaran</label>
+                                    <div class="col-sm-8 input-group input-group-sm">
+                                        <input class="form-control" name="kesadaran" id="kesadaran"
+                                            value="{{ $kunjungan->erm_ranap->kesadaran ?? null }}"
+                                            placeholder="Kesadaran">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <hr>
+                    </div>
+                    <div class="col-md-4 text-center text-secondary">
+                        <h5>Pemeriksaan Penunjang & Lainnya</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <hr>
+                    </div>
                     <x-adminlte-textarea name="catatan_laboratorium" fgroup-class="col-md-3"
                         label="Pemeriksaan Laboratorium" rows="3" igroup-size="sm"
                         placeholder="Pemeriksaan Laboratorium">
                         {{ $kunjungan->erm_ranap->catatan_laboratorium ?? null }}
                     </x-adminlte-textarea>
-                    <x-adminlte-textarea name="catatan_radiologi" fgroup-class="col-md-3" label="Pemeriksaan Radiologi"
-                        rows="3" igroup-size="sm" placeholder="Pemeriksaan Radiologi">
+                    <x-adminlte-textarea name="catatan_radiologi" fgroup-class="col-md-3"
+                        label="Pemeriksaan Radiologi" rows="3" igroup-size="sm"
+                        placeholder="Pemeriksaan Radiologi">
                         {{ $kunjungan->erm_ranap->catatan_radiologi ?? null }}
                     </x-adminlte-textarea>
                     <x-adminlte-textarea name="catatan_penunjang" fgroup-class="col-md-3"
@@ -66,56 +119,155 @@
                         rows="3" igroup-size="sm" placeholder="Hasil Konsultasi">
                         {{ $kunjungan->erm_ranap->hasil_konsultasi ?? null }}
                     </x-adminlte-textarea>
+                    <div class="col-md-2">
+                        <b>Pengambilan SHK</b>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Ya" id="shkya"
+                                    name="pemeriksaan_shk"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pemeriksaan_shk == 'Ya' ? 'checked' : null) : null }}>
+                                <label for="shkya" class="custom-control-label">Ya</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Tidak" id="shktidak"
+                                    name="pemeriksaan_shk"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pemeriksaan_shk == 'Tidak' ? 'checked' : null) : null }}>
+                                <label for="shktidak" class="custom-control-label">Tidak</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <b>SHK Diambil Dari :</b>
+                        <div class="form-group">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Tidak Diambil" id="shktidak"
+                                    name="pengambilan_shk"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengambilan_shk == 'Tidak Diambil' ? 'checked' : null) : null }}>
+                                <label for="shktidak" class="custom-control-label">Tidak Diambil</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Vena" id="shkvena"
+                                    name="pengambilan_shk"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengambilan_shk == 'Vena' ? 'checked' : null) : null }}>
+                                <label for="shkvena" class="custom-control-label">Vena</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" value="Tumit" id="shktumit"
+                                    name="pengambilan_shk"
+                                    {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengambilan_shk == 'Tumit' ? 'checked' : null) : null }}>
+                                <label for="shktumit" class="custom-control-label">Tumit</label>
+                            </div>
+                        </div>
+                    </div>
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD'];
+                    @endphp
+                    <x-adminlte-input-date name="tanggal_shk" label="Tgl Pengambilan SHK"
+                        value="{{ $kunjungan->erm_ranap->tanggal_shk ?? null }}" igroup-size="sm" :config="$config"
+                        fgroup-class="col-md-2" />
+                    <div class="col-md-4"></div>
                     <div class="col-md-4">
+                        <hr>
+                    </div>
+                    <div class="col-md-4 text-center text-secondary">
+                        <h5>Diagnosa ICD 10 & Tindakan ICD-9 CM</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <hr>
+                    </div>
+                    <div class="col-md-6">
                         <x-adminlte-textarea name="diagnosa_masuk" label="Diagnosa Masuk" rows="3"
                             igroup-size="sm" placeholder="Diagnosa Masuk">
                             {{ $kunjungan->erm_ranap->diagnosa_masuk ?? null }}
                         </x-adminlte-textarea>
-                        <x-adminlte-textarea name="diagnosa_utama" label="Diagnosa Utama" rows="1"
-                            igroup-size="sm" placeholder="Diagnosa Utama">
-                            {{ $kunjungan->erm_ranap->diagnosa_utama ?? null }}
-                        </x-adminlte-textarea>
-                    </div>
-                    <x-adminlte-textarea name="diagnosa_sekunder" fgroup-class="col-md-4" label="Diagnosa Sekunder"
-                        rows="6" igroup-size="sm" placeholder="Diagnosa Sekunder">
-                        {{ $kunjungan->erm_ranap->diagnosa_sekunder ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="diagnosa_icd10" fgroup-class="col-md-4" label="Diagnosa ICD-10"
-                        rows="6" igroup-size="sm" placeholder="Diagnosa ICD-10">
-                        {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
-                    </x-adminlte-textarea>
-                    <div class="col-md-4">
                         <div class="row">
-                            <x-adminlte-textarea name="tindakan_operasi" label="Tindakan Operasi" rows="3"
-                                igroup-size="sm" placeholder="Tindakan Operasi" fgroup-class="col-md-12">
-                                {{ $kunjungan->erm_ranap->tindakan_operasi ?? null }}
-                            </x-adminlte-textarea>
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date name="tanggal_operasi" label="Tgl Operasi"
-                                value="{{ $kunjungan->erm_ranap->tanggal_operasi ?? null }}" igroup-size="sm"
-                                :config="$config" fgroup-class="col-md-4" />
-                            @php
-                                $config = ['format' => 'HH:mm:ss'];
-                            @endphp
-                            <x-adminlte-input-date name="awal_operasi" label="Awal Operasi"
-                                value="{{ $kunjungan->erm_ranap->awal_operasi ?? null }}" igroup-size="sm"
-                                :config="$config" fgroup-class="col-md-4" />
-                            <x-adminlte-input-date name="akhir_operasi" label="Akhir Operasi"
-                                value="{{ $kunjungan->erm_ranap->akhir_operasi ?? null }}" igroup-size="sm"
-                                :config="$config" fgroup-class="col-md-4" />
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="diagnosa_utama" label="Diagnosa Utama" rows="1"
+                                    igroup-size="sm" placeholder="Diagnosa Utama">
+                                    {{ $kunjungan->erm_ranap->diagnosa_utama ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="1"
+                                    igroup-size="sm" placeholder="Diagnosa ICD-10">
+                                    {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
                         </div>
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="diagnosa_sekunder" label="Diagnosa Sekunder"
+                                    rows="6" igroup-size="sm" placeholder="Diagnosa Sekunder">
+                                    {{ $kunjungan->erm_ranap->diagnosa_sekunder ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="6"
+                                    igroup-size="sm" placeholder="Diagnosa ICD-10">
+                                    {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                        </div>
                     </div>
-                    <x-adminlte-textarea name="tindakan_prosedur" label="Tindakan Prosedur" fgroup-class="col-md-4"
-                        rows="6" igroup-size="sm" placeholder="Tindakan Operasi">
-                        {{ $kunjungan->erm_ranap->tindakan_prosedur ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="tindakan_icd9" fgroup-class="col-md-4" label="Tindakan Operasi ICD-9"
-                        rows="6" igroup-size="sm" placeholder="Tindakan ICD-9">
-                        {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
-                    </x-adminlte-textarea>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="tindakan_operasi" label="Tindakan Operasi" rows="5"
+                                    igroup-size="sm" placeholder="Tindakan Operasi">
+                                    {{ $kunjungan->erm_ranap->tindakan_operasi ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9"
+                                    rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
+                                    {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+
+                                    @php
+                                        $config = ['format' => 'YYYY-MM-DD'];
+                                    @endphp
+                                    <x-adminlte-input-date name="tanggal_operasi" label="Tgl Operasi"
+                                        value="{{ $kunjungan->erm_ranap->tanggal_operasi ?? null }}" igroup-size="sm"
+                                        :config="$config" fgroup-class="col-md-4" />
+                                    @php
+                                        $config = ['format' => 'HH:mm:ss'];
+                                    @endphp
+                                    <x-adminlte-input-date name="awal_operasi" label="Awal Operasi"
+                                        value="{{ $kunjungan->erm_ranap->awal_operasi ?? null }}" igroup-size="sm"
+                                        :config="$config" fgroup-class="col-md-4" />
+                                    <x-adminlte-input-date name="akhir_operasi" label="Akhir Operasi"
+                                        value="{{ $kunjungan->erm_ranap->akhir_operasi ?? null }}" igroup-size="sm"
+                                        :config="$config" fgroup-class="col-md-4" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="tindakan_prosedur" label="Tindakan Prosedur"
+                                    rows="5" igroup-size="sm" placeholder="Tindakan Prosedur">
+                                    {{ $kunjungan->erm_ranap->tindakan_prosedur ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9"
+                                    rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
+                                    {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                                </x-adminlte-textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <hr>
+                    </div>
+                    <div class="col-md-4 text-center text-secondary">
+                        <h5>Pemulangan & Kondisi</h5>
+                    </div>
+                    <div class="col-md-4">
+                        <hr>
+                    </div>
                     <div class="col-md-3">
                         <b>Cara Pulang</b>
                         <div class="form-group">
@@ -190,19 +342,45 @@
                             </x-adminlte-textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <x-adminlte-textarea name="instruksi_pulang" label="Instruksi Pulang" rows="5"
-                            igroup-size="sm" placeholder="Instruksi Pulang">
-                            {{ $kunjungan->erm_ranap->instruksi_pulang ?? null }}
-                        </x-adminlte-textarea>
-                        <x-adminlte-input name="tanggal_kontrol"
-                            value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}" label="Tgl Kontrol"
-                            igroup-size="sm" placeholder="Tgl Kontrol" />
-                        <x-adminlte-input name="diet" value="{{ $kunjungan->erm_ranap->diet ?? null }}"
-                            label="Diet" igroup-size="sm" placeholder="Diet" />
-                        <x-adminlte-input name="latihan" value="{{ $kunjungan->erm_ranap->latihan ?? null }}"
-                            label="Latihan" igroup-size="sm" placeholder="Latihan" />
+                    <x-adminlte-textarea name="instruksi_pulang" fgroup-class="col-md-4" label="Instruksi Pulang"
+                        rows="5" igroup-size="sm" placeholder="Instruksi Pulang">
+                        {{ $kunjungan->erm_ranap->instruksi_pulang ?? null }}
+                    </x-adminlte-textarea>
+                    <div class="col-md-4">
+                        <div class="form-group row">
+                            <label for="tanggal_kontrol" class="col-sm-3 col-form-label">Tgl Kontrol</label>
+                            <div class="col-sm-9 input-group input-group-sm">
+                                <input class="form-control" name="tanggal_kontrol" id="tanggal_kontrol"
+                                    value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}"
+                                    placeholder="Tgl Kontrol">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="kontrol_ke" class="col-sm-3 col-form-label">Kontrol Ke</label>
+                            <div class="col-sm-9 input-group input-group-sm">
+                                <input class="form-control" name="kontrol_ke" id="kontrol_ke"
+                                    value="{{ $kunjungan->erm_ranap->kontrol_ke ?? null }}" placeholder="Kontrol Ke">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="diet" class="col-sm-3 col-form-label">Diet</label>
+                            <div class="col-sm-9 input-group input-group-sm">
+                                <input class="form-control" name="diet" id="diet"
+                                    value="{{ $kunjungan->erm_ranap->diet ?? null }}" placeholder="Diet">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="latihan" class="col-sm-3 col-form-label">Latihan</label>
+                            <div class="col-sm-9 input-group input-group-sm">
+                                <input class="form-control" name="latihan" id="latihan"
+                                    value="{{ $kunjungan->erm_ranap->latihan ?? null }}" placeholder="Latihan">
+                            </div>
+                        </div>
                     </div>
+                    <x-adminlte-textarea name="kembali_jika" fgroup-class="col-md-4" label="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi"
+                        rows="5" igroup-size="sm" placeholder="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi">
+                        {{ $kunjungan->erm_ranap->kembali_jika ?? null }}
+                    </x-adminlte-textarea>
                     <div class="col-md-6">
                         <x-adminlte-input name="nama_keluarga"
                             value="{{ $kunjungan->erm_ranap->nama_keluarga ?? null }}" label="Nama Keluarga"

@@ -53,167 +53,183 @@
                                     @else
                                         .... hari
                                     @endif
-                                    <br><br>
                                 </div>
                                 <div class="col-md-4"></div>
                                 <div class="col-md-4">
                                     <b>Ruangan Asal : </b> {{ $kunjungans->first()->unit->nama_unit ?? '-' }} <br>
                                     <b>Ruangan Inap : </b> {{ $kunjungan->unit->nama_unit ?? '-' }} <br>
-                                    <b>No SEP : </b> {{ $kunjungan->no_sep ?? '-' }} <br><br>
+                                    <b>No SEP : </b> {{ $kunjungan->no_sep ?? '-' }}
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-12 border border-dark">
-                            <dl>
-                                <dt>Ringkasan Perawatan :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->ringkasan_perawatan ?? '....' }}</pre>
-                                </dd>
-                                <dt>Riwayat Penyakit :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->riwayat_penyakit ?? '....' }}</pre>
-                                </dd>
-                                <dt>Indikasi Rawat Inap :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->indikasi_ranap ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                            <b>Ringkasan Perawatan : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->ringkasan_perawatan ?? '....' }}</pre>
+                            <b>Riwayat Penyakit : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->riwayat_penyakit ?? '....' }}</pre>
+                            <b>Indikasi Rawat Inap : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->indikasi_ranap ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-8  border border-dark">
-                            <dl>
-                                <dt>Pemeriksaan Fisik :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pemeriksaan Fisik : </b><br>
+                            <b>Suhu Badan : </b> {{ $kunjungan->erm_ranap->suhu ?? '....' }} Celcius &emsp;
+                            <b>Tekanan Darah : </b> {{ $kunjungan->erm_ranap->tensi_darah ?? '....' }} mmHg &emsp;
+                            <b>Denyut Nadi : </b> {{ $kunjungan->erm_ranap->denyut_nadi ?? '....' }} xs &emsp;
+                            <b>Pernapasan : </b> {{ $kunjungan->erm_ranap->pernapasan ?? '....' }} xs &emsp;
+                            <b>Berat Badan Bayi : </b> {{ $kunjungan->erm_ranap->berat_badan ?? '....' }} kg &emsp;
+                            <br>
+                            <pre>{{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl class="row">
-                                <dt class="col-md-5">Berat Badan</dt>
-                                <dd class="col-md-7"> : {{ $kunjungan->erm_ranap->berat_badan ?? '....' }} kg</dd>
-                                <dt class="col-md-5">Suhu Badan</dt>
-                                <dd class="col-md-7">: {{ $kunjungan->erm_ranap->suhu ?? '....' }} Celcius</dd>
-                                <dt class="col-md-5">Tensi Darah</dt>
-                                <dd class="col-md-7"> : {{ $kunjungan->erm_ranap->tensi_darah ?? '....' }} mmhg</dd>
-                                <dt class="col-md-5">Denyut Nadi</dt>
-                                <dd class="col-md-7"> : {{ $kunjungan->erm_ranap->denyut_nadi ?? '....' }} xs</dd>
-                                <dt class="col-md-5">Pernapasan</dt>
-                                <dd class="col-md-7">: {{ $kunjungan->erm_ranap->pernapasan ?? '....' }} xs</dd>
-                            </dl>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pemeriksaan Laboratorium : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->catatan_laboratorium ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-6  border border-dark">
-                            <dl>
-                                <dt>Pemeriksaan Laboratorium :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->catatan_laboratorium ?? '....' }}</pre>
-                                </dd>
-                                <dt>Pemeriksaan Radiologi :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->catatan_radiologi ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pemeriksaan Radiologi : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->catatan_radiologi ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-6  border border-dark">
-                            <dl>
-                                <dt>Pemeriksaan Penunjang Lainnya :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->catatan_penunjang ?? '....' }}</pre>
-                                </dd>
-                                <dt>Hasil Konsultasi :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->hasil_konsultasi ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pemeriksaan Penunjang Lainnya : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->catatan_penunjang ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Diagnosa Masuk :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->diagnosa_masuk ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pemeriksaan SHK : </b> &emsp;
+                            Dilakukan :
+                            @if ($kunjungan->erm_ranap->pemeriksaan_shk == 'Ya')
+                                &#x1F5F9; Ya
+                            @else
+                                &#x25A2; Ya
+                            @endif/
+                            @if ($kunjungan->erm_ranap->pemeriksaan_shk == 'Tidak')
+                                &#x1F5F9; Tidak
+                            @else
+                                &#x25A2; Tidak
+                            @endif &emsp;
+                            Diambil dari :
+                            @if ($kunjungan->erm_ranap->pengambilan_shk == 'Tumit')
+                                &#x1F5F9; Tumit
+                            @else
+                                &#x25A2; Tumit
+                            @endif/
+                            @if ($kunjungan->erm_ranap->pengambilan_shk == 'Vena')
+                                &#x1F5F9; Vena
+                            @else
+                                &#x25A2; Vena
+                            @endif&emsp;
+                            Tgl Pengambilan :
+                            {{ \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') ?? '....' }}
+                            &emsp;
                         </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Diagnosa Utama :</dt>
-                                <dd>
+                        <div class="col-md-12  border border-dark">
+                            <b>Hasil Konsultasi : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->hasil_konsultasi ?? '....' }}</pre>
+                        </div>
+                        <div class="col-md-12  border border-dark">
+                            <b>Diagnosa Masuk : </b><br>
+                            <pre>{{ $kunjungan->erm_ranap->diagnosa_masuk ?? '....' }}</pre>
+                        </div>
+                        <div class="col-md-12  border border-dark">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <b>Diagnosa Utama : </b><br>
                                     <pre>{{ $kunjungan->erm_ranap->diagnosa_utama ?? '....' }}</pre>
-                                </dd>
-                                <dt>Diagnosa Sekunder :</dt>
-                                <dd>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>ICD 10</b><br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12  border border-dark">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <b>Diagnosa Sekunder : </b><br>
                                     <pre>{{ $kunjungan->erm_ranap->diagnosa_sekunder ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>ICD 10</b><br>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Diagnosa ICD-10 :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->diagnosa_icd10 ?? '-' }}</pre>
-                                </dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Tindakan Operasi :</dt>
-                                <dd>
+                        <div class="col-md-12  border border-dark">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <b>Tindakan Operasi :</b><br>
                                     <pre>{{ $kunjungan->erm_ranap->tindakan_operasi ?? '....' }}</pre>
-                                </dd>
-                            </dl>
-                            <dl class="row">
-                                <dt class="col-md-5">Tgl Operasi</dt>
-                                <dd class="col-md-7">: {{ $kunjungan->erm_ranap->tanggal_operasi ?? '....' }}</dd>
-                                <dt class="col-md-5">Waktu Mulai</dt>
-                                <dd class="col-md-7">: {{ $kunjungan->erm_ranap->awal_operasi ?? '....' }}</dd>
-                                <dt class="col-md-5">Waktu Selesai</dt>
-                                <dd class="col-md-7">: {{ $kunjungan->erm_ranap->akhir_operasi ?? '....' }}</dd>
-                            </dl>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>ICD 9 CM</b><br>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Tindakan / Prosedur :</dt>
-                                <dd>
+                        <div class="col-md-12  border border-dark">
+                            <b>Tgl Operasi : </b>{{ $kunjungan->erm_ranap->tanggal_operasi ?? '....' }}&emsp;
+                            <b>Waktu Mulai : </b>{{ $kunjungan->erm_ranap->awal_operasi ?? '....' }}&emsp;
+                            <b>Waktu Selesai : </b>{{ $kunjungan->erm_ranap->akhir_operasi ?? '....' }}&emsp;
+                        </div>
+                        <div class="col-md-12  border border-dark">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <b>Tindakan / Prosedur :</b><br>
                                     <pre>{{ $kunjungan->erm_ranap->tindakan_prosedur ?? '....' }}</pre>
-                                </dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-4  border border-dark">
-                            <dl>
-                                <dt>Tindakan ICD-10 :</dt>
-                                <dd>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>ICD 9 CM</b><br>
                                     <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
-                                </dd>
-                            </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12  border border-dark">
+                            <b>Pasang Ventilator</b>&emsp;
+                            <b>Waktu Intubasi : </b> .... WIB&emsp;
+                            <b>Waktu Extubasi : </b> .... WIB&emsp;
                         </div>
                         <div class="col-md-12  border border-dark">
                             <b>Pengobatan Selama Dirawat :</b> <br>
-                            <table>
-                                <thead>
-                                    <tr class="border-bottom border-dark">
-                                        <th>Nama Barang</th>
-                                        <th>Jml</th>
-                                        <th>Aturan Pakai</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($obat as $item)
-                                        <tr class="border-bottom border-dark">
-                                            <td>{{ $item['nama_barang'] }} </td>
-                                            <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
-                                            <td>{{ $item['aturan_pakai'] }} </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <table>
+                                        <thead>
+                                            <tr class="border-bottom border-dark">
+                                                <th>Nama Obat</th>
+                                                {{-- <th>Jml</th>
+                                                <th>Aturan Pakai</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($obat2[0] as $item)
+                                                <tr class="border-bottom border-dark">
+                                                    <td>{{ $item['nama_barang'] }} </td>
+                                                    {{-- <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
+                                                    <td>{{ $item['aturan_pakai'] }} </td> --}}
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <table>
+                                        <thead>
+                                            <tr class="border-bottom border-dark">
+                                                <th>Nama Obat</th>
+                                                {{-- <th>Jml</th>
+                                                <th>Aturan Pakai</th> --}}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($obat2[1] as $item)
+                                                <tr class="border-bottom border-dark">
+                                                    <td>{{ $item['nama_barang'] }} </td>
+                                                    {{-- <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
+                                                    <td>{{ $item['aturan_pakai'] }} </td> --}}
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
-                            {{-- <dl>
-                                <dt>Pengobatan Untuk Pulang :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
-                                </dd>
-                            </dl> --}}
                         </div>
-                        <div class="col-md-3  border border-dark">
+                        <div class="col-md-4  border border-dark">
                             <b>Cara Keluar :</b><br>
                             @if ($kunjungan->erm_ranap->cara_pulang == 'Sembuh / Perbaikan')
                                 &#x1F5F9; Sembuh / Perbaikan
@@ -237,23 +253,16 @@
                             @endif <br>
                             <pre>{{ $kunjungan->erm_ranap->cara_pulang_text ?? '....' }}</pre>
                         </div>
-                        <div class="col-md-3  border border-dark">
-                            <dl>
-                                <dt>Kondisi Pulang :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->kondisi_pulang ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                        <div class="col-md-4  border border-dark">
+                            <b>Kondisi Pulang :</b><br>
+                            <pre>{{ $kunjungan->erm_ranap->kondisi_pulang ?? '....' }}</pre>
+                            <b>Keadaan Umum :</b><br>
+                            <pre>{{ $kunjungan->erm_ranap->kondisi_umum ?? '....' }}</pre>
+                            <b>Kesadaran :</b> {{ $kunjungan->erm_ranap->kesadaran ?? '....' }}<br>
+                            <b>Tekanan Darah :</b> {{ $kunjungan->erm_ranap->tensi_darah ?? '....' }}<br>
+                            <b>Nadi :</b> {{ $kunjungan->erm_ranap->denyut_nadi ?? '....' }}<br>
                         </div>
-                        <div class="col-md-3  border border-dark">
-                            <dl>
-                                <dt>Keadaan Umum :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->kondisi_umum ?? '....' }}</pre>
-                                </dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-3  border border-dark">
+                        <div class="col-md-4  border border-dark">
                             <b>Cara Keluar :</b><br>
                             @if ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Poliklinik RSUD Waled')
                                 &#x1F5F9; Poliklinik RSUD Waled
@@ -278,29 +287,16 @@
                             <pre>{{ $kunjungan->erm_ranap->pengobatan_lanjutan_text ?? '....' }}</pre>
                         </div>
                         <div class="col-md-6  border border-dark">
-                            <dl>
-                                <dt>Instruksi Pulang :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->instruksi_pulang ?? '....' }}</pre>
-                                </dd>
-                                <dt>Tgl Kontrol :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->tanggal_kontrol ?? '....' }}</pre>
-                                </dd>
-                            </dl>
+                            <b>Instruksi Pulang :</b><br>
+                            <pre>{{ $kunjungan->erm_ranap->instruksi_pulang ?? '....' }}</pre>
+                            <b>Tgl Kontrol : </b> {{ $kunjungan->erm_ranap->tanggal_kontrol ?? '....' }} &emsp;
+                            <b>Kontrol Ke : </b>{{ $kunjungan->erm_ranap->kontrol_ke ?? '....' }}<br>
+                            <b>Diet : </b> {{ $kunjungan->erm_ranap->diet ?? '....' }}<br>
+                            <b>Latihan : </b> {{ $kunjungan->erm_ranap->latihan ?? '....' }}<br>
                         </div>
                         <div class="col-md-6  border border-dark">
-                            <dl>
-
-                                <dt>Diet :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->diet ?? '-' }}</pre>
-                                </dd>
-                                <dt>Latihan :</dt>
-                                <dd>
-                                    <pre>{{ $kunjungan->erm_ranap->latihan ?? '-' }}</pre>
-                                </dd>
-                            </dl>
+                            <b>Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi :</b><br>
+                            {{ $kunjungan->erm_ranap->kembali_jika ?? '....' }}
                         </div>
                         <div class="col-md-6 text-center border border-dark">
                             <br>
@@ -327,12 +323,41 @@
                     </div>
                 </section>
             </div>
-            {{-- <button class="btn btn-success btnPrint" onclick="printDiv('printMe')"><i class="fas fa-print"> Print
-                    Laporan</i> --}}
+
         </div>
     </div>
+    <footer>Halaman
+        <span class="page-number"></span>
+    </footer>
 @stop
 @section('css')
+    <style>
+        @media print {
+            body {
+                counter-reset: page;
+                size: A4;
+                margin-bottom: 60px;
+            }
+
+            .page-number::before {
+                counter-increment: page;
+                content: "Page " counter(page);
+            }
+
+            /* Tambahkan gaya lainnya sesuai kebutuhan */
+            footer {
+                z-index: 2;
+                position: fixed;
+                height: 50px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                padding: 5px;
+                border-top: 1px solid #ddd;
+            }
+        }
+    </style>
     <style>
         pre {
             border: none;
@@ -341,6 +366,7 @@
             margin: 0 !important;
             font-size: 13px;
         }
+
         dd {
             margin-bottom: 0 !important;
         }

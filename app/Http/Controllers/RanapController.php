@@ -318,12 +318,18 @@ class RanapController extends APIController
                 }
             }
         }
+
+        $obat2 = array_chunk($obat, count($obat) / 2);
+
+        // dd(count($obat), $obat2);
+
         // dd($obat);
         return view('simrs.ranap.print_resume_ranap', compact([
             'kunjungan',
             'kunjungans',
             'erm',
             'obat',
+            'obat2',
             'pasien',
         ]));
     }
