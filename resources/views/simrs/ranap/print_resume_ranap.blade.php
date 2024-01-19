@@ -411,9 +411,9 @@
         }
     </script>
     <script type="text/javascript">
-        // $(document).ready(function() {
-        //     window.print();
-        // });
+        $(document).ready(function() {
+            window.print();
+        });
         // setTimeout(function() {
         //     window.top.close();
         // }, 2000);
