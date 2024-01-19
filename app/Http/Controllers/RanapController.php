@@ -324,7 +324,7 @@ class RanapController extends APIController
         // dd(count($obat), $obat2);
 
         // dd($obat);
-        return view('simrs.ranap.print_resume_ranap', compact([
+        return view('simrs.ranap.test_print_resume', compact([
             'kunjungan',
             'kunjungans',
             'erm',
