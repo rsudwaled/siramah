@@ -141,7 +141,7 @@ class RanapController extends APIController
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
         $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
         $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $penjamin       = PenjaminSimrs::get();
         return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','kode'));
     }
@@ -300,16 +300,17 @@ class RanapController extends APIController
         $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
 
         $pasien         = Pasien::where('no_Bpjs', 'LIKE', '%' .$nomorkartu. '%')->first();
-        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->get();
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->first();
         $unit           = Unit::where('kelas_unit', 2)->get();
         $poli           = Unit::whereNotNull('KDPOLI')->get();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $icd            = Icd10::limit(15)->get();
         $penjamin       = PenjaminSimrs::get();
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         $spri           = Spri::where('noKartu', $nomorkartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
+        $historyBpjs    = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $kode);
         $kodeKunjungan  = $kode;
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan'));
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan','historyBpjs'));
     }
 
     public function daftarRanapBPJSStore(Request $request)

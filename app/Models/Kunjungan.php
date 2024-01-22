@@ -32,6 +32,7 @@ class Kunjungan extends Model
         'diagx',
         'created_at',
         'keterangan2',
+        'lakalantas',
         'is_ranap_daftar',
         'form_send_by',
         'jp_daftar',

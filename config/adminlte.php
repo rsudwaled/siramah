@@ -533,36 +533,7 @@ return [
 
             ],
         ],
-        // IGD
-        // [
-        //     'text'    => 'Aplikasi IGD',
-        //     'icon'    => 'fas fa-user-plus',
-        //     'can' => 'pendaftaran-igd',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Pendaftaran IGD',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'dashboard-antrian-igd',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Kunjungan Pasien',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'daftar-kunjungan',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Riwayat Pendaftaran byUser',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'daftar-kunjungan-byuser',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-
-        //     ],
-        // ],
+        
         // PENGELOLAAN
         [
             'text'    => 'Pengelolaan',
@@ -811,6 +782,29 @@ return [
                     'url'  => 'cppt',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Diagnosa Pola Penyakit',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => ['k3rs', 'rekam-medis'],
+                    'submenu' => [
+                        [
+                            'text' => 'Pola Penyakit Penderita Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'rawat-inap/diagnosa-pola-penyakit',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'Pola Penyakit Penderita Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => '/rawat-jalandiagnosa-pola-penyakit',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        
+                    ]
                 ],
                 [
                     'text' => 'Laporan Index',

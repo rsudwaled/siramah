@@ -8,8 +8,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                    <li class="breadcrumb-item"><b>PASIEN</b></li>
+                    <li class="breadcrumb-item"><b>BARU</b></li>
                 </ol>
             </div>
         </div>

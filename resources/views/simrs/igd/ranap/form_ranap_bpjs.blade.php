@@ -80,25 +80,23 @@
                                     @endphp
                                     <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" :config="$config"
                                         striped bordered hoverable compressed>
-                                        @foreach ($kunjungan as $item)
-                                            <tr>
-                                                <td>
-                                                    <b>
-                                                        Tgl Masuk : {{ $item->tgl_masuk }} <br>
-                                                        Unit : {{ $item->unit->nama_unit }}
-                                                    </b>
-                                                </td>
-                                                <td>
-                                                    <b>
-                                                        Kode : {{ $item->kode_kunjungan }} <br>
-                                                        Counter : {{ $item->counter }} <br>
-                                                    </b>
-                                                </td>
-                                                <td>{{ $item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}</td>
-                                                <td>{{ $item->penjamin->nama_penjamin_bpjs }}</td>
-                                                <td>{{ $item->status->status_kunjungan }}</td>
-                                            </tr>
-                                        @endforeach
+                                        <tr>
+                                            <td>
+                                                <b>
+                                                    Tgl Masuk : {{ $kunjungan->tgl_masuk }} <br>
+                                                    Unit : {{ $kunjungan->unit->nama_unit }}
+                                                </b>
+                                            </td>
+                                            <td>
+                                                <b>
+                                                    Kode : {{ $kunjungan->kode_kunjungan }} <br>
+                                                    Counter : {{ $kunjungan->counter }} <br>
+                                                </b>
+                                            </td>
+                                            <td>{{ $kunjungan->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}</td>
+                                            <td>{{ $kunjungan->penjamin->nama_penjamin_bpjs }}</td>
+                                            <td>{{ $kunjungan->status->status_kunjungan }}</td>
+                                        </tr>
                                     </x-adminlte-datatable>
                                 </div>
                             </div>
@@ -197,7 +195,7 @@
                                                 <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                                     <option value="">--Pilih Alasan--</option>
                                                     @foreach ($alasanmasuk as $item)
-                                                        <option value="{{ $item->id }}">
+                                                        <option value="{{ $item->id }}" {{$item->id == $kunjungan->id_alasan_masuk ?'selected':''}}>
                                                             {{ $item->alasan_masuk }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
@@ -215,14 +213,14 @@
                                                 <x-adminlte-select2 name="kode_paramedis" label="Pilih DPJP">
                                                     <option value="">--Pilih Dokter--</option>
                                                     @foreach ($paramedis as $item)
-                                                        <option value="{{ $item->kode_dokter_jkn }}">
+                                                        <option value="{{ $item->kode_dokter_jkn }}" {{$item->kode_paramedis == $kunjungan->kode_paramedis ?'selected':''}}>
                                                             {{ $item->nama_paramedis }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)
-                                                        <option value="{{ $item->kode_penjamin }}">
+                                                        <option value="{{ $item->kode_penjamin }}" {{$item->kode_penjamin == $kunjungan->kode_penjamin ?'selected':''}}>
                                                             {{ $item->nama_penjamin }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
@@ -234,12 +232,12 @@
                                                 <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
                                                     label="Status Kecelakaan">
                                                     <option value="">--Status Kecelakaan--</option>
-                                                    <option value="0">BUKAN KECELAKAAN LALU LINTAS (BKLL)
+                                                    <option value="0" {{$kunjungan->lakalantas==0 ?'selected':''}}>BUKAN KECELAKAAN LALU LINTAS (BKLL)
                                                     </option>
-                                                    <option value="1">KLL & BUKAN KECELAKAAN KERJA (BKK)
+                                                    <option value="1" {{$kunjungan->lakalantas==1 ?'selected':''}}>KLL & BUKAN KECELAKAAN KERJA (BKK)
                                                     </option>
-                                                    <option value="2">KLL & KK</option>
-                                                    <option value="3">KECELAKAAN KERJA</option>
+                                                    <option value="2" {{$kunjungan->lakalantas==2 ?'selected':''}}>KLL & KK</option>
+                                                    <option value="3" {{$kunjungan->lakalantas==3 ?'selected':''}}>KECELAKAAN KERJA</option>
                                                 </x-adminlte-select>
 
                                             </div>
@@ -254,12 +252,14 @@
                                                                         <div class="col-md-6">
                                                                             <x-adminlte-input name="noLP"
                                                                                 label="NO LP"
+                                                                                value="{{ $historyBpjs != null ? $historyBpjs->noLP:'' }}"
                                                                                 placeholder="no laporan polisi"
                                                                                 disable-feedback />
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <x-adminlte-input name="keterangan"
                                                                                 label="Keterangan"
+                                                                                value="{{ $historyBpjs != null ? $historyBpjs->keterangan:'' }}"
                                                                                 placeholder="keterangan kecelakaan"
                                                                                 disable-feedback />
                                                                         </div>
@@ -268,7 +268,7 @@
                                                                                 $config = ['format' => 'YYYY-MM-DD'];
                                                                             @endphp
                                                                             <x-adminlte-input-date name="tglKejadian"
-                                                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                                                value="{{ $historyBpjs != null ? $historyBpjs->tglKejadian:Carbon\Carbon::now()->format('Y-m-d') }}"
                                                                                 label="Tanggal Kejadian"
                                                                                 :config="$config" />
                                                                         </div>
@@ -349,7 +349,13 @@
 @section('js')
     <script>
         const select = document.getElementById('status_kecelakaan');
+        console.log(select.value);
         const pilihUnit = document.getElementById('div_stts_kecelakaan');
+        if (select.value > 0 || select.value == null) {
+            document.getElementById('div_stts_kecelakaan').style.display = "block";
+        } else {
+            document.getElementById('div_stts_kecelakaan').style.display = "none";
+        }
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
                 document.getElementById('div_stts_kecelakaan').style.display = "block";
