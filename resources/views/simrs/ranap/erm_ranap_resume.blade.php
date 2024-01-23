@@ -399,30 +399,28 @@
                         <x-adminlte-input name="nik_keluarga"
                             value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}" label="NIK Keluarga"
                             igroup-size="sm" placeholder="NIK Keluarga" />
+                        <div class="btn btn-xs btn-secondary" onclick="btnttdPasien()"><i class="fas fa-check"></i>
+                            Ttd
+                            Dokter</div>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->ttd_keluarga)
+                                Sudah di tanda tangani oleh dokter pada {{ $kunjungan->erm_ranap->waktu_ttd_keluarga }}
+                            @endif
+                        @endif
                     </div>
                     <div class="col-md-6">
                         <x-adminlte-input name="dpjp" value="{{ $kunjungan->dokter->nama_paramedis ?? null }}"
                             label="Dokter DPJP" igroup-size="sm" placeholder="Dokter DPJP" readonly />
-                        <!-- partial:index.partial.html -->
-                        <div class="signature-component">
-                            <canvas id="signature-pad" width="400" height="200"></canvas>
-                            <div>
-                                <span class="btn btn-danger mt-1" id="clear">Clear</span>
-                                <span id="showPointsToggle"></span>
-                            </div>
-                        </div>
+                        <div class="btn btn-xs btn-secondary" onclick="btnttdDokter()"><i class="fas fa-check"></i>
+                            Ttd Dokter</div>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->ttd_dokter)
+                                Sudah di tanda tangani oleh dokter pada {{ $kunjungan->erm_ranap->waktu_ttd_dokter }}
+                            @endif
+                        @endif
                     </div>
-                    {{-- <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3" igroup-size="sm"
-                        placeholder="Tindakan / Prosedur">
-                        {{ $kunjungan->erm_ranap->tindakan ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9" rows="3"
-                        igroup-size="sm" placeholder="Tindakan ICD-9">
-                        {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
-                    </x-adminlte-textarea> --}}
-                    {{-- <div class="col-md-4">
-                    </div> --}}
                 </div>
+                <br>
                 @if ($kunjungan->erm_ranap)
                     @if ($kunjungan->erm_ranap->status == 2)
                         <div class="btn btn-secondary"><i class="fas fa-check"></i> Sudah Diverifikasi</div>
@@ -436,8 +434,6 @@
                         <i class="fas fa-edit"></i> Edit \ Simpan
                     </button>
                 @endif
-
-
                 {{-- <a class="btn btn-primary"
                     href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i
                         class="fas fa-save"></i> Final Resume</a> --}}
@@ -448,3 +444,24 @@
         </div>
     </div>
 </div>
+<x-adminlte-modal id="modalttd" title="Tanda Tangan Resume Ranap" theme="warning" icon="fas fa-file-medical"
+    size='lg'>
+    <form id="formttd" action="" name="formttd" method="POST">
+        @csrf
+        <input type="hidden" name="norm" value="{{ $kunjungan->no_rm }}">
+        <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
+        <input type="hidden" id="ttd_image64" name="image">
+        <!-- partial:index.partial.html -->
+        <div class="signature-component">
+            <canvas id="signature-pad" width="400" height="200"></canvas>
+            <div>
+                <span class="btn btn-danger mt-1" id="clear">Clear</span>
+            </div>
+        </div>
+    </form>
+    <x-slot name="footerSlot">
+        <button class="btn btn-success mr-auto" onclick="simpanttd()"><i class="fas fa-save"></i>
+            Simpan</button>
+        <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
+    </x-slot>
+</x-adminlte-modal>

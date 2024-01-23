@@ -408,10 +408,24 @@
                 <br>
                 Pasien / Keluarga Pasien <br>
                 Yang Menerima Penjelasan
-                <br>
-                <br>
-                <br>
-                <br>
+                @if ($kunjungan->erm_ranap)
+                    @if ($kunjungan->erm_ranap->ttdkeluarga)
+                        <br>
+                        <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttdkeluarga->image }}"
+                            alt="Red dot" />
+                        <br>
+                    @else
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    @endif
+                @else
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                @endif
                 <b><u>{{ $kunjungan->erm_ranap->nama_keluarga ?? 'Keluarga Pasien' }}</u></b><br>
                 NIK. {{ $kunjungan->erm_ranap->nik_keluarga ?? '' }}
             </div>
@@ -419,10 +433,24 @@
                 Waled, {{ now()->format('d F y h:m:s') }} <br>
                 Dokter Penanggung Jawab Pelayanan <br>
                 (DPJP)
-                <br>
-                <br>
-                <br>
-                <br>
+                @if ($kunjungan->erm_ranap)
+                    @if ($kunjungan->erm_ranap->ttddokter)
+                        <br>
+                        <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttddokter->image }}"
+                            alt="Red dot" />
+                        <br>
+                    @else
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    @endif
+                @else
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                @endif
                 <b><u>{{ $kunjungan->dokter->nama_paramedis }}</u></b><br>
                 SIP. {{ $kunjungan->dokter->sip_dr ?? '..................' }}
             </div>

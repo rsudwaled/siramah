@@ -12,6 +12,7 @@ use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\TagihanPasien;
+use App\Models\TtdDokter;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -395,6 +396,46 @@ class RanapController extends APIController
             $request->all()
         );
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
+        return redirect()->back();
+    }
+    public function ttd_dokter_resume_ranap(Request $request)
+    {
+        $now = now();
+        $request['time'] = $now->timestamp;
+        $resume  = ErmRanap::where('kode_kunjungan', $request->kode_kunjungan)->first();
+        if ($resume) {
+            if ($resume->ttd_dokter) {
+                $ttd = TtdDokter::find($resume->ttd_dokter);
+                $ttd->update($request->all());
+            } else {
+                $ttd = TtdDokter::create($request->all());
+            }
+            $resume->update([
+                'ttd_dokter' => $ttd->id,
+                'waktu_ttd_dokter' =>  $now,
+            ]);
+        }
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Di Tanda Tangani');
+        return redirect()->back();
+    }
+    public function ttd_pasien_resume_ranap(Request $request)
+    {
+        $now = now();
+        $request['time'] = $now->timestamp;
+        $resume  = ErmRanap::where('kode_kunjungan', $request->kode_kunjungan)->first();
+        if ($resume) {
+            if ($resume->ttd_keluarga) {
+                $ttd = TtdDokter::find($resume->ttd_keluarga);
+                $ttd->update($request->all());
+            } else {
+                $ttd = TtdDokter::create($request->all());
+            }
+            $resume->update([
+                'ttd_keluarga' => $ttd->id,
+                'waktu_ttd_keluarga' =>  $now,
+            ]);
+        }
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Di Tanda Tangani');
         return redirect()->back();
     }
     public function verif_resume_ranap(Request $request)
