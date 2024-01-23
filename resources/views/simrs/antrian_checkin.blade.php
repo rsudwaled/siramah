@@ -29,10 +29,12 @@
                         <label>Status = <span id="status">-</span></label>
                     </div>
                     <x-slot name="footerSlot">
-                        <a href="{{ route('antrianConsole') }}" class="btn btn-danger withLoad"><i class="fas fa-arrow-left"></i>
+                        <a href="{{ route('antrianConsole') }}" class="btn btn-danger withLoad"><i
+                                class="fas fa-arrow-left"></i>
                             Mesin
                             Antrian</a>
-                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i class="fas fa-sync"></i> Reset
+                        <a href="{{ route('checkinAntrian') }}" class="btn btn-warning withLoad"><i class="fas fa-sync"></i>
+                            Reset
                             Antrian</a>
                     </x-slot>
                 </x-adminlte-card>
@@ -153,15 +155,18 @@
                                 @if ($antrian->nomorsep)
                                     <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
                                         class="btn btn-success withLoad"><i class="fas fa-print"></i>
-                                        Cetak Karcis Antrian</a>
+                                        Cetak Karcis</a>
                                 @endif
                             @else
                                 <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
                                     class="btn btn-success withLoad"><i class="fas fa-print"></i>
-                                    Cetak Karcis Antrian</a>
+                                    Cetak Karcis</a>
                             @endif
-                            <a href="{{ route('batalAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                                class="btn btn-danger"><i class="fas fa-times withLoad"></i> Batal Antrian</a>
+                            <a target="_blank" href="http://192.168.2.45/simrs/cetaklabel/{{ $antrian->norm }}"
+                                class="btn btn-primary"><i class="fas fa-print"></i>
+                                Cetak Label</a>
+                            {{-- <a href="{{ route('batalAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                                class="btn btn-danger"><i class="fas fa-times withLoad"></i> Batal Antrian</a> --}}
                         </x-slot>
                     </x-adminlte-card>
                 </div>

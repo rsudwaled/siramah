@@ -147,15 +147,10 @@
                         {{ $kunjungans->first()->tgl_masuk ? Carbon\Carbon::parse($kunjungans->first()->tgl_masuk)->format('d F Y H:m:s') : '-' }}
                         <br>
                         <b>Tanggal Keluar : </b>
-                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungans->first()->tgl_keluar)->format('d F Y H:m:s') : '-' }}
+                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungan->tgl_keluar)->format('d F Y H:m:s') : '-' }}
                         <br>
                         <b>Lama Rawat : </b>
-                        @if ($kunjungan->tgl_keluar)
-                            {{ Carbon\Carbon::parse($kunjungans->first()->tgl_keluar)->diffInDays($kunjungans->first()->tgl_masuk) }}
-                            hari
-                        @else
-                            .... hari
-                        @endif
+                        {{ $lama_rawat }} hari
                     </div>
                     {{-- <div class="col-md-4"></div> --}}
                     <div class="col-md-4">
