@@ -11,6 +11,15 @@
             <dd class="col-sm-8 m-0">{{ $pasien->no_Bpjs }}</dd>
             <dt class="col-sm-4 m-0">Tgl Lahir</dt>
             <dd class="col-sm-8 m-0">{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') }}</dd>
+            <dt class="col-sm-4 m-0">Umur</dt>
+            <dd class="col-sm-8 m-0">
+                @if (\Carbon\Carbon::parse($pasien->tgl_lahir)->age)
+                    {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} tahun
+                @else
+                    {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->diffInDays(now()) }} hari
+                @endif
+
+            </dd>
         </dl>
     </div>
     <div class="col-md-3">
