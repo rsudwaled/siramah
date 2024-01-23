@@ -88,7 +88,7 @@
                             <div class="row">
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
-                                    <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP SEMUA UMUR</b>
+                                    <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL SEMUA UMUR</b>
                                 </dd>
                                 <dt class="col-sm-4 m-0">Periode</dt>
                                 <dd class="col-sm-8 m-0"> :
@@ -150,7 +150,7 @@
 
             });
         });
-       
+
     </script>
 @endsection
 @section('css')
