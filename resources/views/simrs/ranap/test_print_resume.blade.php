@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Print Preview - 2 Halaman F4</title>
+    <title>Ringkasan Pasien Pulang</title>
     <link rel="stylesheet" href="path/to/bootstrap-grid.min.css">
     <link rel="stylesheet" href="{{ asset('medilab/assets/vendor/bootstrap/css/bootstrap-grid.min.css') }}">
     <style>
@@ -197,29 +197,31 @@
             <div class="col-md-12  border border-dark">
                 <b>Pemeriksaan SHK : </b> &emsp;
                 Dilakukan :
-                @if ($kunjungan->erm_ranap->pemeriksaan_shk == 'Ya')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pemeriksaan_shk == 'Ya' : null)
                     &#x1F5F9; Ya
                 @else
                     &#x25A2; Ya
                 @endif/
-                @if ($kunjungan->erm_ranap->pemeriksaan_shk == 'Tidak')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pemeriksaan_shk == 'Tidak' : null)
                     &#x1F5F9; Tidak
                 @else
                     &#x25A2; Tidak
                 @endif &emsp;
                 Diambil dari :
-                @if ($kunjungan->erm_ranap->pengambilan_shk == 'Tumit')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengambilan_shk == 'Tumit' : null)
                     &#x1F5F9; Tumit
                 @else
                     &#x25A2; Tumit
                 @endif/
-                @if ($kunjungan->erm_ranap->pengambilan_shk == 'Vena')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengambilan_shk == 'Vena' : null)
                     &#x1F5F9; Vena
                 @else
                     &#x25A2; Vena
                 @endif&emsp;
                 Tgl Pengambilan :
-                {{ \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') ?? '....' }}
+                @if ($kunjungan->erm_ranap)
+                    {{ \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') ?? '....' }}
+                @endif
                 &emsp;
             </div>
             <div class="col-md-12  border border-dark">
@@ -337,22 +339,22 @@
             </div>
             <div class="col-md-4  border border-dark">
                 <b>Cara Keluar :</b><br>
-                @if ($kunjungan->erm_ranap->cara_pulang == 'Sembuh / Perbaikan')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->cara_pulang == 'Sembuh / Perbaikan' : null)
                     &#x1F5F9; Sembuh / Perbaikan
                 @else
                     &#x25A2; Sembuh / Perbaikan
                 @endif <br>
-                @if ($kunjungan->erm_ranap->cara_pulang == 'Pindah RS')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->cara_pulang == 'Pindah RS' : null)
                     &#x1F5F9; Pindah RS
                 @else
                     &#x25A2; Pindah RS
                 @endif <br>
-                @if ($kunjungan->erm_ranap->cara_pulang == 'Pulang Paksa')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->cara_pulang == 'Pulang Paksa' : null)
                     &#x1F5F9; Pulang Paksa
                 @else
                     &#x25A2; Pulang Paksa
                 @endif <br>
-                @if ($kunjungan->erm_ranap->cara_pulang == 'Meninggal')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->cara_pulang == 'Meninggal' : null)
                     &#x1F5F9; Meninggal
                 @else
                     &#x25A2; Meninggal
@@ -370,22 +372,22 @@
             </div>
             <div class="col-md-4  border border-dark">
                 <b>Cara Keluar :</b><br>
-                @if ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Poliklinik RSUD Waled')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengobatan_lanjutan == 'Poliklinik RSUD Waled' : null)
                     &#x1F5F9; Poliklinik RSUD Waled
                 @else
                     &#x25A2; Poliklinik RSUD Waled
                 @endif <br>
-                @if ($kunjungan->erm_ranap->pengobatan_lanjutan == 'RS Lain')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengobatan_lanjutan == 'RS Lain' : null)
                     &#x1F5F9; RS Lain
                 @else
                     &#x25A2; RS Lain
                 @endif <br>
-                @if ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Puskesmas')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengobatan_lanjutan == 'Puskesmas' : null)
                     &#x1F5F9; Puskesmas
                 @else
                     &#x25A2; Puskesmas
                 @endif <br>
-                @if ($kunjungan->erm_ranap->pengobatan_lanjutan == 'Dokter Praktek')
+                @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengobatan_lanjutan == 'Dokter Praktek' : null)
                     &#x1F5F9; Dokter Praktek
                 @else
                     &#x25A2; Dokter Praktek

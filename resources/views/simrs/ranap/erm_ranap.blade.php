@@ -479,7 +479,13 @@
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
+@endsection
+
 @section('js')
+    <script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
+    <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
     {{-- toast --}}
     <script>
         const Toast = Swal.mixin({

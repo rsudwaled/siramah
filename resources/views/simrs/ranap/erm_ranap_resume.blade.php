@@ -140,8 +140,8 @@
                         <b>SHK Diambil Dari :</b>
                         <div class="form-group">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" value="Tidak Diambil" id="shktidak"
-                                    name="pengambilan_shk"
+                                <input class="custom-control-input" type="radio" value="Tidak Diambil"
+                                    id="shktidak" name="pengambilan_shk"
                                     {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengambilan_shk == 'Tidak Diambil' ? 'checked' : null) : null }}>
                                 <label for="shktidak" class="custom-control-label">Tidak Diambil</label>
                             </div>
@@ -377,8 +377,9 @@
                             </div>
                         </div>
                     </div>
-                    <x-adminlte-textarea name="kembali_jika" fgroup-class="col-md-4" label="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi"
-                        rows="5" igroup-size="sm" placeholder="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi">
+                    <x-adminlte-textarea name="kembali_jika" fgroup-class="col-md-4"
+                        label="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi" rows="5"
+                        igroup-size="sm" placeholder="Segera kembali ke Rumah Sakit, langsung ke IGD jika terjadi">
                         {{ $kunjungan->erm_ranap->kembali_jika ?? null }}
                     </x-adminlte-textarea>
                     <div class="col-md-6">
@@ -388,6 +389,18 @@
                         <x-adminlte-input name="nik_keluarga"
                             value="{{ $kunjungan->erm_ranap->nik_keluarga ?? null }}" label="NIK Keluarga"
                             igroup-size="sm" placeholder="NIK Keluarga" />
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-input name="dpjp" value="{{ $kunjungan->dokter->nama_paramedis ?? null }}"
+                            label="Dokter DPJP" igroup-size="sm" placeholder="Dokter DPJP" readonly />
+                        <!-- partial:index.partial.html -->
+                        <div class="signature-component">
+                            <canvas id="signature-pad" width="400" height="200"></canvas>
+                            <div>
+                                <span class="btn btn-danger mt-1" id="clear">Clear</span>
+                                <span id="showPointsToggle"></span>
+                            </div>
+                        </div>
                     </div>
                     {{-- <x-adminlte-textarea name="tindakan" label="Tindakan / Prosedur" rows="3" igroup-size="sm"
                         placeholder="Tindakan / Prosedur">

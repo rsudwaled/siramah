@@ -431,11 +431,7 @@ class RanapController extends APIController
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
         $mppa = $kunjungan->erm_ranap_mppa;
         $pasien = $kunjungan->pasien;
-        return view('simrs.ranap.print_mppa', compact([
-            'kunjungan',
-            'mppa',
-            'pasien',
-        ]));
+        return view('simrs.ranap.print_mppa', compact('kunjungan', 'mppa', 'pasien',));
     }
     public function simpan_mppb(Request $request)
     {
