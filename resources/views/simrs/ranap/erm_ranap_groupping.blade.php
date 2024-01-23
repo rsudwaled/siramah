@@ -97,8 +97,8 @@
                                     onchange="checkBayi();">
                                 <label for="bayi" class="custom-control-label">Bayi</label>
                             </div>
-                            <x-adminlte-input name="berat_badan" label="Berat Badan" fgroup-class="formbb"
-                                igroup-size="sm" placeholder="Berat Badan" />
+                            <x-adminlte-input name="berat_badan" label="Berat Badan (gram)" fgroup-class="formbb"
+                                igroup-size="sm" placeholder="Berat Badan (gram)" />
                             <div class="custom-control custom-checkbox">
                                 <input class="custom-control-input" type="checkbox" id="tb" value="1"
                                     onchange="checkTB();">

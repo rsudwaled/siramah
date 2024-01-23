@@ -11,4 +11,13 @@ class ErmRanap extends Model
     protected $connection = 'mysql2';
     protected $table = 'erm_ranap_resume';
     protected $guarded = ['id'];
+
+    public function kunjungan()
+    {
+        return $this->hasOne(Kunjungan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function pasien()
+    {
+        return $this->hasOne(Pasien::class, 'no_rm', 'norm');
+    }
 }

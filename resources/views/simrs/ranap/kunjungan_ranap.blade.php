@@ -126,12 +126,20 @@
                         var btn = "<a href='{{ route('pasienranapprofile') }}?kode=" + value
                             .kode_kunjungan +
                             "' class='btn btn-primary btn-xs'> <i class='fas fa-file-medical withLoad'></i> ERM</a>";
+
+                        if (value.pasien) {
+                            var namapx = value.pasien.nama_px;
+                            var nobpjs = value.pasien.no_Bpjs;
+                        } else {
+                            var namapx = '';
+                            var nobpjs = '  ';
+                        }
                         var addedRow = table.row.add([
                             value.tgl_masuk,
                             value.tgl_keluar,
                             btn + ' ' + value.counter + ' / ' + value.kode_kunjungan,
-                            value.no_rm + ' ' + value.pasien.nama_px,
-                            value.pasien.no_Bpjs,
+                            value.no_rm + ' ' + namapx,
+                            nobpjs,
                             value.unit.nama_unit,
                             value.no_sep,
                             'Rp ' + tarifeklaim.toLocaleString('id-ID'),

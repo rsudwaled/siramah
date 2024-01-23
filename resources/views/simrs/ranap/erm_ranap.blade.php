@@ -121,7 +121,7 @@
                             </div>
                         </div>
                         {{-- tindakan --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakanDokter">
                                 <h3 class="card-title">
                                     Pemberian Tindakan Kedokteran
@@ -132,9 +132,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- konsultasi --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKonsultasi">
                                 <h3 class="card-title">
                                     Pemeriksaan Konsultasi
@@ -145,9 +145,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- nyeri --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cNyeri">
                                 <h3 class="card-title">
                                     Pengkajian Nyeri
@@ -158,9 +158,9 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- jatuh --}}
-                        <div class="card card-info mb-1">
+                        {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cJatuh">
                                 <h3 class="card-title">
                                     Pengkajian Resiko Jatuh
@@ -171,7 +171,7 @@
                                     test
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         {{-- mpp form a --}}
                         @include('simrs.ranap.erm_ranap_mppa')
                         {{-- mpp form b --}}
@@ -479,7 +479,13 @@
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
+@endsection
+
 @section('js')
+    <script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
+    <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
     {{-- toast --}}
     <script>
         const Toast = Swal.mixin({

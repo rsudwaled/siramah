@@ -11,6 +11,11 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
+                    <style>
+                        dd {
+                            margin-bottom: 0 !important;
+                        }
+                    </style>
                     <dl class="row">
                         <dt class="col-sm-5">Prosedur Bedah</dt>
                         <dd class="col-sm-7">: <span class="prosedur_non_bedah"></span></dd>
@@ -59,7 +64,7 @@
                 <div class="col-md-12">
                     @php
                         $heads = ['Tgl', 'Unit', 'Group Vclaim', 'Nama Tarif', 'Grandtotal'];
-                        $config['order'] = [0,'desc'];
+                        $config['order'] = [0, 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['info'] = false;

@@ -11,6 +11,7 @@ use App\Models\ErmRanapObservasi;
 use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
+use App\Models\TagihanPasien;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -288,8 +289,103 @@ class RanapController extends APIController
             'kunjungans',
         ]));
     }
+    public function print_resume_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $erm = $kunjungan->erm_ranap;
+        $pasien = $kunjungan->pasien;
+        $kunjungans = Kunjungan::where('no_rm', $kunjungan->no_rm)
+            ->where('counter', $kunjungan->counter)
+            ->get();
+        $obat = [];
+        foreach ($kunjungans as $kjg) {
+            foreach ($kjg->layanans as  $lynan) {
+                if ($lynan->unit->kelas_unit == 4) {
+                    foreach ($lynan->layanan_details as  $laydet) {
+                        if ($laydet->kode_barang) {
+                            $obat[] = [
+                                'jumlah_layanan' => $laydet->jumlah_layanan,
+                                'grantotal_layanan' => $laydet->grantotal_layanan,
+                                'kode_dokter1' => $laydet->kode_dokter1,
+                                'kode_barang' => $laydet->kode_barang,
+                                'nama_barang' => $laydet->barang->nama_barang,
+                                'aturan_pakai' => $laydet->aturan_pakai,
+                                'kategori_resep' => $laydet->kategori_resep,
+                                'satuan_barang' => $laydet->satuan_barang,
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        $obat2 = array_chunk($obat, count($obat) / 2);
+
+        // dd(count($obat), $obat2);
+
+        // dd($obat);
+        return view('simrs.ranap.test_print_resume', compact([
+            'kunjungan',
+            'kunjungans',
+            'erm',
+            'obat',
+            'obat2',
+            'pasien',
+        ]));
+    }
+    public function lihat_resume_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $kunjungans = Kunjungan::where('no_rm', $kunjungan->no_rm)
+            ->where('counter', $kunjungan->counter)
+            ->get();
+        $erm = $kunjungan->erm_ranap;
+        $pasien = $kunjungan->pasien;
+        $obat = [];
+        foreach ($kunjungans as $kjg) {
+            foreach ($kjg->layanans as  $lynan) {
+                if ($lynan->unit->kelas_unit == 4) {
+                    foreach ($lynan->layanan_details as  $laydet) {
+                        if ($laydet->kode_barang) {
+                            $obat[] = [
+                                'jumlah_layanan' => $laydet->jumlah_layanan,
+                                'grantotal_layanan' => $laydet->grantotal_layanan,
+                                'kode_dokter1' => $laydet->kode_dokter1,
+                                'kode_barang' => $laydet->kode_barang,
+                                'nama_barang' => $laydet->barang->nama_barang,
+                                'aturan_pakai' => $laydet->aturan_pakai,
+                                'kategori_resep' => $laydet->kategori_resep,
+                                'satuan_barang' => $laydet->satuan_barang,
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+        return view('simrs.ranap.lihat_resume_ranap', compact([
+            'kunjungan',
+            'kunjungans',
+            'erm',
+            'obat',
+            'pasien',
+        ]));
+    }
+    public function monitoring_resume_ranap(Request $request)
+    {
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+        $resumes = ErmRanap::simplePaginate();
+        return view('simrs.ranap.monitoring_resume_ranap', compact([
+            'request',
+            'units',
+            'resumes',
+        ]));
+    }
     public function simpan_resume_ranap(Request $request)
     {
+        $request['pic1'] = Auth::user()->name;
+        $request['user1'] = Auth::user()->id;
         $erm = ErmRanap::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,
@@ -299,6 +395,19 @@ class RanapController extends APIController
             $request->all()
         );
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
+        return redirect()->back();
+    }
+    public function verif_resume_ranap(Request $request)
+    {
+        $request['pic2'] = Auth::user()->name;
+        $request[''] = Auth::user()->id;
+        $resume = ErmRanap::where('kode_kunjungan', $request->kode)->first();
+        $resume->update([
+            'pic2' => Auth::user()->name,
+            'user2' => Auth::user()->id,
+            'status' => $resume->status == 2 ? '1' : '2',
+        ]);
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Diverifikasi');
         return redirect()->back();
     }
     public function simpan_mppa(Request $request)
@@ -322,11 +431,7 @@ class RanapController extends APIController
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
         $mppa = $kunjungan->erm_ranap_mppa;
         $pasien = $kunjungan->pasien;
-        return view('simrs.ranap.print_mppa', compact([
-            'kunjungan',
-            'mppa',
-            'pasien',
-        ]));
+        return view('simrs.ranap.print_mppa', compact('kunjungan', 'mppa', 'pasien',));
     }
     public function simpan_mppb(Request $request)
     {
@@ -351,17 +456,6 @@ class RanapController extends APIController
         return view('simrs.ranap.print_mppb', compact([
             'kunjungan',
             'mppb',
-            'pasien',
-        ]));
-    }
-    public function print_resume_ranap(Request $request)
-    {
-        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
-        $erm = $kunjungan->erm_ranap;
-        $pasien = $kunjungan->pasien;
-        return view('simrs.ranap.print_resume_ranap', compact([
-            'kunjungan',
-            'erm',
             'pasien',
         ]));
     }
