@@ -1,15 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Pasien IGD')
+@section('title', 'PASIEN KECELAKAAN')
 @section('content_header')
 <div class="container-fluid">
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h5>Form Daftar</h5>
+            <h5>FORM DAFTAR PASIEN KECELAKAAN</h5>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><b><h5>ANTRIAN : {{ $antrian->no_antri }}</h5></b></li>
+                <li class="breadcrumb-item"><b>DAFTARKAN</b></li>
+                <li class="breadcrumb-item"><b>PASIEN KECELAKAAN</b></li>
                 <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
                         class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
             </ol>
@@ -21,7 +22,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-md-12 ">
                     <div class="card card-primary card-outline">
                         <div class="card-body">
@@ -99,61 +100,20 @@
                     </div>
                    
                 </div>
-            </div>
+            </div> --}}
             <div class="row">
                 <div class="col-lg-12">
                     <x-adminlte-card theme="success" size="sm" id="div_rajal" icon="fas fa-info-circle" collapsible
-                        title="Daftarkan Pasien: {{$pasien->nama_px}} ({{$pasien->no_rm}})">
-                        @if (!empty($resdescrtipt->response))
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body bg-success">
-                                    <div class="row ">
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">- {{$resdescrtipt->response->peserta->statusPeserta->keterangan}} -</h5>
-                                                <span class="description-text">- STATUS BPJS - </span>
-                                            </div>
-                                        </div>
+                        title="Daftarkan Pasien Kecelakaan :">
                         
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->jenisPeserta->keterangan}}</h5>
-                                                <span class="description-text">- JENIS PESERTA -</span>
-                                            </div>
-                                        </div>
-                        
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->hakKelas->keterangan}}</h5>
-                                                <span class="description-text">- HAK KELAS -</span>
-                                            </div>
-                                        </div>
-                        
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->noKartu}}</h5>
-                                                <span class="description-text">- NO KARTU -</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>   
-                        @endif
                         <form action="{{ route('form.daftar-create') }}" id="formPendaftaranIGD" method="post">
                             @csrf
                             <div class="col-lg-12">
-                                <input type="hidden" value="{{ $antrian->id }}" name="id_antrian">
-                                <input type="hidden" name="rm" value="{{ $pasien->no_rm }}">
-                                <input type="hidden" name="kelasRawatHak" value="{{$resdescrtipt->response != NULL ? $resdescrtipt->response->peserta->hakKelas->kode :''}}">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}" disabled
-                                            label="Nama Pasien" enable-old-support>
+                                        <x-adminlte-input name="nama_pasien" label="Nama Pasien" enable-old-support>
                                             <x-slot name="prependSlot">
-                                                <div class="input-group-text text-olive">
-                                                    {{ $pasien->no_rm }}</div>
+                                                <div class="input-group-text text-olive">-</div>
                                             </x-slot>
                                         </x-adminlte-input>
 
@@ -163,7 +123,7 @@
                                         <x-adminlte-input-date name="tanggal"
                                             value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                             :config="$config" />
-                                        <x-adminlte-input name="noTelp" type="number" label="No Telpon" value="{{$pasien->no_tlp ==null? $pasien->no_hp:$pasien->no_tlp}}" />
+                                        <x-adminlte-input name="noTelp" type="number" label="No Telpon" />
                                         <div class="form-group">
                                             <label for="exampleInputBorderWidth2">Perujuk
                                                 <code>(jika pasien memiliki referensi instansi yang merujuk)</code></label>
@@ -186,8 +146,7 @@
                                         <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
                                             <option value="">--Pilih Dokter--</option>
                                             @foreach ($paramedis as $item)
-                                                <option value="{{ $item->kode_paramedis }}"
-                                                    {{ is_null($antrian->isTriase) ? 'asdas' : ($item->kode_paramedis == $antrian->isTriase->kode_paramedis ? 'selected' : '') }}>
+                                                <option value="{{ $item->kode_paramedis }}">
                                                     {{ $item->nama_paramedis }}</option>
                                             @endforeach
                                         </x-adminlte-select2>
@@ -217,7 +176,7 @@
                                         </x-adminlte-select>
                                     </div>
                                     <div class="col-lg-12">
-                                        <div class="col-md-12" id="div_stts_kecelakaan" style="display: none;">
+                                        <div class="col-md-12" id="div_stts_kecelakaan">
                                             <div class="card card-danger card-outline">
                                                 <div class="card-body">
                                                     <div class="row">
@@ -256,13 +215,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($knj_aktif == 0)
-                                    <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right btn-flat "
-                                        id="submitPasien" label="Simpan Data" />
-                                @else
-                                    <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right btn-flat "
-                                        label="tidak bisa lanjut daftar" />
-                                @endif
+                                <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-green float-right btn-flat "
+                                    id="submitPasien" label="Simpan Data" />
                                 <a href="{{ route('list.antrian') }}"
                                     class="btn btn-sm btn-flat m-1 bg-secondary float-right">kembali</a>
                             </div>

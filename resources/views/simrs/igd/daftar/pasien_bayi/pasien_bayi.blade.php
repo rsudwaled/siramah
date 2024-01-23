@@ -67,7 +67,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             @php
-                                $heads = ['Tgl Masuk / Kunjungan', 'keluar', 'Orangtua', 'Alamat','Alasan', 'Penjamin', 'Status'];
+                                $heads = ['Tgl Masuk / Kunjungan', 'Keluar', 'Orangtua', 'Alamat','Alasan', 'Penjamin', 'Status'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;

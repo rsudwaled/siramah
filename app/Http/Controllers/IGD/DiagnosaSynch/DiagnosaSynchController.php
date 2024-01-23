@@ -105,11 +105,11 @@ class DiagnosaSynchController extends APIController
 
     public function synchDiagnosaAndBridging(Request $request)
     {
-        // dd($request->all());
+        
         $validator = Validator::make(request()->all(), [
             'noMR' => 'required',
-            'diagAwal' => 'required',
             'kunjungan' => 'required',
+            'diagAwal' => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -122,7 +122,7 @@ class DiagnosaSynchController extends APIController
         {
             return response()->json(['data'=>$kunjungan,'code'=>401, 'message'=>'MOHON MAAF BUKAN PASIEN BPJS!!. silahkan pilih tombol only update untuk pasien umum']);
         }
-        $icd        = Icd10::firstWhere('diag', $request->diagAwal);
+        
         $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
         if($kunjungan->jpDaftar->is_bpjs ==1)
         {
@@ -132,7 +132,7 @@ class DiagnosaSynchController extends APIController
             $data = [
                 'request' => [
                     't_sep' => [
-                        'noKartu' => $histories->noKartu,
+                        'noKartu' => trim($histories->noKartu),
                         'tglSep' => $histories->tglSep,
                         'ppkPelayanan' => '1018R001',
                         'jnsPelayanan' => $histories->jnsPelayanan,

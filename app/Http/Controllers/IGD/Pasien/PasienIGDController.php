@@ -52,13 +52,13 @@ class PasienIGDController extends Controller
     }
     public function index(Request $request)
     {
-        $provinsi = Provinsi::all();
-        $provinsi_klg = Provinsi::all();
-        $negara = Negara::all();
-        $hb_keluarga = HubunganKeluarga::all();
-        $agama = Agama::all();
-        $pekerjaan = Pekerjaan::all();
-        $pendidikan = Pendidikan::all();
+        $provinsi       = Provinsi::all();
+        $provinsi_klg   = Provinsi::all();
+        $negara         = Negara::all();
+        $hb_keluarga    = HubunganKeluarga::all();
+        $agama          = Agama::all();
+        $pekerjaan      = Pekerjaan::all();
+        $pendidikan     = Pendidikan::all();
         return view('simrs.igd.pasienigd.tambah_pasien', compact('provinsi','provinsi_klg','negara','hb_keluarga','agama','pekerjaan','pendidikan'));
     }
 

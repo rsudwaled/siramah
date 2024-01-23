@@ -1,44 +1,25 @@
 @extends('adminlte::page')
 
-@section('title', 'Cari Pasien')
+@section('title', 'PASIEN KECELAKAAN')
 @section('content_header')
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                @if ($jp==1)
-                <h5>Form Daftar / IGD</h5>
-                @else
-                <h5>Form Daftar / IGK</h5>
-                @endif
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}"
-                            class="btn btn-sm btn-flat bg-purple">Pasien Baru</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('terpilih.antrian',['no'=>$no,'jp'=>$jp]) }}"
-                            class="btn btn-sm btn-flat bg-danger">refresh</a></li>
-                </ol>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-sm-6">
+            <h5>FORM PENCARIAN DATA PASIEN</h5>
+        </div>
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple " target="__blank">PASIEN BARU</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"  class="btn btn-sm btn-secondary">Kembali</a></li>
+            </ol>
         </div>
     </div>
+</div>
 @stop
 
 @section('content')
     <div class="row">
-        <div class="col-md-3">
-            <div class="card card-primary card-outline">
-                <div class="card-body box-profile">
-
-                    <h3 class="profile-username text-center">No Antrian</h3>
-                    <a class="btn btn-primary bg-gradient-primary btn-block"><b>
-                            {{ $antrian->no_antri }}</b></a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-9">
+        <div class="col-md-12">
             <x-adminlte-card theme="primary" size="sm" collapsible title="Cari Pasien :">
                 <div class="col-lg-12">
                     <form action="" method="get">
@@ -124,11 +105,7 @@
                                                 {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : (($data->desa == null ? 'Desa: -':'Desa. '.$data->desas->nama_desa_kelurahan ). ($data->kecamatan==null?'Kec. ':' , Kec. ' . $data->kecamatans->nama_kecamatan ). ($data->kabupaten==null?'Kab. ':' - Kab. ' . $data->kabupatens->nama_kabupaten_kota)) }}</small>
                                         </td>
                                         <td>
-                                            @if ($jp==1)
-                                            <a href="{{route('form.daftar-igd', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
-                                            @else
-                                            <a href="{{route('form.daftar-igk', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
-                                            @endif
+                                            <a href="#" class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -149,11 +126,6 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        $('body').on('click','.btn-daftarkan',function() {
-            var rm = $(this).data('rm');
-            var no = $(this).data('antrian');
-            var jp = $(this).data('jp');
-            alert(rm)
-        });
+        
     </script>
 @endsection

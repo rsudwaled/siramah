@@ -454,7 +454,7 @@ return [
                 ],
                 [
                     'text' => 'Pasien Ranap',
-                    'icon'    => 'fas fa-hospital-user',
+                    'icon'    => 'fas fa-procedures',
                     'url'  => 'pasien-rawat-inap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
@@ -755,6 +755,29 @@ return [
                     'url'  => 'cppt',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Diagnosa Pola Penyakit',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => ['k3rs', 'rekam-medis'],
+                    'submenu' => [
+                        [
+                            'text' => 'Pola Penyakit Penderita Rawat Inap',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'rawat-inap/diagnosa-pola-penyakit',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'Pola Penyakit Penderita Rawat Jalan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => '/rawat-jalandiagnosa-pola-penyakit',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        
+                    ]
                 ],
                 [
                     'text' => 'Laporan Index',

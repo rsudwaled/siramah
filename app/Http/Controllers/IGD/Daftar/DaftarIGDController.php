@@ -115,7 +115,7 @@ class DaftarIGDController extends Controller
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)
             ->count();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
         $tanggal        = now()->format('Y-m-d');
@@ -227,7 +227,7 @@ class DaftarIGDController extends Controller
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noAntrian       = $ant_upd->no_antri;
                 $histories->noMR            = $createKunjungan->no_rm;
-                $histories->noKartu         = $pasien->no_Bpjs;
+                $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
                 $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
                 $histories->user            = Auth::user()->name;

@@ -25,12 +25,12 @@ class AntrianController extends Controller
     public function terpilihAntrian($no, $jp, Request $request)
     {
         $antrian = AntrianPasienIGD::with('isTriase')->firstWhere('no_antri', $no);
-        if($antrian->isTriase==null)
+        if(($antrian->isTriase==null) && (mb_substr($antrian->no_antri, 0, 1) != "B"))
         {
             Alert::error('Proses Daftar Gagal!!', 'pasien belum di triase oleh dokter!');
             return back();
         }
-        if($antrian->isTriase->klasifikasi_pasien == 'PULANG')
+        if(!empty($antrian->isTriase) && $antrian->isTriase->klasifikasi_pasien == 'PULANG' && (mb_substr($antrian->no_antri, 0, 1) != "B"))
         {
             Alert::error('Proses Daftar Gagal!!', 'pasien di triase pulang!');
             return back();

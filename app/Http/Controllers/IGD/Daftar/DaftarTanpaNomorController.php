@@ -136,7 +136,7 @@ class DaftarTanpaNomorController extends Controller
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)
             ->count();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
         $tanggal        = now()->format('Y-m-d');
@@ -225,7 +225,7 @@ class DaftarTanpaNomorController extends Controller
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noMR            = $createKunjungan->no_rm;
-                $histories->noKartu         = $pasien->no_Bpjs;
+                $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
                 $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
                 $histories->user            = Auth::user()->name;

@@ -24,7 +24,8 @@
                 <div class="col-md-12 ">
                     <div class="card card-primary card-outline">
                         <div class="card-body">
-                            <form action="{{route('update.kunjungan', ['kunjungan'=> $kunjungan->kode_kunjungan])}}" id="formPendaftaranIGD" method="post">
+                            <form action="{{ route('update.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
+                                id="formPendaftaranIGD" method="post">
                                 @csrf
                                 @method('PUT')
                                 <div class="col-lg-12">
@@ -32,7 +33,8 @@
                                         <div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>Tanggal Masuk</label>
-                                                <input type="text" class="form-control" value="{{ Carbon\Carbon::parse($kunjungan->tgl_masuk)->format('Y-m-d') }}">
+                                                <input type="text" class="form-control"
+                                                    value="{{ Carbon\Carbon::parse($kunjungan->tgl_masuk)->format('Y-m-d') }}">
                                             </div>
                                             <div class="form-group">
                                                 <label for="exampleInputBorderWidth2">Perujuk
@@ -65,17 +67,21 @@
                                                         {{ $item->nama_penjamin }}</option>
                                                 @endforeach
                                             </x-adminlte-select>
-                                            <div class="form-group">
-                                                <label>Alasan Edit Data</label>
-                                                <textarea class="form-control" rows="3" placeholder="silahkan masukin alasan edit data ..."></textarea>
-                                            </div>
+                                            <x-adminlte-select name="alasan_edit" label="Alasan Edit Data">
+                                                <option value="">--Alasan Edit--</option>
+                                                @foreach ($alasanedit as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ $item->id == $kunjungan->id_alasan_edit ? 'selected' : '' }}>
+                                                        {{ $item->nama_alasan }}</option>
+                                                @endforeach
+                                            </x-adminlte-select>
                                         </div>
                                     </div>
                                     <x-adminlte-button type="submit"
-                                        class="withLoad btn-flat btn btn-sm m-1 bg-primary float-right" id="submitPasien"
+                                        class="withLoad  btn btn-sm m-1 bg-primary float-right" id="submitPasien"
                                         label="Simpan Data" />
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                                        class="btn btn-sm btn-flat btn-secondary float-right m-1 withLoad">kembali</a>
+                                        class="btn btn-sm  btn-secondary float-right m-1 withLoad">kembali</a>
                                 </div>
                             </form>
                         </div>

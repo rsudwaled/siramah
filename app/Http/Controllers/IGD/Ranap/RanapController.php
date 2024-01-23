@@ -27,38 +27,38 @@ class RanapController extends APIController
     // API FUNCTION
     public function signature()
     {
-        $cons_id = env('ANTRIAN_CONS_ID');
-        $secretKey = env('ANTRIAN_SECRET_KEY');
-        $userkey = env('ANTRIAN_USER_KEY');
+        $cons_id        = env('ANTRIAN_CONS_ID');
+        $secretKey      = env('ANTRIAN_SECRET_KEY');
+        $userkey        = env('ANTRIAN_USER_KEY');
         date_default_timezone_set('UTC');
-        $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
-        $signature = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
-        $encodedSignature = base64_encode($signature);
-        $data['user_key'] = $userkey;
-        $data['x-cons-id'] = $cons_id;
-        $data['x-timestamp'] = $tStamp;
-        $data['x-signature'] = $encodedSignature;
-        $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
+        $tStamp                 = strval(time() - strtotime('1970-01-01 00:00:00'));
+        $signature              = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
+        $encodedSignature       = base64_encode($signature);
+        $data['user_key']       = $userkey;
+        $data['x-cons-id']      = $cons_id;
+        $data['x-timestamp']    = $tStamp;
+        $data['x-signature']    = $encodedSignature;
+        $data['decrypt_key']    = $cons_id . $secretKey . $tStamp;
         return $data;
     }
 
     public static function stringDecrypt($key, $string)
     {
         $encrypt_method = 'AES-256-CBC';
-        $key_hash = hex2bin(hash('sha256', $key));
-        $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
-        $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
-        $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+        $key_hash       = hex2bin(hash('sha256', $key));
+        $iv             = substr(hex2bin(hash('sha256', $key)), 0, 16);
+        $output         = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+        $output         = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
         return $output;
     }
 
     public function response_decrypt($response, $signature)
     {
-        $code = json_decode($response->body())->metaData->code;
-        $message = json_decode($response->body())->metaData->message;
+        $code       = json_decode($response->body())->metaData->code;
+        $message    = json_decode($response->body())->metaData->message;
         if ($code == 200 || $code == 1) {
-            $response = json_decode($response->body())->response ?? null;
-            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response);
+            $response   = json_decode($response->body())->response ?? null;
+            $decrypt    = $this->stringDecrypt($signature['decrypt_key'], $response);
             $data = json_decode($decrypt);
             if ($code == 1) {
                 $code = 200;
@@ -71,9 +71,9 @@ class RanapController extends APIController
 
     public function response_no_decrypt($response)
     {
-        $code = json_decode($response->body())->metaData->code;
-        $message = json_decode($response->body())->metaData->message;
-        $response = json_decode($response->body())->metaData->response;
+        $code       = json_decode($response->body())->metaData->code;
+        $message    = json_decode($response->body())->metaData->message;
+        $response   = json_decode($response->body())->metaData->response;
         $response = [
             'response' => $response,
             'metadata' => [
@@ -141,7 +141,7 @@ class RanapController extends APIController
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
         $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
         $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $penjamin       = PenjaminSimrs::get();
         return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','kode'));
     }
@@ -245,18 +245,18 @@ class RanapController extends APIController
                 if ($createLH->save()) {
                     // create layanan detail
                     $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetkarc = substr($layanandet->id_layanan_detail, 9) + 1;
-                    $nomorlayanandetadm = substr($layanandet->id_layanan_detail, 9) + 2;
+                    $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
+                    $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
 
                     // create detail admn
                     $createAdm = new LayananDetail();
-                    $createAdm->id_layanan_detail   = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
-                    $createAdm->kode_layanan_header = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail   = $unit->kode_tarif_karcis;
-                    $createAdm->total_tarif         = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->jumlah_layanan      = 1;
-                    $createAdm->total_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->grantotal_layanan   = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+                    $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
+                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
+                    $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->jumlah_layanan          = 1;
+                    $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
                     $createAdm->status_layanan_detail   = 'OPN';
                     $createAdm->tgl_layanan_detail      = now();
                     $createAdm->tgl_layanan_detail_2    = now();
@@ -282,53 +282,35 @@ class RanapController extends APIController
         return redirect()->route('list-assesment.ranap');
     }
 
-    // public function ranapBPJS(Request $request)
-    // {
-    //     if ($request->no_kartu == null) {
-    //         Alert::error('Error!!', 'pasien tidak memiliki no bpjs');
-    //         return back();
-    //     }
-    //     $vlcaim                     = new VclaimController();
-    //     $request['nomorkartu']      = $request->no_kartu;
-    //     $request['tanggal']         = now()->format('Y-m-d');
-    //     $res                        = $vlcaim->peserta_nomorkartu($request);
-    //     $kodeKelas                  = $res->response->peserta->hakKelas->kode;
-    //     $kelas                      = $res->response->peserta->hakKelas->keterangan;
-    //     $refKunj                    = $request->kodeKunjungan;
-
-    //     $pasien         = Pasien::where('no_Bpjs', 'LIKE', '%' .$request->no_kartu. '%')->first();
-    //     $kunjungan      = Kunjungan::where('kode_kunjungan', $refKunj)->get();
-    //     $unit           = Unit::where('kelas_unit', 2)->get();
-    //     $poli           = Unit::whereNotNull('KDPOLI')->get();
-    //     $alasanmasuk    = AlasanMasuk::limit(10)->get();
-    //     $icd            = Icd10::limit(15)->get();
-    //     $penjamin       = PenjaminSimrs::get();
-    //     $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-    //     $spri           = Spri::where('noKartu', $request->no_kartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
-    //     return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli', 'refKunj', 'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis'));
-    // }
-
 
     public function daftarRanapBPJS(Request $request, $nomorkartu, $kode)
     {
-        $vlcaim                 = new VclaimController();
-        $request['nomorkartu']  = trim($nomorkartu);
-        $request['tanggal']     = now()->format('Y-m-d');
-        $res                    = $vlcaim->peserta_nomorkartu($request);
-        $kodeKelas              = $res->response->peserta->hakKelas->kode;
-        $kelas                  = $res->response->peserta->hakKelas->keterangan;
+        $tanggal        = now()->format('Y-m-d');
+        $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . trim($nomorkartu) . "/tglSEP/" . $tanggal;
+        $signature      = $this->signature();
+        $response       = Http::withHeaders($signature)->get($url);
+        $resdescrtipt   = $this->response_decrypt($response, $signature);
+       
+        if($resdescrtipt->metadata->code != 200)
+        {
+            Alert::error('INFORMASI BPJS!!', 'bermasalah pada : '.$resdescrtipt->metadata->message.' '.($resdescrtipt->metadata->code));
+            return back();
+        }
+        $kodeKelas      = $resdescrtipt->response->peserta->hakKelas->kode;
+        $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
 
         $pasien         = Pasien::where('no_Bpjs', 'LIKE', '%' .$nomorkartu. '%')->first();
-        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->get();
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->first();
         $unit           = Unit::where('kelas_unit', 2)->get();
         $poli           = Unit::whereNotNull('KDPOLI')->get();
-        $alasanmasuk    = AlasanMasuk::limit(10)->get();
+        $alasanmasuk    = AlasanMasuk::get();
         $icd            = Icd10::limit(15)->get();
         $penjamin       = PenjaminSimrs::get();
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         $spri           = Spri::where('noKartu', $nomorkartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
+        $historyBpjs    = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $kode);
         $kodeKunjungan  = $kode;
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan'));
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan','historyBpjs'));
     }
 
     public function daftarRanapBPJSStore(Request $request)
@@ -588,7 +570,7 @@ class RanapController extends APIController
         $data = [
             'request' => [
                 't_sep' => [
-                    'noKartu'   => $histories->noKartu,
+                    'noKartu'   => trim($histories->noKartu),
                     'tglSep'    => $histories->tglSep,
                     'ppkPelayanan'  => '1018R001',
                     'jnsPelayanan'  => $histories->jnsPelayanan,
@@ -650,7 +632,7 @@ class RanapController extends APIController
         ];
         $response = Http::withHeaders($signature)->post($url, $data);
         $callback = json_decode($response->body());
-        // dd($callback, $data);
+        
         if ($callback->metaData->code == 200) {
             $resdescrtipt   = $this->response_decrypt($response, $signature);
             $sep            = $resdescrtipt->response->sep->noSep;
@@ -679,7 +661,7 @@ class RanapController extends APIController
         $request['nomorkartu']  = $request->nomorkartu;
         $request['tanggal']     = now()->format('Y-m-d');
         $res                    = $vlcaim->peserta_nomorkartu($request);
-        // dd($request->all(), $pasienBayi, $res);
+        
         $kodeKelas      = $res->response->peserta->hakKelas->kode;
         $kelas          = $res->response->peserta->hakKelas->keterangan;
         $alasanmasuk    = AlasanMasuk::whereNotIn('id', [2,7, 3,13,9])->get();

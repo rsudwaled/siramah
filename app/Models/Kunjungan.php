@@ -32,12 +32,13 @@ class Kunjungan extends Model
         'diagx',
         'created_at',
         'keterangan2',
+        'lakalantas',
         'is_ranap_daftar',
         'form_send_by',
         'jp_daftar',
         'perujuk',
         'no_spri',
-        'alasan_edit',
+        'id_alasan_edit',
     ];
     protected $appends = ['rm_counter'];
     public function getRmCounterAttribute()
@@ -159,6 +160,10 @@ class Kunjungan extends Model
     public function diagnosaIGD()
     {
         return $this->belongsTo(Icd10::class, 'diagx', 'diag');
+    }
+    public function alasanEdit()
+    {
+        return $this->belongsTo(MtAlasanEdit::class, 'id_alasan_edit', 'id' );
     }
 
     // protected $appends = ['nama_pasien'];

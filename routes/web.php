@@ -51,6 +51,9 @@ use App\Http\Controllers\PatologiAnatomiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
+
+// rekam medis
+use App\Http\Controllers\RM\DiagnosaPolaPenyakitController as DiagnosaPolaPenyakit;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
@@ -373,6 +376,12 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
+    
+    // diagnosa pola penyakit
+    Route::get('rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatInap'])->name('diagnosa-pola-penyakit-rawat-inap');
+    Route::get('rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatJalan'])->name('diagnosa-pola-penyakit-rawat-jalan');
+    Route::get('Export/rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'exportExcel'])->name('diagnosa-pola-penyakit.export');
+    Route::get('Export/rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'exportExcelRajal'])->name('diagnosa-pola-penyakit-rajal.export');
     // mining pasien igd
     //HAPUS
     // Route::get('/mining-pasien', [App\Http\Controllers\KarcisAntrianIGDController::class, 'getPasienIGD'])->name('mining-pasien-igd');
@@ -518,10 +527,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/pasien-update', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'updatePasien'])->name('update-pasien.update');
 
     // pasien bayi
-    Route::get('/pasien-bayi/kunjungan-igk', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
+    Route::get('/pasien-bayi/kunjungan-kebidanan', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
     Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
     Route::get('/pasien-bayi/cari-data', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'cariBayi'])->name('pasien-bayi.cari');
     Route::get('/cari-detail-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiPerorangtua'])->name('detailbayi.byortu');
+    Route::get('/tambah/pasien-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formAddBayi'])->name('pasien-baru.bayi-baru');
+    Route::post('/store-bayi-baru', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formBayiStore'])->name('pasien-bayi.store-bayi');
     //RANAP BAYI
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
@@ -556,4 +567,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'detailKunjungan'])->name('detail.kunjungan');
     Route::get('/edit-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'editKunjungan'])->name('edit.kunjungan');
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
+    
+    // Pasien Kecelakaan
+    Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
 });
