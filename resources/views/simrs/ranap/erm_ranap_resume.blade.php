@@ -141,9 +141,9 @@
                         <div class="form-group">
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Tidak Diambil"
-                                    id="shktidak" name="pengambilan_shk"
+                                    id="shktidakx" name="pengambilan_shk"
                                     {{ $kunjungan->erm_ranap ? ($kunjungan->erm_ranap->pengambilan_shk == 'Tidak Diambil' ? 'checked' : null) : null }}>
-                                <label for="shktidak" class="custom-control-label">Tidak Diambil</label>
+                                <label for="shktidakx" class="custom-control-label">Tidak Diambil</label>
                             </div>
                             <div class="custom-control custom-radio">
                                 <input class="custom-control-input" type="radio" value="Vena" id="shkvena"
@@ -165,7 +165,15 @@
                     <x-adminlte-input-date name="tanggal_shk" label="Tgl Pengambilan SHK"
                         value="{{ $kunjungan->erm_ranap->tanggal_shk ?? null }}" igroup-size="sm" :config="$config"
                         fgroup-class="col-md-2" />
-                    <div class="col-md-4"></div>
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                    @endphp
+                    <x-adminlte-input-date name="intubasi" label="Ventilator Intubasi"
+                        value="{{ $kunjungan->erm_ranap->intubasi ?? null }}" igroup-size="sm" :config="$config"
+                        fgroup-class="col-md-2" />
+                    <x-adminlte-input-date name="extubasi" label="Ventilator Extubasi"
+                        value="{{ $kunjungan->erm_ranap->extubasi ?? null }}" igroup-size="sm" :config="$config"
+                        fgroup-class="col-md-2" />
                     <div class="col-md-4">
                         <hr>
                     </div>
@@ -188,9 +196,9 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="1"
+                                <x-adminlte-textarea name="icd10_utama" label="Diagnosa ICD-10" rows="1"
                                     igroup-size="sm" placeholder="Diagnosa ICD-10">
-                                    {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
+                                    {{ $kunjungan->erm_ranap->icd10_utama ?? null }}
                                 </x-adminlte-textarea>
                             </div>
                         </div>
@@ -202,9 +210,9 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="diagnosa_icd10" label="Diagnosa ICD-10" rows="6"
+                                <x-adminlte-textarea name="icd10_sekunder" label="Diagnosa ICD-10" rows="6"
                                     igroup-size="sm" placeholder="Diagnosa ICD-10">
-                                    {{ $kunjungan->erm_ranap->diagnosa_icd10 ?? null }}
+                                    {{ $kunjungan->erm_ranap->icd10_sekunder ?? null }}
                                 </x-adminlte-textarea>
                             </div>
                         </div>
@@ -218,14 +226,13 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9"
+                                <x-adminlte-textarea name="icd9_operasi" label="Tindakan Operasi ICD-9"
                                     rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
-                                    {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                                    {{ $kunjungan->erm_ranap->icd9_operasi ?? null }}
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-12">
                                 <div class="row">
-
                                     @php
                                         $config = ['format' => 'YYYY-MM-DD'];
                                     @endphp
@@ -252,9 +259,9 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="tindakan_icd9" label="Tindakan Operasi ICD-9"
+                                <x-adminlte-textarea name="icd9_prosedur" label="Tindakan Operasi ICD-9"
                                     rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
-                                    {{ $kunjungan->erm_ranap->tindakan_icd9 ?? null }}
+                                    {{ $kunjungan->erm_ranap->icd9_prosedur ?? null }}
                                 </x-adminlte-textarea>
                             </div>
                         </div>
@@ -350,9 +357,12 @@
                         <div class="form-group row">
                             <label for="tanggal_kontrol" class="col-sm-3 col-form-label">Tgl Kontrol</label>
                             <div class="col-sm-9 input-group input-group-sm">
-                                <input class="form-control" name="tanggal_kontrol" id="tanggal_kontrol"
-                                    value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}"
-                                    placeholder="Tgl Kontrol">
+                                @php
+                                    $config = ['format' => 'YYYY-MM-DD'];
+                                @endphp
+                                <x-adminlte-input-date name="tanggal_kontrol"
+                                    value="{{ $kunjungan->erm_ranap->tanggal_kontrol ?? null }}" igroup-size="sm"
+                                    :config="$config" />
                             </div>
                         </div>
                         <div class="form-group row">
