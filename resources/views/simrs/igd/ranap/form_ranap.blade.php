@@ -95,7 +95,7 @@
                                                     </b>
                                                 </td>
                                                 <td>{{ $item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}</td>
-                                                <td>{{ $item->penjamin->nama_penjamin_bpjs }}</td>
+                                                <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
                                                 <td>{{ $item->status->status_kunjungan }}</td>
                                                 <td>
                                                     <b>

@@ -117,12 +117,19 @@
                                                     class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
                                             @endif --}}
                                             @php
-                                                $nomorKartu = trim($ranap->noKartu);
+                                                if(empty($ranap->noKartu))
+                                                {
+                                                    $nomorKartu = null;
+                                                }else{
+                                                    $nomorKartu = trim($ranap->noKartu);
+                                                }
                                             @endphp
                                             <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
                                                 class="btn btn-xs btn-block btn-primary btn-flat mr-5">DAFTARKAN PASIEN UMUM</a>
+                                            @if (!empty($nomorKartu))
                                             <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $ranap->kunjungan]) }}"
                                                 class="btn btn-xs btn-block btn-success btn-flat mr-5 withLoad ">DAFTARKAN PASIEN BPJS</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

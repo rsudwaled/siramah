@@ -799,7 +799,7 @@ return [
                         [
                             'text' => 'Pola Penyakit Penderita Rawat Jalan',
                             'icon'    => 'fas fa-disease',
-                            'url'  => '/rawat-jalandiagnosa-pola-penyakit',
+                            'url'  => '/rawat-jalan/diagnosa-pola-penyakit',
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],

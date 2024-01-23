@@ -59,6 +59,7 @@
                                 <div class="col-md-4">
                                     <div class="row mt-4 float-right">
                                         <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1" id="diagnosa_pola"
+                                        onclick="javascript: form.action='{{ route('diagnosa-pola-penyakit-rawat-inap') }}';"
                                             theme="primary" label="Lihat Data" />
                                         <x-adminlte-button type="submit" label="Excel" class="bg-purple btn btn-sm m-1" target="_blank"
                                         onclick="javascript: form.action='{{ route('diagnosa-pola-penyakit.export') }}';" />
@@ -116,8 +117,15 @@
                                             <td>{{ round($item->persen, 2) }} %</td>
                                         </tr>
                                     @endforeach
+                                    
                                 </tbody>
-
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="2">Total</td>
+                                        <td >{{$diagnosa->sum($item->KB)}}</td>
+                                        <td >{{$diagnosa->sum($item->KB)}}</td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </section>
@@ -130,7 +138,7 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
-@section('plugins.TempusDominusBs4', true)
+@section('plugins.TempusDominusBs4', false)
 
 @section('js')
     <script>
@@ -138,18 +146,18 @@
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-        $(document).on('click', '#diagnosa_pola', function(e) {
-            $.LoadingOverlay("show");
-            var data = $('#formFilter').serialize();
-            var url = "{{ route('diagnosa-pola-penyakit-rawat-inap') }}?" + data;
-            window.location = url;
-            $.ajax({
-                data: data,
-                url: url,
-                type: "GET",
+        // $(document).on('click', '#diagnosa_pola', function(e) {
+        //     $.LoadingOverlay("show");
+        //     var data = $('#formFilter').serialize();
+        //     var url = "{{ route('diagnosa-pola-penyakit-rawat-inap') }}?" + data;
+        //     window.location = url;
+        //     $.ajax({
+        //         data: data,
+        //         url: url,
+        //         type: "GET",
 
-            });
-        });
+        //     });
+        // });
       
     </script>
 @endsection

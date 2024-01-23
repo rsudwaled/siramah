@@ -83,6 +83,7 @@ class DiagnosaPolaPenyakitController extends Controller
             }
             
             $diagnosa = collect($diagnosa);
+            dd($diagnosa);
         }
         
         return view('simrs.diagnosa_pola_penyakit.rawat_jalan', compact('diagnosa','request'));

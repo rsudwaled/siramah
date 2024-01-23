@@ -259,9 +259,16 @@ class DaftarIGDController extends Controller
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
             }
 
-            $tarif_karcis       = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
-            $tarif_adm          = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
-            $total_bayar_k_a    = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+            $tarif_karcis           = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
+            $tarif_adm              = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
+            $total_bayar_k_a        = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+            
+            // create layanan detail
+            $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+            $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
+            $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
+
+
             // create layanan header
             $createLH = new Layanan();
             $createLH->kode_layanan_header  = $kodelayanan;
@@ -282,11 +289,7 @@ class DaftarIGDController extends Controller
                 }
 
                 if ($createLH->save()) {
-                    // create layanan detail
-                    $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
-                    $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
-
+                    
                     // create detail karcis
                     $createKarcis = new LayananDetail();
                     $createKarcis->id_layanan_detail        = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
@@ -306,15 +309,15 @@ class DaftarIGDController extends Controller
                         $createKarcis->tagihan_penjamin = $total_bayar_k_a;
                     }
                     if ($createKarcis->save()) {
-                        // create detail karcis
+                        // create detail admin
                         $createAdm = new LayananDetail();
                         $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                         $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                        $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
-                        $createAdm->total_tarif             = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
+                        $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
                         $createAdm->jumlah_layanan          = 1;
-                        $createAdm->total_layanan           = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                        $createAdm->grantotal_layanan       = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
+                        $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
                         $createAdm->status_layanan_detail   = 'OPN';
                         $createAdm->tgl_layanan_detail      = now();
                         $createAdm->tgl_layanan_detail_2    = now();

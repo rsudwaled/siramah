@@ -244,15 +244,14 @@ class RanapController extends APIController
                 // header create
                 if ($createLH->save()) {
                     // create layanan detail
-                    $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
+                    $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
                     $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
 
                     // create detail admn
                     $createAdm = new LayananDetail();
                     $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                     $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
+                    $createAdm->kode_tarif_detail       = $kodeTarifDetail;
                     $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
                     $createAdm->jumlah_layanan          = 1;
                     $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
@@ -448,14 +447,13 @@ class RanapController extends APIController
                 if ($createLH->save()) {
                     // create layanan detail
                     $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
                     $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
 
                     // create detail admn
                     $createAdm = new LayananDetail();
                     $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                     $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
+                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
                     $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
                     $createAdm->jumlah_layanan          = 1;
                     $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;

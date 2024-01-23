@@ -14,27 +14,26 @@ class PasienKecelakaanController extends Controller
 {
     public function index(Request $request)
     {
-        // if($request->rm==null && $request->nama==null && $request->nomorkartu==null && $request->nik==null)
-        // {
-        //     Alert::info('INFORMASI!!', 'silahkan masukan pencarian berdasarkan data yang ada!');
-        //     return back();
-        // }
-
-        $query = Pasien::orderBy('no_rm','desc');
-        if ($request->rm && !empty($request->rm)) {
-            $query->where('no_rm', $request->rm);
-        }
-        if ($request->nama && !empty($request->nama)) {
-            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%');
-        }
-        if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $query->where('no_Bpjs', $request->nomorkartu);
-        }
-        if($request->nik && !empty($request->nik))
+        $pasien = null;
+        if(!empty($request->rm) || !empty($request->nama) ||  !empty($request->nomorkartu) || !empty($request->nik))
         {
-            $query->where('nik_bpjs', $request->nik);
+            $query = Pasien::query();
+            if ($request->rm && !empty($request->rm)) {
+                $query->where('no_rm', $request->rm);
+            }
+            if ($request->nama && !empty($request->nama)) {
+                $query->where('nama_px', 'LIKE', '%' . $request->nama . '%');
+            }
+            if ($request->nomorkartu && !empty($request->nomorkartu)) {
+                $query->where('no_Bpjs', $request->nomorkartu);
+            }
+            if($request->nik && !empty($request->nik))
+            {
+                $query->where('nik_bpjs', $request->nik);
+            }
+            $pasien = $query->get();
         }
-        $pasien = $query->get();
+       
         return view('simrs.igd.pasien_kecelakaan.index', compact('request','pasien'));
     }
 
