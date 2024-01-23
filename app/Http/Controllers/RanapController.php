@@ -97,6 +97,7 @@ class RanapController extends APIController
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
+
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
@@ -298,6 +299,9 @@ class RanapController extends APIController
             ->where('counter', $kunjungan->counter)
             ->get();
         $obat = [];
+        $tglmasuk = Carbon::parse($kunjungans->first()->tgl_masuk)->startOfDay();
+        $tglpulang = Carbon::parse($kunjungan->tgl_keluar)->endOfDay() ?? now();
+        $lama_rawat = $tglmasuk->diffInDays($tglpulang);
         foreach ($kunjungans as $kjg) {
             foreach ($kjg->layanans as  $lynan) {
                 if ($lynan->unit->kelas_unit == 4) {
@@ -308,7 +312,7 @@ class RanapController extends APIController
                                 'grantotal_layanan' => $laydet->grantotal_layanan,
                                 'kode_dokter1' => $laydet->kode_dokter1,
                                 'kode_barang' => $laydet->kode_barang,
-                                'nama_barang' => $laydet->barang->nama_barang,
+                                'nama_barang' => $laydet->barang->nama_barang ?? '-',
                                 'aturan_pakai' => $laydet->aturan_pakai,
                                 'kategori_resep' => $laydet->kategori_resep,
                                 'satuan_barang' => $laydet->satuan_barang,
@@ -328,6 +332,7 @@ class RanapController extends APIController
             'kunjungan',
             'kunjungans',
             'erm',
+            'lama_rawat',
             'obat',
             'obat2',
             'pasien',
