@@ -13,26 +13,27 @@ class DiagnosaPolaPenyakitController extends Controller
 {
     public function diagnosaPenyakitRawatInap(Request $request)
     {
-        $first = $request->first;
-        $last = $request->last;
-        $diagnosa = null;
+        $first      = $request->first;
+        $last       = $request->last;
+        $range_umur = $request->data_umur; 
+        $diagnosa   = null;
         if ($first && $last) {
-            if($request->data_umur =='k1') {
+            if($range_umur =='k1') {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_KR_1_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr1_4')
+            elseif($range_umur =='umr1_4')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_1_4_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr5_14')
+            elseif($range_umur =='umr5_14')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_5_14_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr15_44')
+            elseif($range_umur =='umr15_44')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_15_44_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr45_75lb')
+            elseif($range_umur =='umr45_75lb')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_45_75_TH ('$first','$last')");
             }
@@ -43,30 +44,31 @@ class DiagnosaPolaPenyakitController extends Controller
             $diagnosa = collect($diagnosa);
         }
         
-        return view('simrs.diagnosa_pola_penyakit.rawat_inap', compact('diagnosa','request','first','last'));
+        return view('simrs.diagnosa_pola_penyakit.rawat_inap', compact('range_umur','diagnosa','request','first','last'));
     }
     public function diagnosaPenyakitRawatJalan(Request $request)
     {
-        $first = $request->first;
-        $last = $request->last;
-        $diagnosa = null;
+        $first      = $request->first;
+        $last       = $request->last;
+        $range_umur = $request->data_umur; 
+        $diagnosa   = null;
         if ($first && $last) {
-            if($request->data_umur =='k1') {
+            if($range_umur =='k1') {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_KR_1_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr1_4')
+            elseif($range_umur =='umr1_4')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_1_4_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr5_14')
+            elseif($range_umur =='umr5_14')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_5_14_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr15_44')
+            elseif($range_umur =='umr15_44')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_15_44_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr45_75lb')
+            elseif($range_umur =='umr45_75lb')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_45_75_TH ('$first','$last')");
             }
@@ -78,7 +80,7 @@ class DiagnosaPolaPenyakitController extends Controller
             $diagnosa = collect($diagnosa);
         }
         
-        return view('simrs.diagnosa_pola_penyakit.rawat_jalan', compact('diagnosa','request','first','last'));
+        return view('simrs.diagnosa_pola_penyakit.rawat_jalan', compact('range_umur','diagnosa','request','first','last'));
     }
 
     public function exportExcel(Request $request)
@@ -88,8 +90,33 @@ class DiagnosaPolaPenyakitController extends Controller
             Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
             return back();
         }
-
-        $namaFile = 'Laporan_Diagnosa_Pola_Penyakit_Ranap'.$request->first.'_s.d_'.$request->last.'.xlsx';
+        $range_umur = $request->data_umur;
+        $umur       = null; 
+        if($range_umur =='k1') 
+        {
+            $umur = 'Kurang_Dari_1_Tahun';
+        }
+        elseif($range_umur =='umr1_4')
+        {
+            $umur = 'umur_1_sampai_4_Tahun';
+        }
+        elseif($range_umur =='umr5_14')
+        {
+            $umur = 'umur_5_sampai_14_Tahun';
+        }
+        elseif($range_umur =='umr15_44')
+        {
+            $umur = 'umur_15_sampai_44_Tahun';
+        }
+        elseif($range_umur =='umr45_75lb')
+        {
+            $umur = 'umur_45_sampai_lebih_dari_75_Tahun';
+        }
+        else
+        {
+            $umur = 'semua_umur';
+        }
+        $namaFile = 'Laporan_Diagnosa_Pola_Penyakit_Ranap'.$request->first.'_s.d_'.$request->last.'_'.$umur.'.xlsx';
         return Excel::download(new DiagnosaPenyakitExport($request), $namaFile);
     }
     public function exportExcelRajal(Request $request)
@@ -99,8 +126,33 @@ class DiagnosaPolaPenyakitController extends Controller
             Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
             return back();
         }
-
-        $namaFile = 'Laporan_Diagnosa_Pola_Penyakit_Rajal'.$request->first.'_s.d_'.$request->last.'.xlsx';
+        $range_umur = $request->data_umur;
+        $umur       = null; 
+        if($range_umur =='k1') 
+        {
+            $umur = 'Kurang_Dari_1_Tahun';
+        }
+        elseif($range_umur =='umr1_4')
+        {
+            $umur = 'umur_1_sampai_4_Tahun';
+        }
+        elseif($range_umur =='umr5_14')
+        {
+            $umur = 'umur_5_sampai_14_Tahun';
+        }
+        elseif($range_umur =='umr15_44')
+        {
+            $umur = 'umur_15_sampai_44_Tahun';
+        }
+        elseif($range_umur =='umr45_75lb')
+        {
+            $umur = 'umur_45_sampai_lebih_dari_75_Tahun';
+        }
+        else
+        {
+            $umur = 'semua_umur';
+        }
+        $namaFile = 'Laporan_Diagnosa_Pola_Penyakit_Rajal'.$request->first.'_s.d_'.$request->last.'_'.$umur.'.xlsx';
         return Excel::download(new DiagnosaPenyakitRajalExport($request), $namaFile);
     }
 }
