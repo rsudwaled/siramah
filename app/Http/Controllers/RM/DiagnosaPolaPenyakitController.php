@@ -32,13 +32,9 @@ class DiagnosaPolaPenyakitController extends Controller
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_15_44_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr45_75')
+            elseif($request->data_umur =='umr45_75lb')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_45_75_TH ('$first','$last')");
-            }
-            elseif($request->data_umur =='lb75')
-            {
-                $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_iNAP_UMUR_LB_75_TH ('$first','$last')");
             }
             else{
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_SEMUA_UMUR ('$first','$last')");
@@ -47,7 +43,7 @@ class DiagnosaPolaPenyakitController extends Controller
             $diagnosa = collect($diagnosa);
         }
         
-        return view('simrs.diagnosa_pola_penyakit.rawat_inap', compact('diagnosa','request'));
+        return view('simrs.diagnosa_pola_penyakit.rawat_inap', compact('diagnosa','request','first','last'));
     }
     public function diagnosaPenyakitRawatJalan(Request $request)
     {
@@ -70,23 +66,19 @@ class DiagnosaPolaPenyakitController extends Controller
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_15_44_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='umr45_75')
+            elseif($request->data_umur =='umr45_75lb')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_45_75_TH ('$first','$last')");
             }
-            elseif($request->data_umur =='lb75')
-            {
-                $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_LB_75_TH ('$first','$last')");
-            }
+           
             else{
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_SEMUA_UMUR ('$first','$last')");
             }
             
             $diagnosa = collect($diagnosa);
-            dd($diagnosa);
         }
         
-        return view('simrs.diagnosa_pola_penyakit.rawat_jalan', compact('diagnosa','request'));
+        return view('simrs.diagnosa_pola_penyakit.rawat_jalan', compact('diagnosa','request','first','last'));
     }
 
     public function exportExcel(Request $request)

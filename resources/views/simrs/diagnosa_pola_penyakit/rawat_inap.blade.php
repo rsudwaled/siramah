@@ -25,7 +25,7 @@
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="first" id="from" label="Tanggal Mulai" :config="$config"
-                                {{-- value="{{ $from == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $from }}"> --}} value="2022-01-01">
+                                value="{{ $first == null ? \Carbon\Carbon::parse($request->first)->format('Y-m-d') : $first }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-calendar-alt"></i>
@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <x-adminlte-input-date name="last" id="to" label="Tanggal Selesai"
-                                        :config="$config" {{-- value="{{ $to == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $to }}"> --}} value="2023-01-01">
+                                        :config="$config" value="{{ $last == null ? \Carbon\Carbon::parse($request->last)->format('Y-m-d') : $last }}">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
                                                 <i class="fas fa-calendar-alt"></i>
@@ -52,8 +52,7 @@
                                             <option value="umr1_4" {{$request->data_umur=='umr1_4'?'selected':''}}>1 - 4 TAHUN</option>
                                             <option value="umr5_14"  {{$request->data_umur=='umr5_14'?'selected':''}}>5 - 14 TAHUN</option>
                                             <option value="umr15_44"  {{$request->data_umur=='umr15_44'?'selected':''}}>15 - 44 TAHUN</option>
-                                            <option value="umr45_75"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - 75 TAHUN</option>
-                                            <option value="lb75"  {{$request->data_umur=='lb75'?'selected':''}}> > 75 TAHUN</option>
+                                            <option value="umr45_75lb"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - > 75 TAHUN</option>
                                         </x-adminlte-select>
                                 </div>
                                 <div class="col-md-4">
@@ -117,15 +116,7 @@
                                             <td>{{ round($item->persen, 2) }} %</td>
                                         </tr>
                                     @endforeach
-                                    
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <td colspan="2">Total</td>
-                                        <td >{{$diagnosa->sum($item->KB)}}</td>
-                                        <td >{{$diagnosa->sum($item->KB)}}</td>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
                     </section>
@@ -138,7 +129,7 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.DatatablesPlugins', true)
-@section('plugins.TempusDominusBs4', false)
+@section('plugins.TempusDominusBs4', true)
 
 @section('js')
     <script>

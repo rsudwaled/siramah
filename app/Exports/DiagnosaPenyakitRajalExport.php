@@ -29,17 +29,15 @@ class DiagnosaPenyakitRajalExport implements FromView
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_15_44_TH ('$first','$last')");
             }
-            elseif($diag_umr =='umr45_75')
+            elseif($diag_umr =='umr45_75lb')
             {
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_45_75_TH ('$first','$last')");
             }
-            elseif($diag_umr =='lb75')
-            {
-                $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_UMUR_LB_75_TH ('$first','$last')");
-            }
+           
             else{
                 $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_JALAN_SEMUA_UMUR ('$first','$last')");
             }
+            $diagnosa = collect($diagnosa);
             
         }
         

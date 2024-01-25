@@ -570,4 +570,6 @@ Route::middleware('auth')->group(function () {
     
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
+    Route::get('/create/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'create'])->name('pasien-kecelakaan.create');
+    Route::post('/store/pasien-kecelakaan-store', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'store'])->name('pasien-kecelakaan.store');
 });

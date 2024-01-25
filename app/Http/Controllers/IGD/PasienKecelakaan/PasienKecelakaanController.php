@@ -37,11 +37,17 @@ class PasienKecelakaanController extends Controller
         return view('simrs.igd.pasien_kecelakaan.index', compact('request','pasien'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $pasien         = Pasien::firstWhere('no_rm', $request->rm);
         $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
-        return view('simrs.igd.pasien_kecelakaan.create', compact('alasanmasuk','paramedis','penjamin'));
+        return view('simrs.igd.pasien_kecelakaan.create', compact('alasanmasuk','paramedis','penjamin','pasien'));
+    }
+
+    public function store(Request $request)
+    {
+        dd($request->all());
     }
 }

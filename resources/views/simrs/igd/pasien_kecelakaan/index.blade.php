@@ -105,7 +105,7 @@
                                                 {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : (($data->desa == null ? 'Desa: -':'Desa. '.$data->desas->nama_desa_kelurahan ). ($data->kecamatan==null?'Kec. ':' , Kec. ' . $data->kecamatans->nama_kecamatan ). ($data->kabupaten==null?'Kab. ':' - Kab. ' . $data->kabupatens->nama_kabupaten_kota)) }}</small>
                                         </td>
                                         <td>
-                                            <a href="#" class="btn btn-xs btn-primary withLoad">daftarkan</a>
+                                            <a href="{{route('pasien-kecelakaan.create',['rm'=>$data->no_rm])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                         </td>
                                     </tr>
                                 @endforeach
