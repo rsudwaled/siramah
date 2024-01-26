@@ -197,6 +197,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('monitoring_resume_ranap', [RanapController::class, 'monitoring_resume_ranap'])->name('monitoring_resume_ranap');
     Route::get('lihat_resume_ranap', [RanapController::class, 'lihat_resume_ranap'])->name('lihat_resume_ranap');
+    Route::post('ttd_dokter_resume_ranap', [RanapController::class, 'ttd_dokter_resume_ranap'])->name('ttd_dokter_resume_ranap');
+    Route::post('ttd_pasien_resume_ranap', [RanapController::class, 'ttd_pasien_resume_ranap'])->name('ttd_pasien_resume_ranap');
     Route::post('simpan_resume_ranap', [RanapController::class, 'simpan_resume_ranap'])->name('simpan_resume_ranap');
     Route::get('verif_resume_ranap', [RanapController::class, 'verif_resume_ranap'])->name('verif_resume_ranap');
     Route::get('print_resume_ranap', [RanapController::class, 'print_resume_ranap'])->name('print_resume_ranap');
@@ -376,7 +378,7 @@ Route::middleware('auth')->group(function () {
     Route::post('kebutuhan-jurusan-add', [KebutuhanJurusanController::class, 'kebutuhanJurusanAdd'])->name('data-jurusan.add');
     Route::get('kebutuhan-jurusan/{id}/edit', [KebutuhanJurusanController::class, 'editKebutuhan'])->name('data-kebutuhan.edit');
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
-    
+
     // diagnosa pola penyakit
     Route::get('rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatInap'])->name('diagnosa-pola-penyakit-rawat-inap');
     Route::get('rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatJalan'])->name('diagnosa-pola-penyakit-rawat-jalan');
@@ -567,7 +569,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'detailKunjungan'])->name('detail.kunjungan');
     Route::get('/edit-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'editKunjungan'])->name('edit.kunjungan');
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
-    
+
     // Pasien Kecelakaan
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
     Route::get('detail/pasien-kecelakaan/{kunjungan}', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'detailPasienKecelakaan'])->name('pasien-kecelakaan.detail');

@@ -488,7 +488,7 @@
     <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
     {{-- toast --}}
     <script>
-        const Toast = Swal.mixin({
+        var Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
@@ -1939,6 +1939,39 @@
                 $.LoadingOverlay("hide");
             });
             $.LoadingOverlay("hide");
+        }
+    </script>
+    {{-- ttd --}}
+    <script>
+        function btnttdDokter() {
+            $.LoadingOverlay("show");
+            $('#formttd').attr('action', "{{ route('ttd_dokter_resume_ranap') }}");
+            $('#modalttd').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function btnttdPasien() {
+            $.LoadingOverlay("show");
+            $('#formttd').attr('action', "{{ route('ttd_pasien_resume_ranap') }}");
+            $('#modalttd').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function simpanttd() {
+            // var wrapper = document.getElementById("signature-pad");
+            // var canvas = wrapper.querySelector("canvas");
+            // var signaturePad = new SignaturePad(canvas);
+            // if (signaturePad.isEmpty()) {
+            //     alert("Please provide a signature first.");
+            // } else {
+            //     const dataURL = signaturePad.toDataURL("image/jpeg");
+            //     download(dataURL, "signature.jpg");
+            // }
+            var canvas = document.getElementById("signature-pad");
+            var baseimage = canvas.toDataURL();
+            $('#ttd_image64').val(baseimage);
+            $("#formttd").submit();
+            alert('test');
         }
     </script>
     {{-- observasi --}}

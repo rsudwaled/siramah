@@ -12,6 +12,7 @@ use App\Models\ErmRanapPerkembangan;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\TagihanPasien;
+use App\Models\TtdDokter;
 use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -97,6 +98,7 @@ class RanapController extends APIController
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
+
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
@@ -298,6 +300,9 @@ class RanapController extends APIController
             ->where('counter', $kunjungan->counter)
             ->get();
         $obat = [];
+        $tglmasuk = Carbon::parse($kunjungans->first()->tgl_masuk)->startOfDay();
+        $tglpulang = Carbon::parse($kunjungan->tgl_keluar)->endOfDay() ?? now();
+        $lama_rawat = $tglmasuk->diffInDays($tglpulang);
         foreach ($kunjungans as $kjg) {
             foreach ($kjg->layanans as  $lynan) {
                 if ($lynan->unit->kelas_unit == 4) {
@@ -308,7 +313,7 @@ class RanapController extends APIController
                                 'grantotal_layanan' => $laydet->grantotal_layanan,
                                 'kode_dokter1' => $laydet->kode_dokter1,
                                 'kode_barang' => $laydet->kode_barang,
-                                'nama_barang' => $laydet->barang->nama_barang,
+                                'nama_barang' => $laydet->barang->nama_barang ?? '-',
                                 'aturan_pakai' => $laydet->aturan_pakai,
                                 'kategori_resep' => $laydet->kategori_resep,
                                 'satuan_barang' => $laydet->satuan_barang,
@@ -318,16 +323,12 @@ class RanapController extends APIController
                 }
             }
         }
-
         $obat2 = array_chunk($obat, count($obat) / 2);
-
-        // dd(count($obat), $obat2);
-
-        // dd($obat);
-        return view('simrs.ranap.test_print_resume', compact([
+        return view('simrs.ranap.print_resume_ranap', compact([
             'kunjungan',
             'kunjungans',
             'erm',
+            'lama_rawat',
             'obat',
             'obat2',
             'pasien',
@@ -395,6 +396,46 @@ class RanapController extends APIController
             $request->all()
         );
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Disimpan');
+        return redirect()->back();
+    }
+    public function ttd_dokter_resume_ranap(Request $request)
+    {
+        $now = now();
+        $request['time'] = $now->timestamp;
+        $resume  = ErmRanap::where('kode_kunjungan', $request->kode_kunjungan)->first();
+        if ($resume) {
+            if ($resume->ttd_dokter) {
+                $ttd = TtdDokter::find($resume->ttd_dokter);
+                $ttd->update($request->all());
+            } else {
+                $ttd = TtdDokter::create($request->all());
+            }
+            $resume->update([
+                'ttd_dokter' => $ttd->id,
+                'waktu_ttd_dokter' =>  $now,
+            ]);
+        }
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Di Tanda Tangani');
+        return redirect()->back();
+    }
+    public function ttd_pasien_resume_ranap(Request $request)
+    {
+        $now = now();
+        $request['time'] = $now->timestamp;
+        $resume  = ErmRanap::where('kode_kunjungan', $request->kode_kunjungan)->first();
+        if ($resume) {
+            if ($resume->ttd_keluarga) {
+                $ttd = TtdDokter::find($resume->ttd_keluarga);
+                $ttd->update($request->all());
+            } else {
+                $ttd = TtdDokter::create($request->all());
+            }
+            $resume->update([
+                'ttd_keluarga' => $ttd->id,
+                'waktu_ttd_keluarga' =>  $now,
+            ]);
+        }
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Di Tanda Tangani');
         return redirect()->back();
     }
     public function verif_resume_ranap(Request $request)

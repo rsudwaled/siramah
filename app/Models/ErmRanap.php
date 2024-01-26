@@ -20,4 +20,12 @@ class ErmRanap extends Model
     {
         return $this->hasOne(Pasien::class, 'no_rm', 'norm');
     }
+    public function ttddokter()
+    {
+        return $this->hasOne(TtdDokter::class,  'id', 'ttd_dokter');
+    }
+    public function ttdkeluarga()
+    {
+        return $this->hasOne(TtdDokter::class,  'id', 'ttd_keluarga');
+    }
 }

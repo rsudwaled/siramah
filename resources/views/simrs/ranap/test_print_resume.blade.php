@@ -147,15 +147,10 @@
                         {{ $kunjungans->first()->tgl_masuk ? Carbon\Carbon::parse($kunjungans->first()->tgl_masuk)->format('d F Y H:m:s') : '-' }}
                         <br>
                         <b>Tanggal Keluar : </b>
-                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungans->first()->tgl_keluar)->format('d F Y H:m:s') : '-' }}
+                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungan->tgl_keluar)->format('d F Y H:m:s') : '-' }}
                         <br>
                         <b>Lama Rawat : </b>
-                        @if ($kunjungan->tgl_keluar)
-                            {{ Carbon\Carbon::parse($kunjungans->first()->tgl_keluar)->diffInDays($kunjungans->first()->tgl_masuk) }}
-                            hari
-                        @else
-                            .... hari
-                        @endif
+                        {{ $lama_rawat }} hari
                     </div>
                     {{-- <div class="col-md-4"></div> --}}
                     <div class="col-md-4">
@@ -195,6 +190,10 @@
                 <pre>{{ $kunjungan->erm_ranap->catatan_penunjang ?? '....' }}</pre>
             </div>
             <div class="col-md-12  border border-dark">
+                <b>Hasil Konsultasi : </b><br>
+                <pre>{{ $kunjungan->erm_ranap->hasil_konsultasi ?? '....' }}</pre>
+            </div>
+            <div class="col-md-12  border border-dark">
                 <b>Pemeriksaan SHK : </b> &emsp;
                 Dilakukan :
                 @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pemeriksaan_shk == 'Ya' : null)
@@ -220,13 +219,9 @@
                 @endif&emsp;
                 Tgl Pengambilan :
                 @if ($kunjungan->erm_ranap)
-                    {{ \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') ?? '....' }}
+                    {{ $kunjungan->erm_ranap->tanggal_shk ? \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') : '....' }}
                 @endif
                 &emsp;
-            </div>
-            <div class="col-md-12  border border-dark">
-                <b>Hasil Konsultasi : </b><br>
-                <pre>{{ $kunjungan->erm_ranap->hasil_konsultasi ?? '....' }}</pre>
             </div>
             <div class="col-md-12  border border-dark">
                 <b>Diagnosa Masuk : </b><br>
@@ -240,6 +235,7 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
+                        <pre>{{ $kunjungan->erm_ranap->icd10_utama ?? '' }}</pre>
                     </div>
                 </div>
             </div>
@@ -247,10 +243,11 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Diagnosa Sekunder : </b><br>
-                        <pre>{{ $kunjungan->erm_ranap->diagnosa_sekunder ?? '....' }}</pre>
+                        <pre>{{ $kunjungan->erm_ranap->diagnosa_sekunder ?? '' }}</pre>
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
+                        <pre>{{ $kunjungan->erm_ranap->icd10_sekunder ?? '' }}</pre>
                     </div>
                 </div>
             </div>
@@ -262,6 +259,7 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
+                        <pre>{{ $kunjungan->erm_ranap->icd9_operasi ?? '-' }}</pre>
                     </div>
                 </div>
             </div>
@@ -278,14 +276,14 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->tindakan_icd9 ?? '-' }}</pre>
+                        <pre>{{ $kunjungan->erm_ranap->icd9_prosedur ?? '-' }}</pre>
                     </div>
                 </div>
             </div>
             <div class="col-md-12  border border-dark">
                 <b>Pasang Ventilator</b>&emsp;
-                <b>Waktu Intubasi : </b> .... WIB&emsp;
-                <b>Waktu Extubasi : </b> .... WIB&emsp;
+                <b>Waktu Intubasi : </b> {{ $kunjungan->erm_ranap->intubasi ?? '....' }} WIB&emsp;
+                <b>Waktu Extubasi : </b> {{ $kunjungan->erm_ranap->extubasi ?? '....' }} WIB&emsp;
             </div>
         </div>
         <div class="footer">Halaman 1 Dari 2 | Resume Rawat Inap {{ $pasien->no_rm }} {{ $pasien->nama_px }}</div>
@@ -359,7 +357,7 @@
                 @else
                     &#x25A2; Meninggal
                 @endif <br>
-                <pre>{{ $kunjungan->erm_ranap->cara_pulang_text ?? '....' }}</pre>
+                <pre>{{ $kunjungan->erm_ranap->cara_pulang_text ?? '' }}</pre>
             </div>
             <div class="col-md-4  border border-dark">
                 <b>Kondisi Pulang :</b><br>
@@ -371,7 +369,7 @@
                 <b>Nadi :</b> {{ $kunjungan->erm_ranap->denyut_nadi ?? '....' }}<br>
             </div>
             <div class="col-md-4  border border-dark">
-                <b>Cara Keluar :</b><br>
+                <b>Pengobatan Dilanjutkan :</b><br>
                 @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengobatan_lanjutan == 'Poliklinik RSUD Waled' : null)
                     &#x1F5F9; Poliklinik RSUD Waled
                 @else
@@ -392,7 +390,7 @@
                 @else
                     &#x25A2; Dokter Praktek
                 @endif <br>
-                <pre>{{ $kunjungan->erm_ranap->pengobatan_lanjutan_text ?? '....' }}</pre>
+                <pre>{{ $kunjungan->erm_ranap->pengobatan_lanjutan_text ?? '' }}</pre>
             </div>
             <div class="col-md-6  border border-dark">
                 <b>Instruksi Pulang :</b><br>

@@ -761,7 +761,6 @@ return [
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],
-                        
                     ]
                 ],
                 [
