@@ -262,6 +262,9 @@
                                         <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
                                         from="formPendaftaranIGD" label="Simpan" />
                                         @endif
+                                    @else
+                                    <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                        from="formPendaftaranIGD" label="Simpan" />
                                     @endif
                                 @else
                                     <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"

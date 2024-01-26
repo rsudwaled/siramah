@@ -15,14 +15,14 @@ class LaporanSurvailansRajalExport implements FromView, WithDrawings, ShouldAuto
 {
     public function view():View
     {
-        $from = request()->input('dari') ;
-        $to = request()->input('sampai') ;
-        $p1 = Carbon::parse($from);
-        $p2 = Carbon::parse($to);
-        $th = $p2->year;
-        $periode = $p1->day."-".$p2->day." ".$p2->monthName;
-        $lds = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_SURVAILANS_TERPADU_RAWAT_JALAN`('$from','$to')");
-        $sumLds = collect($lds);
+        $from       = request()->input('dari') ;
+        $to         = request()->input('sampai') ;
+        $p1         = Carbon::parse($from);
+        $p2         = Carbon::parse($to);
+        $th         = $p2->year;
+        $periode    = $p1->day."-".$p2->day." ".$p2->monthName;
+        $lds        = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_SURVAILANS_TERPADU_RAWAT_JALAN`('$from','$to')");
+        $sumLds     = collect($lds);
         return view('export.laporan.lap_diag_survailans_rajal', compact('lds','sumLds','periode','th'));
     }
 

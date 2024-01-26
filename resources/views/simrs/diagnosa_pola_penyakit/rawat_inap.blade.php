@@ -25,7 +25,7 @@
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="first" id="from" label="Tanggal Mulai" :config="$config"
-                                {{-- value="{{ $from == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $from }}"> --}} value="2022-01-01">
+                                value="{{ $first == null ? \Carbon\Carbon::parse($request->first)->format('Y-m-d') : $first }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-calendar-alt"></i>
@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <x-adminlte-input-date name="last" id="to" label="Tanggal Selesai"
-                                        :config="$config" {{-- value="{{ $to == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $to }}"> --}} value="2023-01-01">
+                                        :config="$config" value="{{ $last == null ? \Carbon\Carbon::parse($request->last)->format('Y-m-d') : $last }}">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
                                                 <i class="fas fa-calendar-alt"></i>
@@ -52,13 +52,13 @@
                                             <option value="umr1_4" {{$request->data_umur=='umr1_4'?'selected':''}}>1 - 4 TAHUN</option>
                                             <option value="umr5_14"  {{$request->data_umur=='umr5_14'?'selected':''}}>5 - 14 TAHUN</option>
                                             <option value="umr15_44"  {{$request->data_umur=='umr15_44'?'selected':''}}>15 - 44 TAHUN</option>
-                                            <option value="umr45_75"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - 75 TAHUN</option>
-                                            <option value="lb75"  {{$request->data_umur=='lb75'?'selected':''}}> > 75 TAHUN</option>
+                                            <option value="umr45_75lb"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - > 75 TAHUN</option>
                                         </x-adminlte-select>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="row mt-4 float-right">
                                         <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1" id="diagnosa_pola"
+                                        onclick="javascript: form.action='{{ route('diagnosa-pola-penyakit-rawat-inap') }}';"
                                             theme="primary" label="Lihat Data" />
                                         <x-adminlte-button type="submit" label="Excel" class="bg-purple btn btn-sm m-1" target="_blank"
                                         onclick="javascript: form.action='{{ route('diagnosa-pola-penyakit.export') }}';" />
@@ -88,7 +88,19 @@
                             <div class="row">
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
-                                    <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP SEMUA UMUR</b>
+                                    @if($range_umur =='k1') 
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL KURANG DARI 1 TAHUN</b> 
+                                    @elseif($range_umur =='umr1_4')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 1 - 4 TAHUN</b>
+                                    @elseif($range_umur =='umr5_14')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 5 - 14 TAHUN</b>
+                                    @elseif($range_umur =='umr15_44')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 15 - 44 TAHUN</b>
+                                    @elseif($range_umur =='umr45_75lb')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 45 - > 75 TAHUN</b>
+                                    @else
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL SEMUA UMUR</b>
+                                    @endif
                                 </dd>
                                 <dt class="col-sm-4 m-0">Periode</dt>
                                 <dd class="col-sm-8 m-0"> :
@@ -109,7 +121,7 @@
                                 <tbody>
                                     @foreach ($diagnosa as $item)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->nmr }}</td>
                                             <td>{{ $item->diag_utama }}</td>
                                             <td>{{ $item->diag_utama_desc }}</td>
                                             <td>{{ $item->KB }}</td>
@@ -117,7 +129,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                     </section>
@@ -138,18 +149,18 @@
             var printContents = document.getElementById(divName).innerHTML;
             window.print(printContents);
         }
-        $(document).on('click', '#diagnosa_pola', function(e) {
-            $.LoadingOverlay("show");
-            var data = $('#formFilter').serialize();
-            var url = "{{ route('diagnosa-pola-penyakit-rawat-inap') }}?" + data;
-            window.location = url;
-            $.ajax({
-                data: data,
-                url: url,
-                type: "GET",
+        // $(document).on('click', '#diagnosa_pola', function(e) {
+        //     $.LoadingOverlay("show");
+        //     var data = $('#formFilter').serialize();
+        //     var url = "{{ route('diagnosa-pola-penyakit-rawat-inap') }}?" + data;
+        //     window.location = url;
+        //     $.ajax({
+        //         data: data,
+        //         url: url,
+        //         type: "GET",
 
-            });
-        });
+        //     });
+        // });
       
     </script>
 @endsection

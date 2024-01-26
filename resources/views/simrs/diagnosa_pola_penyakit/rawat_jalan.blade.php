@@ -25,7 +25,7 @@
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="first" id="from" label="Tanggal Mulai" :config="$config"
-                                {{-- value="{{ $from == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $from }}"> --}} value="2022-01-01">
+                                value="{{ $first == null ? \Carbon\Carbon::parse($request->dari)->format('Y-m-d') : $first }}">
                                 <x-slot name="prependSlot">
                                     <div class="input-group-text bg-primary">
                                         <i class="fas fa-calendar-alt"></i>
@@ -37,7 +37,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <x-adminlte-input-date name="last" id="to" label="Tanggal Selesai"
-                                        :config="$config" {{-- value="{{ $to == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $to }}"> --}} value="2023-01-01">
+                                        :config="$config" value="{{ $last == null ? \Carbon\Carbon::parse($request->sampai)->format('Y-m-d') : $last }}">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
                                                 <i class="fas fa-calendar-alt"></i>
@@ -88,7 +88,19 @@
                             <div class="row">
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
-                                    <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL SEMUA UMUR</b>
+                                    @if($range_umur =='k1') 
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL KURANG DARI 1 TAHUN</b> 
+                                    @elseif($range_umur =='umr1_4')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 1 - 4 TAHUN</b>
+                                    @elseif($range_umur =='umr5_14')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 5 - 14 TAHUN</b>
+                                    @elseif($range_umur =='umr15_44')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 15 - 44 TAHUN</b>
+                                    @elseif($range_umur =='umr45_75lb')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 45 - > 75 TAHUN</b>
+                                    @else
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL SEMUA UMUR</b>
+                                    @endif
                                 </dd>
                                 <dt class="col-sm-4 m-0">Periode</dt>
                                 <dd class="col-sm-8 m-0"> :
@@ -109,7 +121,7 @@
                                 <tbody>
                                     @foreach ($diagnosa as $item)
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->nmr }}</td>
                                             <td>{{ $item->diag_utama }}</td>
                                             <td>{{ $item->diag_utama_desc }}</td>
                                             <td>{{ $item->KB }}</td>
@@ -117,7 +129,6 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
-
                             </table>
                         </div>
                     </section>

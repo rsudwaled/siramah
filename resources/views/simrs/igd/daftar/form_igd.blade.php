@@ -263,6 +263,7 @@
                                     <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right btn-flat "
                                         label="tidak bisa lanjut daftar" />
                                 @endif
+                                
                                 <a href="{{ route('list.antrian') }}"
                                     class="btn btn-sm btn-flat m-1 bg-secondary float-right">kembali</a>
                             </div>

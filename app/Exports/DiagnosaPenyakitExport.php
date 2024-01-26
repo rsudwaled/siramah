@@ -10,9 +10,10 @@ class DiagnosaPenyakitExport implements FromView
 {
     public function view():View
     {
-        $first = request()->input('first') ;
-        $last = request()->input('last') ;
-        $diag_umr = request()->input('data_umur');
+        $first      = request()->input('first') ;
+        $last       = request()->input('last') ;
+        $diag_umr   = request()->input('data_umur');
+
         if($diag_umr =='k1') {
             $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_KR_1_TH ('$first','$last')");
         }
@@ -28,17 +29,14 @@ class DiagnosaPenyakitExport implements FromView
         {
             $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_15_44_TH ('$first','$last')");
         }
-        elseif($diag_umr =='umr45_75')
+        elseif($diag_umr =='umr45_75lb')
         {
             $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_UMUR_45_75_TH ('$first','$last')");
-        }
-        elseif($diag_umr =='lb75')
-        {
-            $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_iNAP_UMUR_LB_75_TH ('$first','$last')");
         }
         else{
             $diagnosa = \DB::connection('mysql8')->select("CALL SP_DIAGNOSA_POLA_PENYAKIT_PENDERITA_RAWAT_INAP_SEMUA_UMUR ('$first','$last')");
         }
+        $diagnosa = collect($diagnosa);
         
         return view('export.laporan.diagnosa_pola_penyakit', compact('diagnosa'));
     }
