@@ -15,11 +15,34 @@ use App\Models\Kunjungan;
 use App\Models\JPasienIGD;
 use App\Models\LayananDetail;
 use App\Models\HistoriesIGDBPJS;
+use App\Models\PasienKecelakaan;
 use App\Models\TarifLayananDetail;
+use App\Models\Provinsi;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PasienKecelakaanController extends Controller
 {
+    public function listPasienKecelakaan(Request $request)
+    {
+        $date       = $request->date;
+        $query      = Kunjungan::where('lakalantas','>', 0);
+
+        if($request->date != null)
+        {
+            $query->whereDate('tgl_masuk', $request->date);
+        }
+
+        $kunjungan  = $query->get();
+
+        return view('simrs.igd.pasien_kecelakaan.list_pasien', compact('request','kunjungan'));
+    }
+
+    public function detailPasienKecelakaan($kunjungan)
+    {
+        $kunjungan = Kunjungan::with('pasienKecelakaan')->where('kode_kunjungan', $kunjungan)->first();
+        return view('simrs.igd.pasien_kecelakaan.detail_kecelakaan', compact('kunjungan'));
+    }
+
     public function index(Request $request)
     {
         $pasien = null;
@@ -51,7 +74,9 @@ class PasienKecelakaanController extends Controller
         $alasanmasuk    = AlasanMasuk::whereIn('id',['2','3'])->get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
-        return view('simrs.igd.pasien_kecelakaan.create', compact('alasanmasuk','paramedis','penjamin','pasien'));
+        $provinsi       = Provinsi::all();
+
+        return view('simrs.igd.pasien_kecelakaan.create', compact('provinsi','alasanmasuk','paramedis','penjamin','pasien'));
     }
 
     public function store(Request $request)
@@ -102,7 +127,7 @@ class PasienKecelakaanController extends Controller
          $c = $counter->counter + 1;
      }
      
-     $unit   = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
+     $unit   = Unit::firstWhere('kode_unit', '1002');
      $pasien = Pasien::where('no_rm', $request->rm)->first();
      $dokter = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
      
@@ -118,11 +143,12 @@ class PasienKecelakaanController extends Controller
      $createKunjungan->kelas             = 3;
      $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
      $createKunjungan->perujuk           = $request->nama_perujuk??null;
+     $createKunjungan->lakaLantas        = $request->lakaLantas == null ? 0 : $request->lakaLantas;
      $createKunjungan->is_ranap_daftar   = 0;
      $createKunjungan->form_send_by      = 0;
      $createKunjungan->jp_daftar         =  $request->isBpjs;
-     // $createKunjungan->pic2 = Auth::user()->id;
-     $createKunjungan->pic = Auth::user()->id;
+     $createKunjungan->pic2              = Auth::user()->id;
+    //  $createKunjungan->pic = Auth::user()->id;
      if ($createKunjungan->save()) {
          $jpPasien               = new JPasienIGD();
          $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
@@ -161,6 +187,17 @@ class PasienKecelakaanController extends Controller
              $histories->status_daftar   = 0;
              $histories->unit            = $unit->kode_unit;
              $histories->save();
+         }else{
+            $historiesUmum = new PasienKecelakaan();
+            $historiesUmum->kode_kunjungan  = $createKunjungan->kode_kunjungan;
+            $historiesUmum->lakaLantas      = $request->lakaLantas == null ? 0 : $request->lakaLantas;
+            $historiesUmum->noLP            = $request->lakaLantas > 0 ? $request->noLP:null;
+            $historiesUmum->tglKejadian     = $request->lakaLantas > 0 ? $request->tglKejadian:null;
+            $historiesUmum->keterangan      = $request->lakaLantas > 0 ? $request->keterangan:null;
+            $historiesUmum->kdPropinsi      = $request->lakaLantas > 0 ? $request->provinsi:null;
+            $historiesUmum->kdKabupaten     = $request->lakaLantas > 0 ? $request->kabupaten:null;
+            $historiesUmum->kdKecamatan     = $request->lakaLantas > 0 ? $request->kecamatan:null;
+            $historiesUmum->save();
          }
 
          $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
@@ -247,6 +284,6 @@ class PasienKecelakaanController extends Controller
          } 
      }
      Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
-     return redirect()->route('list.antrian');
+     return redirect()->route('pasien-kecelakaan.list');
     }
 }

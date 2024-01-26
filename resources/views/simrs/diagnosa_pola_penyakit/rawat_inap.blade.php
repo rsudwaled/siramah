@@ -89,17 +89,17 @@
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
                                     @if($range_umur =='k1') 
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL KURANG DARI 1 TAHUN</b> 
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP KURANG DARI 1 TAHUN</b> 
                                     @elseif($range_umur =='umr1_4')
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 1 - 4 TAHUN</b>
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP UMUR 1 - 4 TAHUN</b>
                                     @elseif($range_umur =='umr5_14')
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 5 - 14 TAHUN</b>
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP UMUR 5 - 14 TAHUN</b>
                                     @elseif($range_umur =='umr15_44')
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 15 - 44 TAHUN</b>
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP UMUR 15 - 44 TAHUN</b>
                                     @elseif($range_umur =='umr45_75lb')
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 45 - > 75 TAHUN</b>
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP UMUR 45 - > 75 TAHUN</b>
                                     @else
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL SEMUA UMUR</b>
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP SEMUA UMUR</b>
                                     @endif
                                 </dd>
                                 <dt class="col-sm-4 m-0">Periode</dt>

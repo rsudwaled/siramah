@@ -569,6 +569,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
     
     // Pasien Kecelakaan
+    Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
+    Route::get('detail/pasien-kecelakaan/{kunjungan}', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'detailPasienKecelakaan'])->name('pasien-kecelakaan.detail');
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('/create/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'create'])->name('pasien-kecelakaan.create');
     Route::post('/store/pasien-kecelakaan-store', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'store'])->name('pasien-kecelakaan.store');

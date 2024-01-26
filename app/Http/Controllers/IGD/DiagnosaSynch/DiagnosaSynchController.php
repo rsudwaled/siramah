@@ -124,6 +124,7 @@ class DiagnosaSynchController extends APIController
         }
         
         $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
+       
         if($kunjungan->jpDaftar->is_bpjs ==1)
         {
             $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
