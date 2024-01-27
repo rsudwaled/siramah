@@ -52,7 +52,7 @@
                                             <option value="umr1_4" {{$request->data_umur=='umr1_4'?'selected':''}}>1 - 4 TAHUN</option>
                                             <option value="umr5_14"  {{$request->data_umur=='umr5_14'?'selected':''}}>5 - 14 TAHUN</option>
                                             <option value="umr15_44"  {{$request->data_umur=='umr15_44'?'selected':''}}>15 - 44 TAHUN</option>
-                                            <option value="umr45_75lb"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - > 75 TAHUN</option>
+                                            <option value="umr45_75lb"  {{$request->data_umur=='umr45_75lb'?'selected':''}}>45 - > 75 TAHUN</option>
                                         </x-adminlte-select>
                                 </div>
                                 <div class="col-md-4">
