@@ -512,6 +512,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/daftar/form-igk/store', [App\Http\Controllers\IGD\Daftar\DaftarIGKController::class, 'store'])->name('form-igk.daftar-create');
 
     // daftar tanpa nomor antrian
+    Route::get('/penjamin-umum', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'penjaminUmum'])->name('penjamin.umum');
+    Route::get('/penjamin-bpjs', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'penjaminBPJS'])->name('penjamin.bpjs');
     Route::get('/daftar/tanpa-nomor', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'vTanpaNomor'])->name('v.tanpa-nomor');
     Route::get('/form-daftar/tanpa-nomor/{rm}', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'formDaftarTanpaNomor'])->name('form-daftar.tanpa-nomor');
     Route::post('/daftar/tanpa-nomor/store', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'daftarTanpaNomorStore'])->name('form-tanpanomor.store');
