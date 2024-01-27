@@ -165,6 +165,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(MtAlasanEdit::class, 'id_alasan_edit', 'id' );
     }
+    public function pasienKecelakaan()
+    {
+        return $this->belongsTo(PasienKecelakaan::class, 'kode_kunjungan', 'kode_kunjungan' );
+    }
 
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()
