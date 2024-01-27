@@ -424,13 +424,13 @@ return [
             'icon'    => 'fas fa-hospital-alt',
             'can' => 'pendaftaran-igd',
             'submenu' => [
-                [
-                    'text' => 'Dashboard IGD',
-                    'icon'    => 'fas fa-columns',
-                    'url'  => 'dashboard-igd',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
+                // [
+                //     'text' => 'Dashboard IGD',
+                //     'icon'    => 'fas fa-columns',
+                //     'url'  => 'dashboard-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
                     'text' => 'Daftar Antrian',
                     'icon'    => 'fas fa-chalkboard-teacher',
@@ -460,35 +460,20 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Pasien Kecelakaan',
+                    'icon'    => 'fas fa-ambulance',
+                    'url'  => 'list/pasien-kecelakaan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Kunjungan',
                     'icon'    => 'fas fa-address-book',
                     'url'  => 'daftar-kunjungan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-
-                // [
-                //     'text' => 'Pendaftaran Pasien',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'pendaftaran-pasien-igd',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
-
-                // [
-                //     'text' => 'Pendaftaran Rawat Inap',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'pendaftaran-rawat-inap',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
-                // [
-                //     'text' => 'Kunjungan Pasien',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'pilih-kunjungan',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
+                
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',
