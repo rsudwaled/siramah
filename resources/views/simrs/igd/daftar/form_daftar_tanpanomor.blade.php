@@ -30,14 +30,16 @@
                                         <div class="col-sm-3 col-6">
                                             <div class="description-block border-right">
                                                 <h5 class="description-headers">{{ $pasien->nama_px }}</h5>
-                                                <small>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</small> <br>
+                                                <small>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</small>
+                                                <br>
                                                 <span class="description-text">-Pasien-</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-sm-3 col-6">
                                             <div class="description-block border-right">
-                                                <h5 class="description-headers">{{ date('d F Y', strtotime($pasien->tgl_lahir))}}</h5>
+                                                <h5 class="description-headers">
+                                                    {{ date('d F Y', strtotime($pasien->tgl_lahir)) }}</h5>
                                                 <span class="description-text">-Tanggal Lahir-</span>
                                             </div>
                                         </div>
@@ -52,7 +54,8 @@
                                         <div class="col-sm-3 col-6">
                                             <div class="description-block">
                                                 <h5 class="description-headers">
-                                                    NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }} <br>
+                                                    NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }}
+                                                    <br>
                                                     BPJS : {{ $pasien->no_Bpjs == null ? 'tidak ada' : $pasien->no_Bpjs }}
                                                 </h5>
                                                 <span class="description-text">-NIK & BPJS-</span>
@@ -94,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
             <div class="row">
@@ -102,47 +105,53 @@
                     <x-adminlte-card theme="success" size="sm" id="div_rajal" icon="fas fa-info-circle" collapsible
                         title="Daftarkan : {{ $pasien->nama_px }} ({{ $pasien->no_rm }})">
                         @if (!empty($resdescrtipt->response))
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body bg-success disabled color-palette">
-                                    <div class="row ">
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">- {{$resdescrtipt->response->peserta->statusPeserta->keterangan}} -</h5>
-                                                <span class="description-text">STATUS BPJS </span>
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body bg-success disabled color-palette">
+                                        <div class="row ">
+                                            <div class="col-sm-3 col-6">
+                                                <div class="description-block border-right">
+                                                    <h5 class="description-header ">-
+                                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan }} -
+                                                    </h5>
+                                                    <span class="description-text">STATUS BPJS </span>
+                                                </div>
+
                                             </div>
-                        
-                                        </div>
-                        
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->jenisPeserta->keterangan}}</h5>
-                                                <span class="description-text">JENIS PESERTA</span>
+
+                                            <div class="col-sm-3 col-6">
+                                                <div class="description-block border-right">
+                                                    <h5 class="description-header ">
+                                                        {{ $resdescrtipt->response->peserta->jenisPeserta->keterangan }}
+                                                    </h5>
+                                                    <span class="description-text">JENIS PESERTA</span>
+                                                </div>
+
                                             </div>
-                        
-                                        </div>
-                        
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block border-right">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->hakKelas->keterangan}}</h5>
-                                                <span class="description-text">HAK KELAS</span>
+
+                                            <div class="col-sm-3 col-6">
+                                                <div class="description-block border-right">
+                                                    <h5 class="description-header ">
+                                                        {{ $resdescrtipt->response->peserta->hakKelas->keterangan }}</h5>
+                                                    <span class="description-text">HAK KELAS</span>
+                                                </div>
+
                                             </div>
-                        
-                                        </div>
-                        
-                                        <div class="col-sm-3 col-6">
-                                            <div class="description-block">
-                                                <h5 class="description-header ">{{$resdescrtipt->response->peserta->noKartu}}</h5>
-                                                <span class="description-text">NO KARTU</span>
+
+                                            <div class="col-sm-3 col-6">
+                                                <div class="description-block">
+                                                    <h5 class="description-header ">
+                                                        {{ $resdescrtipt->response->peserta->noKartu }}</h5>
+                                                    <span class="description-text">NO KARTU</span>
+                                                </div>
+
                                             </div>
-                        
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>   
                         @endif
-                        
+
                         <form action="" id="formPendaftaranIGD" method="post">
                             @csrf
                             <div class="col-lg-12">
@@ -161,22 +170,25 @@
                                         <x-adminlte-input-date name="tanggal"
                                             value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                             :config="$config" />
-                                        <x-adminlte-input name="noTelp" type="number" value="{{$pasien->no_tlp ==null? $pasien->no_hp:$pasien->no_tlp}}" label="No Telpon" />
+                                        <x-adminlte-input name="noTelp" type="number"
+                                            value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
+                                            label="No Telpon" />
                                         <div class="form-group">
                                             <label for="exampleInputBorderWidth2">Perujuk
                                                 <code>(jika pasien memiliki referensi instansi yang merujuk)</code></label>
-                                                <select name="isPerujuk" id="isPerujuk" class="form-control">
-                                                    <option value="0">Tanpa Perujuk</option>
-                                                    <option value="1">Tambah Perujuk</option>
-                                                </select>
-                                            </div>
+                                            <select name="isPerujuk" id="isPerujuk" class="form-control">
+                                                <option value="0">Tanpa Perujuk</option>
+                                                <option value="1">Tambah Perujuk</option>
+                                            </select>
+                                        </div>
                                         <div class="form-group" id="perujuk">
                                             <label for="exampleInputBorderWidth2">Nama Perujuk</label>
-                                            <input type="text" name="nama_perujuk" class="form-control" id="nama_perujuk">
+                                            <input type="text" name="nama_perujuk" class="form-control"
+                                                id="nama_perujuk">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <x-adminlte-select name="isBpjs" label="Jenis Pasien">
+                                        <x-adminlte-select name="isBpjs" id="isBpjs" label="Jenis Pasien">
                                             <option value="">--Pilih Jenis Pasien--</option>
                                             <option value="0">Pasien UMUM</option>
                                             <option value="1">Pasien BPJS</option>
@@ -188,13 +200,22 @@
                                                     {{ $item->nama_paramedis }}</option>
                                             @endforeach
                                         </x-adminlte-select2>
-                                        <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                            <option value="">--Pilih Penjamin--</option>
-                                            @foreach ($penjamin as $item)
-                                                <option value="{{ $item->kode_penjamin }}">
-                                                    {{ $item->nama_penjamin }}</option>
-                                            @endforeach
-                                        </x-adminlte-select2>
+                                        <div class="form-group" id="show_penjamin_umum">
+                                            <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
+                                                @foreach ($penjamin as $item)
+                                                    <option value="{{ $item->kode_penjamin }}">
+                                                        {{ $item->nama_penjamin }}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
+                                        <div class="form-group" id="show_penjamin_bpjs">
+                                            <x-adminlte-select2 name="penjamin_id_bpjs" label="Pilih Penjamin BPJS" >
+                                                @foreach ($penjaminbpjs as $item)
+                                                    <option value="{{ $item->kode_penjamin_simrs }}">
+                                                        {{ $item->nama_penjamin_bpjs }}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
                                         <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                             <option value="">--Pilih Alasan--</option>
                                             @foreach ($alasanmasuk as $item)
@@ -256,15 +277,21 @@
                                 @if ($knj_aktif == 0)
                                     @if (!empty($resdescrtipt->response))
                                         @if ($resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF')
-                                        <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
-                                        from="formPendaftaranIGD" label="Simpan Data" />
+                                            <x-adminlte-button type="submit"
+                                                onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
+                                                class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                                from="formPendaftaranIGD" label="Simpan Data" />
                                         @else
-                                        <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
-                                        from="formPendaftaranIGD" label="Simpan" />
+                                            <x-adminlte-button type="submit"
+                                                onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
+                                                class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                                from="formPendaftaranIGD" label="Simpan" />
                                         @endif
                                     @else
-                                    <x-adminlte-button type="submit" onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';" class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
-                                        from="formPendaftaranIGD" label="Simpan" />
+                                        <x-adminlte-button type="submit"
+                                            onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
+                                            class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                            from="formPendaftaranIGD" label="Simpan" />
                                     @endif
                                 @else
                                     <x-adminlte-button class=" btn btn-sm m-1 bg-danger float-right"
@@ -288,6 +315,7 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
+        const isbpjs = document.getElementById('isBpjs');
         const perujuk = document.getElementById('isPerujuk');
         const select = document.getElementById('status_kecelakaan');
         const pilihUnit = document.getElementById('div_stts_kecelakaan');
@@ -311,7 +339,17 @@
             if (perujuk.value > 0 || perujuk.value == null) {
                 $('#perujuk').show();
             } else {
-               $('#perujuk').hide();
+                $('#perujuk').hide();
+            }
+        });
+        $('#show_penjamin_bpjs').hide();
+        $(isbpjs).on('change', function() {
+            if (isbpjs.value > 0 || isbpjs.value == null) {
+                $('#show_penjamin_umum').hide();
+                $('#show_penjamin_bpjs').show();
+            } else {
+                $('#show_penjamin_umum').show();
+                $('#show_penjamin_bpjs').hide();
             }
         });
         $(function() {
