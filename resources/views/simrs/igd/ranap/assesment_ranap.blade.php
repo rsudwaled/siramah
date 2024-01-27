@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-lg-12">
                             @php
-                                $heads = ['TANGGAL MASUK','KUNJUNGAN', 'PASIEN', 'ALAMAT', 'STATUS', 'AKSI'];
+                                $heads = ['TANGGAL MASUK', 'KUNJUNGAN', 'PASIEN', 'ALAMAT', 'STATUS', 'AKSI'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -98,37 +98,28 @@
                                             <small>{{ $ranap->alamat }}</small>
                                         </td>
                                         <td>
-                                            <b>Daftar :
-                                                {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : 'UMUM' }}</b><br>
+                                            <span
+                                                class="badge $ranap->status_pasien_daftar == 1 ? 'badge-success' : 'badge-primary' ">
+                                                <b>Daftar :
+                                                    {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : 'UMUM' }}</b>
+                                            </span><br>
                                             Pasien : {{ $ranap->status_ranap == 1 ? 'Rawat Inap' : 'Pasien Umum' }} <br>
                                         </td>
                                         <td>
-                                            {{-- @if ($ranap->status_pasien_daftar == 1)
-                                                <button href="#" data-toggle="modal" data-target="modalSPRI"
-                                                    data-id="{{ $ranap->kunjungan }}"
-                                                    data-nomorkartu="{{ $ranap->noKartu }}"
-                                                    class="btn btn-block bg-purple btn-xs btn-flat btnModalSPRI">SPRI</button>
-                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
-                                                    class="btn btn-xs btn-block btn-success btn-flat mt-1">UMUM</a>
-                                            @else
-                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
-                                                    class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
-                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
-                                                    class="btn btn-xs btn-block btn-primary btn-flat mr-5">UMUM</a>
-                                            @endif --}}
                                             @php
-                                                if(empty($ranap->noKartu))
-                                                {
+                                                if (empty($ranap->noKartu)) {
                                                     $nomorKartu = null;
-                                                }else{
+                                                } else {
                                                     $nomorKartu = trim($ranap->noKartu);
                                                 }
                                             @endphp
                                             <a href="{{ route('form-umum.pasien-ranap', ['rm' => $ranap->rm, 'kunjungan' => $ranap->kunjungan]) }}"
-                                                class="btn btn-xs btn-block btn-primary btn-flat mr-5">DAFTARKAN PASIEN UMUM</a>
+                                                class="btn btn-xs btn-block btn-primary btn-flat mr-5">DAFTARKAN PASIEN
+                                                UMUM</a>
                                             @if (!empty($nomorKartu))
-                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $ranap->kunjungan]) }}"
-                                                class="btn btn-xs btn-block btn-success btn-flat mr-5 withLoad ">DAFTARKAN PASIEN BPJS</a>
+                                                <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $ranap->kunjungan]) }}"
+                                                    class="btn btn-xs btn-block btn-success btn-flat mr-5 withLoad ">DAFTARKAN
+                                                    PASIEN BPJS</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -238,7 +229,7 @@
                     cache: true
                 }
             });
-           
+
         });
     </script>
 @endsection

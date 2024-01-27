@@ -136,6 +136,12 @@ class RanapController extends APIController
 
     public function ranapUmum(Request $request, $rm, $kunjungan)
     {
+        $cekKunjungan   = Kunjungan::where('ref_kunjungan', $kunjungan)->first();
+        if(!empty($cekKunjungan))
+        {
+            Alert::error('PASIEN SUDAH DIDAFTARKAN RANAP!!', 'kamar : '. $cekKunjungan->kamar.' bed : '.$cekKunjungan->no_bed);
+            return back();
+        }
         $kode           = $kunjungan;
         $pasien         = Pasien::where('no_rm', $rm)->first();
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
@@ -284,6 +290,12 @@ class RanapController extends APIController
 
     public function daftarRanapBPJS(Request $request, $nomorkartu, $kode)
     {
+        $cekKunjungan   = Kunjungan::where('ref_kunjungan', $kode)->first();
+        if(!empty($cekKunjungan))
+        {
+            Alert::error('PASIEN SUDAH DIDAFTARKAN RANAP!!', 'kamar : '. $cekKunjungan->kamar.' bed : '.$cekKunjungan->no_bed);
+            return back();
+        }
         $tanggal        = now()->format('Y-m-d');
         $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . trim($nomorkartu) . "/tglSEP/" . $tanggal;
         $signature      = $this->signature();
