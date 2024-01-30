@@ -218,44 +218,65 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                @if ($kunjungan->erm_ranap->icd10_sekunder)
-                                    <label for="asddasf">ICD-10 Sekunder </label>
-                                    @foreach (json_decode($kunjungan->erm_ranap->icd10_sekunder) as $item)
+
+                                @if ($kunjungan->erm_ranap)
+                                    @if ($kunjungan->erm_ranap->icd10_sekunder)
+                                        <label for="asddasf">ICD-10 Sekunder </label>
+                                        @foreach (json_decode($kunjungan->erm_ranap->icd10_sekunder) as $item)
+                                            <div id="row">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <select name="icd10_sekunder[]"
+                                                            class="form-control diagSekunderResume">
+                                                            <option value="{{ $item }}" selected>
+                                                                {{ $item }}
+                                                            </option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-xs btn-danger"
+                                                                onclick="hapusDiagSekunderResume(this)">
+                                                                <i class="fas fa-trash "></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                         <div id="row">
                                             <div class="form-group">
                                                 <div class="input-group">
-                                                    <select name="icd10_sekunder[]"
+                                                    <select name="icd10_sekunder[]" id="asddasf"
                                                         class="form-control diagSekunderResume">
-                                                        <option value="{{ $item }}" selected>
-                                                            {{ $item }}
-                                                        </option>
                                                     </select>
                                                     <div class="input-group-append">
-                                                        <button type="button" class="btn btn-xs btn-danger"
-                                                            onclick="hapusDiagSekunderResume(this)">
-                                                            <i class="fas fa-trash "></i>
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addDiagSekunderResume()">
+                                                            <i class="fas fa-plus "></i>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
-                                    <div id="row">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <select name="icd10_sekunder[]" id="asddasf"
-                                                    class="form-control diagSekunderResume">
-                                                </select>
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-xs btn-success"
-                                                        onclick="addDiagSekunderResume()">
-                                                        <i class="fas fa-plus "></i>
-                                                    </button>
+                                        <div id="diagSekunderBaru"></div>
+                                    @else
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <label for="asddasf">ICD-10 Sekunder </label>
+                                                <div class="input-group">
+                                                    <select name="icd10_sekunder[]" id="asddasf"
+                                                        class="form-control diagSekunderResume">
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addDiagSekunderResume()">
+                                                            <i class="fas fa-plus "></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="diagSekunderBaru"></div>
+                                        <div id="diagSekunderBaru"></div>
+                                    @endif
                                 @else
                                     <div id="row">
                                         <div class="form-group">
@@ -275,6 +296,7 @@
                                     </div>
                                     <div id="diagSekunderBaru"></div>
                                 @endif
+
 
                             </div>
                         </div>
