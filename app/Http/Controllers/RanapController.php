@@ -390,6 +390,9 @@ class RanapController extends APIController
     {
         $request['pic1'] = Auth::user()->name;
         $request['user1'] = Auth::user()->id;
+        $request['icd10_sekunder'] = $request->icd10_sekunder ?  json_encode($request->icd10_sekunder) : null;
+        $request['icd9_prosedur'] = $request->icd9_prosedur ?  json_encode($request->icd9_prosedur) : null;
+        $request['icd9_operasi'] = $request->icd9_operasi ?  json_encode($request->icd9_operasi) : null;
         $erm = ErmRanap::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,

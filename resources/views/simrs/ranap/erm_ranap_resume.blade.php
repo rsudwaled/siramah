@@ -308,7 +308,8 @@
                             </div>
                             <div class="col-md-6">
                                 @if ($kunjungan->erm_ranap)
-                                    @if ($kunjungan->erm_ranap->icd9_operasi)
+                                    @if (is_array(json_decode($kunjungan->erm_ranap->icd9_operasi)) ||
+                                            is_object(json_decode($kunjungan->erm_ranap->icd9_operasi)))
                                         <label for="xinputIcd9Operasi">ICD-9 Operasi</label>
                                         @foreach (json_decode($kunjungan->erm_ranap->icd9_operasi) as $item)
                                             <div id="row">
@@ -415,7 +416,7 @@
                             <div class="col-md-6">
                                 @if ($kunjungan->erm_ranap)
                                     @if ($kunjungan->erm_ranap->icd9_prosedur)
-                                        <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                        <label for="xinputIcd9Tindakan">ICD-9 Prosedur</label>
                                         @foreach (json_decode($kunjungan->erm_ranap->icd9_prosedur) as $item)
                                             <div id="row">
                                                 <div class="form-group">
@@ -455,7 +456,7 @@
                                     @else
                                         <div id="row">
                                             <div class="form-group">
-                                                <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                                <label for="xinputIcd9Tindakan">ICD-9 Prosedur</label>
                                                 <div class="input-group">
                                                     <select name="icd9_prosedur[]" id="xinputIcd9Tindakan"
                                                         class="form-control icd9operasi">
@@ -474,7 +475,7 @@
                                 @else
                                     <div id="row">
                                         <div class="form-group">
-                                            <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                            <label for="xinputIcd9Tindakan">ICD-9 Prosedur</label>
                                             <div class="input-group">
                                                 <select name="icd9_prosedur[]" id="xinputIcd9Tindakan"
                                                     class="form-control icd9operasi">
