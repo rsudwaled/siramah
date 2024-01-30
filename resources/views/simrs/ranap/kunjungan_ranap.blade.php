@@ -37,7 +37,7 @@
             <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Data Pasien Rawat Inap">
                 @php
                     $heads = ['Tgl Masuk', 'Tgl Keluar (LOS)', 'Kunjungan', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Tarif Eklaim', 'Tagihan RS', '%', 'Status'];
-                    $config['order'] = [['9', 'asc']];
+                    $config['order'] = [['0', 'asc']];
                     $config['paging'] = false;
                     $config['processing'] = true;
                     $config['serverside'] = true;
