@@ -266,7 +266,13 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->icd9_operasi ?? '-' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->icd9_operasi)
+                                @foreach (json_decode($kunjungan->erm_ranap->icd9_operasi) as $item)
+                                    {{ explode('|', $item)[0] }} <br>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
@@ -283,7 +289,13 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->icd9_prosedur ?? '-' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->icd9_prosedur)
+                                @foreach (json_decode($kunjungan->erm_ranap->icd9_prosedur) as $item)
+                                    {{ explode('|', $item)[0] }} <br>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
