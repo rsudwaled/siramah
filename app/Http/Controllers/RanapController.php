@@ -305,6 +305,7 @@ class RanapController extends APIController
         $lama_rawat = $tglmasuk->diffInDays($tglpulang);
         foreach ($kunjungans as $kjg) {
             foreach ($kjg->layanans as  $lynan) {
+                // dd($kjg->layanans);
                 if ($lynan->unit->kelas_unit == 4) {
                     foreach ($lynan->layanan_details as  $laydet) {
                         if ($laydet->kode_barang) {
@@ -317,6 +318,9 @@ class RanapController extends APIController
                                 'aturan_pakai' => $laydet->aturan_pakai,
                                 'kategori_resep' => $laydet->kategori_resep,
                                 'satuan_barang' => $laydet->satuan_barang,
+                                'tgl_layanan_detail' => $laydet->tgl_layanan_detail,
+                                'row_id_header' => $laydet->row_id_header,
+                                'keterangan' => $lynan->keterangan,
                             ];
                         }
                     }

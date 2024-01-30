@@ -196,10 +196,18 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="icd10_utama" label="Diagnosa ICD-10" rows="1"
-                                    igroup-size="sm" placeholder="Diagnosa ICD-10">
-                                    {{ $kunjungan->erm_ranap->icd10_utama ?? null }}
-                                </x-adminlte-textarea>
+                                <x-adminlte-select2 name="icd10_utama" class="diagSekunderResume" igroup-size="sm"
+                                    label="ICD-10 Utama">
+                                    @if ($kunjungan->erm_ranap)
+                                        @if ($kunjungan->erm_ranap->icd10_utama)
+                                            <option value="{{ $kunjungan->erm_ranap->icd10_utama }}" selected>
+                                                {{ $kunjungan->erm_ranap->icd10_utama }}</option>
+                                        @endif
+                                    @endif
+                                    <x-slot name="appendSlot">
+                                        <x-adminlte-button theme="secondary" icon="fas fa-diagnoses" />
+                                    </x-slot>
+                                </x-adminlte-select2>
                             </div>
                         </div>
                         <div class="row">
@@ -210,10 +218,64 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="icd10_sekunder" label="Diagnosa ICD-10" rows="6"
-                                    igroup-size="sm" placeholder="Diagnosa ICD-10">
-                                    {{ $kunjungan->erm_ranap->icd10_sekunder ?? null }}
-                                </x-adminlte-textarea>
+                                @if ($kunjungan->erm_ranap->icd10_sekunder)
+                                    <label for="asddasf">ICD-10 Sekunder </label>
+                                    @foreach (json_decode($kunjungan->erm_ranap->icd10_sekunder) as $item)
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <select name="icd10_sekunder[]"
+                                                        class="form-control diagSekunderResume">
+                                                        <option value="{{ $item }}" selected>
+                                                            {{ $item }}
+                                                        </option>
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-danger"
+                                                            onclick="hapusDiagSekunderResume(this)">
+                                                            <i class="fas fa-trash "></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <select name="icd10_sekunder[]" id="asddasf"
+                                                    class="form-control diagSekunderResume">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-xs btn-success"
+                                                        onclick="addDiagSekunderResume()">
+                                                        <i class="fas fa-plus "></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="diagSekunderBaru"></div>
+                                @else
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <label for="asddasf">ICD-10 Sekunder </label>
+                                            <div class="input-group">
+                                                <select name="icd10_sekunder[]" id="asddasf"
+                                                    class="form-control diagSekunderResume">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-xs btn-success"
+                                                        onclick="addDiagSekunderResume()">
+                                                        <i class="fas fa-plus "></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="diagSekunderBaru"></div>
+                                @endif
+
                             </div>
                         </div>
                     </div>

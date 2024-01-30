@@ -531,6 +531,29 @@
                     cache: true
                 }
             });
+            $(".diagSekunderResume").select2({
+                placeholder: 'Silahkan pilih Diagnosa ICD-10',
+                theme: "bootstrap4",
+                multiple: true,
+                maximumSelectionLength: 1,
+                ajax: {
+                    url: "{{ route('get_diagnosis_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
             $(".procedure").select2({
                 placeholder: 'Silahkan pilih Tindakan ICD-9',
                 theme: "bootstrap4",
@@ -725,7 +748,47 @@
         });
         $("body").on("click", "#deleteRowTindakan", function() {
             $(this).parents("#row").remove();
-        })
+        });
+    </script>
+    <script>
+        // row select diagnosa
+        function addDiagSekunderResume() {
+            newRowAdd = '<div id="row"><div class="form-group">' +
+                '<div class="input-group">' +
+                '<select name="icd10_sekunder[]" class="form-control diagSekunderResume"></select>' +
+                '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusDiagSekunderResume(this)">' +
+                '<i class="fas fa-trash"></i>' +
+                "</button></div></div></div></div>";
+            $('#diagSekunderBaru').append(newRowAdd);
+            $(".diagSekunderResume").select2({
+                placeholder: 'Silahkan pilih Diagnosa ICD-10',
+                theme: "bootstrap4",
+                multiple: true,
+                maximumSelectionLength: 1,
+                ajax: {
+                    url: "{{ route('get_diagnosis_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        }
+
+        function hapusDiagSekunderResume(button) {
+            $(button).parents("#row").remove();
+        }
     </script>
     {{-- riwayat kunjungan --}}
     <x-adminlte-modal id="modalKunjungan" name="modalKunjungan" title="Kunjungan Pasien" theme="success"

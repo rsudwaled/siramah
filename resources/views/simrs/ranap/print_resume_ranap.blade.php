@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ringkasan Pasien Pulang</title>
+    <title>Resume Ranap {{ $pasien->nama_px }}</title>
     <link rel="stylesheet" href="path/to/bootstrap-grid.min.css">
     <link rel="stylesheet" href="{{ asset('medilab/assets/vendor/bootstrap/css/bootstrap-grid.min.css') }}">
     <style>
@@ -144,10 +144,10 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Tanggal Masuk : </b>
-                        {{ $kunjungans->first()->tgl_masuk ? Carbon\Carbon::parse($kunjungans->first()->tgl_masuk)->format('d F Y H:m:s') : '-' }}
+                        {{ $kunjungans->first()->tgl_masuk ? Carbon\Carbon::parse($kunjungans->first()->tgl_masuk)->format('d F Y H:i:s') : '-' }}
                         <br>
                         <b>Tanggal Keluar : </b>
-                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungan->tgl_keluar)->format('d F Y H:m:s') : '-' }}
+                        {{ $kunjungan->tgl_keluar ? Carbon\Carbon::parse($kunjungan->tgl_keluar)->format('d F Y H:i:s') : '-' }}
                         <br>
                         <b>Lama Rawat : </b>
                         {{ $lama_rawat }} hari
@@ -235,7 +235,7 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->icd10_utama ?? '' }}</pre>
+                        {{ $kunjungan->erm_ranap->icd10_utama ? explode('|', $kunjungan->erm_ranap->icd10_utama)[0] : '' }}
                     </div>
                 </div>
             </div>
@@ -247,7 +247,14 @@
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->icd10_sekunder ?? '' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->icd10_sekunder)
+                                @foreach (json_decode($kunjungan->erm_ranap->icd10_sekunder) as $item)
+                                    {{ explode('|', $item)[0] }} <br>
+                                @endforeach
+                            @endif
+                        @endif
+                        {{-- <pre>{{ $kunjungan->erm_ranap->icd10_sekunder ?? '' }}</pre> --}}
                     </div>
                 </div>
             </div>
@@ -298,6 +305,7 @@
                             <thead>
                                 <tr class="border-bottom border-dark">
                                     <th>Nama Obat</th>
+                                    <th>Keterangan</th>
                                     {{-- <th>Jml</th>
                                 <th>Aturan Pakai</th> --}}
                                 </tr>
@@ -306,6 +314,7 @@
                                 @foreach ($obat2[0] as $item)
                                     <tr class="border-bottom border-dark">
                                         <td>{{ $item['nama_barang'] }} </td>
+                                        <td>{{ $item['keterangan'] }} </td>
                                         {{-- <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
                                     <td>{{ $item['aturan_pakai'] }} </td> --}}
                                     </tr>
@@ -318,6 +327,7 @@
                             <thead>
                                 <tr class="border-bottom border-dark">
                                     <th>Nama Obat</th>
+                                    <th>Keterangan</th>
                                     {{-- <th>Jml</th>
                                 <th>Aturan Pakai</th> --}}
                                 </tr>
@@ -326,6 +336,7 @@
                                 @foreach ($obat2[1] as $item)
                                     <tr class="border-bottom border-dark">
                                         <td>{{ $item['nama_barang'] }} </td>
+                                        <td>{{ $item['keterangan'] }} </td>
                                         {{-- <td>{{ $item['jumlah_layanan'] }} {{ $item['satuan_barang'] }}</td>
                                     <td>{{ $item['aturan_pakai'] }} </td> --}}
                                     </tr>
@@ -430,7 +441,7 @@
                 NIK. {{ $kunjungan->erm_ranap->nik_keluarga ?? '' }}
             </div>
             <div class="col-md-6 text-center border border-dark">
-                Waled, {{ now()->format('d F y h:m:s') }} <br>
+                Waled, {{ now()->format('d F y h:i:s') }} <br>
                 Dokter Penanggung Jawab Pelayanan <br>
                 (DPJP)
                 @if ($kunjungan->erm_ranap)
