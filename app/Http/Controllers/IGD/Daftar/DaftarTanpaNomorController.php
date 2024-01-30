@@ -12,6 +12,7 @@ use App\Models\Pasien;
 use App\Models\Kunjungan;
 use App\Models\AlasanMasuk;
 use App\Models\Paramedis;
+use App\Models\Penjamin;
 use App\Models\PenjaminSimrs;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
@@ -129,6 +130,17 @@ class DaftarTanpaNomorController extends Controller
         return view('simrs.igd.daftar.v_tanpanomor', compact('request','pasien'));
     }
 
+    public function penjaminUmum(Request $request)
+    {
+        $penjamin = PenjaminSimrs::get();
+        return response()->json($penjamin);
+    }
+    public function penjaminBPJS(Request $request)
+    {
+        $penjamin = Penjamin::get();
+        return response()->json($penjamin);
+    }
+
     public function formDaftarTanpaNomor($rm)
     {
         $pasien     = Pasien::firstWhere('no_rm', $rm);
@@ -139,37 +151,48 @@ class DaftarTanpaNomorController extends Controller
         $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
+        $penjaminbpjs       = Penjamin::get();
         $tanggal        = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
         $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
         $signature      = $this->signature();
         $response       = Http::withHeaders($signature)->get($url);
         $resdescrtipt   = $this->response_decrypt($response, $signature);
-        return view('simrs.igd.daftar.form_daftar_tanpanomor', compact('pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.form_daftar_tanpanomor', compact('pasien','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function daftarTanpaNomorStore(Request $request)
     {
+        if (empty($request->penjamin_id_umum) || empty($request->penjamin_id_umum)) {
+            Alert::error('Penjamin Belum dipilih!!', 'silahkan pilih penjamin terlebih dahulu!');
+            return back();
+        }
+        if($request->isBpjs == null)
+        {
+            Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
+            return back();
+        }
+        $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
             [
-                'rm' => 'required',
-                'dokter_id' => 'required',
-                'tanggal' => 'required',
-                'penjamin_id' => 'required',
-                'alasan_masuk_id' => 'required',
-                'isBpjs' => 'required',
-                'jp' => 'required',
-                'noTelp' => 'required|numeric|min:10|max_digits:15',
+                'rm'                => 'required',
+                'dokter_id'         => 'required',
+                'tanggal'           => 'required',
+                // 'penjamin_id_umum'  => 'required',
+                'alasan_masuk_id'   => 'required',
+                'isBpjs'            => 'required',
+                'jp'                => 'required',
+                'noTelp'            => 'required|numeric|min:10|max_digits:15',
             ],
             [
-                'dokter_id' => 'Dokter DPJP wajib dipilih !',
-                'tanggal' => 'Tanggal pendaftaran wajib dipilih !',
-                'penjamin_id' => 'Penjamin wajib dipilih !',
-                'alasan_masuk_id' => 'Alasan daftar wajib dipilih !',
-                'isBpjs' => 'Anda harus memilih pasien didaftarkan sebagai pasien bpj/umum !',
-                'jp' => 'Anda harus memilih pasien didaftarkan kedalam unit mana !',
-                'noTelp' => 'No telepon wajib diisi !',
-                'noTelp.max' => 'No telepon maksimal 13 digit',
+                'dokter_id'         => 'Dokter DPJP wajib dipilih !',
+                'tanggal'           => 'Tanggal pendaftaran wajib dipilih !',
+                // 'penjamin_id_umum'  => 'Penjamin wajib dipilih !',
+                'alasan_masuk_id'   => 'Alasan daftar wajib dipilih !',
+                'isBpjs'            => 'Anda harus memilih pasien didaftarkan sebagai pasien bpj/umum !',
+                'jp'                => 'Anda harus memilih pasien didaftarkan kedalam unit mana !',
+                'noTelp'            => 'No telepon wajib diisi !',
+                'noTelp.max'        => 'No telepon maksimal 13 digit',
             ]);
 
             $data = Kunjungan::where('no_rm', $request->rm)
@@ -191,9 +214,10 @@ class DaftarTanpaNomorController extends Controller
             $c = $counter->counter + 1;
         }
         
-        $unit   = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
-        $pasien = Pasien::where('no_rm', $request->rm)->first();
-        $dokter = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
+        $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
+        $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
+        
         
         $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $c;
@@ -203,15 +227,15 @@ class DaftarTanpaNomorController extends Controller
         $createKunjungan->kode_paramedis    = $request->dokter_id;
         $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-        $createKunjungan->kode_penjamin     = $request->penjamin_id;
+        $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         =  $request->isBpjs;
-        // $createKunjungan->pic2 = Auth::user()->id;
-        $createKunjungan->pic = Auth::user()->id;
+        $createKunjungan->pic2              = Auth::user()->id;
+        
         if ($createKunjungan->save()) {
             $jpPasien               = new JPasienIGD();
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
@@ -277,7 +301,7 @@ class DaftarTanpaNomorController extends Controller
                 $createLH->status_layanan       = 3; // status 3 nanti di update jadi 1
                 $createLH->total_layanan        = $total_bayar_k_a;
 
-                if ($request->penjamin_id == 'P01') {
+                if ($penjamin == 'P01') {
                     $createLH->tagihan_pribadi = $total_bayar_k_a;
                 } else {
                     $createLH->tagihan_penjamin = $total_bayar_k_a;
@@ -298,7 +322,7 @@ class DaftarTanpaNomorController extends Controller
                     $createKarcis->tgl_layanan_detail       = now();
                     $createKarcis->tgl_layanan_detail_2     = now();
                     $createKarcis->row_id_header            = $createLH->id;
-                    if ($request->penjamin_id == 'P01') {
+                    if ($penjamin == 'P01') {
                         $createKarcis->tagihan_pribadi      = $tarif_karcis->TOTAL_TARIF_CURRENT;
                     } else {
                         $createKarcis->tagihan_penjamin     = $tarif_karcis->TOTAL_TARIF_CURRENT;
@@ -317,7 +341,7 @@ class DaftarTanpaNomorController extends Controller
                         $createAdm->tgl_layanan_detail      = now();
                         $createAdm->tgl_layanan_detail_2    = now();
                         $createAdm->row_id_header           = $createLH->id;
-                        if ($request->penjamin_id == 'P01') {
+                        if ($penjamin == 'P01') {
                             $createAdm->tagihan_pribadi     = $tarif_adm->TOTAL_TARIF_CURRENT;
                         } else {
                             $createAdm->tagihan_penjamin    = $tarif_adm->TOTAL_TARIF_CURRENT;

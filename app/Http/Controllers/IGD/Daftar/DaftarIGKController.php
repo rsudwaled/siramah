@@ -176,28 +176,7 @@ class DaftarIGKController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien tidak memiliki nomor kartu. silahkan edit pasien terlebih dahulu!');
             return back();
         }
-        // if(!empty($pasien->no_Bpjs) && $request->isBpjs == 1)
-        // {
-        //     $tanggal    = now()->format('Y-m-d');
-        //     $url        = env('VCLAIM_URL') . "Peserta/nokartu/" . $pasien->no_Bpjs . "/tglSEP/" . $tanggal;
-        //     $signature  = $this->signature();
-        //     $response   = Http::withHeaders($signature)->get($url);
-        //     $repon_desc = $this->response_decrypt($response, $signature);
-            
-        //     if($repon_desc->metadata->code != 200)
-        //     {
-        //         Alert::error('Daftar Gagal!!', 'pasien memiliki masalah dengan bpjs : '.$repon_desc->metadata->message.'-'.($repon_desc->metadata->code));
-        //         return back();
-        //     }
-        //     if($repon_desc->metadata->code == 200 && $repon_desc->response->peserta->statusPeserta->kode == 0)
-        //     {
-        //         $hakKelas = $repon_desc->response->peserta->hakKelas->kode;
-        //     }else{
-        //         Alert::error('Daftar Gagal!!', 'status pasien bpjs : '.$repon_desc->response->peserta->statusPeserta->keterangan);
-        //         return back();
-        //     }
-        // }
-
+        
         $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
         $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
         $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
@@ -220,8 +199,8 @@ class DaftarIGKController extends Controller
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         =  $request->isBpjs;
-        // $createKunjungan->pic2 = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id;
+        $createKunjungan->pic2              = Auth::user()->id;
+
         if ($createKunjungan->save()) {
             $ant_upd                    = AntrianPasienIGD::find($request->id_antrian);
             $ant_upd->no_rm             = $request->rm;

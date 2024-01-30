@@ -52,8 +52,7 @@
                                             <option value="umr1_4" {{$request->data_umur=='umr1_4'?'selected':''}}>1 - 4 TAHUN</option>
                                             <option value="umr5_14"  {{$request->data_umur=='umr5_14'?'selected':''}}>5 - 14 TAHUN</option>
                                             <option value="umr15_44"  {{$request->data_umur=='umr15_44'?'selected':''}}>15 - 44 TAHUN</option>
-                                            <option value="umr45_75"  {{$request->data_umur=='umr45_75'?'selected':''}}>45 - 75 TAHUN</option>
-                                            <option value="lb75"  {{$request->data_umur=='lb75'?'selected':''}}> > 75 TAHUN</option>
+                                            <option value="umr45_75lb"  {{$request->data_umur=='umr45_75lb'?'selected':''}}>45 - > 75 TAHUN</option>
                                         </x-adminlte-select>
                                 </div>
                                 <div class="col-md-4">
@@ -88,8 +87,8 @@
                             <div class="row">
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
-                                    @if($range_umur =='k1') 
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL KURANG DARI 1 TAHUN</b> 
+                                    @if($range_umur =='k1')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL KURANG DARI 1 TAHUN</b>
                                     @elseif($range_umur =='umr1_4')
                                         <b> DIAGNOSA POLA PENYAKIT PENDERITA RAJAL UMUR 1 - 4 TAHUN</b>
                                     @elseif($range_umur =='umr5_14')

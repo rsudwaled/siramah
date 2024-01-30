@@ -63,17 +63,31 @@
                                             <option value="2">KLL & KK</option>
                                             <option value="3">KECELAKAAN KERJA</option>
                                         </x-adminlte-select>
-                                        <x-adminlte-select2 name="provinsi" id="provinsi" label="Provinsi">
-                                            <option selected disabled>Cari Provinsi</option>
-                                        </x-adminlte-select2>
-                                        <x-adminlte-select2 name="kabupaten" label="Kota / Kabupaten">
-                                            <option selected disabled>Cari Kota / Kabupaten
-                                            </option>
-                                        </x-adminlte-select2>
-                                        <x-adminlte-select2 name="kecamatan" label="Kecamatan">
-                                            <option selected disabled>Cari Kecamatan
-                                            </option>
-                                        </x-adminlte-select2>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <x-adminlte-select name="provinsi" label="Provinsi" id="provinsi_pasien">
+                                                    @foreach ($provinsi as $item)
+                                                        <option value="{{ $item->kode_provinsi }}">
+                                                            {{ $item->nama_provinsi }}
+                                                        </option>
+                                                    @endforeach
+                                                </x-adminlte-select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <x-adminlte-select name="kabupaten" label="Kabupaten" id="kab_pasien">
+                                                </x-adminlte-select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <x-adminlte-select name="kecamatan" label="Kecamatan" id="kec_pasien">
+                                                </x-adminlte-select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <x-adminlte-select name="desa" label="Desa" id="desa_pasien">
+                                                </x-adminlte-select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
@@ -116,7 +130,7 @@
                                             value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal Kejadian"
                                             :config="$config" />
                                     </div>
-                                    
+
                                 </div>
                                 <x-adminlte-button type="submit"
                                     class="withLoad btn btn-sm m-1 bg-green float-right btn-flat " id="submitPasien"
@@ -180,66 +194,87 @@
                 }
             });
 
-            $("#provinsi").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_provinsi_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            nama: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
+            $('#provinsi_pasien').change(function() {
+                var prov_pasien = $(this).val();
+                if (prov_pasien) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('kab-pasien.get') }}?kab_prov_id=" + prov_pasien,
+                        dataType: 'JSON',
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(kabupatenpasien) {
+                            if (kabupatenpasien) {
+                                $('#kab_pasien').empty();
+                                $("#kab_pasien").append(
+                                    ' < option > --Pilih Kabupaten-- < /option>');
+                                $.each(kabupatenpasien, function(key, value) {
+                                    $('#kab_pasien').append('<option value="' + value
+                                        .kode_kabupaten_kota + '">' + value
+                                        .nama_kabupaten_kota + '</option>');
+                                });
+                            } else {
+                                $('#kab_pasien').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $("#kab_pasien").empty();
                 }
             });
-            $("#kabupaten").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_kabupaten_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            kodeprovinsi: $("#provinsi option:selected").val(),
-                            nama: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
+            $('#kab_pasien').change(function() {
+                var kec_kab_id = $("#kab_pasien").val();
+                if (kec_kab_id) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('kec-pasien.get') }}?kec_kab_id=" + kec_kab_id,
+                        dataType: 'JSON',
+                        success: function(kecamatanpasien) {
+                            console.log(kecamatanpasien);
+                            if (kecamatanpasien) {
+                                $('#kec_pasien').empty();
+                                $("#kec_pasien").append(
+                                    ' < option > --Pilih Kecamatan-- < /option>');
+                                $.each(kecamatanpasien, function(key, value) {
+                                    $('#kec_pasien').append('<option value="' + value
+                                        .kode_kecamatan + '">' + value
+                                        .nama_kecamatan + '</option>');
+                                });
+                            } else {
+                                $('#kec_pasien').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $("#kec_pasien").empty();
                 }
             });
-            $("#kecamatan").select2({
-                theme: "bootstrap4",
-                ajax: {
-                    url: "{{ route('ref_kecamatan_api') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function(params) {
-                        return {
-                            kodekabupaten: $("#kabupaten option:selected").val(),
-                            nama: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
+            $('#kec_pasien').change(function() {
+                var desa_kec_id = $("#kec_pasien").val();
+                if (desa_kec_id) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('desa-pasien.get') }}?desa_kec_id=" + desa_kec_id,
+                        dataType: 'JSON',
+                        success: function(desapasien) {
+                            console.log(desapasien);
+                            if (desapasien) {
+                                $('#desa_pasien').empty();
+                                $("#desa_pasien").append(
+                                    ' < option > --Pilih Desa-- < /option>');
+                                $.each(desapasien, function(key, value) {
+                                    $('#desa_pasien').append('<option value="' + value
+                                        .kode_desa_kelurahan + '">' + value
+                                        .nama_desa_kelurahan + '</option>');
+                                });
+                            } else {
+                                $('#desa_pasien').empty();
+                            }
+                        }
+                    });
+                } else {
+                    $("#desa_pasien").empty();
                 }
             });
         });
