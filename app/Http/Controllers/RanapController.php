@@ -98,7 +98,6 @@ class RanapController extends APIController
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
-
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',

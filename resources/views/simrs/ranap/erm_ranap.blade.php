@@ -575,6 +575,29 @@
                     cache: true
                 }
             });
+            $(".icd9operasi").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
+                theme: "bootstrap4",
+                multiple: true,
+                maximumSelectionLength: 1,
+                ajax: {
+                    url: "{{ route('get_procedure_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
             $('.btnCariSEP').click(function(e) {
                 var nomorkartu = $('.nomorkartu-id').val();
                 $('#modalSEP').modal('show');
@@ -751,7 +774,6 @@
         });
     </script>
     <script>
-        // row select diagnosa
         function addDiagSekunderResume() {
             newRowAdd = '<div id="row"><div class="form-group">' +
                 '<div class="input-group">' +
@@ -788,6 +810,79 @@
 
         function hapusDiagSekunderResume(button) {
             $(button).parents("#row").remove();
+        }
+
+        function addIcdOperasi() {
+            newRowAdd = '<div id="row"><div class="form-group">' +
+                '<div class="input-group">' +
+                '<select name="icd9_operasi[]" class="form-control icd9operasi"></select>' +
+                '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
+                '<i class="fas fa-trash"></i>' +
+                "</button></div></div></div></div>";
+            $('#inputIcdOperasi').append(newRowAdd);
+            $(".icd9operasi").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
+                theme: "bootstrap4",
+                multiple: true,
+                maximumSelectionLength: 1,
+                ajax: {
+                    url: "{{ route('get_procedure_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+        }
+
+        function hapusIcdOperasi(button) {
+            $(button).parents("#row").remove();
+        }
+
+        function addIcdTindakan() {
+            newRowAdd = '<div id="row"><div class="form-group">' +
+                '<div class="input-group">' +
+                '<select name="icd9_prosedur[]" class="form-control icd9operasi"></select>' +
+                '<div class="input-group-append">' +
+                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
+                '<i class="fas fa-trash"></i>' +
+                "</button></div></div></div></div>";
+            $('#inputIcdTindakan').append(newRowAdd);
+            $(".icd9operasi").select2({
+                placeholder: 'Silahkan pilih Tindakan ICD-9',
+                theme: "bootstrap4",
+                multiple: true,
+                maximumSelectionLength: 1,
+                ajax: {
+                    url: "{{ route('get_procedure_eclaim') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 100,
+                    data: function(params) {
+                        return {
+                            keyword: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
         }
     </script>
     {{-- riwayat kunjungan --}}

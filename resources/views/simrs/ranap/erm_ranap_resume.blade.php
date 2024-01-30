@@ -218,7 +218,6 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-
                                 @if ($kunjungan->erm_ranap)
                                     @if ($kunjungan->erm_ranap->icd10_sekunder)
                                         <label for="asddasf">ICD-10 Sekunder </label>
@@ -296,8 +295,6 @@
                                     </div>
                                     <div id="diagSekunderBaru"></div>
                                 @endif
-
-
                             </div>
                         </div>
                     </div>
@@ -310,10 +307,83 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="icd9_operasi" label="Tindakan Operasi ICD-9"
-                                    rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
-                                    {{ $kunjungan->erm_ranap->icd9_operasi ?? null }}
-                                </x-adminlte-textarea>
+                                @if ($kunjungan->erm_ranap)
+                                    @if ($kunjungan->erm_ranap->icd9_operasi)
+                                        <label for="xinputIcd9Operasi">ICD-9 Operasi</label>
+                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_operasi) as $item)
+                                            <div id="row">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <select name="icd9_operasi[]"
+                                                            class="form-control icd9operasi">
+                                                            <option value="{{ $item }}" selected>
+                                                                {{ $item }}
+                                                            </option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-xs btn-danger"
+                                                                onclick="hapusIcdOperasi(this)">
+                                                                <i class="fas fa-trash "></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <select name="icd9_operasi[]" id="xinputIcd9Operasi"
+                                                        class="form-control icd9operasi">
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addIcdOperasi()">
+                                                            <i class="fas fa-plus "></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="inputIcdOperasi"></div>
+                                    @else
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <label for="xinputIcd9Operasi">ICD-9 Operasi</label>
+                                                <div class="input-group">
+                                                    <select name="icd9_operasi[]" id="xinputIcd9Operasi"
+                                                        class="form-control icd9operasi">
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addIcdOperasi()">
+                                                            <i class="fas fa-plus "></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="inputIcdOperasi"></div>
+                                    @endif
+                                @else
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <label for="xinputIcd9Operasi">ICD-9 Operasi</label>
+                                            <div class="input-group">
+                                                <select name="icd9_operasi[]" id="xinputIcd9Operasi"
+                                                    class="form-control icd9operasi">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-xs btn-success"
+                                                        onclick="addIcdOperasi()">
+                                                        <i class="fas fa-plus "></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="inputIcdOperasi"></div>
+                                @endif
                             </div>
                             <div class="col-md-12">
                                 <div class="row">
@@ -343,10 +413,83 @@
                                 </x-adminlte-textarea>
                             </div>
                             <div class="col-md-6">
-                                <x-adminlte-textarea name="icd9_prosedur" label="Tindakan Operasi ICD-9"
-                                    rows="5" igroup-size="sm" placeholder="Tindakan ICD-9">
-                                    {{ $kunjungan->erm_ranap->icd9_prosedur ?? null }}
-                                </x-adminlte-textarea>
+                                @if ($kunjungan->erm_ranap)
+                                    @if ($kunjungan->erm_ranap->icd9_prosedur)
+                                        <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_prosedur) as $item)
+                                            <div id="row">
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <select name="icd9_prosedur[]"
+                                                            class="form-control icd9operasi">
+                                                            <option value="{{ $item }}" selected>
+                                                                {{ $item }}
+                                                            </option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button type="button" class="btn btn-xs btn-danger"
+                                                                onclick="hapusIcdOperasi(this)">
+                                                                <i class="fas fa-trash "></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <select name="icd9_prosedur[]" id="xinputIcd9Tindakan"
+                                                        class="form-control icd9operasi">
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addIcdTindakan()">
+                                                            <i class="fas fa-plus "></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="inputIcdTindakan"></div>
+                                    @else
+                                        <div id="row">
+                                            <div class="form-group">
+                                                <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                                <div class="input-group">
+                                                    <select name="icd9_prosedur[]" id="xinputIcd9Tindakan"
+                                                        class="form-control icd9operasi">
+                                                    </select>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-xs btn-success"
+                                                            onclick="addIcdTindakan()">
+                                                            <i class="fas fa-plus "></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="inputIcdTindakan"></div>
+                                    @endif
+                                @else
+                                    <div id="row">
+                                        <div class="form-group">
+                                            <label for="xinputIcd9Tindakan">ICD-9 Operasi</label>
+                                            <div class="input-group">
+                                                <select name="icd9_prosedur[]" id="xinputIcd9Tindakan"
+                                                    class="form-control icd9operasi">
+                                                </select>
+                                                <div class="input-group-append">
+                                                    <button type="button" class="btn btn-xs btn-success"
+                                                        onclick="addIcdTindakan()">
+                                                        <i class="fas fa-plus "></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="inputIcdTindakan"></div>
+                                @endif
                             </div>
                         </div>
                     </div>
