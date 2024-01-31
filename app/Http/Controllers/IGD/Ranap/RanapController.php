@@ -124,14 +124,36 @@ class RanapController extends APIController
 
     public function dataPasienRanap(Request $request)
     {
-        $kunjungan = Kunjungan::where([
-                ['status_kunjungan','!=', 8],
-                ['is_ranap_daftar', 1],
-            ])
-            ->whereDate('tgl_masuk', now())
-            ->get();
-        $unit = Unit::where('kelas_unit', 1)->get();
-        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan','unit'));
+        $query = DB::connection('mysql2')->table('ts_kunjungan')
+                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
+                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+                    // ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
+                    ->select(
+                        'mt_pasien.no_Bpjs as no_Bpjs', 'mt_pasien.nik_bpjs as nik_bpjs', 'mt_pasien.no_rm as no_rm','mt_pasien.nama_px as nama_px','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jenis_kelamin',
+                        'ts_kunjungan.kode_kunjungan as kode_kunjungan','ts_kunjungan.status_kunjungan as status_kunjungan','ts_kunjungan.no_sep as no_sep',
+                        'ts_kunjungan.tgl_masuk as tgl_masuk','ts_kunjungan.kode_unit as kode_unit', 'ts_kunjungan.diagx as diagx',
+                        'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas',
+                        'mt_unit.nama_unit as nama_unit',
+                        // 'mt_status_kunjungan.status_kunjungan as status_kunjungan',
+                    )
+                    ->where('status_kunjungan','!=', 8)
+                    ->where('is_ranap_daftar', 1)
+                    ->orderBy('tgl_masuk', 'desc');
+        if($request->tanggal && !empty($request->tanggal))
+        {
+            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
+        }
+
+        if($request->unit && !empty($request->unit))
+        {
+            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        }
+
+        if(empty($request->tanggal) && empty($request->unit)){
+            $query->whereDate('ts_kunjungan.tgl_masuk', now());
+        }
+        $kunjungan = $query->get();
+        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
     public function ranapUmum(Request $request, $rm, $kunjungan)

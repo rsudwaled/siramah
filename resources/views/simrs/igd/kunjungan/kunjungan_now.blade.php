@@ -1,61 +1,55 @@
 @extends('adminlte::page')
 @section('title', 'Kunjungan ')
 @section('content_header')
-<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-sm-6">
-            <h5>Data Kunjungan</h5>
-        </div>
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a onClick="window.location.reload();" 
-                        class="btn btn-sm btn-flat btn-warning">refresh</a></li>
-                
-            </ol>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h5>Data Kunjungan</h5>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select name="unit" id="unit" class="form-control select2">
+                                        @foreach ($unit as $item)
+                                            <option value="{{ $item->kode_unit }}"
+                                                {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
+                                                {{ $item->nama_unit }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input id="new-event" type="date" name="tanggal" class="form-control"
+                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="submit"
+                                                class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a onClick="window.location.reload();" class="btn btn-md btn-warning">Refresh</a>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                </ol>
+            </div>
         </div>
     </div>
-</div>
 @stop
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
-                <form action="" method="get">
-                    <div class="row">
-                        <div class="col-md-6">
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date name="tanggal" label="Tanggal " :config="$config"
-                                value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
-                                <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col-md-6">
-                            <x-adminlte-select2 name="unit" label="Pilih Unit">
-                                <option value="">Semua Unit</option>
-                                @foreach ($unit as $item)
-                                    <option value="{{ $item->kode_unit }}"
-                                        {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>{{ $item->nama_unit }}
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
-                        </div>
-                    </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
-                </form>
-            </x-adminlte-card>
-        </div>
-
         <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Pasien', 'Alamat', 'kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'status', 'detail'];
+                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -68,7 +62,7 @@
                         @foreach ($kunjungan as $item)
                             <tr>
                                 <td>
-                                    <a href="{{route('edit-pasien', ['rm'=>$item->rm])}}" target="__blank">
+                                    <a href="{{ route('edit-pasien', ['rm' => $item->rm]) }}" target="__blank">
                                         <b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
                                         {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
                                     </a>
@@ -80,17 +74,24 @@
                                         <small>
                                             <b>PASIEN KECELAKAAN</b>
                                         </small> <br>
-                                    @endif 
-                                    {{ $item->kunjungan }} <br> 
-                                    ({{ $item->nama_unit }}) <br>
-                                    
+                                    @endif
+                                    {{ $item->kunjungan }} <br>
+                                    ({{ $item->nama_unit }})
+                                    <br>
+
                                 </td>
                                 <td>{{ $item->tgl_kunjungan }}</td>
                                 <td>{{ $item->diagx }}</td>
                                 <td>{{ $item->sep }}</td>
                                 <td>{{ $item->status }}</td>
                                 <td>
-                                    <a href="{{route('detail.kunjungan',['kunjungan'=>$item->kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat withLoad">Detail</a>
+                                    <b>
+                                        {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar==0 ? 'UMUM' :'BPJS PROSES') }}
+                                    </b>
+                                </td>
+                                <td>
+                                    <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kunjungan]) }}"
+                                        class="btn btn-success btn-xs btn-block btn-flat withLoad">Detail</a>
 
                                 </td>
                             </tr>

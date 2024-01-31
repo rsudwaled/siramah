@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', 'Detail Pasien Kecelakaan')
+@section('title', 'Detail Pasien BPJS PROSES')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Detail Pasien Kecelakaan</h5>
+                <h5>Detail Pasien BPJS PROSES</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.list') }}"
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bpjs-proses.index') }}"
                             class="btn btn-sm  btn-secondary withLoad">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
@@ -158,9 +158,15 @@
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block border-right">
                                             <h5 class="description-header ">
-                                                Provinsi :  {{ $kunjungan->pasienKecelakaan == null ? '-':$kunjungan->pasienKecelakaan->provinsi->nama_provinsi }} <br>
-                                                Kabupaten : {{ $kunjungan->pasienKecelakaan == null ? '-':$kunjungan->pasienKecelakaan->kabupaten->nama_kabupaten_kota }} <br>
-                                                Kecamatan : {{ $kunjungan->pasienKecelakaan == null ? '-':$kunjungan->pasienKecelakaan->kecamatan->nama_kecamatan }} <br>
+                                                Provinsi :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->provinsi->nama_provinsi }}
+                                                <br>
+                                                Kabupaten :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->kabupaten->nama_kabupaten_kota }}
+                                                <br>
+                                                Kecamatan :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->kecamatan->nama_kecamatan }}
+                                                <br>
                                             </h5>
                                             <span class="description-text">- Lokasi Kecelakaan -</span>
                                         </div>
@@ -179,7 +185,7 @@
                                     <div class="col-sm-3 col-6">
                                         <div class="description-block">
                                             <h5 class="description-header ">
-                                                {{ $kunjungan->pasienKecelakaan == null ? '-':date('d M Y', strtotime($kunjungan->pasienKecelakaan->tglKejadian)) }}
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : date('d M Y', strtotime($kunjungan->pasienKecelakaan->tglKejadian)) }}
                                             </h5>
                                             <span class="description-text">- Tanggal Kejadian -</span>
                                         </div>
@@ -233,9 +239,13 @@
                                         </b>
                                     </td>
                                     <td>
-                                        <b>
-                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
-                                        </b>
+                                        @if ($kunjungan->jp_daftar == 0)
+                                            <b>UMUM</b>
+                                        @elseif ($kunjungan->jp_daftar == 1)
+                                            <b>BPJS</b>
+                                        @else
+                                            <b>BPJS PROSES</b>
+                                        @endif
                                     </td>
                                 </tr>
                             </tbody>

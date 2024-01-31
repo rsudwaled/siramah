@@ -113,7 +113,7 @@ class DaftarTanpaNomorController extends Controller
    }
     public function vTanpaNomor(Request $request)
     {
-        $pasien = null;
+        $pasien = Pasien::latest()->limit(50)->get();
         if ($request->rm && !empty($request->rm)) {
             $pasien = Pasien::where('no_rm', $request->rm)->get();
         }
@@ -141,9 +141,10 @@ class DaftarTanpaNomorController extends Controller
         return response()->json($penjamin);
     }
 
-    public function formDaftarTanpaNomor($rm)
+    public function formDaftarTanpaNomor(Request $request, $rm)
     {
         $pasien     = Pasien::firstWhere('no_rm', $rm);
+        
         $kunjungan  = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)
@@ -151,18 +152,28 @@ class DaftarTanpaNomorController extends Controller
         $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
-        $penjaminbpjs       = Penjamin::get();
+        $penjaminbpjs   = Penjamin::get();
         $tanggal        = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
-        $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
-        $signature      = $this->signature();
-        $response       = Http::withHeaders($signature)->get($url);
-        $resdescrtipt   = $this->response_decrypt($response, $signature);
+        
+        $url            = null;
+        $signature      = null;
+        $response       = null;
+        $resdescrtipt   = null;
+        if(!empty($pasien->nik_bpjs))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
+            $signature      = $this->signature();
+            $response       = Http::withHeaders($signature)->get($url);
+            $resdescrtipt   = $this->response_decrypt($response, $signature);
+        }
+        
         return view('simrs.igd.daftar.form_daftar_tanpanomor', compact('pasien','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function daftarTanpaNomorStore(Request $request)
     {
+
         if (empty($request->penjamin_id_umum) || empty($request->penjamin_id_umum)) {
             Alert::error('Penjamin Belum dipilih!!', 'silahkan pilih penjamin terlebih dahulu!');
             return back();
@@ -172,6 +183,7 @@ class DaftarTanpaNomorController extends Controller
             Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
         }
+        $bpjsProses = $request->bpjsProses;
         $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
             [
@@ -233,7 +245,7 @@ class DaftarTanpaNomorController extends Controller
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
-        $createKunjungan->jp_daftar         =  $request->isBpjs;
+        $createKunjungan->jp_daftar         = $bpjsProses == null ? $request->isBpjs : 2;
         $createKunjungan->pic2              = Auth::user()->id;
         
         if ($createKunjungan->save()) {
@@ -241,7 +253,7 @@ class DaftarTanpaNomorController extends Controller
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            $jpPasien->is_bpjs      = $request->isBpjs;
+            $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
             if($request->isBpjs == 1)
@@ -256,7 +268,7 @@ class DaftarTanpaNomorController extends Controller
                 $histories->noTelp          = $request->noTelp;
                 $histories->tglSep          = now();
                 $histories->jnsPelayanan    = '2';
-                $histories->klsRawatHak     = $hakKelas??null;
+                $histories->klsRawatHak     = $request->kelasRawatHak??null;
                 $histories->asalRujukan     = '2';
                 $histories->tglRujukan      = now();
                 $histories->noRujukan       = null;
@@ -302,7 +314,7 @@ class DaftarTanpaNomorController extends Controller
                 $createLH->total_layanan        = $total_bayar_k_a;
 
                 if ($penjamin == 'P01') {
-                    $createLH->tagihan_pribadi = $total_bayar_k_a;
+                    $createLH->tagihan_pribadi  = $total_bayar_k_a;
                 } else {
                     $createLH->tagihan_penjamin = $total_bayar_k_a;
                 }

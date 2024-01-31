@@ -11,7 +11,7 @@
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><b><h5>ANTRIAN : {{ $antrian->no_antri }}</h5></b></li>
                 <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                        class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                        class="btn btn-sm btn-flat btn-secondary">Kembali</a></li>
             </ol>
         </div>
     </div>

@@ -11,6 +11,7 @@ use App\Models\Icd10;
 use Illuminate\Http\Request;
 use App\Models\DiagnosaFrunit;
 use App\Models\HistoriesIGDBPJS;
+use Auth;
 
 
 class DiagnosaSynchController extends APIController
@@ -23,8 +24,8 @@ class DiagnosaSynchController extends APIController
                 
         if($request->tanggal && !empty($request->tanggal))
         {
-            $dataYesterday = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
-            $yesterday = $dataYesterday->subDays(2)->format('Y-m-d');
+            $dataYesterday  = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
+            $yesterday      = $dataYesterday->subDays(2)->format('Y-m-d');
 
             $query->whereDate('input_date','>=', $yesterday); 
             $query->whereDate('input_date','<=', $request->tanggal); 
@@ -37,48 +38,48 @@ class DiagnosaSynchController extends APIController
             $query->whereDate('input_date', now());
         }
 
-        $pasien_fr = $query->get();
-        $unit = Unit::whereIn('kode_unit',['1002','1023','1010','2004','2013'])->get();
-        $requestUnit = Unit::firstWhere('kode_unit', $request->unit);
+        $pasien_fr      = $query->get();
+        $unit           = Unit::whereIn('kode_unit',['1002','1023','1010','2004','2013'])->get();
+        $requestUnit    = Unit::firstWhere('kode_unit', $request->unit);
         return view('simrs.igd.diagnosa_synch.index', compact('request','pasien_fr','unit','requestUnit'));
     }
 
     // API FUNCTION
    public function signature()
    {
-       $cons_id = env('ANTRIAN_CONS_ID');
-       $secretKey = env('ANTRIAN_SECRET_KEY');
-       $userkey = env('ANTRIAN_USER_KEY');
+       $cons_id             = env('ANTRIAN_CONS_ID');
+       $secretKey           = env('ANTRIAN_SECRET_KEY');
+       $userkey             = env('ANTRIAN_USER_KEY');
        date_default_timezone_set('UTC');
-       $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
-       $signature = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
-       $encodedSignature = base64_encode($signature);
-       $data['user_key'] = $userkey;
-       $data['x-cons-id'] = $cons_id;
-       $data['x-timestamp'] = $tStamp;
-       $data['x-signature'] = $encodedSignature;
-       $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
+       $tStamp                  = strval(time() - strtotime('1970-01-01 00:00:00'));
+       $signature               = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
+       $encodedSignature        = base64_encode($signature);
+       $data['user_key']        = $userkey;
+       $data['x-cons-id']       = $cons_id;
+       $data['x-timestamp']     = $tStamp;
+       $data['x-signature']     = $encodedSignature;
+       $data['decrypt_key']     = $cons_id . $secretKey . $tStamp;
        return $data;
    }
 
    public static function stringDecrypt($key, $string)
    {
-       $encrypt_method = 'AES-256-CBC';
-       $key_hash = hex2bin(hash('sha256', $key));
-       $iv = substr(hex2bin(hash('sha256', $key)), 0, 16);
-       $output = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
-       $output = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+       $encrypt_method  = 'AES-256-CBC';
+       $key_hash        = hex2bin(hash('sha256', $key));
+       $iv              = substr(hex2bin(hash('sha256', $key)), 0, 16);
+       $output          = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+       $output          = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
        return $output;
    }
 
    public function response_decrypt($response, $signature)
    {
-       $code = json_decode($response->body())->metaData->code;
+       $code    = json_decode($response->body())->metaData->code;
        $message = json_decode($response->body())->metaData->message;
        if ($code == 200 || $code == 1) {
-           $response = json_decode($response->body())->response ?? null;
-           $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response);
-           $data = json_decode($decrypt);
+           $response    = json_decode($response->body())->response ?? null;
+           $decrypt     = $this->stringDecrypt($signature['decrypt_key'], $response);
+           $data        = json_decode($decrypt);
            if ($code == 1) {
                $code = 200;
            }
@@ -90,14 +91,14 @@ class DiagnosaSynchController extends APIController
 
    public function response_no_decrypt($response)
    {
-       $code = json_decode($response->body())->metaData->code;
-       $message = json_decode($response->body())->metaData->message;
-       $response = json_decode($response->body())->metaData->response;
+       $code        = json_decode($response->body())->metaData->code;
+       $message     = json_decode($response->body())->metaData->message;
+       $response    = json_decode($response->body())->metaData->response;
        $response = [
            'response' => $response,
            'metadata' => [
-               'message' => $message,
-               'code' => $code,
+               'message'    => $message,
+               'code'       => $code,
            ],
        ];
        return json_decode(json_encode($response));
@@ -109,7 +110,7 @@ class DiagnosaSynchController extends APIController
         $validator = Validator::make(request()->all(), [
             'noMR' => 'required',
             'kunjungan' => 'required',
-            'diagAwal' => 'required',
+            'diagAwal'  => 'required',
         ]);
         
         if ($validator->fails()) {
@@ -127,33 +128,33 @@ class DiagnosaSynchController extends APIController
        
         if($kunjungan->jpDaftar->is_bpjs ==1)
         {
-            $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
-            $signature = $this->signature();
+            $url        = env('VCLAIM_URL') . 'SEP/2.0/insert';
+            $signature  = $this->signature();
             $signature['Content-Type'] = 'application/x-www-form-urlencoded';
             $data = [
                 'request' => [
                     't_sep' => [
-                        'noKartu' => trim($histories->noKartu),
-                        'tglSep' => $histories->tglSep,
+                        'noKartu'   => trim($histories->noKartu),
+                        'tglSep'    => $histories->tglSep,
                         'ppkPelayanan' => '1018R001',
                         'jnsPelayanan' => $histories->jnsPelayanan,
                         'klsRawat' => [
-                            'klsRawatHak' => $histories->klsRawatHak,
-                            'klsRawatNaik' => '',
-                            'pembiayaan' => '',
-                            'penanggungJawab' => '',
+                            'klsRawatHak'       => $histories->klsRawatHak,
+                            'klsRawatNaik'      => '',
+                            'pembiayaan'        => '',
+                            'penanggungJawab'   => '',
                         ],
                         'noMR' => $histories->noMR,
                         'rujukan' => [
-                            'asalRujukan' => $histories->asalRujukan == null?'':$histories->asalRujukan,
-                            'tglRujukan' => $histories->tglRujukan,
-                            'noRujukan' => '',
-                            'ppkRujukan' => '',
+                            'asalRujukan'   => $histories->asalRujukan == null?'':$histories->asalRujukan,
+                            'tglRujukan'    => $histories->tglRujukan,
+                            'noRujukan'     => '',
+                            'ppkRujukan'    => '',
                         ],
-                        'catatan' => '',
-                        'diagAwal' => $request->diagAwal,
+                        'catatan'   => '',
+                        'diagAwal'  => $request->diagAwal,
                         'poli' => [
-                            'tujuan' => 'IGD',
+                            'tujuan'    => 'IGD',
                             'eksekutif' => '0',
                         ],
                         'cob' => [
@@ -163,33 +164,34 @@ class DiagnosaSynchController extends APIController
                             'katarak' => '0',
                         ],
                         'jaminan' => [
-                            'lakaLantas' => $histories->lakaLantas == null? 0 : $histories->lakaLantas,
-                            'noLP' => $histories->noLP == null ? '' : $histories->noLP,
+                            'lakaLantas'    => $histories->lakaLantas == null? 0 : $histories->lakaLantas,
+                            'noLP'          => $histories->noLP == null ? '' : $histories->noLP,
                             'penjamin' => [
-                                'tglKejadian' => $histories->lakaLantas == null ? 0 : $histories->tglKejadian,
-                                'keterangan' => $histories->keterangan == null ? '' : $histories->keterangan,
+                                'tglKejadian'   => $histories->lakaLantas == null ? 0 : $histories->tglKejadian,
+                                'keterangan'    => $histories->keterangan == null ? '' : $histories->keterangan,
                                 'suplesi' => [
-                                    'suplesi' => '0',
-                                    'noSepSuplesi' => '',
-                                    'lokasiLaka' => [
-                                        'kdPropinsi' => $histories->kdPropinsi == null ? '' : $histories->kdPropinsi,
-                                        'kdKabupaten' => $histories->kdKabupaten == null ? '' : $histories->kdKabupaten,
-                                        'kdKecamatan' => $histories->kdKecamatan == null ? '' : $histories->kdKecamatan,
+                                    'suplesi'       => '0',
+                                    'noSepSuplesi'  => '',
+                                    'lokasiLaka'    => [
+                                        'kdPropinsi'    => $histories->kdPropinsi == null ? '' : $histories->kdPropinsi,
+                                        'kdKabupaten'   => $histories->kdKabupaten == null ? '' : $histories->kdKabupaten,
+                                        'kdKecamatan'   => $histories->kdKecamatan == null ? '' : $histories->kdKecamatan,
                                     ],
                                 ],
                             ],
                         ],
-                        'tujuanKunj' => '0',
+                        'tujuanKunj'    => '0',
                         'flagProcedure' => '',
-                        'kdPenunjang' => '',
-                        'assesmentPel' => '',
+                        'kdPenunjang'   => '',
+                        'assesmentPel'  => '',
                         'skdp' => [
-                            'noSurat' => '',
-                            'kodeDPJP' => '',
+                            'noSurat'   => '',
+                            'kodeDPJP'  => '',
                         ],
                         'dpjpLayan' => $histories->dpjpLayan,
-                        'noTelp' => $histories->noTelp,
-                        'user' => 'test',
+                        'noTelp'    => $histories->noTelp,
+                        // 'user'      => 'test',
+                        'user'      => $histories->user,
                     ],
                 ],
             ];
@@ -218,7 +220,7 @@ class DiagnosaSynchController extends APIController
                 return response()->json(['data'=>$callback]);
             }
         }else{
-            return response()->json(['data'=>$callback]);
+            return response()->json(['data'=>null]);
         }
         
     }
@@ -226,8 +228,8 @@ class DiagnosaSynchController extends APIController
     public function synchDiagnosa(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'noMR' => 'required',
-            'diagAwal' => 'required',
+            'noMR'      => 'required',
+            'diagAwal'  => 'required',
             'kunjungan' => 'required',
         ]);
         
@@ -240,7 +242,7 @@ class DiagnosaSynchController extends APIController
         {
             return response()->json(['data'=>$kunjungan,'code'=>401,'message'=>'Kunjungan Tidak Ada!']);
         }
-        $icd        = Icd10::firstWhere('diag', $request->diagAwal);
+        $icd                = Icd10::firstWhere('diag', $request->diagAwal);
         $kunjungan->diagx   = $request->diagAwal.' - '.$icd->nama ;
         $kunjungan->save();
 

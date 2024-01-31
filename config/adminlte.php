@@ -467,7 +467,14 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
-                    'text' => 'Kunjungan',
+                    'text' => 'Pasien BPJS PROSES',
+                    'icon'    => 'fas fa-thumbtack',
+                    'url'  => 'pasien-bpjsproses/list-pasien',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
+                    'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-address-book',
                     'url'  => 'daftar-kunjungan',
                     'shift'   => 'ml-2',

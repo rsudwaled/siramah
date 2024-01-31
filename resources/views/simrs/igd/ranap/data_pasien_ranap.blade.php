@@ -1,23 +1,44 @@
 @extends('adminlte::page')
-@section('title', 'Kunjungan ')
+@section('title', 'Pasien Rawat Inap')
 @section('content_header')
-<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-sm-6">
-            <h5>Pasien Rawat Inap</h5>
-        </div>
-        <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a onClick="window.location.reload();" 
-                        class="btn btn-sm btn-flat btn-warning">refresh</a></li>
-            </ol>
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-4">
+                <h5>Pasien Rawat Inap</h5>
+            </div>
+            <div class="col-sm-8">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <input type="text" name="nama_pasien" class="form-control" value="{{$request->nama_pasien != null ? $request->nama_pasien:''}}" placeholder="cari nama pasien">
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <input id="new-event" type="date" name="tanggal" class="form-control"
+                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="submit"
+                                                class="btn btn-primary btn-sm withLoad">Cari</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a onClick="window.location.reload();" class="btn btn-md btn-warning">Refresh</a>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                </ol>
+            </div>
         </div>
     </div>
-</div>
 @stop
 @section('content')
     <div class="row">
-        <div class="col-md-12">
+        {{-- <div class="col-md-12">
             <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
@@ -48,13 +69,13 @@
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
-        </div>
+        </div> --}}
 
         <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan','Pasien', 'Alamat',  'status', 'detail'];
+                        $heads = ['Tgl Masuk / Kunjungan', 'Pasien', 'Alamat', 'Ruangan', 'detail'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -68,21 +89,28 @@
                             <tr>
                                 <td>
                                     <b>
-                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }})
+                                        {{ $item->kode_kunjungan }} <br> ({{ $item->nama_unit }})
                                     </b> <br>
                                     {{ $item->tgl_masuk }}
                                 </td>
                                 <td>
-                                    <a href="{{route('edit-pasien', ['rm'=>$item->no_rm])}}" target="__blank">
-                                        <b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->no_rm }} <br>NIK :
-                                        {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
+                                    <a href="{{ route('edit-pasien', ['rm' => $item->no_rm]) }}" target="__blank">
+                                        <b>{{ $item->nama_px }}</b> <br>RM : {{ $item->no_rm }} <br>NIK :
+                                        {{ $item->nik_bpjs }} <br>No Kartu : {{ $item->no_Bpjs }}
                                     </a>
                                 </td>
-                                <td>alamat : {{ $item->pasien->alamat }} / <br></td>
-                                
-                                <td>{{ $item->status->status_kunjungan }}</td>
+                                <td>alamat : {{ $item->alamat }} / <br></td>
+
                                 <td>
-                                    <a href="{{route('detail.kunjungan', ['kunjungan'=>$item->kode_kunjungan])}}" class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
+                                    <b>
+                                       Kamar : {{$item->kamar}} <br>
+                                       BED   :  {{$item->no_bed}} <br>
+                                       Kelas : {{$item->kelas}} <br>
+                                    </b>
+                                </td>
+                                <td>
+                                    <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                        class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -101,5 +129,5 @@
 @section('plugins.Sweetalert2', true)
 
 @section('js')
-   
+
 @endsection

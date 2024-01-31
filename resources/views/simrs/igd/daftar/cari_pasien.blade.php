@@ -5,20 +5,20 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                @if ($jp==1)
-                <h5>Form Daftar / IGD</h5>
+                @if ($jp == 1)
+                    <h5>Form Daftar / IGD</h5>
                 @else
-                <h5>Form Daftar / IGK</h5>
+                    <h5>Form Daftar / IGK</h5>
                 @endif
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                            class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}"
-                            class="btn btn-sm btn-flat bg-purple">Pasien Baru</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('terpilih.antrian',['no'=>$no,'jp'=>$jp]) }}"
-                            class="btn btn-sm btn-flat bg-danger">refresh</a></li>
+                            class="btn btn-sm bg-purple">Pasien Baru</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('terpilih.antrian', ['no' => $no, 'jp' => $jp]) }}"
+                            class="btn btn-sm bg-danger">Refresh</a></li>
                 </ol>
             </div>
         </div>
@@ -97,6 +97,14 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </x-adminlte-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline">
+                <div class="card-body box-profile">
                     @if (isset($pasien))
                         <div class="row mt-5">
                             @php
@@ -108,26 +116,28 @@
                                 $config['scrollCollapse'] = true;
                                 $config['scrollX'] = true;
                             @endphp
-                            <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
-                                bordered hoverable compressed>
+                            <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" head-theme="dark"
+                                :config="$config" striped bordered hoverable compressed>
                                 @foreach ($pasien as $data)
                                     <tr>
                                         <td>
-                                            NIK : {{$data->nik_bpjs}} <br>
-                                            BPJS : {{$data->no_Bpjs}}
+                                            NIK : {{ $data->nik_bpjs }} <br>
+                                            BPJS : {{ $data->no_Bpjs }}
                                         </td>
                                         <td>
                                             <b>{{ $data->no_rm }}</b><br>
                                             {{ $data->nama_px }}
                                         </td>
-                                        <td><small>alamat : {{ $data->alamat??'-' }} / <br>
-                                                {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : (($data->desa == null ? 'Desa: -':'Desa. '.$data->desas->nama_desa_kelurahan ). ($data->kecamatan==null?'Kec. ':' , Kec. ' . $data->kecamatans->nama_kecamatan ). ($data->kabupaten==null?'Kab. ':' - Kab. ' . $data->kabupatens->nama_kabupaten_kota)) }}</small>
+                                        <td><small>alamat : {{ $data->alamat ?? '-' }} / <br>
+                                                {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}</small>
                                         </td>
                                         <td>
-                                            @if ($jp==1)
-                                            <a href="{{route('form.daftar-igd', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
+                                            @if ($jp == 1)
+                                                <a href="{{ route('form.daftar-igd', ['no' => $antrian->no_antri, 'rm' => $data->no_rm, 'jp' => $jp]) }}"
+                                                    class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                             @else
-                                            <a href="{{route('form.daftar-igk', ['no'=>$antrian->no_antri,'rm'=>$data->no_rm, 'jp'=>$jp])}}" class="btn btn-xs btn-primary withLoad">daftarkan</a>
+                                                <a href="{{ route('form.daftar-igk', ['no' => $antrian->no_antri, 'rm' => $data->no_rm, 'jp' => $jp]) }}"
+                                                    class="btn btn-xs btn-primary withLoad">daftarkan</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -136,7 +146,7 @@
                         </div>
                     @endif
                 </div>
-            </x-adminlte-card>
+            </div>
         </div>
     </div>
 
@@ -149,7 +159,7 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        $('body').on('click','.btn-daftarkan',function() {
+        $('body').on('click', '.btn-daftarkan', function() {
             var rm = $(this).data('rm');
             var no = $(this).data('antrian');
             var jp = $(this).data('jp');

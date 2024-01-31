@@ -111,6 +111,11 @@ class DaftarIGDController extends Controller
     {
         $antrian    = AntrianPasienIGD::firstWhere('no_antri', $no);
         $pasien     = Pasien::firstWhere('no_rm', $rm);
+        if(empty($pasien->no_Bpjs) || empty($pasien->nik_bpjs))
+        {
+            Alert::info('INFORMASI NIK atau No Kartu PASIEN KOSONG!!', 'silahkan edit data pasien terlebih dahulu!');
+            return back();
+        }
         $kunjungan  = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)

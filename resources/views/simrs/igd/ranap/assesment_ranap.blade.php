@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-lg-12">
                             @php
-                                $heads = ['TANGGAL MASUK', 'KUNJUNGAN', 'PASIEN', 'ALAMAT', 'STATUS', 'AKSI'];
+                                $heads = ['TANGGAL MASUK', 'KUNJUNGAN', 'PASIEN', 'ALAMAT', 'STATUS DAFTAR', 'AKSI'];
                                 $config['order'] = ['0', 'desc'];
                                 $config['paging'] = false;
                                 $config['info'] = false;
@@ -99,9 +99,9 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="badge $ranap->status_pasien_daftar == 1 ? 'badge-success' : 'badge-primary' ">
-                                                <b>Daftar :
-                                                    {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : 'UMUM' }}</b>
+                                                class="badge {{$ranap->status_pasien_daftar == 1 ? 'badge-success' : ($ranap->status_pasien_daftar==0 ? 'badge-primary' :'badge-warning') }}">
+                                                Daftar :
+                                                    {{ $ranap->status_pasien_daftar == 1 ? 'PASIEN BPJS' : ($ranap->status_pasien_daftar==0 ? 'UMUM' :'BPJS PROSES') }}
                                             </span><br>
                                             Pasien : {{ $ranap->status_ranap == 1 ? 'Rawat Inap' : 'Pasien Umum' }} <br>
                                         </td>

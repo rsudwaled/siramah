@@ -62,7 +62,7 @@ class PasienKecelakaanController extends Controller
             {
                 $query->where('nik_bpjs', $request->nik);
             }
-            $pasien = $query->get();
+            $pasien = $query->limit(100)->get();
         }
        
         return view('simrs.igd.pasien_kecelakaan.index', compact('request','pasien'));
