@@ -2129,7 +2129,6 @@
             var baseimage = canvas.toDataURL();
             $('#ttd_image64').val(baseimage);
             $("#formttd").submit();
-            alert('test');
         }
     </script>
     {{-- observasi --}}
