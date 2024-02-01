@@ -51,6 +51,8 @@
                             <td>
                                 {{ $item->ihs }}
                                 @if ($item->ihs)
+                                    <a href="{{ route('patient_sync') }}?norm={{ $item->no_rm }}"
+                                        class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
                                 @else
                                     <a href="{{ route('patient_sync') }}?norm={{ $item->no_rm }}"
                                         class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
