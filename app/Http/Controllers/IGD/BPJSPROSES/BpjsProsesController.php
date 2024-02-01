@@ -17,6 +17,10 @@ class BpjsProsesController extends Controller
         {
             $query->whereDate('tgl_masuk', $request->date);
         }
+        if(empty($request->date))
+        {
+            $query->whereDate('tgl_masuk', now());
+        }
 
         $kunjungan  = $query->get();
         return view('simrs.igd.bpjs_proses.list_pasien_bpjsproses', compact('request','kunjungan'));

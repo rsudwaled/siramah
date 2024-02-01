@@ -117,17 +117,18 @@
                         @endif
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="alert alert-success alert-dismissible">
-                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h5><i class="icon fas fa-exclamation-triangle"></i> Kunjungan Sudah Di Perbaharui!</h5>
-                            @if (!empty($kunjungan->id_alasan_edit))
-                                kunjungan sudah di perbaharui dengan alasan perubahan : {{$kunjungan->id_alasan_edit != null ? $kunjungan->alasanEdit->nama_alasan :''}}
-                            @endif
+                @if ($kunjungan->id_alasan_edit != null)
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <h5><i class="icon fas fa-exclamation-triangle"></i> Kunjungan Sudah Di Perbaharui!</h5>
+                                kunjungan sudah di perbaharui dengan alasan perubahan :
+                                {{ $kunjungan->id_alasan_edit != null ? $kunjungan->alasanEdit->nama_alasan : '' }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
                 <div class="row">
                     <div class="col-12 table-responsive">
                         <table class="table table-bordered">
@@ -181,7 +182,7 @@
                         </table>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>

@@ -144,7 +144,11 @@ class DaftarTanpaNomorController extends Controller
     public function formDaftarTanpaNomor(Request $request, $rm)
     {
         $pasien     = Pasien::firstWhere('no_rm', $rm);
-        
+        if(empty($pasien->nik_bpjs))
+        {
+            Alert::info('Informasi!!', 'pasien tidak memiliki NIK. silahkan daftarkan sebagai pasien bayi atau perbaharui nik pasien dengan benar!');
+            return back();
+        }
         $kunjungan  = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
         $knj_aktif  = Kunjungan::where('no_rm', $rm)
             ->where('status_kunjungan', 1)

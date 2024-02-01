@@ -845,6 +845,6 @@ class RanapController extends APIController
             }
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
-        return redirect()->route('kunjungan.ranap');
+        return redirect()->route('pasien.ranap');
     }
 }
