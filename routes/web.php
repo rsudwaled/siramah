@@ -47,6 +47,7 @@ use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Controllers\LaboratoriumController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatologiAnatomiController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\RadiologiController;
@@ -54,6 +55,7 @@ use App\Http\Controllers\RanapController;
 
 // rekam medis
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController as DiagnosaPolaPenyakit;
+use App\Http\Controllers\SatuSehatController;
 use App\Http\Livewire\Users;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
@@ -143,6 +145,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('obat', ObatController::class);
     Route::resource('kpo', KPOController::class);
     Route::resource('vclaim', VclaimController::class);
+
+    Route::prefix('satusehat')->group(function () {
+        Route::get('token_generate', [SatuSehatController::class, 'token_generate'])->name('token_generate');
+        Route::get('patient', [PatientController::class, 'index'])->name('patient');
+        Route::get('patient_by_nik', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
+        Route::get('patient_sync', [PatientController::class, 'patient_sync'])->name('patient_sync');
+    });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
