@@ -124,3 +124,57 @@
         <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
     </x-slot>
 </x-adminlte-modal>
+@push('js')
+    <x-adminlte-modal id="modalKunjungan" name="modalKunjungan" title="Kunjungan Pasien" theme="success"
+        icon="fas fa-file-medical" size="xl">
+        @php
+            $heads = ['Tgl Masuk', 'Tgl Keluar', 'Kunjungan', 'Jenis Pelayanan', 'Unit', 'Diagnosa', 'SEP'];
+            $config['paging'] = false;
+            $config['order'] = ['0', 'desc'];
+            $config['info'] = false;
+        @endphp
+        <x-adminlte-datatable id="tableKunjungan" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
+            hoverable compressed>
+        </x-adminlte-datatable>
+    </x-adminlte-modal>
+    <script>
+        $(function() {
+            $('.btnRiwayatKunjungan').click(function(e) {
+                $.LoadingOverlay("show");
+                getKunjunganPasien();
+                $('#modalKunjungan').modal('show');
+                $.LoadingOverlay("hide");
+            });
+
+            function getKunjunganPasien() {
+                var url = "{{ route('get_kunjungan_pasien') }}?norm={{ $kunjungan->no_rm }}";
+                var table = $('#tableKunjungan').DataTable();
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                }).done(function(data) {
+                    table.rows().remove().draw();
+                    if (data.metadata.code == 200) {
+                        $.each(data.response, function(key, value) {
+                            table.row.add([
+                                value.tgl_masuk,
+                                value.tgl_keluar,
+                                value.counter + " / " + value.kode_kunjungan,
+                                value.tgl_keluar,
+                                value.unit.nama_unit,
+                                value.tgl_keluar,
+                                value.tgl_keluar,
+                            ]).draw(false);
+                        });
+                    } else {
+                        Swal.fire(
+                            'Mohon Maaf !',
+                            data.metadata.message,
+                            'error'
+                        );
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

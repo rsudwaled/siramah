@@ -41,6 +41,10 @@
             </dd>
             <dt class="col-sm-4 m-0">No SEP</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->no_sep }}</dd>
+            <dt class="col-sm-4 m-0">Tarif RS</dt>
+            <dd class="col-sm-8 m-0"> Rp. <span class="biaya_rs_html">-</span></dd>
+            <dt class="col-sm-4 m-0">Tarif E-Klaim</dt>
+            <dd class="col-sm-8 m-0">Rp. <span class="tarif_eklaim_html">-</span></dd>
             <dt class="col-sm-4 m-0">Groupping</dt>
             <dd class="col-sm-8 m-0"><span class="code_cbg_html">-</span></dd>
         </dl>

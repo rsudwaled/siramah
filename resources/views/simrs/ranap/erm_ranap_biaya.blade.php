@@ -87,3 +87,10 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $('.biaya_rs_html').html("{{ money($data->rangkuman->tarif_rs, 'IDR') }}");
+        $('.tarif_eklaim_html').html("{{ money($data->budget->tarif_inacbg ?? 0, 'IDR') }}");
+        $('.code_cbg_html').html("{{ $data->budget->kode_cbg ?? 'Belum Groupping' }}");
+    });
+</script>

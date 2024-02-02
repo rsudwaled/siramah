@@ -693,3 +693,32 @@
         <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
     </x-slot>
 </x-adminlte-modal>
+@push('css')
+    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
+@endpush
+@push('js')
+    <script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
+    <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
+    <script>
+        function btnttdDokter() {
+            $.LoadingOverlay("show");
+            $('#formttd').attr('action', "{{ route('ttd_dokter_resume_ranap') }}");
+            $('#modalttd').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function btnttdPasien() {
+            $.LoadingOverlay("show");
+            $('#formttd').attr('action', "{{ route('ttd_pasien_resume_ranap') }}");
+            $('#modalttd').modal('show');
+            $.LoadingOverlay("hide");
+        }
+
+        function simpanttd() {
+            var canvas = document.getElementById("signature-pad");
+            var baseimage = canvas.toDataURL();
+            $('#ttd_image64').val(baseimage);
+            $("#formttd").submit();
+        }
+    </script>
+@endpush

@@ -67,6 +67,8 @@
                 var table = $('#table1').DataTable({
                     "paging": false,
                     "info": false,
+                    "scrollCollapse": true,
+                    "scrollY": '300px'
                 });
             });
         }

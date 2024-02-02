@@ -1,3 +1,22 @@
+<div class="row">
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('tgl_keluar', null)->count() }}" text="Sedang Ranap"
+            theme="primary" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('budget.kode_cbg', null)->count() }}" text="Belum Groupping"
+            theme="danger" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box
+            title="{{ $kunjungans->where('tgl_keluar', '!=', null)->where('erm_ranap', null)->count() }}"
+            text="Belum Resume Ranap" theme="warning" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('tgl_keluar', '!=', null)->count() }}" text="Sudah Pulang"
+            theme="success" icon="fas fa-user-injured" />
+    </div>
+</div>
 @php
     $heads = ['Tgl Masuk', 'Tgl Keluar ', 'LOS', 'Action', 'No RM', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Tarif Eklaim', 'Tagihan RS', '%', 'Status'];
     $config['order'] = [['0', 'asc']];
@@ -13,8 +32,27 @@
     @if ($kunjungans)
         @foreach ($kunjungans as $kunjungan)
             @if ($kunjungan->budget)
-                <tr>
+                @if ($kunjungan->tgl_keluar)
+                    @if ($kunjungan->erm_ranap)
+                        @switch($kunjungan->erm_ranap->status)
+                            @case(1)
+                                <tr class="table-warning">
+                                @break
+
+                                @case(2)
+                                <tr class="table-success">
+                                @break
+
+                                @default
+                                <tr class="table-warning">
+                            @endswitch
+                        @else
+                        <tr class="table-warning">
+                    @endif
                 @else
+                    <tr>
+                @endif
+            @else
                 <tr class="table-danger">
             @endif
             <td>{{ $kunjungan->tgl_masuk }}</td>

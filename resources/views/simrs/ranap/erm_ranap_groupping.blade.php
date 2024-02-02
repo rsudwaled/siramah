@@ -4,7 +4,7 @@
             Groupping E-Klaim
         </h3>
         <div class="card-tools">
-            Rp. <span class="tarif_eklaim_html">-</span> <i class="fas fa-file-medical"></i>
+            <span class="tarif_eklaim_html">-</span> <i class="fas fa-file-medical"></i>
         </div>
     </a>
     <div id="cGroupping" class="collapse" role="tabpanel">
