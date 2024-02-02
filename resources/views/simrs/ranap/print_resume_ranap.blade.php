@@ -112,7 +112,7 @@
 <body>
     <!-- Konten Halaman 1 -->
     <div class="page">
-        <div class="row" style="font-size: 13px">
+        <div class="row" style="font-size: 14px">
             <div class="col-md-2 border border-dark">
                 <div class="m-2  text-center">
                     <img class="" src="{{ asset('vendor/adminlte/dist/img/rswaled.png') }}" style="height: 70px">
@@ -231,7 +231,7 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Diagnosa Utama : </b><br>
-                        <pre>{{ $kunjungan->erm_ranap->diagnosa_utama ?? '....' }}</pre>
+                        {{ $kunjungan->erm_ranap->diagnosa_utama ?? '....' }}
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
@@ -243,7 +243,13 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Diagnosa Sekunder : </b><br>
-                        <pre>{{ $kunjungan->erm_ranap->diagnosa_sekunder ?? '' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->diagnosa_sekunder)
+                                @foreach (json_decode($kunjungan->erm_ranap->diagnosa_sekunder) as $item)
+                                    - {{ $item }} <br>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                     <div class="col-md-4">
                         <b>ICD 10</b><br>
@@ -262,7 +268,13 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Tindakan Operasi :</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->tindakan_operasi ?? '....' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->tindakan_operasi)
+                                @foreach (json_decode($kunjungan->erm_ranap->tindakan_operasi) as $item)
+                                    - {{ $item }} <br>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
@@ -285,7 +297,13 @@
                 <div class="row">
                     <div class="col-md-8">
                         <b>Tindakan / Prosedur :</b><br>
-                        <pre>{{ $kunjungan->erm_ranap->tindakan_prosedur ?? '....' }}</pre>
+                        @if ($kunjungan->erm_ranap)
+                            @if ($kunjungan->erm_ranap->tindakan_prosedur)
+                                @foreach (json_decode($kunjungan->erm_ranap->tindakan_prosedur) as $item)
+                                    - {{ $item }} <br>
+                                @endforeach
+                            @endif
+                        @endif
                     </div>
                     <div class="col-md-4">
                         <b>ICD 9 CM</b><br>
@@ -308,7 +326,7 @@
         <div class="footer">Halaman 1 Dari 2 | Resume Rawat Inap {{ $pasien->no_rm }} {{ $pasien->nama_px }}</div>
     </div>
     <div class="page">
-        <div class="row" style="font-size: 13px">
+        <div class="row" style="font-size: 14px">
             <div class="col-md-12  border border-dark">
                 <b>Pengobatan Selama Dirawat :</b> <br>
                 <div class="row">

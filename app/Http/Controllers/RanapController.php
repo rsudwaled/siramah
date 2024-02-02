@@ -396,9 +396,30 @@ class RanapController extends APIController
     {
         $request['pic1'] = Auth::user()->name;
         $request['user1'] = Auth::user()->id;
-        $request['icd10_sekunder'] = $request->icd10_sekunder ?  json_encode($request->icd10_sekunder) : null;
-        $request['icd9_prosedur'] = $request->icd9_prosedur ?  json_encode($request->icd9_prosedur) : null;
-        $request['icd9_operasi'] = $request->icd9_operasi ?  json_encode($request->icd9_operasi) : null;
+
+        $icd10_sekunder = [];
+        $diagsekunder = array_filter($request->diagnosa_sekunder);
+        foreach ($diagsekunder as $key => $value) {
+            $icd10_sekunder[] = $request->icd10_sekunder[$key];
+        }
+        $request['diagnosa_sekunder'] = $request->diagnosa_sekunder ?  json_encode($diagsekunder) : null;
+        $request['icd10_sekunder'] = $request->icd10_sekunder ?  json_encode($icd10_sekunder) : null;
+
+        $icd9_operasi = [];
+        $tidakanoperasi = array_filter($request->tindakan_operasi);
+        foreach ($tidakanoperasi as $key => $value) {
+            $icd9_operasi[] = $request->icd9_operasi[$key];
+        }
+        $request['tindakan_operasi'] = $request->tindakan_operasi ?  json_encode($tidakanoperasi) : null;
+        $request['icd9_operasi'] = $request->icd9_operasi ?  json_encode($icd9_operasi) : null;
+
+        $icd9_prosedur = [];
+        $tidakanoprosedur = array_filter($request->tindakan_prosedur);
+        foreach ($tidakanoprosedur as $key => $value) {
+            $icd9_prosedur[] = $request->icd9_prosedur[$key];
+        }
+        $request['tindakan_prosedur'] = $request->tindakan_prosedur ?  json_encode($tidakanoprosedur) : null;
+        $request['icd9_prosedur'] = $request->icd9_prosedur ?  json_encode($icd9_prosedur) : null;
         $erm = ErmRanap::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,

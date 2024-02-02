@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'ERM Rawat Inap')
+@section('title', 'ERM Ranap ' . $pasien->nama_px)
 @section('content_header')
-    <h1>ERM Rawat Inap</h1>
+    <h1>ERM Ranap {{ $pasien->nama_px }}</h1>
 @stop
 @section('content')
     @php
@@ -767,118 +767,6 @@
         $("body").on("click", "#deleteRowTindakan", function() {
             $(this).parents("#row").remove();
         });
-    </script>
-    <script>
-        function addDiagSekunderResume() {
-            newRowAdd = '<div id="row"><div class="form-group">' +
-                '<div class="input-group">' +
-                '<select name="icd10_sekunder[]" class="form-control diagSekunderResume"></select>' +
-                '<div class="input-group-append">' +
-                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusDiagSekunderResume(this)">' +
-                '<i class="fas fa-trash"></i>' +
-                "</button></div></div></div></div>";
-            $('#diagSekunderBaru').append(newRowAdd);
-            $(".diagSekunderResume").select2({
-                placeholder: 'Silahkan pilih Diagnosa ICD-10',
-                theme: "bootstrap4",
-                multiple: true,
-                maximumSelectionLength: 1,
-                ajax: {
-                    url: "{{ route('get_diagnosis_eclaim') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            keyword: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-        }
-
-        function hapusDiagSekunderResume(button) {
-            $(button).parents("#row").remove();
-        }
-
-        function addIcdOperasi() {
-            newRowAdd = '<div id="row"><div class="form-group">' +
-                '<div class="input-group">' +
-                '<select name="icd9_operasi[]" class="form-control icd9operasi"></select>' +
-                '<div class="input-group-append">' +
-                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
-                '<i class="fas fa-trash"></i>' +
-                "</button></div></div></div></div>";
-            $('#inputIcdOperasi').append(newRowAdd);
-            $(".icd9operasi").select2({
-                placeholder: 'Silahkan pilih Tindakan ICD-9',
-                theme: "bootstrap4",
-                multiple: true,
-                maximumSelectionLength: 1,
-                ajax: {
-                    url: "{{ route('get_procedure_eclaim') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            keyword: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-
-        }
-
-        function hapusIcdOperasi(button) {
-            $(button).parents("#row").remove();
-        }
-
-        function addIcdTindakan() {
-            newRowAdd = '<div id="row"><div class="form-group">' +
-                '<div class="input-group">' +
-                '<select name="icd9_prosedur[]" class="form-control icd9operasi"></select>' +
-                '<div class="input-group-append">' +
-                '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
-                '<i class="fas fa-trash"></i>' +
-                "</button></div></div></div></div>";
-            $('#inputIcdTindakan').append(newRowAdd);
-            $(".icd9operasi").select2({
-                placeholder: 'Silahkan pilih Tindakan ICD-9',
-                theme: "bootstrap4",
-                multiple: true,
-                maximumSelectionLength: 1,
-                ajax: {
-                    url: "{{ route('get_procedure_eclaim') }}",
-                    type: "get",
-                    dataType: 'json',
-                    delay: 100,
-                    data: function(params) {
-                        return {
-                            keyword: params.term // search term
-                        };
-                    },
-                    processResults: function(response) {
-                        return {
-                            results: response
-                        };
-                    },
-                    cache: true
-                }
-            });
-        }
     </script>
     {{-- rincian biaya --}}
     <script>
