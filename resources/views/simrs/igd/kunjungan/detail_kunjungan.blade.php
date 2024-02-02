@@ -5,15 +5,15 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Detail Kunjungan</h5>
+                <h5>DETAIL KUNJUNGAN</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('daftar.kunjungan') }}"
-                            class="btn btn-sm btn-flat btn-secondary withLoad">kembali</a></li>
+                            class="btn btn-sm btn-secondary withLoad">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                            class="btn btn-sm btn-flat btn-warning withLoad">edit kunjungan</a></li>
+                            class="btn btn-sm btn-warning withLoad">Edit Kunjungan</a></li>
                 </ol>
             </div>
         </div>
@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h5> Kunjungan dari {{ $kunjungan->pasien->nama_px }}.
+                        <h5> KUNJUNGAN DARI {{ $kunjungan->pasien->nama_px }}.
                             <small class="float-right">
                                 <b>
                                     Tgl Masuk : {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}
@@ -138,8 +138,8 @@
                                     <th>Pasien</th>
                                     <th>Nomor</th>
                                     <th>Tanggal Lahir</th>
-                                    <th>BPJS</th>
                                     <th>Pasien Daftar</th>
+                                    <th>BPJS</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -168,13 +168,25 @@
                                     </td>
                                     <td>
                                         <b>
-                                            SEP : {{ $kunjungan->no_sep ?? '-' }} <br>
-                                            SPRI : {{ $kunjungan->no_spri ?? '-' }}
+                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
                                         </b>
                                     </td>
                                     <td>
                                         <b>
-                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
+                                            SEP : {{ $kunjungan->no_sep ?? '-' }}
+                                            @if ($kunjungan->no_sep)
+                                                <x-adminlte-button type="button" data-sep="{{ $kunjungan->no_sep }}"
+                                                    theme="danger" class="btn-xs btn-deleteSEP" id="btn-deleteSEP"
+                                                    label="Hapus SEP" />
+                                            @endif
+                                            <br><br>
+                                            SPRI : {{ $kunjungan->no_spri ?? '-' }}
+                                            @if ($kunjungan->no_spri)
+                                                <x-adminlte-button type="button" data-spri="{{ $kunjungan->no_spri }}"
+                                                    theme="danger" class="btn-xs btn-deleteSPRI" id="btn-deleteSPRI"
+                                                    label="Hapus SPRI" />
+                                            @endif
+                                            <br>
                                         </b>
                                     </td>
                                 </tr>
@@ -195,5 +207,120 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 @section('js')
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $('.btn-deleteSEP').click(function(e) {
+                var sep = $(this).data('sep');
+                var deleteSEP = "{{ route('sep_ranap.delete') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "untuk menghapus data SEP!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Hapus!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: deleteSEP,
+                            data: {
+                                noSep: sep,
+                            },
+                            success: function(data) {
+                                if (data.metadata.code == 200) {
+                                    Swal.fire({
+                                        title: "HAPUS SEP BERHASIL!",
+                                        text: data.metadata.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "HAPUS SEP GAGAL!",
+                                        text: data.metadata.message +
+                                            '( ERROR : ' + data
+                                            .metadata.code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
+            });
+            $('.btn-deleteSPRI').click(function(e) {
+                var spri = $(this).data('spri');
+                var deleteSPRI = "{{ route('spri_ranap.delete') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "untuk menghapus data SPRI!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Hapus!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: deleteSPRI,
+                            data: {
+                                noSuratKontrol: spri,
+                            },
+                            success: function(data) {
+                                if (data.metadata.code == 200) {
+                                    Swal.fire({
+                                        title: "HAPUS SPRI BERHASIL!",
+                                        text: data.metadata.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "HAPUS SPRI GAGAL!",
+                                        text: data.metadata.message +
+                                            '( ERROR : ' + data
+                                            .metadata.code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
+            });
 
+        });
+    </script>
 @endsection

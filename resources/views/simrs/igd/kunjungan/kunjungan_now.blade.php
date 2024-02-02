@@ -1,12 +1,12 @@
 @extends('adminlte::page')
-@section('title', 'Kunjungan ')
+@section('title', 'DATA KUNJUNGAN ')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <h5>DATA KUNJUNGAN</h5>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
                         <form action="" method="get">
@@ -21,7 +21,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-5">
                                     <div class="input-group">
                                         <input id="new-event" type="date" name="tanggal" class="form-control"
                                             value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
@@ -32,8 +32,11 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <a onClick="window.location.reload();" class="btn btn-md btn-warning">Refresh</a>
+                                <div class="col-md-3">
+                                    <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">Kunjungan RANAP</a>
+                                    <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-sync"></i>
+                                    </a>
                                 </div>
                             </div>
                         </form>
@@ -49,7 +52,7 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
+                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -82,7 +85,14 @@
                                 </td>
                                 <td>{{ $item->tgl_kunjungan }}</td>
                                 <td>{{ $item->diagx }}</td>
-                                <td>{{ $item->sep }}</td>
+                                <td>
+                                    {{ $item->sep }} <br>
+                                    @if ($item->sep)
+                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}"
+                                            theme="danger" class="btn-xs btn-deleteSEP" id="btn-deleteSEP"
+                                            label="Hapus SEP" />
+                                    @endif
+                                </td>
                                 <td>{{ $item->status }}</td>
                                 <td>
                                     <b>
@@ -107,11 +117,10 @@
                                         }
                                     @endphp
                                     <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                        class="btn btn-xs btn-warning withLoad">RANAP UMUM</a>
+                                        class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
                                     @if (!empty($nomorKartu))
                                         <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                            class="btn btn-xs btn-success withLoad ">DAFTARKAN
-                                            PASIEN BPJS</a>
+                                            class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
                                     @endif
                                 </td>
                             </tr>
@@ -132,6 +141,10 @@
                 @csrf
                 <div class="row">
                     <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">RM Pasien</label>
+                        <input type="text" name="noMR" id="noMR" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
                         <label for="exampleInputBorderWidth2">Nama Pasien</label>
                         <input type="text" name="nama_pasien" id="nama_pasien" readonly class="form-control">
                     </div>
@@ -147,7 +160,7 @@
                         <label for="exampleInputBorderWidth2">KODE KUNJUNGAN</label>
                         <input type="text" name="kode_kunjungan" id="kunjungan" readonly class="form-control">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6" style="display: none">
                         <label for="exampleInputBorderWidth2">JENIS PASIEN DAFTAR</label>
                         <input type="text" name="jp_daftar" id="jp_daftar" readonly class="form-control">
                     </div>
@@ -157,10 +170,8 @@
                     </div>
                 </div>
                 <x-slot name="footerSlot">
-                    <x-adminlte-button type="button" class="btn btn-sm bg-primary btn-synchronize-sep" id="btnNonRanap"
-                        form="formUpdateDiagnosa" label="Update Diagnosa Pasien" />
-                    <x-adminlte-button type="button" class="btn btn-sm bg-purple btn-synchronize-ranap" id="btnRanap"
-                        form="formUpdateDiagnosa" label="Update Diagnosa Rawat Inap" />
+                    <x-adminlte-button type="button" class="btn btn-sm bg-primary btn-synchronize-sep"
+                        form="formUpdateDiagnosa" label="Update Diagnosa" />
                     <x-adminlte-button theme="danger" label="batal update" class="btn btn-sm" data-dismiss="modal" />
                 </x-slot>
             </form>
@@ -180,19 +191,6 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            });
-            $('.btn-singkron').on('click', function() {
-                let diag = $(this).data('diagx');
-                let kunj = $(this).data('kunjungan');
-                let rm = $(this).data('rm');
-                let nama = $(this).data('nama');
-                let jk = $(this).data('jk');
-                let jk_dsc = jk == 'P' ? 'perempuan' : 'laki-laki';
-                $('#refDiagnosa').val(diag);
-                $('#kunjungan').val(kunj);
-                $('#noMR').val(rm);
-                $('#nama_pasien').text(nama);
-                $('#jk').text(jk_dsc);
             });
 
             $("#diagnosa").select2({
@@ -216,20 +214,13 @@
                 }
             });
             $('.show-formdiagnosa').click(function(e) {
+                $("#noMR").val($(this).data('rm'));
                 $("#nik_bpjs").val($(this).data('nik'));
                 $("#no_Bpjs").val($(this).data('nokartu'));
                 $("#kunjungan").val($(this).data('kunjungan'));
                 $("#nama_pasien").val($(this).data('nama'));
                 $("#jp_daftar").val($(this).data('jpdaftar'));
                 $('#formDiagnosa').modal('show');
-
-                if ($("#jp_daftar").val() == '1') {
-                    $('.btn-synchronize-sep').hide();
-                    $('.btn-synchronize-ranap').show();
-                } else {
-                    $('.btn-synchronize-sep').show();
-                    $('.btn-synchronize-ranap').hide();
-                }
 
             });
 
@@ -261,7 +252,6 @@
                             data: {
                                 noMR: $('#noMR').val(),
                                 kunjungan: $('#kunjungan').val(),
-                                refDiagnosa: $('#refDiagnosa').val(),
                                 diagAwal: $('#diagnosa').val(),
                             },
                             success: function(data) {
@@ -355,34 +345,31 @@
                 });
 
             });
-            $('.btn-synchronize-ranap').click(function(e) {
-                var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
+            $('.btn-deleteSEP').click(function(e) {
+                var sep = $(this).data('sep');
+                var deleteSEP = "{{ route('sep_ranap.delete') }}";
                 Swal.fire({
                     title: "Apakah Anda Yakin?",
-                    text: "Update Diagnosa Pasien Rawat Inap!",
+                    text: "untuk menghapus data SEP!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
                     cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Update Diagnosa!",
+                    confirmButtonText: "Hapus!",
                     cancelButtonText: "Batal!",
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type: 'POST',
-                            url: urlUpdateOnly,
-                            dataType: 'json',
+                            type: 'DELETE',
+                            url: deleteSEP,
                             data: {
-                                noMR: $('#noMR').val(),
-                                kunjungan: $('#kunjungan').val(),
-                                refDiagnosa: $('#refDiagnosa').val(),
-                                diagAwal: $('#diagnosa').val(),
+                                noSep: sep,
                             },
                             success: function(data) {
-                                if (data.code == 200) {
+                                if (data.metadata.code == 200) {
                                     Swal.fire({
-                                        title: "Update Diagnosa Success!",
-                                        text: data.message,
+                                        title: "HAPUS SEP BERHASIL!",
+                                        text: data.metadata.message,
                                         icon: "success",
                                         confirmButtonText: "oke!",
                                     }).then((result) => {
@@ -393,9 +380,10 @@
                                     $.LoadingOverlay("hide");
                                 } else {
                                     Swal.fire({
-                                        title: "Update Gagal!",
-                                        text: data.message + '( ERROR : ' + data
-                                            .code + ')',
+                                        title: "HAPUS SEP GAGAL!",
+                                        text: data.metadata.message +
+                                            '( ERROR : ' + data
+                                            .metadata.code + ')',
                                         icon: "error",
                                         confirmButtonText: "oke!",
                                     }).then((result) => {

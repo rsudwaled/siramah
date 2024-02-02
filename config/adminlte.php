@@ -432,6 +432,13 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Kunjungan Pasien',
+                    'icon'    => 'fas fa-address-book',
+                    'url'  => 'daftar-kunjungan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Pasien Kecelakaan',
                     'icon'    => 'fas fa-ambulance',
                     'url'  => 'list/pasien-kecelakaan',
@@ -445,13 +452,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                [
-                    'text' => 'Kunjungan Pasien',
-                    'icon'    => 'fas fa-address-book',
-                    'url'  => 'daftar-kunjungan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
+                
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',

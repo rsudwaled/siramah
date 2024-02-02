@@ -119,12 +119,12 @@ class DiagnosaSynchController extends APIController
     
         $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
         $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
-        if($kunjungan->jpDaftar->is_bpjs ==0)
+        if($kunjungan->jpDaftar->is_bpjs == 0)
         {
             return response()->json(['data'=>$kunjungan,'code'=>401, 'message'=>'MOHON MAAF BUKAN PASIEN BPJS!!. silahkan pilih tombol only update untuk pasien umum']);
         }
         
-        $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
+        // $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
        
         if($kunjungan->jpDaftar->is_bpjs ==1)
         {
@@ -211,9 +211,9 @@ class DiagnosaSynchController extends APIController
               $kunjungan->no_sep    = $sep;
               $kunjungan->save();
 
-              $isSynch->status_bridging = 1;
-              $isSynch->isSynch         = 1;
-              $isSynch->save();
+            //   $isSynch->status_bridging = 1;
+            //   $isSynch->isSynch         = 1;
+            //   $isSynch->save();
               return response()->json(['data'=>$callback]);
             }
             else{
@@ -246,13 +246,13 @@ class DiagnosaSynchController extends APIController
         $kunjungan->diagx   = $request->diagAwal.' - '.$icd->nama ;
         $kunjungan->save();
 
-        $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
+        // $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);
         if(empty($kunjungan))
         {
             return response()->json(['data'=>$kunjungan,'code'=>402,'message'=>'Kunjungan Belum di Assesment Dokter!']);
         }
-        $isSynch->isSynch = 1;
-        $isSynch->save();
+        // $isSynch->isSynch = 1;
+        // $isSynch->save();
 
         return response()->json(['data'=>$kunjungan,'code'=>200,'message'=>'Diagnosa Kunjungan : '.$kunjungan->kode_kunjungan.' berhasil diupdate']);
     }

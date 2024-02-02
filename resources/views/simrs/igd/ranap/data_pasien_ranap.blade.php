@@ -12,7 +12,9 @@
                         <form action="" method="get">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <input type="text" name="nama_pasien" class="form-control" value="{{$request->nama_pasien != null ? $request->nama_pasien:''}}" placeholder="cari nama pasien">
+                                    <input type="text" name="nama_pasien" class="form-control"
+                                        value="{{ $request->nama_pasien != null ? $request->nama_pasien : '' }}"
+                                        placeholder="cari nama pasien">
                                 </div>
                                 <div class="col-md-5">
                                     <div class="input-group">
@@ -38,44 +40,11 @@
 @stop
 @section('content')
     <div class="row">
-        {{-- <div class="col-md-12">
-            <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
-                <form action="" method="get">
-                    <div class="row">
-                        <div class="col-md-6">
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date name="tanggal" label="Tanggal " :config="$config"
-                                value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
-                                <x-slot name="prependSlot">
-                                    <div class="input-group-text bg-primary">
-                                        <i class="fas fa-calendar-alt"></i>
-                                    </div>
-                                </x-slot>
-                            </x-adminlte-input-date>
-                        </div>
-                        <div class="col-md-6">
-                            <x-adminlte-select2 name="unit" label="Pilih Unit">
-                                <option value="">Semua Unit</option>
-                                @foreach ($unit as $item)
-                                    <option value="{{ $item->kode_unit }}"
-                                        {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>{{ $item->nama_unit }}
-                                    </option>
-                                @endforeach
-                            </x-adminlte-select2>
-                        </div>
-                    </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
-                </form>
-            </x-adminlte-card>
-        </div> --}}
-
         <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan', 'Pasien', 'Alamat', 'Ruangan', 'detail'];
+                        $heads = ['Tgl Masuk / Kunjungan', 'Pasien', 'Alamat', 'Jenis Pasien', 'Ruangan', 'SPRI / SEP RANAP', 'Detail'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -100,17 +69,36 @@
                                     </a>
                                 </td>
                                 <td>alamat : {{ $item->alamat }} / <br></td>
+                                <td> {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
+                                </td>
 
                                 <td>
                                     <b>
-                                       Kamar : {{$item->kamar}} <br>
-                                       BED   :  {{$item->no_bed}} <br>
-                                       Kelas : {{$item->kelas}} <br>
+                                        Kamar : {{ $item->kamar }} <br>
+                                        BED : {{ $item->no_bed }} <br>
+                                        Kelas : {{ $item->kelas }} <br>
                                     </b>
+                                </td>
+                                <td>
+                                    @if ($item->jp_daftar == 1)
+                                        <b>
+                                            SPRI : {{ $item->no_spri == null ? 'PASIEN BELUM BUAT SPRI' : $item->no_spri }}
+                                            <br>
+                                            SEP :
+                                            {{ $item->no_sep == null ? 'PASIEN BELUM GENERATE SEP RANAP' : $item->no_sep }}
+                                        </b>
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
+                                    @if ($item->jp_daftar == 1)
+                                        @if ($item->no_spri == null && $item->no_sep == null)
+                                            <a href="{{ route('create-sepigd.ranap-bpjs', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                                class="btn btn-danger btn-xs btn-block btn-flat">Bridging</a>
+                                        @endif
+                                    @endif
+
                                 </td>
                             </tr>
                         @endforeach

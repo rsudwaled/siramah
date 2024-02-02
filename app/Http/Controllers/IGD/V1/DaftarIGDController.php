@@ -159,7 +159,7 @@ class DaftarIGDController extends Controller
             return back();
         }
         
-        if ($request->isBpjs == 1 && empty($request->no_Bpjs)) {
+        if ($request->isBpjs == 1 && empty($request->no_bpjs)) {
             Alert::error('NO KARTU WAJIB DIISI!!', 'untuk pasien bpjs no kartu wajib diisi!');
             return back();
         }

@@ -239,7 +239,7 @@
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right"
                                             form="submitRanap" label="Simpan Data" />
-                                        <a href="{{ route('list-assesment.ranap') }}"
+                                        <a href="{{ route('daftar.kunjungan') }}"
                                             class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
