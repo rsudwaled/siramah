@@ -51,7 +51,8 @@ class DokterController extends Controller
         ]);
         $paramedis = Paramedis::firstWhere('kode_paramedis', $request->kode_paramedis);
         $paramedis->update([
-            'sip_dr' => $request->sip_dr
+            'nik' => $request->nik,
+            'sip_dr' => $request->sip_dr,
         ]);
         Alert::success('Success', 'Data Dokter telah diperbarui');
         return redirect()->back();

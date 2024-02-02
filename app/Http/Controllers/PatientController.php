@@ -34,7 +34,7 @@ class PatientController extends APIController
     public function patient_by_nik(Request $request)
     {
         $token = Token::latest()->first()->access_token;
-        $url = $this->baseurl . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|3209344805650001";
+        $url = $this->baseurl . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $request->nik;
         $response = Http::withToken($token)->get($url);
         $data = $response->json();
         return $this->sendResponse($data);
@@ -45,7 +45,6 @@ class PatientController extends APIController
         $request['nik'] = $pasien->nik_bpjs;
         $res = $this->patient_by_nik($request);
         if ($res->response->entry[0]) {
-            # code...
             $ihs = $res->response->entry[0]->resource->id;
             $pasien->update([
                 'ihs' => $ihs

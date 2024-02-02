@@ -154,6 +154,8 @@ Route::middleware('auth')->group(function () {
         Route::get('patient_by_nik', [PatientController::class, 'patient_by_nik'])->name('patient_by_nik');
         Route::get('patient_sync', [PatientController::class, 'patient_sync'])->name('patient_sync');
         Route::get('practitioner', [PractitionerController::class, 'index'])->name('practitioner');
+        Route::get('practitioner_by_nik', [PractitionerController::class, 'practitioner_by_nik'])->name('practitioner_by_nik');
+        Route::get('practitioner_sync', [PractitionerController::class, 'practitioner_sync'])->name('practitioner_sync');
         Route::get('organization', [OrganizationController::class, 'index'])->name('organization');
         Route::get('organization_sync', [OrganizationController::class, 'organization_sync'])->name('organization_sync');
     });
