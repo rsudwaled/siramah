@@ -300,6 +300,6 @@ class PasienBayiController extends Controller
             ]);
         }
         Alert::success('Tambah Bayi Berhasil!!', 'pasien bayi dengan  RM: ' . $bayi->rm_bayi . ' berhasil di tambahkan!');
-        return redirect()->route('pasien-bayi.cari');
+        return redirect()->route('form-umum.ranap-bayi', ['rm' => $bayi->rm_bayi]);
     }
 }
