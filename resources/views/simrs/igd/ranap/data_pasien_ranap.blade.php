@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-4">
-                <h5>Pasien Rawat Inap</h5>
+                <h5>PASIEN RAWAT INAP</h5>
             </div>
             <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">

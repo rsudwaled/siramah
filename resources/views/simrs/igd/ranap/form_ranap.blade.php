@@ -237,10 +237,10 @@
 
                                         </div>
                                         <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green btn-flat float-right"
+                                            class="withLoad btn btn-sm m-1 bg-green float-right"
                                             form="submitRanap" label="Simpan Data" />
                                         <a href="{{ route('list-assesment.ranap') }}"
-                                            class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
+                                            class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
                             </x-adminlte-card>

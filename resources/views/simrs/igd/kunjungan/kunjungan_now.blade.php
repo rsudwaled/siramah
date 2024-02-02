@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Data Kunjungan</h5>
+                <h5>DATA KUNJUNGAN</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -86,23 +86,86 @@
                                 <td>{{ $item->status }}</td>
                                 <td>
                                     <b>
-                                        {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar==0 ? 'UMUM' :'BPJS PROSES') }}
+                                        {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
                                     </b>
                                 </td>
                                 <td>
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kunjungan]) }}"
-                                        class="btn btn-success btn-xs btn-block btn-flat withLoad">Detail</a>
+                                        class="btn btn-success btn-xs withLoad">Detail</a>
 
+                                    <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                        data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
+                                        data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
+                                        data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
+                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa" id="btn-diagnosa"
+                                        label="Update Diagnosa" />
+                                    @php
+                                        if (empty($item->noKartu)) {
+                                            $nomorKartu = null;
+                                        } else {
+                                            $nomorKartu = trim($item->noKartu);
+                                        }
+                                    @endphp
+                                    <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
+                                        class="btn btn-xs btn-warning withLoad">RANAP UMUM</a>
+                                    @if (!empty($nomorKartu))
+                                        <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                            class="btn btn-xs btn-success withLoad ">DAFTARKAN
+                                            PASIEN BPJS</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
                 </div>
             </div>
-
         </div>
     </div>
-
+    <x-adminlte-modal id="formDiagnosa" title="Diagnosa Pasien" theme="primary" size='lg' disable-animations>
+        <div class="col-lg-12">
+            <div class="alert alert-warning alert-dismissible">
+                <h5>
+                    <i class="icon fas fa-users"></i>Update Diagnosa Pasien :
+                </h5>
+            </div>
+            <form id="formUpdateDiagnosa" method="post" action="">
+                @csrf
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">Nama Pasien</label>
+                        <input type="text" name="nama_pasien" id="nama_pasien" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">NIK</label>
+                        <input type="text" name="nik_bpjs" id="nik_bpjs" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">NO KARTU</label>
+                        <input type="text" name="no_Bpjs" id="no_Bpjs" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">KODE KUNJUNGAN</label>
+                        <input type="text" name="kode_kunjungan" id="kunjungan" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="exampleInputBorderWidth2">JENIS PASIEN DAFTAR</label>
+                        <input type="text" name="jp_daftar" id="jp_daftar" readonly class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <x-adminlte-select2 name="diagAwal" id="diagnosa" label="PILIH DIAGNOSA ICD 10">
+                        </x-adminlte-select2>
+                    </div>
+                </div>
+                <x-slot name="footerSlot">
+                    <x-adminlte-button type="button" class="btn btn-sm bg-primary btn-synchronize-sep" id="btnNonRanap"
+                        form="formUpdateDiagnosa" label="Update Diagnosa Pasien" />
+                    <x-adminlte-button type="button" class="btn btn-sm bg-purple btn-synchronize-ranap" id="btnRanap"
+                        form="formUpdateDiagnosa" label="Update Diagnosa Rawat Inap" />
+                    <x-adminlte-button theme="danger" label="batal update" class="btn btn-sm" data-dismiss="modal" />
+                </x-slot>
+            </form>
+        </div>
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
@@ -151,6 +214,201 @@
                     },
                     cache: true
                 }
+            });
+            $('.show-formdiagnosa').click(function(e) {
+                $("#nik_bpjs").val($(this).data('nik'));
+                $("#no_Bpjs").val($(this).data('nokartu'));
+                $("#kunjungan").val($(this).data('kunjungan'));
+                $("#nama_pasien").val($(this).data('nama'));
+                $("#jp_daftar").val($(this).data('jpdaftar'));
+                $('#formDiagnosa').modal('show');
+
+                if ($("#jp_daftar").val() == '1') {
+                    $('.btn-synchronize-sep').hide();
+                    $('.btn-synchronize-ranap').show();
+                } else {
+                    $('.btn-synchronize-sep').show();
+                    $('.btn-synchronize-ranap').hide();
+                }
+
+            });
+
+            $('.btn-synchronize-sep').click(function(e) {
+                var urlBridging = "{{ route('synch.diagnosa') }}";
+                var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: "btn btn-success m-2",
+                        cancelButton: "btn btn-danger m-2"
+                    },
+                    buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "Update Diagnosa dan Bridging Pembuatan SEP!",
+                    icon: "warning",
+                    padding: "3em",
+                    showCancelButton: true,
+                    confirmButtonText: "Bridging Pembuatan SEP!",
+                    cancelButtonText: "Update Diagnosa!",
+                    reverseButtons: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlBridging,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                console.info(data.code);
+                                if (data.code == 400) {
+                                    Swal.fire('Data yang dikirimkan tidak lengkap', '',
+                                        'info');
+                                    $.LoadingOverlay("hide");
+                                }
+                                if (data.code == 401) {
+                                    Swal.fire(data.message, '',
+                                        'info');
+                                    $.LoadingOverlay("hide");
+                                }
+                                console.info(data.data);
+                                if (data.data.metaData.code == 200) {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Bridging Success!",
+                                        text: data.data.metaData.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Bridging Gagal!",
+                                        text: data.data.metaData.message +
+                                            '( ERROR : ' + data.data.metaData
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+
+                    ) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateOnly,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Update Diagnosa Success!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    swalWithBootstrapButtons.fire({
+                                        title: "Update Gagal!",
+                                        text: data.message + '( ERROR : ' + data
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
+
+            });
+            $('.btn-synchronize-ranap').click(function(e) {
+                var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "Update Diagnosa Pasien Rawat Inap!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, Update Diagnosa!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: urlUpdateOnly,
+                            dataType: 'json',
+                            data: {
+                                noMR: $('#noMR').val(),
+                                kunjungan: $('#kunjungan').val(),
+                                refDiagnosa: $('#refDiagnosa').val(),
+                                diagAwal: $('#diagnosa').val(),
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: "Update Diagnosa Success!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "Update Gagal!",
+                                        text: data.message + '( ERROR : ' + data
+                                            .code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
             });
         });
     </script>

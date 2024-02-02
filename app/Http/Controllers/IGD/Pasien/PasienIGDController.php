@@ -191,7 +191,7 @@ class PasienIGDController extends Controller
             $kec    = Kecamatan::firstWhere('nama_kecamatan', $request->kecamatan_pasien);
             $desa   = Desa::firstWhere('nama_desa_kelurahan', $request->desa_pasien);
         }
-        // dd($request->all(),$kabUpdate, $kecUpdate,$desaUpdate, $kab, $kec, $desa);
+
         $pasien->no_Bpjs            = $request->no_bpjs;
         $pasien->nama_px            = $request->nama_pasien_baru;
         $pasien->jenis_kelamin      = $request->jk;
@@ -237,6 +237,7 @@ class PasienIGDController extends Controller
                 $klp->update();
             }
         }
+        dd($pasien);
         return response()->json(['pasien'=>$pasien, 'status'=>200]);
     }
 

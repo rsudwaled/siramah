@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\IGD\Daftar;
+namespace App\Http\Controllers\IGD\V1;
 
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use App\Models\Unit;
 use App\Models\Pasien;
+use App\Models\Unit;
 use App\Models\Kunjungan;
 use App\Models\AlasanMasuk;
 use App\Models\Paramedis;
@@ -20,137 +20,115 @@ use App\Models\TarifLayananDetail;
 use App\Models\JPasienIGD;
 use App\Models\HistoriesIGDBPJS;
 
-class DaftarTanpaNomorController extends Controller
+class DaftarIGDController extends Controller
 {
-// API FUNCTION
-
+    // API FUNCTION BPJS
     public function sendResponse($data, int $code = 200)
-    {
-        $response = [
-            'response' => $data,
-            'metadata' => [
-                'message' => 'Ok',
-                'code' =>  $code,
-            ],
-        ];
-        return json_decode(json_encode($response));
-    }
-    public function sendError($error,  $code = 404)
-    {
-        $code       = $code ?? 404;
-        $response   = [
-            'metadata' => [
-                'message' => $error,
-                'code' => $code,
-            ],
-        ];
-        return json_decode(json_encode($response));
-    }
+     {
+         $response = [
+             'response' => $data,
+             'metadata' => [
+                 'message' => 'Ok',
+                 'code' =>  $code,
+             ],
+         ];
+         return json_decode(json_encode($response));
+     }
+     public function sendError($error,  $code = 404)
+     {
+         $code = $code ?? 404;
+         $response = [
+             'metadata' => [
+                 'message'  => $error,
+                 'code'     => $code,
+             ],
+         ];
+         return json_decode(json_encode($response));
+     }
+ 
     public function signature()
-   {
-       $cons_id             = env('ANTRIAN_CONS_ID');
-       $secretKey           = env('ANTRIAN_SECRET_KEY');
-       $userkey             = env('ANTRIAN_USER_KEY');
-       date_default_timezone_set('UTC');
-       $tStamp              = strval(time() - strtotime('1970-01-01 00:00:00'));
-       $signature           = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
-       $encodedSignature    = base64_encode($signature);
-       $data['user_key']    = $userkey;
-       $data['x-cons-id']   = $cons_id;
-       $data['x-timestamp'] = $tStamp;
-       $data['x-signature'] = $encodedSignature;
-       $data['decrypt_key'] = $cons_id . $secretKey . $tStamp;
-       return $data;
-   }
-
-   public static function stringDecrypt($key, $string)
-   {
-       $encrypt_method  = 'AES-256-CBC';
-       $key_hash        = hex2bin(hash('sha256', $key));
-       $iv              = substr(hex2bin(hash('sha256', $key)), 0, 16);
-       $output          = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
-       $output          = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
-       return $output;
-   }
-
-   public function response_decrypt($response, $signature)
-   {
-       $code    = json_decode($response->body())->metaData->code;
-       $message = json_decode($response->body())->metaData->message;
-       if ($code == 200 || $code == 1) {
-           $response    = json_decode($response->body())->response ?? null;
-           $decrypt     = $this->stringDecrypt($signature['decrypt_key'], $response);
-           $data        = json_decode($decrypt);
-           if ($code == 1) {
-               $code = 200;
-           }
-           return $this->sendResponse($data, $code);
-       } else {
-           return $this->sendError($message, $code);
-       }
-   }
-
-   public function response_no_decrypt($response)
-   {
-       $code        = json_decode($response->body())->metaData->code;
-       $message     = json_decode($response->body())->metaData->message;
-       $response    = json_decode($response->body())->metaData->response;
-       $response = [
-           'response' => $response,
-           'metadata' => [
-               'message' => $message,
-               'code' => $code,
-           ],
-       ];
-       return json_decode(json_encode($response));
-   }
-   public function updateNOBPJS(Request $request)
-   {
-       $data            = Pasien::where('nik_bpjs', $request->nik_pas)->first();
-       $data->no_Bpjs   = $request->no_bpjs;
-       $data->update();
-       return response()->json($data, 200);
-   }
-    public function vTanpaNomor(Request $request)
     {
-        $pasien = Pasien::latest()->limit(50)->get();
+        $cons_id    = env('ANTRIAN_CONS_ID');
+        $secretKey  = env('ANTRIAN_SECRET_KEY');
+        $userkey    = env('ANTRIAN_USER_KEY');
+        date_default_timezone_set('UTC');
+        $tStamp                 = strval(time() - strtotime('1970-01-01 00:00:00'));
+        $signature              = hash_hmac('sha256', $cons_id . '&' . $tStamp, $secretKey, true);
+        $encodedSignature       = base64_encode($signature);
+        $data['user_key']       = $userkey;
+        $data['x-cons-id']      = $cons_id;
+        $data['x-timestamp']    = $tStamp;
+        $data['x-signature']    = $encodedSignature;
+        $data['decrypt_key']    = $cons_id . $secretKey . $tStamp;
+        return $data;
+    }
+ 
+    public static function stringDecrypt($key, $string)
+    {
+        $encrypt_method = 'AES-256-CBC';
+        $key_hash       = hex2bin(hash('sha256', $key));
+        $iv             = substr(hex2bin(hash('sha256', $key)), 0, 16);
+        $output         = openssl_decrypt(base64_decode($string), $encrypt_method, $key_hash, OPENSSL_RAW_DATA, $iv);
+        $output         = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
+        return $output;
+    }
+ 
+    public function response_decrypt($response, $signature)
+    {
+        $code       = json_decode($response->body())->metaData->code;
+        $message    = json_decode($response->body())->metaData->message;
+        if ($code == 200 || $code == 1) {
+            $response   = json_decode($response->body())->response ?? null;
+            $decrypt    = $this->stringDecrypt($signature['decrypt_key'], $response);
+            $data = json_decode($decrypt);
+            if ($code == 1) {
+                $code = 200;
+            }
+            return $this->sendResponse($data, $code);
+        } else {
+            return $this->sendError($message, $code);
+        }
+    }
+ 
+    public function response_no_decrypt($response)
+    {
+        $code       = json_decode($response->body())->metaData->code;
+        $message    = json_decode($response->body())->metaData->message;
+        $response   = json_decode($response->body())->metaData->response;
+        $response = [
+            'response' => $response,
+            'metadata' => [
+                'message'   => $message,
+                'code'      => $code,
+            ],
+        ];
+        return json_decode(json_encode($response));
+    }
+
+    public function index(Request $request)
+    {
+        $query          = Pasien::query();
         if ($request->rm && !empty($request->rm)) {
-            $pasien = Pasien::where('no_rm', $request->rm)->get();
+            $query->where('no_rm', $request->rm);
         }
         if ($request->nama && !empty($request->nama)) {
-            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(50)->get();
+            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(50);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)->get();
+            $query->where('no_Bpjs', $request->nomorkartu);
         }
         if($request->nik && !empty($request->nik))
         {
-            $pasien = Pasien::where('nik_bpjs', $request->nik)->get();
+            $query->where('nik_bpjs', $request->nik);
         }
-        return view('simrs.igd.daftar.v_tanpanomor', compact('request','pasien'));
-    }
-
-    public function penjaminUmum(Request $request)
-    {
-        $penjamin = PenjaminSimrs::get();
-        return response()->json($penjamin);
-    }
-    public function penjaminBPJS(Request $request)
-    {
-        $penjamin = Penjamin::get();
-        return response()->json($penjamin);
-    }
-
-    public function formDaftarTanpaNomor(Request $request, $rm)
-    {
-        $pasien     = Pasien::firstWhere('no_rm', $rm);
-        if(empty($pasien->nik_bpjs))
+        if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
         {
-            Alert::info('Informasi!!', 'pasien tidak memiliki NIK. silahkan daftarkan sebagai pasien bayi atau perbaharui nik pasien dengan benar!');
-            return back();
+            $pasien         = $query->get();
+        }else{
+            $pasien         = null;
         }
-        $kunjungan  = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
-        $knj_aktif  = Kunjungan::where('no_rm', $rm)
+        $kunjungan  = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
+        $knj_aktif  = Kunjungan::where('no_rm', $request->rm)
             ->where('status_kunjungan', 1)
             ->count();
         $alasanmasuk    = AlasanMasuk::get();
@@ -171,13 +149,20 @@ class DaftarTanpaNomorController extends Controller
             $response       = Http::withHeaders($signature)->get($url);
             $resdescrtipt   = $this->response_decrypt($response, $signature);
         }
-        
-        return view('simrs.igd.daftar.form_daftar_tanpanomor', compact('pasien','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.v1.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
-    public function daftarTanpaNomorStore(Request $request)
+    public function storeTanpaNoAntrian(Request $request)
     {
-
+        if (empty($request->nik_bpjs)) {
+            Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
+            return back();
+        }
+        
+        if ($request->isBpjs == 1 && empty($request->no_Bpjs)) {
+            Alert::error('NO KARTU WAJIB DIISI!!', 'untuk pasien bpjs no kartu wajib diisi!');
+            return back();
+        }
         if (empty($request->penjamin_id_umum) || empty($request->penjamin_id_umum)) {
             Alert::error('Penjamin Belum dipilih!!', 'silahkan pilih penjamin terlebih dahulu!');
             return back();
@@ -376,6 +361,29 @@ class DaftarTanpaNomorController extends Controller
             } 
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
-        return redirect()->route('list.antrian');
+        return redirect()->route('daftar.kunjungan');
+    }
+
+    public function cekStatusBPJS(Request $request)
+    {
+        $tanggal        = now()->format('Y-m-d');
+        $url            = env('VCLAIM_URL') . "Peserta/nik/" . $request->nik . "/tglSEP/" . $tanggal;
+        $signature      = $this->signature();
+        $response       = Http::withHeaders($signature)->get($url);
+        $resdescrtipt   = $this->response_decrypt($response, $signature);
+        $keterangan     = null;
+        $jenisPeserta   = null;
+        $code           = null;
+        // dd($resdescrtipt, $response );
+        if(!empty($resdescrtipt->response)){
+            $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
+            $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+            $code           = $resdescrtipt->metadata->code;
+        }else{
+            $keterangan     = $resdescrtipt->metadata->message;
+            $jenisPeserta   = $resdescrtipt->metadata->code;
+        }
+        
+        return response()->json(['keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
     }
 }
