@@ -66,7 +66,8 @@
                             </div>
                         </div>
                         {{-- rincian --}}
-                        @include('simrs.ranap.erm_ranap_biaya')
+                        {{-- @include('simrs.ranap.erm_ranap_biaya') --}}
+                        <div id="rincian_biaya"></div>
                         {{-- administrasi --}}
                         {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
@@ -952,192 +953,13 @@
                 type: "GET",
                 url: url,
             }).done(function(data) {
-                table.rows().remove().draw();
-                if (data.metadata.code == 200) {
-                    var tarifrs = data.response.rangkuman.tarif_rs;
-                    var groupping = data.response.budget;
-                    $('.biaya_rs_html').html(tarifrs.toLocaleString('id-ID'));
-                    if (groupping) {
-                        var kodecbg = data.response.budget.kode_cbg;
-                        var tarifeklaim = data.response.budget.tarif_inacbg;
-                        $('.tarif_eklaim_html').html(tarifeklaim.toLocaleString('id-ID') ?? 'Belum Groupping');
-                        $('.code_cbg_html').html(kodecbg ?? 'Belum Groupping');
-                    } else {
-                        $('.tarif_eklaim_html').html('Belum Groupping');
-                        $('.code_cbg_html').html('Belum Groupping');
-                    }
-                    $.each(data.response.rincian, function(key, value) {
-                        table.row.add([
-                            value.TGL,
-                            value.NAMA_UNIT,
-                            value.nama_group_vclaim,
-                            value.NAMA_TARIF,
-                            value.GRANTOTAL_LAYANAN.toLocaleString(
-                                'id-ID'),
-                        ]).draw(false);
-                    });
-                    $('.prosedur_non_bedah')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .prosedur_non_bedah.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.tenaga_ahli')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .tenaga_ahli.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.radiologi')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .radiologi.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.rehabilitasi')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .rehabilitasi.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.obat')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .obat.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.alkes')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .alkes.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.prosedur_bedah')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .prosedur_bedah.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.keperawatan')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .keperawatan.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.laboratorium')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .laboratorium.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.kamar_akomodasi')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .kamar_akomodasi.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.obat_kronis')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .obat_kronis.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.bmhp')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .bmhp.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.konsultasi')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .konsultasi.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.penunjang')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .penunjang.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.pelayanan_darah')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .pelayanan_darah.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.rawat_intensif')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .rawat_intensif.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.obat_kemo')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .obat_kemo.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.sewa_alat')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .sewa_alat.toLocaleString(
-                                'id-ID')
-                        );
-                    $('.tarif_rs')
-                        .html(
-                            data
-                            .response
-                            .rangkuman
-                            .tarif_rs.toLocaleString(
-                                'id-ID')
-                        );
-
-
-                } else {
-                    Swal.fire(
-                        'Mohon Maaf !',
-                        data.metadata.message,
-                        'error'
-                    );
-                }
-                $.LoadingOverlay("hide");
+                $('#rincian_biaya').html(data);
+                $('#tableRincianBiaya').DataTable({
+                    "paging": false,
+                    "info": false,
+                    "scrollCollapse": true,
+                    "scrollY": '300px'
+                });
             });
         }
     </script>

@@ -96,8 +96,6 @@ class RanapController extends APIController
         $budget = BudgetControl::find($request->norm . '|' . $request->counter);
         $data = [
             "rincian" => $response,
-            "budget" => $budget,
-            "pasien" => $budget->pasien ?? null,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
@@ -120,7 +118,8 @@ class RanapController extends APIController
                 "obat_kemo" => round($response->where('nama_group_vclaim', "OBAT KEMOTERAPI")->sum("GRANTOTAL_LAYANAN")),
             ],
         ];
-        return $this->sendResponse($data, 200);
+        $data = json_decode(json_encode($data));
+        return view('simrs.ranap.erm_ranap_biaya', compact('data'));
     }
     public function get_hasil_laboratorium(Request $request)
     {
