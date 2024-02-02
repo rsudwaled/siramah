@@ -62,7 +62,7 @@
     <x-adminlte-modal id="modalEdit" title="Edit Dokter" theme="warning" icon="fas fa-user-plus">
         <form name="formInput" id="formInput" method="POST">
             @csrf
-            @method('PATCH')
+            @method('PUT')
             <input type="hidden" name="id" id="id" value="">
             <x-adminlte-input name="kodedokter" placeholder="Kode BPJS" label="Kode BPJS" readonly />
             <x-adminlte-input name="kode_paramedis" placeholder="Kode SIMRS" label="Kode Dokter" readonly />

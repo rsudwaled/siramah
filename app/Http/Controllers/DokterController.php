@@ -44,12 +44,14 @@ class DokterController extends Controller
     {
         $request->validate([
             'namadokter' => 'required',
+            'kode_paramedis' => 'required',
+            'kodedokter' => 'required',
         ]);
         $dokter = Dokter::firstWhere('kodedokter', $id);
         $dokter->update([
             'namadokter' => $request->namadokter
         ]);
-        $paramedis = Paramedis::firstWhere('kode_paramedis', $request->kode_paramedis);
+        $paramedis = Paramedis::where('kode_paramedis', $request->kode_paramedis)->first();
         $paramedis->update([
             'nik' => $request->nik,
             'sip_dr' => $request->sip_dr,

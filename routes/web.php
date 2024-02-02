@@ -212,11 +212,14 @@ Route::middleware('auth')->group(function () {
 
 
     Route::get('monitoring_resume_ranap', [RanapController::class, 'monitoring_resume_ranap'])->name('monitoring_resume_ranap');
+    Route::get('table_resume_ranap', [RanapController::class, 'table_resume_ranap'])->name('table_resume_ranap');
     Route::get('lihat_resume_ranap', [RanapController::class, 'lihat_resume_ranap'])->name('lihat_resume_ranap');
     Route::post('ttd_dokter_resume_ranap', [RanapController::class, 'ttd_dokter_resume_ranap'])->name('ttd_dokter_resume_ranap');
     Route::post('ttd_pasien_resume_ranap', [RanapController::class, 'ttd_pasien_resume_ranap'])->name('ttd_pasien_resume_ranap');
     Route::post('simpan_resume_ranap', [RanapController::class, 'simpan_resume_ranap'])->name('simpan_resume_ranap');
     Route::get('verif_resume_ranap', [RanapController::class, 'verif_resume_ranap'])->name('verif_resume_ranap');
+    Route::get('revisi_resume_ranap', [RanapController::class, 'revisi_resume_ranap'])->name('revisi_resume_ranap');
+
     Route::get('print_resume_ranap', [RanapController::class, 'print_resume_ranap'])->name('print_resume_ranap');
     Route::post('simpan_implementasi_evaluasi_keperawatan', [RanapController::class, 'simpan_implementasi_evaluasi_keperawatan'])->name('simpan_implementasi_evaluasi_keperawatan');
     Route::post('simpan_keperawatan_ranap', [RanapController::class, 'simpan_keperawatan_ranap'])->name('simpan_keperawatan_ranap');

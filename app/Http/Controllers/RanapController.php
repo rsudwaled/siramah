@@ -30,27 +30,6 @@ class RanapController extends APIController
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
-        // if ($request->tanggal) {
-        //     $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
-        //     $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
-        //     if ($request->kodeunit == '-') {
-        //         $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
-        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
-        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
-        //             ->orWhere('status_kunjungan', 1)
-        //             ->whereRelation('unit', 'kelas_unit', '=', 2)
-        //             ->with(['pasien', 'budget', 'unit', 'status'])
-        //             ->get();
-        //     } else {
-        //         $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
-        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
-        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
-        //             ->orWhere('status_kunjungan', 1)
-        //             ->where('kode_unit', $request->kodeunit)
-        //             ->with(['pasien', 'budget', 'unit', 'status'])
-        //             ->get();
-        //     }
-        // }
         return view('simrs.ranap.kunjungan_ranap', compact([
             'request',
             'units',
@@ -81,7 +60,7 @@ class RanapController extends APIController
                     ->get();
             }
         }
-        return $this->sendResponse($kunjungans);
+        return view('simrs.ranap.table_pasien_ranap', compact('kunjungans'));
     }
     // erm pasien ranap
     public function pasienranapprofile(Request $request)
@@ -386,6 +365,32 @@ class RanapController extends APIController
             'resumes',
         ]));
     }
+    public function table_resume_ranap(Request $request)
+    {
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
+            $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
+            if ($request->ruangan == '-') {
+                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->with(['pasien', 'budget', 'tagihan', 'erm_ranap', 'unit', 'status'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::where('kode_unit', $request->ruangan)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->where('kode_unit', $request->ruangan)
+                    ->with(['pasien', 'budget', 'tagihan', 'erm_ranap', 'unit', 'status'])
+                    ->get();
+            }
+        }
+        return view('simrs.ranap.table_resume_ranap', compact('kunjungans'));
+    }
     public function simpan_resume_ranap(Request $request)
     {
         $request['pic1'] = Auth::user()->name;
@@ -452,7 +457,20 @@ class RanapController extends APIController
         $resume->update([
             'pic2' => Auth::user()->name,
             'user2' => Auth::user()->id,
-            'status' => $resume->status == 2 ? '1' : '2',
+            'status' => 2,
+        ]);
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Diverifikasi');
+        return redirect()->back();
+    }
+    public function revisi_resume_ranap(Request $request)
+    {
+        $request['pic2'] = Auth::user()->name;
+        $request[''] = Auth::user()->id;
+        $resume = ErmRanap::where('kode_kunjungan', $request->kode)->first();
+        $resume->update([
+            'pic2' => Auth::user()->name,
+            'user2' => Auth::user()->id,
+            'status' => 1,
         ]);
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Diverifikasi');
         return redirect()->back();
