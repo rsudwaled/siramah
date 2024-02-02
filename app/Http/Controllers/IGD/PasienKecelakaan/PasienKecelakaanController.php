@@ -31,7 +31,10 @@ class PasienKecelakaanController extends Controller
         {
             $query->whereDate('tgl_masuk', $request->date);
         }
-
+        if(empty($request->date))
+        {
+            $query->whereDate('tgl_masuk', now());
+        }
         $kunjungan  = $query->get();
 
         return view('simrs.igd.pasien_kecelakaan.list_pasien', compact('request','kunjungan'));
