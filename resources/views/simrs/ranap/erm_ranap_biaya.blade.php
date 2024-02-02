@@ -90,16 +90,36 @@
 <script>
     $(function() {
         $('.biaya_rs_html').html("{{ money($data->rangkuman->tarif_rs, 'IDR') }}");
-        $('.tarif_eklaim_html').html("{{ money($data->budget->tarif_inacbg ?? 0, 'IDR') }}");
-        $('.code_cbg_html').html("{{ $data->budget->kode_cbg ?? 'Belum Groupping' }}");
-        if ("{{ isset($data->rangkuman->tarif_rs) }}" && "{{ $data->budget->kode_cbg }}") {
-            if ("{{ $data->rangkuman->tarif_rs > $data->budget->tarif_inacbg }}") {
-                alert('Tarif RS Sudah Melebihi Tarif Klaim, Mohon Periksa kembali pelayanan');
+        var groupping = "{{ $data->groupping }}";
+        if (groupping == "true") {
+            $('.tarif_eklaim_html').html("{{ money($data->budget->tarif_inacbg ?? 0, 'IDR') }}");
+            $('.code_cbg_html').html("{{ $data->budget->kode_cbg ?? 'Belum Groupping' }}");
+            var tarif_rs = parseInt("{{ $data->rangkuman->tarif_rs ?? 0 }}");
+            var tarif_inacbg = parseInt("{{ $data->budget->tarif_inacbg ?? 0 }}");
+            // console.log(tarif_rs);
+            // console.log(tarif_inacbg);
+            console.log(tarif_rs > tarif_inacbg);
+            if (tarif_rs > tarif_inacbg) {
+                swal.fire(
+                    "Peringatan Tarif Eklaim",
+                    "Tarif RS Sudah Melebihi Tarif Klaim, Mohon Periksa kembali pelayanan",
+                    'warning'
+                );
             } else {
-                alert('Sudah Groupping');
+                swal.fire(
+                    "Peringatan Groupping Eklaim",
+                    "Telah dilakukan groupping, tarif RS masih aman dari tarif Eklaim",
+                    'success'
+                );
             }
         } else {
-            alert('Belum Groupping');
+            $('.tarif_eklaim_html').html("{{ money(0, 'IDR') }}");
+            $('.code_cbg_html').html("Belum Groupping");
+            swal.fire(
+                "Peringatan Groupping Eklaim",
+                "Mohon lakukan Groupping Eklaim, sebelum 3 hari setelah pasien masuk rawat inap",
+                'warning'
+            );
         }
     });
 </script>

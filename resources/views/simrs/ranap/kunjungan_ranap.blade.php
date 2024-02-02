@@ -62,7 +62,6 @@
                 type: "GET",
                 url: url,
             }).done(function(data) {
-                console.log(data);
                 $('#tableRanap').html(data);
                 var table = $('#table1').DataTable({
                     "paging": false,

@@ -9,7 +9,7 @@
     </div>
     <div class="col-md-3">
         <x-adminlte-small-box
-            title="{{ $kunjungans->where('tgl_keluar', '!=', null)->where('erm_ranap', null)->count() }}"
+            title="{{ $kunjungans->where('tgl_keluar', '!=', null)->where('erm_ranap.status', '!=', 2)->count() }}"
             text="Belum Resume Ranap" theme="warning" icon="fas fa-user-injured" />
     </div>
     <div class="col-md-3">

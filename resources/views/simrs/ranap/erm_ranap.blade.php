@@ -1239,7 +1239,6 @@
         function simpanSuratKontrol() {
             $.LoadingOverlay("show");
             var data = $('#formSuratKontrol').serialize();
-            console.log(data);
             var url = "{{ route('api.suratkontrol_insert') }}";
             $.ajax({
                 type: "POST",
@@ -1285,7 +1284,6 @@
                 url: url,
                 data: datax,
             }).done(function(data) {
-                console.log(data);
                 if (data.metadata.code == 200) {
                     Swal.fire(
                         'Berhasil Buat Surat Kontrol',
