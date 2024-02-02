@@ -7,7 +7,7 @@
             <span class="tarif_eklaim_html">-</span> <i class="fas fa-file-medical"></i>
         </div>
     </a>
-    <div id="cGroupping" class="collapse" role="tabpanel">
+    <div id="cGroupping" class="collapse show" role="tabpanel">
         <div class="card-body">
             <form action="{{ route('claim_ranap_v3') }}" id="formGroupper" method="POST">
                 @csrf
