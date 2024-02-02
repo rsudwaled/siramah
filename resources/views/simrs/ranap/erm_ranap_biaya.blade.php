@@ -92,5 +92,14 @@
         $('.biaya_rs_html').html("{{ money($data->rangkuman->tarif_rs, 'IDR') }}");
         $('.tarif_eklaim_html').html("{{ money($data->budget->tarif_inacbg ?? 0, 'IDR') }}");
         $('.code_cbg_html').html("{{ $data->budget->kode_cbg ?? 'Belum Groupping' }}");
+        if ("{{ isset($data->rangkuman->tarif_rs) }}" && "{{ $data->budget->kode_cbg }}") {
+            if ("{{ $data->rangkuman->tarif_rs > $data->budget->tarif_inacbg }}") {
+                alert('Tarif RS Sudah Melebihi Tarif Klaim, Mohon Periksa kembali pelayanan');
+            } else {
+                alert('Sudah Groupping');
+            }
+        } else {
+            alert('Belum Groupping');
+        }
     });
 </script>
