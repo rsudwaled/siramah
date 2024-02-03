@@ -30,27 +30,6 @@ class RanapController extends APIController
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
-        // if ($request->tanggal) {
-        //     $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
-        //     $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
-        //     if ($request->kodeunit == '-') {
-        //         $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
-        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
-        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
-        //             ->orWhere('status_kunjungan', 1)
-        //             ->whereRelation('unit', 'kelas_unit', '=', 2)
-        //             ->with(['pasien', 'budget', 'unit', 'status'])
-        //             ->get();
-        //     } else {
-        //         $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
-        //             ->where('tgl_masuk', '<=', $request->tgl_awal)
-        //             ->where('tgl_keluar', '>=', $request->tgl_akhir)
-        //             ->orWhere('status_kunjungan', 1)
-        //             ->where('kode_unit', $request->kodeunit)
-        //             ->with(['pasien', 'budget', 'unit', 'status'])
-        //             ->get();
-        //     }
-        // }
         return view('simrs.ranap.kunjungan_ranap', compact([
             'request',
             'units',
@@ -81,7 +60,7 @@ class RanapController extends APIController
                     ->get();
             }
         }
-        return $this->sendResponse($kunjungans);
+        return view('simrs.ranap.table_pasien_ranap', compact('kunjungans'));
     }
     // erm pasien ranap
     public function pasienranapprofile(Request $request)
@@ -98,7 +77,6 @@ class RanapController extends APIController
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
-
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
@@ -117,9 +95,9 @@ class RanapController extends APIController
         $response = collect(DB::connection('mysql2')->select("CALL RINCIAN_BIAYA_FINAL('" . $request->norm . "','" . $request->counter . "','','')"));
         $budget = BudgetControl::find($request->norm . '|' . $request->counter);
         $data = [
+            "groupping" =>  $budget ? 'true' : 'false',
+            "budget" => $budget ?? null,
             "rincian" => $response,
-            "budget" => $budget,
-            "pasien" => $budget->pasien ?? null,
             "rangkuman" => [
                 "tarif_rs" => round($response->sum("GRANTOTAL_LAYANAN")),
                 "prosedur_non_bedah" => round($response->where('nama_group_vclaim', "PROSEDURE NON BEDAH")->sum("GRANTOTAL_LAYANAN")),
@@ -142,7 +120,8 @@ class RanapController extends APIController
                 "obat_kemo" => round($response->where('nama_group_vclaim', "OBAT KEMOTERAPI")->sum("GRANTOTAL_LAYANAN")),
             ],
         ];
-        return $this->sendResponse($data, 200);
+        $data = json_decode(json_encode($data));
+        return view('simrs.ranap.erm_ranap_biaya', compact('data'));
     }
     public function get_hasil_laboratorium(Request $request)
     {
@@ -305,6 +284,7 @@ class RanapController extends APIController
         $lama_rawat = $tglmasuk->diffInDays($tglpulang);
         foreach ($kunjungans as $kjg) {
             foreach ($kjg->layanans as  $lynan) {
+                // dd($kjg->layanans);
                 if ($lynan->unit->kelas_unit == 4) {
                     foreach ($lynan->layanan_details as  $laydet) {
                         if ($laydet->kode_barang) {
@@ -317,6 +297,9 @@ class RanapController extends APIController
                                 'aturan_pakai' => $laydet->aturan_pakai,
                                 'kategori_resep' => $laydet->kategori_resep,
                                 'satuan_barang' => $laydet->satuan_barang,
+                                'tgl_layanan_detail' => $laydet->tgl_layanan_detail,
+                                'row_id_header' => $laydet->row_id_header,
+                                'keterangan' => $lynan->keterangan,
                             ];
                         }
                     }
@@ -383,10 +366,73 @@ class RanapController extends APIController
             'resumes',
         ]));
     }
+    public function table_resume_ranap(Request $request)
+    {
+        $kunjungans = null;
+        if ($request->tanggal) {
+            $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
+            $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
+            if ($request->ruangan == '-') {
+                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->with(['pasien', 'budget', 'tagihan', 'erm_ranap', 'unit', 'status'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::where('kode_unit', $request->ruangan)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->where('kode_unit', $request->ruangan)
+                    ->with(['pasien', 'budget', 'tagihan', 'erm_ranap', 'unit', 'status'])
+                    ->get();
+            }
+        }
+        return view('simrs.ranap.table_resume_ranap', compact('kunjungans'));
+    }
+    public function form_resume_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::with([
+            'pasien',
+            'erm_ranap',
+        ])->firstWhere('kode_kunjungan', $request->kode);
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.form_resume_ranap', compact([
+            'kunjungan',
+            'pasien',
+        ]));
+    }
+
     public function simpan_resume_ranap(Request $request)
     {
         $request['pic1'] = Auth::user()->name;
         $request['user1'] = Auth::user()->id;
+        $icd10_sekunder = [];
+        $diagsekunder = array_filter($request->diagnosa_sekunder);
+        foreach ($diagsekunder as $key => $value) {
+            $icd10_sekunder[] = $request->icd10_sekunder[$key];
+        }
+        $request['diagnosa_sekunder'] = $request->diagnosa_sekunder ?  json_encode($diagsekunder) : null;
+        $request['icd10_sekunder'] = $request->icd10_sekunder ?  json_encode($icd10_sekunder) : null;
+
+        $icd9_operasi = [];
+        $tidakanoperasi = array_filter($request->tindakan_operasi);
+        foreach ($tidakanoperasi as $key => $value) {
+            $icd9_operasi[] = $request->icd9_operasi[$key];
+        }
+        $request['tindakan_operasi'] = $request->tindakan_operasi ?  json_encode($tidakanoperasi) : null;
+        $request['icd9_operasi'] = $request->icd9_operasi ?  json_encode($icd9_operasi) : null;
+
+        $icd9_prosedur = [];
+        $tidakanoprosedur = array_filter($request->tindakan_prosedur);
+
+        foreach ($tidakanoprosedur as $key => $value) {
+            $icd9_prosedur[] = $request->icd9_prosedur[$key];
+        }
+        $request['tindakan_prosedur'] = $request->tindakan_prosedur ?  json_encode($tidakanoprosedur) : null;
+        $request['icd9_prosedur'] = $request->icd9_prosedur ?  json_encode($icd9_prosedur) : null;
         $erm = ErmRanap::updateOrCreate(
             [
                 'kode_kunjungan' => $request->kode_kunjungan,
@@ -446,7 +492,20 @@ class RanapController extends APIController
         $resume->update([
             'pic2' => Auth::user()->name,
             'user2' => Auth::user()->id,
-            'status' => $resume->status == 2 ? '1' : '2',
+            'status' => 2,
+        ]);
+        Alert::success('Success', 'Data Resume Rawat Inap Berhasil Diverifikasi');
+        return redirect()->back();
+    }
+    public function revisi_resume_ranap(Request $request)
+    {
+        $request['pic2'] = Auth::user()->name;
+        $request[''] = Auth::user()->id;
+        $resume = ErmRanap::where('kode_kunjungan', $request->kode)->first();
+        $resume->update([
+            'pic2' => Auth::user()->name,
+            'user2' => Auth::user()->id,
+            'status' => 1,
         ]);
         Alert::success('Success', 'Data Resume Rawat Inap Berhasil Diverifikasi');
         return redirect()->back();

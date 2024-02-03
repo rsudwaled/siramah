@@ -7,93 +7,67 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card icon="fas fa-filter" title="Filter Resume Ranap" theme="secondary" collapsible>
-                <form action="" method="get">
-                    <div class="row">
-                        @php
-                            $config = ['format' => 'YYYY-MM-DD'];
-                        @endphp
-                        <x-adminlte-input-date fgroup-class="col-md-3" igroup-size="sm" name="tanggal" label="Tanggal Antrian"
-                            :config="$config" value="{{ $request->tanggal ?? now()->format('Y-m-d') }}" />
-                        <x-adminlte-select2 fgroup-class="col-md-3" name="kodeunit" label="Ruangan">
-                            <option value="-" {{ $request->kodeunit ? '-' : 'selected' }}>SEMUA RUANGAN (-)
-                            </option>
+            <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Total Pasien">
+                <div class="row">
+                    <div class="col-md-4">
+                        <x-adminlte-select2 fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
+                            igroup-class="col-9" name="kodeunit" label="Ruangan">
                             @foreach ($units as $key => $item)
                                 <option value="{{ $key }}" {{ $key == $request->kodeunit ? 'selected' : null }}>
                                     {{ $item }} ({{ $key }})
                                 </option>
                             @endforeach
+                            <option value="-">SEMUA RUANGAN (-)
+                            </option>
                         </x-adminlte-select2>
                     </div>
-                    <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
-                </form>
+                    <div class="col-md-6">
+                        @php
+                            $config = ['format' => 'YYYY-MM-DD'];
+                        @endphp
+                        <x-adminlte-input-date fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
+                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Rawat Inap"
+                            :config="$config" value="{{ now()->format('Y-m-d') }}">
+                            <x-slot name="appendSlot">
+                                <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getPasienRanap()"
+                                    icon="fas fa-search" theme="primary" label="Submit Pencarian" />
+                            </x-slot>
+                        </x-adminlte-input-date>
+                    </div>
+                </div>
+                <div id="tableRanap"></div>
             </x-adminlte-card>
         </div>
-        @if ($resumes)
-            <div class="col-md-12">
-                <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Total Pasien">
-                    @php
-                        $heads = ['Tgl Masuk', 'Tgl Pulang', 'Kunjungan', 'No RM', 'Pasien', 'Unit', 'PIC', 'Status', 'Action'];
-                        // $config['order'] = [['7', 'asc']];
-                        $config['paging'] = false;
-                        $config['scrollY'] = '400px';
-                    @endphp
-                    <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
-                        hoverable compressed>
-                        @foreach ($resumes as $item)
-                            <tr>
-                                <td>{{ $item->kunjungan->tgl_masuk }}</td>
-                                <td>{{ $item->kunjungan->tgl_keluar }}</td>
-                                <td>{{ $item->kunjungan->counter }}/{{ $item->kunjungan->kode_kunjungan }}</td>
-                                <td>{{ $item->norm }}</td>
-                                <td>{{ $item->pasien->nama_px }}</td>
-                                <td>{{ $item->kunjungan->unit->nama_unit }}</td>
-                                <td>{{ $item->pic1 }}</td>
-                                <td>
-                                    @switch($item->status)
-                                        @case(1)
-                                            Perbaikan
-                                        @break
-
-                                        @case(2)
-                                            Verifikasi
-                                        @break
-
-                                        @default
-                                            Belum Dicheck
-                                    @endswitch
-                                </td>
-                                <td>
-                                    @if ($item->status == 2)
-                                        <a href="{{ route('verif_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
-                                            class="btn btn-xs btn-success"><i class="fas fa-check"></i> Verif</a>
-                                    @else
-                                        <a href="{{ route('verif_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
-                                            class="btn btn-xs btn-danger"><i class="fas fa-times"></i> Batal Verif</a>
-                                    @endif
-                                    <a target="_blank"
-                                        href="{{ route('lihat_resume_ranap') }}?kode={{ $item->kode_kunjungan }}"
-                                        class="btn btn-xs btn-primary"><i class="fas fa-eye"></i> Lihat</a>
-                                    <a target="_blank"
-                                        href="{{ route('pasienranapprofile') }}?kode={{ $item->kode_kunjungan }}"
-                                        class="btn btn-xs btn-warning"><i class="fas fa-edit"></i> Edit</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </x-adminlte-datatable>
-                </x-adminlte-card>
-            </div>
-        @endif
     </div>
-    {{-- <x-adminlte-modal id="modalHasilLab" name="modalHasilLab" title="Hasil Laboratorium" theme="success"
-        icon="fas fa-file-medical" size="xl">
-        <iframe id="dataHasilLab" src="" height="600px" width="100%" title="Iframe Example"></iframe>
+    {{-- <x-adminlte-modal  title="Resume Ranap" theme="warning" icon="fas fa-file-medical" size='xl'>
+        <div id="formResume"></div>
         <x-slot name="footerSlot">
-            <a href="" id="urlHasilLab" target="_blank" class="btn btn-primary mr-auto">
-                <i class="fas fa-download "></i>Download</a>
-            <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+          <button class="btn btn-success mr-auto" onclick="simpanttd()"><i class="fas fa-save"></i>
+                Simpan</button>
+            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
         </x-slot>
     </x-adminlte-modal> --}}
+    <div class="modal" id="modalResume" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="max-width: none !important;margin: 2rem !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="formResume"></div>
+                </div>
+                {{-- <div class="modal-footer">
+                    <button type="button" type="submit" form="formResume" class="btn btn-success"><i
+                            class="fas fa-edit"></i> Simpan /
+                        Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div> --}}
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('plugins.Select2', true)
@@ -101,16 +75,46 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
-
 @section('js')
-    {{-- hasil lab --}}
+    {{-- pasien rawat inap --}}
     <script>
         $(function() {
-            $('.btnHasilLab').click(function() {
-                $('#dataHasilLab').attr('src', $(this).data('fileurl'));
-                $('#urlHasilLab').attr('href', $(this).data('fileurl'));
-                $('#modalHasilLab').modal('show');
-            });
+            var kodeinit = "{{ $request->kodeunit }}";
+            if (kodeinit) {
+                getPasienRanap();
+            }
         });
+
+        function getPasienRanap() {
+            var ruangan = $("#kodeunit").val();
+            var tanggal = $("#tanggal").val();
+            var url = "{{ route('table_resume_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                $('#tableRanap').html(data);
+                var table = $('#table1').DataTable({
+                    "paging": false,
+                    "info": false,
+                });
+            });
+        }
+
+        function lihatResume(params) {
+            $.LoadingOverlay("show");
+            var kode = $(params).data('kode');
+            var url = "{{ route('form_resume_ranap') }}?kode=" + kode;
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                console.log(data);
+                $('#formResume').html(data);
+                $('#modalResume').modal('show');
+                $.LoadingOverlay("hide");
+            });
+            // alert(url);
+        }
     </script>
 @endsection

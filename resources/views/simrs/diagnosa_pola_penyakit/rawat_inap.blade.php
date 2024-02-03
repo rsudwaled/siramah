@@ -88,8 +88,8 @@
                             <div class="row">
                                 <dt class="col-sm-4 m-0">Judul</dt>
                                 <dd class="col-sm-8 m-0"> :
-                                    @if($range_umur =='k1') 
-                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP KURANG DARI 1 TAHUN</b> 
+                                    @if($range_umur =='k1')
+                                        <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP KURANG DARI 1 TAHUN</b>
                                     @elseif($range_umur =='umr1_4')
                                         <b> DIAGNOSA POLA PENYAKIT PENDERITA RANAP UMUR 1 - 4 TAHUN</b>
                                     @elseif($range_umur =='umr5_14')
@@ -161,7 +161,7 @@
 
         //     });
         // });
-      
+
     </script>
 @endsection
 @section('css')

@@ -727,7 +727,7 @@ return [
                     'text' => 'Monitoring Resume Ranap',
                     'icon'    => 'fas fa-file-medical',
                     'url'  => 'monitoring_resume_ranap',
-                    'active' => ['monitoring_resume_ranap','lihat_resume_ranap'],
+                    'active' => ['monitoring_resume_ranap', 'lihat_resume_ranap'],
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
@@ -1316,6 +1316,56 @@ return [
 
                 ],
 
+            ],
+        ],
+        // VCLAIM BPJS
+        [
+            'text'    => 'Integrasi Satu Sehat',
+            'icon'    => 'fas fa-project-diagram',
+            'can' => ['bpjs', 'pendaftaran'],
+            'submenu' => [
+                [
+                    'text' => 'Patient',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'satusehat/patient',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
+                    'text' => 'Practitioner',
+                    'icon'    => 'fas fa-user-md',
+                    'url'  => 'satusehat/practitioner',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
+                    'text' => 'Organization',
+                    'icon'    => 'fas fa-hospital',
+                    'url'  => 'satusehat/organization',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
+                    'text' => 'Location',
+                    'icon'    => 'fas fa-hospital',
+                    'url'  => 'satusehat/location',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
+                    'text' => 'Encouter',
+                    'icon'    => 'fas fa-user',
+                    'url'  => 'satusehat/patnt',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
+                    'text' => 'Condition',
+                    'icon'    => 'fas fa-user',
+                    'url'  => 'satusehat/pient',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
             ],
         ],
         // MODUL TESTING

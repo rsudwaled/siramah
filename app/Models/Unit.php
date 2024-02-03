@@ -14,17 +14,12 @@ class Unit extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false;
-
-    protected $fillable = [
-        'kode_unit',
-        'nama_unit',
-        'nama_panggil',
-        'kuota_total',
-        'kuota_online',
+    protected $guarded = [
+        'id',
     ];
     public function jadwals()
     {
-        return $this->hasMany(JadwalPoliDB::class, 'kode_unit', 'kode_unit');
+        return $this->hasMany(JadwalDokter::class, 'kode_unit', 'kode_unit');
     }
     public function antrians()
     {
