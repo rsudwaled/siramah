@@ -10,10 +10,10 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.list') }}"
-                            class="btn btn-sm  btn-secondary withLoad">kembali</a></li>
+                            class="btn btn-sm  btn-secondary withLoad">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                            class="btn btn-sm  btn-warning withLoad">edit kunjungan</a></li>
+                            class="btn btn-sm  btn-warning withLoad">Edit Kunjungan</a></li>
                 </ol>
             </div>
         </div>

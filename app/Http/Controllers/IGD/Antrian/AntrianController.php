@@ -35,7 +35,7 @@ class AntrianController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien di triase pulang!');
             return back();
         }
-        $pasien = null;
+        $pasien = Pasien::orderBy('no_rm','desc')->paginate(20);
         $jp = $jp;
         if ($request->rm && !empty($request->rm)) {
             $pasien = Pasien::where('no_rm', $request->rm)->get();

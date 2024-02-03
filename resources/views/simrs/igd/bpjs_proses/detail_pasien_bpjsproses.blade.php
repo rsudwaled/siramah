@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Detail Kunjungan')
+@section('title', 'Detail Pasien BPJS PROSES')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>DETAIL KUNJUNGAN</h5>
+                <h5>Detail Pasien BPJS PROSES</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('daftar.kunjungan') }}"
-                            class="btn btn-sm btn-secondary withLoad">Kembali</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bpjs-proses.index') }}"
+                            class="btn btn-sm  btn-secondary withLoad">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                            class="btn btn-sm btn-warning withLoad">Edit Kunjungan</a></li>
+                            class="btn btn-sm  btn-warning withLoad">Edit Kunjungan</a></li>
                 </ol>
             </div>
         </div>
@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h5> KUNJUNGAN DARI {{ $kunjungan->pasien->nama_px }}.
+                        <h5> Pasien a.n : {{ $kunjungan->pasien->nama_px }}.
                             <small class="float-right">
                                 <b>
                                     Tgl Masuk : {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}
@@ -117,7 +117,7 @@
                         @endif
                     </div>
                 </div>
-                @if ($kunjungan->id_alasan_edit != null)
+                @if (!empty($kunjungan->id_alasan_edit) && $kunjungan->id_alasan_edit != null)
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="alert alert-success alert-dismissible">
@@ -131,6 +131,72 @@
                 @endif
                 <div class="row">
                     <div class="col-12 table-responsive">
+                        <div class="card">
+                            <div class="card-body bg-danger">
+                                <div class="row ">
+                                    <div class="col-sm-3 col-6">
+                                        <div class="description-block border-right">
+                                            <h5 class="description-header ">
+                                                @if ($kunjungan->lakalantas > 0 && $kunjungan->lakalantas == 1)
+                                                    <small>
+                                                        <b>KLL & BUKAN KECELAKAAN KERJA (BKK)</b>
+                                                    </small> <br>
+                                                @elseif ($kunjungan->lakalantas > 0 && $kunjungan->lakalantas == 2)
+                                                    <small>
+                                                        <b>KLL & KK</b>
+                                                    </small> <br>
+                                                @elseif ($kunjungan->lakalantas > 0 && $kunjungan->lakalantas == 3)
+                                                    <small>
+                                                        <b>KECELAKAAN KERJA</b>
+                                                    </small> <br>
+                                                @endif
+                                            </h5>
+                                            <span class="description-text">- Status Kecelakaan - </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3 col-6">
+                                        <div class="description-block border-right">
+                                            <h5 class="description-header ">
+                                                Provinsi :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->provinsi->nama_provinsi }}
+                                                <br>
+                                                Kabupaten :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->kabupaten->nama_kabupaten_kota }}
+                                                <br>
+                                                Kecamatan :
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : $kunjungan->pasienKecelakaan->kecamatan->nama_kecamatan }}
+                                                <br>
+                                            </h5>
+                                            <span class="description-text">- Lokasi Kecelakaan -</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3 col-6">
+                                        <div class="description-block border-right">
+                                            <h5 class="description-header ">NO :
+                                                {{ $kunjungan->pasienKecelakaan->noLP ?? 'Tidak Ada' }}
+                                            </h5>
+                                            <h6>{{ $kunjungan->pasienKecelakaan->keterangan ?? 'Tidak Ada' }}</h6><br>
+                                            <span class="description-text">- No Laporan Polisi -</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-3 col-6">
+                                        <div class="description-block">
+                                            <h5 class="description-header ">
+                                                {{ $kunjungan->pasienKecelakaan == null ? '-' : date('d M Y', strtotime($kunjungan->pasienKecelakaan->tglKejadian)) }}
+                                            </h5>
+                                            <span class="description-text">- Tanggal Kejadian -</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 table-responsive">
                         <table class="table table-bordered">
                             <thead class="thead-dark">
                                 <tr>
@@ -138,8 +204,8 @@
                                     <th>Pasien</th>
                                     <th>Nomor</th>
                                     <th>Tanggal Lahir</th>
-                                    <th>Pasien Daftar</th>
                                     <th>BPJS</th>
+                                    <th>Pasien Daftar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -168,26 +234,18 @@
                                     </td>
                                     <td>
                                         <b>
-                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
+                                            SEP : {{ $kunjungan->no_sep ?? '-' }} <br>
+                                            SPRI : {{ $kunjungan->no_spri ?? '-' }}
                                         </b>
                                     </td>
                                     <td>
-                                        <b>
-                                            SEP : {{ $kunjungan->no_sep ?? '-' }}
-                                            @if ($kunjungan->no_sep)
-                                                <x-adminlte-button type="button" data-sep="{{ $kunjungan->no_sep }}"
-                                                    theme="danger" class="btn-xs btn-deleteSEP" id="btn-deleteSEP"
-                                                    label="Hapus SEP" />
-                                            @endif
-                                            <br><br>
-                                            SPRI : {{ $kunjungan->no_spri ?? '-' }}
-                                            @if ($kunjungan->no_spri)
-                                                <x-adminlte-button type="button" data-spri="{{ $kunjungan->no_spri }}"
-                                                    theme="danger" class="btn-xs btn-deleteSPRI" id="btn-deleteSPRI"
-                                                    label="Hapus SPRI" />
-                                            @endif
-                                            <br>
-                                        </b>
+                                        @if ($kunjungan->jp_daftar == 0)
+                                            <b>UMUM</b>
+                                        @elseif ($kunjungan->jp_daftar == 1)
+                                            <b>BPJS</b>
+                                        @else
+                                            <b>BPJS PROSES</b>
+                                        @endif
                                     </td>
                                 </tr>
                             </tbody>
@@ -207,120 +265,5 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 @section('js')
-    <script>
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('.btn-deleteSEP').click(function(e) {
-                var sep = $(this).data('sep');
-                var deleteSEP = "{{ route('sep_ranap.delete') }}";
-                Swal.fire({
-                    title: "Apakah Anda Yakin?",
-                    text: "untuk menghapus data SEP!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Hapus!",
-                    cancelButtonText: "Batal!",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: deleteSEP,
-                            data: {
-                                noSep: sep,
-                            },
-                            success: function(data) {
-                                if (data.metadata.code == 200) {
-                                    Swal.fire({
-                                        title: "HAPUS SEP BERHASIL!",
-                                        text: data.metadata.message,
-                                        icon: "success",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                } else {
-                                    Swal.fire({
-                                        title: "HAPUS SEP GAGAL!",
-                                        text: data.metadata.message +
-                                            '( ERROR : ' + data
-                                            .metadata.code + ')',
-                                        icon: "error",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                }
-                            },
-                        });
-                    }
-                });
-            });
-            $('.btn-deleteSPRI').click(function(e) {
-                var spri = $(this).data('spri');
-                var deleteSPRI = "{{ route('spri_ranap.delete') }}";
-                Swal.fire({
-                    title: "Apakah Anda Yakin?",
-                    text: "untuk menghapus data SPRI!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Hapus!",
-                    cancelButtonText: "Batal!",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'DELETE',
-                            url: deleteSPRI,
-                            data: {
-                                noSuratKontrol: spri,
-                            },
-                            success: function(data) {
-                                if (data.metadata.code == 200) {
-                                    Swal.fire({
-                                        title: "HAPUS SPRI BERHASIL!",
-                                        text: data.metadata.message,
-                                        icon: "success",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                } else {
-                                    Swal.fire({
-                                        title: "HAPUS SPRI GAGAL!",
-                                        text: data.metadata.message +
-                                            '( ERROR : ' + data
-                                            .metadata.code + ')',
-                                        icon: "error",
-                                        confirmButtonText: "oke!",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            location.reload();
-                                        }
-                                    });
-                                    $.LoadingOverlay("hide");
-                                }
-                            },
-                        });
-                    }
-                });
-            });
 
-        });
-    </script>
 @endsection

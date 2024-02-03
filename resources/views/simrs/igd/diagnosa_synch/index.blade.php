@@ -8,8 +8,36 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">FILTER</li>
-                    <li class="breadcrumb-item">UNIT : {{ $requestUnit->nama_unit ?? '-' }}</li>
+                    <li class="breadcrumb-item">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <select name="unit" id="unit" class="form-control select2">
+                                        @foreach ($unit as $item)
+                                            <option value="{{ $item->kode_unit }}"
+                                                {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
+                                                {{ $item->nama_unit }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input id="new-event" type="date" name="tanggal" class="form-control"
+                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="submit"
+                                                class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <a href="{{route('v.diagnosa')}}" class="btn btn-md btn-warning">Refresh</a>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -17,7 +45,7 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-md-12">
+        {{-- <div class="col-md-12">
             <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
                 <form action="" method="get">
                     <div class="row">
@@ -48,7 +76,7 @@
                     <x-adminlte-button type="submit" class="withLoad" theme="primary" label="Submit Pencarian" />
                 </form>
             </x-adminlte-card>
-        </div>
+        </div> --}}
         <div class="col-lg-12">
             <div class="row">
                 <div class="col-lg-8">
@@ -238,12 +266,12 @@
                 });
                 swalWithBootstrapButtons.fire({
                     title: "Apakah Anda Yakin?",
-                    text: "Update Diagnosa dan Briding SEP!",
+                    text: "Update Diagnosa dan Bridging Pembuatan SEP!",
                     icon: "warning",
                     padding: "3em",
                     showCancelButton: true,
-                    confirmButtonText: "Ya, Bridging!",
-                    cancelButtonText: "Only, Update!",
+                    confirmButtonText: "Bridging Pembuatan SEP!",
+                    cancelButtonText: "Update Diagnosa!",
                     reverseButtons: false
                 }).then((result) => {
                     if (result.isConfirmed) {

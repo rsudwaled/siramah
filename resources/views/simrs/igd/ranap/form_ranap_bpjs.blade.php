@@ -11,8 +11,8 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><b>RAWAT INAP</b></li>
                     <li class="breadcrumb-item"><b>PASIEN BPJS</b></li>
-                    <li class="breadcrumb-item"><a href="{{ route('list-assesment.ranap') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ route('list-assesment.ranap') }}"
+                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li> --}}
                 </ol>
             </div>
         </div>
@@ -317,10 +317,10 @@
                                             </div>
                                         </div>
                                         <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green float-right btn-flat btn-simpan"
+                                            class="withLoad btn btn-sm m-1 bg-green float-right btn-simpan"
                                             form="submitRanap" label="Simpan Data" />
-                                        <a href="{{route('list-assesment.ranap')}}"
-                                            class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
+                                        <a href="{{route('daftar.kunjungan')}}"
+                                            class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
                             </x-adminlte-card>

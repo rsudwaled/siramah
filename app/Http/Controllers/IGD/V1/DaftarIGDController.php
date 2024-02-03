@@ -1,30 +1,29 @@
 <?php
 
-namespace App\Http\Controllers\IGD\Daftar;
+namespace App\Http\Controllers\IGD\V1;
 
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use App\Models\AntrianPasienIGD;
-use App\Models\Unit;
 use App\Models\Pasien;
+use App\Models\Unit;
 use App\Models\Kunjungan;
 use App\Models\AlasanMasuk;
 use App\Models\Paramedis;
+use App\Models\Penjamin;
 use App\Models\PenjaminSimrs;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
 use App\Models\TarifLayananDetail;
 use App\Models\JPasienIGD;
 use App\Models\HistoriesIGDBPJS;
-use Illuminate\Support\Facades\Auth;
-use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Http;
 
 class DaftarIGDController extends Controller
 {
-     // API FUNCTION
-
-     public function sendResponse($data, int $code = 200)
+    // API FUNCTION BPJS
+    public function sendResponse($data, int $code = 200)
      {
          $response = [
              'response' => $data,
@@ -105,61 +104,99 @@ class DaftarIGDController extends Controller
         ];
         return json_decode(json_encode($response));
     }
- 
 
-    public function formIGD( $no,$rm,$jp )
+    public function index(Request $request)
     {
-        $antrian    = AntrianPasienIGD::firstWhere('no_antri', $no);
-        $pasien     = Pasien::firstWhere('no_rm', $rm);
-        if(empty($pasien->no_Bpjs) || empty($pasien->nik_bpjs))
-        {
-            Alert::info('INFORMASI NIK atau No Kartu PASIEN KOSONG!!', 'silahkan edit data pasien terlebih dahulu!');
-            return back();
+        $query          = Pasien::query();
+        if ($request->rm && !empty($request->rm)) {
+            $query->where('no_rm', $request->rm);
         }
-        $kunjungan  = Kunjungan::where('no_rm', $rm)->orderBy('tgl_masuk','desc')->take(2)->get();
-        $knj_aktif  = Kunjungan::where('no_rm', $rm)
+        if ($request->nama && !empty($request->nama)) {
+            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(50);
+        }
+        if ($request->nomorkartu && !empty($request->nomorkartu)) {
+            $query->where('no_Bpjs', $request->nomorkartu);
+        }
+        if($request->nik && !empty($request->nik))
+        {
+            $query->where('nik_bpjs', $request->nik);
+        }
+        if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
+        {
+            $pasien         = $query->get();
+        }else{
+            $pasien         = null;
+        }
+        $kunjungan  = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
+        $knj_aktif  = Kunjungan::where('no_rm', $request->rm)
             ->where('status_kunjungan', 1)
             ->count();
         $alasanmasuk    = AlasanMasuk::get();
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
+        $penjaminbpjs   = Penjamin::get();
         $tanggal        = now()->format('Y-m-d');
-
         // cek status bpjs aktif atau tidak
-        $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
-        $signature      = $this->signature();
-        $response       = Http::withHeaders($signature)->get($url);
-        $resdescrtipt   = $this->response_decrypt($response, $signature);
-        return view('simrs.igd.daftar.form_igd', compact('antrian','pasien','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        
+        $url            = null;
+        $signature      = null;
+        $response       = null;
+        $resdescrtipt   = null;
+        if(!empty($pasien->nik_bpjs))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
+            $signature      = $this->signature();
+            $response       = Http::withHeaders($signature)->get($url);
+            $resdescrtipt   = $this->response_decrypt($response, $signature);
+        }
+        return view('simrs.igd.v1.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
-    public function store(Request $request)
+    public function storeTanpaNoAntrian(Request $request)
     {
+        if (empty($request->nik_bpjs)) {
+            Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
+            return back();
+        }
+        
+        if ($request->isBpjs == 1 && empty($request->no_bpjs)) {
+            Alert::error('NO KARTU WAJIB DIISI!!', 'untuk pasien bpjs no kartu wajib diisi!');
+            return back();
+        }
+        if (empty($request->penjamin_id_umum) || empty($request->penjamin_id_umum)) {
+            Alert::error('Penjamin Belum dipilih!!', 'silahkan pilih penjamin terlebih dahulu!');
+            return back();
+        }
+        if($request->isBpjs == null)
+        {
+            Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
+            return back();
+        }
+        $bpjsProses = $request->bpjsProses;
+        $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
             [
-            'rm' => 'required',
-            'dokter_id' => 'required',
-            'tanggal' => 'required',
-            'penjamin_id' => 'required',
-            'alasan_masuk_id' => 'required',
-            'id_antrian' => 'required',
-            'isBpjs' => 'required',
-            'noTelp' => 'required|numeric|min:10|max_digits:15',
+                'rm'                => 'required',
+                'dokter_id'         => 'required',
+                'tanggal'           => 'required',
+                // 'penjamin_id_umum'  => 'required',
+                'alasan_masuk_id'   => 'required',
+                'isBpjs'            => 'required',
+                'jp'                => 'required',
+                'noTelp'            => 'required|numeric|min:10|max_digits:15',
             ],
             [
-            'dokter_id' => 'Dokter DPJP wajib dipilih !',
-            'tanggal' => 'Tanggal pendaftaran wajib dipilih !',
-            'penjamin_id' => 'Penjamin wajib dipilih !',
-            'alasan_masuk_id' => 'Alasan daftar wajib dipilih !',
-            'id_antrian' => 'Anda harus memiliki antrian !',
-            'isBpjs' => 'Anda harus memilih pasien didaftarkan sebagai pasien bpj/umum !',
-            'noTelp' => 'No telepon wajib diisi !',
-            'noTelp.max' => 'No telepon maksimal 13 digit',
-            ],
+                'dokter_id'         => 'Dokter DPJP wajib dipilih !',
+                'tanggal'           => 'Tanggal pendaftaran wajib dipilih !',
+                // 'penjamin_id_umum'  => 'Penjamin wajib dipilih !',
+                'alasan_masuk_id'   => 'Alasan daftar wajib dipilih !',
+                'isBpjs'            => 'Anda harus memilih pasien didaftarkan sebagai pasien bpj/umum !',
+                'jp'                => 'Anda harus memilih pasien didaftarkan kedalam unit mana !',
+                'noTelp'            => 'No telepon wajib diisi !',
+                'noTelp.max'        => 'No telepon maksimal 13 digit',
+            ]);
 
-        );
-        
-        $data = Kunjungan::where('no_rm', $request->rm)
+            $data = Kunjungan::where('no_rm', $request->rm)
             ->where('status_kunjungan', 1)
             ->get();
         if ($data->count() > 0) {
@@ -177,22 +214,13 @@ class DaftarIGDController extends Controller
         } else {
             $c = $counter->counter + 1;
         }
-        $unit = Unit::firstWhere('kode_unit', '1002');
-        $pasien = Pasien::where('no_rm', $request->rm)->first();
-        if($request->isBpjs == 1 && empty($pasien->no_Bpjs))
-        {
-            Alert::error('Proses Daftar Gagal!!', 'pasien tidak memiliki nomor kartu. silahkan edit pasien terlebih dahulu!');
-            return back();
-        }
-
-        $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
-        $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
-        $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
-        $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , '.' kec: ' . $kec . ' , '.' Kab: ' . $kab . ' )';
-      
-        $dokter = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-   
-        $createKunjungan = new Kunjungan();
+        
+        $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
+        $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
+        
+        
+        $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $c;
         $createKunjungan->no_rm             = $request->rm;
         $createKunjungan->kode_unit         = $unit->kode_unit;
@@ -200,36 +228,27 @@ class DaftarIGDController extends Controller
         $createKunjungan->kode_paramedis    = $request->dokter_id;
         $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-        $createKunjungan->kode_penjamin     = $request->penjamin_id;
+        $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
-        $createKunjungan->jp_daftar         =  $request->isBpjs;
+        $createKunjungan->jp_daftar         = $bpjsProses == null ? $request->isBpjs : 2;
         $createKunjungan->pic2              = Auth::user()->id;
+        
         if ($createKunjungan->save()) {
-            $ant_upd = AntrianPasienIGD::find($request->id_antrian);
-            $ant_upd->no_rm             = $request->rm;
-            $ant_upd->nama_px           = $pasien->nama_px;
-            $ant_upd->kode_kunjungan    = $createKunjungan->kode_kunjungan;
-            $ant_upd->unit              = $unit->kode_unit;
-            $ant_upd->alamat            = $alamat;
-            $ant_upd->status            = 2;
-            $ant_upd->update();
-
-            $jpPasien = new JPasienIGD();
+            $jpPasien               = new JPasienIGD();
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            $jpPasien->is_bpjs      = $request->isBpjs;
+            $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
-            if($jpPasien->is_bpjs == 1)
+            if($request->isBpjs == 1)
             {
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
-                $histories->noAntrian       = $ant_upd->no_antri;
                 $histories->noMR            = $createKunjungan->no_rm;
                 $histories->noKartu         = trim($pasien->no_Bpjs);
                 $histories->ppkPelayanan    = '1018R001';
@@ -266,36 +285,33 @@ class DaftarIGDController extends Controller
             $tarif_karcis           = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
             $tarif_adm              = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
             $total_bayar_k_a        = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
-            
-            // create layanan detail
+
             $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
             $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
             $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
-
-
             // create layanan header
-            $createLH = new Layanan();
+            $createLH                       = new Layanan();
             $createLH->kode_layanan_header  = $kodelayanan;
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
             $createLH->pic                  = Auth::user()->id;
-            $createLH->status_pembayaran = 'OPN';
+            $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 1) {
                 $createLH->kode_tipe_transaksi  = 1;
                 $createLH->status_layanan       = 3; // status 3 nanti di update jadi 1
                 $createLH->total_layanan        = $total_bayar_k_a;
 
-                if ($request->penjamin_id == 'P01') {
-                    $createLH->tagihan_pribadi = $total_bayar_k_a;
+                if ($penjamin == 'P01') {
+                    $createLH->tagihan_pribadi  = $total_bayar_k_a;
                 } else {
                     $createLH->tagihan_penjamin = $total_bayar_k_a;
                 }
 
                 if ($createLH->save()) {
-                    
+
                     // create detail karcis
-                    $createKarcis = new LayananDetail();
+                    $createKarcis                           = new LayananDetail();
                     $createKarcis->id_layanan_detail        = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
                     $createKarcis->kode_layanan_header      = $createLH->kode_layanan_header;
                     $createKarcis->kode_tarif_detail        = $unit->kode_tarif_karcis;
@@ -307,14 +323,14 @@ class DaftarIGDController extends Controller
                     $createKarcis->tgl_layanan_detail       = now();
                     $createKarcis->tgl_layanan_detail_2     = now();
                     $createKarcis->row_id_header            = $createLH->id;
-                    if ($request->penjamin_id == 'P01') {
-                        $createKarcis->tagihan_pribadi  = $total_bayar_k_a;
+                    if ($penjamin == 'P01') {
+                        $createKarcis->tagihan_pribadi      = $tarif_karcis->TOTAL_TARIF_CURRENT;
                     } else {
-                        $createKarcis->tagihan_penjamin = $total_bayar_k_a;
+                        $createKarcis->tagihan_penjamin     = $tarif_karcis->TOTAL_TARIF_CURRENT;
                     }
                     if ($createKarcis->save()) {
                         // create detail admin
-                        $createAdm = new LayananDetail();
+                        $createAdm                          = new LayananDetail();
                         $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                         $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
                         $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
@@ -326,10 +342,10 @@ class DaftarIGDController extends Controller
                         $createAdm->tgl_layanan_detail      = now();
                         $createAdm->tgl_layanan_detail_2    = now();
                         $createAdm->row_id_header           = $createLH->id;
-                        if ($request->penjamin_id == 'P01') {
-                            $createAdm->tagihan_pribadi     = $total_bayar_k_a;
+                        if ($penjamin == 'P01') {
+                            $createAdm->tagihan_pribadi     = $tarif_adm->TOTAL_TARIF_CURRENT;
                         } else {
-                            $createAdm->tagihan_penjamin    = $total_bayar_k_a;
+                            $createAdm->tagihan_penjamin    = $tarif_adm->TOTAL_TARIF_CURRENT;
                         }
                         
                         if($createAdm->save())
@@ -345,6 +361,29 @@ class DaftarIGDController extends Controller
             } 
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
-        return redirect()->route('list.antrian');
+        return redirect()->route('daftar.kunjungan');
+    }
+
+    public function cekStatusBPJS(Request $request)
+    {
+        $tanggal        = now()->format('Y-m-d');
+        $url            = env('VCLAIM_URL') . "Peserta/nik/" . $request->nik . "/tglSEP/" . $tanggal;
+        $signature      = $this->signature();
+        $response       = Http::withHeaders($signature)->get($url);
+        $resdescrtipt   = $this->response_decrypt($response, $signature);
+        $keterangan     = null;
+        $jenisPeserta   = null;
+        $code           = null;
+        // dd($resdescrtipt, $response );
+        if(!empty($resdescrtipt->response)){
+            $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
+            $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+            $code           = $resdescrtipt->metadata->code;
+        }else{
+            $keterangan     = $resdescrtipt->metadata->message;
+            $jenisPeserta   = $resdescrtipt->metadata->code;
+        }
+        
+        return response()->json(['keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
     }
 }
