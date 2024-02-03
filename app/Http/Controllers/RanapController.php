@@ -392,11 +392,23 @@ class RanapController extends APIController
         }
         return view('simrs.ranap.table_resume_ranap', compact('kunjungans'));
     }
+    public function form_resume_ranap(Request $request)
+    {
+        $kunjungan = Kunjungan::with([
+            'pasien',
+            'erm_ranap',
+        ])->firstWhere('kode_kunjungan', $request->kode);
+        $pasien = $kunjungan->pasien;
+        return view('simrs.ranap.form_resume_ranap', compact([
+            'kunjungan',
+            'pasien',
+        ]));
+    }
+
     public function simpan_resume_ranap(Request $request)
     {
         $request['pic1'] = Auth::user()->name;
         $request['user1'] = Auth::user()->id;
-
         $icd10_sekunder = [];
         $diagsekunder = array_filter($request->diagnosa_sekunder);
         foreach ($diagsekunder as $key => $value) {
@@ -415,6 +427,7 @@ class RanapController extends APIController
 
         $icd9_prosedur = [];
         $tidakanoprosedur = array_filter($request->tindakan_prosedur);
+
         foreach ($tidakanoprosedur as $key => $value) {
             $icd9_prosedur[] = $request->icd9_prosedur[$key];
         }

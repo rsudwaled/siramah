@@ -20,23 +20,25 @@
                 <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
                 <input type="hidden" name="counter" value="{{ $kunjungan->counter }}">
                 <div class="row">
-                    <x-adminlte-textarea name="ringkasan_perawatan" fgroup-class="col-md-4" label="Ringkasan Perawatan"
-                        rows="3" igroup-size="sm" placeholder="Ringkasan Perawatan">
-                        {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="riwayat_penyakit" fgroup-class="col-md-4" label="Riwayat Penyakit"
-                        rows="3" igroup-size="sm" placeholder="Riwayat Penyakit">
-                        {{ $kunjungan->erm_ranap->riwayat_penyakit ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="indikasi_ranap" fgroup-class="col-md-4" label="Indikasi Ranap"
-                        rows="3" igroup-size="sm" placeholder="Indikasi Ranap">
-                        {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
-                    </x-adminlte-textarea>
-                    <x-adminlte-textarea name="pemeriksaan_fisik" fgroup-class="col-md-6" label="Pemeriksaan Fisik"
-                        rows="4" igroup-size="sm" placeholder="Pemeriksaan Fisik">
-                        {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
-                    </x-adminlte-textarea>
                     <div class="col-md-6">
+                        <x-adminlte-textarea name="ringkasan_perawatan" label="Ringkasan Perawatan" rows="3"
+                            igroup-size="sm" placeholder="Ringkasan Perawatan">
+                            {{ $kunjungan->erm_ranap->ringkasan_perawatan ?? null }}
+                        </x-adminlte-textarea>
+                        <x-adminlte-textarea name="riwayat_penyakit" label="Riwayat Penyakit" rows="3"
+                            igroup-size="sm" placeholder="Riwayat Penyakit">
+                            {{ $kunjungan->erm_ranap->riwayat_penyakit ?? null }}
+                        </x-adminlte-textarea>
+                        <x-adminlte-textarea name="indikasi_ranap" label="Indikasi Ranap" rows="3"
+                            igroup-size="sm" placeholder="Indikasi Ranap">
+                            {{ $kunjungan->erm_ranap->indikasi_ranap ?? null }}
+                        </x-adminlte-textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <x-adminlte-textarea name="pemeriksaan_fisik" label="Pemeriksaan Fisik" rows="4"
+                            igroup-size="sm" placeholder="Pemeriksaan Fisik">
+                            {{ $kunjungan->erm_ranap->pemeriksaan_fisik ?? null }}
+                        </x-adminlte-textarea>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -477,10 +479,10 @@
                                         <div class="row">
                                             <div class="input-group col-md-6">
                                                 <input type="text" class="form-control form-control-sm"
-                                                    name="tindakan_operasi[]" placeholder="Tindakan Operasi">
+                                                    name="tindakan_prosedur[]" placeholder="Tindakan Prosedur">
                                             </div>
                                             <div class="input-group col-md-6">
-                                                <select name="icd9_operasi[]" class="form-control icd9operasi">
+                                                <select name="icd9_prosedur[]" class="form-control icd9operasi">
                                                 </select>
                                                 <div class="input-group-append">
                                                     <button type="button" class="btn btn-xs btn-success"

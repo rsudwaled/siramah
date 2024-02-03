@@ -1,3 +1,22 @@
+<div class="row">
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('tgl_keluar', null)->count() }}" text="Sedang Ranap"
+            theme="primary" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('budget.kode_cbg', null)->count() }}" text="Belum Groupping"
+            theme="danger" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box
+            title="{{ $kunjungans->where('tgl_keluar', '!=', null)->where('erm_ranap.status', '!=', 2)->count() }}"
+            text="Belum Resume Ranap" theme="warning" icon="fas fa-user-injured" />
+    </div>
+    <div class="col-md-3">
+        <x-adminlte-small-box title="{{ $kunjungans->where('tgl_keluar', '!=', null)->count() }}" text="Sudah Pulang"
+            theme="success" icon="fas fa-user-injured" />
+    </div>
+</div>
 @php
     $heads = ['Tgl Masuks', 'Tgl Keluar ', 'LOS', 'Action', 'No RM', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Tarif Eklaim', 'Tagihan RS', '%', 'Status'];
     $config['order'] = [['0', 'asc']];
@@ -36,8 +55,9 @@
                 Hari
             </td>
             <td>
-                <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
-                    class="btn btn-primary btn-xs withLoad"><i class="fas fa-file-medical"></i>ERM</a>
+                <div class="btn btn-xs btn-primary" onclick="lihatResume(this)"
+                    data-kode="{{ $kunjungan->kode_kunjungan }}"><i class="fas fa-file-medical"></i> Resume
+                </div>
                 @if (isset($kunjungan->erm_ranap))
                     <a href="{{ route('verif_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"
                         class="btn btn-success btn-xs withLoad"><i class="fas fa-check"></i></a>

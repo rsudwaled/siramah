@@ -25,8 +25,8 @@
                             $config = ['format' => 'YYYY-MM-DD'];
                         @endphp
                         <x-adminlte-input-date fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
-                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Rawat Inap" :config="$config"
-                            value="{{ now()->format('Y-m-d') }}">
+                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Rawat Inap"
+                            :config="$config" value="{{ now()->format('Y-m-d') }}">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getPasienRanap()"
                                     icon="fas fa-search" theme="primary" label="Submit Pencarian" />
@@ -68,6 +68,9 @@
                     "info": false,
                     "scrollCollapse": true,
                     "scrollY": '300px'
+                });
+                $(".withLoad").click(function() {
+                    $.LoadingOverlay("show");
                 });
             });
         }
