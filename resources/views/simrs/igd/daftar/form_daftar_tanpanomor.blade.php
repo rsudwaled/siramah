@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Daftar')
+@section('title', 'Daftar Tanpa Nomor Antrian')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
@@ -10,7 +10,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                            class="btn btn-sm btn-secondary">Kembali</a></li>
                 </ol>
             </div>
         </div>
@@ -188,18 +188,31 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <x-adminlte-select name="isBpjs" id="isBpjs" label="Jenis Pasien">
-                                            <option value="">--Pilih Jenis Pasien--</option>
-                                            <option value="0">Pasien UMUM</option>
-                                            <option value="1">Pasien BPJS</option>
-                                        </x-adminlte-select>
-                                        <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
-                                            <option value="">--Pilih Dokter--</option>
-                                            @foreach ($paramedis as $item)
-                                                <option value="{{ $item->kode_paramedis }}">
-                                                    {{ $item->nama_paramedis }}</option>
-                                            @endforeach
-                                        </x-adminlte-select2>
+                                        <div class="form-group">
+                                            <label for="exampleInputBorderWidth2">Jenis Pasien
+                                                <code>
+                                                    [ silahkan ceklis untuk pasien bpjs masih proses
+                                                    <label for="exampleInputBorderWidth2">BPJS
+                                                        <code>( <input type="checkbox" value="0" name="bpjsProses"
+                                                                id="bpjsProses" class="mt-1"> )
+                                                        </code>
+                                                    </label>
+                                                    ]
+                                                </code>
+                                            </label>
+                                            <select name="isBpjs" id="isBpjs"class="form-control">
+                                                <option value="">--Pilih Jenis Pasien--</option>
+                                                <option value="0">Pasien UMUM</option>
+                                                @if (!empty($resdescrtipt->response))
+                                                    <option value="1"
+                                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF' ? 'selected' : '' }}>
+                                                        Pasien BPJS</option>
+                                                @else
+                                                    <option value="1">Pasien BPJS</option>
+                                                @endif
+                                            </select>
+                                        </div>
+
                                         <div class="form-group" id="show_penjamin_umum">
                                             <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
                                                 @foreach ($penjamin as $item)
@@ -209,13 +222,20 @@
                                             </x-adminlte-select2>
                                         </div>
                                         <div class="form-group" id="show_penjamin_bpjs">
-                                            <x-adminlte-select2 name="penjamin_id_bpjs" label="Pilih Penjamin BPJS" >
+                                            <x-adminlte-select2 name="penjamin_id_bpjs" label="Pilih Penjamin BPJS">
                                                 @foreach ($penjaminbpjs as $item)
                                                     <option value="{{ $item->kode_penjamin_simrs }}">
                                                         {{ $item->nama_penjamin_bpjs }}</option>
                                                 @endforeach
                                             </x-adminlte-select2>
                                         </div>
+                                        <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
+                                            <option value="">--Pilih Dokter--</option>
+                                            @foreach ($paramedis as $item)
+                                                <option value="{{ $item->kode_paramedis }}">
+                                                    {{ $item->nama_paramedis }}</option>
+                                            @endforeach
+                                        </x-adminlte-select2>
                                         <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                             <option value="">--Pilih Alasan--</option>
                                             @foreach ($alasanmasuk as $item)
@@ -279,18 +299,18 @@
                                         @if ($resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF')
                                             <x-adminlte-button type="submit"
                                                 onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
-                                                class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                                class="withLoad btn  btn-sm m-1 bg-green float-right"
                                                 from="formPendaftaranIGD" label="Simpan Data" />
                                         @else
                                             <x-adminlte-button type="submit"
                                                 onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
-                                                class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                                class="withLoad btn  btn-sm m-1 bg-green float-right"
                                                 from="formPendaftaranIGD" label="Simpan" />
                                         @endif
                                     @else
                                         <x-adminlte-button type="submit"
                                             onclick="javascript: form.action='{{ route('form-tanpanomor.store') }}';"
-                                            class="withLoad btn btn-flat btn-sm m-1 bg-green float-right"
+                                            class="withLoad btn  btn-sm m-1 bg-green float-right"
                                             from="formPendaftaranIGD" label="Simpan" />
                                     @endif
                                 @else
@@ -298,7 +318,7 @@
                                         label="tidak bisa lanjut daftar" />
                                 @endif
                                 <a href="{{ route('list.antrian') }}"
-                                    class="btn btn-sm btn-flat m-1 bg-secondary float-right">kembali</a>
+                                    class="btn btn-sm  m-1 bg-secondary float-right">kembali</a>
                             </div>
                         </form>
                     </x-adminlte-card>
@@ -342,7 +362,13 @@
                 $('#perujuk').hide();
             }
         });
-        $('#show_penjamin_bpjs').hide();
+        if (isbpjs.value == 1) {
+            $('#show_penjamin_umum').hide();
+            $('#show_penjamin_bpjs').show();
+        } else {
+            $('#show_penjamin_bpjs').hide();
+            $('#show_penjamin_umum').show();
+        }
         $(isbpjs).on('change', function() {
             if (isbpjs.value > 0 || isbpjs.value == null) {
                 $('#show_penjamin_umum').hide();
@@ -352,6 +378,13 @@
                 $('#show_penjamin_bpjs').hide();
             }
         });
+        // $('#bpjsProses').click(function(e) {
+        //     if (this.checked) {
+        //         $("#bpjsProses").val(1);
+        //     } else {
+        //         $("#bpjsProses").val(0);
+        //     }
+        // });
         $(function() {
             $.ajaxSetup({
                 headers: {

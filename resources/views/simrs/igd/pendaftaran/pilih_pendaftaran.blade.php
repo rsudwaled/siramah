@@ -21,19 +21,6 @@
                         </div>
                     </div>
                 </div>
-                
-                {{-- <div class="col-sm-6 col-12 pasien-kebidanan" style="cursor: pointer">
-                    <div class="info-box bg-gradient-warning">
-                        <span class="info-box-icon"><i class="fas fa-baby"></i></span>
-                        <div class="info-box-content  m-4">
-                            <span class="info-box-text">PASIEN IGD KEBIDANAN</span>
-                            <span class="info-box-number">daftarkan Sebagai pasien igd kebidanan</span>
-                            <div class="progress">
-                                <div class="progress-bar" style="width: 70%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
 
                 <div class="col-sm-6 col-12 pasien-bpjs" style="cursor: pointer">
                     <div class="info-box bg-gradient-success">

@@ -10,9 +10,9 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                            class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
-                            class="btn btn-sm btn-flat bg-purple">Daftar
+                            class="btn btn-sm bg-purple">Daftar
                             Bayi Luar</a></li>
                 </ol>
             </div>

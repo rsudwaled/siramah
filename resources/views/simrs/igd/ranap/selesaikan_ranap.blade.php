@@ -1,19 +1,19 @@
 @extends('adminlte::page')
 
-@section('title', 'Detail Daftar Rawat Inap')
+@section('title', 'DETAIL PENDAFTARAN PASIEN RANAP')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Detail Daftar Rawat Inap</h5>
+                <h5>DETAIL PENDAFTARAN PASIEN RANAP</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('daftar.kunjungan') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li>
+                            class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                            class="btn btn-sm btn-flat btn-warning withLoad">Edit Pendaftaran</a></li>
+                            class="btn btn-sm btn-warning withLoad">Edit Pendaftaran</a></li>
                 </ol>
             </div>
         </div>
@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h5> Pendaftaran Rawat Inap Pasien : {{ $kunjungan->pasien->nama_px }}.
+                        <h5> BRIDGING PASIEN : {{ $kunjungan->pasien->nama_px }}.
                             <small class="float-right">Tgl Masuk :
                                 {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}</small>
                         </h5>
@@ -43,7 +43,7 @@
                                         <div class="description-block border-right">
                                             <h5 class="description-header ">
                                                 {{ $kunjungan->no_spri ?? 'SILAHKAN BUAT SPRI!' }}</h5>
-                                            <span class="description-text">- SPRI - </span>
+                                            <span class="description-text">-{{ $kunjungan->no_spri!= NULL ? 'SPRI SELESAI DIBUAT!':'BUAT SPRI' }} - </span>
                                         </div>
                                     </div>
 
@@ -51,7 +51,7 @@
                                         <div class="description-block">
                                             <h5 class="description-header ">{{ $kunjungan->no_sep ?? 'SILAHKAN BUAT SEP!' }}
                                             </h5>
-                                            <span class="description-text">- SEP -</span>
+                                            <span class="description-text">- {{ $kunjungan->no_spri!= NULL ? 'SEP SELESAI DIBUAT!':'BUAT SEP' }}  -</span>
                                         </div>
                                     </div>
                                 </div>
@@ -144,9 +144,9 @@
 
                 <div class="row no-print">
                     <div class="col-12">
-                        <button type="button" class="btn btn-success float-right m-1" style="margin-right: 5px;">
+                        <a href="{{route('daftar.kunjungan')}}" class="btn btn-success float-right m-1 withLoad" style="margin-right: 5px;">
                             <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
-                        </button>
+                        </a>
                         @if (empty($kunjungan->no_sep))
                             <button type="button" class="btn bg-purple float-right m-1 btnSEPIGD" 
                                 data-spri="{{ $kunjungan->no_spri }}"
@@ -282,30 +282,30 @@
                 $('#noKartu').val(noKartu);
                 $('#kodeKunjungan').val(kunjungan);
                 $('.lanjutkanPROSESDAFTAR').hide();
-                if ($('#modalSPRI').show()) {
-                    var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        dataType: 'JSON',
-                        success: function(data) {
-                            console.log(data.cekSPRI);
-                            if (data.cekSPRI == null) {
-                                Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
-                                    'info');
-                            } else {
-                                $('.lanjutkanPROSESDAFTAR').show();
-                                $('.btnCreateSPRI').hide();
-                                $('.btnCreateSPRIBatal').hide();
-                                $('.lanjutkanPROSESDAFTAR').click(function(e) {
-                                    location.href =
-                                        "{{ route('ranapbpjs') }}/?no_kartu=" + data
-                                        .cekSPRI.noKartu;
-                                });
-                            }
-                        }
-                    });
-                }
+                // if ($('#modalSPRI').show()) {
+                //     var url = "{{ route('cekprosesdaftar.spri') }}?noKartu=" + noKartu;
+                //     $.ajax({
+                //         type: "GET",
+                //         url: url,
+                //         dataType: 'JSON',
+                //         success: function(data) {
+                //             console.log(data.cekSPRI);
+                //             if (data.cekSPRI == null) {
+                //                 Swal.fire('PASIEN BELUM PUNYA SPRI. SILAHKAN BUAT SPRI', '',
+                //                     'info');
+                //             } else {
+                //                 $('.lanjutkanPROSESDAFTAR').show();
+                //                 $('.btnCreateSPRI').hide();
+                //                 $('.btnCreateSPRIBatal').hide();
+                //                 $('.lanjutkanPROSESDAFTAR').click(function(e) {
+                //                     location.href =
+                //                         "{{ route('ranapbpjs') }}/?no_kartu=" + data
+                //                         .cekSPRI.noKartu;
+                //                 });
+                //             }
+                //         }
+                //     });
+                // }
                 $('#modalSPRI').modal('toggle');
             });
 

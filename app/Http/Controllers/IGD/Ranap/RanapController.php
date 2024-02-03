@@ -124,14 +124,36 @@ class RanapController extends APIController
 
     public function dataPasienRanap(Request $request)
     {
-        $kunjungan = Kunjungan::where([
-                ['status_kunjungan','!=', 8],
-                ['is_ranap_daftar', 1],
-            ])
-            ->whereDate('tgl_masuk', now())
-            ->get();
-        $unit = Unit::where('kelas_unit', 1)->get();
-        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan','unit'));
+        $query = DB::connection('mysql2')->table('ts_kunjungan')
+                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
+                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+                    // ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
+                    ->select(
+                        'mt_pasien.no_Bpjs as no_Bpjs', 'mt_pasien.nik_bpjs as nik_bpjs', 'mt_pasien.no_rm as no_rm','mt_pasien.nama_px as nama_px','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jenis_kelamin',
+                        'ts_kunjungan.kode_kunjungan as kode_kunjungan','ts_kunjungan.status_kunjungan as status_kunjungan','ts_kunjungan.no_sep as no_sep', 'ts_kunjungan.no_spri as no_spri',
+                        'ts_kunjungan.tgl_masuk as tgl_masuk','ts_kunjungan.kode_unit as kode_unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.jp_daftar as jp_daftar',
+                        'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas',
+                        'mt_unit.nama_unit as nama_unit',
+                        // 'mt_status_kunjungan.status_kunjungan as status_kunjungan',
+                    )
+                    ->where('status_kunjungan','!=', 8)
+                    ->where('is_ranap_daftar', 1)
+                    ->orderBy('tgl_masuk', 'desc');
+        if($request->tanggal && !empty($request->tanggal))
+        {
+            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
+        }
+
+        if($request->unit && !empty($request->unit))
+        {
+            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        }
+
+        if(empty($request->tanggal) && empty($request->unit)){
+            $query->whereDate('ts_kunjungan.tgl_masuk', now());
+        }
+        $kunjungan = $query->get();
+        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
     public function ranapUmum(Request $request, $rm, $kunjungan)
@@ -395,7 +417,7 @@ class RanapController extends APIController
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
-        $createKunjungan->jp_daftar         = 0;
+        $createKunjungan->jp_daftar         = 1;
         $createKunjungan->pic               = Auth::user()->id;
         if ($createKunjungan->save()) {
 
@@ -503,28 +525,36 @@ class RanapController extends APIController
         return view('simrs.igd.ranap.selesaikan_ranap', compact('kunjungan', 'request'));
     }
 
+    //BRIDGING KE BPJS 
     public function createSPRI(Request $request)
     {
         $vclaim     = new VclaimController();
         $response   = $vclaim->spri_insert($request);
         if ($response->metadata->code == 200) {
             $spri = $response->response;
-            Spri::create([
-                'kunjungan'         => $request->kodeKunjungan,
-                'noSPRI'            => $spri->noSPRI,
-                'tglRencanaKontrol' => $spri->tglRencanaKontrol,
-                'namaDokter'        => $spri->namaDokter,
-                'noKartu'           => $spri->noKartu,
-                'nama'              => $spri->nama,
-                'kelamin'           => $spri->kelamin,
-                'tglLahir'          => $spri->tglLahir,
-                'namaDiagnosa'      => $spri->namaDiagnosa,
-
-                'kodeDokter'        => $request->kodeDokter,
-                'poliKontrol'       => $request->poliKontrol,
-                'user'              => $request->user,
-            ]);
-
+            $cekSPRI = Spri::where('kunjungan', $request->kodeKunjungan)->first();
+            if(!empty($cekSPRI))
+            {
+                $cekSPRI->noSPRI            = $spri->noSPRI;
+                $cekSPRI->tglRencanaKontrol = $spri->tglRencanaKontrol;
+                $cekSPRI->save();
+            }else{
+                Spri::create([
+                    'kunjungan'         => $request->kodeKunjungan,
+                    'noSPRI'            => $spri->noSPRI,
+                    'tglRencanaKontrol' => $spri->tglRencanaKontrol,
+                    'namaDokter'        => $spri->namaDokter,
+                    'noKartu'           => $spri->noKartu,
+                    'nama'              => $spri->nama,
+                    'kelamin'           => $spri->kelamin,
+                    'tglLahir'          => $spri->tglLahir,
+                    'namaDiagnosa'      => $spri->namaDiagnosa,
+    
+                    'kodeDokter'        => $request->kodeDokter,
+                    'poliKontrol'       => $request->poliKontrol,
+                    'user'              => $request->user,
+                ]);
+            }
             $kunjungan          = Kunjungan::where('kode_kunjungan', $request->kodeKunjungan)->first();
             $kunjungan->no_spri = $spri->noSPRI;
             $kunjungan->save();
@@ -562,7 +592,7 @@ class RanapController extends APIController
         $cekSPRI = Spri::where('noKartu', $request->noKartu)
             ->where('tglRencanaKontrol', now()->format('Y-m-d'))
             ->first();
-        // dd($cekSPRI);
+            
         return response()->json([
             'cekSPRI' => $cekSPRI,
         ]);
@@ -636,7 +666,7 @@ class RanapController extends APIController
                     ],
                     'dpjpLayan' => '',
                     'noTelp'    => $histories->noTelp,
-                    'user'      => 'test',
+                    'user'      => 'RSUD WALED',
                 ],
             ],
         ];
@@ -647,6 +677,8 @@ class RanapController extends APIController
             $resdescrtipt   = $this->response_decrypt($response, $signature);
             $sep            = $resdescrtipt->response->sep->noSep;
 
+            $histories->ppkRujukan       = '1018R001';
+            $histories->noRujukan       = $spri->noSPRI;
             $histories->diagAwal        = $kunjungan->diagx;
             $histories->status_daftar   = 1;
             $histories->is_bridging     = 1;
@@ -661,6 +693,51 @@ class RanapController extends APIController
         else{
             return response()->json(['data'=>$callback]);
         }
+    }
+
+    public function deleteSEP(Request $request)
+    {
+       
+        $vclaim     = new VclaimController();
+        $response   = $vclaim->sep_delete($request);
+        if ($response->metadata->code == 200) {
+            $cekSEP    = HistoriesIGDBPJS::firstWhere('respon_nosep', $request->noSep);
+            if($cekSEP)
+            {
+                $cekSEP->respon_nosep   = Null;
+                $cekSEP->noRujukan      = Null;
+                $cekSEP->ppkRujukan     = Null;
+                $cekSEP->save();
+            }
+
+            $kunjungan          = Kunjungan::where('no_sep', $request->noSep)->first();
+            $kunjungan->no_sep  = NULL;
+            $kunjungan->save();
+        } else {
+            Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
+        }
+        return $response;
+    }
+    public function deleteSPRI(Request $request)
+    {
+       
+        $vclaim     = new VclaimController();
+        $response   = $vclaim->spri_delete($request);
+        if ($response->metadata->code == 200) {
+            $cekSPRI    = Spri::firstWhere('noSPRI', $request->noSuratKontrol);
+            if($cekSPRI)
+            {
+                $cekSPRI->noSPRI = Null;
+                $cekSPRI->save();
+            }
+
+            $kunjungan          = Kunjungan::where('no_spri', $request->noSuratKontrol)->first();
+            $kunjungan->no_spri = NULL;
+            $kunjungan->save();
+        } else {
+            Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
+        }
+        return $response;
     }
 
     // pasien ranap bayi
@@ -823,6 +900,6 @@ class RanapController extends APIController
             }
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
-        return redirect()->route('kunjungan.ranap');
+        return redirect()->route('pasien.ranap');
     }
 }

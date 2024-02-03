@@ -3,12 +3,15 @@
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-6">
+            <div class="col-sm-4">
                 <h1>List Antrian</h1>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm bg-purple">Daftar Pasien Kecelakaan</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
+                            Baru</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
+                            class="btn btn-sm btn-primary">Daftar Pasien Kecelakaan</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('v.tanpa-nomor') }}" class="btn btn-sm btn-warning">Daftar
                             Tanpa Antrian</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
