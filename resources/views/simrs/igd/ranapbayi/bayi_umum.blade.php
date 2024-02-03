@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Ranap Bayi')
+@section('title', 'FORM RANAP BAYI')
 @section('content_header')
-    <h1>Ranap Bayi : {{ $pasien->nama_px }}</h1>
+    <h1>FORM RANAP BAYI: {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -102,7 +102,7 @@
                                                             </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select2 name="dpjp" label="pilih dpjp">
+                                                            <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
                                                                 <option value="">--Pilih Dpjp--</option>
                                                                 @foreach ($paramedis as $item)
                                                                     <option value="{{ $item->kode_paramedis }}">
@@ -118,7 +118,7 @@
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="submitRanap"
                                             label="Simpan Data" />
                                         <a href="{{ route('pasien-bayi.cari') }}"
-                                            class="btn btn-secondary btn-flat m-1 btn-sm float-right">Kembali</a>
+                                            class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
                             </x-adminlte-card>

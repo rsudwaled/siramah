@@ -279,10 +279,10 @@
                 denyButtonText: `Batal`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    if($('#no_tlp').val() == null || $('#no_hp').val() == null)
-                    {
-                        Swal.fire('kontak pasien wajib diisi', 'boleh diisi di telpon atau no hp', 'info');
-                    }
+                    // if($('#no_tlp').val() == null || $('#no_hp').val() == null)
+                    // {
+                    //     Swal.fire('kontak pasien wajib diisi', 'boleh diisi di telpon atau no hp', 'info');
+                    // }
                     if($('#kab_pasien').val() == null)
                     {
                         Swal.fire('alamat wajib diisi lengkap', 'provinsi-kabupaten/kota-kecamatan-desa/kelurahan', 'info');

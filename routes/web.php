@@ -561,7 +561,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
     Route::get('/ranap-bpjs', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJS'])->name('ranapbpjs');
     Route::get('/pasien-rawat-inap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'dataPasienRanap'])->name('pasien.ranap');
-
+    Route::get('ranap/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'detailPasienRanap'])->name('pasien-ranap.detail');
     //  list assesment ranap
     Route::get('/list-pasien/assesment-ranap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'listPasienRanap'])->name('list-assesment.ranap');
     Route::get('/list-pasien/form-ranap/{rm}/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUmum'])->name('form-umum.pasien-ranap');
@@ -572,6 +572,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/spri-get/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getSPRI'])->name('spri.get');
     Route::get('/ranap/spri-check/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'cekProsesDaftarSPRI'])->name('cekprosesdaftar.spri');
     Route::get('/get-bed-byruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('bed-ruangan.get');
+   
 
     Route::get('/ranap/pasien-bpjs/{nomorkartu}/{kode}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJS'])->name('daftar.ranap-bpjs');
     Route::post('/ranap/pasien-bpjs/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJSStore'])->name('store.ranap-bpjs');
@@ -592,12 +593,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
 
     // Pasien Kecelakaan
+    Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
     Route::get('detail/pasien-kecelakaan/{kunjungan}', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'detailPasienKecelakaan'])->name('pasien-kecelakaan.detail');
-    Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('/create/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'create'])->name('pasien-kecelakaan.create');
     Route::post('/store/pasien-kecelakaan-store', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'store'])->name('pasien-kecelakaan.store');
-
+    Route::get('/buat-pasien-baru/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'createPasienKec'])->name('pasien-kecelakaan.pasien-baru');
+    Route::post('/store-pasien-baru/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'pasienKecStore'])->name('pasien-kecelakaan.store-pasien-baru');
     // Pasien BPJS Proses
     Route::get('/pasien-bpjsproses/list-pasien', [App\Http\Controllers\IGD\BPJSPROSES\BpjsProsesController::class, 'listPasienBpjsProses'])->name('pasien-bpjs-proses.index');
     Route::get('detail/pasien-proses/{kunjungan}', [App\Http\Controllers\IGD\BPJSPROSES\BpjsProsesController::class, 'detailPasienBPJSPROSES'])->name('pasien-bpjs-proses.detail');

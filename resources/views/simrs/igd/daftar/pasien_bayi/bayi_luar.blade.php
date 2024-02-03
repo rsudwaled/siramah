@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', 'Pendaftaran Pasien Bayi')
+@section('title', 'DATA PASIEN BAYI')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Kunjungan Kebidanan</h5>
+                <h5>DATA PASIEN BAYI</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
                             class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
                             class="btn btn-sm bg-success">Tambah Bayi Baru</a></li>
@@ -24,7 +24,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan Kebidinanan :">
+            <x-adminlte-card theme="primary" size="sm" collapsible title="FILTER DATA BAYI :">
                 <div class="col-lg-12">
                     <div class="row">
                         <form action="" method="get">
