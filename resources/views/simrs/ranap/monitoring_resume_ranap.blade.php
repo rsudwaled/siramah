@@ -48,7 +48,7 @@
         </x-slot>
     </x-adminlte-modal> --}}
     <div class="modal" id="modalResume" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document" style="max-width: none !important;margin: 1rem !important;">
+        <div class="modal-dialog" role="document" style="max-width: none !important;margin: 2rem !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Modal title</h5>
