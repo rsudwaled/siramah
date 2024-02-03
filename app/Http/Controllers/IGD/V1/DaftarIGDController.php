@@ -112,7 +112,7 @@ class DaftarIGDController extends Controller
             $query->where('no_rm', $request->rm);
         }
         if ($request->nama && !empty($request->nama)) {
-            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(50);
+            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(100);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
             $query->where('no_Bpjs', $request->nomorkartu);
@@ -374,11 +374,18 @@ class DaftarIGDController extends Controller
         $keterangan     = null;
         $jenisPeserta   = null;
         $code           = null;
-        // dd($resdescrtipt, $response );
+        
         if(!empty($resdescrtipt->response)){
             $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
             $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
             $code           = $resdescrtipt->metadata->code;
+
+            $pasien         = Pasien::where('no_rm', $request->rm)->first();
+            if(empty($pasien->no_Bpjs))
+            {
+                $pasien->no_Bpjs = $resdescrtipt->response->peserta->noKartu;
+                $pasien->save();
+            }
         }else{
             $keterangan     = $resdescrtipt->metadata->message;
             $jenisPeserta   = $resdescrtipt->metadata->code;

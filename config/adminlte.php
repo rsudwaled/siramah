@@ -446,12 +446,13 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
-                    'text' => 'Pasien Kecelakaan',
-                    'icon'    => 'fas fa-ambulance',
-                    'url'  => 'list/pasien-kecelakaan',
+                    'text' => 'Pasien BPJS PROSES',
+                    'icon'    => 'fas fa-thumbtack',
+                    'url'  => 'pasien-bpjsproses/list-pasien',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
+               
                 [
                     'text' => 'Pasien Ranap',
                     'icon'    => 'fas fa-procedures',
@@ -459,7 +460,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-                
+                [
+                    'text' => 'Pasien Kecelakaan',
+                    'icon'    => 'fas fa-ambulance',
+                    'url'  => 'list/pasien-kecelakaan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',

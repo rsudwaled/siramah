@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', 'Pendaftaran Pasien Bayi')
+@section('title', 'KUNJUNGAN KEBIDANAN')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Kunjungan Kebidanan</h5>
+                <h5>KUNJUNGAN KEBIDANAN</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
+                    <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}"
                             class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
                             class="btn btn-sm bg-purple">Daftar

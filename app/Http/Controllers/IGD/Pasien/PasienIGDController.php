@@ -157,7 +157,7 @@ class PasienIGDController extends Controller
             'no_ktp'            => $request->nik_pasien_baru,
         ]);
         Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
-        return redirect()->route('list.antrian');
+        return redirect()->route('daftar-igd.v1');
     }
 
     public function editPasien(Request $request, $rm)
@@ -237,7 +237,6 @@ class PasienIGDController extends Controller
                 $klp->update();
             }
         }
-        dd($pasien);
         return response()->json(['pasien'=>$pasien, 'status'=>200]);
     }
 
