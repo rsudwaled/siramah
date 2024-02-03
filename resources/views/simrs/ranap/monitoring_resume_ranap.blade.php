@@ -26,7 +26,7 @@
                             $config = ['format' => 'YYYY-MM-DD'];
                         @endphp
                         <x-adminlte-input-date fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
-                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Antrian" :config="$config"
+                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Rawat Inap" :config="$config"
                             value="{{ now()->format('Y-m-d') }}">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getPasienRanap()"
