@@ -6,7 +6,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card theme="secondary" icon="fas fa-info-circle" title="Data Pasien Rawat Inap">
+            <x-adminlte-card theme="secondary" icon="fas fa-procedures" title="Data Pasien Rawat Inap">
                 <div class="row">
                     <div class="col-md-4">
                         <x-adminlte-select2 fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
@@ -45,7 +45,6 @@
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
 @section('js')
-    {{-- pasien rawat inap --}}
     <script>
         $(function() {
             var kodeinit = "{{ $request->kodeunit }}";
@@ -55,23 +54,17 @@
         });
 
         function getPasienRanap() {
+            $.LoadingOverlay("show");
             var ruangan = $("#kodeunit").val();
             var tanggal = $("#tanggal").val();
-            var url = "{{ route('get_pasien_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
+            var url = "{{ route('table_pasien_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
+            console.log(url);
             $.ajax({
                 type: "GET",
                 url: url,
             }).done(function(data) {
                 $('#tableRanap').html(data);
-                var table = $('#table1').DataTable({
-                    "paging": false,
-                    "info": false,
-                    "scrollCollapse": true,
-                    "scrollY": '300px'
-                });
-                $(".withLoad").click(function() {
-                    $.LoadingOverlay("show");
-                });
+                $.LoadingOverlay("hide");
             });
         }
     </script>
