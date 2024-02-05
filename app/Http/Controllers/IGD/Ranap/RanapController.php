@@ -156,6 +156,11 @@ class RanapController extends APIController
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
+    public function detailPasienRanap($kunjungan)
+    {
+        $kunjungan = Kunjungan::with('pasien','alasanEdit')->where('kode_kunjungan', $kunjungan)->first();
+        return view('simrs.igd.ranap.detail_kunjungan', compact('kunjungan'));
+    }
     public function ranapUmum(Request $request, $rm, $kunjungan)
     {
         $cekKunjungan   = Kunjungan::where('ref_kunjungan', $kunjungan)->first();
@@ -306,7 +311,7 @@ class RanapController extends APIController
             }
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
-        return redirect()->route('list-assesment.ranap');
+        return redirect()->route('pasien.ranap');
     }
 
 

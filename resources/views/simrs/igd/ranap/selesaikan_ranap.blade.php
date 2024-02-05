@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('daftar.kunjungan') }}"
+                    <li class="breadcrumb-item"><a href="{{ route('pasien.ranap') }}"
                             class="btn btn-sm btn-secondary">Kembali</a></li>
                     <li class="breadcrumb-item"><a
                             href="{{ route('edit.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
@@ -144,7 +144,7 @@
 
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{route('daftar.kunjungan')}}" class="btn btn-success float-right m-1 withLoad" style="margin-right: 5px;">
+                        <a href="{{route('pasien.ranap')}}" class="btn btn-success float-right m-1 withLoad" style="margin-right: 5px;">
                             <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
                         </a>
                         @if (empty($kunjungan->no_sep))

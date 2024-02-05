@@ -90,7 +90,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                    <a href="{{ route('pasien-ranap.detail', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
                                     @if ($item->jp_daftar == 1)
                                         @if ($item->no_spri == null && $item->no_sep == null)

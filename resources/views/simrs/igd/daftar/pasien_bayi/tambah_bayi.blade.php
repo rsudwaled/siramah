@@ -8,8 +8,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    {{-- <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li> --}}
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
+                        class="btn btn-sm bg-purple">Data Pasien Bayi Terdaftar</a></li>
                 </ol>
             </div>
         </div>
@@ -111,7 +111,7 @@
                                     @php
                                         $heads = ['Pasien', 'Aksi'];
                                         $config['order'] = false;
-                                        $config['paging'] = true;
+                                        $config['paging'] = false;
                                         $config['info'] = false;
                                         $config['scrollY'] = '500px';
                                         $config['scrollCollapse'] = true;
@@ -122,21 +122,23 @@
                                         @foreach ($pasien as $data)
                                             <tr>
                                                 <td>
-                                                    <b>
-                                                        RM : {{ $data->no_rm }}<br>
-                                                        NIK : {{ $data->nik_bpjs }} <br>
-                                                        BPJS : {{ $data->no_Bpjs }} <br>
-                                                        PASIEN : {{ $data->nama_px }}
-                                                    </b> <br><br>
-                                                    <small>alamat : {{ $data->alamat ?? '-' }} / <br>
-                                                        {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}</small>
+                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
+                                                        target="__blank">
+                                                        <b>
+                                                            RM : {{ $data->no_rm }}<br>
+                                                            NIK : {{ $data->nik_bpjs }} <br>
+                                                            BPJS : {{ $data->no_Bpjs }} <br>
+                                                            PASIEN : {{ $data->nama_px }}
+                                                        </b> <br><br>
+                                                        <small>alamat : {{ $data->alamat ?? '-' }} / <br>
+                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}</small>
+                                                    </a>
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
-                                                        class="btn-flat btn-xs btn-singkron bg-purple" 
-                                                        label="PILIH DATA" />
+                                                        class="btn-flat btn-xs btn-singkron bg-purple" label="PILIH DATA" />
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -201,11 +203,13 @@
                                                     <option value="L">Laki-Laki</option>
                                                     <option value="P">Perempuan</option>
                                                 </x-adminlte-select>
-                                                
+
                                                 <x-slot name="footerSlot">
-                                                    <x-adminlte-button form="form_add_bayi" class="float-right ml-2 btn-sm btn-flat"
-                                                        type="submit" theme="success" label="Simpan Data" />
-                                                    <a href="{{ route('list.antrian') }}" class="float-right btn btn-sm btn-flat btn-secondary">Kembali</a>
+                                                    <x-adminlte-button form="form_add_bayi"
+                                                        class="float-right ml-2 btn-sm" type="submit"
+                                                        theme="success" label="Simpan Data" />
+                                                    <a href="{{ route('daftar-igd.v1') }}"
+                                                        class="float-right btn btn-sm btn-secondary">Kembali</a>
                                                 </x-slot>
                                             </div>
                                         </div>
@@ -220,6 +224,7 @@
     </div>
 @endsection
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.Datatables', true)
 @section('js')
     <script>
         $(function() {
