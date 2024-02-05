@@ -689,3 +689,28 @@
         href="{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"><i class="fas fa-print"></i>
         Print</a>
 </form>
+
+<script>
+    $(() => {
+        let usrCfg = _AdminLTE_InputDate.parseCfg({
+            "format": "YYYY-MM-DD",
+            "icons": {
+                "time": "fas fa-clock",
+                "date": "fas fa-calendar-alt",
+                "up": "fas fa-arrow-up",
+                "down": "fas fa-arrow-down",
+                "previous": "fas fa-chevron-left",
+                "next": "fas fa-chevron-right",
+                "today": "fas fa-calendar-check-o",
+                "clear": "fas fa-trash",
+                "close": "fas fa-times"
+            },
+            "buttons": {
+                "showClose": true
+            }
+        });
+        $('#tanggal_operasi').datetimepicker(usrCfg);
+        let value = "";
+        $('#tanggal_operasi').val(value || "");
+    })
+</script>
