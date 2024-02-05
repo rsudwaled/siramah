@@ -64,10 +64,10 @@ class PasienIGDController extends Controller
 
     public function pasienBaruIGD(Request $request)
     {
-       
+
         $request->validate(
             [
-                'nik_pasien_baru'   =>'required|numeric|digits_between:16,16',
+                'nik_pasien_baru'   =>'required|numeric',
                 'nama_pasien_baru'  =>'required',
                 'tempat_lahir'      =>'required',
                 'jk'                =>'required',
@@ -75,7 +75,7 @@ class PasienIGDController extends Controller
                 'agama'             =>'required',
                 'pekerjaan'         =>'required',
                 'pendidikan'        =>'required',
-                'no_telp'           =>'required|numeric|digits_between:10,13',
+                'no_telp'           =>'required|numeric',
                 'provinsi_pasien'   =>'required',
                 'negara'            =>'required',
                 'kewarganegaraan'   =>'required',
@@ -117,7 +117,7 @@ class PasienIGDController extends Controller
         $add_rm_new = $rm_last + 1; //982847
         $th         = substr(Carbon::now()->format('Y'), -2); //23
         $rm_new     = $th . $add_rm_new;
-        
+
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
             'nama_keluarga'     => $request->nama_keluarga,
