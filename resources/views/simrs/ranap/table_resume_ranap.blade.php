@@ -55,9 +55,7 @@
                 Hari
             </td>
             <td>
-                <div class="btn btn-xs btn-primary" onclick="lihatResume(this)"
-                    data-kode="{{ $kunjungan->kode_kunjungan }}"><i class="fas fa-file-medical"></i> Resume
-                </div>
+                <a href="{{ route('form_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}" class="btn btn-xs btn-primary withLoad"><i class="fas fa-file-medical"></i> Resume</a>
                 @if (isset($kunjungan->erm_ranap))
                     <a href="{{ route('verif_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}"
                         class="btn btn-success btn-xs withLoad"><i class="fas fa-check"></i></a>

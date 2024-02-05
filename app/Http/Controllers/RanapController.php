@@ -399,9 +399,12 @@ class RanapController extends APIController
             'erm_ranap',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
+        $groupping = $kunjungan->groupping;
         return view('simrs.ranap.form_resume_ranap', compact([
             'kunjungan',
             'pasien',
+            'groupping',
+
         ]));
     }
 

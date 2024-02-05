@@ -452,7 +452,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-               
+
                 [
                     'text' => 'Pasien Ranap',
                     'icon'    => 'fas fa-procedures',
@@ -727,7 +727,7 @@ return [
                     'text' => 'Monitoring Resume Ranap',
                     'icon'    => 'fas fa-file-medical',
                     'url'  => 'monitoring_resume_ranap',
-                    'active' => ['monitoring_resume_ranap', 'lihat_resume_ranap'],
+                    'active' => ['monitoring_resume_ranap', 'form_resume_ranap'],
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

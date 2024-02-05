@@ -1191,5 +1191,4 @@
 
         }
     </script>
-
 @endsection

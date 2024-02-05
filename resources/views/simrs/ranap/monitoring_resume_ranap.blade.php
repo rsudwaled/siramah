@@ -39,14 +39,6 @@
             </x-adminlte-card>
         </div>
     </div>
-    {{-- <x-adminlte-modal  title="Resume Ranap" theme="warning" icon="fas fa-file-medical" size='xl'>
-        <div id="formResume"></div>
-        <x-slot name="footerSlot">
-          <button class="btn btn-success mr-auto" onclick="simpanttd()"><i class="fas fa-save"></i>
-                Simpan</button>
-            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
-        </x-slot>
-    </x-adminlte-modal> --}}
     <div class="modal" id="modalResume" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document" style="max-width: none !important;margin: 2rem !important;">
             <div class="modal-content">
@@ -75,8 +67,10 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
-@section('js')
-    {{-- pasien rawat inap --}}
+@push('css')
+    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
+@endpush
+@push('js')
     <script>
         $(function() {
             var kodeinit = "{{ $request->kodeunit }}";
@@ -86,6 +80,7 @@
         });
 
         function getPasienRanap() {
+            $.LoadingOverlay("show");
             var ruangan = $("#kodeunit").val();
             var tanggal = $("#tanggal").val();
             var url = "{{ route('table_resume_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
@@ -98,6 +93,7 @@
                     "paging": false,
                     "info": false,
                 });
+                $.LoadingOverlay("hide");
             });
         }
 
@@ -105,6 +101,7 @@
             $.LoadingOverlay("show");
             var kode = $(params).data('kode');
             var url = "{{ route('form_resume_ranap') }}?kode=" + kode;
+            alert(url);
             $.ajax({
                 type: "GET",
                 url: url,
@@ -117,11 +114,6 @@
             // alert(url);
         }
     </script>
-@endsection
-@push('css')
-    <link rel="stylesheet" href="{{ asset('signature/dist/signature-style.css') }}">
-@endpush
-@push('js')
     <script src="{{ asset('signature/dist/underscore-min.js') }}"></script>
     <script src="{{ asset('signature/dist/signature-script.js') }}"></script>
     <script>
