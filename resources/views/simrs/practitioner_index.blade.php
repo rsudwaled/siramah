@@ -22,7 +22,7 @@
                         <tr>
                             <td>{{ $item->kodedokter }}</td>
                             <td>{{ $item->paramedis ? $item->paramedis->kode_paramedis : '-' }}</td>
-                            <td>{{ $item->id_satusehat }}</td>
+                            <td>{{ $item->paramedis ? $item->paramedis->id_satusehat : '-'  }}</td>
                             <td>{{ $item->paramedis ? $item->paramedis->nik : '-' }}
 
                                 @if ($item->paramedis)

@@ -9,9 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PractitionerController extends APIController
+class PractitionerController extends SatuSehatController
 {
-    public string $baseurl = "https://api-satusehat.kemkes.go.id/fhir-r4/v1";
     public function index(Request $request)
     {
         $paramedis = Paramedis::get();
@@ -25,10 +24,10 @@ class PractitionerController extends APIController
     public function practitioner_by_nik(Request $request)
     {
         $token = Token::latest()->first()->access_token;
-        $url = $this->baseurl . "/Practitioner?identifier=https://fhir.kemkes.go.id/id/nik|" . $request->nik;
+        $url = env('SATUSEHAT_BASE_URL') . "/Practitioner?identifier=https://fhir.kemkes.go.id/id/nik|" . $request->nik;
         $response = Http::withToken($token)->get($url);
         $data = $response->json();
-        return $this->sendResponse($data);
+        return $this->responseSatuSehat($data);
     }
     public function practitioner_sync(Request $request)
     {
@@ -40,9 +39,9 @@ class PractitionerController extends APIController
             $paramedis->update([
                 'id_satusehat' => $ihs
             ]);
-            Alert::success('Berhasil Sync Practitioner');
+            Alert::success('Success', 'Berhasil Sync Practitioner Satu Sehat');
         } else {
-            Alert::error('Data Practitioner Tidak Ditemukan');
+            Alert::error('Mohon Maaf', $res->metadata->message);
         }
         return redirect()->back();
     }

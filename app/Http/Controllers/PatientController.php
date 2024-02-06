@@ -8,9 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PatientController extends APIController
+class PatientController extends SatuSehatController
 {
-    public string $baseurl = "https://api-satusehat.kemkes.go.id/fhir-r4/v1";
     public function index(Request $request)
     {
         if ($request->search) {
@@ -34,24 +33,24 @@ class PatientController extends APIController
     public function patient_by_nik(Request $request)
     {
         $token = Token::latest()->first()->access_token;
-        $url = $this->baseurl . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $request->nik;
+        $url = env('SATUSEHAT_BASE_URL') . "/Patient?identifier=https://fhir.kemkes.go.id/id/nik|" . $request->nik;
         $response = Http::withToken($token)->get($url);
         $data = $response->json();
-        return $this->sendResponse($data);
+        return $this->responseSatuSehat($data);
     }
     public function patient_sync(Request $request)
     {
         $pasien = Pasien::where('no_rm', $request->norm)->first();
         $request['nik'] = $pasien->nik_bpjs;
         $res = $this->patient_by_nik($request);
-        if ($res->response->entry[0]) {
+        if ($res->metadata->code == 200) {
             $ihs = $res->response->entry[0]->resource->id;
             $pasien->update([
                 'ihs' => $ihs
             ]);
-            Alert::success('Berhasil Sync Patient');
+            Alert::success('Sukses', 'Berhasil Sync Patient Satu Sehat');
         } else {
-            Alert::error('Data Pasien Tidak Ditemukan');
+            Alert::error('Mohon Maaf', $res->metadata->message);
         }
         return redirect()->back();
     }
