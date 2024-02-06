@@ -28,10 +28,10 @@
                             $config = ['format' => 'YYYY-MM-DD'];
                         @endphp
                         <x-adminlte-input-date fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
-                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Periksa"
-                            :config="$config" value="{{ now()->format('Y-m-d') }}">
+                            igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Periksa" :config="$config"
+                            value="{{ now()->format('Y-m-d') }}">
                             <x-slot name="appendSlot">
-                                <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getPasienRanap()"
+                                <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getKunjungan()"
                                     icon="fas fa-search" theme="primary" label="Submit Pencarian" />
                             </x-slot>
                         </x-adminlte-input-date>
@@ -49,3 +49,31 @@
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
+@section('js')
+    <script>
+        $(function() {
+            var kodeinit = "{{ $request->kodeunit }}";
+            if (kodeinit) {
+                getKunjungan();
+            }
+        });
+
+        function getKunjungan() {
+            $.LoadingOverlay("show");
+            var ruangan = $("#kodeunit").val();
+            var tanggal = $("#tanggal").val();
+            var url = "{{ route('table_kunjungan_encounter') }}?kodeunit=" + ruangan + "&tanggalperiksa=" + tanggal;
+            console.log(url);
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                $('#tableRanap').html(data);
+                $.LoadingOverlay("hide");
+            }).fail(function(data) {
+                console.log(data);
+                $.LoadingOverlay("hide");
+            });
+        }
+    </script>
+@endsection

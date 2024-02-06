@@ -163,6 +163,8 @@ Route::middleware('auth')->group(function () {
         Route::get('location', [LocationController::class, 'index'])->name('location');
         Route::get('location_sync', [LocationController::class, 'location_sync'])->name('location_sync');
         Route::get('encounter', [EncounterController::class, 'encounter'])->name('encounter');
+        Route::get('table_kunjungan_encounter', [EncounterController::class, 'table_kunjungan_encounter'])->name('table_kunjungan_encounter');
+        Route::get('encounter_sync', [EncounterController::class, 'encounter_sync'])->name('encounter_sync');
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');

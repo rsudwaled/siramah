@@ -1353,7 +1353,7 @@ return [
                     'can' => ['bpjs', 'pendaftaran', 'casemix'],
                 ],
                 [
-                    'text' => 'Encouter',
+                    'text' => 'Encounter',
                     'icon'    => 'fas fa-user',
                     'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
