@@ -42,11 +42,13 @@ use App\Http\Controllers\FormulirRL4Controller;
 use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
 use App\Http\Controllers\EklaimController;
+use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Controllers\LaboratoriumController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatologiAnatomiController;
@@ -158,6 +160,9 @@ Route::middleware('auth')->group(function () {
         Route::get('practitioner_sync', [PractitionerController::class, 'practitioner_sync'])->name('practitioner_sync');
         Route::get('organization', [OrganizationController::class, 'index'])->name('organization');
         Route::get('organization_sync', [OrganizationController::class, 'organization_sync'])->name('organization_sync');
+        Route::get('location', [LocationController::class, 'index'])->name('location');
+        Route::get('location_sync', [LocationController::class, 'location_sync'])->name('location_sync');
+        Route::get('encounter', [EncounterController::class, 'encounter'])->name('encounter');
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');

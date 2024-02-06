@@ -760,18 +760,18 @@ class AntrianController extends APIController
             ])
         );
     }
-    public function batalAntrian(Request $request)
-    {
-        $request['taskid'] = 99;
-        $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . 'Sistem Siramah';
-        $response = $this->batal_antrian($request);
-        if ($response->metadata->code == 200) {
-            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
-        } else {
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-        }
-        return redirect()->back();
-    }
+    // public function batalAntrian(Request $request)
+    // {
+    //     $request['taskid'] = 99;
+    //     $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . 'Sistem Siramah';
+    //     $response = $this->batal_antrian($request);
+    //     if ($response->metadata->code == 200) {
+    //         Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
+    //     } else {
+    //         Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+    //     }
+    //     return redirect()->back();
+    // }
     public function batalPendaftaran(Request $request)
     {
         $request['taskid'] = 99;

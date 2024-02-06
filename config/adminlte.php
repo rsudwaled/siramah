@@ -1355,7 +1355,7 @@ return [
                 [
                     'text' => 'Encouter',
                     'icon'    => 'fas fa-user',
-                    'url'  => 'satusehat/patnt',
+                    'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
                     'can' => ['bpjs', 'pendaftaran', 'casemix'],
                 ],
