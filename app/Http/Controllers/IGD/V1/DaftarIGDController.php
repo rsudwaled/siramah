@@ -172,6 +172,15 @@ class DaftarIGDController extends Controller
             Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
         }
+        $cek = Kunjungan::where('no_rm', $request->rm);
+        $cek_kunjungan = $cek->where('status_kunjungan', 1)->get();
+        // $cek_kunjungan_24jam = $cek->where('status_kunjungan', 1)->
+        if(count($cek_kunjungan) > 0 )
+        {
+            Alert::error('Daftar GAGAL!!', 'pasien masih memiliki kunjungan yang aktif!');
+            return back();
+        }
+
         $bpjsProses = $request->bpjsProses;
         $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
@@ -236,6 +245,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         = $bpjsProses == null ? $request->isBpjs : 2;
         $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
         
         if ($createKunjungan->save()) {
             $jpPasien               = new JPasienIGD();

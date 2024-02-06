@@ -3,45 +3,55 @@
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-4">
+            <div class="col-lg-12">
                 <h5>DATA KUNJUNGAN</h5>
             </div>
-            <div class="col-sm-8">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select name="unit" id="unit" class="form-control select2">
-                                        @foreach ($unit as $item)
-                                            <option value="{{ $item->kode_unit }}"
-                                                {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
-                                                {{ $item->nama_unit }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="input-group">
-                                        <input id="new-event" type="date" name="tanggal" class="form-control"
-                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                            placeholder="Event Title">
-                                        <div class="input-group-append">
-                                            <button id="add-new-event" type="submit"
-                                                class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">
+                                <form action="" method="get">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label for="">Filter Data : </label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select name="unit" id="unit" class="form-control select2">
+                                                @foreach ($unit as $item)
+                                                    <option value="{{ $item->kode_unit }}"
+                                                        {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
+                                                        {{ $item->nama_unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="input-group">
+                                                <input id="new-event" type="date" name="tanggal" class="form-control"
+                                                    value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                    placeholder="Event Title">
+                                                <div class="input-group-append">
+                                                    <button id="add-new-event" type="submit"
+                                                        class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">Kunjungan RANAP</a>
-                                    <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-sync"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
-                    </li>
-                </ol>
+                                </form>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-lg-5 text-right">
+                        <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">KUNJUNGAN RANAP</a>
+                        <button type="button" class="btn btn-sm bg-success cekKunjunganPoli" data-toggle="modal"
+                            data-target="modalCekKunjunganPoli">Cek Kunjungan
+                            Poli</button>
+                        <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                            <i class="fas fa-sync"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -88,9 +98,8 @@
                                 <td>
                                     {{ $item->sep }} <br>
                                     @if ($item->sep)
-                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}"
-                                            theme="danger" class="btn-xs btn-deleteSEP" id="btn-deleteSEP"
-                                            label="Hapus SEP" />
+                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
+                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
                                     @endif
                                 </td>
                                 <td>{{ $item->status }}</td>
@@ -177,6 +186,18 @@
             </form>
         </div>
     </x-adminlte-modal>
+    <x-adminlte-modal id="modalCekKunjunganPoli" title="Cek Kunjungan Poli Pasien" theme="success" size='md'
+        disable-animations>
+        <form>
+            <div class="col-lg-12">
+                <x-adminlte-input name="no_rm" id="no_rm" label="No RM PASIEN" />
+            </div>
+            <x-slot name="footerSlot">
+                <x-adminlte-button type="submit" theme="success" class="btnCekKunjungan" label="Cek Kunjungan" />
+                <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal" data-dismiss="modal" />
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
@@ -192,6 +213,10 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+            $('.cekKunjunganPoli').click(function(e) {
+                $('#modalCekKunjunganPoli').modal('toggle');
+            });
+
 
             $("#diagnosa").select2({
                 theme: "bootstrap4",
@@ -399,5 +424,49 @@
                 });
             });
         });
+
+        function lihatHasilLaboratorium() {
+            $.LoadingOverlay("show");
+            getHasilLab();
+            $('#modalLaboratorium').modal('show');
+
+        }
+
+        function getHasilLab() {
+            var url = "{{ route('get_hasil_laboratorium') }}?norm={{ $kunjungan->no_rm }}";
+            var table = $('#tableLaboratorium').DataTable();
+            $.ajax({
+                type: "GET",
+                url: url,
+            }).done(function(data) {
+                table.rows().remove().draw();
+                if (data.metadata.code == 200) {
+                    $.each(data.response, function(key, value) {
+                        var periksa = '';
+                        var btn =
+                            '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
+                            value.laboratorium + '">Lihat</button> ';
+                        $.each(value.pemeriksaan, function(key, value) {
+                            periksa = periksa + value + '<br>';
+                        });
+                        table.row.add([
+                            value.tgl_masuk,
+                            value.counter + " / " + value.kode_kunjungan,
+                            value.no_rm + " / " + value.nama_px,
+                            value.nama_unit,
+                            periksa,
+                            btn,
+                        ]).draw(false);
+                    });
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+                $.LoadingOverlay("hide");
+            });
+        }
     </script>
 @endsection

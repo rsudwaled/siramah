@@ -245,7 +245,9 @@ class RanapController extends APIController
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 0;
-        $createKunjungan->pic               = Auth::user()->id;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
+
         if ($createKunjungan->save()) {
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
             if ($kodelayanan == null) {
@@ -423,7 +425,9 @@ class RanapController extends APIController
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic               = Auth::user()->id;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
+
         if ($createKunjungan->save()) {
 
             $histories = new HistoriesIGDBPJS();
@@ -836,7 +840,9 @@ class RanapController extends APIController
         $createKunjungan->id_ruangan        = $request->idRuangan;
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
-        $createKunjungan->pic2               = Auth::user()->id;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
+
         if ($createKunjungan->save()) {
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
             if ($kodelayanan == null) {
@@ -906,5 +912,19 @@ class RanapController extends APIController
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
         return redirect()->route('pasien.ranap');
+    }
+
+    public function getDokterByPoli(Request $request)
+    {
+        $unit = Unit::where('KDPOLI', $request->kodePoli)->first();
+        $dokter = Paramedis::where('unit', $unit->kode_unit)->get();
+        $data = array();
+        foreach ($dokter as $item) {
+            $data[] = array(
+                "id" => $item->kode_dokter_jkn,
+                "text" => $item->nama_paramedis . " (" . $item->kode_dokter_jkn . ")"
+            );
+        }
+        return response()->json($data);
     }
 }

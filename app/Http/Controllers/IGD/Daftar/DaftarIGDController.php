@@ -208,6 +208,8 @@ class DaftarIGDController extends Controller
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         =  $request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
+
         if ($createKunjungan->save()) {
             $ant_upd = AntrianPasienIGD::find($request->id_antrian);
             $ant_upd->no_rm             = $request->rm;

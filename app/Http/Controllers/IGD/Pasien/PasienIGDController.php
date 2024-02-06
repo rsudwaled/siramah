@@ -67,7 +67,7 @@ class PasienIGDController extends Controller
        
         $request->validate(
             [
-                'nik_pasien_baru'   =>'required|numeric|digits_between:16,16',
+                'nik_pasien_baru'   =>'required|numeric',
                 'nama_pasien_baru'  =>'required',
                 'tempat_lahir'      =>'required',
                 'jk'                =>'required',
@@ -75,7 +75,7 @@ class PasienIGDController extends Controller
                 'agama'             =>'required',
                 'pekerjaan'         =>'required',
                 'pendidikan'        =>'required',
-                'no_telp'           =>'required|numeric|digits_between:10,13',
+                'no_telp'           =>'required|numeric',
                 'provinsi_pasien'   =>'required',
                 'negara'            =>'required',
                 'kewarganegaraan'   =>'required',

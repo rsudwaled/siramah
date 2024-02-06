@@ -174,7 +174,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 text-right">
-                            <a href="{{ route('list.antrian') }}" class="btn btn-sm btn-secondary">kembali</a>
+                            <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-secondary">kembali</a>
                             <button type="submit" class="btn bg-purple btn-sm">Simpan Pasien</button>
                         </div>
                     </div>
