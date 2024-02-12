@@ -13,6 +13,12 @@ use DB;
 
 class KunjunganController extends Controller
 {
+    public function RiwayatKunjunganPasien(Request $request)
+    {
+        $riwayat = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(3)->get();
+        return response()->json($riwayat);
+    }
+
     public function daftarKunjungan(Request $request)
     {
 

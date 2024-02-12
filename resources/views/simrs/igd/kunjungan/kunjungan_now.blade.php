@@ -44,9 +44,6 @@
                     </div>
                     <div class="col-lg-5 text-right">
                         <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">KUNJUNGAN RANAP</a>
-                        <button type="button" class="btn btn-sm bg-success cekKunjunganPoli" data-toggle="modal"
-                            data-target="modalCekKunjunganPoli">Cek Kunjungan
-                            Poli</button>
                         <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                             <i class="fas fa-sync"></i>
                         </a>
@@ -186,18 +183,6 @@
             </form>
         </div>
     </x-adminlte-modal>
-    <x-adminlte-modal id="modalCekKunjunganPoli" title="Cek Kunjungan Poli Pasien" theme="success" size='md'
-        disable-animations>
-        <form>
-            <div class="col-lg-12">
-                <x-adminlte-input name="no_rm" id="no_rm" label="No RM PASIEN" />
-            </div>
-            <x-slot name="footerSlot">
-                <x-adminlte-button type="submit" theme="success" class="btnCekKunjungan" label="Cek Kunjungan" />
-                <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal" data-dismiss="modal" />
-            </x-slot>
-        </form>
-    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
@@ -213,11 +198,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('.cekKunjunganPoli').click(function(e) {
-                $('#modalCekKunjunganPoli').modal('toggle');
-            });
-
-
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -425,48 +405,6 @@
             });
         });
 
-        function lihatHasilLaboratorium() {
-            $.LoadingOverlay("show");
-            getHasilLab();
-            $('#modalLaboratorium').modal('show');
-
-        }
-
-        function getHasilLab() {
-            var url = "{{ route('get_hasil_laboratorium') }}?norm={{ $kunjungan->no_rm }}";
-            var table = $('#tableLaboratorium').DataTable();
-            $.ajax({
-                type: "GET",
-                url: url,
-            }).done(function(data) {
-                table.rows().remove().draw();
-                if (data.metadata.code == 200) {
-                    $.each(data.response, function(key, value) {
-                        var periksa = '';
-                        var btn =
-                            '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
-                            value.laboratorium + '">Lihat</button> ';
-                        $.each(value.pemeriksaan, function(key, value) {
-                            periksa = periksa + value + '<br>';
-                        });
-                        table.row.add([
-                            value.tgl_masuk,
-                            value.counter + " / " + value.kode_kunjungan,
-                            value.no_rm + " / " + value.nama_px,
-                            value.nama_unit,
-                            periksa,
-                            btn,
-                        ]).draw(false);
-                    });
-                } else {
-                    Swal.fire(
-                        'Mohon Maaf !',
-                        data.metadata.message,
-                        'error'
-                    );
-                }
-                $.LoadingOverlay("hide");
-            });
-        }
+    
     </script>
 @endsection
