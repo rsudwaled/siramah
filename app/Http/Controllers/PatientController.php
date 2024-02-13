@@ -38,6 +38,19 @@ class PatientController extends SatuSehatController
         $data = $response->json();
         return $this->responseSatuSehat($data);
     }
+    public function patient_get_id(Request $request)
+    {
+        $pasien = Pasien::where('no_rm', $request->norm)->first();
+        $request['nik'] = $pasien->nik_bpjs;
+        $res = $this->patient_by_nik($request);
+        if ($res->metadata->code == 200) {
+            $ihs = $res->response->entry[0]->resource->id;
+            $pasien->update([
+                'ihs' => $ihs
+            ]);
+        }
+        return $res;
+    }
     public function patient_sync(Request $request)
     {
         $pasien = Pasien::where('no_rm', $request->norm)->first();

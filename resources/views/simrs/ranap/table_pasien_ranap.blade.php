@@ -83,7 +83,9 @@
             <td
                 class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
                 @if ($kunjungan->tagihan && $kunjungan->budget)
-                    {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
+                    @if ($kunjungan->tagihan->total_biaya && $kunjungan->budget->tarif_inacbg)
+                        {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
+                    @endif
                 @endif
             </td>
             <td>
