@@ -65,6 +65,9 @@
             }).done(function(data) {
                 $('#tableRanap').html(data);
                 $.LoadingOverlay("hide");
+            }).fail(function(data) {
+                alert('Error' + data);
+                $.LoadingOverlay("hide");
             });
         }
     </script>
