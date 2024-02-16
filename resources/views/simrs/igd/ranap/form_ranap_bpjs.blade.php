@@ -164,6 +164,7 @@
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
+                                    <input type="hidden" name="kodeKelas" id="kodeKelas" value="{{$kodeKelas}}">
                                     <input type="hidden" name="noKartuBPJS" id="noKartuBPJS"
                                         value="{{ trim($pasien->no_Bpjs) }}">
                                     <div class="col-lg-12">
@@ -306,7 +307,7 @@
                                                             </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6" id="naikKelasDesc2">
-                                                            <x-adminlte-input name="penanggungJawab"
+                                                            <x-adminlte-input name="penanggungJawab" id="naikKelasDesc2Input"
                                                                 label="Penanggung Jawab (pasien naik kelas)"
                                                                 placeholder="jika pembiayaan oleh pemberi kerja atau tambahan layanan kesehatan"
                                                                 label-class="text-black">
@@ -481,6 +482,7 @@
                     $("#c_rad").val(0);
                     $("#naikKelasDesc1").hide();
                     $("#naikKelasDesc2").hide();
+                    $("#naikKelasDesc2Input").val('');
                 }
             });
 

@@ -129,14 +129,12 @@ class RanapController extends APIController
         $query = DB::connection('mysql2')->table('ts_kunjungan')
                     ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
                     ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
-                    // ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
                     ->select(
                         'mt_pasien.no_Bpjs as no_Bpjs', 'mt_pasien.nik_bpjs as nik_bpjs', 'mt_pasien.no_rm as no_rm','mt_pasien.nama_px as nama_px','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jenis_kelamin',
                         'ts_kunjungan.kode_kunjungan as kode_kunjungan','ts_kunjungan.status_kunjungan as status_kunjungan','ts_kunjungan.no_sep as no_sep', 'ts_kunjungan.no_spri as no_spri',
                         'ts_kunjungan.tgl_masuk as tgl_masuk','ts_kunjungan.kode_unit as kode_unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.jp_daftar as jp_daftar',
                         'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas',
                         'mt_unit.nama_unit as nama_unit',
-                        // 'mt_status_kunjungan.status_kunjungan as status_kunjungan',
                     )
                     ->where('status_kunjungan','!=', 8)
                     ->where('is_ranap_daftar', 1)
@@ -144,11 +142,6 @@ class RanapController extends APIController
         if($request->tanggal && !empty($request->tanggal))
         {
             $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
-        }
-
-        if($request->unit && !empty($request->unit))
-        {
-            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
         }
 
         if(empty($request->tanggal) && empty($request->unit)){
@@ -171,6 +164,7 @@ class RanapController extends APIController
             Alert::error('PASIEN SUDAH DIDAFTARKAN RANAP!!', 'kamar : '. $cekKunjungan->kamar.' bed : '.$cekKunjungan->no_bed);
             return back();
         }
+
         $kode           = $kunjungan;
         $pasien         = Pasien::where('no_rm', $rm)->first();
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
@@ -327,6 +321,7 @@ class RanapController extends APIController
             Alert::error('PASIEN SUDAH DIDAFTARKAN RANAP!!', 'kamar : '. $cekKunjungan->kamar.' bed : '.$cekKunjungan->no_bed);
             return back();
         }
+
         $tanggal        = now()->format('Y-m-d');
         $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . trim($nomorkartu) . "/tglSEP/" . $tanggal;
         $signature      = $this->signature();
@@ -357,7 +352,7 @@ class RanapController extends APIController
 
     public function daftarRanapBPJSStore(Request $request)
     {
-       
+    //    dd($request->all());
         if(empty($request->idRuangan))
         {
             Alert::error('RUANGAN BELUM DIPILIH!!', 'silahkan pilih ruangan terlebih dahulu!');
@@ -424,6 +419,7 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
+        $createKunjungan->crad              = $request->crad??0;
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
@@ -442,7 +438,13 @@ class RanapController extends APIController
             $histories->noTelp          = $request->noTelp;
             $histories->tglSep          = now();
             $histories->jnsPelayanan    = '1';
-            $histories->klsRawatHak     = $request->hak_kelas??null;
+            $histories->klsRawatHak     = $request->kodeKelas;
+            if(!is_null($request->crad))
+            {
+                $histories->klsRawatNaik    = $request->hak_kelas??null;
+                $histories->pembiayaan      = $request->pembiayaan??null;
+                $histories->penanggungJawab = $request->penanggungJawab??null;
+            }
             $histories->asalRujukan     = '2';
             $histories->tglRujukan      = now();
             $histories->noRujukan       = null;
@@ -862,9 +864,9 @@ class RanapController extends APIController
                     'jnsPelayanan'  => $histories->jnsPelayanan,
                     'klsRawat'      => [
                         'klsRawatHak'       => $histories->klsRawatHak,
-                        'klsRawatNaik'      => '',
-                        'pembiayaan'        => '',
-                        'penanggungJawab'   => '',
+                        'klsRawatNaik'      => $histories->klsRawatNaik??'',
+                        'pembiayaan'        => $histories->pembiayaan??'',
+                        'penanggungJawab'   => $histories->penanggungJawab??'',
                     ],
                     'noMR'      => $histories->noMR,
                     'rujukan'   => [
@@ -873,7 +875,7 @@ class RanapController extends APIController
                         'noRujukan'     => $spri->noSPRI??'',
                         'ppkRujukan'    => '1018R001',
                     ],
-                    'catatan'   => 'testinsert',
+                    'catatan'   => '',
                     'diagAwal'  => $kunjungan->diagx,
                     'poli'      => [
                         'tujuan'    => '',

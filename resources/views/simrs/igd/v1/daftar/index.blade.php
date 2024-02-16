@@ -10,12 +10,11 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
                             Baru</a></li>
-                    <li class="breadcrumb-item"><a href="#" class="btn btn-sm bg-danger">Daftar Ranap Langsung</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="#" class="btn btn-sm bg-danger">Daftar Ranap Langsung</a></li> --}}
                     <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
                             class="btn btn-sm btn-primary">Daftar Pasien Kecelakaan</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
-                            class="btn btn-sm btn-success">Daftar
-                            Pasien Bayi</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
+                            class="btn btn-sm btn-success">Daftar Bayi By Kun Kebidanan</a></li> --}}
                     <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"><i
                                 class="fas fa-sync"></i></a></li>
                 </ol>

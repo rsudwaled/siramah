@@ -13,15 +13,8 @@
                             <li class="breadcrumb-item">
                                 <form action="" method="get">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <label for="">Filter Data : </label>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <input type="text" name="nama_pasien" class="form-control"
-                                                value="{{ $request->nama_pasien != null ? $request->nama_pasien : '' }}"
-                                                placeholder="cari nama pasien">
-                                        </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-12">
+                                            <label for="">Filter Data By TGL MASUK : </label>
                                             <div class="input-group">
                                                 <input id="new-event" type="date" name="tanggal" class="form-control"
                                                     value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"

@@ -102,18 +102,35 @@
                                 <td>{{ $item->status }}</td>
                                 <td>
                                     <b>
-                                        {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                    </b>
+                                        @if (empty($item->jp_daftar) && !empty($item->sep))
+                                            PASIEN BPJS
+                                        @else
+                                            {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
+                                        @endif
+                                    </b> <br>
+                                    @role('Admin Super')
+                                        <small>
+                                            <a class="btn btn-success btn-xs">
+                                                @if (is_null($item->form_send_by))
+                                                    DEKSTOP
+                                                @else
+                                                    {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
+                                                @endif
+                                            </a>
+                                        </small>
+                                    @endrole
+
+
                                 </td>
                                 <td>
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kunjungan]) }}"
-                                        class="btn btn-success btn-xs withLoad">Detail</a>
+                                        class="btn btn-success btn-xs withLoad mt-1">Detail</a>
 
                                     <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
                                         data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
                                         data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
                                         data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
-                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa" id="btn-diagnosa"
+                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
                                         label="Update Diagnosa" />
                                     @php
                                         if (empty($item->noKartu)) {
@@ -404,7 +421,5 @@
                 });
             });
         });
-
-    
     </script>
 @endsection
