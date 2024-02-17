@@ -40,6 +40,7 @@ class HistoriesIGDBPJS extends Model
         'user',
         'response',
         'is_bridging',
+        'is_ranap_umum',
         'status_daftar',
         
     ];

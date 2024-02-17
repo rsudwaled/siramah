@@ -150,6 +150,7 @@ class RanapController extends APIController
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
         $kunjungan = $query->get();
+        // dd($kunjungan);
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
@@ -222,6 +223,7 @@ class RanapController extends APIController
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
+        $dokter     = Paramedis::firstWhere('kode_dokter_jkn', $request->kode_paramedis);
 
         $createKunjungan = new Kunjungan();
         $createKunjungan->counter           = $c;
@@ -240,13 +242,35 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
-        $createKunjungan->is_ranap_daftar   = 1;
+        if(!is_null($request->pasienNitip)){
+            $createKunjungan->is_ranap_daftar   = 2;
+        }else{
+            $createKunjungan->is_ranap_daftar   = 1;
+        }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 0;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
+            $histories = new HistoriesIGDBPJS();
+            $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
+            $histories->noMR            = $createKunjungan->no_rm;
+            $histories->noKartu         = trim($request->noKartuBPJS);
+            $histories->ppkPelayanan    = '1018R001';
+            $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
+            $histories->user            = Auth::user()->name;
+            $histories->noTelp          = $request->noTelp;
+            $histories->tglSep          = now();
+            $histories->jnsPelayanan    = '1';
+            $histories->klsRawatHak     = $request->kodeKelas;
+            $histories->asalRujukan     = '2';
+            $histories->tglRujukan      = now();
+            $histories->is_bridging     = 0;
+            $histories->status_daftar   = 0;
+            $histories->is_ranap_umum   = 1;
+            $histories->unit            = $unit->kode_unit;
+            $histories->save();
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
             if ($kodelayanan == null) {
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
@@ -301,7 +325,6 @@ class RanapController extends APIController
 
                     if ($createAdm->save()) {
                         $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1

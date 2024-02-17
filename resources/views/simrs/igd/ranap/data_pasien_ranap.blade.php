@@ -88,7 +88,7 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan', 'Pasien', 'Alamat', 'Jenis Pasien', 'Ruangan', 'SPRI / SEP RANAP', 'Detail'];
+                        $heads = ['TGL MASUK / KUNJUNGAN', 'PASIEN', 'ALAMAT', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -123,7 +123,7 @@
                                         Kelas : {{ $item->kelas }} <br>
                                     </b>
                                     @if ($item->is_ranap_daftar==2)
-                                    <small class="text-red"><b><i>( PASIEN TITIPAN : Dari Kelas {{$item->klsRawatHak}} )</i></b></small>
+                                    <small class="text-red"><b><i>( PASIEN TITIPAN : Kelas {{$item->klsRawatHak}} )</i></b></small>
                                     @endif
                                     @if (!is_null($item->klsRawatNaik))
                                         @php

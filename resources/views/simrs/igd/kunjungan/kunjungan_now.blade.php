@@ -141,9 +141,11 @@
                                     @endphp
                                     <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
                                         class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                    @if (!empty($nomorKartu))
-                                        <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                            class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
+                                    @if ($item->jp_daftar !== 0)
+                                        @if (!empty($nomorKartu))
+                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

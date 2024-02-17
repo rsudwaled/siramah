@@ -143,6 +143,13 @@
                                 </x-adminlte-select>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="icheck-primary d-inline ml-2">
+                                <input type="checkbox" value="0" name="pasienTitipan" id="pasienTitipan">
+                                <label for="pasienTitipan"></label>
+                            </div>
+                            <span class="text text-red"><b id="textDescChange">ceklis apabila pasien titipan</b></span>
+                        </div>
                         <div class="card-footer">
                             <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
                                 id="cariRuangan" class="bg-purple" />
@@ -160,6 +167,7 @@
                                     <input type="hidden" name="kodeKunjungan" value="{{$kode}}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
+                                    <input type="hidden" name="pasienNitip" id="pasienNitip">
                                     <div class="col-lg-12">
                                         <div class="row">
                                             <div class="col-lg-6">
@@ -295,38 +303,46 @@
                 }
             });
 
-
-        });
-        $('#cariRuangan').on('click', function() {
-            // $("#pilihRuangan").show();
-            var unit = $('#unitTerpilih').val();
-            var kelas = $('#r_kelas_id').val();
-            $('#hakKelas').val(kelas);
-            $('#hakKelas').text('Kelas ' + kelas);
-            if (kelas) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
-                    dataType: 'JSON',
-                    success: function(res) {
-                        if (res) {
-                            $.each(res.bed, function(key, value) {
-                                $("#idRuangan").append(
-                                    '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
-                                    value.id_ruangan + ', `' + value.nama_kamar + '`, `' +
-                                value.no_bed +
-                                '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
-                                    value.nama_kamar + '"</h6> <br> NO BED : "' + value
-                                    .no_bed + '"<br></div></div></div>');
-                            });
-                        } else {
-                            $("#bed_byruangan").empty();
+            $('#cariRuangan').on('click', function() {
+                // $("#pilihRuangan").show();
+                var unit = $('#unitTerpilih').val();
+                var kelas = $('#r_kelas_id').val();
+                $('#hakKelas').val(kelas);
+                $('#hakKelas').text('Kelas ' + kelas);
+                if (kelas) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
+                        dataType: 'JSON',
+                        success: function(res) {
+                            if (res) {
+                                $.each(res.bed, function(key, value) {
+                                    $("#idRuangan").append(
+                                        '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
+                                        value.id_ruangan + ', `' + value.nama_kamar + '`, `' +
+                                    value.no_bed +
+                                    '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
+                                        value.nama_kamar + '"</h6> <br> NO BED : "' + value
+                                        .no_bed + '"<br></div></div></div>');
+                                });
+                            } else {
+                                $("#bed_byruangan").empty();
+                            }
                         }
-                    }
-                });
-            } else {
-                $("#bed_byruangan").empty();
-            }
+                    });
+                } else {
+                    $("#bed_byruangan").empty();
+                }
+            });
+
+            $('#pasienTitipan').click(function(e) {
+                if (this.checked) {
+                    $("#showTitipan").show();
+                    $("#pasienNitip").val(1);
+                } else {
+                    $("#pasienNitip").val(0);
+                }
+            });
         });
 
         function chooseRuangan(id, nama, bed) {
