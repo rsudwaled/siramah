@@ -106,7 +106,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card card-success card-outline">
@@ -143,6 +143,13 @@
                                                 kelas
                                                 rawat</b></span>
                                     </div>
+                                    <div class="col-md-12">
+                                        <div class="icheck-primary d-inline ml-2">
+                                            <input type="checkbox" value="0" name="pasienTitipan" id="pasienTitipan">
+                                            <label for="pasienTitipan"></label>
+                                        </div>
+                                        <span class="text text-red"><b id="textDescChange">ceklis apabila pasien titipan</b></span>
+                                    </div>
                                 </div>
                                 <div class="card-footer">
                                     <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
@@ -150,10 +157,37 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12" id="showTitipan">
+                            <div class="card card-success card-outline">
+                                <div class="card-body">
+                                    <div class="col-md-12">
+                                        <x-adminlte-select2 name="unitTerpilihTitipan" id="unitTerpilihTitipan" label="Titipkan Di Ruangan">
+                                            @foreach ($unit as $item)
+                                                <option value="{{ $item->kode_unit }}">
+                                                    {{ $item->nama_unit }}</option>
+                                            @endforeach
+                                        </x-adminlte-select2>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <x-adminlte-select name="kelas_rawat_titipan" id="r_kelas_id_titipan"  label="Kelas Rawat">
+                                            <option value="1">KELAS 1</option>
+                                            <option value="2" >KELAS 2</option>
+                                            <option value="3" >KELAS 3</option>
+                                            <option value="4" >VIP</option>
+                                            <option value="5" >VVIP</option>
+                                        </x-adminlte-select>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <x-adminlte-button label="Cari Ruangan" data-toggle="modal" data-target="#pilihRuangan"
+                                        id="cariRuanganTitipan" class="bg-purple btn-block" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-md-9">
+                <div class="col-md-8">
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
@@ -164,6 +198,7 @@
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
+                                    <input type="hidden" name="pasienNitip" id="pasienNitip">
                                     <input type="hidden" name="kodeKelas" id="kodeKelas" value="{{$kodeKelas}}">
                                     <input type="hidden" name="noKartuBPJS" id="noKartuBPJS"
                                         value="{{ trim($pasien->no_Bpjs) }}">
@@ -392,6 +427,7 @@
                     cache: true
                 }
             });
+
             $("#dokter").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -436,6 +472,7 @@
                     cache: true
                 }
             });
+            
             $('#cariRuangan').on('click', function() {
                 var unit = $('#unitTerpilih').val();
                 var kelas = $('#r_kelas_id').val();
@@ -467,6 +504,48 @@
                     $("#bed_byruangan").empty();
                 }
             });
+
+            $("#showTitipan").hide();
+            $('#pasienTitipan').click(function(e) {
+                if (this.checked) {
+                    $("#showTitipan").show();
+                    $("#pasienNitip").val(1);
+                } else {
+                    $("#pasienNitip").val(0);
+                }
+            });
+            $('#cariRuanganTitipan').on('click', function() {
+                var unit = $('#unitTerpilihTitipan').val();
+                var kelas = $('#r_kelas_id_titipan').val();
+                $('#hakKelas').val(kelas);
+                $('#hakKelas').text('Kelas ' + kelas);
+                if (kelas) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('bed-ruangan.get') }}?unit=" + unit + '&kelas=' + kelas,
+                        dataType: 'JSON',
+                        success: function(res) {
+                            if (res) {
+                                $.each(res.bed, function(key, value) {
+                                    $("#idRuangan").append(
+                                        '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
+                                        value.id_ruangan + ', `' + value
+                                    .nama_kamar + '`, `' + value.no_bed +
+                                    '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
+                                        value.nama_kamar +
+                                        '"</h6> <br> NO BED : "' + value
+                                        .no_bed + '"<br></div></div></div>');
+                                });
+                            } else {
+                                $("#bed_byruangan").empty();
+                            }
+                        }
+                    });
+                } else {
+                    $("#bed_byruangan").empty();
+                }
+            });
+
             $("#naikKelasDesc1").hide();
             $("#naikKelasDesc2").hide();
             $('#naikKelasRawat').click(function(e) {

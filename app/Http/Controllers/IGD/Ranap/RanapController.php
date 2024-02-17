@@ -129,15 +129,17 @@ class RanapController extends APIController
         $query = DB::connection('mysql2')->table('ts_kunjungan')
                     ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
                     ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+                    ->join('mt_histories_igd_bpjs', 'ts_kunjungan.kode_kunjungan', '=', 'mt_histories_igd_bpjs.kode_kunjungan')
                     ->select(
                         'mt_pasien.no_Bpjs as no_Bpjs', 'mt_pasien.nik_bpjs as nik_bpjs', 'mt_pasien.no_rm as no_rm','mt_pasien.nama_px as nama_px','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jenis_kelamin',
                         'ts_kunjungan.kode_kunjungan as kode_kunjungan','ts_kunjungan.status_kunjungan as status_kunjungan','ts_kunjungan.no_sep as no_sep', 'ts_kunjungan.no_spri as no_spri',
                         'ts_kunjungan.tgl_masuk as tgl_masuk','ts_kunjungan.kode_unit as kode_unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.jp_daftar as jp_daftar',
-                        'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas',
+                        'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas','ts_kunjungan.is_ranap_daftar as is_ranap_daftar',
                         'mt_unit.nama_unit as nama_unit',
+                        'mt_histories_igd_bpjs.klsRawatHak as klsRawatHak','mt_histories_igd_bpjs.klsRawatNaik as klsRawatNaik','mt_histories_igd_bpjs.pembiayaan as pembiayaan','mt_histories_igd_bpjs.penanggungJawab as penanggungJawab',
                     )
                     ->where('status_kunjungan','!=', 8)
-                    ->where('is_ranap_daftar', 1)
+                    ->whereIn('is_ranap_daftar', [1,2])
                     ->orderBy('tgl_masuk', 'desc');
         if($request->tanggal && !empty($request->tanggal))
         {
@@ -352,7 +354,6 @@ class RanapController extends APIController
 
     public function daftarRanapBPJSStore(Request $request)
     {
-    //    dd($request->all());
         if(empty($request->idRuangan))
         {
             Alert::error('RUANGAN BELUM DIPILIH!!', 'silahkan pilih ruangan terlebih dahulu!');
@@ -420,7 +421,11 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->crad              = $request->crad??0;
-        $createKunjungan->is_ranap_daftar   = 1;
+        if(!is_null($request->pasienNitip)){
+            $createKunjungan->is_ranap_daftar   = 2;
+        }else{
+            $createKunjungan->is_ranap_daftar   = 1;
+        }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
         $createKunjungan->pic2              = Auth::user()->id;
@@ -441,7 +446,285 @@ class RanapController extends APIController
             $histories->klsRawatHak     = $request->kodeKelas;
             if(!is_null($request->crad))
             {
-                $histories->klsRawatNaik    = $request->hak_kelas??null;
+                // Aturan naik kelas BPJS. hak_kelas diambil dari form view kelas ruangan
+                // 1. VVIP, 
+                // 2. VIP, 
+                // 3. Kelas 1, 
+                // 4. Kelas 2, 
+                // 5. Kelas 3, 
+                // 6. ICCU, 
+                // 7. ICU, 
+                // 8. Diatas Kelas 1
+                $naikKelasByBPJS = null;
+                if($request->hak_kelas==1){$naikKelasByBPJS=3;}
+                if($request->hak_kelas==2){$naikKelasByBPJS=4;}
+                if($request->hak_kelas==3){$naikKelasByBPJS=5;}
+                if($request->hak_kelas==4){$naikKelasByBPJS=2;}
+                if($request->hak_kelas==5){$naikKelasByBPJS=1;}
+
+                $histories->klsRawatNaik    = $naikKelasByBPJS??null;
+                $histories->pembiayaan      = $request->pembiayaan??null;
+                $histories->penanggungJawab = $request->penanggungJawab??null;
+            }
+            $histories->asalRujukan     = '2';
+            $histories->tglRujukan      = now();
+            $histories->noRujukan       = null;
+            $histories->ppkRujukan      = null;
+            $histories->diagAwal        = $request->diagAwal;
+            $histories->lakaLantas      = $request->lakaLantas == null ? 0 : $request->lakaLantas;
+            $histories->noLP            = $request->lakaLantas > 0 ? $request->noLP:null;
+            $histories->tglKejadian     = $request->lakaLantas > 0 ? $request->tglKejadian:null;
+            $histories->keterangan      = $request->lakaLantas > 0 ? $request->keterangan:null;
+            $histories->kdPropinsi      = $request->lakaLantas > 0 ? $request->provinsi:null;
+            $histories->kdKabupaten     = $request->lakaLantas > 0 ? $request->kabupaten:null;
+            $histories->kdKecamatan     = $request->lakaLantas > 0 ? $request->kecamatan:null;
+            $histories->response        = null;
+            $histories->is_bridging     = 0;
+            $histories->status_daftar   = 0;
+            $histories->unit            = $unit->kode_unit;
+            $histories->save();
+
+            $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+            if ($kodelayanan == null) {
+                $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+            }
+            $kodeTarifDetail = $unit->kode_tarif_adm . $ruangan->id_kelas; //kode tarif detail
+            $tarif_adm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $kodeTarifDetail);
+            $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT;
+            // create layanan header
+            $createLH = new Layanan();
+            $createLH->kode_layanan_header  = $kodelayanan;
+            $createLH->tgl_entry            = now();
+            $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
+            $createLH->kode_unit            = $unit->kode_unit;
+            $createLH->pic                  = Auth::user()->id;
+            $createLH->status_pembayaran    = 'OPN';
+            if ($unit->kelas_unit == 2) {
+                $createLH->total_layanan = $total_bayar_k_a;
+
+                if ($request->penjamin_id == 'P01') {
+                    $createLH->kode_tipe_transaksi  = 2;
+                    $createLH->status_layanan       = 1;
+                    $createLH->tagihan_pribadi      = $total_bayar_k_a;
+                } else {
+                    $createLH->kode_tipe_transaksi  = 2;
+                    $createLH->status_layanan       = 2;
+                    $createLH->tagihan_penjamin     = $total_bayar_k_a;
+                }
+                // header create
+                if ($createLH->save()) {
+                    // create layanan detail
+                    $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+                    $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
+
+                    // create detail admn
+                    $createAdm = new LayananDetail();
+                    $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+                    $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
+                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
+                    $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->jumlah_layanan          = 1;
+                    $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
+                    $createAdm->status_layanan_detail   = 'OPN';
+                    $createAdm->tgl_layanan_detail      = now();
+                    $createAdm->tgl_layanan_detail_2    = now();
+                    $createAdm->row_id_header           = $createLH->id;
+                    if ($request->penjamin_id == 'P01') {
+                        $createAdm->tagihan_pribadi     = $total_bayar_k_a;
+                    } else {
+                        $createAdm->tagihan_penjamin    = $total_bayar_k_a;
+                    }
+
+                    if ($createAdm->save()) {
+                        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
+                        $createKunjungan->update();
+
+                        $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
+                        $createLH->update();
+                    }
+                }
+            }
+        }
+
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $createKunjungan->kode_kunjungan)->first();
+        Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' Selanjutnya Silahkan Buat SPRI dan SEP Rawat Inap!');
+        return redirect()->route('create-sepigd.ranap-bpjs',['kunjungan'=> $kunjungan->kode_kunjungan]);
+    }
+
+    public function getRiwayatRanap(Request $request)
+    {
+        $riwayat = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+       
+        $now = Carbon::now();
+        $createdAt = Carbon::parse($riwayat->tgl_keluar);
+        $diffInHours = $now->diffInHours($createdAt);
+        if ($diffInHours >= 24) {
+            // Data sudah 24 jam
+            $cekdiffInHours = 1;
+        } else {
+            // Data belum 24 jam
+            $cekdiffInHours = 0;
+        }
+
+        if(!empty($riwayat->tgl_keluar))
+        {
+            $code = 200;
+        }else{
+            $code = 404;
+        }
+        $url = route("riwayat-ranap.daftarkan-pasien",[$cekdiffInHours, $riwayat->no_rm, $riwayat->kode_kunjungan]);
+        return response()->json(['url'=>$url]);
+    }
+    public function formRanap1X24Jam(Request $request, $diffInHours, $rm, $kode)
+    {
+        $pasien         = Pasien::where('no_rm', $rm)->first();
+        $tanggal        = now()->format('Y-m-d');
+        $kodeKelas      = null;
+        $kelas          = null;
+
+        if(!empty($pasien->no_Bpjs))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . trim($pasien->no_Bpjs) . "/tglSEP/" . $tanggal;
+            $signature      = $this->signature();
+            $response       = Http::withHeaders($signature)->get($url);
+            $resdescrtipt   = $this->response_decrypt($response, $signature);
+
+            if($resdescrtipt->metadata->code != 200)
+            {
+                Alert::error('INFORMASI BPJS!!', 'bermasalah pada : '.$resdescrtipt->metadata->message.' '.($resdescrtipt->metadata->code));
+                return back();
+            }
+            $kodeKelas      = $resdescrtipt->response->peserta->hakKelas->kode;
+            $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
+        }
+        
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->first();
+        $unit           = Unit::where('kelas_unit', 2)->get();
+        $alasanmasuk    = AlasanMasuk::get();
+        $icd            = Icd10::limit(15)->get();
+        $penjamin       = Penjamin::get();
+        $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
+        $kodeKunjungan  = $kode;
+        return view('simrs.igd.ranap.form_ranap_bpjs_1x24jam', compact('pasien','diffInHours', 'icd',   'kodeKelas', 'kelas',  'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan'));
+    }
+
+    public function createRanap1X24Jam(Request $request)
+    {
+
+        if(empty($request->idRuangan))
+        {
+            Alert::error('RUANGAN BELUM DIPILIH!!', 'silahkan pilih ruangan terlebih dahulu!');
+            return back();
+        }
+        if(empty($request->diagAwal))
+        {
+            Alert::error('DIAGNOSA BELUM DIPILIH!!', 'silahkan pilih diagnosa terlebih dahulu!');
+            return back();
+        }
+       
+        $request->validate(
+            [
+                'noMR'              => 'required',
+                'idRuangan'         => 'required',
+                'tanggal_daftar'    => 'required|date',
+                'noTelp'            => 'required',
+                'alasan_masuk_id'   => 'required',
+                'kode_paramedis'    => 'required',
+                'penjamin_id'       => 'required',
+                'lakaLantas'        => 'required',
+            ],
+            [
+                'tanggal_daftar'    => 'Tanggal daftar wajib dipilih !',
+                'kodeKunjungan'     => 'Kode kunjungan tidak ada !',
+                'noMR'              => 'Kode Rekam Medis Tidak Ada !',
+                'penjamin_id'       => 'Anda belum memilih penjamin !',
+                'alasan_masuk_id'   => 'Alasan masuk wajib diisi !',
+                'noTelp'            => 'No Telepon wajib diisi !',
+                'kode_paramedis'    => 'Dokter DPJP wajib dipilih',
+                'lakaLantas'        => 'Status kecelakaan wajib dipilih',
+            ],
+        );
+
+        $counter = Kunjungan::latest('counter')
+            ->where('no_rm', $request->noMR)
+            ->first();
+        if ($counter == null) {
+            $c = 1;
+        } else {
+            if($request->diffInHours == 0)
+            {
+                $c = $counter->counter;
+            }else{
+                $c = $counter->counter + 1;
+            }
+        }
+        // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
+        $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
+        $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
+        $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
+        $dokter     = Paramedis::firstWhere('kode_dokter_jkn', $request->kode_paramedis);
+   
+        $createKunjungan = new Kunjungan();
+        $createKunjungan->counter           = $c;
+        $createKunjungan->ref_kunjungan     = $request->kodeKunjungan;
+        $createKunjungan->no_rm             = $request->noMR;
+        $createKunjungan->kode_unit         = $unit->kode_unit;
+        $createKunjungan->tgl_masuk         = now();
+        $createKunjungan->kode_paramedis    = $dokter->kode_paramedis;
+        $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+        $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
+        $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin;
+        $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
+        $createKunjungan->kelas             = $ruangan->id_kelas;
+        $createKunjungan->hak_kelas         = $ruangan->id_kelas;
+        $createKunjungan->id_ruangan        = $ruangan->id_ruangan;
+        $createKunjungan->no_bed            = $ruangan->no_bed;
+        $createKunjungan->kamar             = $ruangan->nama_kamar;
+        $createKunjungan->diagx             = $request->diagAwal??NULL;
+        $createKunjungan->crad              = $request->crad??0;
+        if(!is_null($request->pasienNitip && $request->pasienNitip ==1)){
+            $createKunjungan->is_ranap_daftar   = 2;
+        }else{
+            $createKunjungan->is_ranap_daftar   = 1;
+        }
+        $createKunjungan->form_send_by      = 1;
+        $createKunjungan->jp_daftar         = 1;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
+
+        if ($createKunjungan->save()) {
+
+            $histories = new HistoriesIGDBPJS();
+            $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
+            $histories->noMR            = $createKunjungan->no_rm;
+            $histories->noKartu         = trim($request->noKartuBPJS);
+            $histories->ppkPelayanan    = '1018R001';
+            $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
+            $histories->user            = Auth::user()->name;
+            $histories->noTelp          = $request->noTelp;
+            $histories->tglSep          = now();
+            $histories->jnsPelayanan    = '1';
+            $histories->klsRawatHak     = $request->kodeKelas;
+            if(!is_null($request->crad))
+            {
+                // Aturan naik kelas BPJS. hak_kelas diambil dari form view kelas ruangan
+                // 1. VVIP, 
+                // 2. VIP, 
+                // 3. Kelas 1, 
+                // 4. Kelas 2, 
+                // 5. Kelas 3, 
+                // 6. ICCU, 
+                // 7. ICU, 
+                // 8. Diatas Kelas 1
+                $naikKelasByBPJS = null;
+                if($request->hak_kelas==1){$naikKelasByBPJS=3;}
+                if($request->hak_kelas==2){$naikKelasByBPJS=4;}
+                if($request->hak_kelas==3){$naikKelasByBPJS=5;}
+                if($request->hak_kelas==4){$naikKelasByBPJS=2;}
+                if($request->hak_kelas==5){$naikKelasByBPJS=1;}
+
+                $histories->klsRawatNaik    = $naikKelasByBPJS??null;
                 $histories->pembiayaan      = $request->pembiayaan??null;
                 $histories->penanggungJawab = $request->penanggungJawab??null;
             }
@@ -517,242 +800,6 @@ class RanapController extends APIController
 
                     if ($createAdm->save()) {
                         $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
-                        $createKunjungan->update();
-
-                        $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
-                        $createLH->update();
-                    }
-                }
-            }
-        }
-
-        $kunjungan      = Kunjungan::where('kode_kunjungan', $createKunjungan->kode_kunjungan)->first();
-        Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' Selanjutnya Silahkan Buat SPRI dan SEP Rawat Inap!');
-        return redirect()->route('create-sepigd.ranap-bpjs',['kunjungan'=> $kunjungan->kode_kunjungan]);
-    }
-
-    public function getRiwayatRanap(Request $request)
-    {
-        $riwayat = Kunjungan::where('kode_kunjungan', $request->kode)->first();
-       
-        $now = Carbon::now();
-        $createdAt = Carbon::parse($riwayat->tgl_keluar);
-        $diffInHours = $now->diffInHours($createdAt);
-        if ($diffInHours >= 24) {
-            // Data sudah 24 jam
-            $cekdiffInHours = 1;
-        } else {
-            // Data belum 24 jam
-            $cekdiffInHours = 0;
-        }
-
-        if(!empty($riwayat->tgl_keluar))
-        {
-            $code = 200;
-        }else{
-            $code = 404;
-        }
-        $url = route("riwayat-ranap.daftarkan-pasien",[$cekdiffInHours, $riwayat->no_rm, $riwayat->kode_kunjungan]);
-        return response()->json(['url'=>$url]);
-    }
-    public function formRanap1X24Jam(Request $request, $diffInHours, $rm, $kode)
-    {
-        $pasien         = Pasien::where('no_rm', $rm)->first();
-        $tanggal        = now()->format('Y-m-d');
-        $kodeKelas      = null;
-        $kelas          = null;
-
-        if(!empty($pasien->no_Bpjs))
-        {
-            $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . trim($pasien->no_Bpjs) . "/tglSEP/" . $tanggal;
-            $signature      = $this->signature();
-            $response       = Http::withHeaders($signature)->get($url);
-            $resdescrtipt   = $this->response_decrypt($response, $signature);
-
-            if($resdescrtipt->metadata->code != 200)
-            {
-                Alert::error('INFORMASI BPJS!!', 'bermasalah pada : '.$resdescrtipt->metadata->message.' '.($resdescrtipt->metadata->code));
-                return back();
-            }
-            $kodeKelas      = $resdescrtipt->response->peserta->hakKelas->kode;
-            $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
-        }
-        
-        $kunjungan      = Kunjungan::where('kode_kunjungan', $kode)->first();
-        $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::get();
-        $icd            = Icd10::limit(15)->get();
-        $penjamin       = Penjamin::get();
-        $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-        $kodeKunjungan  = $kode;
-        return view('simrs.igd.ranap.form_ranap_bpjs_1x24jam', compact('pasien','diffInHours', 'icd',   'kodeKelas', 'kelas',  'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan'));
-    }
-
-    public function createRanap1X24Jam(Request $request)
-    {
-        if(empty($request->idRuangan))
-        {
-            Alert::error('RUANGAN BELUM DIPILIH!!', 'silahkan pilih ruangan terlebih dahulu!');
-            return back();
-        }
-        if(empty($request->diagAwal))
-        {
-            Alert::error('DIAGNOSA BELUM DIPILIH!!', 'silahkan pilih diagnosa terlebih dahulu!');
-            return back();
-        }
-       
-        $request->validate(
-            [
-                'noMR'              => 'required',
-                'idRuangan'         => 'required',
-                'tanggal_daftar'    => 'required|date',
-                'noTelp'            => 'required',
-                'alasan_masuk_id'   => 'required',
-                'kode_paramedis'    => 'required',
-                'penjamin_id'       => 'required',
-                'lakaLantas'        => 'required',
-            ],
-            [
-                'tanggal_daftar'    => 'Tanggal daftar wajib dipilih !',
-                'kodeKunjungan'     => 'Kode kunjungan tidak ada !',
-                'noMR'              => 'Kode Rekam Medis Tidak Ada !',
-                'penjamin_id'       => 'Anda belum memilih penjamin !',
-                'alasan_masuk_id'   => 'Alasan masuk wajib diisi !',
-                'noTelp'            => 'No Telepon wajib diisi !',
-                'kode_paramedis'    => 'Dokter DPJP wajib dipilih',
-                'lakaLantas'        => 'Status kecelakaan wajib dipilih',
-            ],
-        );
-
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->first();
-        if ($counter == null) {
-            $c = 1;
-        } else {
-            if($request->diffInHours == 0)
-            {
-                $c = $counter->counter;
-            }else{
-                $c = $counter->counter + 1;
-            }
-        }
-        // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
-        $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
-        $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
-        $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
-        $dokter     = Paramedis::firstWhere('kode_dokter_jkn', $request->kode_paramedis);
-   
-        $createKunjungan = new Kunjungan();
-        $createKunjungan->counter           = $c;
-        $createKunjungan->ref_kunjungan     = $request->kodeKunjungan;
-        $createKunjungan->no_rm             = $request->noMR;
-        $createKunjungan->kode_unit         = $unit->kode_unit;
-        $createKunjungan->tgl_masuk         = now();
-        $createKunjungan->kode_paramedis    = $dokter->kode_paramedis;
-        $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
-        $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-        $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin;
-        $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
-        $createKunjungan->kelas             = $ruangan->id_kelas;
-        $createKunjungan->hak_kelas         = $ruangan->id_kelas;
-        $createKunjungan->id_ruangan        = $ruangan->id_ruangan;
-        $createKunjungan->no_bed            = $ruangan->no_bed;
-        $createKunjungan->kamar             = $ruangan->nama_kamar;
-        $createKunjungan->diagx             = $request->diagAwal??NULL;
-        $createKunjungan->is_ranap_daftar   = 1;
-        $createKunjungan->form_send_by      = 1;
-        $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
-
-        if ($createKunjungan->save()) {
-
-            $histories = new HistoriesIGDBPJS();
-            $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
-            $histories->noMR            = $createKunjungan->no_rm;
-            $histories->noKartu         = trim($request->noKartuBPJS);
-            $histories->ppkPelayanan    = '1018R001';
-            $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
-            $histories->user            = Auth::user()->name;
-            $histories->noTelp          = $request->noTelp;
-            $histories->tglSep          = now();
-            $histories->jnsPelayanan    = '1';
-            $histories->klsRawatHak     = $request->hak_kelas??null;
-            $histories->asalRujukan     = '2';
-            $histories->tglRujukan      = now();
-            $histories->noRujukan       = null;
-            $histories->ppkRujukan      = null;
-            $histories->diagAwal        = null;
-            $histories->lakaLantas      = $request->lakaLantas == null ? 0 : $request->lakaLantas;
-            $histories->noLP            = $request->lakaLantas > 0 ? $request->noLP:null;
-            $histories->tglKejadian     = $request->lakaLantas > 0 ? $request->tglKejadian:null;
-            $histories->keterangan      = $request->lakaLantas > 0 ? $request->keterangan:null;
-            $histories->kdPropinsi      = $request->lakaLantas > 0 ? $request->provinsi:null;
-            $histories->kdKabupaten     = $request->lakaLantas > 0 ? $request->kabupaten:null;
-            $histories->kdKecamatan     = $request->lakaLantas > 0 ? $request->kecamatan:null;
-            $histories->response        = null;
-            $histories->is_bridging     = 0;
-            $histories->status_daftar   = 0;
-            $histories->unit            = $unit->kode_unit;
-            $histories->save();
-
-            $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-            if ($kodelayanan == null) {
-                $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
-            }
-            $kodeTarifDetail = $unit->kode_tarif_adm . $ruangan->id_kelas; //kode tarif detail
-            $tarif_adm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $kodeTarifDetail);
-            $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT;
-            // create layanan header
-            $createLH = new Layanan();
-            $createLH->kode_layanan_header  = $kodelayanan;
-            $createLH->tgl_entry            = now();
-            $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
-            $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
-            $createLH->status_pembayaran    = 'OPN';
-            if ($unit->kelas_unit == 2) {
-                $createLH->total_layanan = $total_bayar_k_a;
-
-                if ($request->penjamin_id == 'P01') {
-                    $createLH->kode_tipe_transaksi  = 2;
-                    $createLH->status_layanan       = 1;
-                    $createLH->tagihan_pribadi      = $total_bayar_k_a;
-                } else {
-                    $createLH->kode_tipe_transaksi  = 2;
-                    $createLH->status_layanan       = 2;
-                    $createLH->tagihan_penjamin     = $total_bayar_k_a;
-                }
-                // header create
-                if ($createLH->save()) {
-                    // create layanan detail
-                    $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
-
-                    // create detail admn
-                    $createAdm = new LayananDetail();
-                    $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
-                    $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
-                    $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->jumlah_layanan          = 1;
-                    $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->status_layanan_detail   = 'OPN';
-                    $createAdm->tgl_layanan_detail      = now();
-                    $createAdm->tgl_layanan_detail_2    = now();
-                    $createAdm->row_id_header           = $createLH->id;
-                    if ($request->penjamin_id == 'P01') {
-                        $createAdm->tagihan_pribadi     = $total_bayar_k_a;
-                    } else {
-                        $createAdm->tagihan_penjamin    = $total_bayar_k_a;
-                    }
-
-                    if ($createAdm->save()) {
-                        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
@@ -876,7 +923,7 @@ class RanapController extends APIController
                         'ppkRujukan'    => '1018R001',
                     ],
                     'catatan'   => '',
-                    'diagAwal'  => $kunjungan->diagx,
+                    'diagAwal'  => $kunjungan->diagx==null? $histories->diagAwal:$kunjungan->diagx,
                     'poli'      => [
                         'tujuan'    => '',
                         'eksekutif' => '0',

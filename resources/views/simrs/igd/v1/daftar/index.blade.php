@@ -141,6 +141,7 @@
                                                             PASIEN : {{ $data->nama_px }}
                                                         </b> <br><br>
                                                         <small>
+                                                            <b>TTL : {{ date('d-m-Y', strtotime($data->tgl_lahir))?? '-' }} </b> <br>
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
                                                             {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}
                                                         </small> <br>

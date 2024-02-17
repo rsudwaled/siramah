@@ -112,7 +112,7 @@
                                         {{ $item->nik_bpjs }} <br>No Kartu : {{ $item->no_Bpjs }}
                                     </a>
                                 </td>
-                                <td>alamat : {{ $item->alamat }} / <br></td>
+                                <td><small>alamat : {{ $item->alamat }} /</small> <br></td>
                                 <td> {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
                                 </td>
 
@@ -122,6 +122,30 @@
                                         BED : {{ $item->no_bed }} <br>
                                         Kelas : {{ $item->kelas }} <br>
                                     </b>
+                                    @if ($item->is_ranap_daftar==2)
+                                    <small class="text-red"><b><i>( PASIEN TITIPAN : Dari Kelas {{$item->klsRawatHak}} )</i></b></small>
+                                    @endif
+                                    @if (!is_null($item->klsRawatNaik))
+                                        @php
+                                            if ($item->klsRawatNaik == 3) {
+                                                $naikKelas = 1;
+                                            }
+                                            if ($item->klsRawatNaik == 4) {
+                                                $naikKelas = 2;
+                                            }
+                                            if ($item->klsRawatNaik == 5) {
+                                                $naikKelas = 3;
+                                            }
+                                            if ($item->klsRawatNaik == 2) {
+                                                $naikKelas = 4;
+                                            }
+                                            if ($item->klsRawatNaik == 1) {
+                                                $naikKelas = 5;
+                                            }
+                                        @endphp
+                                        <small class="text-red"><b><i>(NAIK KELAS : Dari-{{ $item->klsRawatHak }}
+                                                    Ke-{{ $naikKelas }} )</i></b></small>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($item->jp_daftar == 1)
@@ -191,7 +215,9 @@
                                     riwayat
                                     .tgl_masuk + "</td><td>" + (riwayat.tgl_keluar ==
                                         null ? 'Belum Pulang' : riwayat.tgl_keluar) +
-                                    "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +riwayat.kode_kunjungan +","+riwayat.no_rm+")>Pilih Riwayat</button></td></tr>";
+                                    "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
+                                    riwayat.kode_kunjungan + "," + riwayat.no_rm +
+                                    ")>Pilih Riwayat</button></td></tr>";
                                 $('.riwayatKunjungan tbody').append(row);
                             });
                         },
@@ -212,55 +238,55 @@
 
         function pilihRiwayat(kode, rm) {
             Swal.fire({
-                    title: "Apakah Anda Yakin?",
-                    text: "Pilih Riwayat Kunjungan untuk daftar Rawat Inap!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Ya, Pilih!",
-                    cancelButtonText: "Batal!",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: 'GET',
-                            url: "{{ route('riwayat-ranap.daftar') }}",
-                            dataType: 'json',
-                            data: {
-                                kode: kode,
-                                rm: rm,
-                            },
-                            success: function(response) {
-                                // if (data.code == 200) {
-                                //     Swal.fire({
-                                //         title: "Informasi!",
-                                //         text: "Pasien bisa di daftarkan Rawat Inap",
-                                //         icon: "success",
-                                //         confirmButtonText: "oke!",
-                                //     }).then((result) => {
-                                //         if (result.isConfirmed) {
-                                //             window.location.href = response.url;
-                                //         }
-                                //     });
-                                //     $.LoadingOverlay("hide");
-                                // } else {
-                                //     Swal.fire({
-                                //         title: "OOPS!!",
-                                //         text: "Pasien Belum Pulang",
-                                //         icon: "error",
-                                //         confirmButtonText: "oke!",
-                                //     }).then((result) => {
-                                //         if (result.isConfirmed) {
-                                //             location.reload();
-                                //         }
-                                //     });
-                                //     $.LoadingOverlay("hide");
-                                // }
-                                window.location.href = response.url;
-                            },
-                        });
-                    }
-                });
+                title: "Apakah Anda Yakin?",
+                text: "Pilih Riwayat Kunjungan untuk daftar Rawat Inap!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, Pilih!",
+                cancelButtonText: "Batal!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('riwayat-ranap.daftar') }}",
+                        dataType: 'json',
+                        data: {
+                            kode: kode,
+                            rm: rm,
+                        },
+                        success: function(response) {
+                            // if (data.code == 200) {
+                            //     Swal.fire({
+                            //         title: "Informasi!",
+                            //         text: "Pasien bisa di daftarkan Rawat Inap",
+                            //         icon: "success",
+                            //         confirmButtonText: "oke!",
+                            //     }).then((result) => {
+                            //         if (result.isConfirmed) {
+                            //             window.location.href = response.url;
+                            //         }
+                            //     });
+                            //     $.LoadingOverlay("hide");
+                            // } else {
+                            //     Swal.fire({
+                            //         title: "OOPS!!",
+                            //         text: "Pasien Belum Pulang",
+                            //         icon: "error",
+                            //         confirmButtonText: "oke!",
+                            //     }).then((result) => {
+                            //         if (result.isConfirmed) {
+                            //             location.reload();
+                            //         }
+                            //     });
+                            //     $.LoadingOverlay("hide");
+                            // }
+                            window.location.href = response.url;
+                        },
+                    });
+                }
+            });
         }
     </script>
 @endsection
