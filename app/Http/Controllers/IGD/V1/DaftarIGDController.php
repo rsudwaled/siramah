@@ -45,7 +45,7 @@ class DaftarIGDController extends Controller
          ];
          return json_decode(json_encode($response));
      }
- 
+
     public function signature()
     {
         $cons_id    = env('ANTRIAN_CONS_ID');
@@ -62,7 +62,7 @@ class DaftarIGDController extends Controller
         $data['decrypt_key']    = $cons_id . $secretKey . $tStamp;
         return $data;
     }
- 
+
     public static function stringDecrypt($key, $string)
     {
         $encrypt_method = 'AES-256-CBC';
@@ -72,7 +72,7 @@ class DaftarIGDController extends Controller
         $output         = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
         return $output;
     }
- 
+
     public function response_decrypt($response, $signature)
     {
         $code       = json_decode($response->body())->metaData->code;
@@ -89,7 +89,7 @@ class DaftarIGDController extends Controller
             return $this->sendError($message, $code);
         }
     }
- 
+
     public function response_no_decrypt($response)
     {
         $code       = json_decode($response->body())->metaData->code;
@@ -137,7 +137,7 @@ class DaftarIGDController extends Controller
         $penjaminbpjs   = Penjamin::get();
         $tanggal        = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
-        
+
         $url            = null;
         $signature      = null;
         $response       = null;
@@ -158,7 +158,7 @@ class DaftarIGDController extends Controller
             Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
             return back();
         }
-        
+
         if ($request->isBpjs == 1 && empty($request->no_bpjs)) {
             Alert::error('NO KARTU WAJIB DIISI!!', 'untuk pasien bpjs no kartu wajib diisi!');
             return back();
@@ -212,7 +212,7 @@ class DaftarIGDController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
             return back();
         }
-        
+
         // counter increment
         $counter = Kunjungan::latest('counter')
             ->where('no_rm', $request->rm)
@@ -223,12 +223,12 @@ class DaftarIGDController extends Controller
         } else {
             $c = $counter->counter + 1;
         }
-        
+
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
         $pasien     = Pasien::where('no_rm', $request->rm)->first();
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-        
-        
+
+
         $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $c;
         $createKunjungan->no_rm             = $request->rm;
@@ -357,7 +357,7 @@ class DaftarIGDController extends Controller
                         } else {
                             $createAdm->tagihan_penjamin    = $tarif_adm->TOTAL_TARIF_CURRENT;
                         }
-                        
+
                         if($createAdm->save())
                         {
                             $createKunjungan->status_kunjungan = 1;  //status 8 nanti update setelah header dan detail selesai jadi 1
@@ -368,7 +368,7 @@ class DaftarIGDController extends Controller
                         }
                     }
                 }
-            } 
+            }
         }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->rm . ' berhasil didaftarkan!');
         return redirect()->route('daftar.kunjungan');
@@ -384,7 +384,7 @@ class DaftarIGDController extends Controller
         $keterangan     = null;
         $jenisPeserta   = null;
         $code           = null;
-        
+
         if(!empty($resdescrtipt->response)){
             $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
             $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
@@ -400,7 +400,7 @@ class DaftarIGDController extends Controller
             $keterangan     = $resdescrtipt->metadata->message;
             $jenisPeserta   = $resdescrtipt->metadata->code;
         }
-        
+
         return response()->json(['keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
     }
 }

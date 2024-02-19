@@ -10,15 +10,13 @@
             <dt class="col-sm-4 m-0">No BPJS</dt>
             <dd class="col-sm-8 m-0">{{ $pasien->no_Bpjs }}</dd>
             <dt class="col-sm-4 m-0">Tgl Lahir</dt>
-            <dd class="col-sm-8 m-0">{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') }}</dd>
-            <dt class="col-sm-4 m-0">Umur</dt>
-            <dd class="col-sm-8 m-0">
+            <dd class="col-sm-8 m-0">{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d') }} (
                 @if (\Carbon\Carbon::parse($pasien->tgl_lahir)->age)
                     {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->age }} tahun
                 @else
                     {{ \Carbon\Carbon::parse($pasien->tgl_lahir)->diffInDays(now()) }} hari
                 @endif
-
+                )
             </dd>
         </dl>
     </div>
@@ -32,13 +30,13 @@
             <dd class="col-sm-8 m-0">{{ $kunjungan->unit->nama_unit }} / {{ $kunjungan->kelas }}</dd>
             <dt class="col-sm-4 m-0">Dokter DPJP</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->dokter->nama_paramedis }}</dd>
+            <dt class="col-sm-4 m-0">Penjamin</dt>
+            <dd class="col-sm-8 m-0">{{ $kunjungan->penjamin_simrs->nama_penjamin }}
+            </dd>
         </dl>
     </div>
     <div class="col-md-3">
         <dl class="row">
-            <dt class="col-sm-4 m-0">Penjamin</dt>
-            <dd class="col-sm-8 m-0">{{ $kunjungan->penjamin_simrs->nama_penjamin }}
-            </dd>
             <dt class="col-sm-4 m-0">No SEP</dt>
             <dd class="col-sm-8 m-0">{{ $kunjungan->no_sep }}</dd>
             <dt class="col-sm-4 m-0">Tarif RS</dt>

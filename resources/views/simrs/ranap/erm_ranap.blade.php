@@ -116,8 +116,8 @@
                             </a>
                             <div id="cKPO" class="collapse" role="tabpanel">
                                 <div class="card-body p-0">
-                                    {{-- <iframe src="http://192.168.2.125/kpoelektronik/" height="780" width="100%"
-                                        frameborder="0"></iframe> --}}
+                                    <iframe id="kpoFrame" src="" height="780" width="100%"
+                                        frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -498,6 +498,7 @@
     {{-- gorupping --}}
     <script>
         $(function() {
+            $('#kpoFrame').attr('src', 'http://192.168.2.125/kpoelektronik/');
             $(".masuk_icu").hide();
             $(".naik_kelas").hide();
             $(".pake_ventilator").hide();
@@ -1191,5 +1192,4 @@
 
         }
     </script>
-
 @endsection
