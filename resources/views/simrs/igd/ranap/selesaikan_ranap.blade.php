@@ -169,8 +169,8 @@
                     <x-adminlte-modal id="modalSPRI" title="Buat SPRI terlebih dahulu" theme="primary" size='lg'
                         disable-animations>
                         <form>
-                            {{-- <input type="hidden" name="user" id="user" value="{{ Auth::user()->name }}"> --}}
-                            <input type="hidden" name="user" id="user" value="test">
+                            <input type="hidden" name="user" id="user" value="{{ Auth::user()->name }}">
+                            {{-- <input type="hidden" name="user" id="user" value="test"> --}}
                             <input type="hidden" name="kodeKunjungan" id="kodeKunjungan">
                             <input type="hidden" name="jenispelayanan" id="jenispelayanan" value="1">
                             <div class="row">
@@ -203,7 +203,7 @@
                             </div>
                             <x-slot name="footerSlot">
                                 <x-adminlte-button type="submit" theme="success" form="formSPRI" class="btnCreateSPRI"
-                                    label="Buat SPRI" />
+                                    label="Bridging SPRI" />
                                 <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal"
                                     data-dismiss="modal" />
                                 <x-adminlte-button class="btn bg-gradient-maroon btn-md lanjutkanPROSESDAFTAR"
@@ -253,22 +253,22 @@
                     cache: true
                 }
             });
+
             $("#dokter").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: "{{ route('ref_dpjp_api') }}",
+                    url: "{{ route('dokter-bypoli.get') }}",
                     type: "get",
                     dataType: 'json',
                     delay: 250,
                     data: function(params) {
+                        console.log(params)
                         return {
-                            jenispelayanan: $("#jenispelayanan").val(),
-                            kodespesialis: $("#poliklinik option:selected").val(),
-                            tanggal: $("#tanggal").val(),
-                            nama: params.term // search term
+                            kodePoli: $("#poliklinik option:selected").val()// search term
                         };
                     },
                     processResults: function(response) {
+                        console.info(response)
                         return {
                             results: response
                         };

@@ -251,6 +251,7 @@ class DaftarTanpaNomorController extends Controller
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         = $bpjsProses == null ? $request->isBpjs : 2;
         $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs;
         
         if ($createKunjungan->save()) {
             $jpPasien               = new JPasienIGD();

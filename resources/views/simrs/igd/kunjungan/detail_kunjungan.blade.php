@@ -168,7 +168,11 @@
                                     </td>
                                     <td>
                                         <b>
-                                            {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
+                                            @if ( $kunjungan->jp_daftar == 0 && !empty($kunjungan->no_sep))
+                                                PASIEN BPJS
+                                            @else
+                                                {{ $kunjungan->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
+                                            @endif
                                         </b>
                                     </td>
                                     <td>

@@ -173,6 +173,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(PasienKecelakaan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function bpjsCheckHistories()
+    {
+        return $this->belongsTo(HistoriesIGDBPJS::class, 'kode_kunjungan', 'kode_kunjungan' );
+    }
 
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()

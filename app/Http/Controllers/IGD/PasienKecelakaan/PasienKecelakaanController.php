@@ -163,7 +163,8 @@ class PasienKecelakaanController extends Controller
      $createKunjungan->form_send_by      = 0;
      $createKunjungan->jp_daftar         =  $request->isBpjs;
      $createKunjungan->pic2              = Auth::user()->id;
-    //  $createKunjungan->pic = Auth::user()->id;
+     $createKunjungan->pic               = Auth::user()->id_simrs;
+     
      if ($createKunjungan->save()) {
          $jpPasien               = new JPasienIGD();
          $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;

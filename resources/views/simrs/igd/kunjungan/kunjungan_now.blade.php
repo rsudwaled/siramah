@@ -3,45 +3,52 @@
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-sm-4">
+            <div class="col-lg-12">
                 <h5>DATA KUNJUNGAN</h5>
             </div>
-            <div class="col-sm-8">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <select name="unit" id="unit" class="form-control select2">
-                                        @foreach ($unit as $item)
-                                            <option value="{{ $item->kode_unit }}"
-                                                {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
-                                                {{ $item->nama_unit }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="input-group">
-                                        <input id="new-event" type="date" name="tanggal" class="form-control"
-                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                            placeholder="Event Title">
-                                        <div class="input-group-append">
-                                            <button id="add-new-event" type="submit"
-                                                class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-lg-7">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">
+                                <form action="" method="get">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <label for="">Filter Data : </label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <select name="unit" id="unit" class="form-control select2">
+                                                @foreach ($unit as $item)
+                                                    <option value="{{ $item->kode_unit }}"
+                                                        {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
+                                                        {{ $item->nama_unit }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="input-group">
+                                                <input id="new-event" type="date" name="tanggal" class="form-control"
+                                                    value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                    placeholder="Event Title">
+                                                <div class="input-group-append">
+                                                    <button id="add-new-event" type="submit"
+                                                        class="btn btn-primary btn-sm withLoad">Submit Pencarian</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">Kunjungan RANAP</a>
-                                    <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-sync"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
-                    </li>
-                </ol>
+                                </form>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-lg-5 text-right">
+                        <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">KUNJUNGAN RANAP</a>
+                        <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                            <i class="fas fa-sync"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -53,7 +60,7 @@
                 <div class="card-body">
                     @php
                         $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
-                        $config['order'] = false;
+                        $config['order'] = ['3', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '600px';
@@ -88,26 +95,42 @@
                                 <td>
                                     {{ $item->sep }} <br>
                                     @if ($item->sep)
-                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}"
-                                            theme="danger" class="btn-xs btn-deleteSEP" id="btn-deleteSEP"
-                                            label="Hapus SEP" />
+                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
+                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
                                     @endif
                                 </td>
                                 <td>{{ $item->status }}</td>
                                 <td>
                                     <b>
-                                        {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                    </b>
+                                        @if (empty($item->jp_daftar) && !empty($item->sep))
+                                            PASIEN BPJS
+                                        @else
+                                            {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
+                                        @endif
+                                    </b> <br>
+                                    @role('Admin Super')
+                                        <small>
+                                            <a class="btn btn-success btn-xs">
+                                                @if (is_null($item->form_send_by))
+                                                    DEKSTOP
+                                                @else
+                                                    {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
+                                                @endif
+                                            </a>
+                                        </small>
+                                    @endrole
+
+
                                 </td>
                                 <td>
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kunjungan]) }}"
-                                        class="btn btn-success btn-xs withLoad">Detail</a>
+                                        class="btn btn-success btn-xs withLoad mt-1">Detail</a>
 
                                     <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
                                         data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
                                         data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
                                         data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
-                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa" id="btn-diagnosa"
+                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
                                         label="Update Diagnosa" />
                                     @php
                                         if (empty($item->noKartu)) {
@@ -118,9 +141,11 @@
                                     @endphp
                                     <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
                                         class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                    @if (!empty($nomorKartu))
-                                        <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                            class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
+                                    @if ($item->jp_daftar !== 0)
+                                        @if (!empty($nomorKartu))
+                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>
@@ -192,7 +217,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {
