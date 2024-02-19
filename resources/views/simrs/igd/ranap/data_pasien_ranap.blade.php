@@ -201,9 +201,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $('.cekKunjunganPoli').click(function(e) {
                 $('#modalCekKunjunganPoli').modal('toggle');
             });
+
             $('.btn-cekKunjungan').click(function(e) {
                 $('#modalCekKunjunganPoli').modal('hide');
                 $('#modalCekKunjungan').modal('toggle');
@@ -266,31 +268,6 @@
                             rm: rm,
                         },
                         success: function(response) {
-                            // if (data.code == 200) {
-                            //     Swal.fire({
-                            //         title: "Informasi!",
-                            //         text: "Pasien bisa di daftarkan Rawat Inap",
-                            //         icon: "success",
-                            //         confirmButtonText: "oke!",
-                            //     }).then((result) => {
-                            //         if (result.isConfirmed) {
-                            //             window.location.href = response.url;
-                            //         }
-                            //     });
-                            //     $.LoadingOverlay("hide");
-                            // } else {
-                            //     Swal.fire({
-                            //         title: "OOPS!!",
-                            //         text: "Pasien Belum Pulang",
-                            //         icon: "error",
-                            //         confirmButtonText: "oke!",
-                            //     }).then((result) => {
-                            //         if (result.isConfirmed) {
-                            //             location.reload();
-                            //         }
-                            //     });
-                            //     $.LoadingOverlay("hide");
-                            // }
                             window.location.href = response.url;
                         },
                     });

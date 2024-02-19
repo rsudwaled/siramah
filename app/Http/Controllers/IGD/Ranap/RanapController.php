@@ -557,13 +557,21 @@ class RanapController extends APIController
             $cekdiffInHours = 0;
         }
 
-        if(!empty($riwayat->tgl_keluar))
+        if(!empty($riwayat->kode_penjamin))
         {
-            $code = 200;
-        }else{
-            $code = 404;
+            $penjamin_bpjs = Penjamin::firstWhere('kode_penjamin_simrs',$riwayat->kode_penjamin);
+            if(!empty($penjamin_bpjs))
+            {
+                $route = route("riwayat-ranap.daftarkan-pasien",[$cekdiffInHours, $riwayat->no_rm, $riwayat->kode_kunjungan]);;
+            }
+            $penjamin_umum = PenjaminSimrs::firstWhere('kode_penjamin',$riwayat->kode_penjamin);
+            if(!empty($penjamin_umum))
+            {
+                $route = route("form-umum.pasien-ranap",[$riwayat->no_rm, $riwayat->kode_kunjungan]);
+                // $route = route("pasien.ranap");
+            }
         }
-        $url = route("riwayat-ranap.daftarkan-pasien",[$cekdiffInHours, $riwayat->no_rm, $riwayat->kode_kunjungan]);
+        $url = $route;
         return response()->json(['url'=>$url]);
     }
     public function formRanap1X24Jam(Request $request, $diffInHours, $rm, $kode)

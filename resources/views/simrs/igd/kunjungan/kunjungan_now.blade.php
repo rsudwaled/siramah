@@ -217,6 +217,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -237,6 +238,7 @@
                     cache: true
                 }
             });
+
             $('.show-formdiagnosa').click(function(e) {
                 $("#noMR").val($(this).data('rm'));
                 $("#nik_bpjs").val($(this).data('nik'));
@@ -369,6 +371,7 @@
                 });
 
             });
+            
             $('.btn-deleteSEP').click(function(e) {
                 var sep = $(this).data('sep');
                 var deleteSEP = "{{ route('sep_ranap.delete') }}";
