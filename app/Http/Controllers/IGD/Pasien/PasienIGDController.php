@@ -64,7 +64,7 @@ class PasienIGDController extends Controller
 
     public function pasienBaruIGD(Request $request)
     {
-       
+
         $request->validate(
             [
                 'nik_pasien_baru'   =>'required|numeric',
@@ -117,7 +117,7 @@ class PasienIGDController extends Controller
         $add_rm_new = $rm_last + 1; //982847
         $th         = substr(Carbon::now()->format('Y'), -2); //23
         $rm_new     = $th . $add_rm_new;
-        
+
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
             'nama_keluarga'     => $request->nama_keluarga,

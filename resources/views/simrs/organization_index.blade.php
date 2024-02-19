@@ -11,7 +11,7 @@
         <div class="col-md-12">
             <x-adminlte-card title="Data Unit" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
-                    $heads = ['Kode Unit', 'Kode JKN', 'ID SatuSehat', 'Nama Unit', 'Kelas', 'Lokasi', 'Daftar', 'Status'];
+                    $heads = ['Kode Unit', 'Kode JKN', 'ID Organization', 'ID Location', 'Nama Unit', 'Kelas', 'Lokasi', 'Daftar', 'Status'];
                     $config['paging'] = false;
                     $config['info'] = false;
                     $config['scrollY'] = '500px';
@@ -30,6 +30,16 @@
                                         class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
                                 @else
                                     <a href="{{ route('organization_sync') }}?kode={{ $item->kode_unit }}"
+                                        class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
+                                @endif
+                            </td>
+                            <td>
+                                {{ $item->id_location }}
+                                @if ($item->id_location)
+                                    <a href="{{ route('location_sync') }}?kode={{ $item->kode_unit }}"
+                                        class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
+                                @else
+                                    <a href="{{ route('location_sync') }}?kode={{ $item->kode_unit }}"
                                         class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
                                 @endif
                             </td>
@@ -97,34 +107,3 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.BootstrapSwitch', true)
-@section('js')
-    <script>
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('.btnEditPoli').click(function() {
-                var idpoli = $(this).data('id');
-                $('#modalPoli').modal('show');
-                $.LoadingOverlay("show");
-                $.get("{{ route('poliklinik.index') }}" + '/' + idpoli, function(data) {
-                    console.log(data);
-                    $('#idpoli').val(idpoli);
-                    $('#kodepoli').val(data.kodepoli);
-                    $('#namapoli').val(data.namapoli);
-                    $('#kodesubspesialis').val(data.kodesubspesialis);
-                    $('#namasubspesialis').val(data.namasubspesialis);
-                    $('#lokasi').val(data.lokasi);
-                    $('#lantaipendaftaran').val(data.lantaipendaftaran);
-                    if (data.status == 1) {
-                        $('#status').prop('checked', true).trigger('change');
-                    }
-                    $('#modalPoli').modal('show');
-                    $.LoadingOverlay("hide", true);
-                })
-            });
-        });
-    </script>
-@endsection

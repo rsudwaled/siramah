@@ -452,7 +452,7 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-               
+
                 [
                     'text' => 'Pasien Ranap',
                     'icon'    => 'fas fa-procedures',
@@ -727,7 +727,7 @@ return [
                     'text' => 'Monitoring Resume Ranap',
                     'icon'    => 'fas fa-file-medical',
                     'url'  => 'monitoring_resume_ranap',
-                    'active' => ['monitoring_resume_ranap', 'lihat_resume_ranap'],
+                    'active' => ['monitoring_resume_ranap', 'form_resume_ranap'],
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],
@@ -1353,9 +1353,9 @@ return [
                     'can' => ['bpjs', 'pendaftaran', 'casemix'],
                 ],
                 [
-                    'text' => 'Encouter',
+                    'text' => 'Encounter',
                     'icon'    => 'fas fa-user',
-                    'url'  => 'satusehat/patnt',
+                    'url'  => 'satusehat/encounter',
                     'shift'   => 'ml-2',
                     'can' => ['bpjs', 'pendaftaran', 'casemix'],
                 ],

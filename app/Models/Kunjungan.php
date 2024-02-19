@@ -69,6 +69,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(DiagnosaPoli::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function diagnosaicd()
+    {
+        return $this->hasOne(DiagnosaICD::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function dokter()
     {
         return $this->belongsTo(Paramedis::class, 'kode_paramedis', 'kode_paramedis');
@@ -163,11 +167,11 @@ class Kunjungan extends Model
     }
     public function alasanEdit()
     {
-        return $this->belongsTo(MtAlasanEdit::class, 'id_alasan_edit', 'id' );
+        return $this->belongsTo(MtAlasanEdit::class, 'id_alasan_edit', 'id');
     }
     public function pasienKecelakaan()
     {
-        return $this->belongsTo(PasienKecelakaan::class, 'kode_kunjungan', 'kode_kunjungan' );
+        return $this->belongsTo(PasienKecelakaan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
     public function bpjsCheckHistories()
     {

@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class SatuSehatController extends Controller
+class SatuSehatController extends APIController
 {
-    public string $baseurl = "https://api-satusehat.kemkes.go.id/oauth2/v1";
-    public function token_generate(Request $request)
+    public function token_generate()
     {
-        $url = $this->baseurl . "/accesstoken?grant_type=client_credentials";
+        $url = env('SATUSEHAT_AUTH_URL') . "/accesstoken?grant_type=client_credentials";
         $response = Http::asForm()->post($url, [
-            'client_id' => "85ElTXsaYvakYMw26qcyGn24B6AD7rTrKcrYWZEn9qaolHX4",
-            'client_secret' => "ZgmUth7OQwHR8sVNVw7Wtu0ABG3loIgsjqSvo64ui59zArRtXzGeDqANLob4skyQ",
+            'client_id' => env('SATUSEHAT_CLIENT_ID'),
+            'client_secret' => env('SATUSEHAT_SECRET_ID'),
         ]);
         if ($response->successful()) {
             $json = $response->json();
@@ -30,5 +29,28 @@ class SatuSehatController extends Controller
         }
         return response()->json($response->json(), $response->status());
     }
-
+    public function responseSatuSehat($data)
+    {
+        if ($data['resourceType'] == "OperationOutcome") {
+            $response = [
+                'response' => $data,
+                'metadata' => [
+                    'message' => $data['issue'][0]['code'],
+                    'code' => 500,
+                ],
+            ];
+            if ($data['issue'][0]['code'] == "invalid-access-token") {
+                $token = $this->token_generate();
+            }
+        } else {
+            $response = [
+                'response' => $data,
+                'metadata' => [
+                    'message' => "Ok",
+                    'code' => 200,
+                ],
+            ];
+        }
+        return json_decode(json_encode($response));
+    }
 }

@@ -72,15 +72,20 @@
             <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
             <td>{{ $kunjungan->unit->nama_unit }}</td>
             <td>{{ $kunjungan->no_sep }}</td>
-            <td>
+            <td
+                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
                 {{ $kunjungan->budget ? money($kunjungan->budget->tarif_inacbg, 'IDR') : 'Rp 0' }}
             </td>
-            <td>
+            <td
+                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
                 {{ $kunjungan->tagihan ? money($kunjungan->tagihan->total_biaya, 'IDR') : 'Rp 0' }}
             </td>
-            <td>
+            <td
+                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
                 @if ($kunjungan->tagihan && $kunjungan->budget)
-                    {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
+                    @if ($kunjungan->tagihan->total_biaya && $kunjungan->budget->tarif_inacbg)
+                        {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
+                    @endif
                 @endif
             </td>
             <td>
@@ -96,3 +101,26 @@
         @endforeach
     @endif
 </x-adminlte-datatable>
+<br>
+Catatan : <br>
+- Baris Berwana Merah : belum groupping <br>
+- Baris Berwana Kuning : pasien sudah pulang tapi belum diisi erm resume<br>
+- Baris Berwana Hijau : pasien sudah pulang dan resumenya sudah diisi<br>
+<script>
+    $(function() {
+        blmgroupping = "{{ $kunjungans->where('budget.kode_cbg', null)->count() }}";
+        if (blmgroupping != 0) {
+            swal.fire(
+                blmgroupping + " Pasien Belum Groupping",
+                "Mohon lakukan Groupping Eklaim, sebelum 3 hari setelah pasien masuk rawat inap",
+                'warning'
+            );
+        }
+        $('#table1').DataTable({
+            "paging": false,
+            "info": false,
+            "scrollCollapse": true,
+            "scrollY": '300px'
+        });
+    });
+</script>

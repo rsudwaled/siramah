@@ -23,20 +23,17 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class RanapController extends APIController
 {
-    // daftar pasien ranap
     public function kunjunganranap(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
-        $kunjungans = null;
         return view('simrs.ranap.kunjungan_ranap', compact([
             'request',
             'units',
-            'kunjungans',
         ]));
     }
-    public function get_pasien_ranap(Request $request)
+    public function table_pasien_ranap(Request $request)
     {
         $kunjungans = null;
         if ($request->tanggal) {
@@ -121,7 +118,7 @@ class RanapController extends APIController
             ],
         ];
         $data = json_decode(json_encode($data));
-        return view('simrs.ranap.erm_ranap_biaya', compact('data'));
+        return view('simrs.ranap.erm_ranap_rincian_biaya', compact('data'));
     }
     public function get_hasil_laboratorium(Request $request)
     {
@@ -399,9 +396,12 @@ class RanapController extends APIController
             'erm_ranap',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
+        $groupping = $kunjungan->groupping;
         return view('simrs.ranap.form_resume_ranap', compact([
             'kunjungan',
             'pasien',
+            'groupping',
+
         ]));
     }
 

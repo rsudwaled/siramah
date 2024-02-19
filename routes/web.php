@@ -42,11 +42,13 @@ use App\Http\Controllers\FormulirRL4Controller;
 use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
 use App\Http\Controllers\EklaimController;
+use App\Http\Controllers\EncounterController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
 use App\Http\Controllers\KebutuhanJurusanController;
 use App\Http\Controllers\LaboratoriumController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PatologiAnatomiController;
@@ -158,6 +160,11 @@ Route::middleware('auth')->group(function () {
         Route::get('practitioner_sync', [PractitionerController::class, 'practitioner_sync'])->name('practitioner_sync');
         Route::get('organization', [OrganizationController::class, 'index'])->name('organization');
         Route::get('organization_sync', [OrganizationController::class, 'organization_sync'])->name('organization_sync');
+        Route::get('location', [LocationController::class, 'index'])->name('location');
+        Route::get('location_sync', [LocationController::class, 'location_sync'])->name('location_sync');
+        Route::get('encounter', [EncounterController::class, 'encounter'])->name('encounter');
+        Route::get('table_kunjungan_encounter', [EncounterController::class, 'table_kunjungan_encounter'])->name('table_kunjungan_encounter');
+        Route::get('encounter_sync', [EncounterController::class, 'encounter_sync'])->name('encounter_sync');
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
@@ -188,19 +195,21 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
     // ranap
-    // Route::get('pasienRanapAktif', [KunjunganController::class, 'pasienRanapAktif'])->name('pasienRanapAktif');
-    // Route::get('pasienRanap', [KunjunganController::class, 'pasienRanap'])->name('pasienRanap');
-    // Route::get('pasienRanapPasien', [KunjunganController::class, 'pasienRanapPasien'])->name('pasienRanapPasien');
-    // Route::get('kunjunganranapaktif', [RanapController::class, 'kunjunganranapaktif'])->name('kunjunganranapaktif');
+    Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
+    Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');
+    Route::get('pasienRanapPasien', [RanapController::class, 'kunjunganranap'])->name('pasienRanapPasien');
+    Route::get('kunjunganranapaktif', [RanapController::class, 'kunjunganranap'])->name('kunjunganranapaktif');
     // Route::post('claim_ranap_v2', [InacbgController::class, 'claim_ranap_v2'])->name('claim_ranap_v2');
     Route::post('claim_ranap_v3', [InacbgController::class, 'claim_ranap_v3'])->name('claim_ranap_v3');
     Route::get('get_diagnosis_eclaim', [InacbgController::class, 'get_diagnosis_eclaim'])->name('get_diagnosis_eclaim');
     Route::get('get_procedure_eclaim', [InacbgController::class, 'get_procedure_eclaim'])->name('get_procedure_eclaim');
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
+
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
-    Route::get('get_pasien_ranap', [RanapController::class, 'get_pasien_ranap'])->name('get_pasien_ranap');
+    Route::get('table_pasien_ranap', [RanapController::class, 'table_pasien_ranap'])->name('table_pasien_ranap');
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::get('get_rincian_biaya', [RanapController::class, 'get_rincian_biaya'])->name('get_rincian_biaya');
+
     Route::get('get_kunjungan_pasien', [RanapController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
     Route::get('get_hasil_laboratorium', [RanapController::class, 'get_hasil_laboratorium'])->name('get_hasil_laboratorium');
     Route::get('get_hasil_radiologi', [RanapController::class, 'get_hasil_radiologi'])->name('get_hasil_radiologi');
@@ -255,7 +264,6 @@ Route::middleware('auth')->group(function () {
     Route::get('cetakUlangOrderObat', [FarmasiController::class, 'cetakUlangOrderObat'])->name('cetakUlangOrderObat');
     Route::get('kpo/tanggal/{tanggal}', [KPOController::class, 'kunjungan_tanggal'])->name('kpo.kunjungan_tanggal');
     Route::get('kpoRanap', [KPOController::class, 'kpoRanap'])->name('kpoRanap');
-    Route::get('kunjunganRanap', [KunjunganController::class, 'kunjunganRanap'])->name('kunjunganRanap');
     // casemix
     Route::get('diagnosaRawatJalan', [PoliklinikController::class, 'diagnosaRawatJalan'])->name('diagnosaRawatJalan');
     Route::get('pasienranappulang', [KunjunganController::class, 'pasienRanapPulang'])->name('pasienranappulang');

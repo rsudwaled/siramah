@@ -9,9 +9,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class OrganizationController extends APIController
+class OrganizationController extends SatuSehatController
 {
-    public string $baseurl = "https://api-satusehat.kemkes.go.id/fhir-r4/v1";
     public function index()
     {
         $unit = Unit::with(['lokasi'])->get();
@@ -42,9 +41,9 @@ class OrganizationController extends APIController
                 $unit->update([
                     'id_satusehat' => $json->id,
                 ]);
-                Alert::success('Berhasil Sync Organization');
+                Alert::success('Success', 'Berhasil Sync Organization');
             } else {
-                Alert::error('Data Organization Tidak Ditemukan');
+                Alert::error('Mohon Maaf', $res->metadata->message);
             }
         }
         return redirect()->back();
@@ -69,7 +68,7 @@ class OrganizationController extends APIController
             return $this->sendError($validator->errors()->first(), 400);
         }
         $token = Token::latest()->first()->access_token;
-        $url =  $this->baseurl . "/Organization";
+        $url =  env('SATUSEHAT_BASE_URL') . "/Organization";
         $data = [
             "resourceType" => "Organization",
             "active" => true,
@@ -150,6 +149,6 @@ class OrganizationController extends APIController
         ];
         $response = Http::withToken($token)->post($url, $data);
         $res = $response->json();
-        return $this->sendResponse($res, 200);
+        return $this->responseSatuSehat($res);
     }
 }
