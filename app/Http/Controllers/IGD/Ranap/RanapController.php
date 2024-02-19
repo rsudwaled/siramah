@@ -126,21 +126,7 @@ class RanapController extends APIController
 
     public function dataPasienRanap(Request $request)
     {
-        $query = DB::connection('mysql2')->table('ts_kunjungan')
-                    ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
-                    ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
-                    ->join('mt_histories_igd_bpjs', 'ts_kunjungan.kode_kunjungan', '=', 'mt_histories_igd_bpjs.kode_kunjungan')
-                    ->select(
-                        'mt_pasien.no_Bpjs as no_Bpjs', 'mt_pasien.nik_bpjs as nik_bpjs', 'mt_pasien.no_rm as no_rm','mt_pasien.nama_px as nama_px','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jenis_kelamin',
-                        'ts_kunjungan.kode_kunjungan as kode_kunjungan','ts_kunjungan.status_kunjungan as status_kunjungan','ts_kunjungan.no_sep as no_sep', 'ts_kunjungan.no_spri as no_spri',
-                        'ts_kunjungan.tgl_masuk as tgl_masuk','ts_kunjungan.kode_unit as kode_unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.jp_daftar as jp_daftar',
-                        'ts_kunjungan.kamar as kamar','ts_kunjungan.no_bed as no_bed','ts_kunjungan.kelas as kelas','ts_kunjungan.is_ranap_daftar as is_ranap_daftar',
-                        'mt_unit.nama_unit as nama_unit',
-                        'mt_histories_igd_bpjs.klsRawatHak as klsRawatHak','mt_histories_igd_bpjs.klsRawatNaik as klsRawatNaik','mt_histories_igd_bpjs.pembiayaan as pembiayaan','mt_histories_igd_bpjs.penanggungJawab as penanggungJawab',
-                    )
-                    ->where('status_kunjungan','!=', 8)
-                    ->whereIn('is_ranap_daftar', [1,2])
-                    ->orderBy('tgl_masuk', 'desc');
+        $query = Kunjungan::with('bpjsCheckHistories','pasien','unit')->whereIn('is_ranap_daftar',['1','2','3']);
         if($request->tanggal && !empty($request->tanggal))
         {
             $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
@@ -150,7 +136,6 @@ class RanapController extends APIController
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
         $kunjungan = $query->get();
-        // dd($kunjungan);
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
@@ -223,7 +208,6 @@ class RanapController extends APIController
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
-        $dokter     = Paramedis::firstWhere('kode_dokter_jkn', $request->kode_paramedis);
 
         $createKunjungan = new Kunjungan();
         $createKunjungan->counter           = $c;
@@ -243,7 +227,7 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         if(!is_null($request->pasienNitip)){
-            $createKunjungan->is_ranap_daftar   = 2;
+            $createKunjungan->is_ranap_daftar   = 3;
         }else{
             $createKunjungan->is_ranap_daftar   = 1;
         }
@@ -253,24 +237,7 @@ class RanapController extends APIController
         $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
-            $histories = new HistoriesIGDBPJS();
-            $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
-            $histories->noMR            = $createKunjungan->no_rm;
-            $histories->noKartu         = trim($request->noKartuBPJS);
-            $histories->ppkPelayanan    = '1018R001';
-            $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
-            $histories->user            = Auth::user()->name;
-            $histories->noTelp          = $request->noTelp;
-            $histories->tglSep          = now();
-            $histories->jnsPelayanan    = '1';
-            $histories->klsRawatHak     = $request->kodeKelas;
-            $histories->asalRujukan     = '2';
-            $histories->tglRujukan      = now();
-            $histories->is_bridging     = 0;
-            $histories->status_daftar   = 0;
-            $histories->is_ranap_umum   = 1;
-            $histories->unit            = $unit->kode_unit;
-            $histories->save();
+            
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
             if ($kodelayanan == null) {
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);

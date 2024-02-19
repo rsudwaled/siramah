@@ -510,6 +510,8 @@
                 if (this.checked) {
                     $("#showTitipan").show();
                     $("#pasienNitip").val(1);
+                    $("#r_kelas_id").attr("disabled", true);
+                    $("#unitTerpilih").attr("disabled", true);
                 } else {
                     $("#pasienNitip").val(0);
                 }

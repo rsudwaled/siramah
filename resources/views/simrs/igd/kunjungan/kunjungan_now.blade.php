@@ -60,7 +60,7 @@
                 <div class="card-body">
                     @php
                         $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
-                        $config['order'] = false;
+                        $config['order'] = ['3', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '600px';

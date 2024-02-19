@@ -88,8 +88,8 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['TGL MASUK / KUNJUNGAN', 'PASIEN', 'ALAMAT', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
-                        $config['order'] = false;
+                        $heads = ['TGL MASUK ', 'KUNJUNGAN', 'PASIEN', 'ALAMAT', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
+                        $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '600px';
@@ -102,17 +102,21 @@
                             <tr>
                                 <td>
                                     <b>
-                                        {{ $item->kode_kunjungan }} <br> ({{ $item->nama_unit }})
-                                    </b> <br>
-                                    {{ $item->tgl_masuk }}
+                                        {{ $item->tgl_masuk }}
+                                    </b>
                                 </td>
                                 <td>
-                                    <a href="{{ route('edit-pasien', ['rm' => $item->no_rm]) }}" target="__blank">
-                                        <b>{{ $item->nama_px }}</b> <br>RM : {{ $item->no_rm }} <br>NIK :
-                                        {{ $item->nik_bpjs }} <br>No Kartu : {{ $item->no_Bpjs }}
+                                    <b>
+                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }})
+                                    </b>
+                                </td>
+                                <td>
+                                    <a href="{{ route('edit-pasien', ['rm' => $item->pasien->no_rm]) }}" target="__blank">
+                                        <b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->pasien->no_rm }} <br>NIK :
+                                        {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
                                     </a>
                                 </td>
-                                <td><small>alamat : {{ $item->alamat }} /</small> <br></td>
+                                <td><small>alamat : {{ $item->pasien->alamat }} /</small> <br></td>
                                 <td> {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
                                 </td>
 
@@ -122,29 +126,34 @@
                                         BED : {{ $item->no_bed }} <br>
                                         Kelas : {{ $item->kelas }} <br>
                                     </b>
-                                    @if ($item->is_ranap_daftar==2)
-                                    <small class="text-red"><b><i>( PASIEN TITIPAN : Kelas {{$item->klsRawatHak}} )</i></b></small>
+                                    @if ($item->is_ranap_daftar == 3)
+                                        <small class="text-red"><b><i>( PASIEN TITIPAN )</i></b></small>
                                     @endif
-                                    @if (!is_null($item->klsRawatNaik))
-                                        @php
-                                            if ($item->klsRawatNaik == 3) {
-                                                $naikKelas = 1;
-                                            }
-                                            if ($item->klsRawatNaik == 4) {
-                                                $naikKelas = 2;
-                                            }
-                                            if ($item->klsRawatNaik == 5) {
-                                                $naikKelas = 3;
-                                            }
-                                            if ($item->klsRawatNaik == 2) {
-                                                $naikKelas = 4;
-                                            }
-                                            if ($item->klsRawatNaik == 1) {
-                                                $naikKelas = 5;
-                                            }
-                                        @endphp
-                                        <small class="text-red"><b><i>(NAIK KELAS : Dari-{{ $item->klsRawatHak }}
-                                                    Ke-{{ $naikKelas }} )</i></b></small>
+                                    @if (!is_null($item->bpjsCheckHistories))
+                                        @if (!is_null($item->bpjsCheckHistories->klsRawatNaik))
+                                            @php
+                                                if ($item->bpjsCheckHistories->klsRawatNaik == 3) {
+                                                    $naikKelas = 1;
+                                                }
+                                                if ($item->bpjsCheckHistories->klsRawatNaik == 4) {
+                                                    $naikKelas = 2;
+                                                }
+                                                if ($item->bpjsCheckHistories->klsRawatNaik == 5) {
+                                                    $naikKelas = 3;
+                                                }
+                                                if ($item->bpjsCheckHistories->klsRawatNaik == 2) {
+                                                    $naikKelas = 4;
+                                                }
+                                                if ($item->bpjsCheckHistories->klsRawatNaik == 1) {
+                                                    $naikKelas = 5;
+                                                }
+                                            @endphp
+                                            <small class="text-red"><b><i>(NAIK KELAS :
+                                                        Dari-{{ $item->bpjsCheckHistories->klsRawatHak }}
+                                                        Ke-{{ $naikKelas }} )</i></b></small>
+                                        @else
+                                            <small class="text-red"><b><i>( PASIEN TITIPAN )</i></b></small>
+                                        @endif
                                     @endif
                                 </td>
                                 <td>
