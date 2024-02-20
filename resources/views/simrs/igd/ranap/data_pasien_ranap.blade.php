@@ -55,7 +55,33 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="col-lg-12">
+                                <div class="callout callout-warning">
+                                    <h5>Riwayat Pasien!</h5>
+                                    <p>daftar 3 riwayat terakhir pasien.</p>
+                                </div>
                                 <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>KUNJUNGAN</th>
+                                            <th>NO RM</th>
+                                            <th>PASIEN</th>
+                                            <th>POLI</th>
+                                            <th>STATUS</th>
+                                            <th>TGL MASUK</th>
+                                            <th>TGL PULANG</th>
+                                            <th>RANAP</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="callout callout-success">
+                                    <h5>Riwayat Pasien Rawat Inap!</h5>
+                                    <p>daftar 3 riwayat terakhir rawat inap pasien.</p>
+                                </div>
+                                <table id="table1" class="riwayatRanap data-table table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>KUNJUNGAN</th>
@@ -216,20 +242,36 @@
                         url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
                         dataType: 'JSON',
                         success: function(data) {
-                            $.each(data, function(index, riwayat) {
+                            console.log(data.riwayat);
+                            $.each(data.riwayat, function(index, riwayat) {
                                 var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
                                     .kode_kunjungan + "</td><td>" +
                                     riwayat.no_rm + "</td><td>" + riwayat.pasien
                                     .nama_px +
                                     "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
                                     riwayat.status.status_kunjungan + "</td><td>" +
-                                    riwayat
-                                    .tgl_masuk + "</td><td>" + (riwayat.tgl_keluar ==
-                                        null ? 'Belum Pulang' : riwayat.tgl_keluar) +
+                                    riwayat.tgl_masuk + "</td><td>" + (riwayat
+                                        .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                        .tgl_keluar) +
                                     "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
                                     riwayat.kode_kunjungan + "," + riwayat.no_rm +
                                     ")>Pilih Riwayat</button></td></tr>";
                                 $('.riwayatKunjungan tbody').append(row);
+                            });
+                            $.each(data.ranap, function(index, ranap) {
+                                var row = "<tr class='riwayat-kunjungan'><td>" + ranap
+                                    .kode_kunjungan + "</td><td>" +
+                                    ranap.no_rm + "</td><td>" + ranap.pasien
+                                    .nama_px +
+                                    "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
+                                    ranap.status.status_kunjungan + "</td><td>" +
+                                    ranap
+                                    .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
+                                        null ? 'Belum Pulang' : ranap.tgl_keluar) +
+                                    "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
+                                    ranap.kode_kunjungan + "," + ranap.no_rm +
+                                    ")>Pilih Riwayat</button></td></tr>";
+                                $('.riwayatRanap tbody').append(row);
                             });
                         },
                         error: function(xhr, status, error) {
