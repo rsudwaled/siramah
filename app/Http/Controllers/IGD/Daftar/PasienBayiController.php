@@ -116,7 +116,7 @@ class PasienBayiController extends Controller
         
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' binti '. $ortubayi->nama_px);
+        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -139,7 +139,7 @@ class PasienBayiController extends Controller
             $pasien = Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper($request->nama_bayi.' binti '. $ortubayi->nama_px),
+                'nama_px'           => strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,
@@ -251,7 +251,7 @@ class PasienBayiController extends Controller
         
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' binti '. $ortubayi->nama_px);
+        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -272,7 +272,7 @@ class PasienBayiController extends Controller
             Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper($request->nama_bayi.' BINTI '. $ortubayi->nama_px),
+                'nama_px'           => strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,

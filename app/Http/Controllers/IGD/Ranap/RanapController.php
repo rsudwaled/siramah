@@ -20,6 +20,7 @@ use App\Models\TarifLayananDetail;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
 use App\Models\HistoriesIGDBPJS;
+use App\Models\RujukanIntern;
 use Carbon\Carbon;
 use DB;
 use Auth;
@@ -160,7 +161,9 @@ class RanapController extends APIController
         $unit           = Unit::where('kelas_unit', 2)->get();
         $alasanmasuk    = AlasanMasuk::get();
         $penjamin       = PenjaminSimrs::get();
-        return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','kode'));
+        $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
+        // dd($rujukan);
+        return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','kode','rujukan'));
     }
     
     public function pasienRanapStore(Request $request)

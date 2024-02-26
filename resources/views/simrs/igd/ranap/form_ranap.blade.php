@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="col-lg-12">
                                     @php
-                                        $heads = ['Tgl Masuk / Unit', 'Kunjungan', 'Diagnosa', 'Penjamin', 'Status','Pasien Daftar'];
+                                        $heads = ['Tgl Masuk / Unit', 'Kunjungan', 'Diagnosa', 'Penjamin', 'Status', 'Pasien Daftar'];
                                         $config['order'] = ['0', 'asc'];
                                         $config['paging'] = false;
                                         $config['info'] = false;
@@ -94,12 +94,13 @@
                                                         Counter : {{ $item->counter }} <br>
                                                     </b>
                                                 </td>
-                                                <td>{{ $item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}</td>
+                                                <td>{{ $item->diagx ?? 'BELUM MELAKUKAN SINGKRONISASI DIAGNOSA' }}
+                                                </td>
                                                 <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
                                                 <td>{{ $item->status->status_kunjungan }}</td>
                                                 <td>
                                                     <b>
-                                                        {{ $item->jp_daftar==0?'PASIEN UMUM':'PASIEN BPJS' }}
+                                                        {{ $item->jp_daftar == 0 ? 'PASIEN UMUM' : 'PASIEN BPJS' }}
                                                     </b>
                                                 </td>
                                             </tr>
@@ -116,8 +117,36 @@
                     <div class="card card-success card-outline">
                         <div class="card-body">
                             <div class="col-lg-12 mb-2">
+
+                                @if (!empty($rujukan))
+                                    <div class="direct-chat-msg">
+                                        <div class="direct-chat-infos clearfix">
+                                            <span class="direct-chat-name float-left">ADMIN BOOKING RUANGAN</span>
+                                            <span
+                                                class="direct-chat-timestamp float-right">{{ $rujukan->tgl_rujukan }}</span>
+                                        </div>
+
+                                        <img class="direct-chat-img"
+                                            src="{{ asset('vendor/adminlte/dist/img/call-center.png') }}"
+                                            alt="Message User Image">
+
+                                        <div class="direct-chat-text">
+                                            Informasi booking <b>RI240226/UGD/SRJ/240001</b> <br>RUANGAN TERSEDIA DI :
+                                            <br><b>KELAS 3 SEROJA NO BED 2!</b>
+                                            {{-- <br><b>NOTE : PASIEN NAIK KELAS</b>  --}}
+                                            <br><b>DPJP : {{$rujukan->dokter}}</b><br> 
+                                            <small class="text-danger"><i><b>silahkan pilih ruangan sesuai
+                                                dengan informasi yang sudah diberikan dengan benar.</b></i></small> <br>
+                                            
+                                        </div>
+                                    </div>
+                                @else
                                 <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i
-                                        class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
+                                    class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH <br> OLEH ADMIN RUANGAN</a>
+                                @endif
+
+
+                                
                                 <a href="#" class="btn bg-teal mb-2" id="showBed" style="display: none">
                                     <i class="fas fa-bed"></i>
                                 </a>
@@ -161,10 +190,10 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
-                                title="Daftarkan : {{ $pasien->nama_px }} ( {{ $pasien->no_rm }} )">
+                                title="DAFTARKAN : {{ $pasien->nama_px }} ( {{ $pasien->no_rm }} )">
                                 <form action="{{ route('pasien-ranap-umum.store') }}" method="post" id="submitRanap">
                                     @csrf
-                                    <input type="hidden" name="kodeKunjungan" value="{{$kode}}">
+                                    <input type="hidden" name="kodeKunjungan" value="{{ $kode }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="pasienNitip" id="pasienNitip">
@@ -191,8 +220,10 @@
                                                 <x-adminlte-input-date name="tanggal_daftar"
                                                     value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                                     label="Tanggal Masuk" :config="$config" />
-                                                <x-adminlte-input name="noTelp" value="{{$pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}" label="No Telp"
-                                                    placeholder="masukan no telp" label-class="text-black">
+                                                <x-adminlte-input name="noTelp"
+                                                    value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
+                                                    label="No Telp" placeholder="masukan no telp"
+                                                    label-class="text-black">
                                                     <x-slot name="prependSlot">
                                                         <div class="input-group-text">
                                                             <i class="fas fa-phone text-black"></i>
@@ -245,8 +276,8 @@
 
                                         </div>
                                         <x-adminlte-button type="submit"
-                                            class="withLoad btn btn-sm m-1 bg-green float-right"
-                                            form="submitRanap" label="Simpan Data" />
+                                            class="withLoad btn btn-sm m-1 bg-green float-right" form="submitRanap"
+                                            label="Simpan Data" />
                                         <a href="{{ route('daftar.kunjungan') }}"
                                             class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
@@ -319,10 +350,12 @@
                                 $.each(res.bed, function(key, value) {
                                     $("#idRuangan").append(
                                         '<div class="position-relative p-3 m-2 bg-green ruanganCheck" onclick="chooseRuangan(' +
-                                        value.id_ruangan + ', `' + value.nama_kamar + '`, `' +
+                                        value.id_ruangan + ', `' + value
+                                    .nama_kamar + '`, `' +
                                     value.no_bed +
                                     '`)" style="height: 100px; width: 150px; margin=5px; border-radius: 2%;"><div class="ribbon-wrapper ribbon-sm"><div class="ribbon bg-warning text-sm">KOSONG</div></div><h6 class="text-left">"' +
-                                        value.nama_kamar + '"</h6> <br> NO BED : "' + value
+                                        value.nama_kamar +
+                                        '"</h6> <br> NO BED : "' + value
                                         .no_bed + '"<br></div></div></div>');
                                 });
                             } else {
