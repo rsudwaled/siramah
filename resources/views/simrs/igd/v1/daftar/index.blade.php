@@ -294,8 +294,8 @@
                                                         onclick="javascript: form.action='{{ route('v1.store-tanpa-noantrian') }}';"
                                                         class="withLoad btn  btn-sm bg-green float-right"
                                                         form="formPendaftaranIGD" label="Simpan Data" />
-                                                    <a href="{{ route('list.antrian') }}"
-                                                        class="float-right btn btn-sm btn-secondary">Kembali</a>
+                                                    {{-- <a href="{{ route('list.antrian') }}"
+                                                        class="float-right btn btn-sm btn-secondary">Kembali</a> --}}
                                                 </x-slot>
                                             </div>
                                         </div>

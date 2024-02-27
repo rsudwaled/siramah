@@ -342,7 +342,8 @@ class RanapController extends APIController
         $spri           = Spri::where('noKartu', $nomorkartu)->where('tglRencanaKontrol', now()->format('Y-m-d'))->first();
         $historyBpjs    = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $kode);
         $kodeKunjungan  = $kode;
-        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan','historyBpjs'));
+        $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
+        return view('simrs.igd.ranap.form_ranap_bpjs', compact('pasien', 'icd', 'poli',  'kodeKelas', 'kelas', 'spri', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan','historyBpjs','rujukan'));
     }
 
     public function daftarRanapBPJSStore(Request $request)
@@ -607,7 +608,8 @@ class RanapController extends APIController
         $penjamin       = Penjamin::get();
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         $kodeKunjungan  = $kode;
-        return view('simrs.igd.ranap.form_ranap_bpjs_1x24jam', compact('pasien','diffInHours', 'icd',   'kodeKelas', 'kelas',  'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan'));
+        $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
+        return view('simrs.igd.ranap.form_ranap_bpjs_1x24jam', compact('pasien','diffInHours', 'icd',   'kodeKelas', 'kelas',  'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','request','kodeKunjungan','rujukan'));
     }
 
     public function createRanap1X24Jam(Request $request)

@@ -204,9 +204,9 @@ class DaftarIGDController extends Controller
                 'noTelp.max'        => 'No telepon maksimal 13 digit',
             ]);
 
-            $data = Kunjungan::where('no_rm', $request->rm)
-            ->where('status_kunjungan', 1)
-            ->get();
+        $data = Kunjungan::where('no_rm', $request->rm)
+                ->where('status_kunjungan', 1)
+                ->get();
         if ($data->count() > 0) {
             Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
             return back();
@@ -225,6 +225,11 @@ class DaftarIGDController extends Controller
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
         $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        if(empty($pasien->no_hp))
+        {
+            $pasien->no_hp = $request->noTelp;
+            $pasien->save();
+        }
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
 
 

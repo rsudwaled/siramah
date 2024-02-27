@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 @section('title', 'DATA KUNJUNGAN ')
-@section('content_header')
+{{-- @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-lg-12">
@@ -8,25 +8,15 @@
             </div>
             <div class="col-lg-12">
                 <div class="row">
-                    <div class="col-lg-7">
-                        <ol class="breadcrumb float-sm-right">
+                    <div class="col-lg-4">
+                        <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <form action="" method="get">
                                     <div class="row">
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <label for="">Filter Data : </label>
                                         </div>
-                                        <div class="col-md-5">
-                                            <select name="unit" id="unit" class="form-control select2">
-                                                @foreach ($unit as $item)
-                                                    <option value="{{ $item->kode_unit }}"
-                                                        {{ $request->unit == $item->kode_unit ? 'selected' : '' }}>
-                                                        {{ $item->nama_unit }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="col-md-5">
+                                        <div class="col-md-9">
                                             <div class="input-group">
                                                 <input id="new-event" type="date" name="tanggal" class="form-control"
                                                     value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
@@ -42,13 +32,46 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="col-lg-5 text-right">
+                    <div class="col-lg-8 text-right">
                         <a href="{{ route('pasien.ranap') }}" class="btn btn-sm bg-purple">KUNJUNGAN RANAP</a>
                         <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                             <i class="fas fa-sync"></i>
                         </a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+@stop --}}
+@section('content_header')
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-4">
+                <h1>DATA KUNJUNGAN</h1>
+            </div>
+            <div class="col-sm-8">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <form action="" method="get">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input id="new-event" type="date" name="tanggal" class="form-control"
+                                        value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                        placeholder="Event Title">
+                                    <div class="input-group-append">
+                                        <button id="add-new-event" type="submit"
+                                            class="btn btn-primary btn-sm withLoad">Cari By Tgl Masuk</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('pasien.ranap') }}" class="btn btn-md bg-purple">KUNJUNGAN RANAP</a>
+                    </li>
+                    <li class="breadcrumb-item"><a onClick="window.location.reload();" class="btn btn-md btn-warning">
+                            <i class="fas fa-sync"></i></a></li>
+                </ol>
             </div>
         </div>
     </div>
@@ -142,9 +165,9 @@
                                     <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
                                         class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
                                     @if ($item->jp_daftar !== 0)
-                                        @if (!empty($nomorKartu))
+                                        @if (!empty($nomorKartu) && $item->jp_daftar == 1)
                                             <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS</a>
+                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                         @endif
                                     @endif
                                 </td>
@@ -371,7 +394,7 @@
                 });
 
             });
-            
+
             $('.btn-deleteSEP').click(function(e) {
                 var sep = $(this).data('sep');
                 var deleteSEP = "{{ route('sep_ranap.delete') }}";

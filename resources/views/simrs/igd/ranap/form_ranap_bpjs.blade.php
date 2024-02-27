@@ -112,22 +112,33 @@
                             <div class="card card-success card-outline">
                                 <div class="card-body">
 
+                                    @if (!empty($rujukan))
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-infos clearfix">
                                             <span class="direct-chat-name float-left">ADMIN BOOKING RUANGAN</span>
-                                            <span class="direct-chat-timestamp float-right">{{Carbon\Carbon::now()}}</span>
+                                            <span
+                                                class="direct-chat-timestamp float-right">{{ $rujukan->tgl_rujukan }}</span>
                                         </div>
-    
-                                        <img class="direct-chat-img" src="{{asset('vendor/adminlte/dist/img/call-center.png')}}"
+
+                                        <img class="direct-chat-img"
+                                            src="{{ asset('vendor/adminlte/dist/img/call-center.png') }}"
                                             alt="Message User Image">
-    
+
                                         <div class="direct-chat-text">
-                                           Informasi booking <b>RI240226/UGD/SRJ/240001</b> <br>RUANGAN TERSEDIA DI : <br><b>KELAS 3 SEROJA NO BED 2!</b> <br> <small><i>silahkan pilih ruangan sesuai dengan informasi yang sudah diberikan dengan benar.</i></small>
+                                            Informasi booking <b>RI240226/UGD/SRJ/240001</b> <br>RUANGAN TERSEDIA DI :
+                                            <br><b>KELAS 3 SEROJA NO BED 2!</b>
+                                            {{-- <br><b>NOTE : PASIEN NAIK KELAS</b>  --}}
+                                            <br><b>DPJP : {{$rujukan->dokter}}</b><br> 
+                                            <small class="text-danger"><i><b>silahkan pilih ruangan sesuai
+                                                dengan informasi yang sudah diberikan dengan benar.</b></i></small> <br>
+                                            
                                         </div>
                                     </div>
+                                @else
+                                <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i
+                                    class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH <br> OLEH ADMIN RUANGAN</a>
+                                @endif
 
-                                    <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i
-                                            class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
                                     <div class="col-md-12">
                                         <x-adminlte-select2 name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                             @foreach ($unit as $item)

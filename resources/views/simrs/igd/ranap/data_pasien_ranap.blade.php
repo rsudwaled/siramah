@@ -1,112 +1,109 @@
 @extends('adminlte::page')
 @section('title', 'Pasien Rawat Inap')
+
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
-            <div class="col-lg-12">
-                <h5>PASIEN RAWAT INAP</h5>
+            <div class="col-sm-4">
+                <h1>PASIEN RAWAT INAP</h1>
             </div>
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-lg-7">
-                        <ol class="breadcrumb ">
-                            <li class="breadcrumb-item">
-                                <form action="" method="get">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="">Filter Data By TGL MASUK : </label>
-                                            <div class="input-group">
-                                                <input id="new-event" type="date" name="tanggal" class="form-control"
-                                                    value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                    placeholder="Event Title">
-                                                <div class="input-group-append">
-                                                    <button id="add-new-event" type="submit"
-                                                        class="btn btn-primary btn-sm withLoad">Cari</button>
-                                                </div>
-                                            </div>
+            <div class="col-sm-8">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item">
+                        <form action="" method="get">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <input id="new-event" type="date" name="tanggal" class="form-control"
+                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="submit"
+                                                class="btn btn-primary btn-sm withLoad">Cari By Tgl Masuk</button>
                                         </div>
                                     </div>
-                                </form>
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="col-lg-5 text-right">
-                        <button type="button" class="btn btn-sm bg-success cekKunjunganPoli" data-toggle="modal"
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <button type="button" class="btn btn-md bg-success cekKunjunganPoli" data-toggle="modal"
                             data-target="modalCekKunjunganPoli">Cek Kunjungan</button>
-                        <a onClick="window.location.reload();" class="btn btn-sm btn-warning">Refresh</a>
-                    </div>
-                </div>
-                <x-adminlte-modal id="modalCekKunjunganPoli" class="modal-cek-kunjungan" title="Cek Kunjungan Pasien"
-                    theme="success" size='md' disable-animations>
-                    <form>
-                        <div class="col-lg-12">
-                            <x-adminlte-input name="no_rm" id="no_rm" label="No RM PASIEN" />
-                        </div>
-                        <x-slot name="footerSlot">
-                            <x-adminlte-button type="submit" theme="success" class="btn-cekKunjungan" id="btn-cekKunjungan"
-                                label="Cek Kunjungan" />
-                            <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal"
-                                data-dismiss="modal" />
-                        </x-slot>
-                    </form>
-                </x-adminlte-modal>
-
-                <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl'>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="col-lg-12">
-                                <div class="callout callout-warning">
-                                    <h5>Riwayat Pasien!</h5>
-                                    <p>daftar 3 riwayat terakhir pasien.</p>
-                                </div>
-                                <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>POLI</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                            <th>RANAP</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="callout callout-success">
-                                    <h5>Riwayat Pasien Rawat Inap!</h5>
-                                    <p>daftar 3 riwayat terakhir rawat inap pasien.</p>
-                                </div>
-                                <table id="table1" class="riwayatRanap data-table table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>POLI</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                            <th>RANAP</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <x-slot name="footerSlot">
-                            <x-adminlte-button theme="danger" label="tutup" onclick="batalPilih()" data-dismiss="modal" />
-                        </x-slot>
-                    </div>
-                </x-adminlte-modal>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a onClick="window.location.reload();" class="btn btn-md btn-warning">Refresh</a>
+                    </li>
+                </ol>
             </div>
         </div>
     </div>
+    <x-adminlte-modal id="modalCekKunjunganPoli" class="modal-cek-kunjungan" title="Cek Kunjungan Pasien" theme="success"
+        size='md' disable-animations>
+        <form>
+            <div class="col-lg-12">
+                <x-adminlte-input name="no_rm" id="no_rm" label="No RM PASIEN" />
+            </div>
+            <x-slot name="footerSlot">
+                <x-adminlte-button type="submit" theme="success" class="btn-cekKunjungan" id="btn-cekKunjungan"
+                    label="Cek Kunjungan" />
+                <x-adminlte-button theme="danger" label="batal" class="btnCreateSPRIBatal" data-dismiss="modal" />
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
+
+    <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl'>
+        <div class="card">
+            <div class="card-body">
+                <div class="col-lg-12">
+                    <div class="callout callout-warning">
+                        <h5>Riwayat Pasien!</h5>
+                        <p>daftar 3 riwayat terakhir pasien.</p>
+                    </div>
+                    <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>KUNJUNGAN</th>
+                                <th>NO RM</th>
+                                <th>PASIEN</th>
+                                <th>POLI</th>
+                                <th>STATUS</th>
+                                <th>TGL MASUK</th>
+                                <th>TGL PULANG</th>
+                                <th>RANAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-12">
+                    <div class="callout callout-success">
+                        <h5>Riwayat Pasien Rawat Inap!</h5>
+                        <p>daftar 3 riwayat terakhir rawat inap pasien.</p>
+                    </div>
+                    <table id="table1" class="riwayatRanap data-table table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>KUNJUNGAN</th>
+                                <th>NO RM</th>
+                                <th>PASIEN</th>
+                                <th>POLI</th>
+                                <th>STATUS</th>
+                                <th>TGL MASUK</th>
+                                <th>TGL PULANG</th>
+                                <th>RANAP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <x-slot name="footerSlot">
+                <x-adminlte-button theme="danger" label="tutup" onclick="batalPilih()" data-dismiss="modal" />
+            </x-slot>
+        </div>
+    </x-adminlte-modal>
 @stop
 @section('content')
     <div class="row">
