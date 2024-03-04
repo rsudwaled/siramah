@@ -8,8 +8,10 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
-                        class="btn btn-sm bg-purple">Data Pasien Bayi Terdaftar</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Data
+                            Pasien Bayi Terdaftar</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
+                            class="btn btn-sm btn-success">Daftar Bayi By Kun Kebidanan</a></li>
                 </ol>
             </div>
         </div>
@@ -159,7 +161,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <form id="form_add_bayi" method="post" action="{{ route('pasien-bayi.store-bayi') }}">
+                                    <form id="form_add_bayi" method="post"
+                                        action="{{ route('pasien-bayi.store-bayi') }}">
                                         @csrf
                                         <div class="row">
                                             <div class="col-lg-6">
@@ -206,8 +209,8 @@
 
                                                 <x-slot name="footerSlot">
                                                     <x-adminlte-button form="form_add_bayi"
-                                                        class="float-right ml-2 btn-sm" type="submit"
-                                                        theme="success" label="Simpan Data" />
+                                                        class="float-right ml-2 btn-sm" type="submit" theme="success"
+                                                        label="Simpan Data" />
                                                     <a href="{{ route('daftar-igd.v1') }}"
                                                         class="float-right btn btn-sm btn-secondary">Kembali</a>
                                                 </x-slot>

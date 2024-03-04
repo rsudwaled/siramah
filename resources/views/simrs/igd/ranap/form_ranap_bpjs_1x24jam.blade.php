@@ -10,9 +10,7 @@
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><b>RAWAT INAP</b></li>
-                    <li class="breadcrumb-item"><b>PASIEN BPJS</b></li>
-                    {{-- <li class="breadcrumb-item"><a href="{{ route('list-assesment.ranap') }}"
-                            class="btn btn-sm btn-flat btn-secondary">kembali</a></li> --}}
+                    <li class="breadcrumb-item"><b>{{$diffInHours==0?'BELUM 24 JAM':'SUDAH 24 JAM'}}</b></li>
                 </ol>
             </div>
         </div>
@@ -61,7 +59,8 @@
                                                 <h5 class="description-headers">
                                                     NIK : {{ $pasien->nik_bpjs == null ? 'tidak ada' : $pasien->nik_bpjs }}
                                                     <br>
-                                                    BPJS : {{ trim($pasien->no_Bpjs) == null ? 'tidak ada' : trim($pasien->no_Bpjs) }}
+                                                    BPJS :
+                                                    {{ trim($pasien->no_Bpjs) == null ? 'tidak ada' : trim($pasien->no_Bpjs) }}
                                                 </h5>
                                                 <span class="description-text">-NIK & BPJS-</span>
                                             </div>
@@ -148,7 +147,7 @@
                                             <input type="checkbox" value="0" name="pasienTitipan" id="pasienTitipan">
                                             <label for="pasienTitipan"></label>
                                         </div>
-                                        <span class="text text-red"><b id="textDescChange">ceklis apabila pasien titipan</b></span>
+                                        <span class="text text-red"><b id="textDescChange">ceklis apabila pasien dititipkan diruangan berbeda</b></span>
                                     </div>
                                 </div>
                                 <div class="card-footer">
@@ -192,10 +191,11 @@
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" icon="fas fa-info-circle" collapsible
                                 title="Daftarkan : {{ $pasien->nama_px }} ( {{ $pasien->no_rm }} )">
-                                <form action="{{ route('store.ranap-bpjs') }}" method="post" id="submitRanap">
+                                <form action="{{ route('daftar-ranap-byriwayat.simpan-pasien') }}" method="post" id="submitRanap">
                                     @csrf
-                                    <input type="hidden" name="kodeKunjungan" value="{{$kodeKunjungan}}">
+                                    <input type="hidden" name="kodeKunjungan" value="{{ $kodeKunjungan }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
+                                    <input type="hidden" name="diffInHours" value=" {{ $diffInHours }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <input type="hidden" name="crad" id="c_rad">
                                     <input type="hidden" name="pasienNitip" id="pasienNitip">
@@ -211,8 +211,10 @@
                                                 <x-adminlte-input-date name="tanggal_daftar" id="tanggal_daftar"
                                                     value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                                     label="Tanggal Masuk" :config="$config" />
-                                                <x-adminlte-input name="noTelp" value="{{$pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}" label="No Telp"
-                                                    placeholder="masukan no telp" label-class="text-black">
+                                                <x-adminlte-input name="noTelp"
+                                                    value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
+                                                    label="No Telp" placeholder="masukan no telp"
+                                                    label-class="text-black">
                                                 </x-adminlte-input>
                                                 <div class="row">
                                                     <div class="col-md-4">
@@ -231,7 +233,8 @@
                                                 <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                                     <option value="">--Pilih Alasan--</option>
                                                     @foreach ($alasanmasuk as $item)
-                                                        <option value="{{ $item->id }}" {{$item->id == $kunjungan->id_alasan_masuk ?'selected':''}}>
+                                                        <option value="{{ $item->id }}"
+                                                            {{ $item->id == $kunjungan->id_alasan_masuk ? 'selected' : '' }}>
                                                             {{ $item->alasan_masuk }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
@@ -245,19 +248,20 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-6">
-                                                
+
                                                 <x-adminlte-select2 name="kode_paramedis" label="Pilih DPJP">
                                                     <option value="">--Pilih Dokter--</option>
                                                     @foreach ($paramedis as $item)
-                                                        <option value="{{ $item->kode_dokter_jkn }}" {{$item->kode_paramedis == $kunjungan->kode_paramedis ?'selected':''}}>
+                                                        <option value="{{ $item->kode_dokter_jkn }}"
+                                                            {{ $item->kode_paramedis == $kunjungan->kode_paramedis ? 'selected' : '' }}>
                                                             {{ $item->nama_paramedis }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)
-                                                        <option value="{{ $item->kode_penjamin }}" {{$item->kode_penjamin == $kunjungan->kode_penjamin ?'selected':''}}>
-                                                            {{ $item->nama_penjamin }}</option>
+                                                        <option value="{{ $item->kode_penjamin_simrs }}">
+                                                            {{ $item->nama_penjamin_bpjs }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
 
@@ -268,12 +272,16 @@
                                                 <x-adminlte-select name="lakaLantas" id="status_kecelakaan"
                                                     label="Status Kecelakaan">
                                                     <option value="">--Status Kecelakaan--</option>
-                                                    <option value="0" {{$kunjungan->lakalantas==0 ?'selected':''}}>BUKAN KECELAKAAN LALU LINTAS (BKLL)
+                                                    <option value="0" {{ $kunjungan->lakalantas == 0 ? 'selected' : '' }}>
+                                                        BUKAN KECELAKAAN LALU LINTAS (BKLL)
                                                     </option>
-                                                    <option value="1" {{$kunjungan->lakalantas==1 ?'selected':''}}>KLL & BUKAN KECELAKAAN KERJA (BKK)
+                                                    <option value="1" {{ $kunjungan->lakalantas == 1 ? 'selected' : '' }}>
+                                                        KLL & BUKAN KECELAKAAN KERJA (BKK)
                                                     </option>
-                                                    <option value="2" {{$kunjungan->lakalantas==2 ?'selected':''}}>KLL & KK</option>
-                                                    <option value="3" {{$kunjungan->lakalantas==3 ?'selected':''}}>KECELAKAAN KERJA</option>
+                                                    <option value="2" {{ $kunjungan->lakalantas == 2 ? 'selected' : '' }}>
+                                                        KLL & KK</option>
+                                                    <option value="3" {{ $kunjungan->lakalantas == 3 ? 'selected' : '' }}>
+                                                        KECELAKAAN KERJA</option>
                                                 </x-adminlte-select>
 
                                             </div>
@@ -288,14 +296,12 @@
                                                                         <div class="col-md-6">
                                                                             <x-adminlte-input name="noLP"
                                                                                 label="NO LP"
-                                                                                value="{{ $historyBpjs != null ? $historyBpjs->noLP:'' }}"
                                                                                 placeholder="no laporan polisi"
                                                                                 disable-feedback />
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <x-adminlte-input name="keterangan"
                                                                                 label="Keterangan"
-                                                                                value="{{ $historyBpjs != null ? $historyBpjs->keterangan:'' }}"
                                                                                 placeholder="keterangan kecelakaan"
                                                                                 disable-feedback />
                                                                         </div>
@@ -304,7 +310,6 @@
                                                                                 $config = ['format' => 'YYYY-MM-DD'];
                                                                             @endphp
                                                                             <x-adminlte-input-date name="tglKejadian"
-                                                                                value="{{ $historyBpjs != null ? $historyBpjs->tglKejadian:Carbon\Carbon::now()->format('Y-m-d') }}"
                                                                                 label="Tanggal Kejadian"
                                                                                 :config="$config" />
                                                                         </div>
@@ -342,7 +347,7 @@
                                                             </x-adminlte-select>
                                                         </div>
                                                         <div class="col-md-6" id="naikKelasDesc2">
-                                                            <x-adminlte-input name="penanggungJawab" id="naikKelasDesc2Input"
+                                                            <x-adminlte-input name="penanggungJawab"
                                                                 label="Penanggung Jawab (pasien naik kelas)"
                                                                 placeholder="jika pembiayaan oleh pemberi kerja atau tambahan layanan kesehatan"
                                                                 label-class="text-black">
@@ -355,7 +360,7 @@
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right btn-simpan"
                                             form="submitRanap" label="Simpan Data" />
-                                        <a href="{{route('daftar.kunjungan')}}"
+                                        <a href="{{ route('pasien.ranap') }}"
                                             class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
@@ -406,6 +411,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $("#poliklinik").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -472,7 +478,7 @@
                     cache: true
                 }
             });
-            
+
             $('#cariRuangan').on('click', function() {
                 var unit = $('#unitTerpilih').val();
                 var kelas = $('#r_kelas_id').val();
@@ -510,12 +516,11 @@
                 if (this.checked) {
                     $("#showTitipan").show();
                     $("#pasienNitip").val(1);
-                    $("#r_kelas_id").attr("disabled", true);
-                    $("#unitTerpilih").attr("disabled", true);
                 } else {
                     $("#pasienNitip").val(0);
                 }
             });
+            
             $('#cariRuanganTitipan').on('click', function() {
                 var unit = $('#unitTerpilihTitipan').val();
                 var kelas = $('#r_kelas_id_titipan').val();
@@ -563,7 +568,6 @@
                     $("#c_rad").val(0);
                     $("#naikKelasDesc1").hide();
                     $("#naikKelasDesc2").hide();
-                    $("#naikKelasDesc2Input").val('');
                 }
             });
 
@@ -630,7 +634,7 @@
                 }
             });
 
-           
+
         });
 
 
@@ -658,6 +662,5 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
-
     </script>
 @endsection

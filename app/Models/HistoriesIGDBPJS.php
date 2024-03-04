@@ -19,6 +19,10 @@ class HistoriesIGDBPJS extends Model
         'tglSep',
         'ppkPelayanan',
         'jnsPelayanan',
+        'klsRawatHak', 
+        'klsRawatNaik', 
+        'pembiayaan', 
+        'penanggungJawab',
         'asalRujukan',
         'tglRujukan',
         'noRujukan',
@@ -36,7 +40,9 @@ class HistoriesIGDBPJS extends Model
         'user',
         'response',
         'is_bridging',
+        'is_ranap_umum',
         'status_daftar',
+        
     ];
 
     protected $casts = [

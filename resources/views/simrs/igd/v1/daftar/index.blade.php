@@ -10,15 +10,13 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
                             Baru</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="#" class="btn btn-sm bg-danger">Daftar Ranap Langsung</a></li> --}}
                     <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
                             class="btn btn-sm btn-primary">Daftar Pasien Kecelakaan</a></li>
-                    {{-- <li class="breadcrumb-item"><a href="{{ route('v.tanpa-nomor') }}" class="btn btn-sm btn-warning">Daftar
-                            Tanpa Antrian</a></li> --}}
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
-                            class="btn btn-sm btn-success">Daftar
-                            Pasien Bayi</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}"
-                            class="btn btn-sm btn-danger">Refresh</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
+                            class="btn btn-sm btn-success">Daftar Bayi By Kun Kebidanan</a></li> --}}
+                    <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"><i
+                                class="fas fa-sync"></i></a></li>
                 </ol>
             </div>
         </div>
@@ -143,6 +141,7 @@
                                                             PASIEN : {{ $data->nama_px }}
                                                         </b> <br><br>
                                                         <small>
+                                                            <b>TTL : {{ date('d-m-Y', strtotime($data->tgl_lahir))?? '-' }} </b> <br>
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
                                                             {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}
                                                         </small> <br>
@@ -156,14 +155,16 @@
                                                         data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
-                                                        class="btn-flat btn-xs btn-pilihPasien bg-purple"
-                                                        label="PILIH DATA" />
+                                                        class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
 
                                                     <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
-                                                        data-rm="{{$data->no_rm}}"
-                                                        class="btn-flat btn-xs btn-cekBPJS bg-success"
-                                                        label="Cek Status BPJS" />
+                                                        data-rm="{{ $data->no_rm }}"
+                                                        class="btn-xs btn-cekBPJS bg-success" label="Cek Status BPJS" />
+
+                                                    <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
+                                                        class="btn-xs btn-cekKunjungan bg-warning mt-1"
+                                                        label="Riwayat Kunjungan" />
 
                                                 </td>
                                             </tr>
@@ -310,6 +311,34 @@
             </x-adminlte-card>
         </div>
     </div>
+    
+    <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl'>
+        <div class="card">
+            <div class="card-body">
+                <div class="col-lg-12">
+                    <table id="riwayatKunjungan" class="data-table table table-bordered" >
+                        <thead>
+                            <tr>
+                                <th>KUNJUNGAN</th>
+                                <th>NO RM</th>
+                                <th>PASIEN</th>
+                                <th>POLI</th>
+                                <th>STATUS</th>
+                                <th>TGL MASUK</th>
+                                <th>TGL PULANG</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <x-slot name="footerSlot">
+                <x-adminlte-button theme="danger" label="tutup" onclick="batalPilih()" data-dismiss="modal" />
+            </x-slot>
+        </div>
+    </x-adminlte-modal>
+    
 @endsection
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Datatables', true)
@@ -405,7 +434,8 @@
                                 if (data.code == 200) {
                                     Swal.fire({
                                         title: "Success!",
-                                        text: data.keterangan+' '+ '( jenis : ' + data
+                                        text: data.keterangan + ' ' + '( jenis : ' +
+                                            data
                                             .jenisPeserta + ')',
                                         icon: "success",
                                         confirmButtonText: "oke!",
@@ -418,7 +448,7 @@
                                 } else {
                                     Swal.fire({
                                         title: "INFO!",
-                                        text: data.keterangan+' '+ '( KODE : ' + data
+                                        text: data.keterangan + ' ' + '( KODE : ' + data
                                             .jenisPeserta + ')',
                                         icon: "info",
                                         confirmButtonText: "oke!",
@@ -435,7 +465,34 @@
                 });
             }
         });
-
+        $('.btn-cekKunjungan').click(function(e) {
+            $('#modalCekKunjungan').modal('toggle');
+            var rm = $(this).data('rm');
+            if (rm) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
+                    dataType: 'JSON',
+                    success: function(data) {
+                        $.each(data, function(index, riwayat) {
+                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat.kode_kunjungan + "</td><td>" +
+                                riwayat.no_rm + "</td><td>" + riwayat.pasien.nama_px +
+                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" + riwayat.status.status_kunjungan + "</td><td>" + riwayat
+                                .tgl_masuk + "</td><td>" + (riwayat.tgl_keluar==null?'Belum Pulang':riwayat.tgl_keluar) + "</td></tr>";
+                            $('#riwayatKunjungan tbody').append(row);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Handle error appropriately
+                    }
+                });
+            }
+        });
+        function batalPilih() {
+            $(".riwayat-kunjungan").remove();
+        }
+       
         $(function() {
             $.ajaxSetup({
                 headers: {
