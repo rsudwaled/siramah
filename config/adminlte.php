@@ -1299,16 +1299,9 @@ return [
                     'shift'   => 'ml-2',
                     'submenu' => [
                         [
-                            'text' => 'Data SEP',
+                            'text' => 'Data SEP Internal',
                             'icon'    => 'fas fa-id-card',
-                            'url'  => 'vclaim/sep_internal',
-                            'shift'   => 'ml-3',
-                            'can' => ['bpjs', 'pendaftaran'],
-                        ],
-                        [
-                            'text' => 'SEP Internal',
-                            'icon'    => 'fas fa-id-card',
-                            'url'  => 'vclaim/sep_internal',
+                            'url'  => 'sep_internal',
                             'shift'   => 'ml-3',
                             'can' => ['bpjs', 'pendaftaran'],
                         ],
