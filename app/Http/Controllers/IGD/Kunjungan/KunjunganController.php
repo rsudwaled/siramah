@@ -10,6 +10,7 @@ use App\Models\PenjaminSimrs;
 use App\Models\AlasanMasuk;
 use App\Models\MtAlasanEdit;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class KunjunganController extends Controller
 {
@@ -89,6 +90,12 @@ class KunjunganController extends Controller
         }
         $kunjungan->save();
         return redirect()->route('detail.kunjungan', ['kunjungan'=>$kunjungan]);
+    }
+
+    public function getKunjunganByUser(Request $request)
+    {
+        $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
+        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 
 }

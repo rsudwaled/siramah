@@ -470,7 +470,7 @@ return [
                 [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',
-                    'url'  => 'daftar-kunjungan-byuser',
+                    'url'  => 'get-kunjungan/by-user',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

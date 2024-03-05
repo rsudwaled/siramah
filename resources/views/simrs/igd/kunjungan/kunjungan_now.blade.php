@@ -233,6 +233,7 @@
 @section('plugins.Sweetalert2', true)
 
 @section('js')
+
     <script>
         $(function() {
             $.ajaxSetup({
