@@ -9,18 +9,9 @@
     @endphp
     <div class="row">
         <div class="col-md-12">
-            @if ($errors->any())
-                <x-adminlte-alert title="Ops Terjadi Masalah !" theme="danger" dismissable>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </x-adminlte-alert>
-            @endif
-            <a href="{{ route('kunjunganranap') }}?kodeunit={{ $kunjungan->kode_unit }}"
-                class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
             <x-adminlte-card theme="primary" theme-mode="outline">
+                <a href="{{ route('kunjunganranap') }}?kodeunit={{ $kunjungan->kode_unit }}"
+                    class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
                 @include('simrs.ranap.erm_ranap_profil')
                 <x-slot name="footerSlot">
                     <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
@@ -33,6 +24,18 @@
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload"
                         icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Rincian Biaya" icon="fas fa-diagnoses" />
+
+                    <hr class="mb-1 mt-0">
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Groupping" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Perawat" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Resiko Jatuh" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Skala Nyeri" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="SBAR TBAK" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Dokter" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Konsultasi" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Transfer Pasien" icon="fas fa-diagnoses" />
+                    <hr class="mb-1 mt-0">
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanRS" theme="primary" label="Rujukan RS"
@@ -826,7 +829,16 @@
                 label="Buat Surat Kontrol" />
         </form>
         @php
-            $heads = ['Tgl Kontrol', 'No S.Kontrol', 'Jenis Surat', 'Poliklinik', 'Dokter', 'No SEP Asal', 'Terbit SEP', 'Action'];
+            $heads = [
+                'Tgl Kontrol',
+                'No S.Kontrol',
+                'Jenis Surat',
+                'Poliklinik',
+                'Dokter',
+                'No SEP Asal',
+                'Terbit SEP',
+                'Action',
+            ];
             $config['paging'] = false;
             $config['order'] = ['0', 'desc'];
             $config['info'] = false;

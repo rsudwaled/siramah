@@ -42,9 +42,8 @@
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
-@section('plugins.DateRangePicker', true)
 @section('plugins.Sweetalert2', true)
-@section('js')
+@push('js')
     <script>
         $(function() {
             var kodeinit = "{{ $request->kodeunit }}";
@@ -58,7 +57,6 @@
             var ruangan = $("#kodeunit").val();
             var tanggal = $("#tanggal").val();
             var url = "{{ route('table_pasien_ranap') }}?ruangan=" + ruangan + "&tanggal=" + tanggal;
-            console.log(url);
             $.ajax({
                 type: "GET",
                 url: url,
@@ -71,4 +69,4 @@
             });
         }
     </script>
-@endsection
+@endpush

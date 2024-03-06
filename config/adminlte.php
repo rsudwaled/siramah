@@ -1318,6 +1318,13 @@ return [
             'can' => ['bpjs', 'pendaftaran'],
             'submenu' => [
                 [
+                    'text' => 'Token',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'satusehat/token_generate',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
+                [
                     'text' => 'Patient',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'satusehat/patient',

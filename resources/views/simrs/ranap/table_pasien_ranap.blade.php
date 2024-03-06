@@ -18,17 +18,23 @@
     </div>
 </div>
 @php
-    $heads = ['Tgl Masuk', 'Tgl Keluar ', 'LOS', 'Action', 'No RM', 'Pasien', 'No BPJS', 'Ruangan', 'No SEP', 'Tarif Eklaim', 'Tagihan RS', '%', 'Status'];
-    $config['order'] = [['0', 'asc']];
-    $config['paging'] = false;
-    $config['autoEmpty'] = false;
-    $config['language'] = ['emptyTable' => '', 'zeroRecords' => ''];
-    $config['processing'] = true;
-    $config['serverside'] = true;
-    $config['scrollY'] = '400px';
+    $heads = [
+        'Tgl Masuks',
+        'Tgl Keluar ',
+        'LOS',
+        'Action',
+        'No RM',
+        'Pasien',
+        'No BPJS',
+        'Ruangan',
+        'No SEP',
+        'Tarif Eklaim',
+        'Tagihan RS',
+        '%',
+        'Status',
+    ];
 @endphp
-<x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered hoverable
-    compressed>
+<x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" bordered hoverable compressed>
     @if ($kunjungans)
         @foreach ($kunjungans as $kunjungan)
             @if ($kunjungan->budget)
@@ -120,7 +126,8 @@ Catatan : <br>
             "paging": false,
             "info": false,
             "scrollCollapse": true,
-            "scrollY": '300px'
+            "scrollY": '300px',
+            "scrollX": true,
         });
     });
 </script>
