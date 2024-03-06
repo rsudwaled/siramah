@@ -20,7 +20,6 @@
                                     {{ $item }}
                                 </option>
                             @endforeach
-
                         </x-adminlte-select2>
                     </div>
                     <div class="col-md-6">
@@ -29,7 +28,7 @@
                         @endphp
                         <x-adminlte-input-date fgroup-class="row" label-class="text-right col-3" igroup-size="sm"
                             igroup-class="col-9" igroup-size="sm" name="tanggal" label="Tanggal Periksa" :config="$config"
-                            value="{{ now()->format('Y-m-d') }}">
+                            value="{{ $request->tanggal ?? now()->format('Y-m-d') }}">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button class="btn-sm btnGetObservasi" onclick="getKunjungan()"
                                     icon="fas fa-search" theme="primary" label="Submit Pencarian" />

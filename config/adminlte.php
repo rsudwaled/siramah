@@ -1299,16 +1299,9 @@ return [
                     'shift'   => 'ml-2',
                     'submenu' => [
                         [
-                            'text' => 'Data SEP',
+                            'text' => 'Data SEP Internal',
                             'icon'    => 'fas fa-id-card',
-                            'url'  => 'vclaim/sep_internal',
-                            'shift'   => 'ml-3',
-                            'can' => ['bpjs', 'pendaftaran'],
-                        ],
-                        [
-                            'text' => 'SEP Internal',
-                            'icon'    => 'fas fa-id-card',
-                            'url'  => 'vclaim/sep_internal',
+                            'url'  => 'sep_internal',
                             'shift'   => 'ml-3',
                             'can' => ['bpjs', 'pendaftaran'],
                         ],
@@ -1324,6 +1317,13 @@ return [
             'icon'    => 'fas fa-project-diagram',
             'can' => ['bpjs', 'pendaftaran'],
             'submenu' => [
+                [
+                    'text' => 'Token',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'satusehat/token_generate',
+                    'shift'   => 'ml-2',
+                    'can' => ['bpjs', 'pendaftaran', 'casemix'],
+                ],
                 [
                     'text' => 'Patient',
                     'icon'    => 'fas fa-user-injured',

@@ -148,7 +148,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('obat', ObatController::class);
     Route::resource('kpo', KPOController::class);
-    Route::resource('vclaim', VclaimController::class);
+    // Route::resource('vclaim', VclaimController::class);
 
     Route::prefix('satusehat')->group(function () {
         Route::get('token_generate', [SatuSehatController::class, 'token_generate'])->name('token_generate');
@@ -302,6 +302,9 @@ Route::middleware('auth')->group(function () {
     Route::get('ref_kabupaten_api', [VclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
     Route::get('ref_kecamatan_api', [VclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
     Route::get('suratKontrolBpjs', [SuratKontrolController::class, 'suratKontrolBpjs'])->name('suratKontrolBpjs');
+    Route::get('sep_internal', [VclaimController::class, 'sepInternal'])->name('sep_internal');
+    Route::delete('sep_internal_delete', [VclaimController::class, 'sepInternalDelete'])->name('sep_internal_delete');
+
     // suratkontrol
     Route::post('suratkontrol_simpan', [SuratKontrolController::class, 'suratkontrol_simpan'])->name('suratkontrol_simpan');
     Route::get('suratkontrol_edit', [SuratKontrolController::class, 'suratkontrol_edit'])->name('suratkontrol_edit');

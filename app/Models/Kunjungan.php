@@ -36,6 +36,7 @@ class Kunjungan extends Model
         'is_ranap_daftar',
         'form_send_by',
         'jp_daftar',
+        'id_satusehat',
         'perujuk',
         'no_spri',
         'id_alasan_edit',

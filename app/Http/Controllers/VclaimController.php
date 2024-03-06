@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kunjungan;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
@@ -824,11 +825,11 @@ class VclaimController extends APIController
         $signature['Content-Type'] = 'application/x-www-form-urlencoded';
         $data = [
             'request' => [
-                "noKartu"       =>$request->noKartu,
-                "kodeDokter"    =>$request->kodeDokter,
-                "poliKontrol"   =>$request->poliKontrol,
-                "tglRencanaKontrol"=>$request->tglRencanaKontrol,
-                "user"          =>$request->user,
+                "noKartu"       => $request->noKartu,
+                "kodeDokter"    => $request->kodeDokter,
+                "poliKontrol"   => $request->poliKontrol,
+                "tglRencanaKontrol" => $request->tglRencanaKontrol,
+                "user"          => $request->user,
             ],
         ];
         $response = Http::withHeaders($signature)->post($url, $data);
@@ -1150,7 +1151,7 @@ class VclaimController extends APIController
         $response = Http::withHeaders($signature)->post($url, $data);
         return $this->response_decrypt($response, $signature);
     }
-   
+
     public function sep_delete(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -1216,5 +1217,91 @@ class VclaimController extends APIController
         ];
         $response = Http::withHeaders($signature)->put($url, $data);
         return $this->response_decrypt($response, $signature);
+    }
+    public function sep_internal(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "noSep" => "required",
+        ]);
+        if ($validator->fails()) {
+            $response = [
+                'metaData' => [
+                    'code' => 400,
+                    'message' => $validator->errors()->first(),
+                ],
+            ];
+            return json_decode(json_encode($response));
+        }
+        $url = $this->baseurl . "SEP/Internal/" . $request->noSep;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)
+            ->get($url);
+        $response = json_decode($response);
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    public function sep_internal_delete(Request $request)
+    {
+        // checking request
+        $validator = Validator::make(request()->all(), [
+            "noSep" => "required",
+            "noSurat" => "required",
+            "tglRujukanInternal" => "required",
+            "kdPoliTuj" => "required",
+        ]);
+        if ($validator->fails()) {
+            return json_decode(json_encode(['metadata' => ['code' => 201, 'message' => $validator->errors()->first(),],]));
+        }
+        // delete sep
+        $url = $this->baseurl . "SEP/Internal/delete";
+        $signature = $this->signature();
+        $client = new Client();
+        $response = $client->request('DELETE', $url, [
+            'headers' => $signature,
+            'body' => json_encode([
+                "request" => [
+                    "t_sep" => [
+                        "noSep" => $request->noSep,
+                        "noSurat" => $request->noSurat,
+                        "tglRujukanInternal" => $request->tglRujukanInternal,
+                        "kdPoliTuj" => $request->kdPoliTuj,
+                        "user" => "RSUD Waled",
+                    ]
+                ]
+            ]),
+        ]);
+        $response = json_decode($response->getBody());
+        if ($response->metaData->code == 200) {
+            $decrypt = $this->stringDecrypt($signature['decrypt_key'], $response->response);
+            $response->response = json_decode($decrypt);
+        }
+        return $response;
+    }
+    public function sepInternal(Request $request)
+    {
+        $sepinternals = null;
+        if ($request->nomorsep) {
+            $request['noSep'] = $request->nomorsep;
+            $sepinternals = $this->sep_internal($request);
+            // dd($request->all(), $sepinternals);
+        }
+        return view('bpjs.vclaim.sep_internal', [
+            'request' => $request,
+            'sepinternals' => $sepinternals,
+        ]);
+    }
+    public function sepInternalDelete(Request $request)
+    {
+        $response = $this->sep_internal_delete($request);
+        if ($response->metaData->code == 200) {
+            Alert::success('Success', 'Data berhasil dihapus. ' . $response->metaData->message);
+        } else {
+            Alert::error('Error', 'Data gagal dihapus. ' .  $response->metaData->message);
+        }
+        return redirect()->back();
     }
 }
