@@ -73,8 +73,10 @@ class EncounterController extends SatuSehatController
                 $kunjungan->update([
                     'id_satusehat' => $ihs,
                 ]);
+                Alert::success('Success', 'Kunjungan telah syncron dengan satusehat id ' . $kunjungan->id_satusehat);
+            } else {
+                Alert::error('Mohon Maaf', $res->metadata->message);
             }
-            Alert::success('Success', 'Kunjungan telah syncron dengan satusehat id ' . $kunjungan->id_satusehat);
         } else {
             Alert::error('Mohon Maaf', 'Kunjungan telah syncron dengan satusehat id ' . $kunjungan->id_satusehat);
         }
