@@ -111,6 +111,11 @@
                                         data-nama="{{ $kunjungan->pasien->nama_px ?? null }}"
                                         data-unit="{{ $kunjungan->unit->nama_unit }}"
                                         data-dokter="{{ $kunjungan->dokter->nama_paramedis }}"
+                                        data-beratbayi="{{ $kunjungan->diagnosaicd->bb_bayi ?? null }}"
+                                        data-kasusbaru="{{ $kunjungan->diagnosaicd->kasus_baru ?? null }}"
+                                        data-kunjunganbaru="{{ $kunjungan->diagnosaicd->kunjungan_baru ?? null }}"
+                                        data-kurang48="{{ $kunjungan->diagnosaicd->meninggal_kr_48jam ?? null }}"
+                                        data-lebih48="{{ $kunjungan->diagnosaicd->meninggal_lb_48jam ?? null }}"
                                         data-diagutama="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_utama ? $kunjungan->diagnosaicd->diag_utama . ' - ' . $kunjungan->diagnosaicd->diag_utama_desc : null) : null }}"
                                         data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_01 ? $kunjungan->diagnosaicd->diag_sekunder_01 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_01_desc : null) : null }}"
                                         data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_02 ? $kunjungan->diagnosaicd->diag_sekunder_02 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_02_desc : null) : null }}"
@@ -161,6 +166,35 @@
                         igroup-size="sm" igroup-class="col-9" igroup-size="sm" readonly />
                 </div>
                 <div class="col-md-6">
+                    <x-adminlte-input name="bb_bayi" label="Berat Bayi" fgroup-class="row" type="number"
+                        placeholder="Berat Badan Bayi Baru (Gram)" label-class="text-left col-3" igroup-size="sm"
+                        igroup-class="col-9" igroup-size="sm" />
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="kasusbaru" name="kasusbaru"
+                                value="1">
+                            <label for="kasusbaru" class="custom-control-label">Kasus Baru Baru</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="kunjunganbaru" name="kunjunganbaru"
+                                value="1">
+                            <label for="kunjunganbaru" class="custom-control-label">Kunjungan Baru</label>
+                        </div>
+                    </div>
+                    <b>Status Pasien Meninggal</b> <br>
+                    <div class="form-group">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="kurang48" name="kurang48"
+                                value="1">
+                            <label for="kurang48" class="custom-control-label">
+                                < 48 Jam</label>
+                        </div>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="lebih48" name="lebih48"
+                                value="1">
+                            <label for="lebih48" class="custom-control-label">> 48 Jam</label>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-12">
                     <x-adminlte-textarea igroup-size="sm" rows=3 label="Diagnsoa Dari Unit" name="diagpoli">
@@ -248,6 +282,7 @@
             $('#unit').val($(button).data('unit'));
             $('#dokter').val($(button).data('dokter'));
             $('#diagpoli').val($(button).data('diagpoli'));
+            $('#bb_bayi').val($(button).data('beratbayi'));
             if ($(button).data('diagutama')) {
                 $("#diag_utama").empty();
                 $('#diag_utama').append(new Option($(button).data('diagutama'), $(button).data('diagutama')));
@@ -277,6 +312,18 @@
                 $("#diag_sekunder_05").empty();
                 $('#diag_sekunder_05').append(new Option($(button).data('diagsekunder5'), $(button).data('diagsekunder5')));
                 $("#diag_sekunder_05").val($(button).data('diagsekunder5')).change();
+            }
+            if ($(button).data('kasusbaru')) {
+                $("#kasusbaru").attr('checked', true)
+            }
+            if ($(button).data('kunjunganbaru')) {
+                $("#kunjunganbaru").attr('checked', true)
+            }
+            if ($(button).data('kurang48')) {
+                $("#kurang48").attr('checked', true)
+            }
+            if ($(button).data('lebih48')) {
+                $("#lebih48").attr('checked', true)
             }
             $('#modalKunjungan').modal('show');
             $.LoadingOverlay("hide");

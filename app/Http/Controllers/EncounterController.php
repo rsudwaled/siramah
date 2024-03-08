@@ -91,6 +91,12 @@ class EncounterController extends SatuSehatController
         $request['diag_sekunder_04_desc'] = $request->diag_sekunder_04_desc;
         $request['diag_sekunder_05_desc'] = $request->diag_sekunder_05_desc;
         $request['kode_paramedis'] = $kunjungan->kode_paramedis;
+        $request['kasus_baru'] = $request->kasusbaru ?? 0;
+        $request['kunjungan_baru'] = $request->kunjunganbaru ?? 0;
+        $request['meninggal_kr_48jam'] = $request->kurang48 ?? 0;
+        $request['meninggal_lb_48jam'] = $request->lebih48 ?? 0;
+        $request['kunjungan_baru'] = $request->kunjunganbaru ?? 0;
+        $request['bb_bayi'] = $request->bb_bayi ?? null;
         $request['tgl_masuk_kunjungan'] = $kunjungan->tgl_masuk;
         $request['tgl_keluar_kunjungan'] = $kunjungan->tgl_keluar;
         $request['pic'] = Auth::user()->id;
