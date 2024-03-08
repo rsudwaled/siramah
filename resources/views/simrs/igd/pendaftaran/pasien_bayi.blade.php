@@ -8,7 +8,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan UGK :">
+            <x-adminlte-card theme="primary" size="sm" collapsible title="RIWAYAT KUNJUNGAN KEBIDANAN :">
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">

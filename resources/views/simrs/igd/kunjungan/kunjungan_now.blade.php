@@ -60,7 +60,7 @@
                                         placeholder="Event Title">
                                     <div class="input-group-append">
                                         <button id="add-new-event" type="submit"
-                                            class="btn btn-primary btn-sm withLoad">Cari By Tgl Masuk</button>
+                                            class="btn btn-primary btn-sm withLoad">CARI BY TGL MASUK</button>
                                     </div>
                                 </div>
                             </div>

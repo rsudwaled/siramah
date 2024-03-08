@@ -149,7 +149,7 @@ class DaftarIGDController extends Controller
             $response       = Http::withHeaders($signature)->get($url);
             $resdescrtipt   = $this->response_decrypt($response, $signature);
         }
-        return view('simrs.igd.v1.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function storeTanpaNoAntrian(Request $request)
