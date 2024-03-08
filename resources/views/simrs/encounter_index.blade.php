@@ -111,12 +111,12 @@
                                         data-nama="{{ $kunjungan->pasien->nama_px ?? null }}"
                                         data-unit="{{ $kunjungan->unit->nama_unit }}"
                                         data-dokter="{{ $kunjungan->dokter->nama_paramedis }}"
-                                        data-diagutama="{{ $kunjungan->diagnosaicd->diag_utama ?? null }} - {{ $kunjungan->diagnosaicd->diag_utama_desc ?? null }}"
-                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd->diag_sekunder_01 ?? null }} - {{ $kunjungan->diagnosaicd->diag_sekunder_01_desc ?? null }}"
-                                        data-diagsekunder2="{{ $kunjungan->diagnosaicd->diag_sekunder_02 ?? null }} - {{ $kunjungan->diagnosaicd->diag_sekunder_02_desc ?? null }}"
-                                        data-diagsekunder3="{{ $kunjungan->diagnosaicd->diag_sekunder_03 ?? null }} - {{ $kunjungan->diagnosaicd->diag_sekunder_03_desc ?? null }}"
-                                        data-diagsekunder4="{{ $kunjungan->diagnosaicd->diag_sekunder_04 ?? null }} - {{ $kunjungan->diagnosaicd->diag_sekunder_04_desc ?? null }}"
-                                        data-diagsekunder5="{{ $kunjungan->diagnosaicd->diag_sekunder_05 ?? null }} - {{ $kunjungan->diagnosaicd->diag_sekunder_05_desc ?? null }}"
+                                        data-diagutama="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_utama ? $kunjungan->diagnosaicd->diag_utama . ' - ' . $kunjungan->diagnosaicd->diag_utama_desc : null) : null }}"
+                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_01 ? $kunjungan->diagnosaicd->diag_sekunder_01 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_01_desc : null) : null }}"
+                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_02 ? $kunjungan->diagnosaicd->diag_sekunder_02 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_02_desc : null) : null }}"
+                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_03 ? $kunjungan->diagnosaicd->diag_sekunder_03 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_03_desc : null) : null }}"
+                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_04 ? $kunjungan->diagnosaicd->diag_sekunder_04 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_04_desc : null) : null }}"
+                                        data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_05 ? $kunjungan->diagnosaicd->diag_sekunder_05 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_05_desc : null) : null }}"
                                         data-diagpoli="{{ $kunjungan->diagnosapoli->diag_00 ?? null }}" />
                                 </td>
                                 <td>{{ $kunjungan->tgl_masuk }}</td>

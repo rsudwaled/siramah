@@ -72,7 +72,6 @@ class EncounterController extends SatuSehatController
             $request['diag_sekunder_05'] = $expload[0] ?? null;
             $request['diag_sekunder_05_desc'] = $expload[1] ?? null;
         }
-        dd($request->all(), $expload);
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode_kunjungan);
         $request['input_date'] = now();
         $request['no_rm'] = $kunjungan->no_rm;
