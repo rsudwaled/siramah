@@ -110,18 +110,18 @@
         <tr>
             <th>
                 <div class="container-assesment">
-                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK) {{$data->COUNTER}}</div>
+                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN (KLINIK)</div>
                 </div>
             </td>
             <th >
                 <table id="tbl_right">
                     <tr>
                         <td>Tanggal Kunjungan</td>
-                        <td id="td_right">{{$data->tgl_kunjungan}}</td>
+                        <td id="td_right">{{ \Carbon\Carbon::parse($data->tgl_kunjungan)->format('Y-m-d') }} </td>
                     </tr>
                     <tr>
                         <td>Tanggal Assesmen</td>
-                        <td id="td_right">{{$data->tgl_pemeriksaan}}</td>
+                        <td id="td_right">{{ \Carbon\Carbon::parse($data->tgl_pemeriksaan)->format('Y-m-d') }}</td>
                     </tr>
                 </table>
             </th>

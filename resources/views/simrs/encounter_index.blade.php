@@ -61,10 +61,7 @@
                             'Pasien',
                             'Status',
                             'Action',
-                            'Tgl Masuk',
-                            'Kunjungan',
-                            'Poliklinik',
-                            'Dokter',
+                            'Counter',
                             'Diagnosa',
                             'ICD-10 01',
                             'ICD-10 S1',
@@ -72,6 +69,9 @@
                             'ICD-10 S3',
                             'ICD-10 S4',
                             'ICD-10 S5',
+                            'Tgl Masuk',
+                            'Poliklinik',
+                            'Dokter',
                         ];
                         $config['order'] = [['3', 'asc']];
                         $config['fixedColumns'] = [
@@ -124,12 +124,9 @@
                                         data-diagsekunder1="{{ $kunjungan->diagnosaicd ? ($kunjungan->diagnosaicd->diag_sekunder_05 ? $kunjungan->diagnosaicd->diag_sekunder_05 . ' - ' . $kunjungan->diagnosaicd->diag_sekunder_05_desc : null) : null }}"
                                         data-diagpoli="{{ $kunjungan->diagnosapoli->diag_00 ?? null }}" />
                                 </td>
-                                <td>{{ $kunjungan->tgl_masuk }}</td>
                                 <td>
-                                    {{ $kunjungan->kode_kunjungan }}
+                                    {{ $kunjungan->counter }}
                                 </td>
-                                <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
                                 <td>{{ $kunjungan->diagnosapoli->diag_00 ?? '-' }}</td>
                                 <td>{{ $kunjungan->diagnosaicd->diag_utama ?? '-' }}</td>
                                 <td>{{ $kunjungan->diagnosaicd->diag_sekunder_01 ?? '-' }}</td>
@@ -137,6 +134,9 @@
                                 <td>{{ $kunjungan->diagnosaicd->diag_sekunder_03 ?? '-' }}</td>
                                 <td>{{ $kunjungan->diagnosaicd->diag_sekunder_04 ?? '-' }}</td>
                                 <td>{{ $kunjungan->diagnosaicd->diag_sekunder_05 ?? '-' }}</td>
+                                <td>{{ $kunjungan->tgl_masuk }}</td>
+                                <td>{{ $kunjungan->unit->nama_unit }}</td>
+                                <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
                                 </tr>
                             @endforeach
                         @endif
@@ -227,7 +227,7 @@
             </div>
         </form>
         <x-slot name="footerSlot">
-            <button type="submit" form="formKunjungan" class="btn btn-success">
+            <button type="submit" form="formKunjungan" class="btn btn-success withLoad">
                 <i class="fas fa-save"></i> Simpan
             </button>
             <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
