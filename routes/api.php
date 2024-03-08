@@ -136,7 +136,7 @@ Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('dispos
 
 // API SIMRS
 Route::prefix('wa')->group(function () {
-    Route::post('webhookf', [WhatsappController::class, 'webhook']);
+    Route::post('webhooka', [WhatsappController::class, 'webhook']);
     // Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
 });
 // APP.RSUDWALED.ID
