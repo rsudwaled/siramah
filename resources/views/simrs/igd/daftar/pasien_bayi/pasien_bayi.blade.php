@@ -11,8 +11,7 @@
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
                             class="btn btn-sm btn-secondary">Kembali</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
-                            class="btn btn-sm bg-purple">Daftar
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Daftar
                             Bayi Luar</a></li>
                 </ol>
             </div>
@@ -22,96 +21,111 @@
 
 @section('content')
     <div class="row">
-        <div class="col-lg-12">
-            <x-adminlte-card theme="primary" size="sm" collapsible title="Riwayat Kunjungan Kebidanan :">
-                <div class="col-lg-12 rounded">
-                    <div class="card">
-                        <div class="card-body bg-success">
-                            <form action="" method="get">
-                                <div class="row ">
-                                    <div class="col-md-4">
-                                        @php
-                                            $config = ['format' => 'YYYY-MM-DD'];
-                                        @endphp
-                                        <x-adminlte-input-date name="start" label="Tanggal Awal" :config="$config"
-                                            value="{{ \Carbon\Carbon::parse($request->start)->format('Y-m-d') }}">
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text bg-primary">
-                                                    <i class="fas fa-calendar-alt"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input-date>
-                                    </div>
-                                    <div class="col-md-4">
-                                        @php
-                                            $config = ['format' => 'YYYY-MM-DD'];
-                                        @endphp
-                                        <x-adminlte-input-date name="finish" label="Tanggal Akhir " :config="$config"
-                                            value="{{ \Carbon\Carbon::parse($request->finish)->format('Y-m-d') }}">
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text bg-primary">
-                                                    <i class="fas fa-calendar-alt"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input-date>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <x-adminlte-button type="submit" class="withLoad mt-4 float-right" theme="primary" label="Submit Pencarian" />
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+        <div class="col-md-4">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">FILTER KUNJUNGAN BY PERIODE TANGGAL</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
+
                 </div>
-                <div class="col-lg-12">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            @php
-                                $heads = ['Tgl Masuk / Kunjungan', 'Keluar', 'Orangtua', 'Alamat','Alasan', 'Penjamin', 'Status'];
-                                $config['order'] = ['0', 'desc'];
-                                $config['paging'] = false;
-                                $config['info'] = false;
-                                $config['scrollY'] = '500px';
-                                $config['scrollCollapse'] = true;
-                                $config['scrollX'] = true;
-                            @endphp
-                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark" :config="$config" striped
-                                bordered hoverable compressed>
-                                @foreach ($kunjungan_igd as $item)
-                                    <tr>
-                                        <td>
-                                            <b>
-                                                {{ $item->kode_kunjungan }}<br>({{ $item->unit->nama_unit }})<br>(Counter: {{ $item->counter }})
-                                            </b> <br><br>
-                                            <small class="text-red"> <b>{{ $item->tgl_masuk }}</b></small>
-                                        </td>
-                                        <td>{{ $item->tgl_keluar == null ? 'belum keluar' : $item->tgl_keluar }}
-                                        <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM : {{ $item->pasien->no_rm }}
-                                            <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
-                                            {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }}
-                                        </td>
-                                        <td>
-                                            <small>
-                                                alamat : {{ $item->pasien->alamat ?? '-' }} / <br>
-                                                {{ $item->pasien->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $item->pasien->desas->nama_desa_kelurahan . ' , Kec. ' . $item->pasien->kecamatans->nama_kecamatan . ' - Kab. ' . $item->pasien->kabupatens->nama_kabupaten_kota }}
-                                            </small>
-                                        </td>
-                                        <td>{{ $item->alasan_masuk->alasan_masuk }}</td>
-                                        </td>
-                                        <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
-                                        <td>
-                                            <button type="button"
-                                                class="btn btn-block bg-gradient-success btn-block btn-flat btn-xs show-formbayi"
-                                                data-kunjungan="{{ $item->kode_kunjungan }}"
-                                                data-rmibu="{{ $item->no_rm }}">daftarkan bayi</button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </x-adminlte-datatable>
+
+                <div class="card-body">
+                    <form action="" method="get">
+                        <div class="row ">
+                            <div class="col-md-12">
+                                @php
+                                    $config = ['format' => 'YYYY-MM-DD'];
+                                @endphp
+                                <x-adminlte-input-date name="start" label="Tanggal Awal" :config="$config"
+                                    value="{{ \Carbon\Carbon::parse($request->start)->format('Y-m-d') }}">
+                                    <x-slot name="prependSlot">
+                                        <div class="input-group-text bg-primary">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                    </x-slot>
+                                </x-adminlte-input-date>
+                            </div>
+                            <div class="col-md-12">
+                                @php
+                                    $config = ['format' => 'YYYY-MM-DD'];
+                                @endphp
+                                <x-adminlte-input-date name="finish" label="Tanggal Akhir " :config="$config"
+                                    value="{{ \Carbon\Carbon::parse($request->finish)->format('Y-m-d') }}">
+                                    <x-slot name="prependSlot">
+                                        <div class="input-group-text bg-primary">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                    </x-slot>
+                                </x-adminlte-input-date>
+                            </div>
+                            <div class="col-md-12">
+                                <x-adminlte-button type="submit" class="withLoad mt-4 float-right" theme="primary"
+                                    label="Submit Pencarian" />
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </x-adminlte-card>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    @php
+                        $heads = [
+                            'Tgl Masuk / Kunjungan',
+                            'Orangtua',
+                            'Alamat',
+                            'Alasan',
+                            'Penjamin',
+                            'Status',
+                        ];
+                        $config['order'] = ['0', 'desc'];
+                        $config['paging'] = false;
+                        $config['info'] = false;
+                        $config['scrollY'] = '500px';
+                        $config['scrollCollapse'] = true;
+                        $config['scrollX'] = true;
+                    @endphp
+                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
+                        :config="$config" striped bordered hoverable compressed>
+                        @foreach ($kunjungan_igd as $item)
+                            <tr>
+                                <td>
+                                    <b>
+                                        {{ $item->kode_kunjungan }}<br>({{ $item->unit->nama_unit }})<br>(Counter:
+                                        {{ $item->counter }})
+                                    </b> <br><br>
+                                    <small class="text-red"> <b>TGL MasuK : <br>{{ $item->tgl_masuk }}</b></small>
+                                </td>
+                                <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM :
+                                    {{ $item->pasien->no_rm }}
+                                    <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
+                                    {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }}
+                                </td>
+                                <td>
+                                    <small>
+                                        alamat : {{ $item->pasien->alamat ?? '-' }} / <br>
+                                        {{ $item->pasien->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : $item->pasien->desas->nama_desa_kelurahan . ' , Kec. ' . $item->pasien->kecamatans->nama_kecamatan . ' - Kab. ' . $item->pasien->kabupatens->nama_kabupaten_kota }}
+                                    </small>
+                                </td>
+                                <td>{{ $item->alasan_masuk->alasan_masuk }}</td>
+                                </td>
+                                <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
+                                <td>
+                                    <button type="button"
+                                        class="btn btn-block bg-gradient-success btn-block btn-flat btn-xs show-formbayi"
+                                        data-kunjungan="{{ $item->kode_kunjungan }}"
+                                        data-rmibu="{{ $item->no_rm }}">daftarkan bayi</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </x-adminlte-datatable>
+                </div>
+            </div>
             <x-adminlte-modal id="formBayi" title="Data Bayi" theme="success" size='lg' disable-animations>
                 <div class="col-lg-12">
                     <div class="alert alert-warning alert-dismissible">
@@ -148,14 +162,14 @@
                             <input type="hidden" name="rm_ibu_bayi" id="rm_ibu_bayi">
                             <input type="hidden" name="kunjungan_ortu" id="kunjungan_ortu">
 
-                            <x-adminlte-input name="rm_ibu" id="rm_ibu" label="RM ORANTUA **" type="text" disabled
-                                fgroup-class="col-md-6" disable-feedback />
-                            <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan **" type="text" disabled
-                                fgroup-class="col-md-6" disable-feedback />
+                            <x-adminlte-input name="rm_ibu" id="rm_ibu" label="RM ORANTUA **" type="text"
+                                disabled fgroup-class="col-md-6" disable-feedback />
+                            <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan **" type="text"
+                                disabled fgroup-class="col-md-6" disable-feedback />
                             <x-slot name="footerSlot">
                                 <x-adminlte-button theme="danger" label="Batal" data-dismiss="modal" class="btn-sm" />
-                                <x-adminlte-button form="form_pasien_bayi" class="float-right btn-sm" type="submit" theme="success"
-                                    label="Simpan Data" />
+                                <x-adminlte-button form="form_pasien_bayi" class="float-right btn-sm" type="submit"
+                                    theme="success" label="Simpan Data" />
                             </x-slot>
                         </div>
                     </form>
@@ -242,11 +256,11 @@
                         $.LoadingOverlay("show");
                         $.each(data.data, function(key, value) {
                             $('#table1').append("<tr>\
-                                            <td>" + value.rm_bayi + "</td>\
-                                            <td>" + value.nama_bayi + "</td>\
-                                            <td>" + value.jk_bayi + "</td>\
-                                            <td>" + value.tgl_lahir_bayi + "</td>\
-                                        </tr>");
+                                                        <td>" + value.rm_bayi + "</td>\
+                                                        <td>" + value.nama_bayi + "</td>\
+                                                        <td>" + value.jk_bayi + "</td>\
+                                                        <td>" + value.tgl_lahir_bayi + "</td>\
+                                                    </tr>");
                         })
                         $.LoadingOverlay("hide");
                     },

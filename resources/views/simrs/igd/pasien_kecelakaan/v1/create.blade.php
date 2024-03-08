@@ -294,8 +294,8 @@
                                             <x-adminlte-button type="submit"
                                                 class="withLoad btn btn-sm m-1 bg-green float-right "
                                                 id="submitPasien" label="Simpan Data" />
-                                            <a href="{{ route('list.antrian') }}"
-                                                class="btn btn-sm m-1 bg-secondary float-right">kembali</a>
+                                            <a href="{{ route('daftar-igd.v1') }}"
+                                                class="btn btn-sm m-1 bg-secondary float-right">Kembali</a>
                                         </div>
                                     </form>
                                 </div>

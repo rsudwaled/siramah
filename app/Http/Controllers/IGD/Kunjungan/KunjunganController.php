@@ -10,13 +10,16 @@ use App\Models\PenjaminSimrs;
 use App\Models\AlasanMasuk;
 use App\Models\MtAlasanEdit;
 use DB;
+use Illuminate\Support\Facades\Auth;
 
 class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        $riwayat = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(3)->get();
-        return response()->json($riwayat);
+        $riwayat    = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(3)->get();
+        $ranap      = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(3)->get();
+        
+        return response()->json(['riwayat'=>$riwayat,'ranap'=>$ranap]);
     }
 
     public function daftarKunjungan(Request $request)
@@ -87,6 +90,12 @@ class KunjunganController extends Controller
         }
         $kunjungan->save();
         return redirect()->route('detail.kunjungan', ['kunjungan'=>$kunjungan]);
+    }
+
+    public function getKunjunganByUser(Request $request)
+    {
+        $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
+        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 
 }

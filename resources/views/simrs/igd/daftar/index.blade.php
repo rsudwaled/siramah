@@ -138,7 +138,9 @@
                                                             PASIEN : {{ $data->nama_px }}
                                                         </b> <br><br>
                                                         <small>
-                                                            <b>TTL : {{ date('d-m-Y', strtotime($data->tgl_lahir))?? '-' }} </b> <br>
+                                                            <b>TTL :
+                                                                {{ date('d-m-Y', strtotime($data->tgl_lahir)) ?? '-' }}
+                                                            </b> <br>
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
                                                             {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}
                                                         </small> <br>
@@ -148,8 +150,7 @@
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
-                                                        data-nama="{{ $data->nama_px }}"
-                                                        data-nik="{{ $data->nik_bpjs }}"
+                                                        data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
                                                         class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
@@ -308,51 +309,75 @@
             </x-adminlte-card>
         </div>
     </div>
-    
+
     <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl'>
         <div class="card">
             <div class="card-body">
-                <div class="col-lg-12">
-                    <div class="callout callout-warning">
-                        <h5>Riwayat Pasien!</h5>
-                        <p>daftar 3 riwayat terakhir pasien.</p>
+                <div class="row">
+                    <div class="col-5 col-sm-3">
+                        <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
+                            aria-orientation="vertical">
+                            <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab" data-toggle="pill" href="#rawat-jalan"
+                                role="tab" aria-controls="rawat-jalan" aria-selected="false">Rawat Jalan</a>
+                            <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab" data-toggle="pill" href="#rawat-inap"
+                                role="tab" aria-controls="rawat-inap" aria-selected="true">Rawat Inap</a>
+                        </div>
                     </div>
-                    <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>KUNJUNGAN</th>
-                                <th>NO RM</th>
-                                <th>PASIEN</th>
-                                <th>POLI</th>
-                                <th>STATUS</th>
-                                <th>TGL MASUK</th>
-                                <th>TGL PULANG</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-12">
-                    <div class="callout callout-success">
-                        <h5>Riwayat Pasien Rawat Inap!</h5>
-                        <p>daftar 3 riwayat terakhir rawat inap pasien.</p>
+                    <div class="col-7 col-sm-9">
+                        <div class="tab-content" id="vert-tabs-tabContent">
+                            <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
+                                aria-labelledby="rawat-jalan-tab">
+                                <div class="info-box mb-3 bg-success ">
+                                    <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">RAWAT JALAN</span>
+                                        <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
+                                    </div>
+
+                                </div>
+                                <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>KUNJUNGAN</th>
+                                            <th>NO RM</th>
+                                            <th>PASIEN</th>
+                                            <th>POLI</th>
+                                            <th>STATUS</th>
+                                            <th>TGL MASUK</th>
+                                            <th>TGL PULANG</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
+                                aria-labelledby="rawat-inap-tab">
+                                <div class="info-box mb-3 bg-primary">
+                                    <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
+                                    <div class="info-box-content">
+                                        <span class="info-box-text">RAWAT INAP</span>
+                                        <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
+                                    </div>
+                                </div>
+                                <table id="table1" class="riwayatRanap data-table table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>KUNJUNGAN</th>
+                                            <th>NO RM</th>
+                                            <th>PASIEN</th>
+                                            <th>POLI</th>
+                                            <th>STATUS</th>
+                                            <th>TGL MASUK</th>
+                                            <th>TGL PULANG</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    <table id="table1" class="riwayatRanap data-table table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>KUNJUNGAN</th>
-                                <th>NO RM</th>
-                                <th>PASIEN</th>
-                                <th>POLI</th>
-                                <th>STATUS</th>
-                                <th>TGL MASUK</th>
-                                <th>TGL PULANG</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
                 </div>
             </div>
             <x-slot name="footerSlot">
@@ -360,7 +385,7 @@
             </x-slot>
         </div>
     </x-adminlte-modal>
-    
+
 @endsection
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Datatables', true)
@@ -497,31 +522,31 @@
                     dataType: 'JSON',
                     success: function(data) {
                         $.each(data.riwayat, function(index, riwayat) {
-                                var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                                    .kode_kunjungan + "</td><td>" +
-                                    riwayat.no_rm + "</td><td>" + riwayat.pasien
-                                    .nama_px +
-                                    "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
-                                    riwayat.status.status_kunjungan + "</td><td>" +
-                                    riwayat.tgl_masuk + "</td><td>" + (riwayat
-                                        .tgl_keluar == null ? 'Belum Pulang' : riwayat
-                                        .tgl_keluar) +
-                                    "</td></tr>";
-                                $('.riwayatKunjungan tbody').append(row);
-                            });
-                            $.each(data.ranap, function(index, ranap) {
-                                var row = "<tr class='riwayat-kunjungan'><td>" + ranap
-                                    .kode_kunjungan + "</td><td>" +
-                                    ranap.no_rm + "</td><td>" + ranap.pasien
-                                    .nama_px +
-                                    "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
-                                    ranap.status.status_kunjungan + "</td><td>" +
-                                    ranap
-                                    .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
-                                        null ? 'Belum Pulang' : ranap.tgl_keluar) +
-                                    "</td></tr>";
-                                $('.riwayatRanap tbody').append(row);
-                            });
+                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                                .kode_kunjungan + "</td><td>" +
+                                riwayat.no_rm + "</td><td>" + riwayat.pasien
+                                .nama_px +
+                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
+                                riwayat.status.status_kunjungan + "</td><td>" +
+                                riwayat.tgl_masuk + "</td><td>" + (riwayat
+                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                    .tgl_keluar) +
+                                "</td></tr>";
+                            $('.riwayatKunjungan tbody').append(row);
+                        });
+                        $.each(data.ranap, function(index, ranap) {
+                            var row = "<tr class='riwayat-kunjungan'><td>" + ranap
+                                .kode_kunjungan + "</td><td>" +
+                                ranap.no_rm + "</td><td>" + ranap.pasien
+                                .nama_px +
+                                "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
+                                ranap.status.status_kunjungan + "</td><td>" +
+                                ranap
+                                .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
+                                    null ? 'Belum Pulang' : ranap.tgl_keluar) +
+                                "</td></tr>";
+                            $('.riwayatRanap tbody').append(row);
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -530,10 +555,11 @@
                 });
             }
         });
+
         function batalPilih() {
             $(".riwayat-kunjungan").remove();
         }
-       
+
         $(function() {
             $.ajaxSetup({
                 headers: {

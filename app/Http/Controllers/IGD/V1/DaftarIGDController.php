@@ -149,7 +149,7 @@ class DaftarIGDController extends Controller
             $response       = Http::withHeaders($signature)->get($url);
             $resdescrtipt   = $this->response_decrypt($response, $signature);
         }
-        return view('simrs.igd.v1.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.index',compact('pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function storeTanpaNoAntrian(Request $request)
@@ -169,12 +169,11 @@ class DaftarIGDController extends Controller
         }
         if($request->isBpjs == null)
         {
-            Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
+            Alert::error('Jenis Pasien Daftar Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
         }
         $cek = Kunjungan::where('no_rm', $request->rm);
         $cek_kunjungan = $cek->where('status_kunjungan', 1)->get();
-        // $cek_kunjungan_24jam = $cek->where('status_kunjungan', 1)->
         if(count($cek_kunjungan) > 0 )
         {
             Alert::error('Daftar GAGAL!!', 'pasien masih memiliki kunjungan yang aktif!');
@@ -205,9 +204,9 @@ class DaftarIGDController extends Controller
                 'noTelp.max'        => 'No telepon maksimal 13 digit',
             ]);
 
-            $data = Kunjungan::where('no_rm', $request->rm)
-            ->where('status_kunjungan', 1)
-            ->get();
+        $data = Kunjungan::where('no_rm', $request->rm)
+                ->where('status_kunjungan', 1)
+                ->get();
         if ($data->count() > 0) {
             Alert::error('Proses Daftar Gagal!!', 'pasien masih memiliki status kunjungan belum ditutup!');
             return back();
@@ -226,6 +225,11 @@ class DaftarIGDController extends Controller
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
         $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        if(empty($pasien->no_hp))
+        {
+            $pasien->no_hp = $request->noTelp;
+            $pasien->save();
+        }
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
 
 
@@ -377,7 +381,14 @@ class DaftarIGDController extends Controller
     public function cekStatusBPJS(Request $request)
     {
         $tanggal        = now()->format('Y-m-d');
-        $url            = env('VCLAIM_URL') . "Peserta/nik/" . $request->nik . "/tglSEP/" . $tanggal;
+        if(!empty($request->nik))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nik/" . $request->nik . "/tglSEP/" . $tanggal;
+        }
+        if(!empty($request->nomorkartu))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . $request->nomorkartu . "/tglSEP/" . $tanggal;
+        }
         $signature      = $this->signature();
         $response       = Http::withHeaders($signature)->get($url);
         $resdescrtipt   = $this->response_decrypt($response, $signature);
