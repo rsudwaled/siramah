@@ -50,27 +50,27 @@ class EncounterController extends SatuSehatController
         if ($request->diag_sekunder_01) {
             $expload = explode(' - ', $request->diag_sekunder_01);
             $request['diag_sekunder_01'] = $expload[0] ?? null;
-            $request['diag_sekunder_01_desc'] = $expload[1] ?? null;
+            $request['diag_sekunder1_desc'] = $expload[1] ?? null;
         }
         if ($request->diag_sekunder_02) {
             $expload = explode(' - ', $request->diag_sekunder_02);
             $request['diag_sekunder_02'] = $expload[0] ?? null;
-            $request['diag_sekunder_02_desc'] = $expload[1] ?? null;
+            $request['diag_sekunder2_desc'] = $expload[1] ?? null;
         }
         if ($request->diag_sekunder_03) {
             $expload = explode(' - ', $request->diag_sekunder_03);
             $request['diag_sekunder_03'] = $expload[0] ?? null;
-            $request['diag_sekunder_03_desc'] = $expload[1] ?? null;
+            $request['diag_sekunder3_desc'] = $expload[1] ?? null;
         }
         if ($request->diag_sekunder_04) {
             $expload = explode(' - ', $request->diag_sekunder_04);
             $request['diag_sekunder_04'] = $expload[0] ?? null;
-            $request['diag_sekunder_04_desc'] = $expload[1] ?? null;
+            $request['diag_sekunder4_desc'] = $expload[1] ?? null;
         }
         if ($request->diag_sekunder_05) {
             $expload = explode(' - ', $request->diag_sekunder_05);
             $request['diag_sekunder_05'] = $expload[0] ?? null;
-            $request['diag_sekunder_05_desc'] = $expload[1] ?? null;
+            $request['diag_sekunder5_desc'] = $expload[1] ?? null;
         }
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode_kunjungan);
         $request['input_date'] = now();
@@ -85,11 +85,11 @@ class EncounterController extends SatuSehatController
         $request['diag_sekunder_04'] = $request->diag_sekunder_04;
         $request['diag_sekunder_05'] = $request->diag_sekunder_05;
         $request['diag_utama_desc'] = $request->diag_utama_desc;
-        $request['diag_sekunder_01_desc'] = $request->diag_sekunder_01_desc;
-        $request['diag_sekunder_02_desc'] = $request->diag_sekunder_02_desc;
-        $request['diag_sekunder_03_desc'] = $request->diag_sekunder_03_desc;
-        $request['diag_sekunder_04_desc'] = $request->diag_sekunder_04_desc;
-        $request['diag_sekunder_05_desc'] = $request->diag_sekunder_05_desc;
+        $request['diag_sekunder1_desc'] = $request->diag_sekunder1_desc;
+        $request['diag_sekunder2_desc'] = $request->diag_sekunder2_desc;
+        $request['diag_sekunder3_desc'] = $request->diag_sekunder3_desc;
+        $request['diag_sekunder4_desc'] = $request->diag_sekunder4_desc;
+        $request['diag_sekunder5_desc'] = $request->diag_sekunder5_desc;
         $request['kode_paramedis'] = $kunjungan->kode_paramedis;
         $request['kasus_baru'] = $request->kasusbaru ?? 0;
         $request['kunjungan_baru'] = $request->kunjunganbaru ?? 0;
