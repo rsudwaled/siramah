@@ -112,6 +112,9 @@
                                         data-nama="{{ $kunjungan->pasien->nama_px ?? null }}"
                                         data-unit="{{ $kunjungan->unit->nama_unit }}"
                                         data-dokter="{{ $kunjungan->dokter->nama_paramedis }}"
+                                        data-nik="{{ $kunjungan->pasien->nik_bpjs ?? null }}"
+                                        data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs ?? null }}"
+                                        data-dokter="{{ $kunjungan->dokter->nama_paramedis }}"
                                         data-beratbayi="{{ $kunjungan->diagnosaicd->bb_bayi ?? null }}"
                                         data-kasusbaru="{{ $kunjungan->diagnosaicd->kasus_baru ?? null }}"
                                         data-kunjunganbaru="{{ $kunjungan->diagnosaicd->kunjungan_baru ?? null }}"
@@ -139,6 +142,7 @@
                                 <td>{{ $kunjungan->unit->nama_unit }}</td>
                                 <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
                                 <td>{{ $kunjungan->pasien->nik_bpjs ?? '-' }}</td>
+                                <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         @endif
@@ -168,33 +172,43 @@
                         igroup-size="sm" igroup-class="col-9" igroup-size="sm" readonly />
                 </div>
                 <div class="col-md-6">
+                    <x-adminlte-input name="nik_bpjs" label="NIK" fgroup-class="row" label-class="text-left col-3"
+                        igroup-size="sm" igroup-class="col-9" igroup-size="sm" />
+                    <x-adminlte-input name="no_Bpjs" label="No BPJS" fgroup-class="row" label-class="text-left col-3"
+                        igroup-size="sm" igroup-class="col-9" igroup-size="sm" />
                     <x-adminlte-input name="bb_bayi" label="Berat Bayi" fgroup-class="row" type="number"
                         placeholder="Berat Badan Bayi Baru (Gram)" label-class="text-left col-3" igroup-size="sm"
                         igroup-class="col-9" igroup-size="sm" />
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="kasusbaru" name="kasusbaru"
-                                value="1">
-                            <label for="kasusbaru" class="custom-control-label">Kasus Baru Baru</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>Status Pasien Meninggal</b> <br>
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="kurang48" name="kurang48"
+                                        value="1">
+                                    <label for="kurang48" class="custom-control-label">
+                                        < 48 Jam</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="lebih48" name="lebih48"
+                                        value="1">
+                                    <label for="lebih48" class="custom-control-label">> 48 Jam</label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="kunjunganbaru" name="kunjunganbaru"
-                                value="1">
-                            <label for="kunjunganbaru" class="custom-control-label">Kunjungan Baru</label>
-                        </div>
-                    </div>
-                    <b>Status Pasien Meninggal</b> <br>
-                    <div class="form-group">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="kurang48" name="kurang48"
-                                value="1">
-                            <label for="kurang48" class="custom-control-label">
-                                < 48 Jam</label>
-                        </div>
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="lebih48" name="lebih48"
-                                value="1">
-                            <label for="lebih48" class="custom-control-label">> 48 Jam</label>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="kasusbaru" name="kasusbaru"
+                                        value="1">
+                                    <label for="kasusbaru" class="custom-control-label">Kasus Baru Baru</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="kunjunganbaru"
+                                        name="kunjunganbaru" value="1">
+                                    <label for="kunjunganbaru" class="custom-control-label">Kunjungan Baru</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -282,6 +296,8 @@
             $('#no_rm').val($(button).data('norm'));
             $('#nama').val($(button).data('nama'));
             $('#unit').val($(button).data('unit'));
+            $('#no_Bpjs').val($(button).data('nomorkartu'));
+            $('#nik_bpjs').val($(button).data('nik'));
             $('#dokter').val($(button).data('dokter'));
             $('#diagpoli').val($(button).data('diagpoli'));
             $('#bb_bayi').val($(button).data('beratbayi'));

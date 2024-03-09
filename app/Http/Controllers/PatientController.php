@@ -67,11 +67,15 @@ class PatientController extends SatuSehatController
         $request['nik'] = $pasien->nik_bpjs;
         $res = $this->patient_by_nik($request);
         if ($res->metadata->code == 200) {
-            $ihs = $res->response->entry[0]->resource->id;
-            $pasien->update([
-                'ihs' => $ihs
-            ]);
-            Alert::success('Sukses', 'Berhasil Sync Patient Satu Sehat');
+            if ($res->response->entry) {
+                $ihs = $res->response->entry[0]->resource->id;
+                $pasien->update([
+                    'ihs' => $ihs
+                ]);
+                Alert::success('Sukses', 'Berhasil Sync Patient Satu Sehat');
+            } else {
+                Alert::error('Mohon Maaf', 'Data Pasien Tidak Ditemukan Di Server Satu Sehat');
+            }
         } else {
             Alert::error('Mohon Maaf', $res->metadata->message);
         }
