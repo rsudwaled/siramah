@@ -73,6 +73,7 @@
                             'Poliklinik',
                             'Dokter',
                             'NIK',
+                            'BPJS',
                         ];
                         $config['order'] = [['3', 'asc']];
                         $config['fixedColumns'] = [
