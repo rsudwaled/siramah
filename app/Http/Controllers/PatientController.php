@@ -44,10 +44,20 @@ class PatientController extends SatuSehatController
         $request['nik'] = $pasien->nik_bpjs;
         $res = $this->patient_by_nik($request);
         if ($res->metadata->code == 200) {
-            $ihs = $res->response->entry[0]->resource->id;
-            $pasien->update([
-                'ihs' => $ihs
-            ]);
+            if ($res->response->entry) {
+                $ihs = $res->response->entry[0]->resource->id;
+                $pasien->update([
+                    'ihs' => $ihs
+                ]);
+            } else {
+                $data = [
+                    'metadata' => [
+                        'message' => "Data Pasien Tidak Ditemukan Di Server Satu Sehat",
+                        'code' => 404,
+                    ],
+                ];
+                $res = json_decode(json_encode($data));
+            }
         }
         return $res;
     }

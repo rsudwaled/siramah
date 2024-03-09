@@ -110,17 +110,22 @@ class EncounterController extends SatuSehatController
             $unit = $kunjungan->unit;
             $dokter = $kunjungan->dokter;
             $request['patient_id'] = $pasien->ihs;
-            if ($pasien->ihs == null) {
-                $request['norm'] = $pasien->no_rm;
-                $api = new PatientController();
-                $res = $api->patient_get_id($request);
-                if ($res->metadata->code == 200) {
-                    $ihs = $res->response->entry[0]->resource->id;
-                    $request['patient_id'] = $ihs;
-                } else {
-                    Alert::error('Mohon Maaf', $res->metadata->message);
-                    return redirect()->back();
+            if ($pasien->nik_bpjs) {
+                if ($pasien->ihs == null) {
+                    $request['norm'] = $pasien->no_rm;
+                    $api = new PatientController();
+                    $res = $api->patient_get_id($request);
+                    if ($res->metadata->code == 200) {
+                        $ihs = $res->response->entry[0]->resource->id;
+                        $request['patient_id'] = $ihs;
+                    } else {
+                        Alert::error('Mohon Maaf', $res->metadata->message);
+                        return redirect()->back();
+                    }
                 }
+            } else {
+                Alert::error('Mohon Maaf', "Pasien Belum Memiliki NIK");
+                return redirect()->back();
             }
             $request['patient_name'] = $pasien->nama_px;
             $request['practitioner_id'] = $dokter->id_satusehat;

@@ -72,6 +72,7 @@
                             'Tgl Masuk',
                             'Poliklinik',
                             'Dokter',
+                            'NIK',
                         ];
                         $config['order'] = [['3', 'asc']];
                         $config['fixedColumns'] = [
@@ -137,6 +138,7 @@
                                 <td>{{ $kunjungan->tgl_masuk }}</td>
                                 <td>{{ $kunjungan->unit->nama_unit }}</td>
                                 <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
+                                <td>{{ $kunjungan->pasien->nik_bpjs ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         @endif
