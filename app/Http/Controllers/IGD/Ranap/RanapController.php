@@ -1091,14 +1091,24 @@ class RanapController extends APIController
             Alert::success('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $request->noMR . ' sudah terdaftar dikunjungan!');
             return redirect()->route('pasien-bayi.cari');
         }
-        $validator = $request->validate([
-            'tanggal_daftar'    => 'required|date',
-            'noMR'              => 'required',
-            'penjamin_id'       => 'required',
-            'idRuangan'         => 'required',
-            'alasan_masuk_id'   => 'required',
-            'dpjp'              => 'required',
-        ]);
+
+        $request->validate(
+            [
+                'tanggal_daftar'    => 'required|date',
+                'noMR'              => 'required',
+                'penjamin_id'       => 'required',
+                'idRuangan'         => 'required',
+                'alasan_masuk_id'   => 'required',
+                'dpjp'              => 'required',
+                'isBpjs'            => 'required',
+            ],
+            [
+                'idRuangan'         => 'Anda harus memilih ruangan terlebih dahulu!',
+                'tanggal'           => 'Tanggal pendaftaran wajib dipilih !',
+                'alasan_masuk_id'   => 'Alasan daftar wajib dipilih !',
+                'isBpjs'            => 'Anda harus memilih pasien didaftarkan sebagai pasien bpjs/umum !',
+                'dpjp'              => 'Anda harus memilih dokter dpjp !',
+            ]);
 
         $counter = Kunjungan::latest('counter')
             ->where('no_rm', $request->noMR)
@@ -1109,7 +1119,7 @@ class RanapController extends APIController
         } else {
             $c = $counter->counter + 1;
         }
-
+       
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
@@ -1122,7 +1132,7 @@ class RanapController extends APIController
         $createKunjungan->kode_paramedis    = $request->dpjp;
         $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-        $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin_simrs;
+        $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin;
         $createKunjungan->kelas             = $ruangan->id_kelas;
         $createKunjungan->hak_kelas         =  $ruangan->id_kelas;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
@@ -1131,6 +1141,7 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->jp_daftar         = $request->input('bpjsProses') == null ? $request->isBpjs : 2;
 
         if ($createKunjungan->save()) {
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
@@ -1190,7 +1201,6 @@ class RanapController extends APIController
                         $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
                         $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->form_send_by      = 1; //status 1 pasien sudah di daftarkan ranap
-                        $createKunjungan->jp_daftar         = 0; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1

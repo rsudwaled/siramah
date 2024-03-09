@@ -83,13 +83,13 @@
                                                                 label="Tanggal Masuk" :config="$config" />
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
+                                                            <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                                 <option value="">--Pilih Penjamin--</option>
                                                                 @foreach ($penjamin as $item)
                                                                     <option value="{{ $item->kode_penjamin }}">
                                                                         {{ $item->nama_penjamin }}</option>
                                                                 @endforeach
-                                                            </x-adminlte-select>
+                                                            </x-adminlte-select2>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <x-adminlte-select name="alasan_masuk_id"
@@ -109,6 +109,26 @@
                                                                         {{ $item->nama_paramedis }}</option>
                                                                 @endforeach
                                                             </x-adminlte-select2>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="checkBoxBpjs">Jenis Pasien
+                                                                    <code>
+                                                                        [
+                                                                        <label for="checkBoxBpjs">BPJS PROSES
+                                                                            <code>( <input type="checkbox" value="0"
+                                                                                    name="bpjsProses" id="bpjsProses" class="mt-1">
+                                                                                )
+                                                                            </code>
+                                                                        </label>
+                                                                        ]
+                                                                    </code>
+                                                                </label>
+                                                                <select name="isBpjs" id="isBpjs"class="form-control">
+                                                                    <option value="0">Pasien UMUM</option>
+                                                                    <option value="1">Pasien BPJS</option>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

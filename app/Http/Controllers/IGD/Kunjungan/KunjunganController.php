@@ -16,10 +16,11 @@ class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        $riwayat    = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(3)->get();
-        $ranap      = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(3)->get();
+        $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(3)->get();
+        $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(3)->get();
+        $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(3)->get();
         
-        return response()->json(['riwayat'=>$riwayat,'ranap'=>$ranap]);
+        return response()->json(['riwayat'=>$riwayat,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
     }
 
     public function daftarKunjungan(Request $request)

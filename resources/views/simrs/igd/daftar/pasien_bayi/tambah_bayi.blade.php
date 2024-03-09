@@ -141,6 +141,16 @@
                                                         data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         class="btn-flat btn-xs btn-singkron bg-purple" label="PILIH DATA" />
+
+                                                    <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
+                                                        data-nomorkartu="{{ $data->no_Bpjs }}"
+                                                        data-rm="{{ $data->no_rm }}" class="btn-xs btn-cekBPJS bg-success"
+                                                        label="CEK STATUS BPJS" />
+
+                                                    <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
+                                                        class="btn-xs btn-cekKunjungan bg-warning mt-1"
+                                                        label="CEK KUNJUNGAN" />
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -174,14 +184,21 @@
                                                     type="text" readonly disable-feedback />
                                                 <x-adminlte-input name="no_bpjs" id="no_bpjs" label="BPJS ORANGTUA **"
                                                     type="text" readonly disable-feedback />
-                                                <x-adminlte-input name="kontak" label="Kontak *" placeholder="no tlp"
-                                                    disable-feedback />
-                                                <x-adminlte-select name="hub_keluarga" label="Hubungan Dengan Pasien *">
-                                                    @foreach ($hb_keluarga as $item)
-                                                        <option value="{{ $item->kode }}">
-                                                            {{ $item->nama_hubungan }}</option>
-                                                    @endforeach
-                                                </x-adminlte-select>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <x-adminlte-input name="kontak" type="number" label="Kontak *"
+                                                            placeholder="no tlp" disable-feedback />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <x-adminlte-select name="hub_keluarga"
+                                                            label="Hubungan Dengan Pasien *">
+                                                            @foreach ($hb_keluarga as $item)
+                                                                <option value="{{ $item->kode }}">
+                                                                    {{ $item->nama_hubungan }}</option>
+                                                            @endforeach
+                                                        </x-adminlte-select>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="col-lg-6">
                                                 <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *"
@@ -190,22 +207,40 @@
                                                 <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi"
                                                     label="Kota Lahir *" required
                                                     placeholder="masukan kota ketika bayi lahir" disable-feedback />
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        @php $config = ['format' => 'DD-MM-YYYY']; @endphp
+                                                        <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi"
+                                                            required label="Tanggal Lahir *" :config="$config"
+                                                            value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
+                                                            <x-slot name="prependSlot">
+                                                                <div class="input-group-text bg-primary">
+                                                                    <i class="fas fa-calendar-alt"></i>
+                                                                </div>
+                                                            </x-slot>
+                                                        </x-adminlte-input-date>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *"
+                                                            id="jk_bayi" required>
+                                                            <option value="L">Laki-Laki</option>
+                                                            <option value="P">Perempuan</option>
+                                                        </x-adminlte-select>
 
-                                                @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                                                <x-adminlte-input-date name="tgl_lahir_bayi" id="tgl_lahir_bayi" required
-                                                    label="Tanggal Lahir *" :config="$config"
-                                                    value="{{ \Carbon\Carbon::parse()->format('Y-m-d') }}">
-                                                    <x-slot name="prependSlot">
-                                                        <div class="input-group-text bg-primary">
-                                                            <i class="fas fa-calendar-alt"></i>
-                                                        </div>
-                                                    </x-slot>
-                                                </x-adminlte-input-date>
-                                                <x-adminlte-select name="jk_bayi" label="Jenis Kelamin *" id="jk_bayi"
-                                                    required>
-                                                    <option value="L">Laki-Laki</option>
-                                                    <option value="P">Perempuan</option>
-                                                </x-adminlte-select>
+                                                    </div>
+                                                </div>
+
+                                                
+
+                                                <div class="form-group">
+                                                    <label for="exampleInputBorderWidth2">Jam Lahir Bayi <br>
+                                                        <code>
+                                                            <b>AM : 00:00 s.d 11.59</b> || <b>PM : 12:00 s.d 00:00</b>
+                                                        </code>
+                                                    </label>
+                                                    <x-adminlte-input name="jam_lahir_bayi" type="time"
+                                                        disable-feedback />
+                                                </div>
 
                                                 <x-slot name="footerSlot">
                                                     <x-adminlte-button form="form_add_bayi"
@@ -225,9 +260,12 @@
             </x-adminlte-card>
         </div>
     </div>
+
+    @include('simrs.igd.daftar.pasien_bayi.components.modal_riwayat_kunjungan')
 @endsection
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Datatables', true)
+@section('plugins.Sweetalert2', true)
 @section('js')
     <script>
         $(function() {
@@ -247,6 +285,130 @@
                 $('#nama_ortu').val(nama);
                 $('#no_bpjs').val(nomorkartu);
 
+            });
+
+            $('.btn-cekBPJS').on('click', function() {
+                var rm = $(this).data('rm');
+                var nik = $(this).data('nik');
+                var nomorkartu = $(this).data('nomorkartu');
+                if (nik || nomorkartu) {
+                    var cekStatusBPJS = "{{ route('cek-status.v1') }}";
+                    Swal.fire({
+                        title: "CEK STATUS BPJS?",
+                        text: "silahkan pilih tombol cek status!",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Cek Status!",
+                        cancelButtonText: "Batal!",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: 'GET',
+                                url: cekStatusBPJS,
+                                dataType: 'json',
+                                data: {
+                                    nomorkartu: nomorkartu,
+                                    nik: nik,
+                                    rm: rm,
+                                },
+                                success: function(data) {
+                                    console.log(data)
+                                    if (data.code == 200) {
+                                        Swal.fire({
+                                            title: "Success!",
+                                            text: data.keterangan + ' ' +
+                                                '( jenis : ' +
+                                                data
+                                                .jenisPeserta + ')',
+                                            icon: "success",
+                                            confirmButtonText: "oke!",
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                // location.reload();
+                                            }
+                                        });
+                                        $.LoadingOverlay("hide");
+                                    } else {
+                                        Swal.fire({
+                                            title: "INFO!",
+                                            text: data.keterangan + ' ' +
+                                                '( KODE : ' + data
+                                                .jenisPeserta + ')',
+                                            icon: "info",
+                                            confirmButtonText: "oke!",
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                location.reload();
+                                            }
+                                        });
+                                        $.LoadingOverlay("hide");
+                                    }
+                                },
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('.btn-cekKunjungan').click(function(e) {
+                $('#modalCekKunjungan').modal('toggle');
+                var rm = $(this).data('rm');
+                if (rm) {
+                    $.ajax({
+                        type: "GET",
+                        url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
+                        dataType: 'JSON',
+                        success: function(data) {
+                            $.each(data.kebidanan, function(index, kebidanan) {
+                                var row = "<tr class='riwayat-kunjungan'><td>" +
+                                    kebidanan
+                                    .kode_kunjungan + "</td><td>" +
+                                    kebidanan.no_rm + "</td><td>" + kebidanan.pasien
+                                    .nama_px +
+                                    "</td><td>" + kebidanan.unit.nama_unit +
+                                    "</td><td>" +
+                                    kebidanan.status.status_kunjungan + "</td><td>" +
+                                    kebidanan.tgl_masuk + "</td><td>" + (kebidanan
+                                        .tgl_keluar == null ? 'Belum Pulang' : kebidanan
+                                        .tgl_keluar) +
+                                    "</td></tr>";
+                                $('.UGDKebidanan tbody').append(row);
+                            });
+                            $.each(data.riwayat, function(index, riwayat) {
+                                var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                                    .kode_kunjungan + "</td><td>" +
+                                    riwayat.no_rm + "</td><td>" + riwayat.pasien
+                                    .nama_px +
+                                    "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
+                                    riwayat.status.status_kunjungan + "</td><td>" +
+                                    riwayat.tgl_masuk + "</td><td>" + (riwayat
+                                        .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                        .tgl_keluar) +
+                                    "</td></tr>";
+                                $('.riwayatKunjungan tbody').append(row);
+                            });
+                            $.each(data.ranap, function(index, ranap) {
+                                var row = "<tr class='riwayat-kunjungan'><td>" + ranap
+                                    .kode_kunjungan + "</td><td>" +
+                                    ranap.no_rm + "</td><td>" + ranap.pasien
+                                    .nama_px +
+                                    "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
+                                    ranap.status.status_kunjungan + "</td><td>" +
+                                    ranap
+                                    .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
+                                        null ? 'Belum Pulang' : ranap.tgl_keluar) +
+                                    "</td></tr>";
+                                $('.riwayatRanap tbody').append(row);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            // Handle error appropriately
+                        }
+                    });
+                }
             });
         });
     </script>
