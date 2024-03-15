@@ -1,3 +1,5 @@
+<a href="{{ route('kunjunganranap') }}?kodeunit={{ $kunjungan->kode_unit }}"
+    class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
 <div class="row">
     <div class="col-md-3">
         <dl class="row">

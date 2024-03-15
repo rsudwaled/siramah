@@ -19,57 +19,59 @@
            <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
        </x-slot>
    </x-adminlte-modal>
-   <script>
-       function lihatHasilLaboratorium() {
-           $.LoadingOverlay("show");
-           getHasilLab();
-           $('#modalLaboratorium').modal('show');
+   @push('js')
+       <script>
+           function lihatHasilLaboratorium() {
+               $.LoadingOverlay("show");
+               getHasilLab();
+               $('#modalLaboratorium').modal('show');
 
-       }
+           }
 
-       function getHasilLab() {
-           var url = "{{ route('get_hasil_laboratorium') }}?norm={{ $kunjungan->no_rm }}";
-           var table = $('#tableLaboratorium').DataTable();
-           $.ajax({
-               type: "GET",
-               url: url,
-           }).done(function(data) {
-               table.rows().remove().draw();
-               if (data.metadata.code == 200) {
-                   $.each(data.response, function(key, value) {
-                       var periksa = '';
-                       var btn =
-                           '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
-                           value.laboratorium + '">Lihat</button> ';
-                       $.each(value.pemeriksaan, function(key, value) {
-                           periksa = periksa + value + '<br>';
+           function getHasilLab() {
+               var url = "{{ route('get_hasil_laboratorium') }}?norm={{ $kunjungan->no_rm }}";
+               var table = $('#tableLaboratorium').DataTable();
+               $.ajax({
+                   type: "GET",
+                   url: url,
+               }).done(function(data) {
+                   table.rows().remove().draw();
+                   if (data.metadata.code == 200) {
+                       $.each(data.response, function(key, value) {
+                           var periksa = '';
+                           var btn =
+                               '<button class="btn btn-xs btn-primary" onclick="showHasilLab(this)"  data-kode="' +
+                               value.laboratorium + '">Lihat</button> ';
+                           $.each(value.pemeriksaan, function(key, value) {
+                               periksa = periksa + value + '<br>';
+                           });
+                           table.row.add([
+                               value.tgl_masuk,
+                               value.counter + " / " + value.kode_kunjungan,
+                               value.no_rm + " / " + value.nama_px,
+                               value.nama_unit,
+                               periksa,
+                               btn,
+                           ]).draw(false);
                        });
-                       table.row.add([
-                           value.tgl_masuk,
-                           value.counter + " / " + value.kode_kunjungan,
-                           value.no_rm + " / " + value.nama_px,
-                           value.nama_unit,
-                           periksa,
-                           btn,
-                       ]).draw(false);
-                   });
-               } else {
-                   Swal.fire(
-                       'Mohon Maaf !',
-                       data.metadata.message,
-                       'error'
-                   );
-               }
-               $.LoadingOverlay("hide");
-           });
-       }
+                   } else {
+                       Swal.fire(
+                           'Mohon Maaf !',
+                           data.metadata.message,
+                           'error'
+                       );
+                   }
+                   $.LoadingOverlay("hide");
+               });
+           }
 
-       function showHasilLab(button) {
-           var kode = $(button).data('kode');
-           var url = "http://192.168.2.74/smartlab_waled/his/his_report?hisno=" +
-               kode;
-           $('#dataHasilLab').attr('src', url);
-           $('#urlHasilLab').attr('href', url);
-           $('#modalHasilLab').modal('show');
-       }
-   </script>
+           function showHasilLab(button) {
+               var kode = $(button).data('kode');
+               var url = "http://192.168.2.74/smartlab_waled/his/his_report?hisno=" +
+                   kode;
+               $('#dataHasilLab').attr('src', url);
+               $('#urlHasilLab').attr('href', url);
+               $('#modalHasilLab').modal('show');
+           }
+       </script>
+   @endpush

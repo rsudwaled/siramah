@@ -61,32 +61,44 @@
                         <dd class="col-sm-7">: {{ money($data->rangkuman->tarif_rs, 'IDR') }}</dd>
                     </dl>
                 </div>
-                <div class="col-md-12">
-                    @php
-                        $heads = ['Tgl', 'Unit', 'Group Vclaim', 'Nama Tarif', 'Grandtotal'];
-                        $config['order'] = [0, 'desc'];
-                        $config['paging'] = false;
-                        $config['info'] = false;
-                        $config['info'] = false;
-                        $config['scrollY'] = '300px';
-                    @endphp
-                    <x-adminlte-datatable id="tableRincianBiaya" class="nowrap text-xs" :heads="$heads"
-                        :config="$config" bordered hoverable compressed>
-                        @foreach ($data->rincian as $item)
-                            <tr>
-                                <td>{{ $item->TGL }}</td>
-                                <td>{{ $item->NAMA_UNIT }}</td>
-                                <td>{{ $item->nama_group_vclaim }}</td>
-                                <td>{{ $item->NAMA_TARIF }}</td>
-                                <td>{{ $item->GRANTOTAL_LAYANAN }}</td>
-                            </tr>
-                        @endforeach
-                    </x-adminlte-datatable>
-                </div>
+                <button class="btn btn-warning btn-sm" onclick="lihatRincianBiaya()"><i
+                        class="fas fa-money-check-alt"></i> Detail Rincian
+                    Biaya</button>
+
             </div>
         </div>
     </div>
 </div>
+<x-adminlte-modal id="modalRincianBiaya" name="modalRincianBiaya" title="Detail Rincian Biaya" theme="success"
+    icon="fas fa-money-check-alt" size="xl">
+    <div class="row">
+        <div class="col-md-12">
+            @php
+                $heads = ['Tgl', 'Unit', 'Group Vclaim', 'Nama Tarif', 'Grandtotal'];
+                $config['order'] = [0, 'desc'];
+                $config['paging'] = false;
+                $config['info'] = false;
+                $config['info'] = false;
+                $config['scrollY'] = '300px';
+            @endphp
+            <x-adminlte-datatable id="tableRincianBiaya" class="nowrap text-xs" :heads="$heads" :config="$config"
+                bordered hoverable compressed>
+                @foreach ($data->rincian as $item)
+                    <tr>
+                        <td>{{ $item->TGL }}</td>
+                        <td>{{ $item->NAMA_UNIT }}</td>
+                        <td>{{ $item->nama_group_vclaim }}</td>
+                        <td>{{ $item->NAMA_TARIF }}</td>
+                        <td>{{ $item->GRANTOTAL_LAYANAN }}</td>
+                    </tr>
+                @endforeach
+            </x-adminlte-datatable>
+        </div>
+    </div>
+    <x-slot name="footerSlot">
+        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+    </x-slot>
+</x-adminlte-modal>
 <script>
     $(function() {
         $('.biaya_rs_html').html("{{ money($data->rangkuman->tarif_rs, 'IDR') }}");
@@ -122,4 +134,7 @@
             );
         }
     });
+    function lihatRincianBiaya() {
+        $('#modalRincianBiaya').modal('show');
+    }
 </script>
