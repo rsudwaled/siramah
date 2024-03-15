@@ -10,6 +10,7 @@ use App\Models\ErmRanapMppb;
 use App\Models\ErmRanapObservasi;
 use App\Models\ErmRanapPerkembangan;
 use App\Models\FileRekamMedis;
+use App\Models\FileUpload;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
 use App\Models\TagihanPasien;
@@ -204,7 +205,8 @@ class RanapController extends APIController
     public function get_file_upload(Request $request)
     {
         $files = FileRekamMedis::where('norm', $request->norm)->get();
-        return view('simrs.ranap.table_file_upload', compact('files'));
+        $fileupload = FileUpload::where('no_rm', $request->norm)->get();
+        return view('simrs.ranap.table_file_upload', compact('files','fileupload'));
     }
     public function get_hasil_patologi(Request $request)
     {

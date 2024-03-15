@@ -20,10 +20,25 @@
             </td>
         </tr>
     @endforeach
+    @foreach ($fileupload as $file)
+        <tr>
+            <td>{{ $file->tgl_upload }}</td>
+            <td>{{ $file->no_rm }}</td>
+            <td>{{ $file->pasien->nama_px }}</td>
+            <td>{{ $file->nama ?? $file->gambar }}</td>
+            <td>File</td>
+            <td>
+                <button class="btn btn-xs btn-primary" onclick="lihatFile(this)" data-fileurl="http://192.168.2.45/files/{{ $file->gambar }}">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        </tr>
+    @endforeach
 </x-adminlte-datatable>
 <script>
     $(function() {
         $('#tableFileUpload').DataTable({
+            "order": [[0, 'desc']],
             "paging": false,
             "info": false,
             "scrollX": true,
