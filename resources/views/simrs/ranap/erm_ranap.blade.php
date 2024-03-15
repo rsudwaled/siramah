@@ -10,31 +10,31 @@
     <div class="row">
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
-                <a href="{{ route('kunjunganranap') }}?kodeunit={{ $kunjungan->kode_unit }}"
-                    class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
                 @include('simrs.ranap.erm_ranap_profil')
                 <x-slot name="footerSlot">
-                    <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
-                        icon="fas fa-search" />
+                    {{-- <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
+                        icon="fas fa-search" /> --}}
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
                         label="Laboratorium" icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
                         icon="fas fa-file-medical" />
                     <x-adminlte-button class="btn-xs mb-1" onclick="lihatLabPa()" theme="warning" label="Patologi Anatomi"
                         icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 " theme="warning" label="Berkas Upload"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Rincian Biaya" icon="fas fa-diagnoses" />
-
+                    <x-adminlte-button class="btn-xs mb-1 " onclick="lihatFileUpload()" theme="warning"
+                        label="Berkas Upload" icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Rincian Biaya"
+                        icon="fas fa-money-check-alt" onclick="lihatRincianBiaya()" />
                     <hr class="mb-1 mt-0">
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Groupping" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Perawat" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Perawat"
+                        icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Resiko Jatuh" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Skala Nyeri" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="SBAR TBAK" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Dokter" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Konsultasi" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Transfer Pasien" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Transfer Pasien"
+                        icon="fas fa-diagnoses" />
                     <hr class="mb-1 mt-0">
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
@@ -182,21 +182,6 @@
                         @include('simrs.ranap.erm_ranap_mppb')
                         {{-- resume --}}
                         @include('simrs.ranap.erm_ranap_resume')
-                        {{-- laboratorium --}}
-                        {{-- @include('simrs.ranap.erm_ranap_lab') --}}
-                        {{-- radiologi --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRadiologi">
-                                <h3 class="card-title">
-                                    Radiologi
-                                </h3>
-                            </a>
-                            <div id="cRadiologi" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
                         {{-- tindakan --}}
                         {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakan">
@@ -454,28 +439,18 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- filepenunjang --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#collapseFile">
-                                <h3 class="card-title">
-                                    File Penunjang
-                                </h3>
-                            </a>
-                            <div id="collapseFile" class="collapse" role="tabpanel" aria-labelledby="headFile">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn  btn-danger">Kembali</a>
+                    {{-- <a href="#" class="btn  btn-danger">Kembali</a> --}}
                 </div>
             </div>
         </div>
     </div>
-
+    @include('simrs.ranap.erm_ranap_lab')
+    @include('simrs.ranap.erm_ranap_rad')
+    @include('simrs.ranap.erm_ranap_patologi')
+    @include('simrs.ranap.erm_ranap_file_rm')
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
@@ -795,9 +770,6 @@
             });
         }
     </script>
-    @include('simrs.ranap.erm_ranap_lab')
-    @include('simrs.ranap.erm_ranap_rad')
-    @include('simrs.ranap.erm_ranap_patologi')
     {{-- suratkontrol --}}
     <x-adminlte-modal id="modalCariSuratKontrol" name="modalCariSuratKontrol" title="Surat Kontrol Pasien"
         theme="success" icon="fas fa-file-medical" size="xl">
