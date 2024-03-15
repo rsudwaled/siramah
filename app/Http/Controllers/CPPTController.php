@@ -32,8 +32,13 @@ class CPPTController extends Controller
         // $counter ='2';
         $rm = $request->rm;
         $counter = $request->counter;
-        $kode_kunjungan = $request->kode_kunjungan;
+        // $kode_kunjungan = $request->kode_kunjungan;
         $data = \DB::connection('mysql2')->select("CALL SP_ASSESMEN_DOKTER_MEDIS_RAWAT_JALAN('$rm','$counter')");
+        // dd($data);
+        if (empty($data)) {
+            // Panggil JavaScript untuk menutup tab
+            echo '<script type="text/javascript">alert("Data kosong. Tab akan ditutup."); window.close();</script>';
+        }
         header("Content-type: image/gif");
         $datagbr = $data[0]->gambar_1;
 

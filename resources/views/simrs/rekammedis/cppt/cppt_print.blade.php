@@ -110,7 +110,7 @@
         <tr>
             <th>
                 <div class="container-assesment">
-                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN (KLINIK)</div>
+                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN {{ $data->NAMA_POLI }}</div>
                 </div>
             </td>
             <th >
@@ -143,7 +143,7 @@
                     </tr>
                     <tr>
                         <td>Keluhan Pasien</td>
-                        <td id="td_right">Burem</td>
+                        <td id="td_right">{{ $data->keluhan_pasien }}</td>
                     </tr>
                     <tr>
                         <td>Tekanan Darah</td>
@@ -295,27 +295,27 @@
                 <table id="tbl_right">
                     <tr>
                         <td>Keadaan Umum</td>
-                        <td id="td_right"></td>
+                        <td id="td_right">{{ $data->keadaanumum }}</td>
                     </tr>
                     <tr>
                         <td>Kesadaran</td>
-                        <td id="td_right">Composmentis</td>
+                        <td id="td_right">{{ $data->kesadaran }}</td>
                     </tr>
                     <tr>
                         <td>Diagnosa Kerja</td>
-                        <td id="td_right">keratilis od (resolving)</td>
+                        <td id="td_right">{{ $data->diagnosakerja }}</td>
                     </tr>
                     <tr>
                         <td>Diagnosa Branding</td>
-                        <td id="td_right"></td>
+                        <td id="td_right">{{ $data->diagnosabanding }}</td>
                     </tr>
                     <tr>
                         <td>Rencana Kerja</td>
-                        <td id="td_right">tobrosan ed 6 x OD(habiskan)</td>
+                        <td id="td_right">{{ $data->rencanakerja }}</td>
                     </tr>
                     <tr>
                         <td>Tindak Lanjut</td>
-                        <td id="td_right">KONTROL</td>
+                        <td id="td_right">{{ $data->TINDAK_LANJUT }}</td>
                     </tr>
                 </table>
             </td>
@@ -353,7 +353,7 @@
         <tr>
             <th>
                 <div class="container-assesment">
-                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN MATA (KLINIK)</div>
+                    <div class="title_left">ASSESMEN AWAL MEDIS RAWAT JALAN {{ $data->NAMA_POLI }}</div>
                     <table id="tbl_right">
                         <tr>
                             <td>Tanggal Kunjungan</td>
