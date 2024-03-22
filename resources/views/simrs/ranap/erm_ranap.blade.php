@@ -27,10 +27,11 @@
                     <hr class="mb-1 mt-0">
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Asesmen Awal Medis"
                         onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
-                        label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Asesmen Keperawatan"
                         onclick="modalAsesmenKeperawatan()" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
+                        label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-diagnoses" />
+
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Resiko Jatuh" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Skala Nyeri" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="SBAR TBAK" icon="fas fa-diagnoses" />
@@ -105,7 +106,10 @@
                             </div>
                         </div> --}}
                         {{-- groupping --}}
+                        @include('simrs.ranap.modal_asesmen_awal')
+                        @include('simrs.ranap.modal_asesmen_keperawatan')
                         @include('simrs.ranap.modal_groupping')
+
                         {{-- perkembangan --}}
                         @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
                         {{-- keperawatan --}}
@@ -453,8 +457,6 @@
     @include('simrs.ranap.erm_ranap_rad')
     @include('simrs.ranap.erm_ranap_patologi')
     @include('simrs.ranap.erm_ranap_file_rm')
-    @include('simrs.ranap.modal_asesmen_awal')
-    @include('simrs.ranap.modal_asesmen_keperawatan')
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
