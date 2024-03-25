@@ -16,8 +16,11 @@ use App\Models\Pasien;
 use App\Models\TagihanPasien;
 use App\Models\TtdDokter;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -206,7 +209,7 @@ class RanapController extends APIController
     {
         $files = FileRekamMedis::where('norm', $request->norm)->get();
         $fileupload = FileUpload::where('no_rm', $request->norm)->get();
-        return view('simrs.ranap.table_file_upload', compact('files','fileupload'));
+        return view('simrs.ranap.table_file_upload', compact('files', 'fileupload'));
     }
     public function get_hasil_patologi(Request $request)
     {
@@ -539,7 +542,8 @@ class RanapController extends APIController
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
         $mppa = $kunjungan->erm_ranap_mppa;
         $pasien = $kunjungan->pasien;
-        return view('simrs.ranap.print_mppa', compact('kunjungan', 'mppa', 'pasien',));
+        $pdf = Pdf::loadView('simrs.ranap.pdf_mppa', compact('kunjungan', 'mppa', 'pasien'));
+        return $pdf->stream('invoice.pdf');
     }
     public function simpan_mppb(Request $request)
     {

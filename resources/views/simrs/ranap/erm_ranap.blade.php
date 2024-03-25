@@ -32,12 +32,22 @@
                     <x-adminlte-button class="btn-xs mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
                         label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-diagnoses" />
 
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Skrining Gizi" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Resiko Jatuh" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Skala Nyeri" icon="fas fa-diagnoses" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Edukasi" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="SBAR TBAK" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Asesmen Dokter" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Konsultasi" icon="fas fa-diagnoses" />
                     <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Transfer Pasien" icon="fas fa-diagnoses" />
+                    <hr class="mb-1 mt-0">
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Rencana Pemulangan"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Evaluasi Awal MPP A" onclick="modalMppA()"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Catatan Implementasi MPP B"
+                        icon="fas fa-file-medical" />
+                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Resume Ranap" icon="fas fa-file-medical" />
                     <hr class="mb-1 mt-0">
                     <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
                         icon="fas fa-file-medical" />
@@ -109,7 +119,6 @@
                         @include('simrs.ranap.modal_asesmen_awal')
                         @include('simrs.ranap.modal_asesmen_keperawatan')
                         @include('simrs.ranap.modal_groupping')
-
                         {{-- perkembangan --}}
                         @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
                         {{-- keperawatan --}}
@@ -183,7 +192,7 @@
                             </div>
                         </div> --}}
                         {{-- mpp form a --}}
-                        @include('simrs.ranap.erm_ranap_mppa')
+                        @include('simrs.ranap.modal_mpp_a')
                         {{-- mpp form b --}}
                         @include('simrs.ranap.erm_ranap_mppb')
                         {{-- resume --}}
