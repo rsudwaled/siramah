@@ -398,7 +398,7 @@ return [
                     'url'  => 'kunjunganranap',
                     'active' => ['kunjunganranap', 'pasienranapprofile'],
                     'shift'   => 'ml-2',
-                    'can' => 'ranap',
+                    'can' => ['ranap','rekam-medis'],
                 ],
                 // [
                 //     'text' => 'Pasien Ranap Aktif',
