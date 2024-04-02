@@ -33,10 +33,35 @@ class RanapController extends APIController
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
-        return view('simrs.ranap.kunjungan_ranap', compact([
+
+        $kunjungans = null;
+        $request['tanggal'] = $request->tanggal ?? now()->format('Y-m-d');
+        if ($request->tanggal) {
+            $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
+            $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
+            if ($request->kodeunit == '-') {
+                $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->whereRelation('unit', 'kelas_unit', '=', 2)
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
+                    ->where('tgl_masuk', '<=', $request->tgl_awal)
+                    ->where('tgl_keluar', '>=', $request->tgl_akhir)
+                    ->orWhere('status_kunjungan', 1)
+                    ->where('kode_unit', $request->kodeunit)
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->get();
+            }
+        }
+        return view('simrs.ranap.kunjungan_ranap', compact(
             'request',
             'units',
-        ]));
+            'kunjungans',
+        ));
     }
     public function table_pasien_ranap(Request $request)
     {

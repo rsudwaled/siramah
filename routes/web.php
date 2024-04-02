@@ -207,7 +207,6 @@ Route::middleware('auth')->group(function () {
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
 
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
-    Route::get('table_pasien_ranap', [RanapController::class, 'table_pasien_ranap'])->name('table_pasien_ranap');
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::get('get_rincian_biaya', [RanapController::class, 'get_rincian_biaya'])->name('get_rincian_biaya');
 
