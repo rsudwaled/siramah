@@ -10,12 +10,34 @@
             www.rsudwaled.id - 0823 1169 6919 - (0231) 8850943
         </td>
         <td width="40%">
-            No RM : <b>{{ $pasien->no_rm }}</b> <br>
-            Nama : <b>{{ $pasien->nama_px }}</b> <br>
-            Tgl Lahir : <b>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d, F Y') }}
-                ({{ \Carbon\Carbon::parse($pasien->tgl_lahir)->diffInYears($kunjungan->tgl_masuk) }}
-                tahun)</b> <br>
-            Kelamin : <b>{{ $pasien->jenis_kelamin }}</b>
+            <table class="table-borderless">
+                <tr>
+                    <td>No RM</td>
+                    <td>:</td>
+                    <td><b>{{ $pasien->no_rm }}</b></td>
+                </tr>
+                <tr>
+                    <td>Nama</td>
+                    <td>:</td>
+                    <td><b>{{ $pasien->nama_px }}</b></td>
+                </tr>
+                <tr>
+                    <td>Tgl Lahir</td>
+                    <td>:</td>
+                    <td>
+                        <b>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d, F Y') }}
+                            ({{ \Carbon\Carbon::parse($pasien->tgl_lahir)->diffInYears($kunjungan->tgl_masuk) }}
+                            tahun)</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Kelamin</td>
+                    <td>:</td>
+                    <td>
+                        <b>{{ $pasien->jenis_kelamin }}</b>
+                    </td>
+                </tr>
+            </table>
         </td>
     </tr>
 </table>

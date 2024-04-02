@@ -23,6 +23,8 @@
                     </dl>
                 </div>
             </div>
+            <x-adminlte-button class="btn-sm mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
+                label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-edit" />
         </div>
     </div>
 </div>

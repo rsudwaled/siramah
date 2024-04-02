@@ -59,14 +59,24 @@
         .table-bordered thead td {
             border-bottom-width: 2px;
         }
+
+        .table-borderless {
+            border: 0px solid black !important;
+            padding: 0;
+        }
+
+        .table-borderless th,
+        .table-borderless td {
+            border: 0px solid black !important;
+            padding: 0;
+        }
     </style>
     @yield('css')
     @push('css')
-</head>
+    </head>
 
-<body style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
-    @include('simrs.ranap.pdf_kop_surat')
-    @yield('content')
-</body>
+    <body style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+        @yield('content')
+    </body>
 
-</html>
+    </html>

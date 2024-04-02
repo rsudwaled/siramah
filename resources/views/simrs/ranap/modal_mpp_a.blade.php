@@ -6,11 +6,12 @@
     </a>
     <div id="mppforma" class="collapse" role="tabpanel">
         <div class="card-body">
-            <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Edit Evaluasi Awal MPP A" onclick="modalMppA()"
-                icon="fas fa-edit" />
-            <a href="{{ route('print_mppa') }}?kode={{ $kunjungan->kode_kunjungan }}" class="btn btn-success btn-xs mb-1"
-                target="_blank" rel="noopener noreferrer"> <i class="fas fa-print"></i> Print</a>
             @include('simrs.ranap.table_mppa')
+            <x-adminlte-button class="btn-sm mb-1" theme="danger" label="Edit Evaluasi Awal MPP A" onclick="modalMppA()"
+                icon="fas fa-edit" />
+            <a href="{{ route('print_mppa') }}?kode={{ $kunjungan->kode_kunjungan }}"
+                class="btn btn-success btn-sm mb-1" target="_blank" rel="noopener noreferrer"> <i
+                    class="fas fa-print"></i> Print</a>
         </div>
     </div>
 </div>
