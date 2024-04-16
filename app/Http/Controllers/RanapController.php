@@ -19,11 +19,8 @@ use App\Models\TtdDokter;
 use App\Models\Unit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Dompdf\Dompdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -46,7 +43,7 @@ class RanapController extends APIController
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status','erm_ranap','penjamin_simrs','alasan_masuk','dokter'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
@@ -54,7 +51,7 @@ class RanapController extends APIController
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->where('kode_unit', $request->kodeunit)
-                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status','erm_ranap','penjamin_simrs','alasan_masuk','dokter'])
                     ->get();
             }
         }

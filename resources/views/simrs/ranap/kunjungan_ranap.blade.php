@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </form>
-                @if ($kunjungans)
+                @if ($kunjungans->count())
                     <div class="row">
                         <div class="col-md-3">
                             <x-adminlte-small-box title="{{ $kunjungans->where('tgl_keluar', null)->count() }}"
@@ -130,15 +130,15 @@
                                     class="btn btn-primary btn-xs withLoad"><i class="fas fa-file-medical"></i> ERM</a>
                             </td>
                             <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
+                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
                                 {{ $kunjungan->tagihan ? money($kunjungan->tagihan->total_biaya, 'IDR') : 'Rp 0' }}
                             </td>
                             <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
+                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
                                 {{ $kunjungan->budget ? money($kunjungan->budget->tarif_inacbg, 'IDR') : 'Rp 0' }}
                             </td>
                             <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'table-danger' : null) : null }}">
+                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
                                 @if ($kunjungan->tagihan && $kunjungan->budget)
                                     @if ($kunjungan->tagihan->total_biaya && $kunjungan->budget->tarif_inacbg)
                                         {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
