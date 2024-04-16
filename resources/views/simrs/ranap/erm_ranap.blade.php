@@ -51,6 +51,12 @@
                             @endif
                         </a>
                     </li>
+                    <li class="nav-item" onclick="modalAsuhanTerpadu()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-user-md"></i> Rencana Asuhan Terpadu
+                            <span class="badge bg-primary float-right">{{ $kunjungan->asuhan_terpadu->count() }}</span>
+                        </a>
+                    </li>
                     <li class="nav-item" onclick="modalAsesmenKeperawatan()">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical-alt"></i> Asesmen Keperawatan
@@ -124,10 +130,10 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
-                        @include('simrs.ranap.erm_ranap_lab')
-                        @include('simrs.ranap.erm_ranap_rad')
-                        @include('simrs.ranap.erm_ranap_patologi')
-                        @include('simrs.ranap.erm_ranap_file_rm')
+                        @include('simrs.ranap.modal_laboratorium')
+                        @include('simrs.ranap.modal_radiologi')
+                        @include('simrs.ranap.modal_patologi')
+                        @include('simrs.ranap.modal_file_rm')
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
                         {{-- IGD --}}
@@ -150,6 +156,8 @@
                         <div id="rincian_biaya"></div>
                         {{-- asesmen awal --}}
                         @include('simrs.ranap.modal_asesmen_awal')
+                        {{-- asuhan terpadu --}}
+                        @include('simrs.ranap.modal_asuhan_terpadu')
                         {{-- asesmen perawat --}}
                         @include('simrs.ranap.modal_asesmen_keperawatan')
                         {{-- groupping --}}

@@ -247,6 +247,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
 
     Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
+    Route::post('simpan_rencana_asuhan_terpadu', [RanapController::class, 'simpan_rencana_asuhan_terpadu'])->name('simpan_rencana_asuhan_terpadu');
     Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
 
     // laboratorium

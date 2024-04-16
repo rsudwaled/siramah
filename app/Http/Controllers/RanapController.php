@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AsesmenRanap;
+use App\Models\AsuhanTerpadu;
 use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
@@ -73,6 +74,7 @@ class RanapController extends APIController
             'groupping',
             'erm_ranap',
             'asesmen_ranap',
+            'asuhan_terpadu',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
@@ -132,6 +134,17 @@ class RanapController extends APIController
             $request->all()
         );
         Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
+        return redirect()->back();
+    }
+    public function simpan_rencana_asuhan_terpadu(Request $request)
+    {
+        AsuhanTerpadu::updateOrCreate(
+            [
+                'kode' => $request->kode
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Rencana Asuhan Terpadu Rawat Inap Disimpan');
         return redirect()->back();
     }
     public function print_asesmen_ranap_awal(Request $request)

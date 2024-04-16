@@ -141,6 +141,41 @@
             <tr>
                 <td width="100%" colspan="2">
                     <b>Rencana Asuhan Terpadu</b><br>
+                    <table class="table table-xs table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Profesi</th>
+                                <th>Rencana Asuhan</th>
+                                <th>Capaian yang diharapkan</th>
+                                <th>Ttd & Nama Jelas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($kunjungan->asuhan_terpadu)
+                                @foreach ($kunjungan->asuhan_terpadu as $item)
+                                    <tr>
+                                        <td>{{ $item->tgl_waktu }}</td>
+                                        <td>{{ $item->profesi }}</td>
+                                        <td>
+                                            <pre>{{ $item->rencana_asuhan }}</pre>
+                                        </td>
+                                        <td>
+                                            <pre>{{ $item->capaian_diharapkan }}</pre>
+                                        </td>
+                                        <td>{{ $item->pic }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            <tr>
+                                <td>.........</td>
+                                <td>.........</td>
+                                <td>.........</td>
+                                <td>.........</td>
+                                <td>.........</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </td>
             </tr>
             <tr>

@@ -45,6 +45,11 @@
             padding: 0.3rem;
         }
 
+        .table-xs th,
+        .table-xs td {
+            padding: 2px;
+        }
+
         .table-bordered {
             border: 1px solid black !important;
             padding: 0;

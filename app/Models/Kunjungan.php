@@ -146,6 +146,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(AsesmenRanap::class, 'rm_counter',   'rm_counter');
     }
+    public function asuhan_terpadu()
+    {
+        return $this->hasMany(AsuhanTerpadu::class, 'rm_counter',   'rm_counter');
+    }
     public function budget()
     {
         return $this->belongsTo(BudgetControl::class, 'rm_counter',   'rm_counter');

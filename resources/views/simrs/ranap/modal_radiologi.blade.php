@@ -1,4 +1,4 @@
-    <x-adminlte-modal id="modalRadiologi" name="modalRadiologi" title="Hasil Laboratirirum Pasien" theme="success"
+    <x-adminlte-modal id="modalRadiologi" name="modalRadiologi" title="Hasil Radiologi Pasien" theme="success"
         icon="fas fa-file-medical" size="xl">
         @php
             $heads = ['Tgl Masuk', 'Kunjungan', 'Pasien', 'Unit', 'Pemeriksaan', 'Action'];
