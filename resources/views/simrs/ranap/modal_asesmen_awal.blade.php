@@ -9,8 +9,9 @@
     </a>
     <div id="cAsesemenAwal" class="collapse" role="tabpanel">
         <div class="card-body">
-            @include('simrs.ranap.form_asesmen_ranap_awal')
-            Asesmen Awal Medis Rawat Inap
+            <x-adminlte-button class="mb-1" theme="{{ $kunjungan->asesmen_ranap ? 'success' : 'danger' }}" label="Edit Asesmen Awal Medis"
+                onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
+            <iframe src="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" width="100%" height="700px" frameborder="0"></iframe>
         </div>
     </div>
 </div>

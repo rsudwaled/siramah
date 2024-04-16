@@ -11,56 +11,116 @@
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
-                <x-slot name="footerSlot">
-                    {{-- <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
-                        icon="fas fa-search" /> --}}
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
-                        label="Laboratorium" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatLabPa()" theme="warning" label="Patologi Anatomi"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 " onclick="lihatFileUpload()" theme="warning"
-                        label="Berkas Upload" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Rincian Biaya"
-                        icon="fas fa-money-check-alt" onclick="lihatRincianBiaya()" />
-                    <hr class="mb-1 mt-0">
-                    <x-adminlte-button class="btn-xs mb-1" theme="{{ $kunjungan->asesmen_ranap ? 'success' : 'danger' }}" label="Asesmen Awal Medis"
-                        onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Asesmen Keperawatan"
-                        onclick="modalAsesmenKeperawatan()" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
-                        label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-diagnoses" />
-
-                    {{-- <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Skrining Gizi" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Resiko Jatuh" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Skala Nyeri" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Edukasi" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="SBAR TBAK" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Asesmen Dokter" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Konsultasi" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Transfer Pasien" icon="fas fa-diagnoses" /> --}}
-                    <hr class="mb-1 mt-0">
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Rencana Pemulangan"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Evaluasi Awal MPP A" onclick="modalMppA()"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Catatan Implementasi MPP B"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="danger" label="Resume Ranap" icon="fas fa-file-medical" />
-                    <hr class="mb-1 mt-0">
-                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanRS" theme="primary" label="Rujukan RS"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnCariSEP" theme="primary" label="SEP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="cariSuratKontrol()" theme="primary"
-                        label="Surat Kontrol" icon="fas fa-file-medical" />
-                </x-slot>
             </x-adminlte-card>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-3">
+            <x-adminlte-card id="nav" theme="primary" title="Navigasi" theme-mode="outline" body-class="p-0">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item" onclick="lihatHasilLaboratorium()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-vials"></i> Laboratorium
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatHasilRadiologi()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-x-ray"></i> Radiologi
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatLabPa()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-microscope"></i> Lab Patologi Anatomi
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatFileUpload()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Berkas File Upload
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatRincianBiaya()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-invoice-dollar"></i> Rincian Biaya
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="modalAsesmenAwal()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Asesmen Awal Medis
+                            @if ($kunjungan->asesmen_ranap)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else
+                                <span class="badge bg-danger float-right">Belum</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="modalAsesmenKeperawatan()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Asesmen Keperawatan
+                            {{-- @if ($kunjungan->asesmen_ranap)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else --}}
+                            <span class="badge bg-danger float-right">Belum</span>
+                            {{-- @endif --}}
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="btnModalGroupping()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-diagnoses"></i> Groupping E-Klaim
+                            @if ($groupping)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else
+                                <span class="badge bg-danger float-right">Belum</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Evaluasi Awal MPP A
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Catatan Implementasi MPP B
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Resume Rawat Inap
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariRujukanFKTP">
+                            <i class="fas fa-inbox"></i> Rujukan FKTP
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariRujukanRS">
+                            <i class="fas fa-inbox"></i> Rujukan RS
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariSEP">
+                            <i class="fas fa-file-medical"></i> SEP
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link" onclick="cariSuratKontrol()">
+                            <i class="fas fa-file-medical"></i> Surat Kontrol
+                        </a>
+                    </li>
+                </ul>
+            </x-adminlte-card>
+        </div>
+        <div class="col-md-9">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
@@ -74,7 +134,8 @@
                                 </h3>
                             </a>
                             <div id="cIGD" class="collapse" role="tabpanel">
-                                <div class="card-body p-0">
+                                <div class="card-body">
+                                    Riwayat & Triase IGD On Building
                                     {{-- <iframe
                                         src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
                                         height="780" width="100%" frameborder="0"></iframe> --}}
@@ -457,7 +518,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    {{-- <a href="#" class="btn  btn-danger">Kembali</a> --}}
+                    {{-- <a href="#nav" class="btn  btn-danger">Kembali</a> --}}
                 </div>
             </div>
         </div>
