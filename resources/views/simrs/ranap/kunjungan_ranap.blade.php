@@ -78,7 +78,7 @@
                         'Penjamin',
                         'Alasan',
                     ];
-                    $config['order'] = [['3', 'asc']];
+                    $config['order'] = [['0', 'asc']];
                     $config['fixedColumns'] = [
                         'leftColumns' => 7,
                     ];

@@ -70,12 +70,17 @@
             border: 0px solid black !important;
             padding: 0;
         }
+
+        pre {
+            margin: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+        }
     </style>
     @yield('css')
     @push('css')
     </head>
 
-    <body style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
+    <body style="font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif">
         @yield('content')
     </body>
 

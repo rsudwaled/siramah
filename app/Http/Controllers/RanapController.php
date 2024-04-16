@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AsesmenRanap;
 use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
@@ -561,6 +562,24 @@ class RanapController extends APIController
         );
         Alert::success('Success', 'Data MPP Form A Berhasil Disimpan');
         return redirect()->back();
+    }
+    public function simpan_asesmen_ranap_awal(Request $request)
+    {
+        AsesmenRanap::updateOrCreate(
+            [
+                'rm_counter' => $request->rm_counter
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
+        return redirect()->back();
+    }
+    public function print_asesmen_ranap_awal(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $pasien = $kunjungan->pasien;
+        $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_ranap_awal', compact('kunjungan', 'pasien'));
+        return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
     }
     public function print_mppa(Request $request)
     {
