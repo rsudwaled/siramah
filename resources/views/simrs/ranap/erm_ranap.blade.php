@@ -11,46 +11,123 @@
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
-                <x-slot name="footerSlot">
-                    {{-- <x-adminlte-button class="btn-xs mb-1 btnRiwayatKunjungan" theme="warning" label="Riwayat Kunjungan"
-                        icon="fas fa-search" /> --}}
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilLaboratorium()" theme="warning"
-                        label="Laboratorium" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatHasilRadiologi()" theme="warning" label="Radiologi"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="lihatLabPa()" theme="warning" label="Patologi Anatomi"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 " onclick="lihatFileUpload()" theme="warning"
-                        label="Berkas Upload" icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Rincian Biaya"
-                        icon="fas fa-money-check-alt" onclick="lihatRincianBiaya()" />
-                    <hr class="mb-1 mt-0">
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Groupping" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Perawat"
-                        icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Resiko Jatuh" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Skala Nyeri" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="SBAR TBAK" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Asesmen Dokter" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Konsultasi" icon="fas fa-diagnoses" />
-                    <x-adminlte-button class="btn-xs mb-1" theme="warning" label="Transfer Pasien"
-                        icon="fas fa-diagnoses" />
-                    <hr class="mb-1 mt-0">
-                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanFKTP" theme="primary" label="Rujukan FKTP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnCariRujukanRS" theme="primary" label="Rujukan RS"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1 btnCariSEP" theme="primary" label="SEP"
-                        icon="fas fa-file-medical" />
-                    <x-adminlte-button class="btn-xs mb-1" onclick="cariSuratKontrol()" theme="primary"
-                        label="Surat Kontrol" icon="fas fa-file-medical" />
-                </x-slot>
             </x-adminlte-card>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-3">
+            <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
+                <ul class="nav nav-pills flex-column">
+                    <li class="nav-item" onclick="lihatHasilLaboratorium()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-vials"></i> Laboratorium
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatHasilRadiologi()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-x-ray"></i> Radiologi
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatLabPa()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-microscope"></i> Lab Patologi Anatomi
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatFileUpload()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Berkas File Upload
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="lihatRincianBiaya()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-invoice-dollar"></i> Rincian Biaya
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="modalAsesmenAwal()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Asesmen Awal Medis
+                            @if ($kunjungan->asesmen_ranap)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else
+                                <span class="badge bg-danger float-right">Belum</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="modalAsesmenKeperawatan()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Asesmen Keperawatan
+                            {{-- @if ($kunjungan->asesmen_ranap)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else --}}
+                            <span class="badge bg-danger float-right">Belum</span>
+                            {{-- @endif --}}
+                        </a>
+                    </li>
+                    <li class="nav-item" onclick="btnModalGroupping()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-diagnoses"></i> Groupping E-Klaim
+                            @if ($groupping)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else
+                                <span class="badge bg-danger float-right">Belum</span>
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Evaluasi Awal MPP A
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Catatan Implementasi MPP B
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical-alt"></i> Resume Rawat Inap
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    {{-- <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariRujukanFKTP">
+                            <i class="fas fa-inbox"></i> Rujukan FKTP
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariRujukanRS">
+                            <i class="fas fa-inbox"></i> Rujukan RS
+                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link btnCariSEP">
+                            <i class="fas fa-file-medical"></i> SEP
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link" onclick="cariSuratKontrol()">
+                            <i class="fas fa-file-medical"></i> Surat Kontrol
+                        </a>
+                    </li>
+                </ul>
+            </x-adminlte-card>
+        </div>
+        <div class="col-md-9">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
+                        @include('simrs.ranap.erm_ranap_lab')
+                        @include('simrs.ranap.erm_ranap_rad')
+                        @include('simrs.ranap.erm_ranap_patologi')
+                        @include('simrs.ranap.erm_ranap_file_rm')
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
                         {{-- IGD --}}
@@ -61,7 +138,8 @@
                                 </h3>
                             </a>
                             <div id="cIGD" class="collapse" role="tabpanel">
-                                <div class="card-body p-0">
+                                <div class="card-body">
+                                    Riwayat & Triase IGD On Building
                                     {{-- <iframe
                                         src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
                                         height="780" width="100%" frameborder="0"></iframe> --}}
@@ -69,41 +147,13 @@
                             </div>
                         </div>
                         {{-- rincian --}}
-                        {{-- @include('simrs.ranap.erm_ranap_biaya') --}}
                         <div id="rincian_biaya"></div>
-                        {{-- administrasi --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
-                                <h3 class="card-title">
-                                    Administrasi Kunjungan
-                                </h3>
-                            </a>
-                            <div id="cAdministrasi" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    <form action="" name="formAdm" id="formAdm" method="POST"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        @php
-                                            $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
-                                        @endphp
-                                        <x-adminlte-input-date name="tgl_masuk" class="tgl_masuk-id" label="Tgl Masuk"
-                                            value="{{ $kunjungan->tgl_masuk }}" igroup-size="sm" :config="$config"
-                                            readonly />
-                                        <x-adminlte-input-date name="tgl_keluar" class="tgl_keluar-id" label="Tgl Keluar"
-                                            value="{{ $kunjungan->tgl_keluar }}" igroup-size="sm" :config="$config"
-                                            readonly />
-                                        <input type="hidden" name="kodekunjungan" value="{{ $kunjungan->kode_kunjungan }}">
-                                        <x-adminlte-input name="no_sep" placeholder="No SEP" igroup-size="sm"
-                                            label="No SEP" enable-old-support required value="{{ $kunjungan->no_sep }}" />
-                                        <button type="submit" form="formAdm" class="btn btn-success">
-                                            <i class="fas fa-edit"></i> Update Administrasi
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div> --}}
+                        {{-- asesmen awal --}}
+                        @include('simrs.ranap.modal_asesmen_awal')
+                        {{-- asesmen perawat --}}
+                        @include('simrs.ranap.modal_asesmen_keperawatan')
                         {{-- groupping --}}
-                        @include('simrs.ranap.erm_ranap_groupping')
+                        @include('simrs.ranap.modal_groupping')
                         {{-- perkembangan --}}
                         @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
                         {{-- keperawatan --}}
@@ -177,7 +227,7 @@
                             </div>
                         </div> --}}
                         {{-- mpp form a --}}
-                        @include('simrs.ranap.erm_ranap_mppa')
+                        @include('simrs.ranap.modal_mpp_a')
                         {{-- mpp form b --}}
                         @include('simrs.ranap.erm_ranap_mppb')
                         {{-- resume --}}
@@ -441,16 +491,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    {{-- <a href="#" class="btn  btn-danger">Kembali</a> --}}
-                </div>
             </div>
         </div>
     </div>
-    @include('simrs.ranap.erm_ranap_lab')
-    @include('simrs.ranap.erm_ranap_rad')
-    @include('simrs.ranap.erm_ranap_patologi')
-    @include('simrs.ranap.erm_ranap_file_rm')
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)

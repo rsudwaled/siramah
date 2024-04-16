@@ -9,6 +9,7 @@
         "akaunting/laravel-money": "^4.0",
         "arcanedev/log-viewer": "^10.0",
         "barryvdh/laravel-dompdf": "^2.0",
+        "dompdf/dompdf": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "jeroennoten/laravel-adminlte": "^3.9",
         "laravel/framework": "^10.8",

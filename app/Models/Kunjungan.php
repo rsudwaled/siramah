@@ -142,6 +142,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function asesmen_ranap()
+    {
+        return $this->belongsTo(AsesmenRanap::class, 'rm_counter',   'rm_counter');
+    }
     public function budget()
     {
         return $this->belongsTo(BudgetControl::class, 'rm_counter',   'rm_counter');

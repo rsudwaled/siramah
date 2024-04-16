@@ -81,7 +81,6 @@
                         ];
                         $config['paging'] = false;
                         $config['scrollX'] = true;
-
                         $config['scrollY'] = '400px';
                     @endphp
                     <x-adminlte-datatable id="table1" class="nowrap text-xs" :heads="$heads" :config="$config" bordered

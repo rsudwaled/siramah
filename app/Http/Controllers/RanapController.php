@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AsesmenRanap;
 use App\Models\BudgetControl;
 use App\Models\ErmRanap;
 use App\Models\ErmRanapKeperawatan;
@@ -16,10 +17,10 @@ use App\Models\Pasien;
 use App\Models\TagihanPasien;
 use App\Models\TtdDokter;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -30,38 +31,35 @@ class RanapController extends APIController
         $units = Unit::whereIn('kelas_unit', ['2'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
-        return view('simrs.ranap.kunjungan_ranap', compact([
-            'request',
-            'units',
-        ]));
-    }
-    public function table_pasien_ranap(Request $request)
-    {
         $kunjungans = null;
+        $request['tanggal'] = $request->tanggal ?? now()->format('Y-m-d');
         if ($request->tanggal) {
             $request['tgl_awal'] = Carbon::parse($request->tanggal)->endOfDay();
             $request['tgl_akhir'] = Carbon::parse($request->tanggal)->startOfDay();
-            if ($request->ruangan == '-') {
+            if ($request->kodeunit == '-') {
                 $kunjungans = Kunjungan::whereRelation('unit', 'kelas_unit', '=', 2)
                     ->where('tgl_masuk', '<=', $request->tgl_awal)
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status', 'erm_ranap', 'penjamin_simrs', 'alasan_masuk', 'dokter'])
                     ->get();
             } else {
-                $kunjungans = Kunjungan::where('kode_unit', $request->ruangan)
+                $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
                     ->where('tgl_masuk', '<=', $request->tgl_awal)
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
-                    ->where('kode_unit', $request->ruangan)
-                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status'])
+                    ->where('kode_unit', $request->kodeunit)
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status', 'erm_ranap', 'penjamin_simrs', 'alasan_masuk', 'dokter'])
                     ->get();
             }
         }
-        return view('simrs.ranap.table_pasien_ranap', compact('kunjungans'));
+        return view('simrs.ranap.kunjungan_ranap', compact(
+            'request',
+            'units',
+            'kunjungans',
+        ));
     }
-    // erm pasien ranap
     public function pasienranapprofile(Request $request)
     {
         $kunjungan = Kunjungan::with([
@@ -73,6 +71,8 @@ class RanapController extends APIController
             'alasan_pulang',
             'surat_kontrol',
             'groupping',
+            'erm_ranap',
+            'asesmen_ranap',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
@@ -120,7 +120,26 @@ class RanapController extends APIController
             ],
         ];
         $data = json_decode(json_encode($data));
-        return view('simrs.ranap.erm_ranap_rincian_biaya', compact('data'));
+        return view('simrs.ranap.form_ranap_rincian_biaya', compact('data'));
+    }
+    // asesmen ranap
+    public function simpan_asesmen_ranap_awal(Request $request)
+    {
+        AsesmenRanap::updateOrCreate(
+            [
+                'rm_counter' => $request->rm_counter
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
+        return redirect()->back();
+    }
+    public function print_asesmen_ranap_awal(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $pasien = $kunjungan->pasien;
+        $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_ranap_awal', compact('kunjungan', 'pasien'));
+        return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
     }
     public function get_hasil_laboratorium(Request $request)
     {
@@ -206,7 +225,7 @@ class RanapController extends APIController
     {
         $files = FileRekamMedis::where('norm', $request->norm)->get();
         $fileupload = FileUpload::where('no_rm', $request->norm)->get();
-        return view('simrs.ranap.table_file_upload', compact('files','fileupload'));
+        return view('simrs.ranap.table_file_upload', compact('files', 'fileupload'));
     }
     public function get_hasil_patologi(Request $request)
     {
@@ -412,7 +431,6 @@ class RanapController extends APIController
 
         ]));
     }
-
     public function simpan_resume_ranap(Request $request)
     {
         $request['pic1'] = Auth::user()->name;
@@ -534,12 +552,14 @@ class RanapController extends APIController
         Alert::success('Success', 'Data MPP Form A Berhasil Disimpan');
         return redirect()->back();
     }
+
     public function print_mppa(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
         $mppa = $kunjungan->erm_ranap_mppa;
         $pasien = $kunjungan->pasien;
-        return view('simrs.ranap.print_mppa', compact('kunjungan', 'mppa', 'pasien',));
+        $pdf = Pdf::loadView('simrs.ranap.pdf_mppa', compact('kunjungan', 'mppa', 'pasien'));
+        return $pdf->stream('invoice.pdf');
     }
     public function simpan_mppb(Request $request)
     {

@@ -207,7 +207,6 @@ Route::middleware('auth')->group(function () {
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
 
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
-    Route::get('table_pasien_ranap', [RanapController::class, 'table_pasien_ranap'])->name('table_pasien_ranap');
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::get('get_rincian_biaya', [RanapController::class, 'get_rincian_biaya'])->name('get_rincian_biaya');
 
@@ -246,6 +245,10 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
     Route::post('simpan_mppb', [RanapController::class, 'simpan_mppb'])->name('simpan_mppb');
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
+
+    Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
+    Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
+
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
