@@ -9,9 +9,12 @@
     </a>
     <div id="cAsesemenAwal" class="collapse" role="tabpanel">
         <div class="card-body">
-            <x-adminlte-button class="mb-1" theme="{{ $kunjungan->asesmen_ranap ? 'success' : 'danger' }}" label="Edit Asesmen Awal Medis"
-                onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
-            <iframe src="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" width="100%" height="700px" frameborder="0"></iframe>
+            <x-adminlte-button theme="{{ $kunjungan->asesmen_ranap ? 'success' : 'danger' }}"
+                label="Edit Asesmen Awal Medis" onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
+            <a href="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" target="_blank"
+                class="btn btn-warning">Print</a>
+            <iframe src="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" width="100%"
+                height="700px" frameborder="0"></iframe>
         </div>
     </div>
 </div>
@@ -103,12 +106,16 @@
                     placeholder="Keluhan Utama" required>
                     {{ $kunjungan->asesmen_ranap->keluhan_utama ?? null }}
                 </x-adminlte-textarea>
+                <x-adminlte-textarea name="riwayat_pengobatan" label="Riwayat Pengobatan" rows="3"
+                    igroup-size="sm" placeholder="Riwayat Pengobatan" required>
+                    {{ $kunjungan->asesmen_ranap->riwayat_pengobatan ?? null }}
+                </x-adminlte-textarea>
+            </div>
+            <div class="col-md-6">
                 <x-adminlte-textarea name="riwayat_penyakit_utama" label="Riwayat Penyakit Utama" rows="3"
                     igroup-size="sm" placeholder="Riwayat Penyakit Utama" required>
                     {{ $kunjungan->asesmen_ranap->riwayat_penyakit_utama ?? null }}
                 </x-adminlte-textarea>
-            </div>
-            <div class="col-md-6">
                 <x-adminlte-textarea name="riwayat_penyakit_dahulu" label="Riwayat Penyakit Dahulu" rows="3"
                     igroup-size="sm" placeholder="Riwayat Penyakit Dahulu" required>
                     {{ $kunjungan->asesmen_ranap->riwayat_penyakit_dahulu ?? null }}
@@ -130,6 +137,9 @@
                 <hr>
             </div>
             <div class="col-md-6">
+                <x-adminlte-input name="keadaan_umum" fgroup-class="row" label-class="text-left col-4"
+                    igroup-class="col-8" igroup-size="sm" label="Keadaan Umum"
+                    value="{{ $kunjungan->asesmen_ranap->keadaan_umum ?? null }}" required />
                 <x-adminlte-select name="kesadaran" label="Kesadaran" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm" required>
                     <option
@@ -165,11 +175,11 @@
                     value="{{ $kunjungan->asesmen_ranap->denyut_nadi ?? null }}" required />
             </div>
             <div class="col-md-6">
-                <x-adminlte-textarea name="pemeriksaan_fisik" label="Pemeriksaan Fisik" rows="3"
+                <x-adminlte-textarea name="pemeriksaan_fisik" label="Pemeriksaan Fisik" rows="5"
                     igroup-size="sm" placeholder="Pemeriksaan Fisik" required>
                     {{ $kunjungan->asesmen_ranap->pemeriksaan_fisik ?? null }}
                 </x-adminlte-textarea>
-                <x-adminlte-textarea name="pemeriksaan_penunjang" label="Pemeriksaan Penunjang" rows="3"
+                <x-adminlte-textarea name="pemeriksaan_penunjang" label="Pemeriksaan Penunjang" rows="5"
                     igroup-size="sm" placeholder="Pemeriksaan Penunjang" required>
                     {{ $kunjungan->asesmen_ranap->pemeriksaan_penunjang ?? null }}
                 </x-adminlte-textarea>

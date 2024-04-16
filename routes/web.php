@@ -245,6 +245,7 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
     Route::post('simpan_mppb', [RanapController::class, 'simpan_mppb'])->name('simpan_mppb');
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
+
     Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
     Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
 

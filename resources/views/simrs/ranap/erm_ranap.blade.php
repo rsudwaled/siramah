@@ -14,7 +14,7 @@
             </x-adminlte-card>
         </div>
         <div class="col-md-3">
-            <x-adminlte-card id="nav" theme="primary" title="Navigasi" theme-mode="outline" body-class="p-0">
+            <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
                 <ul class="nav nav-pills flex-column">
                     <li class="nav-item" onclick="lihatHasilLaboratorium()">
                         <a href="#nav" class="nav-link">
@@ -124,6 +124,10 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
+                        @include('simrs.ranap.erm_ranap_lab')
+                        @include('simrs.ranap.erm_ranap_rad')
+                        @include('simrs.ranap.erm_ranap_patologi')
+                        @include('simrs.ranap.erm_ranap_file_rm')
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
                         {{-- IGD --}}
@@ -143,42 +147,12 @@
                             </div>
                         </div>
                         {{-- rincian --}}
-                        {{-- @include('simrs.ranap.erm_ranap_biaya') --}}
                         <div id="rincian_biaya"></div>
-                        {{-- administrasi --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cAdministrasi">
-                                <h3 class="card-title">
-                                    Administrasi Kunjungan
-                                </h3>
-                            </a>
-                            <div id="cAdministrasi" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    <form action="" name="formAdm" id="formAdm" method="POST"
-                                        enctype="multipart/form-data">
-                                        @csrf
-                                        @php
-                                            $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
-                                        @endphp
-                                        <x-adminlte-input-date name="tgl_masuk" class="tgl_masuk-id" label="Tgl Masuk"
-                                            value="{{ $kunjungan->tgl_masuk }}" igroup-size="sm" :config="$config"
-                                            readonly />
-                                        <x-adminlte-input-date name="tgl_keluar" class="tgl_keluar-id" label="Tgl Keluar"
-                                            value="{{ $kunjungan->tgl_keluar }}" igroup-size="sm" :config="$config"
-                                            readonly />
-                                        <input type="hidden" name="kodekunjungan" value="{{ $kunjungan->kode_kunjungan }}">
-                                        <x-adminlte-input name="no_sep" placeholder="No SEP" igroup-size="sm"
-                                            label="No SEP" enable-old-support required value="{{ $kunjungan->no_sep }}" />
-                                        <button type="submit" form="formAdm" class="btn btn-success">
-                                            <i class="fas fa-edit"></i> Update Administrasi
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- groupping --}}
+                        {{-- asesmen awal --}}
                         @include('simrs.ranap.modal_asesmen_awal')
+                        {{-- asesmen perawat --}}
                         @include('simrs.ranap.modal_asesmen_keperawatan')
+                        {{-- groupping --}}
                         @include('simrs.ranap.modal_groupping')
                         {{-- perkembangan --}}
                         @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
@@ -517,16 +491,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer">
-                    {{-- <a href="#nav" class="btn  btn-danger">Kembali</a> --}}
-                </div>
             </div>
         </div>
     </div>
-    @include('simrs.ranap.erm_ranap_lab')
-    @include('simrs.ranap.erm_ranap_rad')
-    @include('simrs.ranap.erm_ranap_patologi')
-    @include('simrs.ranap.erm_ranap_file_rm')
 @stop
 @section('plugins.Datatables', true)
 @section('plugins.TempusDominusBs4', true)
