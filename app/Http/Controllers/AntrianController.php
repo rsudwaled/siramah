@@ -760,18 +760,18 @@ class AntrianController extends APIController
             ])
         );
     }
-    // public function batalAntrian(Request $request)
-    // {
-    //     $request['taskid'] = 99;
-    //     $request['keterangan'] = "Antrian dibatalkan di poliklinik oleh " . 'Sistem Siramah';
-    //     $response = $this->batal_antrian($request);
-    //     if ($response->metadata->code == 200) {
-    //         Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
-    //     } else {
-    //         Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-    //     }
-    //     return redirect()->back();
-    // }
+    public function batalAntrian(Request $request)
+    {
+        $request['taskid'] = 99;
+        $request['keterangan'] = "Mohon maaf antrian anda dengan kodebooking " . $request->kodebooking . " dibatalkan karena akan ada perubahan jadwal dokter dihari tersebut.";
+        $response = $this->batal_antrian($request);
+        if ($response->metadata->code == 200) {
+            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
+        } else {
+            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+        }
+        return redirect()->back();
+    }
     public function batalPendaftaran(Request $request)
     {
         $request['taskid'] = 99;
@@ -1975,7 +1975,8 @@ class AntrianController extends APIController
             if (isset($kunjungan_kronis)) {
                 $unit = Unit::firstWhere('kode_unit', $kunjungan_kronis->kode_unit);
                 if ($unit->KDPOLI ==  $request->kodepoli) {
-                    if (Carbon::parse($request->tanggalperiksa) < Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1)) {
+                    // return $this->sendError(Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1));
+                    if (Carbon::parse($request->tanggalperiksa)->endOfDay() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1)) {
                         return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
                     }
                 }
@@ -2118,11 +2119,6 @@ class AntrianController extends APIController
                 $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
                 $request['number'] = $request->nohp;
                 $wa->send_message($request);
-                // sholawat
-                $sholawat = "اَللّٰهُمَّ صَلِّ عَلٰى سَيِّدِنَا مُحَمَّدٍ، طِبِّ الْقُلُوْبِ وَدَوَائِهَا، وَعَافِيَةِ الْاَبْدَانِ وَشِفَائِهَا، وَنُوْرِ الْاَبْصَارِ وَضِيَائِهَا، وَعَلٰى اٰلِهِ وَصَحْبِهِ وَسَلِّمْ";
-                $request['message'] = $sholawat;
-                $request['number'] = '6289529909036@c.us';
-                $wa->send_message($request);
                 // kirim notif
                 $wa = new WhatsappController();
                 $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
@@ -2214,6 +2210,10 @@ class AntrianController extends APIController
                 "status_api" => 1,
                 "keterangan" => $request->keterangan,
             ]);
+            $wa = new WhatsappController();
+            $request['message'] = $request['keterangan'];
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan
