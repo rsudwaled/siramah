@@ -127,6 +127,8 @@ class RanapController extends APIController
     // asesmen ranap
     public function simpan_asesmen_ranap_awal(Request $request)
     {
+        $request['pic_awal'] = Auth::user()->name;
+        $request['user_awal'] = Auth::user()->id;
         AsesmenRanap::updateOrCreate(
             [
                 'rm_counter' => $request->rm_counter
@@ -153,6 +155,19 @@ class RanapController extends APIController
         $pasien = $kunjungan->pasien;
         $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_ranap_awal', compact('kunjungan', 'pasien'));
         return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
+    }
+    public function simpan_asesmen_ranap_keperawatan(Request $request)
+    {
+        $request['pic_keperawatan'] = Auth::user()->name;
+        $request['user_keperawatan'] = Auth::user()->id;
+        AsesmenRanap::updateOrCreate(
+            [
+                'rm_counter' => $request->rm_counter
+            ],
+            $request->all()
+        );
+        Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
+        return redirect()->back();
     }
     public function get_hasil_laboratorium(Request $request)
     {

@@ -50,7 +50,7 @@
                     value="{{ $kunjungan->asesmen_ranap->tgl_masuk_ruangan ?? null }}" label="Tgl Masuk Ruangan"
                     :config="$config" required />
                 <x-adminlte-input name="nama_unit" fgroup-class="row" label-class="text-left col-4" igroup-class="col-8"
-                    igroup-size="sm" label="Nama Ruangan" placeholder="Nama Unit"
+                    igroup-size="sm" label="Nama Ruangan" placeholder="Nama Ruangan"
                     value="{{ $kunjungan->unit->nama_unit }}" readonly required />
                 <x-adminlte-select name="cara_masuk" label="Cara Masuk" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" required>

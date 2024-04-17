@@ -249,7 +249,7 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
     Route::post('simpan_rencana_asuhan_terpadu', [RanapController::class, 'simpan_rencana_asuhan_terpadu'])->name('simpan_rencana_asuhan_terpadu');
     Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
-
+    Route::post('simpan_asesmen_ranap_keperawatan', [RanapController::class, 'simpan_asesmen_ranap_keperawatan'])->name('simpan_asesmen_ranap_keperawatan');
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
