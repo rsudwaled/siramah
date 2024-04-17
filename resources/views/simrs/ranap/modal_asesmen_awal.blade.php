@@ -4,15 +4,26 @@
             Asesmen Awal Medis Rawat Inap
         </h3>
         <div class="card-tools">
-            <i class="fas fa-file-medical"></i>
+            @if ($kunjungan->asesmen_ranap)
+                <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenAwal()" title="Print">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button type="button" onclick="modalAsesmenAwal()" class="btn btn-tool bg-warning"
+                    title="Edit Asesmen Awal Medis">
+                    <i class="fas fa-edit"></i> Edit Asesmen
+                </button>
+                <button type="button" class="btn btn-tool bg-success">
+                    <i class="fas fa-check"></i> Sudah Asesmen
+                </button>
+            @else
+                <button type="button" class="btn btn-tool bg-danger">
+                    <i class="fas fa-check"></i> Belum Asesmen
+                </button>
+            @endif
         </div>
     </a>
     <div id="cAsesemenAwal" class="collapse" role="tabpanel">
         <div class="card-body">
-            <x-adminlte-button theme="{{ $kunjungan->asesmen_ranap ? 'success' : 'danger' }}"
-                label="Edit Asesmen Awal Medis" onclick="modalAsesmenAwal()" icon="fas fa-diagnoses" />
-            <a href="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" target="_blank"
-                class="btn btn-warning">Print</a>
             <iframe src="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" width="100%"
                 height="700px" frameborder="0"></iframe>
         </div>
@@ -159,18 +170,18 @@
                         Coma</option>
                 </x-adminlte-select>
                 <x-adminlte-input name="diastole" fgroup-class="row" label-class="text-left col-4"
-                    igroup-class="col-8" igroup-size="sm" label="Diastole"
+                    igroup-class="col-8" type="number" igroup-size="sm" label="Diastole"
                     value="{{ $kunjungan->asesmen_ranap->diastole ?? null }}" required />
                 <x-adminlte-input name="sistole" fgroup-class="row" label-class="text-left col-4"
-                    igroup-class="col-8" igroup-size="sm" label="Sistole"
+                    igroup-class="col-8" type="number" igroup-size="sm" label="Sistole"
                     value="{{ $kunjungan->asesmen_ranap->sistole ?? null }}" required />
                 <x-adminlte-input name="pernapasan" fgroup-class="row" label-class="text-left col-4"
-                    igroup-class="col-8" igroup-size="sm" label="Pernapasan"
+                    igroup-class="col-8" type="number" igroup-size="sm" label="Pernapasan"
                     value="{{ $kunjungan->asesmen_ranap->pernapasan ?? null }}" required />
                 <x-adminlte-input name="suhu" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Suhu"
                     value="{{ $kunjungan->asesmen_ranap->suhu ?? null }}" required />
-                <x-adminlte-input name="denyut_nadi" fgroup-class="row" label-class="text-left col-4"
+                <x-adminlte-input name="denyut_nadi" type="number" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Nadi"
                     value="{{ $kunjungan->asesmen_ranap->denyut_nadi ?? null }}" required />
             </div>
@@ -233,7 +244,7 @@
             <div class="col-md-6">
                 <x-adminlte-input name="rencana_lama_ranap" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Rancana Lama Ranap"
-                    placeholder="Rencana Lama Ranap"
+                    placeholder="Rencana Lama Ranap" type="number"
                     value="{{ $kunjungan->asesmen_ranap->rencana_lama_ranap ?? null }}" />
                 <x-adminlte-input-date name="rencana_tgl_pulang" label="Rencana Tgl Pulang" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm" :config="$config"
@@ -268,6 +279,11 @@
             $.LoadingOverlay("show");
             $('#modalAsesmenAwal').modal('show');
             $.LoadingOverlay("hide");
+        }
+
+        function printAsesmenAwal() {
+            var url = "{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            window.open(url, '_blank');
         }
     </script>
 @endpush

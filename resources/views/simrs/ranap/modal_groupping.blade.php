@@ -4,7 +4,12 @@
             Groupping E-Klaim
         </h3>
         <div class="card-tools">
-            <span class="tarif_eklaim_html">-</span> <i class="fas fa-file-medical"></i>
+            <button type="button" onclick="btnModalGroupping()" class="btn btn-tool bg-warning">
+                <i class="fas fa-edit"></i> Edit Groupping
+            </button>
+            <button type="button" class="btn btn-tool bg-success">
+                <i class="fas fa-file-invoice-dollar"></i> <span class="tarif_eklaim_html">-</span>
+            </button>
         </div>
     </a>
     <div id="cGroupping" class="collapse show" role="tabpanel">
@@ -23,8 +28,6 @@
                     </dl>
                 </div>
             </div>
-            <x-adminlte-button class="btn-sm mb-1" theme="{{ $groupping ? 'success' : 'danger' }}"
-                label="Groupping Eklaim" onclick="btnModalGroupping()" icon="fas fa-edit" />
         </div>
     </div>
 </div>

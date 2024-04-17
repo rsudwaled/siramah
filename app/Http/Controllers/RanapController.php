@@ -122,7 +122,7 @@ class RanapController extends APIController
             ],
         ];
         $data = json_decode(json_encode($data));
-        return view('simrs.ranap.form_ranap_rincian_biaya', compact('data'));
+        return view('simrs.ranap.modal_rincian_biaya', compact('data'));
     }
     // asesmen ranap
     public function simpan_asesmen_ranap_awal(Request $request)

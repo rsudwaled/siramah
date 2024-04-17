@@ -4,7 +4,12 @@
             Rincian Biaya
         </h3>
         <div class="card-tools">
-            {{ money($data->rangkuman->tarif_rs, 'IDR') }} <i class="fas fa-file-invoice-dollar"></i>
+            <button type="button" class="btn btn-tool bg-warning" onclick="lihatRincianBiaya()">
+                <i class="fas fa-money-check-alt"></i> Detail Rincian
+            </button>
+            <button type="button" class="btn btn-tool bg-success">
+                <i class="fas fa-file-invoice-dollar"></i> {{ money($data->rangkuman->tarif_rs, 'IDR') }}
+            </button>
         </div>
     </a>
     <div id="cRincian" class="collapse show" role="tabpanel">
@@ -61,9 +66,6 @@
                         <dd class="col-sm-7">: {{ money($data->rangkuman->tarif_rs, 'IDR') }}</dd>
                     </dl>
                 </div>
-                <button class="btn btn-warning btn-sm" onclick="lihatRincianBiaya()"><i
-                        class="fas fa-money-check-alt"></i> Detail Rincian
-                    Biaya</button>
 
             </div>
         </div>
@@ -134,6 +136,7 @@
             );
         }
     });
+
     function lihatRincianBiaya() {
         $('#modalRincianBiaya').modal('show');
     }
