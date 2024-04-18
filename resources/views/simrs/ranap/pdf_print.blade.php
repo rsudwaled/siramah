@@ -80,6 +80,14 @@
             margin: 0;
             font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
         }
+
+        @page {
+            margin: 0px;
+        }
+
+        body {
+            margin: 20px;
+        }
     </style>
     @yield('css')
     @push('css')

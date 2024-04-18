@@ -56,7 +56,6 @@ class RanapController extends APIController
                     ->get();
             }
         }
-
         $belum = $kunjungans->where('budget.kode_cbg', null)->count();
         if ($belum) {
             Alert::warning('Peringatan', 'Ada ' . $belum . ' pasien yang belum di groupping. Mohon lakukan pengecekan dan silahkan groupping sebelum 3 hari saat rawat inap');

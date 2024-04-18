@@ -7,6 +7,7 @@ use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Poliklinik;
 use App\Models\SuratKontrol;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -223,7 +224,6 @@ class SuratKontrolController extends APIController
             return redirect()->back();
         }
     }
-
     public function suratkontrol_delete(Request $request)
     {
         $request['noSuratKontrol'] = $request->nomorsuratkontrol;
@@ -330,6 +330,31 @@ class SuratKontrolController extends APIController
             return redirect()->back();
         }
     }
+    public function suratkontrol_print(Request $request)
+    {
+        $request['noSuratKontrol'] = $request->nomorsuratkontrol;
+        $vclaim = new VclaimController();
+        $response = $vclaim->suratkontrol_nomor($request);
+        if ($response->metadata->code == 200) {
+            $suratkontrol = $response->response;
+            $sep = $response->response->sep;
+            $peserta = $response->response->sep->peserta;
+            $pasien = Pasien::firstWhere('no_Bpjs', $peserta->noKartu);
+            $dokter = Paramedis::firstWhere('kode_dokter_jkn', $suratkontrol->kodeDokter);
+            $pdf = Pdf::loadView('simrs.ranap.pdf_surat_kontrol', compact(
+                'suratkontrol',
+                'sep',
+                'peserta',
+                'pasien',
+                'dokter',
+            ));
+            return $pdf->stream('pdf_surat_kontrol.pdf');
+        } else {
+            Alert::error('Gagal', 'Surat Kontrol Tidak Ditemukan');
+            return redirect()->back();
+        }
+    }
+
     public function suratkontrol_sep(Request $request)
     {
         $validator = Validator::make(request()->all(), [
