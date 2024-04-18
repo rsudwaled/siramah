@@ -4,13 +4,13 @@
             Asesmen Awal Medis Rawat Inap
         </h3>
         <div class="card-tools">
+            <button type="button" onclick="modalAsesmenAwal()" class="btn btn-tool bg-warning"
+                title="Edit Asesmen Awal Medis">
+                <i class="fas fa-edit"></i> Edit Asesmen
+            </button>
             @if ($kunjungan->asesmen_ranap)
                 <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenAwal()" title="Print">
                     <i class="fas fa-print"></i> Print
-                </button>
-                <button type="button" onclick="modalAsesmenAwal()" class="btn btn-tool bg-warning"
-                    title="Edit Asesmen Awal Medis">
-                    <i class="fas fa-edit"></i> Edit Asesmen
                 </button>
                 <button type="button" class="btn btn-tool bg-success">
                     <i class="fas fa-check"></i> Sudah Asesmen

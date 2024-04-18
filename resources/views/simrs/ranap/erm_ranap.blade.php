@@ -60,11 +60,11 @@
                     <li class="nav-item" onclick="modalAsesmenKeperawatan()">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical-alt"></i> Asesmen Keperawatan
-                            {{-- @if ($kunjungan->asesmen_ranap)
+                            @if ($kunjungan->asesmen_ranap_keperawatan)
                                 <span class="badge bg-success float-right">Sudah</span>
-                            @else --}}
+                            @else
                             <span class="badge bg-danger float-right">Belum</span>
-                            {{-- @endif --}}
+                            @endif
                         </a>
                     </li>
                     <li class="nav-item" onclick="btnModalGroupping()">

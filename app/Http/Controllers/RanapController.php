@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AsesmenRanap;
+use App\Models\AsesmenRanapPerawat;
 use App\Models\AsuhanTerpadu;
 use App\Models\BudgetControl;
 use App\Models\ErmRanap;
@@ -55,6 +56,11 @@ class RanapController extends APIController
                     ->get();
             }
         }
+
+        $belum = $kunjungans->where('budget.kode_cbg', null)->count();
+        if ($belum) {
+            Alert::warning('Peringatan', 'Ada ' . $belum . ' pasien yang belum di groupping. Mohon lakukan pengecekan dan silahkan groupping sebelum 3 hari saat rawat inap');
+        }
         return view('simrs.ranap.kunjungan_ranap', compact(
             'request',
             'units',
@@ -75,6 +81,7 @@ class RanapController extends APIController
             'erm_ranap',
             'asesmen_ranap',
             'asuhan_terpadu',
+            'asesmen_ranap_keperawatan',
         ])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
         $groupping = $kunjungan->groupping;
@@ -160,7 +167,7 @@ class RanapController extends APIController
     {
         $request['pic_keperawatan'] = Auth::user()->name;
         $request['user_keperawatan'] = Auth::user()->id;
-        AsesmenRanap::updateOrCreate(
+        AsesmenRanapPerawat::updateOrCreate(
             [
                 'rm_counter' => $request->rm_counter
             ],
@@ -169,6 +176,14 @@ class RanapController extends APIController
         Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
         return redirect()->back();
     }
+    public function print_asesmen_ranap_keperawatan(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $pasien = $kunjungan->pasien;
+        $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_ranap_awal', compact('kunjungan', 'pasien'));
+        return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
+    }
+
     public function get_hasil_laboratorium(Request $request)
     {
         $kodeunit = '3002';

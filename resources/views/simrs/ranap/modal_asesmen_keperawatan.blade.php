@@ -4,7 +4,21 @@
             Asesmen Keperawatan Rawat Inap
         </h3>
         <div class="card-tools">
-            <i class="fas fa-file-medical"></i>
+            <button type="button" onclick="modalAsesmenKeperawatan()" class="btn btn-tool bg-warning">
+                <i class="fas fa-edit"></i> Edit Asesmen
+            </button>
+            @if ($kunjungan->asesmen_ranap_keperawatan)
+                <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenAwal()" title="Print">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button type="button" class="btn btn-tool bg-success">
+                    <i class="fas fa-check"></i> Sudah Asesmen
+                </button>
+            @else
+                <button type="button" class="btn btn-tool bg-danger">
+                    <i class="fas fa-check"></i> Belum Asesmen
+                </button>
+            @endif
         </div>
     </a>
     <div id="cAsesemenKeperawatan" class="collapse" role="tabpanel">
@@ -21,9 +35,8 @@
         <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
         <input type="hidden" name="counter" value="{{ $kunjungan->counter }}">
         <input type="hidden" name="no_rm" value="{{ $kunjungan->no_rm }}">
-        <input type="hidden" name="nama" value="{{ $kunjungan->pasien->nama_px }}">
         <input type="hidden" name="rm_counter" value="{{ $kunjungan->no_rm }}|{{ $kunjungan->counter }}">
-        <input type="hidden" name="kode_unit" value="{{ $kunjungan->unit->kode_unit }}">
+        <input type="hidden" name="nama" value="{{ $kunjungan->pasien->nama_px }}">
         <div class="row">
             <div class="col-md-6">
                 @php
@@ -31,36 +44,39 @@
                 @endphp
                 <x-adminlte-input-date name="tgl_masuk_ruangan" label="Tgl Masuk Ruangan" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm" :config="$config"
-                    value="{{ $kunjungan->asesmen_ranap->tgl_masuk_ruangan ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->tgl_masuk_ruangan ?? ($kunjungan->asesmen_ranap->tgl_masuk_ruangan ?? null) }}"
+                    required />
+                <input type="hidden" name="kode_unit" value="{{ $kunjungan->unit->kode_unit }}">
                 <x-adminlte-input name="nama_unit" fgroup-class="row" label-class="text-left col-4" igroup-class="col-8"
                     igroup-size="sm" label="Nama Ruangan" placeholder="Nama Ruangan"
-                    value="{{ $kunjungan->unit->nama_unit }}" readonly required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->nama_unit ?? ($kunjungan->asesmen_ranap->nama_unit ?? $kunjungan->unit->nama_unit) }}"
+                    readonly required />
                 <x-adminlte-select name="cara_masuk" label="Cara Masuk" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" required>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->cara_masuk == 'Brankar' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->cara_masuk == 'Brankar' ? 'selected' : null) : null }}>
                         Brankar
                     </option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->cara_masuk == 'Kursi Roda' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->cara_masuk == 'Kursi Roda' ? 'selected' : null) : null }}>
                         Kursi Roda</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->cara_masuk == 'Jalan Kaki' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->cara_masuk == 'Jalan Kaki' ? 'selected' : null) : null }}>
                         Jalan Kaki</option>
                 </x-adminlte-select>
                 <x-adminlte-select name="asal_masuk" label="Asal Masuk" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" required>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->asal_masuk == 'IGD' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->asal_masuk == 'IGD' ? 'selected' : null) : null }}>
                         IGD</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->asal_masuk == 'Kamar Operasi' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->asal_masuk == 'Kamar Operasi' ? 'selected' : null) : null }}>
                         Kamar Operasi</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->asal_masuk == 'Rawat Jalan' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->asal_masuk == 'Rawat Jalan' ? 'selected' : null) : null }}>
                         Rawat Jalan</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->asal_masuk == 'Transfer Ruangan' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->asal_masuk == 'Transfer Ruangan' ? 'selected' : null) : null }}>
                         Transfer Ruangan</option>
                 </x-adminlte-select>
             </div>
@@ -68,22 +84,24 @@
                 <x-adminlte-input-date name="tgl_asesmen_keperawatan" id="tglasesmenawal" label="Tgl Asesmen Perawat"
                     fgroup-class="row" label-class="text-left col-4" igroup-class="col-8" igroup-size="sm"
                     :config="$config" required
-                    value="{{ $kunjungan->asesmen_ranap->tgl_asesmen_keperawatan ?? now() }}" />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->tgl_asesmen_keperawatan ?? now() }}" />
                 <x-adminlte-select name="sumber_data" label="Sumber Data" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm" required>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->sumber_data == 'Pasien / Autoanamnese' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->sumber_data == 'Pasien / Autoanamnese' ? 'selected' : null) : null }}>
                         Pasien / Autoanamnese</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->sumber_data == 'Keluarga / Allonamnese' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->sumber_data == 'Keluarga / Allonamnese' ? 'selected' : null) : null }}>
                         Keluarga / Allonamnese</option>
                 </x-adminlte-select>
                 <x-adminlte-input name="nama_keluarga" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Nama Keluarga" placeholder="Nama Keluarga"
-                    value="{{ $kunjungan->asesmen_ranap->nama_keluarga ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->nama_keluarga ?? ($kunjungan->asesmen_ranap_keperawatan->nama_keluarga ?? null) }}"
+                    required />
                 <x-adminlte-input name="hubungan_keluarga" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Hubungan Keluarga" placeholder="Hubungan Keluarga"
-                    value="{{ $kunjungan->asesmen_ranap->hubungan_keluarga ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->hubungan_keluarga ?? ($kunjungan->asesmen_ranap_keperawatan->nama_keluarga ?? null) }}"
+                    required />
             </div>
         </div>
         <div class="row">
@@ -99,37 +117,37 @@
             <div class="col-md-6">
                 <x-adminlte-textarea name="keluhan_utama" label="Keluhan Utama" rows="3" igroup-size="sm"
                     placeholder="Keluhan Utama" required>
-                    {{ $kunjungan->asesmen_ranap->keluhan_utama ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->keluhan_utama ?? ($kunjungan->asesmen_ranap->keluhan_utama ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_pernah_dirawat" label="Riwayat Pernah Dirawat" rows="3"
                     igroup-size="sm" placeholder="Riwayat Pernah Dirawat" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_pernah_dirawat ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_pernah_dirawat ?? ($kunjungan->asesmen_ranap->riwayat_pernah_dirawat ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_pengobatan" label="Riwayat Pengobatan" rows="3"
                     igroup-size="sm" placeholder="Riwayat Pengobatan" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_pengobatan ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_pengobatan ?? ($kunjungan->asesmen_ranap->riwayat_pengobatan ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_alergi" label="Riwayat Alergi" rows="3" igroup-size="sm"
                     placeholder="Riwayat Alergi" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_alergi ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_alergi ?? ($kunjungan->asesmen_ranap->riwayat_alergi ?? null) }}
                 </x-adminlte-textarea>
             </div>
             <div class="col-md-6">
                 <x-adminlte-textarea name="riwayat_penyerta" label="Riwayat Penyakit Penyerta" rows="3"
                     igroup-size="sm" placeholder="Riwayat Penyakit Penyerta" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_penyerta ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_penyerta ?? ($kunjungan->asesmen_ranap->riwayat_penyerta ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_penyakit_utama" label="Riwayat Penyakit Utama" rows="3"
                     igroup-size="sm" placeholder="Riwayat Penyakit Utama" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_penyakit_utama ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_penyakit_utama ?? ($kunjungan->asesmen_ranap->riwayat_penyakit_utama ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_penyakit_dahulu" label="Riwayat Penyakit Dahulu" rows="3"
                     igroup-size="sm" placeholder="Riwayat Penyakit Dahulu" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_penyakit_dahulu ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_penyakit_dahulu ?? ($kunjungan->asesmen_ranap->riwayat_penyakit_dahulu ?? null) }}
                 </x-adminlte-textarea>
                 <x-adminlte-textarea name="riwayat_penyakit_keluarga" label="Riwayat Penyakit Keluarga"
                     rows="3" igroup-size="sm" placeholder="Riwayat Penyakit Keluarga" required>
-                    {{ $kunjungan->asesmen_ranap->riwayat_penyakit_keluarga ?? null }}
+                    {{ $kunjungan->asesmen_ranap_keperawatan->riwayat_penyakit_keluarga ?? ($kunjungan->asesmen_ranap->riwayat_penyakit_keluarga ?? null) }}
                 </x-adminlte-textarea>
             </div>
         </div>
@@ -146,76 +164,121 @@
             <div class="col-md-6">
                 <x-adminlte-input name="keadaan_umum" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Keadaan Umum"
-                    value="{{ $kunjungan->asesmen_ranap->keadaan_umum ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->keadaan_umum ?? ($kunjungan->asesmen_ranap->keadaan_umum ?? null) }}"
+                    required />
                 <x-adminlte-select name="kesadaran" label="Kesadaran" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm" required>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->kesadaran == 'Compos Mentis' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->kesadaran == 'Compos Mentis' ? 'selected' : null) : null }}>
                         Compos Mentis</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->kesadaran == 'Apatis' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->kesadaran == 'Apatis' ? 'selected' : null) : null }}>
                         Apatis</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->kesadaran == 'Somnolent' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->kesadaran == 'Somnolent' ? 'selected' : null) : null }}>
                         Somnolent</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->kesadaran == 'Sopor' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->kesadaran == 'Sopor' ? 'selected' : null) : null }}>
                         Sopor</option>
                     <option
-                        {{ $kunjungan->asesmen_ranap ? ($kunjungan->asesmen_ranap->kesadaran == 'Coma' ? 'selected' : null) : null }}>
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->kesadaran == 'Coma' ? 'selected' : null) : null }}>
                         Coma</option>
                 </x-adminlte-select>
                 <x-adminlte-input name="diastole" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" type="number" igroup-size="sm" label="Diastole"
-                    value="{{ $kunjungan->asesmen_ranap->diastole ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->diastole ?? ($kunjungan->asesmen_ranap->diastole ?? null) }}"
+                    required />
                 <x-adminlte-input name="sistole" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" type="number" igroup-size="sm" label="Sistole"
-                    value="{{ $kunjungan->asesmen_ranap->sistole ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->sistole ?? ($kunjungan->asesmen_ranap->sistole ?? null) }}"
+                    required />
                 <x-adminlte-input name="pernapasan" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" type="number" igroup-size="sm" label="Pernapasan"
-                    value="{{ $kunjungan->asesmen_ranap->pernapasan ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->pernapasan ?? ($kunjungan->asesmen_ranap->pernapasan ?? null) }}"
+                    required />
                 <x-adminlte-input name="suhu" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Suhu"
-                    value="{{ $kunjungan->asesmen_ranap->suhu ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->keadaan_umum ?? ($kunjungan->asesmen_ranap_keperawatan->keadaan_umum ?? ($kunjungan->asesmen_ranap->suhu ?? null)) }}"
+                    required />
                 <x-adminlte-input name="denyut_nadi" type="number" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm" label="Nadi"
-                    value="{{ $kunjungan->asesmen_ranap->denyut_nadi ?? null }}" required />
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->denyut_nadi ?? ($kunjungan->asesmen_ranap->denyut_nadi ?? null) }}"
+                    required />
             </div>
             <div class="col-md-6">
+                <img src="{{ asset('nyeri_nrs.png') }}" width="100%" alt="">
+                <x-adminlte-input name="skala_nyeri" fgroup-class="row" label-class="text-left col-4"
+                    igroup-class="col-8" type="number" igroup-size="sm" label="Skala Nyeri"
+                    value="{{ $kunjungan->asesmen_ranap_keperawatan->skala_nyeri ?? ($kunjungan->asesmen_ranap->skala_nyeri ?? 0) }}"
+                    required />
                 <x-adminlte-select name="provocation" label="Provocation" fgroup-class="row"
                     label-class="text-left col-4" igroup-class="col-8" igroup-size="sm">
-                    <option>Cahaya</option>
-                    <option>Gelap</option>
-                    <option>Gerakan</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->provocation == 'Cahaya' ? 'selected' : null) : null }}>
+                        Cahaya</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->provocation == 'Gelap' ? 'selected' : null) : null }}>
+                        Gelap</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->provocation == 'Gerakan' ? 'selected' : null) : null }}>
+                        Gerakan</option>
                 </x-adminlte-select>
-                <x-adminlte-select name="quality" label="quality" fgroup-class="row" label-class="text-left col-4"
+                <x-adminlte-select name="quality" label="Quality" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm">
-                    <option>Ditusuk</option>
-                    <option>Dibakar</option>
-                    <option>Ditarik</option>
-                    <option>Kram</option>
-                    <option>Berdenyut</option>
-                    <option>Lainnya</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Ditusuk' ? 'selected' : null) : null }}>
+                        Ditusuk</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Dibakar' ? 'selected' : null) : null }}>
+                        Dibakar</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Ditarik' ? 'selected' : null) : null }}>
+                        Ditarik</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Kram' ? 'selected' : null) : null }}>
+                        Kram</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Berdenyut' ? 'selected' : null) : null }}>
+                        Berdenyut</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->quality == 'Lainnya' ? 'selected' : null) : null }}>
+                        Lainnya</option>
                 </x-adminlte-select>
-                <x-adminlte-select name="reqion" label="reqion" fgroup-class="row" label-class="text-left col-4"
+                <x-adminlte-select name="region" label="Region" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm">
-                    <option>Nyeri Tetap</option>
-                    <option>Nyeri Berpindah-pindah</option>
-                    <option>Gerakan</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->region == 'Nyeri Tetap' ? 'selected' : null) : null }}>
+                        Nyeri Tetap</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->region == 'Nyeri Berpindah-pindah' ? 'selected' : null) : null }}>
+                        Nyeri Berpindah-pindah</option>
                 </x-adminlte-select>
-                <x-adminlte-select name="severity" label="severity" fgroup-class="row" label-class="text-left col-4"
+                <x-adminlte-select name="severity" label="Severity" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm">
-                    <option>Nyeri Ringan</option>
-                    <option>Nyeri Sedang</option>
-                    <option>Nyeri Berat</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->severity == 'Nyeri Ringan' ? 'selected' : null) : null }}>
+                        Nyeri Ringan</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->severity == 'Nyeri Sedang' ? 'selected' : null) : null }}>
+                        Nyeri Sedang</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->severity == 'Nyeri Berat' ? 'selected' : null) : null }}>
+                        Nyeri Berat</option>
                 </x-adminlte-select>
-                <x-adminlte-select name="time" label="time" fgroup-class="row" label-class="text-left col-4"
+                <x-adminlte-select name="time" label="Time" fgroup-class="row" label-class="text-left col-4"
                     igroup-class="col-8" igroup-size="sm">
-                    <option>Terus Menerus</option>
-                    <option>Hilang Timbul</option>
-                    <option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->time == 'Terus Menerus' ? 'selected' : null) : null }}>
+                        Terus Menerus</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->time == 'Hilang Timbul' ? 'selected' : null) : null }}>
+                        Hilang Timbul</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->time == '< 30 Menit' ? 'selected' : null) : null }}>
                         < 30 Menit</option>
-                    <option>> 30 Menit</option>
+                    <option
+                        {{ $kunjungan->asesmen_ranap_keperawatan ? ($kunjungan->asesmen_ranap_keperawatan->time == '> 30 Menit' ? 'selected' : null) : null }}>
+                        > 30 Menit</option>
                 </x-adminlte-select>
             </div>
         </div>
