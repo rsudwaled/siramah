@@ -172,7 +172,7 @@
                     dataType: 'json',
                     success: function(data) {
                         if (data.metadata.code == 200) {
-                            $('#kodeDokter').empty()
+                            $('#kodeDokter').empty();
                             $.each(data.response.list, function(key, value) {
                                 optText = value.namaDokter + " (" + value
                                     .jadwalPraktek +
@@ -322,6 +322,9 @@
                     );
                 }
                 $.LoadingOverlay("hide");
+            }).fail(function() {
+                $.LoadingOverlay("hide");
+                alert("error, silahkan coba lagi");
             });
         }
 
@@ -334,6 +337,9 @@
         function buatSuratKontrol(button) {
             $('#btnStoreSuratKontrol').show();
             $('#btnUpdateSuratKontrol').hide();
+            $('#formSuratKontrol').trigger("reset");
+            $('#kodeDokter').empty();
+            $('#poliKontrol').empty();
             $('#modalSuratKontrol').modal('show');
         }
 
@@ -362,6 +368,9 @@
                     );
                 }
                 $.LoadingOverlay("hide");
+            }).fail(function() {
+                $.LoadingOverlay("hide");
+                alert("error, silahkan coba lagi");
             });
 
         }
@@ -400,6 +409,9 @@
                     );
                 }
                 $.LoadingOverlay("hide");
+            }).fail(function() {
+                $.LoadingOverlay("hide");
+                alert("error, silahkan coba lagi");
             });
 
         }
