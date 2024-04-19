@@ -28,7 +28,7 @@
                             @endphp
                             <x-adminlte-input-date fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
                                 igroup-class="col-8" igroup-size="sm" name="tanggal" label="Tanggal Ranap" :config="$config"
-                                value="{{ now()->format('Y-m-d') }}">
+                                value="{{ $request->tanggal ?? now()->format('Y-m-d') }}">
                                 <x-slot name="appendSlot">
                                     <button class="btn btn-sm btn-primary withLoad" type="submit"><i
                                             class="fas fa-search "></i>

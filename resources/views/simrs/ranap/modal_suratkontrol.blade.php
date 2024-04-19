@@ -53,7 +53,7 @@
         @csrf
         <div class="row">
             <div class="col-md-6">
-                <x-adminlte-input name="noSep" class="nomorsep-id" igroup-size="sm" label="Nomor SEP"
+                <x-adminlte-input name="noSep" class="nomorsep-id nomorsepkontrol" igroup-size="sm" label="Nomor SEP"
                     value="{{ $kunjungan->no_sep }}" placeholder="Nomor SEP" readonly>
                     <x-slot name="appendSlot">
                         <div class="btn btn-primary" onclick="cariSEP()">
@@ -61,6 +61,9 @@
                         </div>
                     </x-slot>
                 </x-adminlte-input>
+                <input type="hidden" name="noSEP" class="nomorsepkontrol">
+                <x-adminlte-input name="noSuratKontrol" igroup-size="sm" label="Nomor Surat Kontrol"
+                    placeholder="Nomor Kartu" readonly />
                 <x-adminlte-input name="nomorkartu" class="nomorkartu-id" value="{{ $pasien->no_Bpjs }}"
                     igroup-size="sm" label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
                 <x-adminlte-input name="norm" class="norm-id" label="No RM" igroup-size="sm" placeholder="No RM "
@@ -100,7 +103,7 @@
         <x-slot name="footerSlot">
             <x-adminlte-button id="btnStoreSuratKontrol" class="mr-auto" icon="fas fa-file-plus" theme="success"
                 label="Buat Surat Kontrol" onclick="simpanSuratKontrol()" />
-            <x-adminlte-button id="btnUpdateSuratKontrol" class="mr-auto" icon="fas fa-edit" theme="warning"
+            <x-adminlte-button id="btnUpdateSuratKontrol" onclick="updateSuratKontrol()" class="mr-auto" icon="fas fa-edit" theme="warning"
                 label="Update Surat Kontrol" />
             <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
         </x-slot>
@@ -294,9 +297,16 @@
                             '<button class="btn btn-xs btn-success" onclick="printSuratKontrol(this)" data-nomorsuratkontrol="' +
                             value.noSuratKontrol + '"><i class="fas fa-print"></i></button> ';
                         btnedit =
-                            '<button class="btn btn-xs btn-warning"  onclick="editSuratKontrol(this)"><i class="fas fa-edit"></i></button> ';
+                            '<button class="btn btn-xs btn-warning" onclick="editSuratKontrol(this)" data-tglRencanaKontrol="' +
+                            value.tglRencanaKontrol + '" data-noSuratKontrol="' +
+                            value.noSuratKontrol + '" data-poliTujuan="' +
+                            value.poliTujuan + '" data-namaPoliTujuan="' +
+                            value.namaPoliTujuan + '" data-noSepAsalKontrol="' +
+                            value.noSepAsalKontrol + '" data-namaDokter="' +
+                            value.namaDokter + '" data-kodeDokter="' +
+                            value.kodeDokter + '"><i class="fas fa-edit"></i></button> ';
                         btndelete =
-                            '<button class="btn btn-xs btn-danger"  onclick="deleteSuratKontrol(this)" data-nomorsurat="' +
+                            '<button class="btn btn-xs btn-danger" onclick="deleteSuratKontrol(this)" data-nomorsurat="' +
                             value.noSuratKontrol + '"><i class="fas fa-trash"></i></button> ';
                         if (value.terbitSEP == "Belum") {
                             var btn = btnprint + btnedit + btndelete;
@@ -372,13 +382,52 @@
                 $.LoadingOverlay("hide");
                 alert("error, silahkan coba lagi");
             });
-
         }
 
         function editSuratKontrol(button) {
             $('#btnStoreSuratKontrol').hide();
             $('#btnUpdateSuratKontrol').show();
+            $('#formSuratKontrol').trigger("reset");
+            $('#kodeDokter').empty();
+            $('#poliKontrol').empty();
+            $('#noSuratKontrol').val($(button).data("nosuratkontrol"));
+            $('.nomorsepkontrol').val($(button).data("nosepasalkontrol"));
+            $('#tglRencanaKontrol').val($(button).data("tglrencanakontrol"));
+            $('#kodeDokter').append(new Option($(button).data("namadokter"), $(button).data("kodedokter")));
+            $('#poliKontrol').append(new Option($(button).data("namapolitujuan"), $(button).data("politujuan")));
+            console.log(button);
             $('#modalSuratKontrol').modal('show');
+        }
+
+        function updateSuratKontrol() {
+            $.LoadingOverlay("show");
+            var data = $('#formSuratKontrol').serialize();
+            var url = "{{ route('surat_kontrol_update') }}";
+            $.ajax({
+                type: "PUT",
+                url: url,
+                data: data,
+            }).done(function(data) {
+                $('#modalSuratKontrol').modal('hide');
+                if (data.metadata.code == 200) {
+                    Swal.fire(
+                        'Berhasil Update Surat Kontrol',
+                        data.metadata.message,
+                        'success'
+                    );
+                    getSuratKontrol();
+                } else {
+                    Swal.fire(
+                        'Mohon Maaf !',
+                        data.metadata.message,
+                        'error'
+                    );
+                }
+                $.LoadingOverlay("hide");
+            }).fail(function() {
+                $.LoadingOverlay("hide");
+                alert("error, silahkan coba lagi");
+            });
         }
 
         function deleteSuratKontrol(button) {

@@ -110,11 +110,6 @@
                         <td><b>{{ $sep->poli }}</b></td>
                     </tr>
                     <tr>
-                        <td>Poliklinik</td>
-                        <td>:</td>
-                        <td><b>{{ $sep->poli }}</b></td>
-                    </tr>
-                    <tr>
                         <td>Diagnosa</td>
                         <td>:</td>
                         <td><b>{{ $sep->diagnosa }}</b></td>
