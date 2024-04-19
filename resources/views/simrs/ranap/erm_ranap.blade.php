@@ -63,7 +63,7 @@
                             @if ($kunjungan->asesmen_ranap_keperawatan)
                                 <span class="badge bg-success float-right">Sudah</span>
                             @else
-                            <span class="badge bg-danger float-right">Belum</span>
+                                <span class="badge bg-danger float-right">Belum</span>
                             @endif
                         </a>
                     </li>
@@ -130,11 +130,6 @@
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
-                        @include('simrs.ranap.modal_laboratorium')
-                        @include('simrs.ranap.modal_radiologi')
-                        @include('simrs.ranap.modal_patologi')
-                        @include('simrs.ranap.modal_file_rm')
-                        @include('simrs.ranap.modal_suratkontrol')
                         {{-- riwayat --}}
                         {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
                         {{-- IGD --}}
@@ -498,6 +493,11 @@
                                 </div>
                             </div>
                         </div>
+                        @include('simrs.ranap.modal_suratkontrol')
+                        @include('simrs.ranap.modal_laboratorium')
+                        @include('simrs.ranap.modal_radiologi')
+                        @include('simrs.ranap.modal_patologi')
+                        @include('simrs.ranap.modal_file_rm')
                     </div>
                 </div>
             </div>
