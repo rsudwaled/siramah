@@ -373,6 +373,18 @@ class RanapController extends APIController
             }
         }
         $obat2 = array_chunk($obat, count($obat) / 2);
+
+        $pdf = Pdf::loadView('simrs.ranap.pdf_resume_ranap', compact(
+            'kunjungan',
+            'kunjungans',
+            'erm',
+            'lama_rawat',
+            'obat',
+            'obat2',
+            'pasien',
+        ));
+        return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
+
         return view('simrs.ranap.print_resume_ranap', compact([
             'kunjungan',
             'kunjungans',

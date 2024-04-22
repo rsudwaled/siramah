@@ -21,7 +21,6 @@ class WhatsappController extends Controller
             }
         }
         return view('admin.whatsapp', compact(['request']));
-        // return $response;
     }
     public function send_message(Request $request)
     {

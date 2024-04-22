@@ -96,9 +96,14 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#nav" class="nav-link">
+                        <a href="#nav" class="nav-link" onclick="modalResumeRanap()">
                             <i class="fas fa-file-medical-alt"></i> Resume Rawat Inap
-                            <span class="badge bg-danger float-right">On Building</span>
+                            @if ($kunjungan->erm_ranap)
+                                <span class="badge bg-success float-right">Sudah</span>
+                            @else
+                                <span class="badge bg-danger float-right">Belum</span>
+                            @endif
+                            {{-- <span class="badge bg-danger float-right">On Building</span> --}}
                         </a>
                     </li>
                     {{-- <li class="nav-item">
@@ -235,7 +240,7 @@
                         {{-- mpp form b --}}
                         @include('simrs.ranap.erm_ranap_mppb')
                         {{-- resume --}}
-                        @include('simrs.ranap.erm_ranap_resume')
+                        @include('simrs.ranap.modal_resume_ranap')
                         {{-- tindakan --}}
                         {{-- <div class="card card-info mb-1">
                             <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakan">
