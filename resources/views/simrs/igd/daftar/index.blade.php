@@ -204,7 +204,7 @@
                                                     <input type="number" name="no_bpjs" id="no_bpjs"
                                                         class="form-control">
                                                 </div>
-                                                <x-adminlte-input name="noTelp" id="noTelp" type="number"
+                                                <x-adminlte-input name="noTelp" id="noTelp" type="number" required
                                                     label="No Telpon" />
                                                 @php
                                                     $config = ['format' => 'YYYY-MM-DD'];
@@ -310,7 +310,7 @@
         </div>
     </div>
 
-    <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl'>
+    <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl' static-backdrop>
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -336,6 +336,7 @@
 
                                 </div>
                                 <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+                                    
                                     <thead>
                                         <tr>
                                             <th>KUNJUNGAN</th>
@@ -360,13 +361,13 @@
                                         <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
                                     </div>
                                 </div>
-                                <table id="table1" class="riwayatRanap data-table table table-bordered">
+                                <table id="table2" class="riwayatRanap data-table table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>KUNJUNGAN</th>
                                             <th>NO RM</th>
                                             <th>PASIEN</th>
-                                            <th>POLI</th>
+                                            <th>RUANGAN</th>
                                             <th>STATUS</th>
                                             <th>TGL MASUK</th>
                                             <th>TGL PULANG</th>

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
-use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BukuTamuController;
 use App\Http\Controllers\DisposisiController;
@@ -58,11 +57,8 @@ use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
 
 // rekam medis
-use App\Http\Controllers\RM\DiagnosaPolaPenyakitController as DiagnosaPolaPenyakit;
+use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
-use App\Http\Livewire\Users;
-use App\Models\JadwalDokter;
-use App\Models\Pasien;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -402,10 +398,31 @@ Route::middleware('auth')->group(function () {
     Route::put('kebutuhan-jurusan/update/{id}', [KebutuhanJurusanController::class, 'updateKebutuhan'])->name('data-kebutuhan.update');
 
     // diagnosa pola penyakit
-    Route::get('rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatInap'])->name('diagnosa-pola-penyakit-rawat-inap');
-    Route::get('rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'diagnosaPenyakitRawatJalan'])->name('diagnosa-pola-penyakit-rawat-jalan');
-    Route::get('Export/rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'exportExcel'])->name('diagnosa-pola-penyakit.export');
-    Route::get('Export/rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakit::class, 'exportExcelRajal'])->name('diagnosa-pola-penyakit-rajal.export');
+    Route::get('rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'diagnosaPenyakitRawatInap'])->name('diagnosa-pola-penyakit-rawat-inap');
+    Route::get('rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'diagnosaPenyakitRawatJalan'])->name('diagnosa-pola-penyakit-rawat-jalan');
+    Route::get('Export/rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'exportExcel'])->name('diagnosa-pola-penyakit.export');
+    Route::get('Export/rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'exportExcelRajal'])->name('diagnosa-pola-penyakit-rajal.export');
+
+    // Laporan Index
+    Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('laporanindex.index_operasi.')->group(function () {
+        Route::get('/','index')->name('index');
+    });
+    // Laporan Index
+    Route::controller(App\Http\Controllers\LaporanIndex\IndexDokterController::class)->prefix('index-dokter')->name('laporanindex.index_dokter.')->group(function () {
+        Route::get('/','index')->name('index');
+    });
+
+    // Start Gizi
+    Route::controller(App\Http\Controllers\Gizi\GiziController::class)->prefix('gizi')->name('simrs.gizi.')->group(function () {
+        Route::get('/','index')->name('index');
+        Route::post('/assesment','addAssesment')->name('add.assesment');
+        Route::get('/{kunjungan}/{counter}/assesment','createAssesment')->name('create.assesment');
+        Route::post('/assesment/store','storeAssesment')->name('store.assesment');
+        Route::post('/diagnosis/store','storeDiagnosis')->name('store.diagnosis');
+        Route::post('/intervensi/store','storeIntervensi')->name('store.intervensi');
+        Route::post('/monev/store','storeMonev')->name('store.monev');
+    });
+    // End GIZI
 
     // VIEW TERBARU
     Route::get('/dashboard-igd', [App\Http\Controllers\IGD\Dashboard\DashboardController::class, 'getDataAll'])->name('dashboard-igd');
@@ -444,10 +461,11 @@ Route::middleware('auth')->group(function () {
 
     // pasien bayi
     Route::get('/pasien-bayi/kunjungan-kebidanan', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');
-    Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
+    Route::get('/list-kunjungan/kebidanan', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'listKunjunganUGK'])->name('list-kunjungan.ugk');
+    Route::get('/tambah/pasien-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formAddBayi'])->name('pasien-baru.bayi-baru');
     Route::get('/pasien-bayi/cari-data', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'cariBayi'])->name('pasien-bayi.cari');
     Route::get('/cari-detail-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiPerorangtua'])->name('detailbayi.byortu');
-    Route::get('/tambah/pasien-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formAddBayi'])->name('pasien-baru.bayi-baru');
+    Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
     Route::post('/store-bayi-baru', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formBayiStore'])->name('pasien-bayi.store-bayi');
 
     //RANAP BAYI

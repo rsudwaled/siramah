@@ -1,8 +1,8 @@
 @extends('adminlte::page')
 
-@section('title', 'Edit Pasien')
+@section('title', 'EDIT PASIEN')
 @section('content_header')
-    <h1>Edit Pasien : {{ $pasien->nama_px }}</h1>
+    <h1>EDIT PASIEN : {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')
@@ -154,9 +154,10 @@
                         </div>
                     </div>
                 </div>
-                <x-adminlte-button id="updatePasien" class="float-right btn-sm btn-flat" theme="success" label="update data" />
-                <button type="button" id="selesaiEdit" class="btn btn-primary btn-sm btn-flat float-right">Selesai Edit</button>
-                <x-adminlte-button label="Refresh" class="btn btn-flat" theme="danger" icon="fas fa-retweet"
+                <x-adminlte-button id="updatePasien" class="float-right btn-sm ml-2" theme="primary" label="Update Data" />
+                <button type="button" id="selesaiEdit" class="btn btn-success btn-sm ml-2 float-right">Selesai Edit</button>
+
+                <x-adminlte-button label="Refresh" class="btn btn-flat btn-sm" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
             </form>
         </div>

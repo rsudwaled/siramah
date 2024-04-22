@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Form Edit : </h5>
+                <h5>FORM EDIT KUNJUNGAN: </h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -58,15 +58,38 @@
                                                     --Pasien UMUM--</option>
                                                 <option value="1" {{ $kunjungan->jp_daftar == 1 ? 'selected' : '' }}>
                                                     --Pasien BPJS--</option>
+                                                <option value="2" {{ $kunjungan->jp_daftar == 2 ? 'selected' : '' }}>
+                                                    --BPJS PROSES--</option>
                                             </x-adminlte-select>
-                                            <x-adminlte-select name="penjamin_id" label="Pilih Penjamin">
-                                                <option value="">--Pilih Penjamin--</option>
-                                                @foreach ($penjamin as $item)
-                                                    <option value="{{ $item->kode_penjamin }}"
-                                                        {{ $item->kode_penjamin == $kunjungan->kode_penjamin ? 'selected' : '' }}>
-                                                        {{ $item->nama_penjamin }}</option>
-                                                @endforeach
-                                            </x-adminlte-select>
+                                            <div class="form-group" id="show_penjamin_umum">
+                                                <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
+                                                    <option value="" selected>Penjamin UMUM</option>
+                                                    @foreach ($penjamin as $penjaminumum)
+                                                    <option value="{{ $penjaminumum->kode_penjamin }}"
+                                                        {{ $penjaminumum->kode_penjamin == $kunjungan->kode_penjamin ? 'selected' : '' }}>
+                                                        {{ $penjaminumum->nama_penjamin }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
+                                            </div>
+                                            <div class="form-group" id="show_penjamin_bpjs">
+                                                <x-adminlte-select2 name="penjamin_id_bpjs" label="Pilih Penjamin BPJS">
+                                                    <option value="" selected>Penjamin BPJS</option>
+                                                    @foreach ($penjaminbpjs as $penjaminbpjs)
+                                                    <option value="{{ $penjaminbpjs->kode_penjamin_simrs }}"
+                                                        {{ $penjaminbpjs->kode_penjamin_simrs == $kunjungan->kode_penjamin ? 'selected' : '' }}>
+                                                        {{ $penjaminbpjs->nama_penjamin_bpjs }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
+                                            </div>
+                                            <div class="form-group">
+                                                <x-adminlte-select2 name="status_kunjungan" label="Status Kunjungan">
+                                                    @foreach ($statusKunjungan as $status)
+                                                        <option value="{{ $status->ID }}"
+                                                            {{ $status->ID == $kunjungan->status_kunjungan ? 'selected' : '' }}>
+                                                            {{ $status->status_kunjungan }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
+                                            </div>
                                             <x-adminlte-select name="alasan_edit" label="Alasan Edit Data">
                                                 <option value="">--Alasan Edit--</option>
                                                 @foreach ($alasanedit as $item)
@@ -81,7 +104,7 @@
                                         class="withLoad  btn btn-sm m-1 bg-primary float-right" id="submitPasien"
                                         label="Simpan Data" />
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
-                                        class="btn btn-sm  btn-secondary float-right m-1 withLoad">kembali</a>
+                                        class="btn btn-sm  btn-secondary float-right m-1 withLoad">Kembali</a>
                                 </div>
                             </form>
                         </div>
@@ -99,6 +122,7 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
+        const isbpjs = document.getElementById('isBpjs');
         $("#provinsi").select2({
             theme: "bootstrap4",
             ajax: {
@@ -117,6 +141,32 @@
                     };
                 },
                 cache: true
+            }
+        });
+        if (isbpjs.value == 1) {
+            $('#show_penjamin_umum').hide();
+            $('#show_penjamin_bpjs').show();
+        } else {
+            $('#show_penjamin_bpjs').hide();
+            $('#show_penjamin_umum').show();
+        }
+        if (isbpjs.value == 2) {
+            $('#show_penjamin_umum').show();
+            $('#show_penjamin_bpjs').show();
+        }
+        $(isbpjs).on('change', function() {
+            if (isbpjs.value == 0 || isbpjs.value == null) {
+                $('#show_penjamin_umum').show();
+                $('#show_penjamin_bpjs').hide();
+            } else if (isbpjs.value == 1) {
+                $('#show_penjamin_umum').hide();
+                $('#show_penjamin_bpjs').show();
+            } else if(isbpjs.value == 2){
+                $('#show_penjamin_umum').show();
+                $('#show_penjamin_bpjs').show();
+            }else{
+                $('#show_penjamin_umum').hide();
+                $('#show_penjamin_bpjs').hide();
             }
         });
         $("#kabupaten").select2({

@@ -1064,6 +1064,7 @@ class RanapController extends APIController
         return response()->json([
             'bed' => $bed,
         ]);
+        dd($bed);
     }
 
     public function formRanapBayi($rm)

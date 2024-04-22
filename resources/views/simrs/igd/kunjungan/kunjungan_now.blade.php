@@ -82,7 +82,7 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'SEP', 'Status Kunjungan', 'Status Daftar', 'Detail'];
+                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Diagnosa', 'SEP', 'Status Pasien', 'Detail'];
                         $config['order'] = ['3', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -100,7 +100,7 @@
                                         {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
                                     </a>
                                 </td>
-                                <td>alamat : {{ $item->alamat }} / <br>
+                                <td>{!! wordwrap($item->alamat, 30, "<br>\n") !!}</td>
                                 </td>
                                 <td>
                                     @if ($item->lakaLantas > 0)
@@ -108,12 +108,14 @@
                                             <b>PASIEN KECELAKAAN</b>
                                         </small> <br>
                                     @endif
-                                    {{ $item->kunjungan }} <br>
-                                    ({{ $item->nama_unit }})
+                                    {{ $item->kunjungan }} | ({{ $item->nama_unit }})
                                     <br>
-
+                                    <b>
+                                        {{ $item->status }}
+                                    </b> <br>
+                                    Tgl : {{ $item->tgl_kunjungan }}
                                 </td>
-                                <td>{{ $item->tgl_kunjungan }}</td>
+
                                 <td>{{ $item->diagx }}</td>
                                 <td>
                                     {{ $item->sep }} <br>
@@ -122,7 +124,6 @@
                                             class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
                                     @endif
                                 </td>
-                                <td>{{ $item->status }}</td>
                                 <td>
                                     <b>
                                         @if (empty($item->jp_daftar) && !empty($item->sep))
@@ -149,27 +150,57 @@
                                     <a href="{{ route('detail.kunjungan', ['kunjungan' => $item->kunjungan]) }}"
                                         class="btn btn-success btn-xs withLoad mt-1">Detail</a>
 
-                                    <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
-                                        data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
-                                        data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
-                                        data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
-                                        theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                        label="Update Diagnosa" />
-                                    @php
-                                        if (empty($item->noKartu)) {
-                                            $nomorKartu = null;
-                                        } else {
-                                            $nomorKartu = trim($item->noKartu);
-                                        }
-                                    @endphp
-                                    <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                        class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                    @if ($item->jp_daftar !== 0)
-                                        @if (!empty($nomorKartu) && $item->jp_daftar == 1)
-                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                    @if ($item->id_status == 1 || $item->id_status == 12)
+                                        <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                            data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
+                                            data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
+                                            data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
+                                            theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa mt-1"
+                                            id="btn-diagnosa" label="Update Diagnosa" />
+                                        @php
+                                            if (empty($item->noKartu)) {
+                                                $nomorKartu = null;
+                                            } else {
+                                                $nomorKartu = trim($item->noKartu);
+                                            }
+                                        @endphp
+                                        <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
+                                            class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
+                                        @if ($item->jp_daftar !== 0)
+                                            @if (!empty($nomorKartu) && $item->jp_daftar == 1)
+                                                <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                    class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                            @endif
+                                        @endif
+                                    @else
+                                        @if (auth()->user()->hasRole('Admin Super'))
+                                            <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                                data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
+                                                data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
+                                                data-kunjungan="{{ $item->kunjungan }}"
+                                                data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
+                                                class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
+                                                label="Update Diagnosa" />
+                                            @php
+                                                if (empty($item->noKartu)) {
+                                                    $nomorKartu = null;
+                                                } else {
+                                                    $nomorKartu = trim($item->noKartu);
+                                                }
+                                            @endphp
+                                            <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
+                                                class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
+                                            @if ($item->jp_daftar !== 0)
+                                                @if (!empty($nomorKartu) && $item->jp_daftar == 1)
+                                                    <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                        class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                                @endif
+                                            @endif
+                                        @else
+                                            {{-- <button class="btn btn-xs btn-danger mt-1">SILAHKAN HUBUNGI IT</button> --}}
                                         @endif
                                     @endif
+
                                 </td>
                             </tr>
                         @endforeach

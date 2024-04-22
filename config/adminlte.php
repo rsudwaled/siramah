@@ -400,13 +400,13 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'ranap',
                 ],
-                // [
-                //     'text' => 'Pasien Ranap Aktif',
-                //     'icon'    => 'fas fa-user-injured',
-                //     'url'  => 'pasienRanapAktif',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'ranap',
-                // ],
+                [
+                    'text'  => 'Gizi',
+                    'icon'  => 'fas fa-user-injured',
+                    'url'   => 'gizi',
+                    'shift'   => 'ml-2',
+                    // 'can' => 'ranap',
+                ],
                 // [
                 //     'text' => 'Pasien Ranap',
                 //     'icon'    => 'fas fa-user-injured',
@@ -434,7 +434,7 @@ return [
                 [
                     'text' => 'Daftar Pasien Bayi',
                     'icon'    => 'fas fa-baby',
-                    'url'  => 'tambah/pasien-bayi',
+                    'url'  => 'list-kunjungan/kebidanan',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
@@ -835,6 +835,20 @@ return [
                     'can' => ['k3rs', 'rekam-medis'],
                     'submenu' => [
                         [
+                            'text' => 'Index Dokter',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'index-dokter',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'Index Operasi',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'index-operasi',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
                             'text' => 'Index Penyakit Rawat Jalan',
                             'icon'    => 'fas fa-disease',
                             'url'  => 'LaporanPenyakitRawatJalan',
@@ -876,13 +890,7 @@ return [
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],
-                        // [
-                        //     'text' => 'Index Dokter',
-                        //     'icon'    => 'fas fa-user-md',
-                        //     'url'  => 'index_dokter',
-                        //     'shift'   => 'ml-3',
-                        //     'can' => ['k3rs','rekam-medis'],
-                        // ],
+                       
                         // [
                         //     'text' => 'Index Daerah',
                         //     'icon'    => 'fas fa-maps',

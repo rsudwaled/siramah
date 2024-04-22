@@ -9,10 +9,7 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
-                            class="btn btn-sm btn-secondary">Kembali</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Daftar
-                            Bayi Luar</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Data Bayi</a></li>
                 </ol>
             </div>
         </div>
@@ -278,31 +275,6 @@
 
             });
 
-            // $('.save-bayi').click(function(e) {
-            //     $('#formBayi').modal('hide');
-            //     // $.LoadingOverlay("show");
-            //     $.ajax({
-            //         type: "post",
-            //         url: "{{ route('pasien-bayi.store') }}",
-            //         data: {
-            //             rm: $("#rm_ibu").val(),
-            //             kunjungan: $("#kunjungan").val(),
-            //             nama_bayi: $("#nama_bayi").val(),
-            //             jk_bayi: $("#jk_bayi").val(),
-            //             tgl_lahir_bayi: $("#tgl_lahir_bayi").val(),
-            //             tempat_lahir_bayi: $("#tempat_lahir_bayi").val(),
-            //             _token: "{{ csrf_token() }}",
-            //         },
-            //         dataType: 'JSON',
-            //         success: function(res) {
-            //             console.log(res);
-            //             if (res.status == 200) {
-            //                 var rm_bayi = res.bayi.rm_bayi;
-            //             }
-            //         }
-            //     });
-            //     $.LoadingOverlay("hide");
-            // });
         });
 
         function batalPilih() {

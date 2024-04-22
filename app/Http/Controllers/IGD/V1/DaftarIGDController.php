@@ -154,6 +154,7 @@ class DaftarIGDController extends Controller
 
     public function storeTanpaNoAntrian(Request $request)
     {
+        // dd($request->all());
         if (empty($request->nik_bpjs)) {
             Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
             return back();
@@ -191,7 +192,7 @@ class DaftarIGDController extends Controller
                 'alasan_masuk_id'   => 'required',
                 'isBpjs'            => 'required',
                 'jp'                => 'required',
-                'noTelp'            => 'required|numeric|min:10|max_digits:15',
+                'noTelp'            => 'required',
             ],
             [
                 'dokter_id'         => 'Dokter DPJP wajib dipilih !',
@@ -201,7 +202,7 @@ class DaftarIGDController extends Controller
                 'isBpjs'            => 'Anda harus memilih pasien didaftarkan sebagai pasien bpjs/umum !',
                 'jp'                => 'Anda harus memilih pasien didaftarkan kedalam unit mana !',
                 'noTelp'            => 'No telepon wajib diisi !',
-                'noTelp.max'        => 'No telepon maksimal 13 digit',
+                // 'noTelp.max'        => 'No telepon maksimal 13 digit',
             ]);
 
         $data = Kunjungan::where('no_rm', $request->rm)

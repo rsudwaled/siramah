@@ -2,7 +2,7 @@
 
 @section('title', 'FORM RANAP BAYI')
 @section('content_header')
-    <h1>FORM RANAP BAYI: {{ $pasien->nama_px }}</h1>
+    <h1>FORM PENDAFTARAN RANAP BAYI</h1>
 @stop
 
 @section('content')
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
-                                title="Form Pendaftaran">
+                                title="DAFTARKAN BAYI : ({{ $pasien->nama_px }})">
                                 <form action="{{ route('ranap-bayi.store') }}" method="post" id="submitRanap">
                                     @csrf
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">

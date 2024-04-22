@@ -32,8 +32,8 @@ class CPPTController extends Controller
         // $counter ='2';
         $rm = $request->rm;
         $counter = $request->counter;
-        $kode_kunjungan = $request->kode_kunjungan;
         $data = \DB::connection('mysql2')->select("CALL SP_ASSESMEN_DOKTER_MEDIS_RAWAT_JALAN('$rm','$counter')");
+        // dd($data);
         header("Content-type: image/gif");
         $datagbr = $data[0]->gambar_1;
 

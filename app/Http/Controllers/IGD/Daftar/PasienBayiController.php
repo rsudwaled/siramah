@@ -23,6 +23,32 @@ use Carbon\Carbon;
 
 class PasienBayiController extends Controller
 {
+
+    public function listKunjunganUGK(Request $request)
+    {
+        $start         = Carbon::parse($request->start)->format('Y-m-d');
+        $finish        = Carbon::parse($request->finish)->format('Y-m-d');
+        $bayi          = PasienBayiIGD::get();
+        $query         = Kunjungan::where('prefix_kunjungan','UGK')
+                        ->whereNull('tgl_keluar');
+                        
+        if(!empty($request->start) && !empty($request->finish))
+        {
+            $query->whereDate('tgl_masuk', '>=', $request->start );
+            $query->whereDate('tgl_masuk', '<=', $request->finish );
+        }else{
+            $now = Carbon::now();
+            $weekStartDate  = $now->startOfWeek()->format('Y-m-d H:i');
+            $weekEndDate    = $now->endOfWeek()->format('Y-m-d H:i');
+
+            $query->whereDate('tgl_masuk', '>=', $weekStartDate );
+            $query->whereDate('tgl_masuk', '<=',  $weekEndDate );
+        }
+
+        $kunjungan_igd = $query->get();
+        return view('simrs.igd.daftar.pasien_bayi.bayi_kunjungan_ugk', compact('kunjungan_igd','bayi','request','start','finish'));
+    }
+
     public function index(Request $request)
     {
         $start         = Carbon::parse($request->start)->format('Y-m-d');
@@ -213,7 +239,6 @@ class PasienBayiController extends Controller
         }else{
             $pasien         = null;
         }
-        // dd($pasien);
         return view('simrs.igd.daftar.pasien_bayi.tambah_bayi', compact('pasien','provinsi','provinsi_klg','negara','hb_keluarga','agama','pekerjaan','pendidikan','request'));
     }
 

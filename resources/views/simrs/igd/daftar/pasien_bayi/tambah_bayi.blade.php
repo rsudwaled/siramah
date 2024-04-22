@@ -1,17 +1,17 @@
 @extends('adminlte::page')
-@section('title', 'Tambah Bayi Baru')
+@section('title', 'FORM PENDAFTARAN PASIEN BAYI:')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Tambah Bayi Baru</h5>
+                <h5>FORM PENDAFTARAN PASIEN BAYI:</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Data
                             Pasien Bayi Terdaftar</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.index') }}"
-                            class="btn btn-sm btn-success">Daftar Bayi By Kun Kebidanan</a></li>
+                            class="btn btn-sm btn-success">List Kunjungan Kebidanan</a></li>
                 </ol>
             </div>
         </div>
@@ -111,7 +111,7 @@
                             @if (isset($pasien))
                                 <div class="row mt-5">
                                     @php
-                                        $heads = ['Pasien', 'Aksi'];
+                                        $heads = ['Pasien','RM', 'Aksi'];
                                         $config['order'] = false;
                                         $config['paging'] = false;
                                         $config['info'] = false;
@@ -136,16 +136,17 @@
                                                             {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}</small>
                                                     </a>
                                                 </td>
+                                                <td><b>{{$data->no_rm}}</b></td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
-                                                        class="btn-flat btn-xs btn-singkron bg-purple" label="PILIH DATA" />
+                                                        class="btn-flat btn-xs btn-singkron bg-purple" label="PILIH DATA" /> <br>
 
                                                     <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-rm="{{ $data->no_rm }}" class="btn-xs btn-cekBPJS bg-success"
-                                                        label="CEK STATUS BPJS" />
+                                                        label="CEK STATUS BPJS" /><br>
 
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         class="btn-xs btn-cekKunjungan bg-warning mt-1"
@@ -229,8 +230,6 @@
 
                                                     </div>
                                                 </div>
-
-                                                
 
                                                 <div class="form-group">
                                                     <label for="exampleInputBorderWidth2">Jam Lahir Bayi <br>
@@ -409,7 +408,14 @@
                         }
                     });
                 }
+                clearTables();
             });
+
+            function clearTables() {
+                $("#riwayatKunjungan tbody").empty();
+                $("#riwayatRanap tbody").empty();
+                $("#UGDKebidanan tbody").empty();
+            }
         });
     </script>
 @endsection
