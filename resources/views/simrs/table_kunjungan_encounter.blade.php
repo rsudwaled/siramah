@@ -14,13 +14,12 @@
     </div>
 </div>
 @php
-    $heads = ['Tgl Masuk', 'No RM', 'Pasien', 'Poliklinik', 'Dokter', 'Diagnosa', 'ICD-10', 'Action'];
+    $heads = ['Tgl Masuk', 'Kode Kunjungan', 'No RM', 'Pasien', 'Poliklinik', 'Dokter', 'Diagnosa', 'ICD-10', 'Status'];
     $config['order'] = [['0', 'asc']];
     $config['paging'] = false;
     $config['autoEmpty'] = false;
     $config['language'] = ['emptyTable' => '', 'zeroRecords' => ''];
-    $config['processing'] = true;
-    $config['serverside'] = true;
+    $config['scrollX'] = true;
     $config['scrollY'] = '400px';
 @endphp
 <x-adminlte-datatable id="table1" class="text-xs" :heads="$heads" :config="$config" bordered hoverable compressed>
@@ -36,13 +35,21 @@
                 <tr class="table-danger">
             @endif
             <td>{{ $kunjungan->tgl_masuk }}</td>
+            <td>
+                {{ $kunjungan->kode_kunjungan }}
+            </td>
             <td>{{ $kunjungan->no_rm }}</td>
-            <td> {{ $kunjungan->pasien->nama_px ?? '-' }}</td>
+            <td>{{ $kunjungan->pasien->nama_px ?? '-' }}</td>
             <td>{{ $kunjungan->unit->nama_unit }}</td>
             <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
             <td>{{ $kunjungan->diagnosapoli->diag_00 ?? '-' }}</td>
             <td>{{ $kunjungan->diagnosaicd->diag_utama ?? '-' }}</td>
             <td>
+                @if ($kunjungan->id_satusehat)
+                    <span class="badge badge-success">Syncron</span>
+                @else
+                    <span class="badge badge-danger">Belum</span>
+                @endif
                 <a href="{{ route('encounter_sync') }}?kode={{ $kunjungan->kode_kunjungan }}"
                     class="btn btn-xs btn-primary">Sync</a>
             </td>
@@ -59,7 +66,8 @@ Catatan : <br>
             "paging": false,
             "info": false,
             "scrollCollapse": true,
-            "scrollY": '300px'
+            "scrollY": '300px',
+            "scrollX": true,
         });
     });
 </script>

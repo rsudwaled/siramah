@@ -36,6 +36,7 @@ class Kunjungan extends Model
         'is_ranap_daftar',
         'form_send_by',
         'jp_daftar',
+        'id_satusehat',
         'perujuk',
         'no_spri',
         'id_alasan_edit',
@@ -140,6 +141,18 @@ class Kunjungan extends Model
     public function tracer()
     {
         return $this->hasOne(Tracer::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
+    public function asesmen_ranap()
+    {
+        return $this->belongsTo(AsesmenRanap::class, 'rm_counter',   'rm_counter');
+    }
+    public function asesmen_ranap_keperawatan()
+    {
+        return $this->belongsTo(AsesmenRanapPerawat::class, 'rm_counter',   'rm_counter');
+    }
+    public function asuhan_terpadu()
+    {
+        return $this->hasMany(AsuhanTerpadu::class, 'rm_counter',   'rm_counter');
     }
     public function budget()
     {

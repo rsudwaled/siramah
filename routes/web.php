@@ -144,7 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('obat', ObatController::class);
     Route::resource('kpo', KPOController::class);
-    Route::resource('vclaim', VclaimController::class);
+    // Route::resource('vclaim', VclaimController::class);
 
     Route::prefix('satusehat')->group(function () {
         Route::get('token_generate', [SatuSehatController::class, 'token_generate'])->name('token_generate');
@@ -161,6 +161,7 @@ Route::middleware('auth')->group(function () {
         Route::get('encounter', [EncounterController::class, 'encounter'])->name('encounter');
         Route::get('table_kunjungan_encounter', [EncounterController::class, 'table_kunjungan_encounter'])->name('table_kunjungan_encounter');
         Route::get('encounter_sync', [EncounterController::class, 'encounter_sync'])->name('encounter_sync');
+        Route::post('encounter_update', [EncounterController::class, 'encounter_update'])->name('encounter_update');
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
@@ -202,13 +203,13 @@ Route::middleware('auth')->group(function () {
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
 
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
-    Route::get('table_pasien_ranap', [RanapController::class, 'table_pasien_ranap'])->name('table_pasien_ranap');
     Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::get('get_rincian_biaya', [RanapController::class, 'get_rincian_biaya'])->name('get_rincian_biaya');
 
     Route::get('get_kunjungan_pasien', [RanapController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
     Route::get('get_hasil_laboratorium', [RanapController::class, 'get_hasil_laboratorium'])->name('get_hasil_laboratorium');
     Route::get('get_hasil_radiologi', [RanapController::class, 'get_hasil_radiologi'])->name('get_hasil_radiologi');
+    Route::get('get_file_upload', [RanapController::class, 'get_file_upload'])->name('get_file_upload');
     Route::get('get_hasil_patologi', [RanapController::class, 'get_hasil_patologi'])->name('get_hasil_patologi');
     Route::get('get_surat_kontrol', [SuratKontrolController::class, 'get_surat_kontrol'])->name('get_surat_kontrol');
     Route::get('monitoring_resume_ranap', [RanapController::class, 'monitoring_resume_ranap'])->name('monitoring_resume_ranap');
@@ -240,6 +241,12 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
     Route::post('simpan_mppb', [RanapController::class, 'simpan_mppb'])->name('simpan_mppb');
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
+
+    Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
+    Route::post('simpan_rencana_asuhan_terpadu', [RanapController::class, 'simpan_rencana_asuhan_terpadu'])->name('simpan_rencana_asuhan_terpadu');
+    Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
+    Route::post('simpan_asesmen_ranap_keperawatan', [RanapController::class, 'simpan_asesmen_ranap_keperawatan'])->name('simpan_asesmen_ranap_keperawatan');
+    Route::get('print_asesmen_ranap_keperawatan', [RanapController::class, 'print_asesmen_ranap_keperawatan'])->name('print_asesmen_ranap_keperawatan');
     // laboratorium
     Route::get('hasillaboratorium', [LaboratoriumController::class, 'hasillaboratorium'])->name('hasillaboratorium');
     // radiologi
@@ -291,6 +298,7 @@ Route::middleware('auth')->group(function () {
     Route::get('monitoringKlaimJasaraharja', [VclaimController::class, 'monitoringKlaimJasaraharja'])->name('monitoringKlaimJasaraharja');
     Route::get('referensiVclaim', [VclaimController::class, 'referensiVclaim'])->name('referensiVclaim');
     Route::get('ref_diagnosa_api', [VclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
+    Route::get('ref_diagnosa_api2', [VclaimController::class, 'ref_diagnosa_api2'])->name('ref_diagnosa_api2');
     Route::get('ref_poliklinik_api', [VclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
     Route::get('ref_faskes_api', [VclaimController::class, 'ref_faskes_api'])->name('ref_faskes_api');
     Route::get('ref_dpjp_api', [VclaimController::class, 'ref_dpjp_api'])->name('ref_dpjp_api');
@@ -298,13 +306,16 @@ Route::middleware('auth')->group(function () {
     Route::get('ref_kabupaten_api', [VclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
     Route::get('ref_kecamatan_api', [VclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
     Route::get('suratKontrolBpjs', [SuratKontrolController::class, 'suratKontrolBpjs'])->name('suratKontrolBpjs');
+    Route::get('sep_internal', [VclaimController::class, 'sepInternal'])->name('sep_internal');
+    Route::delete('sep_internal_delete', [VclaimController::class, 'sepInternalDelete'])->name('sep_internal_delete');
+
     // suratkontrol
     Route::post('suratkontrol_simpan', [SuratKontrolController::class, 'suratkontrol_simpan'])->name('suratkontrol_simpan');
     Route::get('suratkontrol_edit', [SuratKontrolController::class, 'suratkontrol_edit'])->name('suratkontrol_edit');
     Route::post('suratkontrol_update', [SuratKontrolController::class, 'suratkontrol_update'])->name('suratkontrol_update');
     Route::post('suratkontrol_update_v2', [SuratKontrolController::class, 'suratkontrol_update_v2'])->name('suratkontrol_update_v2');
     Route::get('suratkontrol_delete', [SuratKontrolController::class, 'suratkontrol_delete'])->name('suratkontrol_delete');
-    Route::get('suratkontrol_print', [SuratKontrolController::class, 'print'])->name('suratkontrol_print');
+    Route::get('suratkontrol_print', [SuratKontrolController::class, 'suratkontrol_print'])->name('suratkontrol_print');
     // sep
     Route::post('pemulangan_sep_pasien', [KunjunganController::class, 'pemulangan_sep_pasien'])->name('pemulangan_sep_pasien');
     Route::get('rujukanBpjs', [RujukanController::class, 'rujukanBpjs'])->name('rujukanBpjs');
@@ -475,7 +486,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
     Route::get('/ranap-bpjs', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJS'])->name('ranapbpjs');
-    
+
     //  list assesment ranap
     Route::get('/list-pasien/assesment-ranap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'listPasienRanap'])->name('list-assesment.ranap');
     Route::get('/list-pasien/form-ranap/{rm}/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUmum'])->name('form-umum.pasien-ranap');
@@ -487,22 +498,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap/spri-check/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'cekProsesDaftarSPRI'])->name('cekprosesdaftar.spri');
     Route::get('/get-bed-byruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('bed-ruangan.get');
     Route::get('/get-dokter-byPoli', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getDokterByPoli'])->name('dokter-bypoli.get');
-    
-    //RANAP BRIDGING 
+
+    //RANAP BRIDGING
     Route::get('/pasien-rawat-inap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'dataPasienRanap'])->name('pasien.ranap');
-    Route::get('ranap/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'detailPasienRanap'])->name('pasien-ranap.detail');   
+    Route::get('ranap/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'detailPasienRanap'])->name('pasien-ranap.detail');
     Route::get('/ranap/pasien-bpjs/{nomorkartu}/{kode}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJS'])->name('daftar.ranap-bpjs');
     Route::post('/ranap/pasien-bpjs/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'daftarRanapBPJSStore'])->name('store.ranap-bpjs');
     Route::get('bridging-steps/ranap/pasien-bpjs/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapCreateSEPRanap'])->name('create-sepigd.ranap-bpjs');
     Route::post('bridging/sep-igd', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'bridgingSEPIGD'])->name('bridging.sepigd');
     Route::delete('sep/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSEP'])->name('sep_ranap.delete');
     Route::delete('spri/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSPRI'])->name('spri_ranap.delete');
-    
-    //RANAP 1 X 24 Jam    
+
+    //RANAP 1 X 24 Jam
     Route::get('1x24jam/daftar-ranap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getRiwayatRanap'])->name('riwayat-ranap.daftar');
     Route::get('daftar-ranap/{diffInHours}/{rm}/{kode}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanap1X24Jam'])->name('riwayat-ranap.daftarkan-pasien');
     Route::post('create-ranap/1x24jam', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'createRanap1X24Jam'])->name('daftar-ranap-byriwayat.simpan-pasien');
-    
+
     // synch diagnosa
     Route::get('/daftar-diagnosa/synch-diagnosa-assesment', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'vDiagnosaAssesment'])->name('v.diagnosa');
     Route::post('/diagnosa-and-bridging/synch-diagnosa-assesment/post', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'synchDiagnosaAndBridging'])->name('synch.diagnosa');

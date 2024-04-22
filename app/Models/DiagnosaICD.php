@@ -13,4 +13,6 @@ class DiagnosaICD extends Model
     protected $primaryKey = 'kode_kunjungan';
     public $incrementing = false;
     protected $keyType = 'string';
+    public $timestamps = false;
+    protected $guarded = ["id"];
 }

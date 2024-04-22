@@ -105,7 +105,7 @@ Route::prefix('antrian')->group(function () {
     // API SIMRS
     Route::get('token', [AntrianController::class, 'token'])->name('token');
     Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
-    Route::post('ambil_antrian', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
+    Route::post('ambil_antrians ', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
     Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
     Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
     Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
@@ -136,8 +136,8 @@ Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('dispos
 
 // API SIMRS
 Route::prefix('wa')->group(function () {
-    Route::post('webhook', [WhatsappController::class, 'webhook']);
-    Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
+    Route::post('webhooka', [WhatsappController::class, 'webhook']);
+    // Route::post('send_message', [WhatsappController::class, 'send_message_perangkap'])->name('send_message');
 });
 // APP.RSUDWALED.ID
 Route::get('poliklinik_aktif', [PoliklinikController::class, 'poliklinik_aktif'])->name('api.poliklinik_aktif');

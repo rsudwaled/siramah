@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7f108211ab9853876c8c81dd896f3c4",
+    "content-hash": "e292e5ae3bfcf55ef5aa778f9c7193e5",
     "packages": [
         {
             "name": "akaunting/laravel-money",
@@ -10346,7 +10346,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/spatie/ignition/zipball/5b6f801c605a593106b623e45ca41496a6e7d56d",
                 "reference": "5b6f801c605a593106b623e45ca41496a6e7d56d",
-
                 "shasum": ""
             },
             "require": {

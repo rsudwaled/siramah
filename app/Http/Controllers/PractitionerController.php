@@ -34,12 +34,16 @@ class PractitionerController extends SatuSehatController
         $paramedis = Paramedis::where('kode_paramedis', $request->kode_paramedis)->first();
         $request['nik'] = $paramedis->nik;
         $res = $this->practitioner_by_nik($request);
-        if ($res->response->entry[0]) {
-            $ihs = $res->response->entry[0]->resource->id;
-            $paramedis->update([
-                'id_satusehat' => $ihs
-            ]);
-            Alert::success('Success', 'Berhasil Sync Practitioner Satu Sehat');
+        if ($res->metadata->code == 200) {
+            if ($res->response->entry[0]) {
+                $ihs = $res->response->entry[0]->resource->id;
+                $paramedis->update([
+                    'id_satusehat' => $ihs
+                ]);
+                Alert::success('Success', 'Berhasil Sync Practitioner Satu Sehat');
+            } else {
+                Alert::error('Mohon Maaf', $res->metadata->message);
+            }
         } else {
             Alert::error('Mohon Maaf', $res->metadata->message);
         }
