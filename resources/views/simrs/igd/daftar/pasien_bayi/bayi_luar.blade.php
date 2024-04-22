@@ -9,10 +9,10 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
+                    <li class="breadcrumb-item"><a href="{{ route('list-kunjungan.ugk') }}"
                             class="btn btn-sm btn-secondary">Kembali</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
-                            class="btn btn-sm bg-success">Tambah Bayi Baru</a></li>
+                    {{-- <li class="breadcrumb-item"><a href="{{ route('pasien-baru.bayi-baru') }}"
+                            class="btn btn-sm bg-success">Tambah Bayi Baru</a></li> --}}
                     <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}"
                             class="btn btn-sm bg-danger">Refresh</a></li>
                 </ol>

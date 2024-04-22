@@ -99,7 +99,7 @@
                                         <div class="col-sm-3 col-6">
                                             <div class="description-block border-right">
                                                 <h5 class="description-header ">
-                                                    {{ $kunjungan->jp_daftar == 0 ? 'UMUM' : 'BPJS' }}</h5>
+                                                    {{ $kunjungan->jp_daftar == 0 ? 'UMUM' : ($kunjungan->jp_daftar == 1?'BPJS':'BPJS PROSES') }}</h5>
                                                 <span class="description-text">- Jenis Pasien Daftar -</span>
                                             </div>
                                         </div>
