@@ -77,22 +77,20 @@
                             @endif
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
-                            <span class="badge bg-danger float-right">On Building</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical"></i> Evaluasi Awal MPP A
-                            <span class="badge bg-danger float-right">On Building</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical"></i> Catatan Implementasi MPP B
-                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
+                            <span class="badge bg-danger float-right">Belum</span>
                         </a>
                     </li>
                     <li class="nav-item">

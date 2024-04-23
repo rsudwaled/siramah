@@ -278,8 +278,8 @@
                         <tr>
                             <td>
                                 @if ($kunjungan->erm_ranap)
-                                    @if ($kunjungan->erm_ranap->tindakan_operasi)
-                                        @foreach (json_decode($kunjungan->erm_ranap->tindakan_operasi) as $item)
+                                    @if ($kunjungan->erm_ranap->tindakan_prosedur)
+                                        @foreach (json_decode($kunjungan->erm_ranap->tindakan_prosedur) as $item)
                                             {{ $loop->iteration }}. {{ $item }} <br>
                                         @endforeach
                                     @endif
@@ -288,7 +288,7 @@
                             <td>
                                 @if ($kunjungan->erm_ranap)
                                     @if ($kunjungan->erm_ranap->icd9_operasi)
-                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_operasi) as $item)
+                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_prosedur) as $item)
                                             {{ $item }} <br>
                                         @endforeach
                                     @endif

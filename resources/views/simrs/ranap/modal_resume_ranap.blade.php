@@ -9,7 +9,7 @@
                 <i class="fas fa-edit"></i> Edit Resume
             </button>
             @if ($kunjungan->erm_ranap)
-                <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenAwal()" title="Print">
+                <button type="button" class="btn btn-tool bg-warning" onclick="printResume()" title="Print">
                     <i class="fas fa-print"></i> Print
                 </button>
                 <button type="button" class="btn btn-tool bg-success">
@@ -191,18 +191,18 @@
             <div class="col-md-4">
                 <hr>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <x-adminlte-textarea name="diagnosa_masuk" label="Diagnosa Masuk" rows="3" igroup-size="sm"
                     placeholder="Diagnosa Masuk">
                     {{ $kunjungan->erm_ranap->diagnosa_masuk ?? null }}
                 </x-adminlte-textarea>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <x-adminlte-input name="diagnosa_utama" label="Diagnosa Utama" placeholder="Diagnosa Utama"
                             igroup-size="sm" enable-old-support required
                             value="{{ $kunjungan->erm_ranap->diagnosa_utama ?? null }}" />
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <x-adminlte-select2 name="icd10_utama" class="diagSekunderResume" igroup-size="sm"
                             label="ICD-10 Utama">
                             @if ($kunjungan->erm_ranap)
@@ -224,12 +224,12 @@
                             <div id="row">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-4">
                                             <input type="text" class="form-control form-control-sm"
                                                 name="diagnosa_sekunder[]" value="{{ $item }}"
                                                 placeholder="Diagnosa Sekunder" required>
                                         </div>
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-8">
                                             <select name="icd10_sekunder[]" class="form-control diagSekunderResume">
                                                 @if (json_decode($kunjungan->erm_ranap->icd10_sekunder)[$key] != '-|Belum Diisi')
                                                     <option
@@ -253,11 +253,11 @@
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="diagnosa_sekunder[]" placeholder="Diagnosa Sekunder">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd10_sekunder[]" class="form-control diagSekunderResume">
                                         </select>
                                         <div class="input-group-append">
@@ -276,11 +276,11 @@
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="diagnosa_sekunder[]" placeholder="Diagnosa Sekunder">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd10_sekunder[]" class="form-control diagSekunderResume">
                                         </select>
                                         <div class="input-group-append">
@@ -300,11 +300,11 @@
                     <div id="row">
                         <div class="form-group">
                             <div class="row">
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-4">
                                     <input type="text" class="form-control form-control-sm"
                                         name="diagnosa_sekunder[]" placeholder="Diagnosa Sekunder">
                                 </div>
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-8">
                                     <select name="icd10_sekunder[]" class="form-control diagSekunderResume">
                                     </select>
                                     <div class="input-group-append">
@@ -320,7 +320,7 @@
                     <div id="diagSekunderBaru"></div>
                 @endif
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="row">
                     @php
                         $config = ['format' => 'YYYY-MM-DD'];
@@ -347,12 +347,12 @@
                             <div id="row">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-4">
                                             <input type="text" class="form-control form-control-sm"
                                                 name="tindakan_operasi[]" value="{{ $item }}"
                                                 placeholder="Tindakan Operasi">
                                         </div>
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-8">
                                             <select name="icd9_operasi[]" class="form-control icd9operasi">
                                                 @if (json_decode($kunjungan->erm_ranap->icd9_operasi)[$key] != '-|Belum Diisi')
                                                     <option
@@ -376,11 +376,11 @@
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="tindakan_operasi[]" placeholder="Tindakan Operasi">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd9_operasi[]" class="form-control icd9operasi">
                                         </select>
                                         <div class="input-group-append">
@@ -399,11 +399,11 @@
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="tindakan_operasi[]" placeholder="Tindakan Operasi">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd9_operasi[]" class="form-control icd9operasi">
                                         </select>
                                         <div class="input-group-append">
@@ -423,11 +423,11 @@
                     <div id="row">
                         <div class="form-group">
                             <div class="row">
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-4">
                                     <input type="text" class="form-control form-control-sm"
                                         name="tindakan_operasi[]" placeholder="Tindakan Operasi">
                                 </div>
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-8">
                                     <select name="icd9_operasi[]" class="form-control icd9operasi">
                                     </select>
                                     <div class="input-group-append">
@@ -451,12 +451,12 @@
                             <div id="row">
                                 <div class="form-group">
                                     <div class="row">
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-4">
                                             <input type="text" class="form-control form-control-sm"
                                                 name="tindakan_prosedur[]" value="{{ $item }}"
                                                 placeholder="Tindakan Prosedur">
                                         </div>
-                                        <div class="input-group col-md-6">
+                                        <div class="input-group col-md-8">
                                             <select name="icd9_prosedur[]" class="form-control icd9operasi">
                                                 @if (json_decode($kunjungan->erm_ranap->icd9_prosedur)[$key] != '-|Belum Diisi')
                                                     <option
@@ -480,11 +480,11 @@
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="tindakan_prosedur[]" placeholder="Tindakan Prosedur">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd9_prosedur[]" class="form-control icd9operasi">
                                         </select>
                                         <div class="input-group-append">
@@ -497,17 +497,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="inputIcdOperasi"></div>
+                        <div id="inputIcdTindakan"></div>
                     @else
                         <label>Tindakan Prosedur</label>
                         <div id="row">
                             <div class="form-group">
                                 <div class="row">
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-4">
                                         <input type="text" class="form-control form-control-sm"
                                             name="tindakan_prosedur[]" placeholder="Tindakan Prosedur">
                                     </div>
-                                    <div class="input-group col-md-6">
+                                    <div class="input-group col-md-8">
                                         <select name="icd9_prosedur[]" class="form-control icd9operasi">
                                         </select>
                                         <div class="input-group-append">
@@ -527,11 +527,11 @@
                     <div id="row">
                         <div class="form-group">
                             <div class="row">
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-4">
                                     <input type="text" class="form-control form-control-sm"
                                         name="tindakan_prosedur[]" placeholder="Tindakan Prosedur">
                                 </div>
-                                <div class="input-group col-md-6">
+                                <div class="input-group col-md-8">
                                     <select name="icd9_prosedur[]" class="form-control icd9operasi">
                                     </select>
                                     <div class="input-group-append">
@@ -774,13 +774,18 @@
             });
             $("#formResume").submit();
         }
+
+        function printResume() {
+            var url = "{{ route('print_resume_ranap') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            window.open(url, '_blank');
+        }
     </script>
     <script>
         function addDiagSekunderResume() {
             newRowAdd = '<div id="row"><div class="form-group"><div class="row">' +
-                '<div class="input-group col-md-6">' +
+                '<div class="input-group col-md-4">' +
                 '<input type="text" class="form-control form-control-sm" name="diagnosa_sekunder[]" placeholder="Diagnosa Sekunder" required></div>' +
-                '<div class="input-group col-md-6"><select name="icd10_sekunder[]" class="form-control diagSekunderResume"></select>' +
+                '<div class="input-group col-md-8"><select name="icd10_sekunder[]" class="form-control diagSekunderResume"></select>' +
                 '<div class="input-group-append">' +
                 '<button type="button" class="btn btn-xs btn-danger" onclick="hapusDiagSekunderResume(this)">' +
                 '<i class="fas fa-trash"></i>' +
@@ -817,9 +822,9 @@
 
         function addIcdOperasi() {
             newRowAdd = '<div id="row"><div class="form-group"><div class="row">' +
-                '<div class="input-group col-md-6">' +
+                '<div class="input-group col-md-4">' +
                 '<input type="text" class="form-control form-control-sm" name="tindakan_operasi[]" placeholder="Tindakan Operasi" required></div>' +
-                '<div class="input-group col-md-6"><select name="icd9_operasi[]" class="form-control icd9operasi"></select>' +
+                '<div class="input-group col-md-8"><select name="icd9_operasi[]" class="form-control icd9operasi"></select>' +
                 '<div class="input-group-append">' +
                 '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
                 '<i class="fas fa-trash"></i>' +
@@ -857,9 +862,9 @@
 
         function addIcdTindakan() {
             newRowAdd = '<div id="row"><div class="form-group"><div class="row">' +
-                '<div class="input-group col-md-6">' +
+                '<div class="input-group col-md-4">' +
                 '<input type="text" class="form-control form-control-sm" name="tindakan_prosedur[]" placeholder="Tindakan Prosedur" required></div>' +
-                '<div class="input-group col-md-6"><select name="icd9_prosedur[]" class="form-control icd9operasi"></select>' +
+                '<div class="input-group col-md-8"><select name="icd9_prosedur[]" class="form-control icd9operasi"></select>' +
                 '<div class="input-group-append">' +
                 '<button type="button" class="btn btn-xs btn-danger" onclick="hapusIcdOperasi(this)">' +
                 '<i class="fas fa-trash"></i>' +
