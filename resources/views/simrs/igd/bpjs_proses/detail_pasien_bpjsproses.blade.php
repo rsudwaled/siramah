@@ -1,11 +1,11 @@
 @extends('adminlte::page')
 
-@section('title', 'Detail Pasien BPJS PROSES')
+@section('title', 'DETAIL PASIEN BPJS PROSES')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h5>Detail Pasien BPJS PROSES</h5>
+                <h5>DETAIL PASIEN BPJS PROSES</h5>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -27,7 +27,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <h5> Pasien a.n : {{ $kunjungan->pasien->nama_px }}.
+                        <h5> PASIEN A.N : {{ $kunjungan->pasien->nama_px }}.
                             <small class="float-right">
                                 <b>
                                     Tgl Masuk : {{ date('d M Y', strtotime($kunjungan->tgl_masuk)) }}

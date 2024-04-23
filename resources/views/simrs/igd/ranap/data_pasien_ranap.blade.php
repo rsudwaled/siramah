@@ -135,7 +135,7 @@
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     @php
-                        $heads = ['TGL MASUK ', 'KUNJUNGAN', 'PASIEN', 'ALAMAT', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
+                        $heads = ['TGL MASUK ', 'KUNJUNGAN', 'PASIEN', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -163,7 +163,7 @@
                                         {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
                                     </a>
                                 </td>
-                                <td><small>alamat : {{ $item->pasien->alamat }} /</small> <br></td>
+                                
                                 <td> {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
                                 </td>
 

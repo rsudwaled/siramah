@@ -11,9 +11,10 @@
 
 @section('content')
 
-    <div class="col-lg-12 card card-primary card-outline card-tabs">
+<div class="card card-primary card-outline card-tabs ">
+    <div class="col-lg-12 mt-2">
         @php
-            $heads = ['MASUK', 'JENIS DAFTAR','IS RANAP', 'UNIT', 'PASIEN', 'DIAGNOSA | SEP | SPRI'];
+            $heads = ['MASUK', 'JENIS DAFTAR','JENIS RANAP', 'UNIT', 'PASIEN', 'DIAGNOSA | SEP | SPRI'];
             $config['order'] = ['0', 'asc'];
             $config['paging'] = false;
             $config['info'] = false;
@@ -40,7 +41,7 @@
                             </small>
                         @endrole
                     </td>
-                    <td><b>{{ $item->jp_daftar == 1 ? 'BPJS' : ($item->is_ranap == 0 ? 'UMUM' : 'RAWAT INAP') }}</b></td>
+                    <td><b>{{ $item->jp_daftar == 1 ? 'RANAP BPJS' : ($item->is_ranap == 0 ? 'RANAP UMUM' : 'RAWAT INAP') }}</b></td>
                     <td><b>{{ $item->unit->nama_unit }}</b></td>
                     <td>
                         <b>
@@ -58,6 +59,7 @@
             @endforeach
         </x-adminlte-datatable>
     </div>
+</div>
 @stop
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)

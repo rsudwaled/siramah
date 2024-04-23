@@ -23,6 +23,32 @@ use Carbon\Carbon;
 
 class PasienBayiController extends Controller
 {
+
+    public function listKunjunganUGK(Request $request)
+    {
+        $start         = Carbon::parse($request->start)->format('Y-m-d');
+        $finish        = Carbon::parse($request->finish)->format('Y-m-d');
+        $bayi          = PasienBayiIGD::get();
+        $query         = Kunjungan::where('prefix_kunjungan','UGK')
+                        ->whereNull('tgl_keluar');
+                        
+        if(!empty($request->start) && !empty($request->finish))
+        {
+            $query->whereDate('tgl_masuk', '>=', $request->start );
+            $query->whereDate('tgl_masuk', '<=', $request->finish );
+        }else{
+            $now = Carbon::now();
+            $weekStartDate  = $now->startOfWeek()->format('Y-m-d H:i');
+            $weekEndDate    = $now->endOfWeek()->format('Y-m-d H:i');
+
+            $query->whereDate('tgl_masuk', '>=', $weekStartDate );
+            $query->whereDate('tgl_masuk', '<=',  $weekEndDate );
+        }
+
+        $kunjungan_igd = $query->get();
+        return view('simrs.igd.daftar.pasien_bayi.bayi_kunjungan_ugk', compact('kunjungan_igd','bayi','request','start','finish'));
+    }
+
     public function index(Request $request)
     {
         $start         = Carbon::parse($request->start)->format('Y-m-d');
@@ -88,10 +114,12 @@ class PasienBayiController extends Controller
             [
                 'nama_bayi'         => 'required',
                 'tempat_lahir_bayi' => 'required',
+                'jam_lahir_bayi'    => 'required',
             ],
             [
                 'nama_bayi'         => 'Nama bayi wajib diisi !',
                 'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
+                'jam_lahir_bayi'    => 'Jam lahir bayi belum dipilih !',
             ]);
         $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
         $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
@@ -122,13 +150,14 @@ class PasienBayiController extends Controller
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
         $bayi->is_bpjs              = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan    = $request->isbpjs_keterangan;
+        $bayi->jam_lahir_bayi       = $request->jam_lahir_bayi;
         if($bayi->save())
         {
             $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
             if($cekOrtu){
                 $keluarga = KeluargaPasien::create([
                     'no_rm'             => $rm_bayi,
-                    'nama_keluarga'     =>$ortubayi->nama_px,
+                    'nama_keluarga'     => $ortubayi->nama_px,
                     'hubungan_keluarga' => $hub,
                     'alamat_keluarga'   => $ortubayi->alamat,
                     'telp_keluarga'     => $kontak,
@@ -166,7 +195,6 @@ class PasienBayiController extends Controller
                 'no_ktp'            => '',
             ]);
         }
-        // return response()->json(['bayi'=>$bayi, 'status'=>200]);
         return redirect()->route('form-umum.ranap-bayi', $rm_bayi);
     }
 
@@ -185,7 +213,7 @@ class PasienBayiController extends Controller
         $provinsi       = Provinsi::all();
         $provinsi_klg   = Provinsi::all();
         $negara         = Negara::all();
-        $hb_keluarga    = HubunganKeluarga::all();
+        $hb_keluarga    = HubunganKeluarga::whereIn('kode', ['1','2'])->get();
         $agama          = Agama::all();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
@@ -211,7 +239,6 @@ class PasienBayiController extends Controller
         }else{
             $pasien         = null;
         }
-        // dd($pasien);
         return view('simrs.igd.daftar.pasien_bayi.tambah_bayi', compact('pasien','provinsi','provinsi_klg','negara','hb_keluarga','agama','pekerjaan','pendidikan','request'));
     }
 
@@ -222,11 +249,13 @@ class PasienBayiController extends Controller
                 'rm_ibu'            => 'required',
                 'nama_bayi'         => 'required',
                 'tempat_lahir_bayi' => 'required',
+                'jam_lahir_bayi'    => 'required',
             ],
             [
                 'rm_ibu'            => 'Orangtua Bayi wajib dipilih !',
                 'nama_bayi'         => 'Nama bayi wajib diisi !',
                 'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
+                'jam_lahir_bayi'    => 'Jam lahir bayi belum dipilih !',
             ]);
         $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu);
         $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
@@ -255,6 +284,7 @@ class PasienBayiController extends Controller
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
+        $bayi->jam_lahir_bayi       = $request->jam_lahir_bayi;
         if($bayi->save())
         {
             $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
