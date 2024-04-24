@@ -34,6 +34,8 @@
                     <h3 class="profile-username text-center">No Antrian</h3>
                     <a class="btn btn-primary bg-gradient-primary btn-block"><b>
                             {{ $antrian->no_antri }}</b></a>
+                    <a class="btn btn-primary bg-gradient-warning btn-block"><b>
+                            {{ $antrian->no_antri }}</b></a>
                 </div>
             </div>
         </div>
@@ -121,8 +123,12 @@
                                 @foreach ($pasien as $data)
                                     <tr>
                                         <td>
-                                            NIK : {{ $data->nik_bpjs }} <br>
-                                            BPJS : {{ $data->no_Bpjs }}
+                                            {{-- NIK : {{ $data->nik_bpjs }} <br>
+                                            BPJS : {{ $data->no_Bpjs }} --}}
+                                            <a href="{{ route('edit-pasien', ['rm' => $data->rm]) }}" target="__blank">
+                                                <b>{{ $data->pasien }}</b> <br>RM : {{ $data->rm }} <br>NIK :
+                                                {{ $data->nik }} <br>No Kartu : {{ $data->noKartu }}
+                                            </a>
                                         </td>
                                         <td>
                                             <b>{{ $data->no_rm }}</b><br>
