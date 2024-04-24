@@ -156,7 +156,7 @@
                                             data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
                                             data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
                                             theme="primary" class="btn-xs btn-diagnosa show-formdiagnosa mt-1"
-                                            id="btn-diagnosa" label="Update Diagnosa" />
+                                            id="btn-diagnosa" label="Diagnosa ICD-10" />
                                         @php
                                             if (empty($item->noKartu)) {
                                                 $nomorKartu = null;

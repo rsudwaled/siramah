@@ -425,6 +425,13 @@ return [
             'can' => 'pendaftaran-igd',
             'submenu' => [
                 [
+                    'text' => 'Triase',
+                    'icon'    => 'fas fa-chalkboard-teacher',
+                    'url'  => 'list-antrian',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Daftar Pasien',
                     'icon'    => 'fas fa-chalkboard-teacher',
                     'url'  => 'daftar/pasien-igd',
