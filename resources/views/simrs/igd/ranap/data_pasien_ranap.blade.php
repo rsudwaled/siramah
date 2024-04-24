@@ -154,7 +154,12 @@
                                 </td>
                                 <td>
                                     <b>
-                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }})
+                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }}) <br>
+                                        @if ( !empty($item->tgl_keluar) )
+                                            <b>PASIEN SUDAH KELUAR</b>
+                                        @else
+                                        {{strtoupper($item->status->status_kunjungan)}}
+                                        @endif
                                     </b>
                                 </td>
                                 <td>
@@ -198,8 +203,8 @@
                                             <small class="text-red"><b><i>(NAIK KELAS :
                                                         Dari-{{ $item->bpjsCheckHistories->klsRawatHak }}
                                                         Ke-{{ $naikKelas }} )</i></b></small>
-                                        @else
-                                            <small class="text-red"><b><i>( PASIEN TITIPAN )</i></b></small>
+                                        {{-- @else
+                                            <small class="text-red"><b><i>( PASIEN TITIPAN )</i></b></small> --}}
                                         @endif
                                     @endif
                                 </td>

@@ -179,10 +179,47 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <x-adminlte-select2 name="isBpjs" id="isBpjs" label="Jenis Pasien">
-                                            <option value="0">--Pasien UMUM--</option>
-                                            <option value="1">--Pasien BPJS--</option>
-                                        </x-adminlte-select2>
+                                        <div class="form-group">
+                                            <label for="exampleInputBorderWidth2">Jenis Pasien
+                                                <code>
+                                                    [ silahkan ceklis untuk pasien bpjs masih proses
+                                                    <label for="exampleInputBorderWidth2">BPJS
+                                                        <code>( <input type="checkbox" value="0" name="bpjsProses"
+                                                                id="bpjsProses" class="mt-1"> )
+                                                        </code>
+                                                    </label>
+                                                    ]
+                                                </code>
+                                            </label>
+                                            <select name="isBpjs" id="isBpjs"class="form-control">
+                                                <option value="">--Pilih Jenis Pasien--</option>
+                                                <option value="0">Pasien UMUM</option>
+                                                @if (!empty($resdescrtipt->response))
+                                                    <option value="1"
+                                                        {{ $resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF' ? 'selected' : '' }}>
+                                                        Pasien BPJS</option>
+                                                @else
+                                                    <option value="1">Pasien BPJS</option>
+                                                @endif
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group" id="show_penjamin_umum">
+                                            <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
+                                                @foreach ($penjamin as $item)
+                                                    <option value="{{ $item->kode_penjamin }}">
+                                                        {{ $item->nama_penjamin }}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
+                                        <div class="form-group" id="show_penjamin_bpjs">
+                                            <x-adminlte-select2 name="penjamin_id_bpjs" label="Pilih Penjamin BPJS">
+                                                @foreach ($penjaminbpjs as $item)
+                                                    <option value="{{ $item->kode_penjamin_simrs }}">
+                                                        {{ $item->nama_penjamin_bpjs }}</option>
+                                                @endforeach
+                                            </x-adminlte-select2>
+                                        </div>
                                         <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
                                             <option value="">--Pilih Dokter--</option>
                                             @foreach ($paramedis as $item)
@@ -191,13 +228,13 @@
                                                     {{ $item->nama_paramedis }}</option>
                                             @endforeach
                                         </x-adminlte-select2>
-                                        <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
+                                        {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                             <option value="">--Pilih Penjamin--</option>
                                             @foreach ($penjamin as $item)
                                                 <option value="{{ $item->kode_penjamin }}">
                                                     {{ $item->nama_penjamin }}</option>
                                             @endforeach
-                                        </x-adminlte-select2>
+                                        </x-adminlte-select2> --}}
                                         <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                             <option value="">--Pilih Alasan--</option>
                                             @foreach ($alasanmasuk as $item)
@@ -282,6 +319,7 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
+        const isbpjs = document.getElementById('isBpjs');
         const perujuk = document.getElementById('isPerujuk');
         const select = document.getElementById('status_kecelakaan');
         const pilihUnit = document.getElementById('div_stts_kecelakaan');
@@ -298,6 +336,22 @@
                 tanggalkejadian.value = '';
                 provinsi.value = '';
                 document.getElementById('div_stts_kecelakaan').style.display = "none";
+            }
+        });
+        if (isbpjs.value == 1) {
+            $('#show_penjamin_umum').hide();
+            $('#show_penjamin_bpjs').show();
+        } else {
+            $('#show_penjamin_bpjs').hide();
+            $('#show_penjamin_umum').show();
+        }
+        $(isbpjs).on('change', function() {
+            if (isbpjs.value > 0 || isbpjs.value == null) {
+                $('#show_penjamin_umum').hide();
+                $('#show_penjamin_bpjs').show();
+            } else {
+                $('#show_penjamin_umum').show();
+                $('#show_penjamin_bpjs').hide();
             }
         });
         $('#perujuk').hide();

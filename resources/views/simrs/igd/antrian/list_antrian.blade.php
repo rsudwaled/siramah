@@ -1,13 +1,13 @@
 @extends('adminlte::page')
-@section('title', 'List Antrian')
+@section('title', 'List Triase')
 @section('content_header')
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-4">
-                <h1>List Antrian</h1>
+                <h1>List Triase</h1>
             </div>
             <div class="col-sm-8">
-                <ol class="breadcrumb float-sm-right">
+                {{-- <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
                             Baru</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
@@ -19,7 +19,7 @@
                             Pasien Bayi</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('list.antrian') }}"
                             class="btn btn-sm btn-danger">Refresh</a></li>
-                </ol>
+                </ol> --}}
             </div>
         </div>
     </div>
@@ -27,9 +27,9 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <x-adminlte-card theme="primary" collapsible title="Antrian Instalasi Gawat Darurat">
+            <x-adminlte-card theme="primary" collapsible title="Antrian Triase Gawat Darurat">
                 @php
-                    $heads = ['No Antrian', 'Nama Pasien', 'Triase', 'Aksi'];
+                    $heads = ['No Triase', 'Nama Pasien', 'Triase', 'Aksi'];
                     $config['order'] = false;
                     $config['paging'] = false;
                     $config['info'] = false;
