@@ -179,7 +179,7 @@ class RanapController extends APIController
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
-        $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_ranap_awal', compact('kunjungan', 'pasien'));
+        $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_keperawatan', compact('kunjungan', 'pasien'));
         return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
     }
 

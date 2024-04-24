@@ -237,6 +237,8 @@
                         @include('simrs.ranap.modal_mpp_a')
                         {{-- mpp form b --}}
                         @include('simrs.ranap.erm_ranap_mppb')
+                        {{-- rencana pemulangan --}}
+                        @include('simrs.ranap.modal_rencana_pulang')
                         {{-- resume --}}
                         @include('simrs.ranap.modal_resume_ranap')
                         {{-- tindakan --}}
