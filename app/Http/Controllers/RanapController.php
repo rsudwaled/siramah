@@ -383,7 +383,7 @@ class RanapController extends APIController
             'obat2',
             'pasien',
         ));
-        return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
+        return $pdf->stream('RESUME RANAP ' . $pasien->nama_px . ' ' . $kunjungans->first()->tgl_masuk . '.pdf');
 
         return view('simrs.ranap.print_resume_ranap', compact([
             'kunjungan',

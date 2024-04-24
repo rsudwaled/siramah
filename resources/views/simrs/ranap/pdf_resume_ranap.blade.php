@@ -1,5 +1,5 @@
 @extends('simrs.ranap.pdf_print')
-@section('title', 'Resume Rawat Inap')
+@section('title', 'RESUME RANAP ' . $pasien->nama_px)
 
 @section('content')
     @include('simrs.ranap.pdf_kop_surat')
@@ -151,7 +151,7 @@
             </tr>
             <tr>
                 <td width="100%" colspan="2" class="unicode">
-                    <b>Pemeriksaan SHK : </b>  <br>
+                    <b>Pemeriksaan SHK : </b> <br>
                     Dilakukan :
                     @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pemeriksaan_shk == 'Ya' : null)
                         &#x2611; Ya
@@ -162,7 +162,7 @@
                         &#x2611; Tidak
                     @else
                         &#x25A2; Tidak
-                    @endif  <br>
+                    @endif <br>
                     Diambil dari :
                     @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengambilan_shk == 'Tumit' : null)
                         &#x2611; Tumit
@@ -178,7 +178,7 @@
                     @if ($kunjungan->erm_ranap)
                         {{ $kunjungan->erm_ranap->tanggal_shk ? \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') : '....' }}
                     @endif
-                     <br>
+                    <br>
                 </td>
             </tr>
             <tr>
