@@ -21,7 +21,6 @@ class WhatsappController extends Controller
             }
         }
         return view('admin.whatsapp', compact(['request']));
-        // return $response;
     }
     public function send_message(Request $request)
     {
@@ -130,7 +129,8 @@ class WhatsappController extends Controller
             }
         } else {
             $request['number'] = "089529909036";
-            return $this->send_message($request);
+            $this->send_message($request);
+            return response()->json('hello siapa anda  ?', 404);
         }
     }
 }

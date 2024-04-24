@@ -26,7 +26,7 @@
             bordered hoverable compressed>
             @foreach ($kunjungan as $item)
                 <tr>
-                    <td>{{ $item->tgl_masuk }} </td>
+                    <td>{{ $item->tgl_masuk }}  </td>
                     <td>
                         <b>{{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}</b> <br>
                         @role('Admin Super')

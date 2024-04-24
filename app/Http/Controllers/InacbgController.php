@@ -165,7 +165,6 @@ class InacbgController extends APIController
             return $response;
         }
     }
-
     public function search_diagnosis_inagrouper(Request $request)
     {
         $validator = Validator::make(request()->all(), [
@@ -542,7 +541,6 @@ class InacbgController extends APIController
         );
         $diag = null;
         $diag_utama = null;
-
         $request['diagnosa_utama'] = json_decode($request->diagnosa)[0];
         $request['diagnosa_sekunder'] = array_slice(json_decode($request->diagnosa), 1);
         $request['tgl_pulang'] = now()->format('Y-m-d H:m:s');
@@ -581,7 +579,7 @@ class InacbgController extends APIController
             $kunjungan->update([
                 'no_sep' => $request->noSEP,
             ]);
-            Alert::success('Success', 'Groupping berhasil');
+            Alert::success('Success', 'Groupping berhasil (' . $res->response->cbg->description . ')');
         } else {
             Alert::error('Gagal', 'Groupping gagal');
         }

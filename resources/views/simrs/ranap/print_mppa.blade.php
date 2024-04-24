@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-2 border border-dark">
                             <div class="m-2  text-center">
-                                <img class="" src="{{ asset('vendor/adminlte/dist/img/rswaled.png') }}"
+                                <img class="" src="{{ public_path('vendor/adminlte/dist/img/rswaled.png') }}"
                                     style="height: 80px">
                             </div>
                         </div>
@@ -22,7 +22,7 @@
                             Jl. Prabu Kian Santang No. 4 Kab. Cirebon Jawa Barat 45151<br>
                             www.rsudwaled.id - 0823 1169 6919 - (0231) 8850943
                         </div>
-                        <div class="col-md-4  border border-dark">
+                        {{-- <div class="col-md-4  border border-dark">
                             No RM : <b>{{ $pasien->no_rm }}</b> <br>
                             Nama : <b>{{ $pasien->nama_px }}</b> <br>
                             Tgl Lahir : <b>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d, F Y') }}
@@ -288,7 +288,7 @@
                                 <br><br><br>
                                 <b><u>{{ $mppa->pic }}</u></b>
                             </center>
-                        </div>
+                        </div> --}}
                     </div>
                 </section>
             </div>

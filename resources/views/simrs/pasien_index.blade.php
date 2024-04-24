@@ -35,7 +35,18 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Kode RM', 'BPJS', 'NIK', 'Nama Pasien (Sex)', 'Tanggal Lahir (Umur)', 'Kecamatan', 'Alamat', 'Tgl Entry', 'Action'];
+                    $heads = [
+                        'No RM',
+                        'BPJS',
+                        'NIK',
+                        'ID',
+                        'Nama Pasien (Sex)',
+                        'Tanggal Lahir (Umur)',
+                        'Kecamatan',
+                        'Alamat',
+                        'Tgl Entry',
+                        'Action',
+                    ];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -56,6 +67,16 @@
                             <td>{{ $item->no_Bpjs }}</td>
                             <td>{{ $item->nik_bpjs }}</td>
                             <td>{{ $item->nama_px }} ({{ $item->jenis_kelamin }})</td>
+                            <td>
+                                {{ $item->ihs }}
+                                @if ($item->ihs)
+                                    <a href="{{ route('patient_sync') }}?norm={{ $item->no_rm }}"
+                                        class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
+                                @else
+                                    <a href="{{ route('patient_sync') }}?norm={{ $item->no_rm }}"
+                                        class="btn btn-xs btn-warning"> <i class="fas fa-sync"></i> Sync</a>
+                                @endif
+                            </td>
                             <td>{{ \Carbon\Carbon::parse($item->tgl_lahir)->format('Y-m-d') }}
                                 ({{ \Carbon\Carbon::parse($item->tgl_lahir)->age }})
                             </td>
