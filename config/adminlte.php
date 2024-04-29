@@ -351,9 +351,9 @@ return [
                     'can' => 'kasir',
                 ],
                 [
-                    'text' => 'Kunjungan Poliklinik',
-                    'icon'    => 'fas fa-file-medical',
-                    'url'  => 'kunjungan_rajal',
+                    'text' => 'Pasien Rawat Jalan',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'kunjunganrajal',
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],
@@ -393,7 +393,7 @@ return [
                     'can' => 'farmasi',
                 ],
                 [
-                    'text' => 'Pasien Ranap Aktif',
+                    'text' => 'Pasien Rawat Inap',
                     'icon'    => 'fas fa-procedures',
                     'url'  => 'kunjunganranap',
                     'active' => ['kunjunganranap', 'pasienranapprofile'],
@@ -897,7 +897,7 @@ return [
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],
-                       
+
                         // [
                         //     'text' => 'Index Daerah',
                         //     'icon'    => 'fas fa-maps',

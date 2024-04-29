@@ -183,7 +183,8 @@ Route::middleware('auth')->group(function () {
     Route::get('lanjutFarmasiRacikan', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
     Route::get('selesaiPoliklinik', [AntrianController::class, 'selesaiPoliklinik'])->name('selesaiPoliklinik');
     Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
-    Route::get('kunjungan_rajal', [AntrianController::class, 'kunjungan_rajal'])->name('kunjungan_rajal');
+    Route::get('kunjunganrajal', [AntrianController::class, 'kunjunganrajal'])->name('kunjunganrajal');
+    Route::get('ermrajal', [AntrianController::class, 'ermrajal'])->name('ermrajal');
     Route::get('get_kunjungan_rajal', [AntrianController::class, 'get_kunjungan_rajal'])->name('get_kunjungan_rajal');
     Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
     Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntrianPoliklinik'])->name('laporanAntrianPoliklinik');

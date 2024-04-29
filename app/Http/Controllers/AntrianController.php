@@ -1216,51 +1216,47 @@ class AntrianController extends APIController
             'surat_kontrols',
         ]));
     }
-    public function kunjungan_rajal(Request $request)
+    public function kunjunganrajal(Request $request)
     {
         $kunjungans = null;
-        $surat_kontrols = null;
         $unit = Unit::where('KDPOLI', "!=", null)
             ->where('KDPOLI', "!=", "")
             ->get();
         $dokters = Paramedis::where('kode_dokter_jkn', "!=", null)
             ->where('unit', "!=", null)
             ->get();
-        // if ($request->kodepoli == null) {
-        // } else {
-        //     $unit = Unit::where('KDPOLI', "!=", null)
-        //         ->where('KDPOLI', "!=", "")
-        //         ->get();
-        //     $poli =   Unit::firstWhere('KDPOLI', $request->kodepoli);
-        //     $dokters = Paramedis::where('unit', $poli->kode_unit)
-        //         ->where('kode_dokter_jkn', "!=", null)
-        //         ->get();
-        // }
-        // if ($request->tanggal) {
-        //     if ($request->kodepoli != null) {
-        //         $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
-        //             ->where('kode_unit', $poli->kode_unit)
-        //             ->where('status_kunjungan', "!=", 8)
-        //             ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
-        //             ->get();
-        //     } else {
-        //         $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
-        //             ->where('status_kunjungan', "!=", 8)
-        //             ->where('kode_unit', "!=", null)
-        //             ->where('kode_unit', 'LIKE', '10%')
-        //             ->where('kode_unit', "!=", 1002)
-        //             ->where('kode_unit', "!=", 1023)
-        //             ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
-        //             ->get();
-        //     }
-        // }
+        if ($request->tgl_masuk) {
+            if ($request->kode_unit == "-") {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tgl_masuk)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->where('kode_unit', "!=", null)
+                    ->where('kode_unit', 'LIKE', '10%')
+                    ->where('kode_unit', "!=", 1002)
+                    ->where('kode_unit', "!=", 1023)
+                    ->with(['dokter', 'penjamin_simrs', 'unit', 'order_obat_header', 'pasien', 'antrian', 'surat_kontrol',])
+                    ->get();
+            } else {
+                $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tgl_masuk)->where('kode_unit', $request->kode_unit)
+                    ->where('status_kunjungan', "!=", 8)
+                    ->with(['dokter', 'penjamin_simrs', 'unit', 'order_obat_header', 'pasien', 'antrian', 'surat_kontrol',])
+                    ->get();
+                $dokters =  $dokters->where('unit',  $request->kode_unit);
+            }
+            if ($request->kode_paramedis != "-") {
+                $kunjungans = $kunjungans->where('kode_paramedis', $request->kode_paramedis);
+            }
+        }
         return view('simrs.poliklinik.kunjungan_rajal', compact([
             'kunjungans',
             'request',
             'unit',
             'dokters',
-            'surat_kontrols',
         ]));
+    }
+    public function ermrajal(Request $request)
+    {
+        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        dd($request->all(), $kunjungan);
     }
     public function get_kunjungan_rajal(Request $request)
     {
