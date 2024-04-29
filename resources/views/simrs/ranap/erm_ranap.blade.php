@@ -144,10 +144,9 @@
                             </a>
                             <div id="cIGD" class="collapse" role="tabpanel">
                                 <div class="card-body">
-                                    Riwayat & Triase IGD On Building
-                                    {{-- <iframe
+                                    <iframe
                                         src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
-                                        height="780" width="100%" frameborder="0"></iframe> --}}
+                                        height="780" width="100%" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>

@@ -463,7 +463,9 @@
                     <br>
                     Pasien / Keluarga Pasien <br>
                     Yang Menerima Penjelasan
-                    @if ($kunjungan->erm_ranap)
+                    <br>
+                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) !!} ">
+                    {{-- @if ($kunjungan->erm_ranap)
                         @if ($kunjungan->erm_ranap->ttdkeluarga)
                             <br>
                             <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttdkeluarga->image }}"
@@ -480,7 +482,8 @@
                         <br>
                         <br>
                         <br>
-                    @endif
+                    @endif --}}
+                    <br>
                     <b><u>{{ $kunjungan->erm_ranap->nama_keluarga ?? 'Keluarga Pasien' }}</u></b><br>
                     NIK. {{ $kunjungan->erm_ranap->nik_keluarga ?? '' }}
                 </td>
@@ -488,7 +491,9 @@
                     Waled, {{ now()->format('d F y h:i:s') }} <br>
                     Dokter Penanggung Jawab Pelayanan <br>
                     (DPJP)
-                    @if ($kunjungan->erm_ranap)
+                    <br>
+                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) !!} ">
+                    {{-- @if ($kunjungan->erm_ranap)
                         @if ($kunjungan->erm_ranap->ttddokter)
                             <br>
                             <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttddokter->image }}"
@@ -505,7 +510,8 @@
                         <br>
                         <br>
                         <br>
-                    @endif
+                    @endif --}}
+                    <br>
                     <b><u>{{ $kunjungan->dokter->nama_paramedis }}</u></b><br>
                     SIP. {{ $kunjungan->dokter->sip_dr ?? '..................' }}
                 </td>
