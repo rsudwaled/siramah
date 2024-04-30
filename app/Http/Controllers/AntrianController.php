@@ -1256,7 +1256,8 @@ class AntrianController extends APIController
     public function ermrajal(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
-        dd($request->all(), $kunjungan);
+        $pasien = $kunjungan->pasien;
+        return view('simrs.rajal.erm_rajal', compact('kunjungan','pasien'));
     }
     public function get_kunjungan_rajal(Request $request)
     {
