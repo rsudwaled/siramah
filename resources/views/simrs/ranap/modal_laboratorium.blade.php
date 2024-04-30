@@ -14,8 +14,8 @@
        icon="fas fa-file-medical" size="xl">
        <iframe id="dataHasilLab" src="" height="600px" width="100%" title="Iframe Example"></iframe>
        <x-slot name="footerSlot">
-           <a href="" id="urlHasilLab" target="_blank" class="btn btn-primary mr-auto">
-               <i class="fas fa-download "></i>Download</a>
+           {{-- <a href="" id="urlHasilLab" target="_blank" class="btn btn-primary mr-auto">
+               <i class="fas fa-download "></i>Download</a> --}}
            <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
        </x-slot>
    </x-adminlte-modal>

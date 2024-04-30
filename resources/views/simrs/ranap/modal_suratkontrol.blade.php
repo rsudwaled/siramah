@@ -103,8 +103,8 @@
         <x-slot name="footerSlot">
             <x-adminlte-button id="btnStoreSuratKontrol" class="mr-auto" icon="fas fa-file-plus" theme="success"
                 label="Buat Surat Kontrol" onclick="simpanSuratKontrol()" />
-            <x-adminlte-button id="btnUpdateSuratKontrol" onclick="updateSuratKontrol()" class="mr-auto" icon="fas fa-edit" theme="warning"
-                label="Update Surat Kontrol" />
+            <x-adminlte-button id="btnUpdateSuratKontrol" onclick="updateSuratKontrol()" class="mr-auto"
+                icon="fas fa-edit" theme="warning" label="Update Surat Kontrol" />
             <x-adminlte-button theme="danger" icon="fas fa-times" label="Kembali" data-dismiss="modal" />
         </x-slot>
     </form>
@@ -237,6 +237,14 @@
                             if (value.jnsPelayanan == 2) {
                                 var jenispelayanan = "Rawat Jalan";
                             }
+                            if (value.tglPlgSep) {
+                                var btnpilih = "Sudah Dipulangkan";
+                            } else {
+                                var btnpilih =
+                                    "<button class='btn btn-success btn-xs' onclick='pilihSEP(this)'  data-id=" +
+                                    value.noSep +
+                                    ">Pilih</button>";
+                            }
                             table.row.add([
                                 value.tglSep,
                                 value.tglPlgSep,
@@ -244,19 +252,16 @@
                                 jenispelayanan,
                                 value.poli,
                                 value.diagnosa,
-                                "<button class='btnPilihSEP btn btn-success btn-xs' data-id=" +
-                                value.noSep +
-                                ">Pilih</button>",
+                                btnpilih,
                             ]).draw(false);
-
                         });
-                        $('.btnPilihSEP').click(function() {
-                            var nomorsep = $(this).data('id');
-                            $.LoadingOverlay("show");
-                            $('.nomorsep-id').val(nomorsep);
-                            $('#modalSEP').modal('hide');
-                            $.LoadingOverlay("hide");
-                        });
+                        // $('.btnPilihSEP').click(function() {
+                        //     var nomorsep = $(this).data('id');
+                        //     $.LoadingOverlay("show");
+                        //     $('.nomorsep-id').val(nomorsep);
+                        //     $('#modalSEP').modal('hide');
+                        //     $.LoadingOverlay("hide");
+                        // });
                     } else {
                         swal.fire(
                             'Error ' + data.metadata.code,
@@ -267,14 +272,18 @@
                     $.LoadingOverlay("hide");
                 },
                 error: function(data) {
-                    // swal.fire(
-                    //     'Error ' + data.metadata.code,
-                    //     data.metadata.message,
-                    //     'error'
-                    // );
+                    alert('Mohon maaf ada kendala');
                     $.LoadingOverlay("hide");
                 }
             });
+        }
+
+        function pilihSEP(button) {
+            var nomorsep = $(button).data('id');
+            $.LoadingOverlay("show");
+            $('.nomorsep-id').val(nomorsep);
+            $('#modalSEP').modal('hide');
+            $.LoadingOverlay("hide");
         }
 
         function cariSuratKontrol() {

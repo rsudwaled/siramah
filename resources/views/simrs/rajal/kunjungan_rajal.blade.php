@@ -1,7 +1,7 @@
 @extends('adminlte::page')
-@section('title', 'Kunjungan Poliklinik')
+@section('title', 'Pasien Rawat Jalan')
 @section('content_header')
-    <h1>Kunjungan Poliklinik</h1>
+    <h1>Pasien Rawat Jalan</h1>
 @stop
 @section('content')
     <div class="row">
@@ -49,9 +49,9 @@
                             @endphp
                             <x-adminlte-input-date fgroup-class="row" label-class="text-left col-3" igroup-class="col-9"
                                 igroup-size="sm" name="tgl_masuk" label="Tanggal Antrian" :config="$config"
-                                value="{{ \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') }}">
+                                value="{{ \Carbon\Carbon::parse($request->tgl_masuk)->format('Y-m-d') }}">
                                 <x-slot name="appendSlot">
-                                    <x-adminlte-button class="btn-sm" icon="fas fa-search" theme="primary"
+                                    <x-adminlte-button class="btn-sm withLoad" icon="fas fa-search" theme="primary"
                                         label="Submit Pencarian" type="submit" />
                                 </x-slot>
                             </x-adminlte-input-date>
@@ -99,7 +99,51 @@
                                 <td>{{ $item->pasien->nama_px }}</td>
                                 <td>{{ $item->pasien->no_Bpjs }}</td>
                                 <td>
-                                    {{ $item->antrian->taskid ?? '-' }}
+                                    @if ($item->antrian)
+                                        @if ($item->antrian->taskid == 0)
+                                            <span class="badge bg-secondary">Belum Checkin</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 1)
+                                            <span class="badge bg-secondary">{{ $item->antrian->taskid }}. Chekcin</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 2)
+                                            <span class="badge bg-secondary">{{ $item->antrian->taskid }}.
+                                                Pendaftaran</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 3)
+                                            @if ($item->antrian->status_api == 0)
+                                                <span class="badge bg-warning">{{ $item->antrian->taskid }}. Belum
+                                                    Pembayaran</span>
+                                            @else
+                                                <span class="badge bg-warning">{{ $item->antrian->taskid }}. Tunggu
+                                                    Poli</span>
+                                            @endif
+                                        @endif
+                                        @if ($item->antrian->taskid == 4)
+                                            <span class="badge bg-success">{{ $item->antrian->taskid }}. Periksa
+                                                Poli</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 5)
+                                            @if ($item->antrian->status_api == 0)
+                                                <span class="badge bg-success">{{ $item->antrian->taskid }}. Tunggu
+                                                    Farmasi</span>
+                                            @endif
+                                            @if ($item->antrian->status_api == 1)
+                                                <span class="badge bg-success">{{ $item->antrian->taskid }}. Selesai</span>
+                                            @endif
+                                        @endif
+                                        @if ($item->antrian->taskid == 6)
+                                            <span class="badge bg-success">{{ $item->antrian->taskid }}. Racik Obat</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 7)
+                                            <span class="badge bg-success">{{ $item->antrian->taskid }}. Selesai</span>
+                                        @endif
+                                        @if ($item->antrian->taskid == 99)
+                                            <span class="badge bg-danger">{{ $item->antrian->taskid }}. Batal</span>
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td>
                                     <a href="{{ route('ermrajal') }}?kode={{ $item->kode_kunjungan }}"
@@ -133,11 +177,6 @@
                             </tr>
                         @endforeach
                     </x-adminlte-datatable>
-                    <br>
-                    Catatan : <br>
-                    - Baris Berwana Merah : belum groupping <br>
-                    - Baris Berwana Kuning : pasien sudah pulang tapi belum diisi erm resume<br>
-                    - Baris Berwana Hijau : pasien sudah pulang dan resumenya sudah diisi<br>
                 @endif
             </x-adminlte-card>
         </div>

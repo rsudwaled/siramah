@@ -7,12 +7,17 @@
     <div class="row">
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
-                @include('simrs.ranap.erm_ranap_profil')
+                @include('simrs.rajal.erm_rajal_profil')
             </x-adminlte-card>
         </div>
         <div class="col-md-3">
             <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
                 <ul class="nav nav-pills flex-column">
+                    <li class="nav-item" onclick="">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-user-injured"></i> Riwayat Kunjungan
+                        </a>
+                    </li>
                     <li class="nav-item" onclick="lihatHasilLaboratorium()">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-vials"></i> Laboratorium
@@ -34,13 +39,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#nav" class="nav-link btnCariSEP">
-                            <i class="fas fa-file-medical"></i> SEP
+                        <a href="#nav" class="nav-link" onclick="cariSEP()">
+                            <i class="fas fa-file-medical"></i> SEP (BPJS)
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#nav" class="nav-link" onclick="cariSuratKontrol()">
-                            <i class="fas fa-file-medical"></i> Surat Kontrol
+                            <i class="fas fa-file-medical"></i> Surat Kontrol (BPJS)
                         </a>
                     </li>
                 </ul>

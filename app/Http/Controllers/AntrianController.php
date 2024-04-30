@@ -1246,7 +1246,7 @@ class AntrianController extends APIController
                 $kunjungans = $kunjungans->where('kode_paramedis', $request->kode_paramedis);
             }
         }
-        return view('simrs.poliklinik.kunjungan_rajal', compact([
+        return view('simrs.rajal.kunjungan_rajal', compact([
             'kunjungans',
             'request',
             'unit',
@@ -1255,9 +1255,9 @@ class AntrianController extends APIController
     }
     public function ermrajal(Request $request)
     {
-        $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
+        $kunjungan = Kunjungan::with(['pasien', 'antrian', 'alasan_masuk', 'unit', 'dokter', 'penjamin_simrs', 'status', 'surat_kontrol'])->firstWhere('kode_kunjungan', $request->kode);
         $pasien = $kunjungan->pasien;
-        return view('simrs.rajal.erm_rajal', compact('kunjungan','pasien'));
+        return view('simrs.rajal.erm_rajal', compact('kunjungan', 'pasien'));
     }
     public function get_kunjungan_rajal(Request $request)
     {

@@ -355,6 +355,7 @@ return [
                     'icon'    => 'fas fa-clinic-medical',
                     'url'  => 'kunjunganrajal',
                     'shift'   => 'ml-2',
+                    'active' => ['kunjunganrajal', 'ermrajal'],
                     'can' => 'poliklinik',
                 ],
                 [
