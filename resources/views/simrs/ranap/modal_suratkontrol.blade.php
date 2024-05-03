@@ -77,7 +77,7 @@
                 @php
                     $config = ['format' => 'YYYY-MM-DD'];
                 @endphp
-                <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm" label="Tanggal Rencana Kontrol"
+                <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm" label="Tgl Kontrol"
                     placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
                     <x-slot name="appendSlot">
                         <div class="btn btn-primary btnCariPoli">

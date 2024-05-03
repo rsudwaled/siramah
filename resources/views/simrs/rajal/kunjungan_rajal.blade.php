@@ -28,7 +28,6 @@
                                         {{ $item->nama_unit }}
                                     </option>
                                 @endforeach
-
                             </x-adminlte-select2>
                         </div>
                         <div class="col-md-4">
