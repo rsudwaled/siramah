@@ -399,7 +399,7 @@ return [
                     'url'  => 'kunjunganranap',
                     'active' => ['kunjunganranap', 'pasienranapprofile'],
                     'shift'   => 'ml-2',
-                    'can' => ['ranap','rekam-medis'],
+                    'can' => ['ranap', 'rekam-medis'],
                 ],
                 [
                     'text'  => 'Gizi',
@@ -1207,6 +1207,13 @@ return [
                     'url'  => 'antrianPerTanggal',
                     'shift'   => 'ml-2',
                     'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Monitoring Antrian',
+                    'icon'    => 'fas fa-calendar-day',
+                    'url'  => 'monitoringAntrian',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran', 'manajemen'],
                 ],
                 [
                     'text' => 'Antrian Per Kodebooking',

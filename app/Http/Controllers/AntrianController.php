@@ -672,6 +672,31 @@ class AntrianController extends APIController
         }
         return view('bpjs.antrian.antrian_per_tanggal', compact(['request', 'antrians']));
     }
+    public function monitoringAntrian(Request $request)
+    {
+        $antrians = null;
+        if (isset($request->tanggal)) {
+            $response = $this->antrian_tanggal($request);
+            if ($response->metadata->code == 200) {
+                $antrians = $response->response;
+                foreach ($antrians as $key => $value) {
+                    $request['kodebooking'] = $value->kodebooking;
+                    $taskid = $this->taskid_antrean($request);
+                    if ($taskid->metadata->code == 200) {
+                        $dataid = $taskid->response;
+                        $value->taskid = $dataid;
+                    } else {
+                        $value->taskid = [];
+                    }
+                    // dd(count($value->taskid));
+                }
+                // dd($antrians);
+            } else {
+                Alert::error('Error ' . $response->metadata->code,  $response->metadata->message);
+            }
+        }
+        return view('bpjs.antrian.monitoring_antrian', compact(['request', 'antrians']));
+    }
     public function antrianPerKodebooking(Request $request)
     {
         $antrian = null;
