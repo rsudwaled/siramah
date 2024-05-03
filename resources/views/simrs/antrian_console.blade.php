@@ -75,7 +75,7 @@
                 <x-adminlte-card title="Anjungan Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
                     <div class="text-center">
                         <x-adminlte-input name="kodebooking" label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
-                            placeholder="Masukan Kode Antrian untuk Checkin" >
+                            placeholder="Masukan Kode Antrian untuk Checkin">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button name="btn_checkin" id="btn_checkin" theme="success" label="Checkin!" />
                             </x-slot>
@@ -85,6 +85,7 @@
                                 </div>
                             </x-slot>
                         </x-adminlte-input>
+                        <b>Untuk Checkin Melalui App Mobile JKN, Silahkan QR Dibawah ini</b>
                         <img src="{{ asset('portalbpjs.jpg') }}" width="40%" alt="">
                         <br>
                     </div>
@@ -369,6 +370,6 @@
             location.reload();
         });
     </script>
-    @section('plugins.Sweetalert2', true)
-    @include('sweetalert::alert')
+@section('plugins.Sweetalert2', true)
+@include('sweetalert::alert')
 @stop
