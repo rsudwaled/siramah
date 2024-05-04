@@ -428,12 +428,21 @@ Route::middleware('auth')->group(function () {
     // Start Gizi
     Route::controller(App\Http\Controllers\Gizi\GiziController::class)->prefix('gizi')->name('simrs.gizi.')->group(function () {
         Route::get('/','index')->name('index');
-        Route::post('/assesment','addAssesment')->name('add.assesment');
         Route::get('/{kunjungan}/{counter}/assesment','createAssesment')->name('create.assesment');
+        // assesement
+        Route::get('/get-assesment','getAssesment')->name('get-assesment');
+        Route::post('/assesment','addAssesment')->name('add.assesment');
+
         Route::post('/assesment/store','storeAssesment')->name('store.assesment');
+        // diagnosis gizi
         Route::post('/diagnosis/store','storeDiagnosis')->name('store.diagnosis');
+        Route::get('/diagnosis-get','getDiagnosis')->name('get-diagnosis');
+        // intervensi gizi
         Route::post('/intervensi/store','storeIntervensi')->name('store.intervensi');
+        Route::get('/intervensi-get','getIntervensi')->name('get-intervensi');
+        // monitoring dan evaluasi
         Route::post('/monev/store','storeMonev')->name('store.monev');
+        Route::get('/monev-get','getMonev')->name('get-monev');
     });
     // End GIZI
 
@@ -528,6 +537,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/edit-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'editKunjungan'])->name('edit.kunjungan');
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
+    Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
 
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');

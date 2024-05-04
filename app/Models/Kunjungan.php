@@ -126,6 +126,11 @@ class Kunjungan extends Model
     {
         return $this->hasMany(ErmRanapPerkembangan::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+
+    public function erm_ranap_gizi()
+    {
+        return $this->hasOne(ErmRanapGiziAssesment::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function antrian()
     {
         return $this->belongsTo(Antrian::class, 'kode_kunjungan', 'kode_kunjungan');

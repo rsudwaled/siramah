@@ -27,7 +27,7 @@
             <x-adminlte-card title="Data Pasien Aktif" theme="purple" collapsible>
                 @if (isset($pasien))
                     @php
-                        $heads = ['RM', 'NAMA', 'JENIS KELAMIN', 'ALAMAT', 'PENJAMIN', 'RUANGAN', 'AKSI'];
+                        $heads = ['PASIEN', 'ALAMAT', 'PENJAMIN', 'RUANGAN', 'AKSI'];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -39,9 +39,14 @@
                         :config="$config" striped bordered hoverable compressed>
                         @foreach ($pasien as $item)
                             <tr>
-                                <td>{{ $item->NO_RM }}</td>
-                                <td>{{ $item->nama_px }}</td>
-                                <td>{{ $item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                                <td>
+                                    <b>
+                                        {{ $item->NO_RM }} <br>
+                                        {{ $item->nama_px }}
+                                    </b>
+                                    <br>
+                                    {{ $item->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}
+                                </td>
                                 <td><small>{!! wordwrap($item->alamat, 50, "<br>\n") !!}</small></td>
                                 <td>{{ $item->nama_penjamin }}</td>
                                 <td>
@@ -82,7 +87,7 @@
                 var route = "{{ route('simrs.gizi.add.assesment') }}";
                 Swal.fire({
                     title: "Apakah Anda Yakin?",
-                    text: "akan assesment data ini!",
+                    text: "assesment data ini!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -91,6 +96,7 @@
                     cancelButtonText: "Batal!",
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        $.LoadingOverlay("show");
                         $.ajax({
                             type: 'POST',
                             url: route,

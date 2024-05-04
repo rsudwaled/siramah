@@ -35,8 +35,10 @@ class KunjunganController extends Controller
             ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
             ->select(
                 'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jk',
-                'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep', 'ts_kunjungan.form_send_by as form_send_by', 'ts_kunjungan.ref_kunjungan as ref_kunjungan',
-                'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.lakalantas as lakaLantas','ts_kunjungan.jp_daftar as jp_daftar',
+                'ts_kunjungan.kode_kunjungan as kunjungan','ts_kunjungan.status_kunjungan as stts_kunjungan','ts_kunjungan.no_sep as sep', 'ts_kunjungan.form_send_by as form_send_by', 
+                'ts_kunjungan.ref_kunjungan as ref_kunjungan',
+                'ts_kunjungan.tgl_masuk as tgl_kunjungan','ts_kunjungan.kode_unit as unit', 'ts_kunjungan.diagx as diagx','ts_kunjungan.lakalantas as lakaLantas',
+                'ts_kunjungan.jp_daftar as jp_daftar',
                 'mt_unit.nama_unit as nama_unit',
                 'mt_status_kunjungan.status_kunjungan as status',
                 'mt_status_kunjungan.ID as id_status',
@@ -105,6 +107,7 @@ class KunjunganController extends Controller
         $kunjungan->id_alasan_masuk     = $request->alasan_masuk_id;
         $kunjungan->id_alasan_edit      = $request->alasan_edit;
         $kunjungan->status_kunjungan    = $request->status_kunjungan;
+        
         if($request->alasan_edit == 3)
         {
             $kunjungan->jp_daftar= 1;
@@ -123,5 +126,37 @@ class KunjunganController extends Controller
         $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
         return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
-
+    
+    public function sycnDesktopToWebApps(Request $request)
+    {
+        $kunjungan      = Kunjungan::where('kode_kunjungan', $request->nokunjungan)->first();
+        $penjamin       = PenjaminSimrs::where('kode_penjamin', $kunjungan->kode_penjamin)->first();
+        $penjaminbpjs   = Penjamin::where('kode_penjamin_simrs', $kunjungan->kode_penjamin)->first();
+        if(!empty($penjamin))
+        {
+            $kunjungan->jp_daftar        =0;
+            $kunjungan->form_send_by     =0;
+            if($kunjungan->id_ruangan==null)
+            {
+                $kunjungan->is_ranap_daftar  =0;
+            }
+            $kunjungan->save();
+            $message = 'Jenis Pasien Daftar adalah Umum';
+        }     
+        if(!empty($penjaminbpjs))
+        {
+            $kunjungan->jp_daftar        =1;
+            $kunjungan->form_send_by     =0;
+            if($kunjungan->id_ruangan==null)
+            {
+                $kunjungan->is_ranap_daftar  =0;
+            }
+            $kunjungan->save();
+            $message = 'Jenis Pasien Daftar adalah BPJS';
+        } 
+        return response()->json([
+            'data'=>$kunjungan,
+            'message'=>$message,
+            'code'=>200]);    
+    }
 }
