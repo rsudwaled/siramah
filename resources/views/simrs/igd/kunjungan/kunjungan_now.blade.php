@@ -108,6 +108,7 @@
                                             <b>PASIEN KECELAKAAN</b>
                                         </small> <br>
                                     @endif
+                                    {{ $item->rm }} | (RM PASIEN) <br> 
                                     {{ $item->kunjungan }} | ({{ $item->nama_unit }})
                                     <br>
                                     <b>
@@ -132,17 +133,20 @@
                                             {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
                                         @endif
                                     </b> <br>
-                                    @role('Admin Super')
-                                        <small>
-                                            <a class="btn btn-success btn-xs">
-                                                @if (is_null($item->form_send_by))
-                                                    DEKSTOP
-                                                @else
-                                                    {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
-                                                @endif
-                                            </a>
-                                        </small>
-                                    @endrole
+                                    <small>
+                                        <a class="btn btn-warning btn-xs">
+                                            @if (is_null($item->form_send_by))
+                                                DEKSTOP
+                                                <x-adminlte-button type="button" 
+                                                    data-kunjungan="{{ $item->kunjungan }}"
+                                                    theme="primary"
+                                                    class="btn-xs btn-sync-sistem" id="btn-sync-sistem"
+                                                    label="Sync Sistem" />
+                                            @else
+                                                {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
+                                            @endif
+                                        </a>
+                                    </small>
 
 
                                 </td>
@@ -151,7 +155,7 @@
                                         class="btn btn-success btn-xs withLoad mt-1">Detail</a>
 
                                     @if ($item->id_status == 1 || $item->id_status == 12)
-                                        <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                        <x-adminlte-button type="button" 
                                             data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
                                             data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
                                             data-kunjungan="{{ $item->kunjungan }}" data-jpdaftar="{{ $item->jp_daftar }}"
@@ -174,7 +178,7 @@
                                         @endif
                                     @else
                                         @if (auth()->user()->hasRole('Admin Super'))
-                                            <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                            <x-adminlte-button type="button" 
                                                 data-nama="{{ $item->pasien }}" data-nik="{{ $item->nik }}"
                                                 data-rm="{{ $item->rm }}" data-nokartu="{{ $item->noKartu }}"
                                                 data-kunjungan="{{ $item->kunjungan }}"
@@ -466,6 +470,59 @@
                                         text: data.metadata.message +
                                             '( ERROR : ' + data
                                             .metadata.code + ')',
+                                        icon: "error",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                }
+                            },
+                        });
+                    }
+                });
+            });
+
+            $('.btn-sync-sistem').click(function(e) {
+                var kunjungan = $(this).data('kunjungan');
+                var url = "{{ route('sync-dekstop-towebapps') }}";
+                Swal.fire({
+                    title: "Apakah Anda Yakin?",
+                    text: "untuk singkronisasi data dari desktop ke web apps!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Iya!",
+                    cancelButtonText: "Batal!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'PUT',
+                            url: url,
+                            data: {
+                                nokunjungan: kunjungan,
+                            },
+                            success: function(data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: "Singkronisasi Berhasil!",
+                                        text: data.message,
+                                        icon: "success",
+                                        confirmButtonText: "oke!",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                    $.LoadingOverlay("hide");
+                                } else {
+                                    Swal.fire({
+                                        title: "Singkronisasi GAGAL!",
+                                        text: message +
+                                            '( ERROR : ' + data.code + ')',
                                         icon: "error",
                                         confirmButtonText: "oke!",
                                     }).then((result) => {

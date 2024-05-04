@@ -127,15 +127,16 @@ class DaftarIGDController extends Controller
         }else{
             $pasien         = null;
         }
-        $kunjungan  = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
-        $knj_aktif  = Kunjungan::where('no_rm', $request->rm)
-            ->where('status_kunjungan', 1)
-            ->count();
-        $alasanmasuk    = AlasanMasuk::get();
-        $paramedis      = Paramedis::where('act', 1)->get();
-        $penjamin       = PenjaminSimrs::get();
-        $penjaminbpjs   = Penjamin::get();
-        $tanggal        = now()->format('Y-m-d');
+
+        $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
+        $knj_aktif   = Kunjungan::where('no_rm', $request->rm)
+                        ->where('status_kunjungan', 1)
+                        ->count();
+        $alasanmasuk = AlasanMasuk::orderBy('id', 'asc')->get();
+        $paramedis   = Paramedis::where('act', 1)->get();
+        $penjamin    = PenjaminSimrs::get();
+        $penjaminbpjs= Penjamin::get();
+        $tanggal     = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
 
         $url            = null;
@@ -154,7 +155,6 @@ class DaftarIGDController extends Controller
 
     public function storeTanpaNoAntrian(Request $request)
     {
-        // dd($request->all());
         if (empty($request->nik_bpjs)) {
             Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
             return back();
@@ -173,6 +173,7 @@ class DaftarIGDController extends Controller
             Alert::error('Jenis Pasien Daftar Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
         }
+
         $cek = Kunjungan::where('no_rm', $request->rm);
         $cek_kunjungan = $cek->where('status_kunjungan', 1)->get();
         if(count($cek_kunjungan) > 0 )
@@ -226,11 +227,13 @@ class DaftarIGDController extends Controller
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
         $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        
         if(empty($pasien->no_hp))
         {
             $pasien->no_hp = $request->noTelp;
             $pasien->save();
         }
+        
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
 
 

@@ -137,17 +137,18 @@ class DaftarIGDController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
 
         if (empty($request->penjamin_id_umum) || empty($request->penjamin_id_umum)) {
             Alert::error('Penjamin Belum dipilih!!', 'silahkan pilih penjamin terlebih dahulu!');
             return back();
         }
+        
         if($request->isBpjs == null)
         {
             Alert::error('Status Pasien Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
         }
+
         $bpjsProses = $request->bpjsProses;
         $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
@@ -192,7 +193,7 @@ class DaftarIGDController extends Controller
         } else {
             $c = $counter->counter + 1;
         }
-        $unit = Unit::firstWhere('kode_unit', '1002');
+        $unit   = Unit::firstWhere('kode_unit', '1002');
         $pasien = Pasien::where('no_rm', $request->rm)->first();
         if($request->isBpjs == 1 && empty($pasien->no_Bpjs))
         {
