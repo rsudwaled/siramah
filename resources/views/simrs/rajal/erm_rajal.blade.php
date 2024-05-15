@@ -13,6 +13,11 @@
         <div class="col-md-3">
             <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
                 <ul class="nav nav-pills flex-column">
+                    <li class="nav-item" onclick="modalIcare()">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> I-Care JKN
+                        </a>
+                    </li>
                     <li class="nav-item" onclick="">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-user-injured"></i> Riwayat Kunjungan
@@ -60,6 +65,7 @@
                         @include('simrs.ranap.modal_radiologi')
                         @include('simrs.ranap.modal_patologi')
                         @include('simrs.ranap.modal_file_rm')
+                        @include('simrs.rajal.modal_icare')
                     </div>
                 </div>
             </div>
