@@ -114,7 +114,8 @@ Route::prefix('antrian')->group(function () {
     Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
     Route::post('ambil_antrian_farmasi', [AntrianController::class, 'ambil_antrian_farmasi'])->name('ambil_antrian_farmasi');
     Route::post('status_antrian_farmasi', [AntrianController::class, 'status_antrian_farmasi'])->name('status_antrian_farmasi');
-    Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran'])->name('update_antrean_pendaftaran');; #integrasi bridging pendaftaran agil
+    Route::post('update_antrean_pendaftaran', [AntrianController::class, 'update_antrean_pendaftaran'])->name('update_antrean_pendaftaran'); #integrasi bridging pendaftaran agil
+    Route::get('bridging_taskid_4', [AntrianController::class, 'bridging_taskid_4'])->name('bridging_taskid_4'); #integrasi bridging pendaftaran agil
 
 });
 // API SIMRS

@@ -283,7 +283,6 @@ class VclaimController extends APIController
         } else {
             $request['tanggal'] = now()->format('Y-m-d');
         }
-
         // get data
         if (isset($peserta)) {
             $request['tanggalAkhir'] = Carbon::parse($request->tanggal)->format('Y-m-d');
@@ -295,7 +294,6 @@ class VclaimController extends APIController
                 $sep = $response->response->histori;
             }
             // rujukan fktp
-
             $response = $vclaim->rujukan_peserta($request);
             if ($response->metadata->code == 200) {
                 $rujukan = $response->response->rujukan;

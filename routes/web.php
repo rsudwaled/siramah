@@ -42,6 +42,7 @@ use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
 use App\Http\Controllers\EklaimController;
 use App\Http\Controllers\EncounterController;
+use App\Http\Controllers\IcareController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
@@ -185,6 +186,7 @@ Route::middleware('auth')->group(function () {
     Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
     Route::get('kunjunganrajal', [AntrianController::class, 'kunjunganrajal'])->name('kunjunganrajal');
     Route::get('ermrajal', [AntrianController::class, 'ermrajal'])->name('ermrajal');
+    Route::get('icare', [IcareController::class, 'icare'])->name('icare');
     Route::get('get_kunjungan_rajal', [AntrianController::class, 'get_kunjungan_rajal'])->name('get_kunjungan_rajal');
     Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
     Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntrianPoliklinik'])->name('laporanAntrianPoliklinik');

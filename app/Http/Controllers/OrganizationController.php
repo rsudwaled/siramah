@@ -16,7 +16,6 @@ class OrganizationController extends SatuSehatController
         $unit = Unit::with(['lokasi'])->get();
         return view('simrs.organization_index', compact(['unit']));
     }
-
     public function organization_sync(Request $request)
     {
         $unit = Unit::where('kode_unit', $request->kode)->first();

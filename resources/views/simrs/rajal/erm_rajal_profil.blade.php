@@ -1,6 +1,8 @@
 <a href="{{ route('kunjunganrajal') }}?kode_unit={{ $kunjungan->kode_unit }}&kode_paramedis=-&tgl_masuk={{ \Carbon\Carbon::parse($pasien->tgl_masuk)->format('Y-m-d') }}"
     class="btn btn-xs mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
 @if ($kunjungan->antrian)
+    <a href="{{ route('bridging_taskid_4') }}?kode={{ $kunjungan->kode_kunjungan }}"
+        class="btn btn-xs btn-primary">Panggil Pasien (Briding)</a>
     @if ($kunjungan->antrian->taskid == 3)
         @if ($kunjungan->antrian->status_api == 1)
             <x-adminlte-button class="btn-xs mb-2 withLoad" label="Panggil" theme="warning" icon="fas fa-volume-down"
@@ -66,7 +68,9 @@
         <button class="btn btn-xs mb-2 btn-danger">{{ $kunjungan->antrian->taskid }}. Batal</button>
     @endif
 @else
-    <button class="btn btn-xs mb-2 btn-secondary">Belum Bridging</button>
+    {{-- <button class="btn btn-xs mb-2 btn-secondary">Belum Bridging</button> --}}
+    <a href="{{ route('bridging_taskid_4') }}?kode={{ $kunjungan->kode_kunjungan }}"
+        class="btn btn-xs btn-primary">Panggil Pasien (Briding)</a>
 @endif
 
 <div class="row">
