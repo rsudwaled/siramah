@@ -12,12 +12,10 @@
             <x-adminlte-card title="Data Dokter" theme="info" icon="fas fa-info-circle" collapsible maximizable>
                 @php
                     $heads = ['Kode BPJS', 'Kode SIMRS', 'Nama Dokter', 'SIP', 'Status', 'Action'];
-                    $config['paging'] = false;
-                    $config['info'] = false;
                     $config['scrollY'] = '500px';
                     $config['scrollCollapse'] = true;
                 @endphp
-                <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" bordered hoverable compressed>
+                <x-adminlte-datatable id="table2" :heads="$heads" :config="$config" bordered hoverable with-buttons>
                     @foreach ($dokter as $item)
                         <tr>
                             <td>{{ $item->kodedokter }}</td>
@@ -63,6 +61,7 @@
 
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugin', true)
 
 @section('js')
     <script>
