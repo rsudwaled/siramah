@@ -14,7 +14,7 @@
                     </div>
                 </div>
             @endif
-            <x-adminlte-card title="Filter Data Kunjungan" theme="secondary" collapsible>
+            <x-adminlte-card title="Data Kunjungan Pasien" theme="secondary">
                 <form action="" method="get">
                     <div class="row">
                         <div class="col-md-4">
