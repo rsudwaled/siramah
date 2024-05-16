@@ -46,7 +46,7 @@
                         'Taskid7',
                     ];
                 @endphp
-                <x-adminlte-datatable id="table1" class="nowrap" :heads="$heads" bordered hoverable compressed>
+                <x-adminlte-datatable id="table1" :heads="$heads" bordered hoverable compressed>
                     <div class="hidden" hidden>
                         {{ date_default_timezone_set('Asia/Jakarta') }}
                     </div>
@@ -128,6 +128,6 @@
 @stop
 
 @section('plugins.Datatables', true)
+@section('plugins.DatatablesPlugin', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
-

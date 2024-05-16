@@ -75,7 +75,7 @@
                             'NIK',
                             'BPJS',
                         ];
-                        $config['order'] = [['3', 'asc']];
+                        $config['order'] = [['1', 'asc']];
                         $config['fixedColumns'] = [
                             'leftColumns' => 4,
                         ];
