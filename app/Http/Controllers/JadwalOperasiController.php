@@ -130,12 +130,6 @@ class JadwalOperasiController extends APIController
         ];
         return $this->sendResponse($response, 200);
     }
-
-    public function create()
-    {
-        //
-    }
-
     public function store(Request $request)
     {
         if ($request->method == 'STORE') {
