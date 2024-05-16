@@ -3091,7 +3091,6 @@ class AntrianController extends APIController
     }
     function print_sep(Request $request, $sep)
     {
-
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
@@ -3111,33 +3110,33 @@ class AntrianController extends APIController
             $printer->setEmphasis(false);
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("SEP untuk " . $value . "\n");
+            $printer->text("SEP untuk " . $value ?? '-' . "\n");
             $printer->text("Nomor SEP :\n");
             $printer->setTextSize(2, 2);
             $printer->setEmphasis(true);
-            $printer->text($sep->noSep . "\n");
+            $printer->text($sep->noSep ?? '-' . "\n");
             $printer->setEmphasis(false);
             $printer->setTextSize(1, 1);
-            $printer->text("Tgl SEP : " . $sep->tglSep . " \n");
+            $printer->text("Tgl SEP : " . $sep->tglSep ?? '-' . " \n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("================================================\n");
-            $printer->text("Nama Pasien : " . $sep->peserta->nama . " \n");
-            $printer->text("Nomor Kartu : " . $sep->peserta->noKartu . " \n");
-            $printer->text("No. RM : " . $request->norm . "\n");
-            $printer->text("No. Telepon : " . $request->nohp . "\n");
-            $printer->text("Hak Kelas : " . $sep->peserta->hakKelas . " \n");
-            $printer->text("Jenis Peserta : " . $sep->peserta->jnsPeserta . " \n\n");
-            $printer->text("Jenis Pelayanan : " . $sep->jnsPelayanan . " \n");
-            $printer->text("Poli / Spesialis : " . $sep->poli . "\n");
+            $printer->text("Nama Pasien : " . $sep->peserta->nama ?? '-' . " \n");
+            $printer->text("Nomor Kartu : " . $sep->peserta->noKartu ?? '-' . " \n");
+            $printer->text("No. RM : " . $request->norm ?? '-' . "\n");
+            $printer->text("No. Telepon : " . $request->nohp ?? '-' . "\n");
+            $printer->text("Hak Kelas : " . $sep->peserta->hakKelas ?? '-' . " \n");
+            $printer->text("Jenis Peserta : " . $sep->peserta->jnsPeserta ?? '-' . " \n\n");
+            $printer->text("Jenis Pelayanan : " . $sep->jnsPelayanan ?? '-' . " \n");
+            $printer->text("Poli / Spesialis : " . $sep->poli ?? '-' . "\n");
             $printer->text("COB : -\n");
-            $printer->text("Diagnosa Awal : " . $sep->diagnosa . "\n");
-            $printer->text("Faskes Perujuk : " . $request->faskesPerujuk . "\n");
-            $printer->text("Catatan : " . $sep->catatan . "\n\n");
+            $printer->text("Diagnosa Awal : " . $sep->diagnosa ?? '-' . "\n");
+            $printer->text("Faskes Perujuk : " . $request->faskesPerujuk ?? '-' . "\n");
+            $printer->text("Catatan : " . $sep->catatan ?? '-' . "\n\n");
             $printer->setJustification(Printer::JUSTIFY_RIGHT);
-            $printer->text("Cirebon, " . $now->format('d-m-Y') . " \n\n\n\n");
+            $printer->text("Cirebon, " . $now->format('d-m-Y') ?? '-' . " \n\n\n\n");
             $printer->text("RSUD Waled \n\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("Cetakan : " . $now . "\n");
+            $printer->text("Cetakan : " . $now ?? '-' . "\n");
             $printer->cut();
             $printer->close();
         }
