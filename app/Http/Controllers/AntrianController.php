@@ -2210,10 +2210,10 @@ class AntrianController extends APIController
                 "status_api" => 1,
                 "keterangan" => $request->keterangan,
             ]);
-            // $wa = new WhatsappController();
-            // $request['message'] = $request['keterangan'];
-            // $request['number'] = $antrian->nohp;
-            // $wa->send_message($request);
+            $wa = new WhatsappController();
+            $request['message'] = "Antrian anda dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
+            $request['number'] = $antrian->nohp;
+            $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan
