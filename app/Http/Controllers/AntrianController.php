@@ -2649,6 +2649,7 @@ class AntrianController extends APIController
                     "taskid" => $request->taskid,
                     "keterangan" => $request->keterangan,
                     "taskid1" => $now,
+                    "taskid3" => $now,
                 ]);
                 // print antrian
                 $print_karcis = new AntrianController();
@@ -2672,10 +2673,10 @@ class AntrianController extends APIController
                 $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
                 $print_karcis->print_karcis($request, $kunjungan);
                 // notif wa
-                // $wa = new WhatsappController();
-                // $request['message'] = "Antrian dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
-                // $request['number'] = $antrian->nohp;
-                // $wa->send_message($request);
+                $wa = new WhatsappController();
+                $request['message'] = "Antrian atas nama pasien " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
+                $request['number'] = $antrian->nohp;
+                $wa->send_message($request);
             } catch (\Throwable $th) {
                 return $this->sendError("Error Update Antrian : " . $th->getMessage(), 201);
             }
