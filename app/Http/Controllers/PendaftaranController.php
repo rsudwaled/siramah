@@ -517,7 +517,7 @@ class PendaftaranController extends APIController
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN2');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -556,7 +556,7 @@ class PendaftaranController extends APIController
                 if ($request->ip() == "192.168.2.133") {
                     $printer = env('PRINTER_CHECKIN');
                 } else {
-                    $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                    $printer = env('PRINTER_CHECKIN2');
                 }
                 $connector = new WindowsPrintConnector($printer);
                 $printer = new Printer($connector);
@@ -580,7 +580,7 @@ class PendaftaranController extends APIController
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN2');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -818,7 +818,7 @@ class PendaftaranController extends APIController
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN2');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -861,7 +861,7 @@ class PendaftaranController extends APIController
         if ($request->ip() == "192.168.2.133") {
             $printer = env('PRINTER_CHECKIN');
         } else {
-            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+            $printer = env('PRINTER_CHECKIN2');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -933,7 +933,7 @@ class PendaftaranController extends APIController
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN2');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -986,7 +986,7 @@ class PendaftaranController extends APIController
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN2');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
