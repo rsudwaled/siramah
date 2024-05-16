@@ -2227,9 +2227,9 @@ class AntrianController extends APIController
         try {
             Log::notice('Checkin Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
-            } else {
                 $printer = env('PRINTER_CHECKIN');
+            } else {
+                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -2957,9 +2957,9 @@ class AntrianController extends APIController
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
         if ($request->ip() == "192.168.2.133") {
-            $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
-        } else {
             $printer = env('PRINTER_CHECKIN');
+        } else {
+            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -3098,9 +3098,9 @@ class AntrianController extends APIController
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
-            } else {
                 $printer = env('PRINTER_CHECKIN');
+            } else {
+                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
