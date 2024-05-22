@@ -362,6 +362,7 @@
             $('.btnLayani').click(function() {
                 var antrianid = $(this).data('id');
                 $.LoadingOverlay("show");
+                var url = "{{ route('antrian.index') }}/" + antrianid + '/edit'
                 $.get(url, function(data) {
                     $('#kodebooking').html(data.kodebooking);
                     $('#angkaantrean').html(data.angkaantrean);

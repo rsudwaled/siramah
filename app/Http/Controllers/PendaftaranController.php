@@ -260,11 +260,13 @@ class PendaftaranController extends APIController
             }
             $antrian->update([
                 'taskid' => $request->taskid,
+                'taskid1' => now(),
+                'taskid3' => now(),
                 'status_api' => $request->status_api,
                 'keterangan' =>  $request->keterangan,
             ]);
             $api = new AntrianController();
-            $res = $api->update_antrean($request);
+            // $res = $api->update_antrean($request);
             // insert tracer tc_tracer_header
             $tracerbaru = Tracer::updateOrCreate([
                 'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -272,11 +274,12 @@ class PendaftaranController extends APIController
                 'id_status_tracer' => 1,
                 'cek_tracer' => "N",
             ]);
-            if ($res->metadata->code == 200) {
-                Alert::success('Success', 'OK');
-            } else {
-                Alert::error('Error', $res->metadata->message);
-            }
+            // if ($res->metadata->code == 200) {
+            //     Alert::success('Success', 'OK');
+            // } else {
+            //     Alert::error('Error', $res->metadata->message);
+            // }
+            Alert::success('Success', 'OK');
             $this->print_karcis($request, $kunjungan);
             return redirect()->back();
         } else {

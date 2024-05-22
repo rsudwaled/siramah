@@ -2124,7 +2124,7 @@ class AntrianController extends APIController
             return $this->sendError('Antrian tidak ditemukan',  201);
         }
     }
-    public function checkin_antrian(Request $request) #checkin antrian api
+    public function checkin_antrian(Request $request)
     {
         // cek printer
         try {
