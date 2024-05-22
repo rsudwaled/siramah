@@ -811,32 +811,14 @@ class AntrianController extends APIController
     }
     public function panggilPoliklinik(Request $request)
     {
-        $request['taskid'] = 4;
-        $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
-        $request['waktu'] = now()->timestamp * 1000;
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        $vclaim = new AntrianController();
-        $response = $vclaim->update_antrean($request);
         $antrian->update([
-            'taskid' => $request->taskid,
-            'status_api' => 1,
-            'keterangan' => $request->keterangan,
-            'user' => 'Sistem Siramah',
+            'taskid' => 4,
+            'taskid4' =>  now(),
+            'status_api' => 0,
+            'keterangan' => "Panggilan ke poliklinik yang anda pilih",
         ]);
-        if ($response->metadata->code == 200) {
-            // try {
-            //     // notif wa
-            //     $wa = new WhatsappController();
-            //     $request['message'] = "Panggilan antrian atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " untuk segera dilayani di POLIKLINIK " . $antrian->namapoli;
-            //     $request['number'] = $antrian->nohp;
-            //     $wa->send_message($request);
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
-            Alert::success('Success', 'Panggil Pasien Berhasil');
-        } else {
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-        }
+        Alert::success('Success', 'Panggil Pasien Berhasil');
         return redirect()->back();
     }
     public function panggilBridgingPoliklinik(Request $request)
@@ -892,38 +874,16 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'non racikan';
-        $request['taskid'] = 5;
-        $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $api = new AntrianController();
-        $response = $api->update_antrean($request);
         $antrian->update([
-            'taskid' => $request->taskid,
+            'taskid' => 5,
+            'taskid5' => now(),
             'status_api' => 0,
-            'keterangan' => $request->keterangan,
+            'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
             'user' => 'Sistem Siramah',
         ]);
-        if ($response->metadata->code == 200) {
-
-            // try {
-            //     // notif wa
-            //     $wa = new WhatsappController();
-            //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
-            //     $request['number'] = $antrian->nohp;
-            //     $wa->send_message($request);
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
-            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        } else {
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-        }
-        $response = $api->ambil_antrian_farmasi($request);
-        // if ($response->metadata->code == 200) {
-        //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        // } else {
-        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->metadata->code, $response->metadata->message);
-        // }
+        Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        // $api = new AntrianController();
+        // $response = $api->ambil_antrian_farmasi($request);
         return redirect()->back();
     }
     public function lanjutFarmasiRacikan(Request $request)
@@ -931,37 +891,16 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'racikan';
-        $request['taskid'] = 5;
-        $request['keterangan'] = "Silahkan tunggu di farmasi untuk pengambilan obat.";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $api = new AntrianController();
-        $response = $api->update_antrean($request);
-        if ($response->metadata->code == 200) {
-            $antrian->update([
-                'taskid' => $request->taskid,
-                'status_api' => 0,
-                'keterangan' => $request->keterangan,
-                'user' => 'Sistem Siramah',
-            ]);
-            // try {
-            //     // notif wa
-            //     $wa = new WhatsappController();
-            //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
-            //     $request['number'] = $antrian->nohp;
-            //     $wa->send_message($request);
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
-            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        } else {
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-        }
-        $response = $api->ambil_antrian_farmasi($request);
-        // if ($response->metadata->code == 200) {
-        //     Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
-        // } else {
-        //     Alert::error('Error Tambah Antrian Farmasi ' . $response->metadata->code, $response->metadata->message);
-        // }
+        $antrian->update([
+            'taskid' => 5,
+            'taskid5' => now(),
+            'status_api' => 0,
+            'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
+            'user' => 'Sistem Siramah',
+        ]);
+        Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        // $api = new AntrianController();
+        // $response = $api->ambil_antrian_farmasi($request);
         return redirect()->back();
     }
     public function antrianBpjs(Request $request)
@@ -2211,7 +2150,7 @@ class AntrianController extends APIController
                 "keterangan" => $request->keterangan,
             ]);
             $wa = new WhatsappController();
-            $request['message'] = "Antrian anda dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
+            $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
             $request['number'] = $antrian->nohp;
             $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
@@ -2650,6 +2589,7 @@ class AntrianController extends APIController
                     "keterangan" => $request->keterangan,
                     "taskid1" => $now,
                     "taskid3" => $now,
+                    "user1" => "Mesin Antrian",
                 ]);
                 // print antrian
                 $print_karcis = new AntrianController();

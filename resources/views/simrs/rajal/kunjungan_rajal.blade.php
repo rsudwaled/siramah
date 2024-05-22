@@ -8,9 +8,13 @@
         <div class="col-md-12">
             @if ($kunjungans)
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-lg-3 col-6">
                         <x-adminlte-small-box title="{{ $kunjungans->count() }}" text="Total Kunjungan Pasien" theme="primary"
                             icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <x-adminlte-small-box title="{{ $kunjungans->where('antrian', '!=', null)->count() }}"
+                            text="Kunjungan Terintegrasi" theme="success" icon="fas fa-user-injured" />
                     </div>
                 </div>
             @endif
@@ -18,8 +22,20 @@
                 <form action="" method="get">
                     <div class="row">
                         <div class="col-md-4">
-                            <x-adminlte-select2 fgroup-class="row" label-class="text-left col-3" igroup-class="col-9"
-                                igroup-size="sm" name="kode_unit" label="Poliklinik">
+                            @php
+                                $config = ['format' => 'YYYY-MM-DD'];
+                            @endphp
+                            <x-adminlte-input-date igroup-size="sm" name="tgl_masuk" :config="$config"
+                                value="{{ \Carbon\Carbon::parse($request->tgl_masuk)->format('Y-m-d') }}">
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                </x-slot>
+                            </x-adminlte-input-date>
+                        </div>
+                        <div class="col-md-4">
+                            <x-adminlte-select2 igroup-size="sm" name="kode_unit">
                                 <option value="-">SEMUA POLIKLINIK
                                 </option>
                                 @foreach ($unit as $item)
@@ -28,11 +44,15 @@
                                         {{ $item->nama_unit }}
                                     </option>
                                 @endforeach
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-clinic-medical"></i>
+                                    </div>
+                                </x-slot>
                             </x-adminlte-select2>
                         </div>
                         <div class="col-md-4">
-                            <x-adminlte-select2 fgroup-class="row" label-class="text-left col-3" igroup-class="col-9"
-                                igroup-size="sm" name="kode_paramedis" label="Dokter">
+                            <x-adminlte-select2 igroup-size="sm" name="kode_paramedis">
                                 <option value="-">SEMUA DOKTER</option>
                                 @foreach ($dokters as $item)
                                     <option value="{{ $item->kode_paramedis }}"
@@ -40,20 +60,16 @@
                                         {{ $item->nama_paramedis }}
                                     </option>
                                 @endforeach
-                            </x-adminlte-select2>
-                        </div>
-                        <div class="col-md-4">
-                            @php
-                                $config = ['format' => 'YYYY-MM-DD'];
-                            @endphp
-                            <x-adminlte-input-date fgroup-class="row" label-class="text-left col-3" igroup-class="col-9"
-                                igroup-size="sm" name="tgl_masuk" label="Tanggal Antrian" :config="$config"
-                                value="{{ \Carbon\Carbon::parse($request->tgl_masuk)->format('Y-m-d') }}">
-                                <x-slot name="appendSlot">
-                                    <x-adminlte-button class="btn-sm withLoad" icon="fas fa-search" theme="primary"
-                                        label="Submit Pencarian" type="submit" />
+                                <x-slot name="prependSlot">
+                                    <div class="input-group-text bg-primary">
+                                        <i class="fas fa-user-md"></i>
+                                    </div>
                                 </x-slot>
-                            </x-adminlte-input-date>
+                                <x-slot name="appendSlot">
+                                    <x-adminlte-button class="btn-sm withLoad" theme="primary" label="Cari"
+                                        type="submit" />
+                                </x-slot>
+                            </x-adminlte-select2>
                         </div>
                     </div>
                 </form>
@@ -82,9 +98,6 @@
                             'No Rujukan',
                         ];
                         $config['order'] = [['0', 'asc']];
-                        $config['fixedColumns'] = [
-                            'leftColumns' => 6,
-                        ];
                         $config['paging'] = false;
                         $config['scrollX'] = true;
                         $config['scrollY'] = '400px';
@@ -184,6 +197,5 @@
 
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)
-@section('plugins.DatatablesFixedColumns', true)
 @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)

@@ -235,6 +235,76 @@
             </x-adminlte-card>
         </div>
     </div>
+    <x-adminlte-modal id="modalPelayanan" title="Pelayanan Pasien Poliklinik" size="xl" theme="success"
+        icon="fas fa-user-plus" v-centered static-backdrop scrollable>
+        <form name="formLayanan" id="formLayanan" action="" method="post">
+            @csrf
+            <input type="hidden" name="antrianid" id="antrianid" value="">
+            <dl class="row">
+                <dt class="col-sm-3">Kode Booking</dt>
+                <dd class="col-sm-8">: <span id="kodebooking"></span></dd>
+                <dt class="col-sm-3">Antrian</dt>
+                <dd class="col-sm-8">: <span id="angkaantrean"></span> / <span id="nomorantrean"></span>
+                </dd>
+                <dt class="col-sm-3 ">Tanggal Perikasa</dt>
+                <dd class="col-sm-8">: <span id="tanggalperiksa"></span></dd>
+            </dl>
+            <x-adminlte-card theme="primary" title="Informasi Kunjungan Berobat">
+                <div class="row">
+                    <div class="col-md-5">
+                        <dl class="row">
+                            <dt class="col-sm-4">No RM</dt>
+                            <dd class="col-sm-8">: <span id="norm"></span></dd>
+                            <dt class="col-sm-4">NIK</dt>
+                            <dd class="col-sm-8">: <span id="nik"></span></dd>
+                            <dt class="col-sm-4">No BPJS</dt>
+                            <dd class="col-sm-8">: <span id="nomorkartu"></span></dd>
+                            <dt class="col-sm-4">Nama</dt>
+                            <dd class="col-sm-8">: <span id="nama"></span></dd>
+                            <dt class="col-sm-4">No HP</dt>
+                            <dd class="col-sm-8">: <span id="nohp"></span></dd>
+                            <dt class="col-sm-4">Jenis Pasien</dt>
+                            <dd class="col-sm-8">: <span id="jenispasien"></span></dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-7">
+                        <dl class="row">
+                            <dt class="col-sm-4">Jenis Kunjungan</dt>
+                            <dd class="col-sm-8">: <span id="jeniskunjungan"></span></dd>
+                            <dt class="col-sm-4">No SEP</dt>
+                            <dd class="col-sm-8">: <span id="nomorsep"></span></dd>
+                            <dt class="col-sm-4">No Rujukan</dt>
+                            <dd class="col-sm-8">: <span id="nomorrujukan"></span></dd>
+                            <dt class="col-sm-4">No Surat Kontrol</dt>
+                            <dd class="col-sm-8">: <span id="nomorsuratkontrol"></span></dd>
+                            <dt class="col-sm-4">Poliklinik</dt>
+                            <dd class="col-sm-8">: <span id="namapoli"></span></dd>
+                            <dt class="col-sm-4">Dokter</dt>
+                            <dd class="col-sm-8">: <span id="namadokter"></span></dd>
+                            <dt class="col-sm-4">Jadwal</dt>
+                            <dd class="col-sm-8">: <span id="jampraktek"></span></dd>
+                        </dl>
+                    </div>
+                </div>
+            </x-adminlte-card>
+            <x-adminlte-card theme="primary" title="E-Rekam Medis Pasien" collapsible="collapsed">
+                <div class="row">
+                    Kosong
+                </div>
+            </x-adminlte-card>
+            <x-slot name="footerSlot">
+                <x-adminlte-button class="mr-auto btnSuratKontrol" label="Buat Surat Kontrol" theme="primary"
+                    icon="fas fa-prescription-bottle-alt" />
+                <a href="#" id="lanjutFarmasi" class="btn btn-success withLoad"> <i
+                        class="fas fa-prescription-bottle-alt"></i>Farmasi Non-Racikan</a>
+                <a href="#" id="lanjutFarmasiRacikan" class="btn btn-success withLoad"> <i
+                        class="fas fa-prescription-bottle-alt"></i>Farmasi Racikan</a>
+                <a href="#" id="selesaiPoliklinik" class="btn btn-warning withLoad"> <i class="fas fa-check"></i>
+                    Selesai</a>
+                <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
+            </x-slot>
+        </form>
+    </x-adminlte-modal>
 @stop
 
 @section('plugins.Select2', true)
@@ -292,7 +362,7 @@
             $('.btnLayani').click(function() {
                 var antrianid = $(this).data('id');
                 $.LoadingOverlay("show");
-                $.get("{{ route('antrian.index') }}" + '/' + antrianid + '/edit', function(data) {
+                $.get(url, function(data) {
                     $('#kodebooking').html(data.kodebooking);
                     $('#angkaantrean').html(data.angkaantrean);
                     $('#nomorantrean').html(data.nomorantrean);
