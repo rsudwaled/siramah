@@ -112,61 +112,25 @@ class AntrianController extends APIController
     public function racikFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
-        if ($antrian) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 6;
-            $request['keterangan'] = "Proses peracikan obat";
-            $request['waktu'] = Carbon::now()->timestamp * 1000;
-
-            $api = new AntrianController();
-            $response = $api->update_antrean($request);
-            $antrian->update([
-                'taskid' => $request->taskid,
-                'status_api' => 1,
-                'keterangan' => $request->keterangan,
-                'user' => 'Sistem Siramah',
-            ]);
-            // try {
-            //     // notif wa
-            //     $wa = new WhatsappController();
-            //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
-            //     $request['number'] = $antrian->nohp;
-            //     $wa->send_message($request);
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
-            Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
-            return redirect()->back();
-        } else {
-            Alert::error('Error', 'Kodebooking tidak ditemukan');
-            return redirect()->back();
-        }
+        $antrian->update([
+            'taskid' => 6,
+            'taskid6' => now(),
+            'keterangan' => "Proses peracikan obat",
+            'user' => 'Sistem Siramah',
+        ]);
+        Alert::success('Success ',  'Terima resep obat atas nama ' . $antrian->nama . 'Silahkan menunggu proses peracikan obat');
+        return redirect()->back();
     }
     public function selesaiFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
-        $request['kodebooking'] = $antrian->kodebooking;
-        $request['taskid'] = 7;
-        $request['keterangan'] = "Selesai peracikan obat";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $api = new AntrianController();
-        $response = $api->update_antrean($request);
         $antrian->update([
-            'taskid' => $request->taskid,
-            'status_api' => 1,
-            'keterangan' => $request->keterangan,
+            'taskid' => 7,
+            'taskid7' => now(),
+            'keterangan' => "Selesai peracikan obat",
             'user' => 'Sistem Siramah',
         ]);
-        // try {
-        //     // notif wa
-        //     $wa = new WhatsappController();
-        //     $request['message'] = "Resep obat atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah diterima farmasi. Silahkan menunggu peracikan obat.";
-        //     $request['number'] = $antrian->nohp;
-        //     $wa->send_message($request);
-        // } catch (\Throwable $th) {
-        //     //throw $th;
-        // }
-        Alert::success('Success ' . $response->metadata->code, $response->metadata->message);
+        Alert::success('Success ',  'Selesai resep obat atas nama ' . $antrian->nama);
         return redirect()->back();
     }
     public function daftarOnline(Request $request)
