@@ -749,6 +749,42 @@ class AntrianController extends APIController
             ])
         );
     }
+    public function monitoringAntrianRajal(Request $request)
+    {
+        $antrians = null;
+        if ($request->tanggal) {
+            $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal);
+            if ($request->kodepoli != null) {
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->where('kodepoli', $request->kodepoli)->get();
+            }
+            if ($request->kodedokter != null) {
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->where('kodepoli', $request->kodepoli)->where('kodedokter', $request->kodedokter)->get();
+            }
+            if ($request->kodepoli == null && $request->kodedokter == null) {
+                $antrians = Antrian::whereDate('tanggalperiksa', $request->tanggal)->where('method', '!=', 'Offline')->get();
+            }
+        }
+        $polis = Poliklinik::where('status', 1)->get();
+        $dokters = Paramedis::where('kode_dokter_jkn', "!=", null)
+            ->where('unit', "!=", null)
+            ->get();
+        if (isset($request->kodepoli)) {
+            $poli = Unit::firstWhere('KDPOLI', $request->kodepoli);
+            $dokters = Paramedis::where('unit', $poli->kode_unit)
+                ->where('kode_dokter_jkn', "!=", null)
+                ->get();
+        }
+        return view(
+            'simrs.poliklinik.monitoring_antrian',
+            compact([
+                'antrians',
+                'request',
+                'polis',
+                'dokters'
+            ])
+        );
+    }
+
     public function batalAntrian(Request $request)
     {
         $request['taskid'] = 99;

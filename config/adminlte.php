@@ -359,6 +359,13 @@ return [
                     'can' => 'poliklinik',
                 ],
                 [
+                    'text' => 'Monitoring Antrian Rajal',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'monitoringAntrianRajal',
+                    'shift'   => 'ml-2',
+                    'can' => 'poliklinik',
+                ],
+                [
                     'text' => 'Antrian Poliklinik',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'antrianPoliklinik',
