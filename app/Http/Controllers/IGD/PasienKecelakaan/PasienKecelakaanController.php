@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\IGD\PasienKecelakaan;
 
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Penjamin;
 use App\Models\PenjaminSimrs;
 use App\Models\AlasanMasuk;
 use App\Models\Paramedis;
@@ -17,8 +19,12 @@ use App\Models\JPasienIGD;
 use App\Models\LayananDetail;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\PasienKecelakaan;
+use App\Models\TempPasienKecelakaan;
 use App\Models\TarifLayananDetail;
 use App\Models\Provinsi;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use App\Models\Desa;
 use App\Models\Negara;
 use App\Models\HubunganKeluarga;
 use App\Models\KeluargaPasien;
@@ -26,6 +32,7 @@ use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use Carbon\Carbon;
+use DB;
 
 
 class PasienKecelakaanController extends Controller
@@ -56,7 +63,8 @@ class PasienKecelakaanController extends Controller
 
     public function index(Request $request)
     {
-        $pasien = null;
+        $pasien     = null;
+        $newpasien  = null;
         if(!empty($request->rm) || !empty($request->nama) ||  !empty($request->nomorkartu) || !empty($request->nik))
         {
             $query = Pasien::query();
@@ -75,14 +83,171 @@ class PasienKecelakaanController extends Controller
             }
             $pasien = $query->limit(100)->get();
         }
+        if(empty($pasien))
+        {
+            $newpasien = DB::connection('mysql2')->table('temp_pasien_kecelakaan')
+                ->join('mt_pasien','temp_pasien_kecelakaan.rm','=', 'mt_pasien.no_rm' )
+                ->whereColumn('mt_pasien.no_rm', '=', 'temp_pasien_kecelakaan.rm')
+                ->select(
+                    'mt_pasien.no_Bpjs as no_Bpjs', 
+                    'mt_pasien.nik_bpjs as nik_bpjs', 
+                    'mt_pasien.no_rm as no_rm',
+                    'mt_pasien.nama_px as nama_px',
+                    'mt_pasien.alamat as alamat',
+                    'mt_pasien.jenis_kelamin as jk',
+                    'mt_pasien.no_hp as no_hp',
+                    'mt_pasien.no_tlp as no_tlp',
+                )
+                ->orderBy('created_at','desc')
+                ->get(); 
+            
+        }
+        // dd($newpasien);
         $alasanmasuk    = AlasanMasuk::whereIn('id',['2','3'])->get();
         $paramedis      = Paramedis::where('act', 1)->get();
-        $penjamin       = PenjaminSimrs::get();
         $provinsi       = Provinsi::all();
-       
-        return view('simrs.igd.pasien_kecelakaan.v1.create', compact('request','pasien', 'provinsi','alasanmasuk','paramedis','penjamin'));
+        $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
+        $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_kelompok', 'asc')->get();
+        $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
+        $agama          = Agama::all();
+        $pekerjaan      = Pekerjaan::all();
+        $pendidikan     = Pendidikan::all();
+        $hb_keluarga    = HubunganKeluarga::all();
+        $negara         = Negara::all();
+        return view('simrs.igd.pasien_kecelakaan.v1.create', 
+        compact(
+            'request','pasien', 'alasanmasuk','paramedis','penjamin',
+            'penjaminbpjs','provinsi','kabupaten','kecamatan',
+            'hb_keluarga','agama','pekerjaan','pendidikan','negara','newpasien'
+        ));
     }
 
+    public function pasienKecStore(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), 
+            [
+                "modal_nik"             =>'nullable',
+                "modal_no_bpjs"         =>'nullable',
+                "modal_nama_pasien"     =>'required',
+                "modal_tempat_lahir"    =>'nullable',
+                "modal_jk"              =>'required',
+                "modal_tgl_lahir"       =>'nullable',
+                "modal_agama"           =>'nullable',
+                "modal_pekerjaan"       =>'nullable',
+                "modal_pendidikan"      =>'nullable',
+                "modal_no_telp"         =>'nullable',
+                "modal_provinsi_pasien" =>'nullable',
+                "modal_kabupaten_pasien"=>'nullable',
+                "modal_kecamatan_pasien"=>'nullable',
+                "modal_desa_pasien"     =>'nullable',
+                "modal_alamat_lengkap_pasien"=>'nullable',
+                "modal_kewarganegaraan" =>'nullable',
+                "modal_negara"          =>'nullable',
+                "modal_nama_keluarga"   =>'nullable',
+                "modal_kontak"          =>'nullable',
+                "modal_hub_keluarga"    =>'nullable',
+                "modal_alamat_lengkap_sodara"=>'nullable',
+            ],
+            [
+                "modal_nama_pasien"     =>'Nama Pasien Wajib diisi',
+                "modal_jk"              =>'Jenis Kelamin Pasien Wajib diisi',
+            ]
+        );
+        
+        if ($validator->fails()) {
+            // return response()->json([
+            //     'errors' => $validator->errors(),
+            //     'message' => 'Inputan belum diisi',
+            // ], 422); // 422 Unprocessable Entity
+            return response()->json([
+                'message'=>'INPUTAN BELUM DIISI!',
+                'code'=>400
+            ]);
+        }
+
+        if(!empty($request->modal_tgl_lahir))
+        {
+            $tgl_lahir  = Carbon::parse($request->modal_tgl_lahir)->format('Y-m-d');
+        }
+        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
+        $rm_last    = substr($last_rm->no_rm, -6); //982846
+        $add_rm_new = $rm_last + 1; //982847
+        $th         = substr(Carbon::now()->format('Y'), -2); //23
+        $rm_new     = $th . $add_rm_new;
+        
+        $status_keluarga= 'data keluarga tidak ada!';
+        $status_pasien  = null;
+        if(!empty($request->modal_nama_keluarga))
+        {
+            $keluarga = KeluargaPasien::create([
+                'no_rm'             => $rm_new,
+                'nama_keluarga'     => $request->modal_nama_keluarga??Null,
+                'hubungan_keluarga' => $request->modal_hub_keluarga??Null,
+                'alamat_keluarga'   => $request->modal_alamat_lengkap_sodara??Null,
+                'tlp_keluarga'      => $request->modal_kontak??Null,
+                'input_date'        => Carbon::now(),
+                'Update_date'       => Carbon::now(),
+            ]);
+
+            $status_keluarga= 'memiliki keluarga!';
+        }
+
+        $pasien = Pasien::create([
+            'no_rm'             => $rm_new,
+            'no_Bpjs'           => $request->modal_no_bpjs??Null,
+            'nama_px'           => $request->modal_nama_pasien,
+            'jenis_kelamin'     => $request->modal_jk,
+            'tempat_lahir'      => $request->modal_tempat_lahir??Null,
+            'tgl_lahir'         => $tgl_lahir??Null,
+            'agama'             => $request->modal_agama??Null,
+            'pendidikan'        => $request->modal_pendidikan??Null,
+            'pekerjaan'         => $request->modal_pekerjaan??Null,
+            'kewarganegaraan'   => $request->modal_kewarganegaraan??Null,
+            'negara'            => $request->modal_negara??Null,
+            'propinsi'          => $request->modal_provinsi_pasien??Null,
+            'kabupaten'         => $request->modal_kabupaten_pasien??Null,
+            'kecamatan'         => $request->modal_kecamatan_pasien??Null,
+            'desa'              => $request->modal_desa_pasien??Null,
+            'alamat'            => $request->modal_alamat_lengkap_pasien??Null,
+            'no_telp'           => $request->modal_no_telp??Null,
+            'no_hp'             => $request->modal_no_telp??Null,
+            'tgl_entry'         => Carbon::now(),
+            'nik_bpjs'          => $request->modal_nik??Null,
+            'update_date'       => Carbon::now(),
+            'update_by'         => Carbon::now(),
+            'kode_propinsi'     => $request->modal_provinsi_pasien??Null,
+            'kode_kabupaten'    => $request->modal_kabupaten_pasien??Null,
+            'kode_kecamatan'    => $request->modal_kecamatan_pasien??Null,
+            'kode_desa'         => $request->modal_desa_pasien??Null,
+            'no_ktp'            => $request->modal_nik??Null,
+        ]);
+        TempPasienKecelakaan::create([
+            'rm'    => $rm_new,
+            'nama'  => $pasien->nama_px,
+            'jk'    => $pasien->jenis_kelamin,
+        ]);
+        if(!empty($pasien))
+        {
+            $status_pasien ="Pasien Kecelakaan Berhasil disimpan dengan nama pasien : ".$pasien->nama_px;
+        }
+        if(empty($pasien))
+        {
+            return response()->json([
+                'keterangan'=>'Pasien gagal disimpan',
+                'code'=>400
+            ]);
+        }
+        return response()->json([
+            'data' => $pasien,  
+            'status_keluarga'=>$status_keluarga,
+            'status_pasien'=>$status_pasien,
+            'code'=>200
+        ]);
+    }
+
+    // bukan versi 1
     public function create(Request $request)
     {
         $pasien         = Pasien::firstWhere('no_rm', $request->rm);
@@ -90,7 +255,7 @@ class PasienKecelakaanController extends Controller
         $paramedis      = Paramedis::where('act', 1)->get();
         $penjamin       = PenjaminSimrs::get();
         $provinsi       = Provinsi::all();
-
+        
         return view('simrs.igd.pasien_kecelakaan.create', compact('provinsi','alasanmasuk','paramedis','penjamin','pasien'));
     }
 
@@ -98,13 +263,11 @@ class PasienKecelakaanController extends Controller
     {
         $request->validate(
             [
-                'tanggal_daftar'    => 'required|date',
                 'isBpjs'            => 'required',
                 'alasan_masuk_id'   => 'required',
                 'lakaLantas'        => 'required',
                 'isPerujuk'         => 'required',
                 'dokter_id'         => 'required',
-                'penjamin_id'       => 'required',
                 'noTelp'            => 'nullable',
                 'provinsi'          => 'required',
                 'kabupaten'         => 'required',
@@ -114,7 +277,6 @@ class PasienKecelakaanController extends Controller
                 'tglKejadian'       => 'required',
             ],
             [
-                'tanggal_daftar'    => 'tanggal daftar belum dipilih',
                 'isBpjs'            => 'jenis pasien bpjs / umum wajib dipilih',
                 'alasan_masuk_id'   => 'alasan masuk wajib dipilih',
                 'lakaLantas'        => 'status laka lantas wajib dipilih',
@@ -141,11 +303,13 @@ class PasienKecelakaanController extends Controller
      } else {
          $c = $counter->counter + 1;
      }
-     
+     $bpjsProses = $request->isBpjs==2?1:0;
+     $penjamin   = $request->isBpjs >= 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
+
      $unit   = Unit::firstWhere('kode_unit', '1002');
      $pasien = Pasien::where('no_rm', $request->rm)->first();
      $dokter = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-     
+
      $createKunjungan                    = new Kunjungan();
      $createKunjungan->counter           = $c;
      $createKunjungan->no_rm             = $request->rm;
@@ -154,7 +318,7 @@ class PasienKecelakaanController extends Controller
      $createKunjungan->kode_paramedis    = $request->dokter_id;
      $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
      $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-     $createKunjungan->kode_penjamin     = $request->penjamin_id;
+     $createKunjungan->kode_penjamin     = $penjamin;
      $createKunjungan->kelas             = 3;
      $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
      $createKunjungan->perujuk           = $request->nama_perujuk??null;
@@ -166,12 +330,12 @@ class PasienKecelakaanController extends Controller
      $createKunjungan->pic               = Auth::user()->id_simrs;
      
      if ($createKunjungan->save()) {
-         $jpPasien               = new JPasienIGD();
-         $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
-         $jpPasien->rm           = $request->rm;
-         $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-         $jpPasien->is_bpjs      = $request->isBpjs;
-         $jpPasien->save();
+        //  $jpPasien               = new JPasienIGD();
+        //  $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
+        //  $jpPasien->rm           = $request->rm;
+        //  $jpPasien->nomorkartu   = $pasien->no_Bpjs;
+        //  $jpPasien->is_bpjs      = $request->isBpjs;
+        //  $jpPasien->save();
 
          if($request->isBpjs == 1)
          {
@@ -306,109 +470,13 @@ class PasienKecelakaanController extends Controller
     public function createPasienKec()
     {
         $provinsi       = Provinsi::all();
-        $provinsi_klg   = Provinsi::all();
+        $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
+        $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
         $negara         = Negara::all();
-        $hb_keluarga    = HubunganKeluarga::all();
         $agama          = Agama::all();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
-        return view('simrs.igd.pasien_kecelakaan.create_pasien', compact('provinsi','provinsi_klg','negara','hb_keluarga','agama','pekerjaan','pendidikan'));
-    }
-
-    public function pasienKecStore(Request $request)
-    {
-        $request->validate(
-            [
-                'nik_pasien_baru'   =>'nullable|numeric|digits_between:16,16',
-                'nama_pasien_baru'  =>'required',
-                'tempat_lahir'      =>'required',
-                'jk'                =>'required',
-                'tgl_lahir'         =>'required',
-                'agama'             =>'required',
-                'pekerjaan'         =>'required',
-                'pendidikan'        =>'required',
-                'no_telp'           =>'nullable|numeric|digits_between:10,13',
-                'provinsi_pasien'   =>'required',
-                'negara'            =>'required',
-                'kewarganegaraan'   =>'required',
-                'alamat_lengkap_pasien' =>'nullable',
-                'nama_keluarga'     =>'nullable',
-                'kontak'            =>'nullable',
-                'hub_keluarga'      =>'nullable',
-                'alamat_lengkap_sodara' =>'nullable',
-            ],
-            [
-                'nik_pasien_baru'       =>'nik pasien wajib diisi',
-                'nik_pasien_baru.max'   =>'nik maksimal 16 digit dan bentuknya number',
-                'nik_pasien_baru.min'   =>'nik minimal 16 digit dan bentuknya number',
-                'nama_pasien_baru'      =>'nama pasien wajib diisi',
-                'tempat_lahir'          =>'tempat lahir wajib diisi',
-                'jk'                    =>'jenis kelamin wajib dipilih',
-                'tgl_lahir'             =>'tanggal lahir wajib diisi',
-                'agama'                 =>'agama wajib dipilih',
-                'pekerjaan'             =>'pekerjaan wajib dipilih',
-                'pendidikan'            =>'pendidikan wajib dipilih',
-                'no_telp'               =>'no telpon wajib diisi',
-                'no_telp.max'           =>'no telpon maksimal 13 digit',
-                'no_telp.min'           =>'no telpon minimal 12 digit',
-                'provinsi_pasien'       =>'provinsi pasien wajib dipilih',
-                'negara'                =>'negara wajib dipilih',
-                'kewarganegaraan'       =>'kewarganegaraan wajib dipilih',
-                'alamat_lengkap_pasien' =>'alamat lengkap pasien wajib diisi',
-                'nama_keluarga'         =>'nama keluarga wajib diisi',
-                'kontak'                =>'kontak keluarga wajib diisi',
-                'kontak.max'            =>'maksimal 13 digit',
-                'kontak.min'            =>'minimal 12 digit',
-                'hub_keluarga'          =>'hubungan keluarga dengan pasien wajib dipilih',
-                'alamat_lengkap_sodara' =>'alamat lengkap keluarga pasien wajib diisi',
-            ]);
-
-        $tgl_lahir  = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
-        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        $rm_last    = substr($last_rm->no_rm, -6); //982846
-        $add_rm_new = $rm_last + 1; //982847
-        $th         = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_new     = $th . $add_rm_new;
-        
-        $keluarga = KeluargaPasien::create([
-            'no_rm'             => $rm_new,
-            'nama_keluarga'     => $request->nama_keluarga,
-            'hubungan_keluarga' => $request->hub_keluarga,
-            'alamat_keluarga'   => $request->alamat_lengkap_sodara,
-            'tlp_keluarga'      => $request->kontak,
-            'input_date'        => Carbon::now(),
-            'Update_date'       => Carbon::now(),
-        ]);
-        $pasien = Pasien::create([
-            'no_rm'             => $rm_new,
-            'no_Bpjs'           => $request->no_bpjs,
-            'nama_px'           => $request->nama_pasien_baru,
-            'jenis_kelamin'     => $request->jk,
-            'tempat_lahir'      => $request->tempat_lahir,
-            'tgl_lahir'         => $tgl_lahir,
-            'agama'             => $request->agama,
-            'pendidikan'        => $request->pendidikan,
-            'pekerjaan'         => $request->pekerjaan,
-            'kewarganegaraan'   => $request->kewarganegaraan,
-            'negara'            => $request->negara,
-            'propinsi'          => $request->provinsi_pasien,
-            'kabupaten'         => $request->kabupaten_pasien,
-            'kecamatan'         => $request->kecamatan_pasien,
-            'desa'              => $request->desa_pasien,
-            'alamat'            => $request->alamat_lengkap_pasien,
-            'no_telp'           => $request->no_telp,
-            'no_hp'             => $request->no_hp,
-            'tgl_entry'         => Carbon::now(),
-            'nik_bpjs'          => $request->nik_pasien_baru,
-            'update_date'       => Carbon::now(),
-            'update_by'         => Carbon::now(),
-            'kode_propinsi'     => $request->provinsi_pasien,
-            'kode_kabupaten'    => $request->kabupaten_pasien,
-            'kode_kecamatan'    => $request->kecamatan_pasien,
-            'kode_desa'         => $request->desa_pasien,
-            'no_ktp'            => $request->nik_pasien_baru,
-        ]);
-        Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
-        return redirect()->route('pasien-kecelakaan.index');
+        $hb_keluarga    = HubunganKeluarga::all();
+        return view('simrs.igd.pasien_kecelakaan.create_pasien', compact('provinsi','kabupaten','kecamatan','negara','hb_keluarga','agama','pekerjaan','pendidikan'));
     }
 }

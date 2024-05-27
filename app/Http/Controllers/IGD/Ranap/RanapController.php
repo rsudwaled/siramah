@@ -908,25 +908,25 @@ class RanapController extends APIController
         $data = [
             'request' => [
                 't_sep' => [
-                    'noKartu'   => trim($histories->noKartu),
-                    'tglSep'    => $histories->tglSep,
-                    'ppkPelayanan'  => '1018R001',
-                    'jnsPelayanan'  => $histories->jnsPelayanan,
+                    'noKartu'               => trim($histories->noKartu),
+                    'tglSep'                => $histories->tglSep,
+                    'ppkPelayanan'          => '1018R001',
+                    'jnsPelayanan'          => $histories->jnsPelayanan,
                     'klsRawat'      => [
                         'klsRawatHak'       => $histories->klsRawatHak,
                         'klsRawatNaik'      => $histories->klsRawatNaik??'',
                         'pembiayaan'        => $histories->pembiayaan??'',
                         'penanggungJawab'   => $histories->penanggungJawab??'',
                     ],
-                    'noMR'      => $histories->noMR,
+                    'noMR'                  => $histories->noMR,
                     'rujukan'   => [
-                        'asalRujukan'   => $histories->asalRujukan == null?'':$histories->asalRujukan,
-                        'tglRujukan'    => $histories->tglRujukan,
-                        'noRujukan'     => $spri->noSPRI??'',
-                        'ppkRujukan'    => '1018R001',
+                        'asalRujukan'       => $histories->asalRujukan == null?'':$histories->asalRujukan,
+                        'tglRujukan'        => $histories->tglRujukan,
+                        'noRujukan'         => $spri->noSPRI??'',
+                        'ppkRujukan'        => '1018R001',
                     ],
-                    'catatan'   => '',
-                    'diagAwal'  => $kunjungan->diagx==null? $histories->diagAwal:$kunjungan->diagx,
+                    'catatan'               => '',
+                    'diagAwal'              => $kunjungan->diagx==null? $histories->diagAwal:$kunjungan->diagx,
                     'poli'      => [
                         'tujuan'    => '',
                         'eksekutif' => '0',
@@ -938,14 +938,14 @@ class RanapController extends APIController
                         'katarak' => '0',
                     ],
                     'jaminan' => [
-                        'lakaLantas'    => $histories->lakaLantas == null? 0 : $histories->lakaLantas,
-                        'noLP'          => $histories->noLP == null ? '' : $histories->noLP,
-                        'penjamin'      => [
+                        'lakaLantas'        => $histories->lakaLantas == null? 0 : $histories->lakaLantas,
+                        'noLP'              => $histories->noLP == null ? '' : $histories->noLP,
+                        'penjamin'          => [
                             'tglKejadian'   => $histories->lakaLantas == null ? '' : $histories->tglKejadian,
                             'keterangan'    => $histories->keterangan == null ? '' : $histories->keterangan,
                             'suplesi'       => [
-                                'suplesi'       => '0',
-                                'noSepSuplesi'  => '',
+                                'suplesi'           => '0',
+                                'noSepSuplesi'      => '',
                                 'lokasiLaka'    => [
                                     'kdPropinsi'    => $histories->kdPropinsi == null ? '' : $histories->kdPropinsi,
                                     'kdKabupaten'   => $histories->kdKabupaten == null ? '' : $histories->kdKabupaten,
@@ -970,7 +970,6 @@ class RanapController extends APIController
         ];
         $response = Http::withHeaders($signature)->post($url, $data);
         $callback = json_decode($response->body());
-        
         if ($callback->metaData->code == 200) {
             $resdescrtipt   = $this->response_decrypt($response, $signature);
             $sep            = $resdescrtipt->response->sep->noSep;
@@ -1064,7 +1063,6 @@ class RanapController extends APIController
         return response()->json([
             'bed' => $bed,
         ]);
-        dd($bed);
     }
 
     public function formRanapBayi($rm)
@@ -1077,10 +1075,12 @@ class RanapController extends APIController
         }
         $pasien         = Pasien::firstWhere('no_rm', $rm);
         $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
-        $penjamin       = PenjaminSimrs::get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_kelompok', 'asc')->get();
+        $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-        $alasanmasuk    = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->get();
-        return view('simrs.igd.ranapbayi.bayi_umum', compact('pasien', 'unit','penjamin','paramedis','alasanmasuk'));
+        $alasanmasuk    = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->orderBy('id','asc')->get();
+        // dd($alasanmasuk);
+        return view('simrs.igd.ranapbayi.bayi_umum', compact('pasien', 'unit','penjamin','paramedis','alasanmasuk','penjaminbpjs'));
     }
 
 
@@ -1097,7 +1097,7 @@ class RanapController extends APIController
             [
                 'tanggal_daftar'    => 'required|date',
                 'noMR'              => 'required',
-                'penjamin_id'       => 'required',
+                // 'penjamin_id'       => 'required',
                 'idRuangan'         => 'required',
                 'alasan_masuk_id'   => 'required',
                 'dpjp'              => 'required',
@@ -1120,8 +1120,8 @@ class RanapController extends APIController
         } else {
             $c = $counter->counter + 1;
         }
-       
-        $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
+        $bpjsProses = $request->isBpjs==2?1:0;
+        $penjamin   = $request->isBpjs >= 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
 
@@ -1133,16 +1133,19 @@ class RanapController extends APIController
         $createKunjungan->kode_paramedis    = $request->dpjp;
         $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
-        $createKunjungan->kode_penjamin     = $penjamin->kode_penjamin;
+        $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = $ruangan->id_kelas;
-        $createKunjungan->hak_kelas         =  $ruangan->id_kelas;
+        $createKunjungan->hak_kelas         = $ruangan->id_kelas;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->id_ruangan        = $request->idRuangan;
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
-        $createKunjungan->jp_daftar         = $request->input('bpjsProses') == null ? $request->isBpjs : 2;
+        $createKunjungan->is_ranap_daftar   = 1;
+        $createKunjungan->form_send_by      = 1;
+        $createKunjungan->jp_daftar         = $request->isBpjs;
+        $createKunjungan->is_bpjs_proses    = $bpjsProses;
 
         if ($createKunjungan->save()) {
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
@@ -1159,7 +1162,7 @@ class RanapController extends APIController
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
             $createLH->pic                  = Auth::user()->id;
-            $createLH->status_pembayaran = 'OPN';
+            $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
 
@@ -1176,7 +1179,6 @@ class RanapController extends APIController
                 if ($createLH->save()) {
                     // create layanan detail
                     $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
                     $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
 
                     // create detail admn
@@ -1200,8 +1202,8 @@ class RanapController extends APIController
 
                     if ($createAdm->save()) {
                         $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
-                        $createKunjungan->form_send_by      = 1; //status 1 pasien sudah di daftarkan ranap
+                        // $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
+                        // $createKunjungan->form_send_by      = 1; //status 1 pasien sudah di daftarkan ranap
                         $createKunjungan->update();
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1

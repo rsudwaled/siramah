@@ -204,7 +204,7 @@
                                                     <input type="number" name="no_bpjs" id="no_bpjs"
                                                         class="form-control">
                                                 </div>
-                                                <x-adminlte-input name="noTelp" id="noTelp" type="number" required
+                                                <x-adminlte-input name="noTelp" id="noTelp" type="number"
                                                     label="No Telpon" />
                                                 @php
                                                     $config = ['format' => 'YYYY-MM-DD'];
@@ -215,36 +215,50 @@
 
                                             </div>
                                             <div class="col-lg-6">
-                                                <x-adminlte-select name="jp" label="Pilih Unit">
-                                                    <option value="">--Pilih Unit--</option>
-                                                    <option value="1">IGD</option>
-                                                    <option value="0">IGK</option>
-                                                </x-adminlte-select>
-
                                                 <div class="form-group">
-                                                    <label for="exampleInputBorderWidth2">Jenis Pasien <br>
-                                                        <code>
-                                                            [ silahkan ceklis untuk pasien bpjs masih proses
-                                                            <label for="exampleInputBorderWidth2">BPJS
-                                                                <code>( <input type="checkbox" value="0"
-                                                                        name="bpjsProses" id="bpjsProses" class="mt-1">
-                                                                    )
-                                                                </code>
-                                                            </label>
-                                                            ]
-                                                        </code>
-                                                    </label>
-                                                    <select name="isBpjs" id="isBpjs"class="form-control">
-                                                        <option value="">--Pilih Jenis Pasien--</option>
-                                                        <option value="0">Pasien UMUM</option>
-                                                        @if (!empty($resdescrtipt->response))
-                                                            <option value="1"
-                                                                {{ $resdescrtipt->response->peserta->statusPeserta->keterangan === 'AKTIF' ? 'selected' : '' }}>
-                                                                Pasien BPJS</option>
-                                                        @else
-                                                            <option value="1">Pasien BPJS</option>
-                                                        @endif
-                                                    </select>
+                                                    <label for="">Pilih Tujuan</label>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="jp" value="1" checked="">
+                                                                <label class="form-check-label">UGD UMUM</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="jp" value="0">
+                                                                <label class="form-check-label">UGD KEBIDANAN</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="">Jenis Pasien</label>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="0" checked="">
+                                                                <label class="form-check-label">UMUM</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="1">
+                                                                <label class="form-check-label">BPJS</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="2">
+                                                                <label class="form-check-label">BPJS PROSES</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group" id="show_penjamin_umum">
                                                     <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
@@ -254,7 +268,7 @@
                                                         @endforeach
                                                     </x-adminlte-select2>
                                                 </div>
-                                                <div class="form-group" id="show_penjamin_bpjs">
+                                                <div class="form-group" id="show_penjamin_bpjs" style="display: none;">
                                                     <x-adminlte-select2 name="penjamin_id_bpjs"
                                                         label="Pilih Penjamin BPJS">
                                                         @foreach ($penjaminbpjs as $item)
@@ -271,7 +285,6 @@
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
-                                                    <option value="">--Pilih Alasan--</option>
                                                     @foreach ($alasanmasuk as $item)
                                                         <option value="{{ $item->id }}">
                                                             {{ $item->alasan_masuk }}</option>
@@ -310,82 +323,90 @@
         </div>
     </div>
 
-    <x-adminlte-modal id="modalCekKunjungan" title="Riwayat Kunjungan Pasien" theme="success" size='xl' static-backdrop>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-5 col-sm-3">
-                        <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
-                            aria-orientation="vertical">
-                            <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab" data-toggle="pill" href="#rawat-jalan"
-                                role="tab" aria-controls="rawat-jalan" aria-selected="false">Rawat Jalan</a>
-                            <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab" data-toggle="pill" href="#rawat-inap"
-                                role="tab" aria-controls="rawat-inap" aria-selected="true">Rawat Inap</a>
-                        </div>
-                    </div>
-                    <div class="col-7 col-sm-9">
-                        <div class="tab-content" id="vert-tabs-tabContent">
-                            <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
-                                aria-labelledby="rawat-jalan-tab">
-                                <div class="info-box mb-3 bg-success ">
-                                    <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">RAWAT JALAN</span>
-                                        <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
-                                    </div>
-
-                                </div>
-                                <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-                                    
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>POLI</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Riwayat Kunjungan</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-5 col-sm-3">
+                            <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
+                                aria-orientation="vertical">
+                                <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab"
+                                    data-toggle="pill" href="#rawat-jalan" role="tab" aria-controls="rawat-jalan"
+                                    aria-selected="false">Rawat Jalan</a>
+                                <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab"
+                                    data-toggle="pill" href="#rawat-inap" role="tab" aria-controls="rawat-inap"
+                                    aria-selected="true">Rawat Inap</a>
                             </div>
-                            <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
-                                aria-labelledby="rawat-inap-tab">
-                                <div class="info-box mb-3 bg-primary">
-                                    <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">RAWAT INAP</span>
-                                        <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
+                        </div>
+                        <div class="col-7 col-sm-9">
+                            <div class="tab-content" id="vert-tabs-tabContent">
+                                <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
+                                    aria-labelledby="rawat-jalan-tab">
+                                    <div class="info-box mb-3 bg-success ">
+                                        <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">RAWAT JALAN</span>
+                                            <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
+                                        </div>
+    
                                     </div>
+                                    <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+    
+                                        <thead>
+                                            <tr>
+                                                <th>KUNJUNGAN</th>
+                                                <th>NO RM</th>
+                                                <th>PASIEN</th>
+                                                <th>POLI</th>
+                                                <th>STATUS</th>
+                                                <th>TGL MASUK</th>
+                                                <th>TGL PULANG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <table id="table2" class="riwayatRanap data-table table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>RUANGAN</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
+                                <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
+                                    aria-labelledby="rawat-inap-tab">
+                                    <div class="info-box mb-3 bg-primary">
+                                        <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">RAWAT INAP</span>
+                                            <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
+                                        </div>
+                                    </div>
+                                    <table id="table2" class="riwayatRanap data-table table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>KUNJUNGAN</th>
+                                                <th>NO RM</th>
+                                                <th>PASIEN</th>
+                                                <th>RUANGAN</th>
+                                                <th>STATUS</th>
+                                                <th>TGL MASUK</th>
+                                                <th>TGL PULANG</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
+                </div>
             </div>
-            <x-slot name="footerSlot">
-                <x-adminlte-button theme="danger" label="tutup" onclick="batalPilih()" data-dismiss="modal" />
-            </x-slot>
         </div>
-    </x-adminlte-modal>
+    </div>
 
 @endsection
 @section('plugins.TempusDominusBs4', true)
@@ -402,6 +423,19 @@
         const keterangan = document.getElementById('keterangan');
         const tanggalkejadian = document.getElementById('tglKejadian');
         const provinsi = document.getElementById('provinsi');
+
+        document.querySelectorAll('input[name="isBpjs"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === '0') {
+                    document.getElementById('show_penjamin_umum').style.display = 'block';
+                    document.getElementById('show_penjamin_bpjs').style.display = 'none';
+                } else {
+                    document.getElementById('show_penjamin_bpjs').style.display = 'block';
+                    document.getElementById('show_penjamin_umum').style.display = 'none';
+                }
+            });
+        });
+        
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
                 document.getElementById('div_stts_kecelakaan').style.display = "block";
@@ -413,6 +447,7 @@
                 document.getElementById('div_stts_kecelakaan').style.display = "none";
             }
         });
+
         $('#perujuk').hide();
         $(perujuk).on('change', function() {
             if (perujuk.value > 0 || perujuk.value == null) {
@@ -421,22 +456,7 @@
                 $('#perujuk').hide();
             }
         });
-        if (isbpjs.value == 1) {
-            $('#show_penjamin_umum').hide();
-            $('#show_penjamin_bpjs').show();
-        } else {
-            $('#show_penjamin_bpjs').hide();
-            $('#show_penjamin_umum').show();
-        }
-        $(isbpjs).on('change', function() {
-            if (isbpjs.value > 0 || isbpjs.value == null) {
-                $('#show_penjamin_umum').hide();
-                $('#show_penjamin_bpjs').show();
-            } else {
-                $('#show_penjamin_umum').show();
-                $('#show_penjamin_bpjs').hide();
-            }
-        });
+        
         $('.btn-pilihPasien').on('click', function() {
             let rm = $(this).data('rm');
             let nama = $(this).data('nama');
@@ -513,6 +533,7 @@
                 });
             }
         });
+
         $('.btn-cekKunjungan').click(function(e) {
             $('#modalCekKunjungan').modal('toggle');
             var rm = $(this).data('rm');
@@ -559,6 +580,7 @@
 
         function batalPilih() {
             $(".riwayat-kunjungan").remove();
+            $('#modalCekKunjungan').modal('hide');
         }
 
         $(function() {
@@ -567,6 +589,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $("#diagAwal").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -608,6 +631,7 @@
                     cache: true
                 }
             });
+
             $("#kabupaten").select2({
                 theme: "bootstrap4",
                 ajax: {
@@ -629,6 +653,7 @@
                     cache: true
                 }
             });
+
             $("#kecamatan").select2({
                 theme: "bootstrap4",
                 ajax: {

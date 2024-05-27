@@ -109,17 +109,17 @@ class DaftarIGDController extends Controller
     {
         $query          = Pasien::query();
         if ($request->rm && !empty($request->rm)) {
-            $query->where('no_rm', $request->rm);
+            $query->where('no_rm','LIKE', '%' . $request->rm. '%');
         }
         if ($request->nama && !empty($request->nama)) {
             $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(100);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $query->where('no_Bpjs', $request->nomorkartu);
+            $query->where('no_Bpjs','LIKE', '%' . $request->nomorkartu. '%');
         }
         if($request->nik && !empty($request->nik))
         {
-            $query->where('nik_bpjs', $request->nik);
+            $query->where('nik_bpjs','LIKE', '%' .  $request->nik. '%');
         }
         if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
         {
@@ -134,8 +134,8 @@ class DaftarIGDController extends Controller
                         ->count();
         $alasanmasuk = AlasanMasuk::orderBy('id', 'asc')->get();
         $paramedis   = Paramedis::where('act', 1)->get();
-        $penjamin    = PenjaminSimrs::get();
-        $penjaminbpjs= Penjamin::get();
+        $penjamin    = PenjaminSimrs::orderBy('kode_kelompok', 'asc')->get();
+        $penjaminbpjs= Penjamin::orderBy('id', 'asc')->get();
         $tanggal     = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
 
@@ -155,12 +155,13 @@ class DaftarIGDController extends Controller
 
     public function storeTanpaNoAntrian(Request $request)
     {
+        // dd($request->all());
         if (empty($request->nik_bpjs)) {
             Alert::info('NIK WAJIB DIISI!!', 'silahkan edit terlebih dahulu data pasien! JIKA PASIEN BAYI DAFTARKAN PADA MENU PASIEN BAYI');
             return back();
         }
 
-        if ($request->isBpjs == 1 && empty($request->no_bpjs)) {
+        if ($request->isBpjs == 1 && empty($request->no_bpjs) ) {
             Alert::error('NO KARTU WAJIB DIISI!!', 'untuk pasien bpjs no kartu wajib diisi!');
             return back();
         }
@@ -182,14 +183,13 @@ class DaftarIGDController extends Controller
             return back();
         }
 
-        $bpjsProses = $request->bpjsProses;
-        $penjamin   = $request->isBpjs == 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
+        $bpjsProses = $request->isBpjs==2?1:0;
+        $penjamin   = $request->isBpjs >= 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
             [
                 'rm'                => 'required',
                 'dokter_id'         => 'required',
                 'tanggal'           => 'required',
-                // 'penjamin_id_umum'  => 'required',
                 'alasan_masuk_id'   => 'required',
                 'isBpjs'            => 'required',
                 'jp'                => 'required',
@@ -198,7 +198,6 @@ class DaftarIGDController extends Controller
             [
                 'dokter_id'         => 'Dokter DPJP wajib dipilih !',
                 'tanggal'           => 'Tanggal pendaftaran wajib dipilih !',
-                // 'penjamin_id_umum'  => 'Penjamin wajib dipilih !',
                 'alasan_masuk_id'   => 'Alasan daftar wajib dipilih !',
                 'isBpjs'            => 'Anda harus memilih pasien didaftarkan sebagai pasien bpjs/umum !',
                 'jp'                => 'Anda harus memilih pasien didaftarkan kedalam unit mana !',
@@ -235,8 +234,6 @@ class DaftarIGDController extends Controller
         }
         
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-
-
         $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $c;
         $createKunjungan->no_rm             = $request->rm;
@@ -251,7 +248,8 @@ class DaftarIGDController extends Controller
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
-        $createKunjungan->jp_daftar         = $bpjsProses == null ? $request->isBpjs : 2;
+        $createKunjungan->is_bpjs_proses    = $bpjsProses;
+        $createKunjungan->jp_daftar         = $request->jp;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
         
@@ -260,7 +258,7 @@ class DaftarIGDController extends Controller
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
+            $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
             $jpPasien->save();
 
             if($request->isBpjs == 1)

@@ -132,8 +132,8 @@
                                                             BPJS : {{ $data->no_Bpjs }} <br>
                                                             PASIEN : {{ $data->nama_px }}
                                                         </b> <br><br>
-                                                        <small>alamat : {{ $data->alamat ?? '-' }} / <br>
-                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}</small>
+                                                        alamat : {{ $data->alamat ?? '-' }} / <br>
+                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}
                                                     </a>
                                                 </td>
                                                 <td><b>{{$data->no_rm}}</b></td>

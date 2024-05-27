@@ -13,12 +13,13 @@
                     <div class="card card-success card-outline">
                         <div class="card-body">
                             <div class="col-lg-12 mb-2">
-                                <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
+                                <a href="#" class="btn bg-danger mb-2" id="infoRuangan"><i
+                                        class="fas fa-exclamation-triangle"></i> SAAT INI RUANGAN BELUM DIPILIH</a>
                                 <a href="#" class="btn bg-teal mb-2" id="showBed" style="display: none">
                                     <i class="fas fa-bed"></i>
                                 </a>
                                 <a href="#" class="btn btn-primary mb-2" id="showRuangan" style="display: none">
-                                    <i class="fas fa-bed"></i> Tidak ada 
+                                    <i class="fas fa-bed"></i> Tidak ada
                                 </a>
                             </div>
                             <div class="col-md-12">
@@ -57,80 +58,91 @@
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <div class="col-lg-12">
                                         <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="col-md-12">
+                                            <div class="col-lg-6">
+                                                <x-adminlte-input name="nama_pasien" value="{{ $pasien->nama_px }}" disabled
+                                                    label="Nama Pasien" enable-old-support>
+                                                    <x-slot name="prependSlot">
+                                                        <div class="input-group-text text-olive">
+                                                            {{ $pasien->no_rm }}</div>
+                                                    </x-slot>
+                                                </x-adminlte-input>
+                                                <x-adminlte-input name="ruangan_bayi" id="ruanganBayiTerpilih" readonly
+                                                    label="Ruangan Bayi">
+                                                </x-adminlte-input>
+                                                @php
+                                                    $config = ['format' => 'YYYY-MM-DD'];
+                                                @endphp
+                                                <x-adminlte-input-date name="tanggal_daftar"
+                                                    value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                    label="Tanggal Masuk" :config="$config" />
+                                                <x-adminlte-select name="alasan_masuk_id" label="Alasan Pendaftaran">
+                                                    <option value="">--Pilih Alasan--</option>
+                                                    @foreach ($alasanmasuk as $item)
+                                                        <option value="{{ $item->id }}" @if(old('alasan_masuk_id') == $item->id || (isset($selectedAlasanMasuk) && $selectedAlasanMasuk == $item->id) || $item->id == 5) selected @endif>
+                                                            {{ $item->alasan_masuk }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select>
+                                            </div>
+                                            <div class="col-lg-6">
+
+                                                <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
+                                                    <option value="">--Pilih Dpjp--</option>
+                                                    @foreach ($paramedis as $item)
+                                                        <option value="{{ $item->kode_paramedis }}">
+                                                            {{ $item->nama_paramedis }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
+
+                                                <div class="form-group">
+                                                    <label for="">Jenis Pasien</label>
                                                     <div class="row">
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-input name="nama_pasien"
-                                                                value="{{ $pasien->nama_px }}" disabled label="Nama Pasien"
-                                                                enable-old-support>
-                                                                <x-slot name="prependSlot">
-                                                                    <div class="input-group-text text-olive">
-                                                                        {{ $pasien->no_rm }}</div>
-                                                                </x-slot>
-                                                            </x-adminlte-input>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="0" checked="">
+                                                                <label class="form-check-label">UMUM</label>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-input name="ruangan_bayi" id="ruanganBayiTerpilih" readonly label="Ruangan Bayi">
-                                                            </x-adminlte-input>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="1">
+                                                                <label class="form-check-label">BPJS</label>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            @php
-                                                                $config = ['format' => 'YYYY-MM-DD'];
-                                                            @endphp
-                                                            <x-adminlte-input-date name="tanggal_daftar"
-                                                                value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                                label="Tanggal Masuk" :config="$config" />
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                                                <option value="">--Pilih Penjamin--</option>
-                                                                @foreach ($penjamin as $item)
-                                                                    <option value="{{ $item->kode_penjamin }}">
-                                                                        {{ $item->nama_penjamin }}</option>
-                                                                @endforeach
-                                                            </x-adminlte-select2>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-select name="alasan_masuk_id"
-                                                                label="Alasan Pendaftaran">
-                                                                <option value="">--Pilih Alasan--</option>
-                                                                @foreach ($alasanmasuk as $item)
-                                                                    <option value="{{ $item->id }}">
-                                                                        {{ $item->alasan_masuk }}</option>
-                                                                @endforeach
-                                                            </x-adminlte-select>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
-                                                                <option value="">--Pilih Dpjp--</option>
-                                                                @foreach ($paramedis as $item)
-                                                                    <option value="{{ $item->kode_paramedis }}">
-                                                                        {{ $item->nama_paramedis }}</option>
-                                                                @endforeach
-                                                            </x-adminlte-select2>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="checkBoxBpjs">Jenis Pasien
-                                                                    <code>
-                                                                        [
-                                                                        <label for="checkBoxBpjs">BPJS PROSES
-                                                                            <code>( <input type="checkbox" value="0"
-                                                                                    name="bpjsProses" id="bpjsProses" class="mt-1">
-                                                                                )
-                                                                            </code>
-                                                                        </label>
-                                                                        ]
-                                                                    </code>
-                                                                </label>
-                                                                <select name="isBpjs" id="isBpjs"class="form-control">
-                                                                    <option value="0">Pasien UMUM</option>
-                                                                    <option value="1">Pasien BPJS</option>
-                                                                </select>
+                                                        <div class="col-lg-4">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="isBpjs" value="2">
+                                                                <label class="form-check-label">BPJS
+                                                                    PROSES</label>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
+                                                    <option value="">--Pilih Penjamin--</option>
+                                                    @foreach ($penjamin as $item)
+                                                        <option value="{{ $item->kode_penjamin }}">
+                                                            {{ $item->nama_penjamin }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2> --}}
+                                                <div class="form-group" id="show_penjamin_umum">
+                                                    <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
+                                                        @foreach ($penjamin as $item)
+                                                            <option value="{{ $item->kode_penjamin }}">
+                                                                {{ $item->nama_penjamin }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
+                                                </div>
+                                                <div class="form-group" id="show_penjamin_bpjs" style="display: none;">
+                                                    <x-adminlte-select2 name="penjamin_id_bpjs"
+                                                        label="Pilih Penjamin BPJS">
+                                                        @foreach ($penjaminbpjs as $item)
+                                                            <option value="{{ $item->kode_penjamin_simrs }}">
+                                                                {{ $item->nama_penjamin_bpjs }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
                                                 </div>
                                             </div>
                                         </div>
@@ -165,6 +177,8 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
+        const isbpjs = document.getElementById('isBpjs');
+
         $('#cariRuangan').on('click', function() {
             // $("#pilihRuangan").show();
             var unit = $('#unitTerpilih').val();
@@ -215,7 +229,7 @@
                     $("#showBed").css("display", "block");
                     $(".ruanganCheck").remove();
 
-                    $("#ruanganBayiTerpilih").val(nama+' - '+ bed);
+                    $("#ruanganBayiTerpilih").val(nama + ' - ' + bed);
 
                     $("#infoRuangan").css("display", "none");
                 }
@@ -225,5 +239,16 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
+        document.querySelectorAll('input[name="isBpjs"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                if (this.value === '0') {
+                    document.getElementById('show_penjamin_umum').style.display = 'block';
+                    document.getElementById('show_penjamin_bpjs').style.display = 'none';
+                } else {
+                    document.getElementById('show_penjamin_bpjs').style.display = 'block';
+                    document.getElementById('show_penjamin_umum').style.display = 'none';
+                }
+            });
+        });
     </script>
 @endsection
