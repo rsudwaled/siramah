@@ -1,52 +1,53 @@
 @extends('adminlte::page')
-@section('title', 'Pasien Kecelakaan ')
+@section('title', 'PASIEN KECELAKAAN')
 @section('content_header')
     <div class="container-fluid">
-        <div class="row mb-2">
+        <div class="row">
             <div class="col-lg-3">
                 <h5>DATA PASIEN KECELAKAAN</h5>
             </div>
-            <div class="col-lg-9">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-6">
+        </div>
+    </div>
+@stop
+@section('content')
+    <div class="row mt-3">
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <form action="" method="get">
+                                <div class="col-md-8">
                                     <div class="input-group">
                                         <input id="new-event" type="date" name="date" class="form-control"
                                             value="{{ $request->date != null ? \Carbon\Carbon::parse($request->date)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
                                             placeholder="Event Title">
                                         <div class="input-group-append">
                                             <button id="add-new-event" type="submit"
-                                                class="btn btn-primary btn-sm withLoad">Cari Data</button>
+                                                class="btn btn-primary btn-sm withLoad">CARI DATA</button>
                                         </div>
                                     </div>
-                                   
                                 </div>
-                                <div class="col-md-6">
-                                    <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm bg-purple">Daftar
-                                        Pasien Kecelakaan</a>
-                                    <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
-                                        <i class="fas fa-sync"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    
-@stop
-@section('content')
-    <div class="row">
-
-        <div class="col-lg-12">
-            <div class="card card-primary card-outline card-tabs">
-                <div class="card-body">
+                            </form>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm bg-purple">Daftar
+                                Pasien Kecelakaan</a>
+                            <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                                <i class="fas fa-sync"></i></a>
+                        </div>
+                    </div>
                     @php
-                        $heads = ['Pasien', 'Alamat', 'kunjungan', 'Tgl Masuk', 'Diagnosa', 'No SEP', 'status', 'detail'];
+                        $heads = [
+                            'Pasien',
+                            'Alamat',
+                            'kunjungan',
+                            'Tgl Masuk',
+                            'Diagnosa',
+                            'No SEP',
+                            'status',
+                            'detail',
+                        ];
                         $config['order'] = false;
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -100,10 +101,8 @@
                     </x-adminlte-datatable>
                 </div>
             </div>
-
         </div>
     </div>
-
 @stop
 
 @section('plugins.Select2', true)

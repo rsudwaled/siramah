@@ -2,140 +2,45 @@
 @section('title', 'Pasien Rawat Inap')
 
 @section('content_header')
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-4">
-                <h1>PASIEN RAWAT INAP</h1>
-            </div>
-            <div class="col-sm-8">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-12">
+   
+@stop
+@section('content')
+    <div class="row mt-3">
+        <div class="col-lg-12">
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <form action="" method="get">
+                                <div class="col-md-8">
                                     <div class="input-group">
                                         <input id="new-event" type="date" name="tanggal" class="form-control"
                                             value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
                                             placeholder="Event Title">
                                         <div class="input-group-append">
                                             <button id="add-new-event" type="submit"
-                                                class="btn btn-primary btn-sm withLoad">CARI BY TGL MASUK</button>
+                                                class="btn btn-primary btn-sm withLoad">CARI DATA</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <button type="button" class="btn btn-md bg-success cekKunjunganPoli" data-toggle="modal"
-                            data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a onClick="window.location.reload();" class="btn btn-md btn-warning"><i class="fas fa-sync"></i></a>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
-    <x-adminlte-modal id="modalCekKunjunganPoli" class="modal-cek-kunjungan" title="Cek Kunjungan Pasien" theme="success"
-        size='md' disable-animations>
-        <form>
-            <div class="col-lg-12">
-                <x-adminlte-input name="no_rm" id="no_rm" label="No RM PASIEN" />
-            </div>
-            <x-slot name="footerSlot">
-                <x-adminlte-button type="submit" theme="success" class="btn-cekKunjungan" id="btn-cekKunjungan"
-                    label="CARI KUNJUNGAN" />
-                <x-adminlte-button theme="danger" label="BATAL" class="btnCreateSPRIBatal" data-dismiss="modal" />
-            </x-slot>
-        </form>
-    </x-adminlte-modal>
-
-    <x-adminlte-modal id="modalCekKunjungan" title="RIWAYAT KUNJUNGAN" theme="success" size='xl'>
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-5 col-sm-3">
-                        <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
-                            aria-orientation="vertical">
-                            <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab" data-toggle="pill" href="#rawat-jalan"
-                                role="tab" aria-controls="rawat-jalan" aria-selected="false">Rawat Jalan</a>
-                            <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab" data-toggle="pill" href="#rawat-inap"
-                                role="tab" aria-controls="rawat-inap" aria-selected="true">Rawat Inap</a>
+                            </form>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <button class="btn btn-sm bg-purple cekKunjunganPoli" data-toggle="modal" data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
+                            <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                                <i class="fas fa-sync"></i> Refresh</a>
                         </div>
                     </div>
-                    <div class="col-7 col-sm-9">
-                        <div class="tab-content" id="vert-tabs-tabContent">
-                            <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
-                                aria-labelledby="rawat-jalan-tab">
-                                <div class="info-box mb-3 bg-success ">
-                                    <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">RAWAT JALAN</span>
-                                        <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
-                                    </div>
-
-                                </div>
-                                <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>POLI</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                            <th>RANAP</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
-                                aria-labelledby="rawat-inap-tab">
-                                <div class="info-box mb-3 bg-primary">
-                                    <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
-                                    <div class="info-box-content">
-                                        <span class="info-box-text">RAWAT INAP</span>
-                                        <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
-                                    </div>
-                                </div>
-                                <table id="table1" class="riwayatRanap data-table table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>KUNJUNGAN</th>
-                                            <th>NO RM</th>
-                                            <th>PASIEN</th>
-                                            <th>POLI</th>
-                                            <th>STATUS</th>
-                                            <th>TGL MASUK</th>
-                                            <th>TGL PULANG</th>
-                                            <th>RANAP</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <x-slot name="footerSlot">
-                <x-adminlte-button theme="danger" label="tutup" onclick="batalPilih()" data-dismiss="modal" />
-            </x-slot>
-        </div>
-    </x-adminlte-modal>
-@stop
-@section('content')
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card card-primary card-outline card-tabs">
-                <div class="card-body">
                     @php
-                        $heads = ['TGL MASUK ', 'KUNJUNGAN', 'PASIEN', 'JENIS PASIEN', 'RUANGAN', 'SPRI / SEP RANAP', 'DETAIL'];
+                        $heads = [
+                            'TGL MASUK ',
+                            'PASIEN',
+                            'JENIS PASIEN',
+                            'KUNJUNGAN',
+                            'RUANGAN',
+                            'SPRI / SEP RANAP',
+                            'DETAIL',
+                        ];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -152,26 +57,30 @@
                                         {{ $item->tgl_masuk }}
                                     </b>
                                 </td>
-                                <td>
-                                    <b>
-                                        {{ $item->kode_kunjungan }} <br> ({{ $item->unit->nama_unit }}) <br>
-                                        @if ( !empty($item->tgl_keluar) )
-                                            <b>PASIEN SUDAH KELUAR</b>
-                                        @else
-                                        {{strtoupper($item->status->status_kunjungan)}}
-                                        @endif
-                                    </b>
-                                </td>
+
                                 <td>
                                     <a href="{{ route('edit-pasien', ['rm' => $item->pasien->no_rm]) }}" target="__blank">
                                         <b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->pasien->no_rm }} <br>NIK :
                                         {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
                                     </a>
                                 </td>
-                                
-                                <td> {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                </td>
 
+                                <td>
+                                    <b>{{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}</b>
+                                    <br>
+                                    {{ $item->penjamin == null ? $item->penjamin_simrs->nama_penjamin : $item->penjamin->nama_penjamin_bpjs }}
+                                </td>
+                                <td>
+                                    <b>
+                                        {{ $item->pasien->no_rm }} | (RM PASIEN) <br>
+                                        {{ $item->kode_kunjungan }} | ({{ $item->unit->nama_unit }}) <br>
+                                        @if (!empty($item->tgl_keluar))
+                                            <b>PASIEN SUDAH KELUAR</b>
+                                        @else
+                                            {{ strtoupper($item->status->status_kunjungan) }}
+                                        @endif
+                                    </b>
+                                </td>
                                 <td>
                                     <b>
                                         Kamar : {{ $item->kamar }} <br>
@@ -203,7 +112,7 @@
                                             <small class="text-red"><b><i>(NAIK KELAS :
                                                         Dari-{{ $item->bpjsCheckHistories->klsRawatHak }}
                                                         Ke-{{ $naikKelas }} )</i></b></small>
-                                        {{-- @else
+                                            {{-- @else
                                             <small class="text-red"><b><i>( PASIEN TITIPAN )</i></b></small> --}}
                                         @endif
                                     @endif
@@ -234,10 +143,121 @@
                     </x-adminlte-datatable>
                 </div>
             </div>
-
         </div>
     </div>
 
+    <div class="modal fade" id="modalCekKunjunganPoli" style="display: none;" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cek Kunjungan Pasien</h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">No RM PASIEN</label>
+                                <input type="text" name="no_rm" id="no_rm" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default btnCreateSPRIBatal"
+                            data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-primary btn-cekKunjungan" id="btn-cekKunjungan">CARI
+                            KUNJUNGAN</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">RIWAYAT KUNJUNGAN</h4>
+                    <button type="button" class="btn btn-sm btn-default close" onclick="batalPilih()"
+                        data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-5 col-sm-3">
+                                <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
+                                    aria-orientation="vertical">
+                                    <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab"
+                                        data-toggle="pill" href="#rawat-jalan" role="tab"
+                                        aria-controls="rawat-jalan" aria-selected="false">Rawat Jalan</a>
+                                    <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab"
+                                        data-toggle="pill" href="#rawat-inap" role="tab" aria-controls="rawat-inap"
+                                        aria-selected="true">Rawat
+                                        Inap</a>
+                                </div>
+                            </div>
+                            <div class="col-7 col-sm-9">
+                                <div class="tab-content" id="vert-tabs-tabContent">
+                                    <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
+                                        aria-labelledby="rawat-jalan-tab">
+                                        <div class="info-box mb-3 bg-success ">
+                                            <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">RAWAT JALAN</span>
+                                                <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
+                                            </div>
+
+                                        </div>
+                                        <table id="table1" class="riwayatKunjungan data-table table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>KUNJUNGAN</th>
+                                                    <th>NO RM</th>
+                                                    <th>PASIEN</th>
+                                                    <th>POLI</th>
+                                                    <th>STATUS</th>
+                                                    <th>TGL MASUK</th>
+                                                    <th>TGL PULANG</th>
+                                                    <th>RANAP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
+                                        aria-labelledby="rawat-inap-tab">
+                                        <div class="info-box mb-3 bg-primary">
+                                            <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">RAWAT INAP</span>
+                                                <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
+                                            </div>
+                                        </div>
+                                        <table id="table1" class="riwayatRanap data-table table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>KUNJUNGAN</th>
+                                                    <th>NO RM</th>
+                                                    <th>PASIEN</th>
+                                                    <th>POLI</th>
+                                                    <th>STATUS</th>
+                                                    <th>TGL MASUK</th>
+                                                    <th>TGL PULANG</th>
+                                                    <th>RANAP</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('plugins.Select2', true)

@@ -53,14 +53,16 @@
                                 <div class="col-lg-6">
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <label for="exampleInputRounded0">NIK <code>*<i>( maksimal 16 angka )</i></code></label>
-                                            <input class="form-control rounded-0" name="nik_pasien_baru" type="number" 
-                                            placeholder="masukan nik">
+                                            <label for="exampleInputRounded0">NIK <code>*<i>( maksimal 16 angka
+                                                        )</i></code></label>
+                                            <input class="form-control rounded-0" name="nik_pasien_baru" type="number"
+                                                placeholder="masukan nik">
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label for="exampleInputRounded0">BPJS <code>*<i>( maksimal 16 angka )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_bpjs" type="number" 
-                                            placeholder="masukan bpjs">
+                                            <label for="exampleInputRounded0">BPJS <code>*<i>( maksimal 16 angka
+                                                        )</i></code></label>
+                                            <input class="form-control rounded-0" name="no_bpjs" type="number"
+                                                placeholder="masukan bpjs">
                                         </div>
                                         <x-adminlte-input name="nama_pasien_baru" label="Nama *"
                                             placeholder="masukan nama pasien" fgroup-class="col-md-12" disable-feedback />
@@ -108,42 +110,65 @@
                                 <div class="col-lg-6">
                                     <div class="row">
                                         <div class="form-group col-md-6">
-                                            <label for="exampleInputRounded0">No Telpon <code>*<i>( maksimal 16 angka )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_telp" type="number" 
-                                            placeholder="masukan no tlp">
+                                            <label for="exampleInputRounded0">No Telpon <code>*<i>( maksimal 16 angka
+                                                        )</i></code></label>
+                                            <input class="form-control rounded-0" name="no_telp" type="number"
+                                                placeholder="masukan no tlp">
                                         </div>
                                         <x-adminlte-select name="provinsi_pasien" label="Provinsi *" id="provinsi_pasien"
                                             fgroup-class="col-md-6">
                                             @foreach ($provinsi as $item)
-                                                <option value="{{ $item->kode_provinsi }}">
+                                                <option value="{{ $item->kode_provinsi }}"
+                                                    {{ $item->kode_provinsi == 32 ? 'selected' : '' }}>
                                                     {{ $item->nama_provinsi }}
                                                 </option>
                                             @endforeach
                                         </x-adminlte-select>
                                         <x-adminlte-select name="kabupaten_pasien" label="Kabupaten *" id="kab_pasien"
                                             fgroup-class="col-md-6">
+                                            @foreach ($kabupaten as $item)
+                                                <option value="{{ $item->kode_kabupaten_kota }}"
+                                                    {{ $item->kode_kabupaten_kota == 3209 ? 'selected' : '' }}>
+                                                    {{ $item->nama_kabupaten_kota }}
+                                                </option>
+                                            @endforeach
                                         </x-adminlte-select>
                                         <x-adminlte-select name="kecamatan_pasien" label="Kecamatan *" id="kec_pasien"
                                             fgroup-class="col-md-6">
+                                            @foreach ($kecamatan as $item)
+                                                <option value="{{ $item->kode_kecamatan }}"
+                                                    {{ $item->kode_kecamatan == 3209020 ? 'selected' : '' }}>
+                                                    {{ $item->nama_kecamatan }}
+                                                </option>
+                                            @endforeach
                                         </x-adminlte-select>
                                         <x-adminlte-select name="desa_pasien" label="Desa *" id="desa_pasien"
                                             fgroup-class="col-md-6">
                                         </x-adminlte-select>
-                                        <x-adminlte-select2 name="negara" label="Negara *" id="negara_pasien"
-                                            fgroup-class="col-md-6">
-                                            @foreach ($negara as $item)
-                                                <option value="{{ $item->id }}">
-                                                    {{ $item->nama_negara }}
-                                                </option>
-                                            @endforeach
-                                        </x-adminlte-select2>
-                                        <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_pasien"
-                                            label="Kewarganegaraan *" fgroup-class="col-md-6">
-                                            <option value="1">WNI</option>
-                                            <option value="0">WNA</option>
-                                        </x-adminlte-select>
                                         <x-adminlte-textarea name="alamat_lengkap_pasien" label="Alamat Lengkap (RT/RW) *"
-                                            placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
+                                            placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-6" />
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12 row">
+                                                <div class="col-md-6">
+                                                    <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_pasien"
+                                                        label="Kewarganegaraan *">
+                                                        <option value="1">WNI</option>
+                                                        <option value="0">WNA</option>
+                                                    </x-adminlte-select>
+                                                </div>
+                                                <div class="col-md-6" style="display: none;" id="pilih_negara">
+                                                    <label for="" class="col-md-12">Pilih Negara</label>
+                                                    <select id="negara_pasien" name="negara"
+                                                        class="form-control select2 ">
+                                                        @foreach ($negara as $item)
+                                                            <option value="{{ $item->nama_negara }}">
+                                                                {{ $item->nama_negara }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -184,6 +209,7 @@
     </div>
 @endsection
 @section('plugins.TempusDominusBs4', true)
+@section('plugins.Select2', true)
 @section('js')
     <script>
         $(document).ready(function() {
@@ -272,5 +298,20 @@
             });
         });
     </script>
-@endsection
+    <script>
+        const kewarganegaraanSelect = document.getElementById('kewarganegaraan_pasien');
+        const negaraSelect = document.getElementById('pilih_negara');
 
+        // Function to show or hide the negara select based on the selected value of kewarganegaraan
+        function toggleNegaraSelect() {
+            const selectedValue = kewarganegaraanSelect.value;
+            negaraSelect.style.display = selectedValue === '0' ? 'block' : 'none';
+        }
+
+        // Add event listener to the kewarganegaraan select
+        kewarganegaraanSelect.addEventListener('change', toggleNegaraSelect);
+
+        // Call the function initially to set the initial state of the negara select
+        toggleNegaraSelect();
+    </script>
+@endsection

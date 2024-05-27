@@ -533,10 +533,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/diagnosa-and-bridging/synch-diagnosa-assesment/post', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'synchDiagnosaAndBridging'])->name('synch.diagnosa');
     Route::post('/diagnosa-only/synch-diagnosa-assesment/post', [App\Http\Controllers\IGD\DiagnosaSynch\DiagnosaSynchController::class, 'synchDiagnosa'])->name('synch-diagnosa.only');
 
+    // IGD Bridging SEP
+    Route::post('/bridging-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'bridgingSEP'])->name('bridging-sep');
+    Route::put('/update-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'updateSep'])->name('update-sep.igd');
+    Route::post('/pengajuan-backdate', [App\Http\Controllers\IGD\SEP\SEPController::class, 'sepBackdate'])->name('backdate-sep');
+    
     // Kunjungan
     Route::get('/get-kunjungan-pasien', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'RiwayatKunjunganPasien'])->name('kunjungan-pasien.get');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'daftarKunjungan'])->name('daftar.kunjungan');
-    Route::get('/detail-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'detailKunjungan'])->name('detail.kunjungan');
+    Route::get('/detail-kunjungan/{jpdaftar}/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'detailKunjungan'])->name('detail.kunjungan');
     Route::get('/edit-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'editKunjungan'])->name('edit.kunjungan');
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
@@ -558,4 +563,11 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar/pasien-igd', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'index'])->name('daftar-igd.v1');
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
+
+     // Start Gizi
+     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
+        Route::get('/','index')->name('index');
+        Route::post('/copy-selected','copyTable')->name('copy_totable');
+    });
+    // End GIZI
 });

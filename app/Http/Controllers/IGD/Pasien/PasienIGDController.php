@@ -17,6 +17,7 @@ use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\KeluargaPasien;
 use Carbon\Carbon;
+use Auth;
 
 class PasienIGDController extends Controller
 {
@@ -53,18 +54,22 @@ class PasienIGDController extends Controller
     public function index(Request $request)
     {
         $provinsi       = Provinsi::all();
-        $provinsi_klg   = Provinsi::all();
+        $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
+        $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
         $negara         = Negara::all();
         $hb_keluarga    = HubunganKeluarga::all();
         $agama          = Agama::all();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
-        return view('simrs.igd.pasienigd.tambah_pasien', compact('provinsi','provinsi_klg','negara','hb_keluarga','agama','pekerjaan','pendidikan'));
+        return view('simrs.igd.pasienigd.tambah_pasien', 
+            compact('provinsi','kabupaten','kecamatan',
+                'negara','hb_keluarga','agama','pekerjaan','pendidikan'
+            ));
     }
 
     public function pasienBaruIGD(Request $request)
     {
-
+        // dd($request->all());
         $request->validate(
             [
                 'nik_pasien_baru'   =>'required|numeric',
@@ -77,7 +82,7 @@ class PasienIGDController extends Controller
                 'pendidikan'        =>'required',
                 'no_telp'           =>'required|numeric',
                 'provinsi_pasien'   =>'required',
-                'negara'            =>'required',
+                // 'negara'            =>'required',
                 'kewarganegaraan'   =>'required',
                 'alamat_lengkap_pasien' =>'required',
                 'nama_keluarga'     =>'required',
@@ -100,7 +105,7 @@ class PasienIGDController extends Controller
                 'no_telp.max'           =>'no telpon maksimal 13 digit',
                 'no_telp.min'           =>'no telpon minimal 12 digit',
                 'provinsi_pasien'       =>'provinsi pasien wajib dipilih',
-                'negara'                =>'negara wajib dipilih',
+                // 'negara'                =>'negara wajib dipilih',
                 'kewarganegaraan'       =>'kewarganegaraan wajib dipilih',
                 'alamat_lengkap_pasien' =>'alamat lengkap pasien wajib diisi',
                 'nama_keluarga'         =>'nama keluarga wajib diisi',
@@ -132,20 +137,20 @@ class PasienIGDController extends Controller
             'no_Bpjs'           => $request->no_bpjs,
             'nama_px'           => strtoupper($request->nama_pasien_baru),
             'jenis_kelamin'     => $request->jk,
-            'tempat_lahir'      => $request->tempat_lahir,
+            'tempat_lahir'      => strtoupper($request->tempat_lahir),
             'tgl_lahir'         => $tgl_lahir,
             'agama'             => $request->agama,
             'pendidikan'        => $request->pendidikan,
             'pekerjaan'         => $request->pekerjaan,
             'kewarganegaraan'   => $request->kewarganegaraan,
-            'negara'            => $request->negara,
+            'negara'            => $request->kewarganegaraan==1?'INDONESIA':strtoupper($request->negara),
             'propinsi'          => $request->provinsi_pasien,
             'kabupaten'         => $request->kabupaten_pasien,
             'kecamatan'         => $request->kecamatan_pasien,
             'desa'              => $request->desa_pasien,
-            'alamat'            => $request->alamat_lengkap_pasien,
+            'alamat'            => strtoupper($request->alamat_lengkap_pasien),
             'no_telp'           => $request->no_telp,
-            'no_hp'             => $request->no_hp,
+            'no_hp'             => $request->no_telp,
             'tgl_entry'         => Carbon::now(),
             'nik_bpjs'          => $request->nik_pasien_baru,
             'update_date'       => Carbon::now(),
@@ -155,6 +160,8 @@ class PasienIGDController extends Controller
             'kode_kecamatan'    => $request->kecamatan_pasien,
             'kode_desa'         => $request->desa_pasien,
             'no_ktp'            => $request->nik_pasien_baru,
+            'user_create'       =>  Auth::user()->name,
+
         ]);
         Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
         return redirect()->route('daftar-igd.v1');
@@ -193,15 +200,15 @@ class PasienIGDController extends Controller
         }
 
         $pasien->no_Bpjs            = $request->no_bpjs;
-        $pasien->nama_px            = $request->nama_pasien_baru;
+        $pasien->nama_px            = strtoupper($request->nama_pasien_baru);
         $pasien->jenis_kelamin      = $request->jk;
-        $pasien->tempat_lahir       = $request->tempat_lahir;
+        $pasien->tempat_lahir       = strtoupper($request->tempat_lahir);
         $pasien->tgl_lahir          = $request->tgl_lahir;
         $pasien->agama              = $request->agama;
         $pasien->pendidikan         = $request->pendidikan;
         $pasien->pekerjaan          = $request->pekerjaan;
         $pasien->kewarganegaraan    = $request->kewarganegaraan;
-        $pasien->negara             = $request->negara;
+        $pasien->negara             = strtoupper($request->negara);
         $pasien->propinsi           = $request->provinsi_pasien;
         $pasien->kabupaten          = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
         $pasien->kecamatan          = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
@@ -210,7 +217,7 @@ class PasienIGDController extends Controller
         $pasien->kode_kabupaten     = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
         $pasien->kode_kecamatan     = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
         $pasien->kode_desa          = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
-        $pasien->alamat             = $request->alamat_lengkap_pasien;
+        $pasien->alamat             = strtoupper($request->alamat_lengkap_pasien);
         $pasien->no_tlp             = $request->no_tlp;
         $pasien->no_hp              = $request->no_hp;
         $pasien->nik_bpjs           = $request->nik;
@@ -220,7 +227,7 @@ class PasienIGDController extends Controller
             if(is_null($klp))
             {
                 KeluargaPasien::create([
-                    'no_rm'             =>$request->rm,
+                    'no_rm'             => $request->rm,
                     'nama_keluarga'     => $request->nama_keluarga,
                     'hubungan_keluarga' => $request->hub_keluarga,
                     'alamat_keluarga'   => $request->alamat_lengkap_sodara,

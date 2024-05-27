@@ -73,10 +73,9 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="no_telp" label="No Telpon" value="{{ $pasien->no_tlp }}"
+                                    <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon" value="{{ $pasien->no_tlp==null?$pasien->no_hp:$pasien->no_tlp }}"
                                         placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
-                                    <x-adminlte-input name="no_hp" label="No Hp" placeholder="masukan hp"
-                                        value="{{ $pasien->no_hp }}" fgroup-class="col-md-6" disable-feedback />
+                                   
                                     <x-adminlte-select name="provinsi_pasien" label="Provinsi" id="provinsi_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($provinsi as $item)
@@ -304,8 +303,8 @@
                             agama: $('#agama').val(),
                             pekerjaan: $('#pekerjaan').val(),
                             pendidikan: $('#pendidikan').val(),
-                            no_tlp: $('#no_tlp').val(),
-                            no_hp: $('#no_hp').val(),
+                            no_tlp: $('#no_telp').val(),
+                            no_hp: $('#no_telp').val(),
                             provinsi_pasien: $('#provinsi_pasien').val(),
                             kabupaten_pasien: $('#kab_pasien').val(),
                             kecamatan_pasien: $('#kec_pasien').val(),

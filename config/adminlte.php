@@ -492,78 +492,22 @@ return [
 
             ],
         ],
-        // IGD VERSI 1.1
-        // [
-        //     'text'    => 'Aplikasi IGD',
-        //     'icon'    => 'fas fa-hospital-alt',
-        //     'can' => 'pendaftaran-igd',
-        //     'submenu' => [
-        //         // [
-        //         //     'text' => 'Dashboard IGD',
-        //         //     'icon'    => 'fas fa-columns',
-        //         //     'url'  => 'dashboard-igd',
-        //         //     'shift'   => 'ml-2',
-        //         //     'can' => 'pendaftaran-igd',
-        //         // ],
-        //         [
-        //             'text' => 'Daftar Antrian',
-        //             'icon'    => 'fas fa-chalkboard-teacher',
-        //             'url'  => 'list-antrian',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Update Diagnosa',
-        //             'icon'    => 'fas fa-stethoscope',
-        //             'url'  => 'daftar-diagnosa/synch-diagnosa-assesment',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Assesment Ranap',
-        //             'icon'    => 'fas fa-notes-medical',
-        //             'url'  => 'list-pasien/assesment-ranap',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Pasien Ranap',
-        //             'icon'    => 'fas fa-procedures',
-        //             'url'  => 'pasien-rawat-inap',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Pasien Kecelakaan',
-        //             'icon'    => 'fas fa-ambulance',
-        //             'url'  => 'list/pasien-kecelakaan',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Pasien BPJS PROSES',
-        //             'icon'    => 'fas fa-thumbtack',
-        //             'url'  => 'pasien-bpjsproses/list-pasien',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Kunjungan Pasien',
-        //             'icon'    => 'fas fa-address-book',
-        //             'url'  => 'daftar-kunjungan',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
-        //         [
-        //             'text' => 'Riwayat Pendaftaran byUser',
-        //             'icon'    => 'fas fa-user-plus',
-        //             'url'  => 'daftar-kunjungan-byuser',
-        //             'shift'   => 'ml-2',
-        //             'can' => 'pendaftaran-igd',
-        //         ],
+        // KEUANGAN
+        [
+            'text'    => 'Aplikasi Keuangan',
+            'icon'    => 'fas fa-file-invoice-dollar',
+            'can' => 'pendaftaran-igd',
+            'submenu' => [
+                [
+                    'text' => 'Data',
+                    'icon'    => 'fas fa-receipt',
+                    'url'  => 'keuangan',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
 
-        //     ],
-        // ],
+            ],
+        ],
         // PENGELOLAAN
         [
             'text'    => 'Pengelolaan',
