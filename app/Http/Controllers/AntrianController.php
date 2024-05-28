@@ -2170,12 +2170,14 @@ class AntrianController extends APIController
             } else {
                 $printer = env('PRINTER_CHECKIN2');
             }
+
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
             $printer->close();
         } catch (\Throwable $th) {
             return $this->sendError("Printer mesin antrian mati", 500);
         }
+
         // checking request
         $validator = Validator::make(request()->all(), [
             "kodebooking" => "required",
@@ -2193,7 +2195,6 @@ class AntrianController extends APIController
             if ($antrian->taskid == 99) {
                 return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
             }
-            $now = Carbon::now();
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
             $tarifadm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
@@ -2454,7 +2455,7 @@ class AntrianController extends APIController
                             'counter' => $counter,
                             'no_rm' => $antrian->norm,
                             'kode_unit' => $unit->kode_unit,
-                            'tgl_masuk' => $now,
+                            'tgl_masuk' => now(),
                             'kode_paramedis' => $paramedis->kode_paramedis,
                             'status_kunjungan' => 8,
                             'prefix_kunjungan' => $unit->prefix_unit,
@@ -2466,29 +2467,31 @@ class AntrianController extends APIController
                             'no_sep' =>  $request->nomorsep,
                             'no_rujukan' => $antrian->nomorrujukan,
                             'diagx' =>   $request->catatan,
-                            'created_at' => $now,
+                            'created_at' => now(),
                             'keterangan2' => 'MESIN_2',
                         ]
                     );
                     $kunjungan = Kunjungan::where('no_rm', $antrian->norm)->where('counter', $counter)->first();
-                    // get transaksi sebelumnya
-                    // $trx_lama = TransaksiDB::where('unit', $unit->kode_unit)
-                    //     ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
-                    //     ->count();
-                    // get kode layanan
-                    // $kodelayanan = $unit->prefix_unit . $now->format('y') . $now->format('m') . $now->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
                     $kodelayanan = collect(DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-                    //  insert transaksi
-                    // $trx_baru = TransaksiDB::create([
-                    //     'tgl' => $now->format('Y-m-d'),
-                    //     'no_trx_layanan' => $kodelayanan,
-                    //     'unit' => $unit->kode_unit,
-                    // ]);
+                    if ($kodelayanan == null) {
+                        //   get transaksi sebelumnya
+                        $trx_lama = Transaksi::where('unit', $unit->kode_unit)
+                            ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
+                            ->count();
+                        // get kode layanan
+                        $kodelayanan = $unit->prefix_unit . now()->format('y') . now()->format('m') . now()->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                        //  insert transaksi
+                        $trx_baru = Transaksi::create([
+                            'tgl' => now()->format('Y-m-d'),
+                            'no_trx_layanan' => $kodelayanan,
+                            'unit' => $unit->kode_unit,
+                        ]);
+                    }
                     //  insert layanan header
                     $layananbaru = Layanan::create(
                         [
                             'kode_layanan_header' => $kodelayanan,
-                            'tgl_entry' => $now,
+                            'tgl_entry' => now(),
                             'kode_kunjungan' => $kunjungan->kode_kunjungan,
                             'kode_unit' => $unit->kode_unit,
                             'kode_tipe_transaksi' => $tipetransaksi,
@@ -2504,7 +2507,7 @@ class AntrianController extends APIController
                     $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
                     $karcis = LayananDetail::create(
                         [
-                            'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
+                            'id_layanan_detail' => "DET" . now()->format('ymd') . $nomorlayanandet,
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
@@ -2515,9 +2518,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
                             'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
-                            'tgl_layanan_detail' =>  $now,
+                            'tgl_layanan_detail' =>   now(),
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>  $now,
+                            'tgl_layanan_detail_2' =>   now(),
                         ]
                     );
                     //  insert layanan detail admin
@@ -2525,7 +2528,7 @@ class AntrianController extends APIController
                     $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
                     $adm = LayananDetail::create(
                         [
-                            'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
+                            'id_layanan_detail' => "DET" .  now()->format('ymd') . $nomorlayanandet,
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
@@ -2536,9 +2539,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
                             'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
                             'kode_dokter1' => 0,
-                            'tgl_layanan_detail' =>  $now,
+                            'tgl_layanan_detail' =>  now(),
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>  $now,
+                            'tgl_layanan_detail_2' =>  now(),
                         ]
                     );
                     //  update layanan header total tagihan
@@ -2569,7 +2572,7 @@ class AntrianController extends APIController
                 // insert tracer tc_tracer_header
                 $tracerbaru = Tracer::updateOrCreate([
                     'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                    'tgl_tracer' => $now->format('Y-m-d'),
+                    'tgl_tracer' =>  now()->format('Y-m-d'),
                     'id_status_tracer' => 1,
                     'cek_tracer' => "N",
                 ]);
@@ -2587,8 +2590,8 @@ class AntrianController extends APIController
                 $antrian->update([
                     "taskid" => $request->taskid,
                     "keterangan" => $request->keterangan,
-                    "taskid1" => $now,
-                    "taskid3" => $now,
+                    "taskid1" => now(),
+                    "taskid3" => now(),
                     "user1" => "Mesin Antrian",
                 ]);
                 // print antrian

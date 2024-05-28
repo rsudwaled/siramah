@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 @section('title', 'Monitoring Antrian')
 @section('content_header')
-    <h1>Monitoring Antrian </h1>
+    <h1>Monitoring Antrians</h1>
 @stop
 
 @section('content')
@@ -91,18 +91,18 @@
                         'No BPJS',
                         'Nama Pasien',
                         'Taskid',
-                        'Action',
-                        'Jenis Kjg',
-                        'Jenis Px',
-                        'Poliklinik',
-                        'Dokter',
                         'Kodeboking',
                         'Taskid3',
                         'Taskid4',
                         'Taskid5',
                         'Taskid6',
                         'Taskid7',
-                        'Cara Daftar',
+                        'Action',
+                        'JenisKunjungan',
+                        'JenisPasien',
+                        'Poliklinik',
+                        'Dokter',
+                        'Method',
                     ];
                     $config['order'] = ['5', 'asc'];
                     $config['paging'] = false;
@@ -114,126 +114,99 @@
                 <x-adminlte-datatable id="tableAntrian" class="nowrap text-xs" :heads="$heads" :config="$config" bordered
                     hoverable compressed>
                     @isset($antrians)
-                        @foreach ($antrians->where('method', '!=', 'Offline') as $item)
-                            <tr>
+                        @foreach ($antrians->where('taskid', '!=', 99) as $item)
+<tr>
                                 <td>{{ $item->tanggalperiksa }}</td>
                                 <td>{{ $item->angkaantrean }}</td>
                                 <td>{{ $item->norm }}</td>
-                                <td>
-                                    @isset($item->nomorkartu)
-                                        <a class="text-dark"
-                                            href="{{ route('monitoringPelayananPeserta') }}?tanggal={{ now()->format('Y-m-d') }}&nomorkartu={{ $item->nomorkartu }}"
-                                            target="blank">{{ $item->nomorkartu }}</a>
-                                    @endisset
-                                </td>
+                                <td>{{ $item->nomorkartu }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td>
                                     @switch($item->taskid)
-                                        @case(0)
-                                            <span class="badge bg-secondary">96.Belum Checkin</span>
-                                        @break
+@case(0)
+<span class="badge bg-secondary">96.Belum Checkin</span>
+@break
 
-                                        @case(1)
-                                            <span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
-                                        @break
+@case(1)
+<span class="badge bg-secondary">{{ $item->taskid }}. Chekcin</span>
+@break
 
-                                        @case(2)
-                                            <span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
-                                        @break
+@case(2)
+<span class="badge bg-secondary">{{ $item->taskid }}. Pendaftaran</span>
+@break
 
-                                        @case(3)
-                                            @if ($item->status_api == 0)
-                                                <span class="badge bg-warning">{{ $item->taskid }}. Belum
+@case(3)
+@if ($item->status_api == 0)
+<span class="badge bg-warning">{{ $item->taskid }}. Belum
                                                     Pembayaran</span>
-                                            @else
-                                                <span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
-                                            @endif
-                                        @break
+@else
+<span class="badge bg-warning">{{ $item->taskid }}. Tunggu Poli</span>
+@endif
+@break
 
-                                        @case(4)
-                                            <span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
-                                        @break
+@case(4)
+<span class="badge bg-success">{{ $item->taskid }}. Periksa Poli</span>
+@break
 
-                                        @case(5)
-                                            @if ($item->status_api == 0)
-                                                <span class="badge bg-success">{{ $item->taskid }}. Tunggu Farmasi</span>
-                                            @endif
+@case(5)
+@if ($item->status_api == 0)
+<span class="badge bg-success">{{ $item->taskid }}. Tunggu Farmasi</span>
+@endif
                                             @if ($item->status_api == 1)
-                                                <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
-                                            @endif
-                                        @break
+<span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+@endif
+@break
 
-                                        @case(6)
-                                            <span class="badge bg-warning">{{ $item->taskid }}. Racik Farmasi</span>
-                                        @break
+@case(6)
+<span class="badge bg-warning">{{ $item->taskid }}. Racik Farmasi</span>
+@break
 
-                                        @case(7)
-                                            <span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
-                                        @break
+@case(7)
+<span class="badge bg-success">{{ $item->taskid }}. Selesai</span>
+@break
 
-                                        @case(99)
-                                            <span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
-                                        @break
+@case(99)
+<span class="badge bg-danger">{{ $item->taskid }}. Batal</span>
+@break
 
-                                        @default
-                                    @endswitch
+@default
+@endswitch
                                 </td>
-                                <td>
-                                    @switch($item->taskid)
-                                        @case(3)
-                                            @if ($item->status_api == 1)
-                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
-                                                    data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
-                                            @endif
-                                        @break
-
-                                        @case(4)
-                                            <x-adminlte-button class="btn-xs mt-1 btnLayani" label="4. Layani" theme="success"
-                                                icon="fas fa-hand-holding-medical" data-toggle="tooltop"
-                                                title="Layani Pasien {{ $item->nomorantrean }}" data-id="{{ $item->id }}" />
-                                        @break
-
-                                        @default
-                                        @break
-                                    @endswitch
-                                    <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times" data-toggle="tooltop"
-                                        title="Batal Antrian {{ $item->nomorantrean }}" onclick="btnBatal(this)"
-                                        data-kodebooking="{{ $item->kodebooking }}" data-nama="{{ $item->nama }}" />
-                                </td>
-                                <td>
-                                    @switch($item->jeniskunjungan)
-                                        @case(1)
-                                            Rujukan FKTP
-                                        @break
-
-                                        @case(2)
-                                            Umum
-                                        @break
-
-                                        @case(3)
-                                            Kontrol
-                                        @break
-
-                                        @case(4)
-                                            Rujukan RS
-                                        @break
-
-                                        @default
-                                    @endswitch
-                                </td>
-                                <td>{{ $item->jenispasien }}</td>
-                                <td>{{ $item->namapoli }}</td>
-                                <td>{{ $item->namadokter }}</td>
                                 <td>{{ $item->kodebooking }}</td>
                                 <td>{{ $item->taskid3 }}</td>
                                 <td>{{ $item->taskid4 }}</td>
                                 <td>{{ $item->taskid5 }}</td>
                                 <td>{{ $item->taskid6 }}</td>
                                 <td>{{ $item->taskid7 }}</td>
+                                <td></td>
+                                <td>
+                                    @switch($item->jeniskunjungan)
+@case(1)
+Rujukan FKTP
+@break
+
+@case(2)
+Umum
+@break
+
+@case(3)
+Kontrol
+@break
+
+@case(4)
+Rujukan RS
+@break
+
+@default
+@endswitch
+                                </td>
+                                <td>{{ $item->jenispasien }}</td>
+                                <td>{{ $item->namapoli }}</td>
+                                <td>{{ $item->namadokter }}</td>
+
                                 <td>{{ $item->method }}</td>
                             </tr>
-                        @endforeach
+@endforeach
                     @endisset
                 </x-adminlte-datatable>
             </x-adminlte-card>
@@ -312,126 +285,126 @@
 @stop
 
 @section('plugins.Select2', true)
-@section('plugins.Datatables', true)
-@section('plugins.TempusDominusBs4', true)
+        @section('plugins.Datatables', true)
+    @section('plugins.TempusDominusBs4', true)
 @section('plugins.Sweetalert2', true)
 
 @section('js')
-    <script>
-        function btnBatal(button) {
-            var kodebooking = $(button).data("kodebooking");
-            var nama = $(button).data("nama");
-            Swal.fire({
-                title: "Konfirmasi Pembatalan Antrian",
-                text: "Alasan pembatalan antrian atas nama pasien " + nama + " ?",
-                input: "text",
-                inputAttributes: {
-                    autocapitalize: "off"
-                },
-                showCancelButton: true,
-                confirmButtonText: "Batal",
-                showLoaderOnConfirm: true,
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.LoadingOverlay("show");
-                    var url = "{{ route('batal_antrian') }}";
-                    $.post(url, {
-                            kodebooking: kodebooking,
-                            keterangan: result.value,
-                        },
-                        function(res, status) {
-                            $.LoadingOverlay("hide");
-                            Swal.fire({
-                                title: res.metadata.message,
-                                icon: 'info',
-                                confirmButtonText: "Oke",
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $.LoadingOverlay("show");
-                                    location.reload();
-                                }
+        <script>
+            function btnBatal(button) {
+                var kodebooking = $(button).data("kodebooking");
+                var nama = $(button).data("nama");
+                Swal.fire({
+                    title: "Konfirmasi Pembatalan Antrian",
+                    text: "Alasan pembatalan antrian atas nama pasien " + nama + " ?",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "off"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Batal",
+                    showLoaderOnConfirm: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.LoadingOverlay("show");
+                        var url = "{{ route('batal_antrian') }}";
+                        $.post(url, {
+                                kodebooking: kodebooking,
+                                keterangan: result.value,
+                            },
+                            function(res, status) {
+                                $.LoadingOverlay("hide");
+                                Swal.fire({
+                                    title: res.metadata.message,
+                                    icon: 'info',
+                                    confirmButtonText: "Oke",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $.LoadingOverlay("show");
+                                        location.reload();
+                                    }
+                                });
                             });
-                        });
-                }
-            });
-        }
-    </script>
-    <script>
-        $(function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $('.btnLayani').click(function() {
-                var antrianid = $(this).data('id');
-                $.LoadingOverlay("show");
-                var url = "{{ route('antrian.index') }}/" + antrianid + '/edit'
-                $.get(url, function(data) {
-                    $('#kodebooking').html(data.kodebooking);
-                    $('#angkaantrean').html(data.angkaantrean);
-                    $('#nomorantrean').html(data.nomorantrean);
-                    $('#tanggalperiksa').html(data.tanggalperiksa);
-                    $('#norm').html(data.norm);
-                    $('#nik').html(data.nik);
-                    $('#nomorkartu').html(data.nomorkartu);
-                    $('#nama').html(data.nama);
-                    $('#nohp').html(data.nohp);
-                    $('#nomorrujukan').html(data.nomorrujukan);
-                    $('#nomorsuratkontrol').html(data.nomorsuratkontrol);
-                    $('#nomorsep').html(data.nomorsep);
-                    $('#jenispasien').html(data.jenispasien);
-                    $('#namapoli').html(data.namapoli);
-                    $('#namadokter').html(data.namadokter);
-                    $('#jampraktek').html(data.jampraktek);
-                    switch (data.jeniskunjungan) {
-                        case "1":
-                            var jeniskunjungan = "Rujukan FKTP";
-                            break;
-                        case "2":
-                            var jeniskunjungan = "Rujukan Internal";
-                            break;
-                        case "3":
-                            var jeniskunjungan = "Kontrol";
-                            break;
-                        case "4":
-                            var jeniskunjungan = "Rujukan Antar RS";
-                            break;
-                        default:
-                            break;
                     }
-                    $('#jeniskunjungan').html(jeniskunjungan);
-                    $('#user').html(data.user);
-                    $('#antrianid').val(antrianid);
-                    $('#namapoli').val(data.namapoli);
-                    $('#namap').val(data.kodepoli);
-                    $('#namadokter').val(data.namadokter);
-                    $('#kodepoli').val(data.kodepoli);
-                    $('#kodedokter').val(data.kodedokter);
-                    $('#jampraktek').val(data.jampraktek);
-                    $('#nomorsep_suratkontrol').val(data.nomorsep);
-                    $('#kodepoli_suratkontrol').val(data.kodepoli);
-                    $('#namapoli_suratkontrol').val(data.namapoli);
-                    var urlLanjutFarmasi = "{{ route('lanjutFarmasi') }}?kodebooking=" + data
-                        .kodebooking;
-                    $("#lanjutFarmasi").attr("href", urlLanjutFarmasi);
+                });
+            }
+        </script>
+        <script>
+            $(function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $('.btnLayani').click(function() {
+                    var antrianid = $(this).data('id');
+                    $.LoadingOverlay("show");
+                    var url = "{{ route('antrian.index') }}/" + antrianid + '/edit'
+                    $.get(url, function(data) {
+                        $('#kodebooking').html(data.kodebooking);
+                        $('#angkaantrean').html(data.angkaantrean);
+                        $('#nomorantrean').html(data.nomorantrean);
+                        $('#tanggalperiksa').html(data.tanggalperiksa);
+                        $('#norm').html(data.norm);
+                        $('#nik').html(data.nik);
+                        $('#nomorkartu').html(data.nomorkartu);
+                        $('#nama').html(data.nama);
+                        $('#nohp').html(data.nohp);
+                        $('#nomorrujukan').html(data.nomorrujukan);
+                        $('#nomorsuratkontrol').html(data.nomorsuratkontrol);
+                        $('#nomorsep').html(data.nomorsep);
+                        $('#jenispasien').html(data.jenispasien);
+                        $('#namapoli').html(data.namapoli);
+                        $('#namadokter').html(data.namadokter);
+                        $('#jampraktek').html(data.jampraktek);
+                        switch (data.jeniskunjungan) {
+                            case "1":
+                                var jeniskunjungan = "Rujukan FKTP";
+                                break;
+                            case "2":
+                                var jeniskunjungan = "Rujukan Internal";
+                                break;
+                            case "3":
+                                var jeniskunjungan = "Kontrol";
+                                break;
+                            case "4":
+                                var jeniskunjungan = "Rujukan Antar RS";
+                                break;
+                            default:
+                                break;
+                        }
+                        $('#jeniskunjungan').html(jeniskunjungan);
+                        $('#user').html(data.user);
+                        $('#antrianid').val(antrianid);
+                        $('#namapoli').val(data.namapoli);
+                        $('#namap').val(data.kodepoli);
+                        $('#namadokter').val(data.namadokter);
+                        $('#kodepoli').val(data.kodepoli);
+                        $('#kodedokter').val(data.kodedokter);
+                        $('#jampraktek').val(data.jampraktek);
+                        $('#nomorsep_suratkontrol').val(data.nomorsep);
+                        $('#kodepoli_suratkontrol').val(data.kodepoli);
+                        $('#namapoli_suratkontrol').val(data.namapoli);
+                        var urlLanjutFarmasi = "{{ route('lanjutFarmasi') }}?kodebooking=" + data
+                            .kodebooking;
+                        $("#lanjutFarmasi").attr("href", urlLanjutFarmasi);
 
-                    var urlLanjutFarmasiRacikan =
-                        "{{ route('lanjutFarmasiRacikan') }}?kodebooking=" + data
-                        .kodebooking;
-                    $("#lanjutFarmasiRacikan").attr("href", urlLanjutFarmasiRacikan);
+                        var urlLanjutFarmasiRacikan =
+                            "{{ route('lanjutFarmasiRacikan') }}?kodebooking=" + data
+                            .kodebooking;
+                        $("#lanjutFarmasiRacikan").attr("href", urlLanjutFarmasiRacikan);
 
-                    var urlSelesaiPoliklinik = "{{ route('selesaiPoliklinik') }}?kodebooking=" +
-                        data
-                        .kodebooking;
-                    $("#selesaiPoliklinik").attr("href", urlSelesaiPoliklinik);
-                    $('#modalPelayanan').modal('show');
-                    $.LoadingOverlay("hide", true);
-                })
+                        var urlSelesaiPoliklinik = "{{ route('selesaiPoliklinik') }}?kodebooking=" +
+                            data
+                            .kodebooking;
+                        $("#selesaiPoliklinik").attr("href", urlSelesaiPoliklinik);
+                        $('#modalPelayanan').modal('show');
+                        $.LoadingOverlay("hide", true);
+                    })
+                });
+                $('.btnSuratKontrol').click(function() {
+                    $('#modalSuratKontrol').modal('show');
+                });
             });
-            $('.btnSuratKontrol').click(function() {
-                $('#modalSuratKontrol').modal('show');
-            });
-        });
-    </script>
-@endsection
+        </script>
+@endsection)
