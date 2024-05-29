@@ -6,34 +6,6 @@
             <div class="col-sm-6">
                 <h5>DAFTAR / BPJS PROSES</h5>
             </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item">
-                        <form action="" method="get">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <label>Filter Data</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="input-group">
-                                                <input id="new-event" type="date" name="date" class="form-control"
-                                                    value="{{ $request->date != null ? \Carbon\Carbon::parse($request->date)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                    placeholder="Event Title">
-                                                <div class="input-group-append">
-                                                    <button id="add-new-event" type="submit"
-                                                        class="btn btn-primary btn-sm withLoad">Cari</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </li>
-                </ol>
-            </div>
         </div>
     </div>
 @stop
@@ -41,26 +13,39 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card card-primary card-outline">
-                <div class="card-header">
-                    <h3 class="card-title">Data Pasien BPJS Proses</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn bg-purple btn-sm">
-                            <i class="far fa-id-badge"></i>
-                        </button>
-                        <button type="button" class="btn btn-success btn-sm">
-                            <i class="fas fa-plus-square"></i>
-                        </button>
-                        <button onClick="window.location.reload();" type="button" class="btn btn-warning btn-sm">
-                            <i class="fas fa-sync-alt"></i>
-                        </button>
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-6">
+                            <form action="" method="get">
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input id="new-event" type="date" name="date" class="form-control"
+                                            value="{{ $request->date != null ? \Carbon\Carbon::parse($request->date)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <div class="input-group-append">
+                                            <button id="add-new-event" type="submit"
+                                                class="btn btn-primary btn-sm withLoad">CARI DATA</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-lg-6 text-right">
+                            <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                                <i class="fas fa-sync"></i> Refresh</a>
+                        </div>
                     </div>
-
-                </div>
-
-                <div class="card-body mt-1">
                     <div class="table-responsive mailbox-messages">
                         @php
-                            $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Tgl Masuk', 'Diagnosa', 'Status Kunjungan', 'Detail'];
+                            $heads = [
+                                'Pasien',
+                                'Alamat',
+                                'Kunjungan',
+                                'Tgl Masuk',
+                                'Diagnosa',
+                                'Status Kunjungan',
+                                'Detail',
+                            ];
                             $config['order'] = false;
                             $config['paging'] = false;
                             $config['info'] = false;

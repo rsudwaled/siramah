@@ -795,7 +795,14 @@ return [
                         [
                             'text' => 'Index Operasi',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'index-operasi',
+                            'url'  => 'laporan-index/index-operasi ',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'Index Kematian',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'laporan-index/index-kematian',
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],

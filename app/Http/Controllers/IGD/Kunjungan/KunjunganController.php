@@ -55,22 +55,21 @@ class KunjunganController extends Controller
             ->where('ts_kunjungan.ref_kunjungan','=',0)
             ->orderBy('ts_kunjungan.tgl_masuk', 'desc');
 
-       
         if($request->tanggal && !empty($request->tanggal))
         {
             $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
         }
 
-        if($request->unit && !empty($request->unit))
-        {
-            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
-        }
+        // if($request->unit && !empty($request->unit))
+        // {
+        //     $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        // }
 
         if(empty($request->tanggal) && empty($request->unit)){
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
         // $kunjungan = $query->get();
-        $kunjungan  = $query->whereIn('nama_unit',['UGD','UGK'])->get();
+        $kunjungan  = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         $unit       = Unit::where('kelas_unit', 1)->get();
         $paramedis  = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         return view('simrs.igd.kunjungan.kunjungan_now', compact('kunjungan','request','unit','paramedis'));

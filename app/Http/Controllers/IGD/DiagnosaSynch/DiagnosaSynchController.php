@@ -18,7 +18,6 @@ class DiagnosaSynchController extends APIController
 {
     public function vDiagnosaAssesment(Request $request)
     {
-        
         $query = DiagnosaFrunit::with(['pasien','jpDaftar'])->where('status_bridging', 0)
                   ->where('isSynch', 0)->orderBy('input_date','desc');
                 

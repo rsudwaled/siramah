@@ -172,6 +172,7 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 //     Route::get('encounter/', [EncounterController::class, 'index'])->name('encounter_index');
 //     Route::post('encounter/store', [EncounterController::class, 'encounter_store_api'])->name('encounter_store_api');
 // });
+
 // PENUNJANG
 // Route::prefix('penunjang')->name('api.penunjang.')->group(function () {
 //     Route::get('cari_pasien', [PenunjangController::class, 'cari_pasien'])->name('cari_pasien');
@@ -192,6 +193,7 @@ Route::prefix('simrs')->name('api.simrs.')->group(function () {
 //     Route::get('ruangan_get', [RISController::class, 'ruangan_get'])->name('ruangan_get');
 //     Route::get('order_get', [RISController::class, 'order_get'])->name('order_get');
 // });
+
 // INACBG
 Route::prefix('eclaim')->name('api.eclaim.')->group(function () {
     Route::get('search_diagnosis', [InacbgController::class, 'search_diagnosis'])->name('search_diagnosis');

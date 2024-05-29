@@ -414,6 +414,22 @@ Route::middleware('auth')->group(function () {
     Route::get('Export/rawat-inap/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'exportExcel'])->name('diagnosa-pola-penyakit.export');
     Route::get('Export/rawat-jalan/diagnosa-pola-penyakit', [DiagnosaPolaPenyakitController::class, 'exportExcelRajal'])->name('diagnosa-pola-penyakit-rajal.export');
 
+    // Display Antrian
+    Route::controller(App\Http\Controllers\DisplayAntrian\DisplayAntrianController::class)->prefix('display-antrian')->name('simrs.display-antrian.')->group(function () {
+        Route::get('/farmasi','farmasi')->name('farmasi');
+    });
+    // Laporan Index
+    Route::controller(App\Http\Controllers\LaporanIndex\LaporanIndexRMController::class)->prefix('laporan-index')->name('laporan-index.')->group(function () {
+        // Laporan Index
+        Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('index_operasi.')->group(function () {
+            Route::get('/','index')->name('index');
+        });
+        Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-kematian')->name('index_kematian.')->group(function () {
+            Route::get('/','indexKematian')->name('index');
+        });
+
+    });
+
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('laporanindex.index_operasi.')->group(function () {
         Route::get('/','index')->name('index');
@@ -442,6 +458,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/monev/store','storeMonev')->name('store.monev');
         Route::get('/monev-get','getMonev')->name('get-monev');
     });
+  
     // End GIZI
 
     // VIEW TERBARU
