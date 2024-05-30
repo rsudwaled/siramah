@@ -323,16 +323,37 @@ return [
             'icon'    => 'fas fa-clinic-medical',
             'submenu' => [
                 [
-                    'text' => 'Aplikasi Mesin Antrian',
+                    'text' => 'Anjungan Antrian',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'antrianConsole',
                     'shift'   => 'ml-2',
                     'can' => ['pendaftaran', 'rekam-medis'],
                 ],
                 [
-                    'text' => 'Aplikasi Checkin Antrian',
+                    'text' => 'Anjungan Checkin Antrian',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'checkinAntrian',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 2',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayAntrianPoliklinik',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 3',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayAntrianPoliklinik',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                ],
+                [
+                    'text' => 'Display Antrian Farmasi',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayAntrianFarmasi',
                     'shift'   => 'ml-2',
                     'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
                 ],
@@ -1727,5 +1748,5 @@ return [
     |
     */
 
-    'livewire' => false,
+    'livewire' => true,
 ];

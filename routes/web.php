@@ -102,6 +102,14 @@ Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli
 Route::get('daftarUmumOffline', [PendaftaranController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
 Route::get('cekPrinter', [ThermalPrintController::class, 'cekPrinter'])->name('cekPrinter');
 Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
+// display antrian
+Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAntrianPoliklinik'])->name('displayAntrianPoliklinik');
+Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
+Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
+Route::get('displayantrian2', [PoliklinikController::class, 'displayantrian2'])->name('displayantrian2');
+Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
+
+
 // cppt
 Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
 Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
@@ -537,7 +545,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/bridging-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'bridgingSEP'])->name('bridging-sep');
     Route::put('/update-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'updateSep'])->name('update-sep.igd');
     Route::post('/pengajuan-backdate', [App\Http\Controllers\IGD\SEP\SEPController::class, 'sepBackdate'])->name('backdate-sep');
-    
+
     // Kunjungan
     Route::get('/get-kunjungan-pasien', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'RiwayatKunjunganPasien'])->name('kunjungan-pasien.get');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'daftarKunjungan'])->name('daftar.kunjungan');
