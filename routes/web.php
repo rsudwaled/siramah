@@ -60,6 +60,7 @@ use App\Http\Controllers\RanapController;
 // rekam medis
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -117,7 +118,7 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
-    Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
+    Route::get('profile', UserProfil::class)->name('profile'); #ok
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
@@ -429,49 +430,48 @@ Route::middleware('auth')->group(function () {
 
     // Display Antrian
     Route::controller(App\Http\Controllers\DisplayAntrian\DisplayAntrianController::class)->prefix('display-antrian')->name('simrs.display-antrian.')->group(function () {
-        Route::get('/farmasi','farmasi')->name('farmasi');
+        Route::get('/farmasi', 'farmasi')->name('farmasi');
     });
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\LaporanIndexRMController::class)->prefix('laporan-index')->name('laporan-index.')->group(function () {
         // Laporan Index
         Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('index_operasi.')->group(function () {
-            Route::get('/','index')->name('index');
+            Route::get('/', 'index')->name('index');
         });
         Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-kematian')->name('index_kematian.')->group(function () {
-            Route::get('/','indexKematian')->name('index');
+            Route::get('/', 'indexKematian')->name('index');
         });
-
     });
 
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('laporanindex.index_operasi.')->group(function () {
-        Route::get('/','index')->name('index');
+        Route::get('/', 'index')->name('index');
     });
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexDokterController::class)->prefix('index-dokter')->name('laporanindex.index_dokter.')->group(function () {
-        Route::get('/','index')->name('index');
+        Route::get('/', 'index')->name('index');
     });
 
     // Start Gizi
     Route::controller(App\Http\Controllers\Gizi\GiziController::class)->prefix('gizi')->name('simrs.gizi.')->group(function () {
-        Route::get('/','index')->name('index');
-        Route::get('/{kunjungan}/{counter}/assesment','createAssesment')->name('create.assesment');
+        Route::get('/', 'index')->name('index');
+        Route::get('/{kunjungan}/{counter}/assesment', 'createAssesment')->name('create.assesment');
         // assesement
-        Route::get('/get-assesment','getAssesment')->name('get-assesment');
-        Route::post('/assesment','addAssesment')->name('add.assesment');
+        Route::get('/get-assesment', 'getAssesment')->name('get-assesment');
+        Route::post('/assesment', 'addAssesment')->name('add.assesment');
 
-        Route::post('/assesment/store','storeAssesment')->name('store.assesment');
+        Route::post('/assesment/store', 'storeAssesment')->name('store.assesment');
         // diagnosis gizi
-        Route::post('/diagnosis/store','storeDiagnosis')->name('store.diagnosis');
-        Route::get('/diagnosis-get','getDiagnosis')->name('get-diagnosis');
+        Route::post('/diagnosis/store', 'storeDiagnosis')->name('store.diagnosis');
+        Route::get('/diagnosis-get', 'getDiagnosis')->name('get-diagnosis');
         // intervensi gizi
-        Route::post('/intervensi/store','storeIntervensi')->name('store.intervensi');
-        Route::get('/intervensi-get','getIntervensi')->name('get-intervensi');
+        Route::post('/intervensi/store', 'storeIntervensi')->name('store.intervensi');
+        Route::get('/intervensi-get', 'getIntervensi')->name('get-intervensi');
         // monitoring dan evaluasi
-        Route::post('/monev/store','storeMonev')->name('store.monev');
-        Route::get('/monev-get','getMonev')->name('get-monev');
+        Route::post('/monev/store', 'storeMonev')->name('store.monev');
+        Route::get('/monev-get', 'getMonev')->name('get-monev');
     });
-  
+
     // End GIZI
 
     // VIEW TERBARU
@@ -589,10 +589,10 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
 
-     // Start Gizi
-     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
-        Route::get('/','index')->name('index');
-        Route::post('/copy-selected','copyTable')->name('copy_totable');
+    // Start Gizi
+    Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/copy-selected', 'copyTable')->name('copy_totable');
     });
     // End GIZI
 });

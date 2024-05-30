@@ -48,7 +48,7 @@ return [
     */
 
     'google_fonts' => [
-        'allowed' => true,
+        'allowed' => false,
     ],
 
     /*
@@ -1755,5 +1755,5 @@ return [
     |
     */
 
-    'livewire' => true,
+    'livewire' => false,
 ];

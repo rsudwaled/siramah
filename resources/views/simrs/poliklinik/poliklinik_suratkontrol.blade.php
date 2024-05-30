@@ -179,10 +179,12 @@
                                 </td>
                                 <td>
                                     @if ($item->order_obat_header)
-                                        {{ substr($item->order_obat_header->kode_layanan_header, 12) }}
                                         @if ($item->order_obat_header->kode_unit == 4008)
+                                            {{ substr($item->order_obat_header->kode_layanan_header, 12) }}
                                             DEPO 2
-                                        @else
+                                        @endif
+                                        @if ($item->order_obat_header->kode_unit == 4002)
+                                            {{ substr($item->order_obat_header->kode_layanan_header, 12) }}
                                             DEPO 1
                                         @endif
                                     @else
