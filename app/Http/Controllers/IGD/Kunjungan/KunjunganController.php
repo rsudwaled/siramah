@@ -55,22 +55,21 @@ class KunjunganController extends Controller
             ->where('ts_kunjungan.ref_kunjungan','=',0)
             ->orderBy('ts_kunjungan.tgl_masuk', 'desc');
 
-       
         if($request->tanggal && !empty($request->tanggal))
         {
             $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
         }
 
-        if($request->unit && !empty($request->unit))
-        {
-            $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
-        }
+        // if($request->unit && !empty($request->unit))
+        // {
+        //     $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        // }
 
         if(empty($request->tanggal) && empty($request->unit)){
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
         // $kunjungan = $query->get();
-        $kunjungan  = $query->whereIn('nama_unit',['UGD','UGK'])->get();
+        $kunjungan  = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         $unit       = Unit::where('kelas_unit', 1)->get();
         $paramedis  = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         return view('simrs.igd.kunjungan.kunjungan_now', compact('kunjungan','request','unit','paramedis'));
@@ -121,7 +120,7 @@ class KunjunganController extends Controller
             $kunjungan = \DB::connection('mysql2')->table('ts_kunjungan')
             ->where('ts_kunjungan.kode_kunjungan', $kunjungan)
             ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
-            ->join('mt_histories_igd_bpjs','ts_kunjungan.kode_kunjungan','=', 'mt_histories_igd_bpjs.kode_kunjungan' )
+            // ->join('mt_histories_igd_bpjs','ts_kunjungan.kode_kunjungan','=', 'mt_histories_igd_bpjs.kode_kunjungan' )
             ->join('mt_alasan_masuk','ts_kunjungan.id_alasan_masuk','=', 'mt_alasan_masuk.id' )
             ->join('mt_penjamin','ts_kunjungan.kode_penjamin','=', 'mt_penjamin.kode_penjamin' )
             ->select(
@@ -149,6 +148,7 @@ class KunjunganController extends Controller
             )
             ->first();
         }
+        
         return view('simrs.igd.kunjungan.detail_kunjungan', compact('kunjungan','paramedis','histories'));
     }
     public function editKunjungan($kunjungan)

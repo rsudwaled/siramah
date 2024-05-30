@@ -2,23 +2,28 @@
 
 namespace App\Http\Controllers\IGD\Antrian;
 
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Pasien;
 use App\Models\AntrianPasienIGD;
-use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\PenjaminSimrs;
+use App\Models\AlasanMasuk;
+use App\Models\Penjamin;
+use App\Models\Paramedis;
+use App\Models\Pasien;
 
 class AntrianController extends Controller
 {
     public function listAntrian()
     {
         $antrian = AntrianPasienIGD::with('isTriase')
-            // ->whereBetween('tgl', ['2023-12-01', now()])
-            ->whereDate('tgl', now())
+            ->whereBetween('tgl', ['2023-12-01', now()])
+            // ->whereDate('tgl', now())
             ->where('status', 1)
             ->where('kode_kunjungan', null)
             ->orderBy('tgl', 'desc')
             ->get();
+        // dd($antrian);
         return view('simrs.igd.antrian.list_antrian', compact('antrian'));
     }
 
@@ -35,22 +40,34 @@ class AntrianController extends Controller
             Alert::error('Proses Daftar Gagal!!', 'pasien di triase pulang!');
             return back();
         }
-        $pasien = Pasien::orderBy('no_rm','desc')->paginate(20);
+        
         $jp = $jp;
+        $query          = Pasien::query();
         if ($request->rm && !empty($request->rm)) {
-            $pasien = Pasien::where('no_rm', $request->rm)->get();
+            $query->where('no_rm','LIKE', '%' . $request->rm. '%');
         }
         if ($request->nama && !empty($request->nama)) {
-            $pasien = Pasien::where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(50)->get();
+            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(100);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $pasien = Pasien::where('no_Bpjs', $request->nomorkartu)->get();
+            $query->where('no_Bpjs','LIKE', '%' . $request->nomorkartu. '%');
         }
         if($request->nik && !empty($request->nik))
         {
-            $pasien = Pasien::where('nik_bpjs', $request->nik)->get();
+            $query->where('nik_bpjs','LIKE', '%' .  $request->nik. '%');
         }
+        if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
+        {
+            $pasien         = $query->get();
+        }else{
+            $pasien         = null;
+        }
+
+        $penjamin    = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
+        $penjaminbpjs= Penjamin::orderBy('id', 'asc')->get();
+        $paramedis   = Paramedis::where('act', 1)->get();
+        $alasanmasuk = AlasanMasuk::orderBy('id', 'asc')->get();
         
-        return view('simrs.igd.daftar.cari_pasien', compact('antrian','request','pasien','no','jp'));
+        return view('simrs.igd.daftar.cari_pasien', compact('alasanmasuk','paramedis','penjamin','penjaminbpjs','antrian','request','pasien','no','jp'));
     }
 }

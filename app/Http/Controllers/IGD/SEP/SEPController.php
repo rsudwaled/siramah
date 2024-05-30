@@ -72,6 +72,7 @@ class SEPController extends APIController
 
     public function bridgingSEP(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make(request()->all(), [
             'noMR'      => 'required',
             'kunjungan' => 'required',

@@ -15,4 +15,8 @@ class AntrianPasienIGD extends Model
     {
         return $this->belongsTo(TriaseIGD::class, 'no_antri', 'no_antrian');
     }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'unit');
+    }
 }

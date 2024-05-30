@@ -84,15 +84,6 @@
                                                 </x-adminlte-select>
                                             </div>
                                             <div class="col-lg-6">
-
-                                                <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
-                                                    <option value="">--Pilih Dpjp--</option>
-                                                    @foreach ($paramedis as $item)
-                                                        <option value="{{ $item->kode_paramedis }}">
-                                                            {{ $item->nama_paramedis }}</option>
-                                                    @endforeach
-                                                </x-adminlte-select2>
-
                                                 <div class="form-group">
                                                     <label for="">Jenis Pasien</label>
                                                     <div class="row">
@@ -120,6 +111,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
+                                                    <option value="">--Pilih Dpjp--</option>
+                                                    @foreach ($paramedis as $item)
+                                                        <option value="{{ $item->kode_paramedis }}">
+                                                            {{ $item->nama_paramedis }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
+
+                                              
                                                 {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)

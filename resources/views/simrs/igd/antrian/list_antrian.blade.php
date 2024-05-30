@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-4">
-                <h1>List Triase</h1>
+                <h1>List Antrian Triase</h1>
             </div>
             <div class="col-sm-8">
                 {{-- <ol class="breadcrumb float-sm-right">
@@ -26,8 +26,8 @@
 @stop
 @section('content')
     <div class="row">
-        <div class="col-md-12">
-            <x-adminlte-card theme="primary" collapsible title="Antrian Triase Gawat Darurat">
+        <div class="col-md-6">
+            <x-adminlte-card theme="primary" collapsible title="Antrian Gawat Darurat">
                 @php
                     $heads = ['No Triase', 'Nama Pasien', 'Triase', 'Aksi'];
                     $config['order'] = false;
@@ -67,7 +67,7 @@
                 </x-adminlte-datatable>
             </x-adminlte-card>
         </div>
-        {{-- <div class="col-md-6">
+        <div class="col-md-6">
             <x-adminlte-card theme="purple" collapsible title="Antrian Kebidanan">
                 @php
                     $heads = ['No Antrian', 'Triase', 'Aksi'];
@@ -101,7 +101,7 @@
                     @endforeach
                 </x-adminlte-datatable>
             </x-adminlte-card>
-        </div> --}}
+        </div>
     </div>
 
 @stop
