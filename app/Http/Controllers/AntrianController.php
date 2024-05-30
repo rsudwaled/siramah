@@ -1158,7 +1158,7 @@ class AntrianController extends APIController
                 $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
                     ->where('kode_unit', $poli->kode_unit)
                     ->where('status_kunjungan', "!=", 8)
-                    ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+                    ->with(['dokter', 'unit', 'pasien', 'order_obat_header', 'surat_kontrol', 'antrian'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
@@ -1167,7 +1167,7 @@ class AntrianController extends APIController
                     ->where('kode_unit', 'LIKE', '10%')
                     ->where('kode_unit', "!=", 1002)
                     ->where('kode_unit', "!=", 1023)
-                    ->with(['dokter', 'unit', 'pasien', 'surat_kontrol', 'antrian'])
+                    ->with(['dokter', 'unit', 'pasien', 'order_obat_header', 'surat_kontrol', 'antrian'])
                     ->get();
             }
         }
