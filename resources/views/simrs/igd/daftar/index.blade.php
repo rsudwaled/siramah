@@ -216,7 +216,7 @@
 
                                             </div>
                                             <div class="col-lg-6">
-                                                <x-adminlte-select2 name="id_antrian" label="Nomor Triase">
+                                                <x-adminlte-select2 name="antrian_triase" label="Nomor Triase">
                                                     @foreach ($antrian_triase as $triase)
                                                         <option value="{{ $triase->id }}">{{ $triase->no_antri }} | <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien:'BELUM DI TRIASE' }}</b></option>
                                                     @endforeach

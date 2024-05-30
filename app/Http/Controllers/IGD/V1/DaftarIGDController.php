@@ -208,7 +208,7 @@ class DaftarIGDController extends Controller
 
         $query          = Kunjungan::where('no_rm', $request->rm);
         $data           = $query->where('status_kunjungan', 1)->get();
-        $pasien     = Pasien::where('no_rm', $request->rm)->first();
+        $pasien         = Pasien::where('no_rm', $request->rm)->first();
         
         if(empty($pasien->no_hp))
         {
@@ -249,23 +249,25 @@ class DaftarIGDController extends Controller
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->is_bpjs_proses    = $bpjsProses;
-        $createKunjungan->jp_daftar         = $request->jp;
+        $createKunjungan->jp_daftar         = $request->isBpjs==2?0:$request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
         
         if ($createKunjungan->save()) {
-            JPasienIGD::create([
-                'kunjungan'    => $createKunjungan->kode_kunjungan,
-                'rm'           => $request->rm,
-                'nomorkartu'   => $pasien->no_Bpjs,
-                'is_bpjs'      => $bpjsProses == 1 ? $request->isBpjs : 2,
-            ]);
+           
+            $jpPasien = new JPasienIGD();
+            $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
+            $jpPasien->rm           = $request->rm;
+            $jpPasien->nomorkartu   = $pasien->no_Bpjs;
+            // $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
+            $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
+            $jpPasien->save();
             
             $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
             $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
             $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
             $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , '.' kec: ' . $kec . ' , '.' Kab: ' . $kab . ' )';
-            $ant_upd= AntrianPasienIGD::find($request->id_antrian);
+            $ant_upd= AntrianPasienIGD::find($request->antrian_triase);
             if(!empty($ant_upd))
             {
                 $ant_upd->no_rm             = $request->rm;

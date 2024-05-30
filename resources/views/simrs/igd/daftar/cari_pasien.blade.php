@@ -263,17 +263,15 @@
                                         <div class="form-group">
                                             <label for="">Pilih Tujuan</label>
                                             <div class="row">
-                                                <div class="col-lg-6">
+                                               <div class="col-lg-6">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="jp"
-                                                            value="1" checked="{{ $jp == 1 ? true : false }}">
+                                                        <input class="form-check-input" type="radio" name="jp" value="1" {{ $jp == 1 ? 'checked' : '' }}>
                                                         <label class="form-check-label">UGD UMUM</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="jp"
-                                                            value="0" checked="{{ $jp == 0 ? true : false }}">
+                                                        <input class="form-check-input" type="radio" name="jp" value="0" {{ $jp == 0 ? 'checked' : '' }}>
                                                         <label class="form-check-label">UGD KEBIDANAN</label>
                                                     </div>
                                                 </div>
@@ -330,7 +328,7 @@
                                         </x-adminlte-select2>
                                         <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                             @foreach ($alasanmasuk as $item)
-                                                <option value="{{ $item->id }}">
+                                                <option value="{{ $item->id }}" {{$jp==0?($item->id==4?'selected':''):''}}>
                                                     {{ $item->alasan_masuk }}</option>
                                             @endforeach
                                         </x-adminlte-select2>

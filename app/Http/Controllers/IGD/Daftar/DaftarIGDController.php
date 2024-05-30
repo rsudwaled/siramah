@@ -236,14 +236,14 @@ class DaftarIGDController extends Controller
             $ant_upd->status            = 2;
             $ant_upd->update();
 
-            $jpPasien = new JPasienIGD();
-            $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
-            $jpPasien->rm           = $request->rm;
-            $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
-            $jpPasien->save();
+            // $jpPasien = new JPasienIGD();
+            // $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
+            // $jpPasien->rm           = $request->rm;
+            // $jpPasien->nomorkartu   = $pasien->no_Bpjs;
+            // $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
+            // $jpPasien->save();
 
-            if($jpPasien->is_bpjs == 1)
+            if($request->isBpjs == 1)
             {
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;

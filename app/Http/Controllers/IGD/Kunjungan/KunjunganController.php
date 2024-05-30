@@ -120,7 +120,7 @@ class KunjunganController extends Controller
             $kunjungan = \DB::connection('mysql2')->table('ts_kunjungan')
             ->where('ts_kunjungan.kode_kunjungan', $kunjungan)
             ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
-            ->join('mt_histories_igd_bpjs','ts_kunjungan.kode_kunjungan','=', 'mt_histories_igd_bpjs.kode_kunjungan' )
+            // ->join('mt_histories_igd_bpjs','ts_kunjungan.kode_kunjungan','=', 'mt_histories_igd_bpjs.kode_kunjungan' )
             ->join('mt_alasan_masuk','ts_kunjungan.id_alasan_masuk','=', 'mt_alasan_masuk.id' )
             ->join('mt_penjamin','ts_kunjungan.kode_penjamin','=', 'mt_penjamin.kode_penjamin' )
             ->select(
@@ -148,6 +148,7 @@ class KunjunganController extends Controller
             )
             ->first();
         }
+        
         return view('simrs.igd.kunjungan.detail_kunjungan', compact('kunjungan','paramedis','histories'));
     }
     public function editKunjungan($kunjungan)

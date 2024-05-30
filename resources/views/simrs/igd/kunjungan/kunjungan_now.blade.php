@@ -63,8 +63,8 @@
                                             <b>PASIEN KECELAKAAN</b>
                                         </small> <br>
                                     @endif
-                                    {{ $item->rm }} | (RM PASIEN) <br>
-                                    {{ $item->kunjungan }} | ({{ $item->nama_unit }})
+                                    {{ $item->rm }} | <b>(RM PASIEN)</b> <br>
+                                    {{ $item->kunjungan }} | <b>({{ $item->nama_unit }})</b>
                                     <br>
                                     <b>
                                         {{ $item->status }}
@@ -111,12 +111,13 @@
                                             class="btn btn-success btn-xs withLoad mt-1">Detail</a>
                                     @endif
                                     @if ($item->id_status == 1 || $item->id_status == 12)
-                                        <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
+                                        {{-- <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                             data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
                                             data-nokartu="{{ $item->noKartu }}" data-kunjungan="{{ $item->kunjungan }}"
                                             data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
                                             class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                            label="ICD-10" />
+                                            label="ICD-10" /> --}}
+                                            
                                         @php
                                             if (empty($item->noKartu)) {
                                                 $nomorKartu = null;
@@ -134,13 +135,6 @@
                                         @endif
                                     @else
                                         @if (auth()->user()->hasRole('Admin Super'))
-                                            <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
-                                                data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
-                                                data-nokartu="{{ $item->noKartu }}"
-                                                data-kunjungan="{{ $item->kunjungan }}"
-                                                data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
-                                                class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                                label="Update Diagnosa" />
                                             @php
                                                 if (empty($item->noKartu)) {
                                                     $nomorKartu = null;
@@ -243,6 +237,7 @@
             </form>
         </div>
     </x-adminlte-modal>
+
     <div class="modal fade" id="modal-sep-backdate" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -331,8 +326,8 @@
 
 
             $('.btn-synchronize-sep').click(function(e) {
-                // var urlBridging = "{{ route('synch.diagnosa') }}";
-                var urlBridging = "{{ route('bridging-sep') }}";
+                var urlBridging = "{{ route('synch.diagnosa') }}";
+                // var urlBridging = "{{ route('bridging-sep') }}";
                 var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {
