@@ -1075,7 +1075,7 @@ class RanapController extends APIController
         }
         $pasien         = Pasien::firstWhere('no_rm', $rm);
         $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
-        $penjamin       = PenjaminSimrs::orderBy('kode_kelompok', 'asc')->get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
         $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         $alasanmasuk    = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->orderBy('id','asc')->get();

@@ -135,7 +135,8 @@
                                                             RM : {{ $data->no_rm }}<br>
                                                             NIK : {{ $data->nik_bpjs }} <br>
                                                             BPJS : {{ $data->no_Bpjs }} <br>
-                                                            PASIEN : {{ $data->nama_px }}
+                                                            PASIEN : {{ $data->nama_px }} <br>
+                                                            Jenis Kelamin : {{ $data->jenis_kelamin=='L'?'Laki-Laki':'Perempuan' }}
                                                         </b> <br><br>
                                                         <small>
                                                             <b>TTL :
@@ -215,6 +216,11 @@
 
                                             </div>
                                             <div class="col-lg-6">
+                                                <x-adminlte-select2 name="antrian_triase" label="Nomor Triase">
+                                                    @foreach ($antrian_triase as $triase)
+                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} | <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien:'BELUM DI TRIASE' }}</b></option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
                                                 <div class="form-group">
                                                     <label for="">Pilih Tujuan</label>
                                                     <div class="row">
@@ -290,6 +296,7 @@
                                                             {{ $item->alasan_masuk }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
+                                               
                                                 <div class="form-group">
                                                     <label for="exampleInputBorderWidth2">Perujuk
                                                         <code>(nama faskes yang merujuk)</code></label>

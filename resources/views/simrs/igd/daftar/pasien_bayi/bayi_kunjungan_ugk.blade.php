@@ -21,7 +21,7 @@
         <div class="col-md-3">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">FILTER KUNJUNGAN BY PERIODE TANGGAL</h3>
+                    <h3 class="card-title">FILTER KUNJUNGAN BY <br> PERIODE TANGGAL</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
@@ -72,7 +72,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alamat', 'Alasan', 'Penjamin', 'Status'];
+                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alamat', 'Alasan','Status', 'Penjamin', 'Status'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -100,7 +100,7 @@
                                     </small>
                                 </td>
                                 <td>{{ $item->alasan_masuk->alasan_masuk }}</td>
-                                </td>
+                                <td><b>{{ $item->status->status_kunjungan }}</b></td>
                                 <td>{{ $item->penjamin_simrs->nama_penjamin }}</td>
                                 <td>
                                     <button type="button"

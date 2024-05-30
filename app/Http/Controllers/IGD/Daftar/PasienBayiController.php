@@ -38,8 +38,8 @@ class PasienBayiController extends Controller
             $query->whereDate('tgl_masuk', '<=', $request->finish );
         }else{
             $now = Carbon::now();
-            $weekStartDate  = $now->startOfWeek()->format('Y-m-d H:i');
-            $weekEndDate    = $now->endOfWeek()->format('Y-m-d H:i');
+            $weekStartDate  = $now->startOfWeek()->format('Y-m-d');
+            $weekEndDate    = $now->endOfWeek()->format('Y-m-d');
 
             $query->whereDate('tgl_masuk', '>=', $weekStartDate );
             $query->whereDate('tgl_masuk', '<=',  $weekEndDate );
