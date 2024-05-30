@@ -339,14 +339,14 @@ return [
                 [
                     'text' => 'Display Antrian Lt 2',
                     'icon'    => 'fas fa-desktop',
-                    'url'  => 'displayAntrianPoliklinik',
+                    'url'  => 'displayantrian2',
                     'shift'   => 'ml-2',
                     'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
                 ],
                 [
                     'text' => 'Display Antrian Lt 3',
                     'icon'    => 'fas fa-desktop',
-                    'url'  => 'displayAntrianPoliklinik',
+                    'url'  => 'displayantrian3',
                     'shift'   => 'ml-2',
                     'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
                 ],

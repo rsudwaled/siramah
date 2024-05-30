@@ -22,7 +22,7 @@
                                 </div>
                                 <div class="col-md-6 text-md-end">
                                     <h4>Informasi Antrian Poliklinik</h4>
-                                    <h6>Lokasi Lantai 3 Gedung Rawat Jalan RSUD Waled</h6>
+                                    <h6>Lokasi Lantai 2 Gedung Rawat Jalan RSUD Waled</h6>
                                 </div>
                             </div>
                         </div>
