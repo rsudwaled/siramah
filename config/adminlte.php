@@ -1423,9 +1423,8 @@ return [
                 [
                     'text' => 'Role & Permission',
                     'icon'    => 'fas fa-user-shield',
-                    'url'  => 'role',
+                    'url'  => 'role-permission',
                     'shift'   => 'ml-2',
-                    'active'  => ['role', 'role/create', 'regex:@^role(\/[0-9]+)?+$@', 'regex:@^role(\/[0-9]+)?\/edit+$@', 'regex:@^permission(\/[0-9]+)?\/edit+$@'],
                     'can' => 'admin',
                 ],
             ],

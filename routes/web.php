@@ -60,6 +60,7 @@ use App\Http\Controllers\RanapController;
 // rekam medis
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -131,8 +132,9 @@ Route::middleware('auth')->group(function () {
         Route::post('userimport', [UserController::class, 'userimport'])->name('userimport');
         Route::get('userexport', [UserController::class, 'userexport'])->name('userexport');
 
-        Route::resource('role', RoleController::class);
-        Route::resource('permission', PermissionController::class);
+        Route::get('role-permission', RolePermission::class)->name('role.permission');
+        // Route::resource('role', RoleController::class);
+        // Route::resource('permission', PermissionController::class);
         Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
         Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
         Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
