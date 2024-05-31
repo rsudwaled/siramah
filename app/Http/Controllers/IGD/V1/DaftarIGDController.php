@@ -153,8 +153,8 @@ class DaftarIGDController extends Controller
         }
 
         $antrian_triase = AntrianPasienIGD::with('isTriase')
-            ->whereBetween('tgl', ['2023-12-11', now()])
-            // ->whereDate('tgl', '2023-12-11')
+            // ->whereBetween('tgl', ['2023-12-11', now()])
+            ->whereDate('tgl', now())
             ->where('status', 1)
             ->where('kode_kunjungan', null)
             ->orderBy('tgl', 'desc')
@@ -182,7 +182,7 @@ class DaftarIGDController extends Controller
         {
             Alert::error('Jenis Pasien Daftar Belum dipilih!!', 'silahkan pilih status pasien bpjs atau bukan!');
             return back();
-        } 
+        }
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs >= 1 ? $request->penjamin_id_bpjs : $request->penjamin_id_umum;
         $request->validate(
@@ -209,7 +209,7 @@ class DaftarIGDController extends Controller
         $query          = Kunjungan::where('no_rm', $request->rm);
         $data           = $query->where('status_kunjungan', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
-        
+
         if(empty($pasien->no_hp))
         {
             $pasien->no_hp = $request->noTelp;
@@ -233,7 +233,7 @@ class DaftarIGDController extends Controller
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
         $dokter     = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
-        
+
         $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $c;
         $createKunjungan->no_rm             = $request->rm;
@@ -252,9 +252,9 @@ class DaftarIGDController extends Controller
         $createKunjungan->jp_daftar         = $request->isBpjs==2?0:$request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
         $createKunjungan->pic               = Auth::user()->id_simrs;
-        
+
         if ($createKunjungan->save()) {
-           
+
             $jpPasien = new JPasienIGD();
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
@@ -262,7 +262,7 @@ class DaftarIGDController extends Controller
             // $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
             $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
-            
+
             $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
             $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
             $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);

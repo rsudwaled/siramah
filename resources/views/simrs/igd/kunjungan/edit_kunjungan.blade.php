@@ -103,7 +103,7 @@
                                     <x-adminlte-button type="submit"
                                         class="withLoad  btn btn-sm m-1 bg-primary float-right" id="submitPasien"
                                         label="Simpan Data" />
-                                    <a href="{{ route('detail.kunjungan', ['kunjungan' => $kunjungan->kode_kunjungan]) }}"
+                                    <a href="{{ route('daftar.kunjungan') }}"
                                         class="btn btn-sm  btn-secondary float-right m-1 withLoad">Kembali</a>
                                 </div>
                             </form>

@@ -27,7 +27,7 @@ class SEPController extends APIController
         $data['decrypt_key']     = $cons_id . $secretKey . $tStamp;
         return $data;
     }
- 
+
     public static function stringDecrypt($key, $string)
     {
         $encrypt_method  = 'AES-256-CBC';
@@ -37,7 +37,7 @@ class SEPController extends APIController
         $output          = \LZCompressor\LZString::decompressFromEncodedURIComponent($output);
         return $output;
     }
- 
+
     public function response_decrypt($response, $signature)
     {
         $code    = json_decode($response->body())->metaData->code;
@@ -54,7 +54,7 @@ class SEPController extends APIController
             return $this->sendError($message, $code);
         }
     }
- 
+
     public function response_no_decrypt($response)
     {
         $code        = json_decode($response->body())->metaData->code;
@@ -79,22 +79,22 @@ class SEPController extends APIController
             'diagAwal'  => 'required',
             'dpjp'      => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400]);
         }
-    
+
         $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
         $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
         if($kunjungan->jp_daftar == 0)
         {
             return response()->json([
                 'data'=>$kunjungan,
-                'code'=>401, 
+                'code'=>401,
                 'message'=>'MOHON MAAF BUKAN PASIEN BPJS!!. silahkan pilih tombol only update untuk pasien umum'
             ]);
         }
-               
+
         if($kunjungan->jp_daftar ==1)
         {
             $url        = env('VCLAIM_URL') . 'SEP/2.0/insert';
@@ -120,7 +120,7 @@ class SEPController extends APIController
                             'noRujukan'     => '',
                             'ppkRujukan'    => '',
                         ],
-                        'catatan'   => 'test insert',
+                        'catatan'   => '',
                         'diagAwal'  => $request->diagAwal,
                         'poli' => [
                             'tujuan'    => 'IGD',
@@ -157,7 +157,7 @@ class SEPController extends APIController
                             'noSurat'   => '',
                             'kodeDPJP'  => '',
                         ],
-                        'dpjpLayan'     => $request->dpjp, 
+                        'dpjpLayan'     => $request->dpjp,
                         'noTelp'        => $histories->noTelp,
                         'user'          => $histories->user,
                     ],
@@ -174,7 +174,7 @@ class SEPController extends APIController
               $histories->respon_nosep  = $sep;
               $histories->dpjpLayanan   = $request->dpjp;
               $histories->save();
-              
+
               $kunjungan->diagx     = $request->diagAwal;
               $kunjungan->no_sep    = $sep;
               $kunjungan->save();
@@ -201,7 +201,7 @@ class SEPController extends APIController
             'diagAwal'  => 'required',
             'dpjp'      => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400]);
         }
@@ -214,7 +214,7 @@ class SEPController extends APIController
         $url        = env('VCLAIM_URL') . 'SEP/2.0/update';
         $signature  = $this->signature();
         $signature['Content-Type'] = 'application/x-www-form-urlencoded';
-        $data = 
+        $data =
         [
             'request' => [
                 't_sep' => [
@@ -266,14 +266,14 @@ class SEPController extends APIController
         if ($callback->metaData->code == 200) {
             $resdescrtipt               = $this->response_decrypt($response, $signature);
             $sep                        = $resdescrtipt->response->sep->noSep;
-            
+
             $histories->diagnosa_update = $diagnosa_update;
             $histories->dpjp_update     = $dpjp_update;
 
             $histories->diagAwal        = $request->diagAwal;
             $histories->respon_nosep    = $sep;
             $histories->save();
-            
+
             $kunjungan->diagx           = $request->diagAwal;
             $kunjungan->save();
             return response()->json(['data'=>$callback]);
@@ -292,13 +292,13 @@ class SEPController extends APIController
             'keterangan'=> 'required',
             'tglSep'    => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400,'message'=>'Data input belum lengkap!']);
         }
-        
+
         $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
-        
+
         $url        = env('VCLAIM_URL') . 'Sep/pengajuanSEP';
         $signature  = $this->signature();
         $signature['Content-Type'] = 'application/x-www-form-urlencoded';

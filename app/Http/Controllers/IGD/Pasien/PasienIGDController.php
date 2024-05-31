@@ -61,7 +61,7 @@ class PasienIGDController extends Controller
         $agama          = Agama::all();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
-        return view('simrs.igd.pasienigd.tambah_pasien', 
+        return view('simrs.igd.pasienigd.tambah_pasien',
             compact('provinsi','kabupaten','kecamatan',
                 'negara','hb_keluarga','agama','pekerjaan','pendidikan'
             ));
@@ -117,11 +117,25 @@ class PasienIGDController extends Controller
             ]);
 
         $tgl_lahir  = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
-        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        $rm_last    = substr($last_rm->no_rm, -6); //982846
-        $add_rm_new = $rm_last + 1; //982847
-        $th         = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_new     = $th . $add_rm_new;
+        // $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
+        // $rm_last    = substr($last_rm->no_rm, -6); //982846
+        // $add_rm_new = $rm_last + 1; //982847
+        // $th         = substr(Carbon::now()->format('Y'), -2); //23
+        // $rm_new     = $th . $add_rm_new;
+
+        $last_rm = Pasien::latest('no_rm')->first();
+        $last_rm_number = $last_rm ? $last_rm->no_rm : '240000001';
+
+        if (is_numeric($last_rm_number) && $last_rm_number < 24999999) {
+            $rm_new = $last_rm_number + 1;
+        } else {
+            if (preg_match('/^24A(\d{6})$/', $last_rm_number, $matches)) {
+                $incremented_value = (int)$matches[1] + 1;
+                $rm_new = '24A' . str_pad($incremented_value, 6, '0', STR_PAD_LEFT);
+            } else {
+                $rm_new = '24A000001';
+            }
+        }
 
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
