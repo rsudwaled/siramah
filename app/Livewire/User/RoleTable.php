@@ -62,14 +62,15 @@ class RoleTable extends Component
     }
     public function mount()
     {
+
+    }
+    public function render()
+    {
         $search = '%' . $this->search . '%';
         $this->roles = Role::orderBy('name', 'asc')->with(['permissions'])
             ->where('name', 'like', $search)
             ->get();
         $this->permissions = Permission::pluck('name', 'id');
-    }
-    public function render()
-    {
         return view('livewire.user.role-table');
     }
 }

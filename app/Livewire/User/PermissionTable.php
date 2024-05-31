@@ -54,14 +54,13 @@ class PermissionTable extends Component
     }
     public function mount()
     {
+    }
+    public function render()
+    {
         $search = '%' . $this->search . '%';
         $this->permissions = Permission::orderBy('name', 'asc')
             ->where('name', 'like', $search)
             ->get();
-    }
-    public function render()
-    {
-
         return view('livewire.user.permission-table');
     }
 }
