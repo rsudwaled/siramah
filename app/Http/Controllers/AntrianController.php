@@ -303,7 +303,7 @@ class AntrianController extends APIController
     public function ambilAntrianWeb(Request $request)
     {
         $base = new BaseController();
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomorkartu" => "required|numeric|digits:13",
             "nik" => "required|numeric|digits:16",
             "nohp" => "required",
@@ -416,7 +416,7 @@ class AntrianController extends APIController
     public function checkinUpdate(Request $request)
     {
         // checking request
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "waktu" => "required|numeric",
         ]);
@@ -1327,7 +1327,7 @@ class AntrianController extends APIController
     }
     public function ref_jadwal_dokter(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
             "tanggal" =>  "required|date",
         ]);
@@ -1348,7 +1348,7 @@ class AntrianController extends APIController
     }
     public function ref_pasien_fingerprint(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "jenisIdentitas" => "required",
             "noIdentitas" =>  "required",
         ]);
@@ -1362,7 +1362,7 @@ class AntrianController extends APIController
     }
     public function update_jadwal_dokter(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodepoli" =>  "required",
             "kodesubspesialis" =>  "required",
             "kodedokter" =>  "required",
@@ -1386,7 +1386,7 @@ class AntrianController extends APIController
     }
     public function tambah_antrean(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "nomorkartu" =>  "required|digits:13|numeric",
             // "nomorreferensi" =>  "required",
@@ -1449,7 +1449,7 @@ class AntrianController extends APIController
     }
     public function tambah_antrean_farmasi(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "jenisresep" =>  "required",
             "nomorantrean" =>  "required",
@@ -1473,7 +1473,7 @@ class AntrianController extends APIController
     }
     public function update_antrean(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "taskid" =>  "required",
             "waktu" =>  "required",
@@ -1498,7 +1498,7 @@ class AntrianController extends APIController
     public function update_antrean_pendaftaran(Request $request)
     {
         // cek request
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "taskid" => "required",
             "waktu" => "required|numeric",
@@ -1615,7 +1615,7 @@ class AntrianController extends APIController
     }
     public function batal_antrean(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "keterangan" =>  "required",
         ]);
@@ -1635,7 +1635,7 @@ class AntrianController extends APIController
     }
     public function taskid_antrean(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
         if ($validator->fails()) {
@@ -1653,7 +1653,7 @@ class AntrianController extends APIController
     }
     public function dashboard_tanggal(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "tanggal" =>  "required|date|date_format:Y-m-d",
             "waktu" => "required|in:rs,server",
         ]);
@@ -1667,7 +1667,7 @@ class AntrianController extends APIController
     }
     public function dashboard_bulan(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "bulan" =>  "required|date_format:m",
             "tahun" =>  "required|date_format:Y",
             "waktu" => "required|in:rs,server",
@@ -1682,7 +1682,7 @@ class AntrianController extends APIController
     }
     public function antrian_tanggal(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "tanggal" =>  "required|date",
         ]);
         if ($validator->fails()) {
@@ -1695,25 +1695,19 @@ class AntrianController extends APIController
     }
     public function antrian_kodebooking(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
-            "kodeBooking" =>  "required",
+        $validator = Validator::make($request->all(), [
+            "kodebooking" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = $this->baseurl . "antrean/pendaftaran/kodebooking/" . $request->kodeBooking;
+        $url = $this->baseurl . "antrean/pendaftaran/kodebooking/" . $request->kodebooking;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
     public function antrian_belum_dilayani(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
-            "tanggal" =>  "required|date",
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(),  201);
-        }
         $url = $this->baseurl . "antrean/pendaftaran/aktif";
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
@@ -1728,16 +1722,16 @@ class AntrianController extends APIController
     }
     public function antrian_poliklinik(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
-            "kodePoli" =>  "required",
-            "kodeDokter" =>  "required",
+        $validator = Validator::make($request->all(), [
+            "kodepoli" =>  "required",
+            "kodedokter" =>  "required",
             "hari" =>  "required",
-            "jamPraktek" =>  "required",
+            "jampraktek" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  201);
         }
-        $url = $this->baseurl . "antrean/pendaftaran/kodepoli/" . $request->kodePoli . "/kodedokter/" . $request->kodeDokter . "/hari/" . $request->hari . "/jampraktek/" . $request->jamPraktek;
+        $url = $this->baseurl . "antrean/pendaftaran/kodepoli/" . $request->kodepoli . "/kodedokter/" . $request->kodedokter . "/hari/" . $request->hari . "/jampraktek/" . $request->jampraktek;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1777,7 +1771,7 @@ class AntrianController extends APIController
         //     return $this->sendError("Unauthorized (Token Invalid)", 401);
         // }
         // validator
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
             "kodedokter" => "required",
             "tanggalperiksa" => "required|date",
@@ -1863,7 +1857,7 @@ class AntrianController extends APIController
         // if ($this->authtoken($request)) {
         //     return $this->sendError("Unauthorized (Token Invalid)", 401);
         // }
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomorkartu" => "required|numeric|digits:13",
             "nik" => "required|numeric|digits:16",
             "nohp" => "required",
@@ -1876,7 +1870,7 @@ class AntrianController extends APIController
             // "nomorreferensi" => "numeric",
         ]);
         if ($request->jeniskunjungan != 2) {
-            $validator = Validator::make(request()->all(), [
+            $validator = Validator::make($request->all(), [
                 "nomorreferensi" => "required",
             ]);
         }
@@ -2090,7 +2084,7 @@ class AntrianController extends APIController
     }
     public function sisa_antrian(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
         if ($validator->fails()) {
@@ -2132,7 +2126,7 @@ class AntrianController extends APIController
     }
     public function batal_antrian(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "keterangan" => "required",
         ]);
@@ -2179,7 +2173,7 @@ class AntrianController extends APIController
         }
 
         // checking request
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "waktu" => "required",
         ]);
@@ -2639,7 +2633,7 @@ class AntrianController extends APIController
         //     return $auth;
         // }
         // // checking request
-        // $validator = Validator::make(request()->all(), [
+        // $validator = Validator::make($request->all(), [
         //     "nik" => "required|digits:16",
         //     "nomorkartu" => "required|digits:13",
         //     "nomorkk" => "required",
@@ -2764,7 +2758,7 @@ class AntrianController extends APIController
     public function jadwal_operasi_rs(Request $request)
     {
         // checking request
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "tanggalawal" => "required|date",
             "tanggalakhir" => "required|date",
         ]);
@@ -2803,7 +2797,7 @@ class AntrianController extends APIController
     public function jadwal_operasi_pasien(Request $request)
     {
         // checking request
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nopeserta" => "required|digits:13",
         ]);
         if ($validator->fails()) {
@@ -2834,7 +2828,7 @@ class AntrianController extends APIController
     }
     public function ambil_antrian_farmasi(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
         if ($validator->fails()) {
@@ -2857,7 +2851,7 @@ class AntrianController extends APIController
     }
     public function status_antrian_farmasi(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
         if ($validator->fails()) {
