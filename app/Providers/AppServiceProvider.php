@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('Asia/Jakarta');
         URL::forceScheme('http');
         Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/simrs/livewire/update', $handle);
+            return Route::post('/siramah/livewire/update', $handle);
         });
     }
 }
