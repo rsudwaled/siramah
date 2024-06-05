@@ -209,8 +209,8 @@ class DaftarIGDController extends Controller
         $query          = Kunjungan::where('no_rm', $request->rm);
         $data           = $query->where('status_kunjungan', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
-
-        if(empty($pasien->no_hp))
+        // dd($pasien);
+        if(is_null($pasien->no_hp))
         {
             $pasien->no_hp = $request->noTelp;
             $pasien->save();
@@ -337,8 +337,12 @@ class DaftarIGDController extends Controller
                 $createLH->total_layanan        = $total_bayar_k_a;
 
                 if ($penjamin == 'P01') {
+                    $createLH->kode_tipe_transaksi  = 1;
+                    $createLH->status_layanan       = 3; // status 3 nanti di update jadi 1
                     $createLH->tagihan_pribadi  = $total_bayar_k_a;
                 } else {
+                    $createLH->kode_tipe_transaksi  = 2;
+                    $createLH->status_layanan       = 3; // status 3 nanti di update jadi 1
                     $createLH->tagihan_penjamin = $total_bayar_k_a;
                 }
 
@@ -387,7 +391,11 @@ class DaftarIGDController extends Controller
                             $createKunjungan->status_kunjungan = 1;  //status 8 nanti update setelah header dan detail selesai jadi 1
                             $createKunjungan->update();
 
-                            $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
+                            if ($penjamin == 'P01') {
+                                $createLH->status_layanan       = 1;
+                            } else {
+                                $createLH->status_layanan       = 2;
+                            }
                             $createLH->update();
                         }
                     }
@@ -438,5 +446,36 @@ class DaftarIGDController extends Controller
         }
 
         return response()->json(['keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
+    }
+
+    public function cekStatusBPJSTanpaDaftar(Request $request)
+    {
+        $tanggal        = now()->format('Y-m-d');
+        if(!empty($request->cek_nik))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nik/" . $request->cek_nik . "/tglSEP/" . $tanggal;
+        }
+        if(!empty($request->cek_nomorkartu))
+        {
+            $url            = env('VCLAIM_URL') . "Peserta/nokartu/" . $request->cek_nomorkartu . "/tglSEP/" . $tanggal;
+        }
+        $signature      = $this->signature();
+        $response       = Http::withHeaders($signature)->get($url);
+        $resdescrtipt   = $this->response_decrypt($response, $signature);
+        $keterangan     = null;
+        $jenisPeserta   = null;
+        $code           = null;
+        if(!empty($resdescrtipt->response)){
+            $pasien         = $resdescrtipt->response->peserta->nama;
+            $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
+            $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+            $code           = $resdescrtipt->metadata->code;
+            $nik            = $resdescrtipt->response->peserta->nik;
+        }else{
+            $keterangan     = $resdescrtipt->metadata->message;
+            $jenisPeserta   = $resdescrtipt->metadata->code;
+        }
+
+        return response()->json(['nik'=>$nik,'pasien'=>$pasien,'keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
     }
 }

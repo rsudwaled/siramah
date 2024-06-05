@@ -54,6 +54,7 @@
                                 title="DAFTARKAN BAYI : ({{ $pasien->nama_px }})">
                                 <form action="{{ route('ranap-bayi.store') }}" method="post" id="submitRanap">
                                     @csrf
+                                    <input type="hidden" name="ref_kunjungan_ortu" value=" {{ $ref_kunjungan }}">
                                     <input type="hidden" name="noMR" value=" {{ $pasien->no_rm }}">
                                     <input type="hidden" name="idRuangan" id="ruanganSend">
                                     <div class="col-lg-12">
@@ -119,7 +120,7 @@
                                                     @endforeach
                                                 </x-adminlte-select2>
 
-                                              
+
                                                 {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)

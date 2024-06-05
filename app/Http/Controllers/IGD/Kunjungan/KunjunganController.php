@@ -13,18 +13,24 @@ use App\Models\AlasanMasuk;
 use App\Models\StatusKunjungan;
 use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
+use App\Models\Pasien;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use RealRashid\SweetAlert\Facades\Alert;
+use PDF;
 
 class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
-        $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
-        $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
+        // $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
+        // $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
+        // $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
+        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(10)->get();
 
-        return response()->json(['riwayat'=>$riwayat,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        // return response()->json(['riwayat'=>$riwayat,'semua_kunjungan'=>$all_kunj,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        return response()->json(['semua_kunjungan'=>$all_kunj]);
     }
 
     public function daftarKunjungan(Request $request)
@@ -238,5 +244,18 @@ class KunjunganController extends Controller
             'data'=>$kunjungan,
             'message'=>$message,
             'code'=>200]);
+    }
+
+    public function cetakLabel(Request $request)
+    {
+        $pasien = Pasien::where('no_rm', $request->label_no_rm)->first();
+        if(is_null($pasien))
+        {
+            Alert::warning('PERHATIAN!!', 'NO RM tidak terdaftar di data pasien. silahkan cek kembali!');
+            return back();
+        }
+        $qrcode = base64_encode(QrCode::format('svg')->size(35)->errorCorrection('H')->generate('string'));
+        $pdf = PDF::loadView('simrs.igd.cetakan_label.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
+        return $pdf->stream('label-pasien.pdf');
     }
 }

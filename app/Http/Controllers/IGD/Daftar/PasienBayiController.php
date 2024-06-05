@@ -31,7 +31,7 @@ class PasienBayiController extends Controller
         $bayi          = PasienBayiIGD::get();
         $query         = Kunjungan::where('prefix_kunjungan','UGK')
                         ->whereNull('tgl_keluar');
-                        
+
         if(!empty($request->start) && !empty($request->finish))
         {
             $query->whereDate('tgl_masuk', '>=', $request->start );
@@ -56,7 +56,7 @@ class PasienBayiController extends Controller
         $bayi          = PasienBayiIGD::get();
         $query         = Kunjungan::where('prefix_kunjungan','UGK')
                         ->whereNull('tgl_keluar');
-                        
+
         if(!empty($request->start) && !empty($request->finish))
         {
             $query->whereDate('tgl_masuk', '>=', $request->start );
@@ -88,8 +88,8 @@ class PasienBayiController extends Controller
             $dataYesterday  = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
             $yesterday      = $dataYesterday->subDays(2)->format('Y-m-d');
 
-            $query->whereDate('tgl_lahir','>=', $yesterday); 
-            $query->whereDate('tgl_lahir','<=', $request->tanggal); 
+            $query->whereDate('tgl_lahir','>=', $yesterday);
+            $query->whereDate('tgl_lahir','<=', $request->tanggal);
         }
         if ($request->rm && !empty($request->rm)) {
             $query->where('rm_ibu', $request->rm);
@@ -98,11 +98,11 @@ class PasienBayiController extends Controller
             $query->where('nama_ortu', 'LIKE', '%' . $request->nama . '%')->limit(50);
         }
         if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $query->where('no_bpjs_ortu', $request->nomorkartu);
+            $query->where('no_bpjs_ortu', 'LIKE', '%' . $request->nomorkartu.'%');
         }
         if($request->nik && !empty($request->nik))
         {
-            $query->where('nik_ortu', $request->nik);
+            $query->where('nik_ortu', 'LIKE', '%' .$request->nik.'%');
         }
         $bayi = $query->get();
         return view('simrs.igd.daftar.pasien_bayi.bayi_luar', compact('request','bayi'));
@@ -124,13 +124,18 @@ class PasienBayiController extends Controller
         $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
         $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
 
-        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        $rm_last    = substr($last_rm->no_rm, -6); //982846
-        $add_rm_new = $rm_last + 1; //982847
-        $th         = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_bayi    = $th . $add_rm_new;
+        // $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
+        // $rm_last    = substr($last_rm->no_rm, -6); //982846
+        // $add_rm_new = $rm_last + 1; //982847
+        // $th         = substr(Carbon::now()->format('Y'), -2); //23
+        // $rm_bayi    = $th . $add_rm_new;
+        $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
+                ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
+                ->whereRaw("LEFT(no_rm, 2) = '01'")
+                ->first();
+        $rm_bayi ='0'.$cek_last_rm->rm_baru;
 
-        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
+        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp;
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $bayi = new PasienBayiIGD();
@@ -141,7 +146,7 @@ class PasienBayiController extends Controller
         $bayi->alamat_lengkap_ortu  = $ortubayi->alamat;
         $bayi->no_hp_ortu           = $kontak;
         $bayi->kunjungan_ortu       = $request->kunjungan_ortu;
-        
+
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
         $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);
@@ -195,7 +200,7 @@ class PasienBayiController extends Controller
                 'no_ktp'            => '',
             ]);
         }
-        return redirect()->route('form-umum.ranap-bayi', $rm_bayi);
+        return redirect()->route('form-umum.ranap-bayi', ['rm'=> $rm_bayi, 'kunjungan'=>$bayi->kunjungan_ortu]);
     }
 
     public function ranapUMUMBayi(Request $request)
@@ -218,7 +223,7 @@ class PasienBayiController extends Controller
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
 
-        
+
         $query          = Pasien::query();
         if ($request->rm && !empty($request->rm)) {
             $query->where('no_rm', $request->rm);
@@ -260,13 +265,13 @@ class PasienBayiController extends Controller
         $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu);
         $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
 
-        $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        $rm_last    = substr($last_rm->no_rm, -6); //982846
-        $add_rm_new = $rm_last + 1; //982847
-        $th         = substr(Carbon::now()->format('Y'), -2); //23
-        $rm_bayi    = $th . $add_rm_new;
+        $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
+        ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
+        ->whereRaw("LEFT(no_rm, 2) = '01'")
+        ->first();
+        $rm_bayi ='0'.$cek_last_rm->rm_baru;
 
-        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp; 
+        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp;
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $bayi = new PasienBayiIGD();
@@ -277,7 +282,7 @@ class PasienBayiController extends Controller
         $bayi->alamat_lengkap_ortu  = $ortubayi->alamat;
         $bayi->no_hp_ortu           = $kontak;
         $bayi->kunjungan_ortu       = null;
-        
+
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
         $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);

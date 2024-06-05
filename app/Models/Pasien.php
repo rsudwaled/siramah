@@ -11,6 +11,9 @@ class Pasien extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_pasien';
     protected $primaryKey = 'no_rm';
+    // protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     public $timestamps = false;
     const CREATED_AT = 'tgl_entry';
     const UPDATED_AT = 'update_date';

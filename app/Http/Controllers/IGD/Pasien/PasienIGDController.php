@@ -57,8 +57,8 @@ class PasienIGDController extends Controller
         $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
         $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
         $negara         = Negara::all();
-        $hb_keluarga    = HubunganKeluarga::all();
-        $agama          = Agama::all();
+        $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
+        $agama          = Agama::orderBy('ID','asc')->get();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
         return view('simrs.igd.pasienigd.tambah_pasien',
@@ -117,26 +117,32 @@ class PasienIGDController extends Controller
             ]);
 
         $tgl_lahir  = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
-        // $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        // $rm_last    = substr($last_rm->no_rm, -6); //982846
-        // $add_rm_new = $rm_last + 1; //982847
-        // $th         = substr(Carbon::now()->format('Y'), -2); //23
-        // $rm_new     = $th . $add_rm_new;
+        // $last_rm = Pasien::orderBy('tgl_entry','desc')->first();
 
-        $last_rm = Pasien::latest('no_rm')->first();
-        $last_rm_number = $last_rm ? $last_rm->no_rm : '240000001';
-
-        if (is_numeric($last_rm_number) && $last_rm_number < 24999999) {
-            $rm_new = $last_rm_number + 1;
-        } else {
-            if (preg_match('/^24A(\d{6})$/', $last_rm_number, $matches)) {
-                $incremented_value = (int)$matches[1] + 1;
-                $rm_new = '24A' . str_pad($incremented_value, 6, '0', STR_PAD_LEFT);
-            } else {
-                $rm_new = '24A000001';
-            }
-        }
-
+        // if ($last_rm) {
+        //     // Cek apakah no_rm terakhir memiliki prefiks '24A'
+        //     if (strpos($last_rm->no_rm, '24A') === 0) {
+        //         // Jika prefiks '24A', maka no_rm baru dimulai dari '01000001'
+        //         $rm_new = '01000001';
+        //     } elseif (strpos($last_rm->no_rm, '01') === 0) {
+        //         // Jika prefiks '01', increment no_rm terakhir
+        //         $current_no = substr($last_rm->no_rm, 2); // Mengambil bagian setelah '01'
+        //         $new_no = (int)$current_no + 1;
+        //         // Format nomor baru dengan leading zeros sesuai format
+        //         $new_no_rm = '01' . str_pad($new_no, 6, '0', STR_PAD_LEFT);
+        //     } else {
+        //         // Logika tambahan jika ada skenario lain yang perlu ditangani
+        //         $new_no_rm = '01000001'; // Default value jika tidak memenuhi kondisi
+        //     }
+        // } else {
+        //     // Jika belum ada no_rm, mulai dari nomor pertama
+        //     $new_no_rm = '01000001';
+        // }
+        $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
+                ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
+                ->whereRaw("LEFT(no_rm, 2) = '01'")
+                ->first();
+        $rm_new ='0'.$cek_last_rm->rm_baru;
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
             'nama_keluarga'     => $request->nama_keluarga,
@@ -146,6 +152,12 @@ class PasienIGDController extends Controller
             'input_date'        => Carbon::now(),
             'Update_date'       => Carbon::now(),
         ]);
+        if(empty($keluarga))
+        {
+            Alert::warning('DATA KELUARGA KOSONG!', 'silahkan isi data keluarga pasien!');
+            return redirect()->route('pasien-baru.create');
+        }
+
         $pasien = Pasien::create([
             'no_rm'             => $rm_new,
             'no_Bpjs'           => $request->no_bpjs,
@@ -175,8 +187,12 @@ class PasienIGDController extends Controller
             'kode_desa'         => $request->desa_pasien,
             'no_ktp'            => $request->nik_pasien_baru,
             'user_create'       =>  Auth::user()->name,
+            'status_px'         =>  1,
+            'pic2'              => Auth::user()->id,
+            'pic'               => Auth::user()->id_simrs,
 
         ]);
+
         Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
         return redirect()->route('daftar-igd.v1');
     }
@@ -190,8 +206,8 @@ class PasienIGDController extends Controller
         $kecamatan      = Kecamatan::where('kode_kabupaten_kota', $pasien->kode_kabupaten)->get();
         $desa           = Desa::where('kode_kecamatan', $pasien->kode_kecamatan)->get();
         $negara         = Negara::get();
-        $hb_keluarga    = HubunganKeluarga::get();
-        $agama          = Agama::get();
+        $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
+        $agama          = Agama::orderBy('ID','asc')->get();
         $pekerjaan      = Pekerjaan::get();
         $pendidikan     = Pendidikan::get();
         return view('simrs.igd.pasienigd.edit_pasien',compact(
@@ -203,6 +219,7 @@ class PasienIGDController extends Controller
 
     public function updatePasien(Request $request)
     {
+        // dd($request->all());
         $pasien         = Pasien::firstWhere('no_rm',$request->rm);
         $kabUpdate      = is_numeric($request->kabupaten_pasien);
         $kecUpdate      = is_numeric($request->kecamatan_pasien);
@@ -222,7 +239,8 @@ class PasienIGDController extends Controller
         $pasien->pendidikan         = $request->pendidikan;
         $pasien->pekerjaan          = $request->pekerjaan;
         $pasien->kewarganegaraan    = $request->kewarganegaraan;
-        $pasien->negara             = strtoupper($request->negara);
+        // $pasien->negara             = strtoupper($request->negara);
+        $pasien->negara             = 'INDONESIA';
         $pasien->propinsi           = $request->provinsi_pasien;
         $pasien->kabupaten          = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
         $pasien->kecamatan          = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
@@ -232,8 +250,8 @@ class PasienIGDController extends Controller
         $pasien->kode_kecamatan     = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
         $pasien->kode_desa          = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
         $pasien->alamat             = strtoupper($request->alamat_lengkap_pasien);
-        $pasien->no_tlp             = $request->no_tlp;
-        $pasien->no_hp              = $request->no_hp;
+        $pasien->no_tlp             = $request->no_tlp??$request->no_hp;
+        $pasien->no_hp              = $request->no_hp??$request->no_tlp;
         $pasien->nik_bpjs           = $request->nik;
         if($pasien->update())
         {

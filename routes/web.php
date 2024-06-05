@@ -463,7 +463,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/monev/store','storeMonev')->name('store.monev');
         Route::get('/monev-get','getMonev')->name('get-monev');
     });
-  
+
     // End GIZI
 
     // VIEW TERBARU
@@ -514,7 +514,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
     Route::get('/ranap-umum/pasien-bayi/ruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('get-bedruangan-bayi');
-    Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
+    Route::get('/bayi-daftar/rawat-inap/{rm}/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
     Route::get('/ranap-bpjs', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJS'])->name('ranapbpjs');
 
@@ -554,7 +554,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/bridging-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'bridgingSEP'])->name('bridging-sep');
     Route::put('/update-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'updateSep'])->name('update-sep.igd');
     Route::post('/pengajuan-backdate', [App\Http\Controllers\IGD\SEP\SEPController::class, 'sepBackdate'])->name('backdate-sep');
-    
+
     // Kunjungan
     Route::get('/get-kunjungan-pasien', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'RiwayatKunjunganPasien'])->name('kunjungan-pasien.get');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'daftarKunjungan'])->name('daftar.kunjungan');
@@ -563,7 +563,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
-
+    Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
@@ -580,6 +580,7 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar/pasien-igd', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'index'])->name('daftar-igd.v1');
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
+    Route::get('tanpa-daftar/cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJSTanpaDaftar'])->name('cek-status-bpjs.tanpa-daftar');
 
      // Start Gizi
      Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {

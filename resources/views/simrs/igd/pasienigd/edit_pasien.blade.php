@@ -38,8 +38,9 @@
                                         <option value="P" {{ $pasien->jenis_kelamin == 'P' ? 'selected' : '' }}>
                                             Perempuan
                                         </option>
-                                    </x-adminlte-select> @php $config = ['format' => 'DD-MM-YYYY']; @endphp
-                                    <x-adminlte-input-date name="tgl_lahir" value="{{ $pasien->tgl_lahir }}"
+                                    </x-adminlte-select>
+                                   @php $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir)) @endphp
+                                    <x-adminlte-input-date name="tgl_lahir" value="{{ $tgl_lahir }}"
                                         fgroup-class="col-md-6" label="Tanggal Lahir" :config="$config">
                                         <x-slot name="prependSlot">
                                             <div class="input-group-text bg-primary">
@@ -47,6 +48,13 @@
                                             </div>
                                         </x-slot>
                                     </x-adminlte-input-date>
+                                    {{-- @php
+                                        $tgl = Carbon\Carbon::parse($pasien->tgl_lahir)->format('d/m/Y');
+                                    @endphp
+                                    <div class="form-group col-md-6">
+                                        <label for="exampleInputBorderWidth2">Tgl Lahir</label>
+                                        <input type="text" name="tgl_lahir" id="tgl_lahir" class=" form-control" value="{{ Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d'); }}">
+                                    </div> --}}
                                     <x-adminlte-select name="agama" label="Agama" fgroup-class="col-md-6">
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->ID }}"
@@ -75,7 +83,7 @@
                                 <div class="row">
                                     <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon" value="{{ $pasien->no_tlp==null?$pasien->no_hp:$pasien->no_tlp }}"
                                         placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
-                                   
+
                                     <x-adminlte-select name="provinsi_pasien" label="Provinsi" id="provinsi_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($provinsi as $item)
