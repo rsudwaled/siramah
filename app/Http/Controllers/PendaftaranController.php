@@ -265,7 +265,6 @@ class PendaftaranController extends APIController
                 'status_api' => $request->status_api,
                 'keterangan' =>  $request->keterangan,
             ]);
-            dd($antrian);
             $api = new AntrianController();
             // $res = $api->update_antrean($request);
             // insert tracer tc_tracer_header
