@@ -2063,8 +2063,8 @@ class AntrianController extends APIController
                 if ($request->method == 'Bridging') {
                     $antrian->update([
                         'taskid' => 3,
-                        'taskid1' => Carbon::now()->format('Y-m-d H:i:s'),
-                        'taskid3' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'taskid1' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
+                        'taskid3' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
                         'user1' => $request->user,
                         'kode_kunjungan' => $request->kode_kunjungan,
                     ]);
