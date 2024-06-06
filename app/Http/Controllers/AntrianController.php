@@ -816,11 +816,13 @@ class AntrianController extends APIController
             'taskid' => 4,
             'taskid4' =>  now(),
             'status_api' => 0,
+            'user3' => $request->user,
             'keterangan' => "Panggilan ke poliklinik yang anda pilih",
         ]);
         Alert::success('Success', 'Panggil Pasien Berhasil');
         return redirect()->back();
     }
+
     public function panggilBridgingPoliklinik(Request $request)
     {
 
@@ -2631,6 +2633,30 @@ class AntrianController extends APIController
         // jika antrian tidak ditemukan
         else {
             return $this->sendError("Kode booking tidak ditemukan", 400);
+        }
+    }
+    public function panggil_dokter(Request $request)
+    {
+        // checking request
+        $validator = Validator::make($request->all(), [
+            "kodebooking" => "required",
+            "user" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        try {
+            $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+            $antrian->update([
+                'taskid' => 4,
+                'taskid4' =>  now(),
+                'status_api' => 0,
+                'user3' => $request->user,
+                'keterangan' => "Panggilan ke poliklinik yang anda pilih",
+            ]);
+            return $this->sendResponse("Ok", 200);
+        } catch (\Throwable $th) {
+            return $this->sendError($th->getMessage(), 201);
         }
     }
     public function info_pasien_baru(Request $request)
