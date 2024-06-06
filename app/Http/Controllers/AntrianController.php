@@ -2066,6 +2066,7 @@ class AntrianController extends APIController
                         'taskid1' => Carbon::now()->format('Y-m-d H:i:s'),
                         'taskid3' => Carbon::now()->format('Y-m-d H:i:s'),
                         'user1' => $request->user,
+                        'kode_kunjungan' => $request->kode_kunjungan,
                     ]);
                 }
                 $response = [
