@@ -260,11 +260,12 @@ class PendaftaranController extends APIController
             }
             $antrian->update([
                 'taskid' => $request->taskid,
-                'taskid1' => now(),
-                'taskid3' => now(),
+                'taskid1' => now()->setTimezone('Asia/Jakarta'),
+                'taskid3' => now()->setTimezone('Asia/Jakarta'),
                 'status_api' => $request->status_api,
                 'keterangan' =>  $request->keterangan,
             ]);
+            dd($antrian);
             $api = new AntrianController();
             // $res = $api->update_antrean($request);
             // insert tracer tc_tracer_header

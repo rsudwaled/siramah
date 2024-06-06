@@ -157,5 +157,5 @@ return [
     */
 
     'pagination_theme' => 'bootstrap',
-    'asset_url' => 'public/vendor/livewire/livewire.js',
+    'asset_url' => 'http://192.168.2.30/siramah/public/vendor/livewire/livewire.js',
 ];
