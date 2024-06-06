@@ -2051,6 +2051,14 @@ class AntrianController extends APIController
                     "user" => "System Antrian",
                     "nama" => $request->nama,
                 ]);
+                if ($request->method == 'Bridging') {
+                    $antrian->update([
+                        'taskid' => 3,
+                        'taskid1' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'taskid3' => Carbon::now()->format('Y-m-d H:i:s'),
+                        'user1' => $request->user,
+                    ]);
+                }
                 // kirim notif wa
                 $wa = new WhatsappController();
                 $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
