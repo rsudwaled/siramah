@@ -73,7 +73,18 @@
                 <x-adminlte-card title="Kunjungan Poliklinik ({{ $kunjungans->count() }} Orang)" theme="primary"
                     icon="fas fa-info-circle" collapsible>
                     @php
-                        $heads = ['No', 'Tanggal Masuk', 'Kode', 'Pasien', 'BPJS / NIK', 'Poliklinik', 'Antrian', 'Action', 'SEP / Ref'];
+                        $heads = [
+                            'No',
+                            'Tanggal Masuk',
+                            'Kode',
+                            'Pasien',
+                            'BPJS / NIK',
+                            'Poliklinik',
+                            'Antrian',
+                            'Antrian Farmasi',
+                            'Action',
+                            'SEP / Ref',
+                        ];
                         $config['paging'] = false;
                         $config['info'] = false;
                         $config['scrollY'] = '400px';
@@ -165,6 +176,20 @@
                                         @if ($item->status_api == 1)
                                         @endif
                                     @endif --}}
+                                </td>
+                                <td>
+                                    @if ($item->order_obat_header)
+                                        @if ($item->order_obat_header->kode_unit == 4008)
+                                            {{ substr($item->order_obat_header->kode_layanan_header, 12) }}
+                                            DEPO 2
+                                        @endif
+                                        @if ($item->order_obat_header->kode_unit == 4002)
+                                            {{ substr($item->order_obat_header->kode_layanan_header, 12) }}
+                                            DEPO 1
+                                        @endif
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($item->surat_kontrol)

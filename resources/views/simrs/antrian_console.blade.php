@@ -7,23 +7,6 @@
     <div class="wrapper">
         <div class="row p-1">
             <div class="col-md-5">
-                <x-adminlte-card title="Anjungan Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
-                    <div class="text-center">
-                        <x-adminlte-input name="kodebooking" label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
-                            placeholder="Masukan Kode Antrian untuk Checkin" igroup-size="lg">
-                            <x-slot name="appendSlot">
-                                <x-adminlte-button name="btn_checkin" id="btn_checkin" theme="success" label="Checkin!" />
-                            </x-slot>
-                            <x-slot name="prependSlot">
-                                <div class="input-group-text text-success">
-                                    <i class="fas fa-qrcode"></i>
-                                </div>
-                            </x-slot>
-                        </x-adminlte-input>
-                        <i class="fas fa-qrcode fa-5x"></i>
-                        <br>
-                    </div>
-                </x-adminlte-card>
                 <x-adminlte-card title="Informasi Antrian" theme="primary" icon="fas fa-user-injured">
                     <div class="row">
                         <div class="col-md-3">
@@ -88,6 +71,24 @@
                                 class="fas fa-print"></i> Checkin
                             Antrian</a>
                     </x-slot>
+                </x-adminlte-card>
+                <x-adminlte-card title="Anjungan Checkin Antrian RSUD Waled" theme="primary" icon="fas fa-qrcode">
+                    <div class="text-center">
+                        <x-adminlte-input name="kodebooking" label="Silahkan scan QR Code Antrian atau masukan Kode Antrian"
+                            placeholder="Masukan Kode Antrian untuk Checkin">
+                            <x-slot name="appendSlot">
+                                <x-adminlte-button name="btn_checkin" id="btn_checkin" theme="success" label="Checkin!" />
+                            </x-slot>
+                            <x-slot name="prependSlot">
+                                <div class="input-group-text text-success">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                            </x-slot>
+                        </x-adminlte-input>
+                        <b>Untuk Checkin Melalui App Mobile JKN, Silahkan QR Dibawah ini</b>
+                        <img src="{{ asset('portalbpjs.jpg') }}" width="40%" alt="">
+                        <br>
+                    </div>
                 </x-adminlte-card>
             </div>
             {{-- ambil antrian offline --}}
@@ -369,6 +370,6 @@
             location.reload();
         });
     </script>
-    @section('plugins.Sweetalert2', true)
-    @include('sweetalert::alert')
+@section('plugins.Sweetalert2', true)
+@include('sweetalert::alert')
 @stop

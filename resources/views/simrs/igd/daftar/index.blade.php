@@ -8,6 +8,8 @@
             </div>
             <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#" data-toggle="modal" data-target="#modalCekBpjs"
+                        class="btn btn-sm btn-success">Cek BPJS</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
                             Baru</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
@@ -296,7 +298,7 @@
                                                             {{ $item->alasan_masuk }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
-                                               
+
                                                 <div class="form-group">
                                                     <label for="exampleInputBorderWidth2">Perujuk
                                                         <code>(nama faskes yang merujuk)</code></label>
@@ -330,14 +332,44 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true">
+    <div class="modal fade" id="modalCekBpjs" style="display: none;" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">CEK STATUS BPJS</h5>
+                </div>
+                <form id="cekbpjs-status-tanpa-daftar" method="get">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">Nomor Kartu</label>
+                                <input type="text" name="cek_nomorkartu" class="form-control" id="cek_nomorkartu">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">Nomor NIK</label>
+                                <input type="text" name="cek_nik" class="form-control" id="cek_nik">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-primary btn-cek-bpjs-tanpa-daftar"
+                            form="cekbpjs-status-tanpa-daftar">Cek Status</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Riwayat Kunjungan</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    {{-- <div class="row">
                         <div class="col-5 col-sm-3">
                             <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
                                 aria-orientation="vertical">
@@ -359,10 +391,10 @@
                                             <span class="info-box-text">RAWAT JALAN</span>
                                             <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
                                         </div>
-    
+
                                     </div>
                                     <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-    
+
                                         <thead>
                                             <tr>
                                                 <th>KUNJUNGAN</th>
@@ -405,7 +437,26 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+                    <div class="row">
+                        <div class="col-lg-12">
+                         <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                             <thead>
+                                 <tr>
+                                     <th>KUNJUNGAN</th>
+                                     <th>NO RM</th>
+                                     <th>PASIEN</th>
+                                     <th>POLI</th>
+                                     <th>STATUS</th>
+                                     <th>TGL MASUK</th>
+                                     <th>TGL PULANG</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                             </tbody>
+                         </table>
+                        </div>
+                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
@@ -442,7 +493,7 @@
                 }
             });
         });
-        
+
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
                 document.getElementById('div_stts_kecelakaan').style.display = "block";
@@ -463,7 +514,7 @@
                 $('#perujuk').hide();
             }
         });
-        
+
         $('.btn-pilihPasien').on('click', function() {
             let rm = $(this).data('rm');
             let nama = $(this).data('nama');
@@ -476,6 +527,68 @@
             $('#nama_ortu').val(nama);
             $('#no_bpjs').val(nomorkartu);
             $('#noTelp').val(kontak);
+        });
+
+        $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
+            var cek_nik = document.getElementById('cek_nik').value;
+            var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
+            var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
+            Swal.fire({
+                title: "CEK STATUS BPJS?",
+                text: "silahkan pilih tombol cek status!",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Cek Status!",
+                cancelButtonText: "Batal!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+                        url: cekStatusBPJS,
+                        dataType: 'json',
+                        data: {
+                            cek_nomorkartu: cek_nomorkartu,
+                            cek_nik: cek_nik,
+                        },
+                        success: function(data) {
+                            console.log(data)
+                            if (data.code == 200) {
+                                Swal.fire({
+                                    title: "Success!",
+                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( jenis : ' +
+                                        data
+                                        .jenisPeserta + ')',
+                                    icon: "success",
+                                    confirmButtonText: "oke!",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                        document.getElementById('nomorkartu').value = '';
+                                        document.getElementById('nik').value = '';
+                                        $('#modalCekBpjs').modal('hide');
+                                    }
+                                });
+                                $.LoadingOverlay("hide");
+                            } else {
+                                Swal.fire({
+                                    title: "INFO!",
+                                    text: data.keterangan + ' ' + '( KODE : ' + data
+                                        .jenisPeserta + ')',
+                                    icon: "info",
+                                    confirmButtonText: "oke!",
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                                $.LoadingOverlay("hide");
+                            }
+                        },
+                    });
+                }
+            });
         });
 
         $('.btn-cekBPJS').on('click', function() {
@@ -550,7 +663,33 @@
                     url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
                     dataType: 'JSON',
                     success: function(data) {
-                        $.each(data.riwayat, function(index, riwayat) {
+                        // $.each(data.riwayat, function(index, riwayat) {
+                        //     var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                        //         .kode_kunjungan + "</td><td>" +
+                        //         riwayat.no_rm + "</td><td>" + riwayat.pasien
+                        //         .nama_px +
+                        //         "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
+                        //         riwayat.status.status_kunjungan + "</td><td>" +
+                        //         riwayat.tgl_masuk + "</td><td>" + (riwayat
+                        //             .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                        //             .tgl_keluar) +
+                        //         "</td></tr>";
+                        //     $('.riwayatKunjungan tbody').append(row);
+                        // });
+                        // $.each(data.ranap, function(index, ranap) {
+                        //     var row = "<tr class='riwayat-kunjungan'><td>" + ranap
+                        //         .kode_kunjungan + "</td><td>" +
+                        //         ranap.no_rm + "</td><td>" + ranap.pasien
+                        //         .nama_px +
+                        //         "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
+                        //         ranap.status.status_kunjungan + "</td><td>" +
+                        //         ranap
+                        //         .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
+                        //             null ? 'Belum Pulang' : ranap.tgl_keluar) +
+                        //         "</td></tr>";
+                        //     $('.riwayatRanap tbody').append(row);
+                        // });
+                        $.each(data.semua_kunjungan, function(index, riwayat) {
                             var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
                                 .kode_kunjungan + "</td><td>" +
                                 riwayat.no_rm + "</td><td>" + riwayat.pasien
@@ -561,20 +700,7 @@
                                     .tgl_keluar == null ? 'Belum Pulang' : riwayat
                                     .tgl_keluar) +
                                 "</td></tr>";
-                            $('.riwayatKunjungan tbody').append(row);
-                        });
-                        $.each(data.ranap, function(index, ranap) {
-                            var row = "<tr class='riwayat-kunjungan'><td>" + ranap
-                                .kode_kunjungan + "</td><td>" +
-                                ranap.no_rm + "</td><td>" + ranap.pasien
-                                .nama_px +
-                                "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
-                                ranap.status.status_kunjungan + "</td><td>" +
-                                ranap
-                                .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
-                                    null ? 'Belum Pulang' : ranap.tgl_keluar) +
-                                "</td></tr>";
-                            $('.riwayatRanap tbody').append(row);
+                            $('.semuaKunjungan tbody').append(row);
                         });
                     },
                     error: function(xhr, status, error) {

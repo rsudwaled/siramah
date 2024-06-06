@@ -77,22 +77,20 @@
                             @endif
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
-                            <span class="badge bg-danger float-right">On Building</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical"></i> Evaluasi Awal MPP A
-                            <span class="badge bg-danger float-right">On Building</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="#nav" class="nav-link">
                             <i class="fas fa-file-medical"></i> Catatan Implementasi MPP B
-                            <span class="badge bg-danger float-right">On Building</span>
+                        </a>
+                    </li> --}}
+                    <li class="nav-item">
+                        <a href="#nav" class="nav-link">
+                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
+                            <span class="badge bg-danger float-right">Belum</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -146,10 +144,9 @@
                             </a>
                             <div id="cIGD" class="collapse" role="tabpanel">
                                 <div class="card-body">
-                                    Riwayat & Triase IGD On Building
-                                    {{-- <iframe
+                                    <iframe
                                         src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
-                                        height="780" width="100%" frameborder="0"></iframe> --}}
+                                        height="780" width="100%" frameborder="0"></iframe>
                                 </div>
                             </div>
                         </div>
@@ -239,6 +236,8 @@
                         @include('simrs.ranap.modal_mpp_a')
                         {{-- mpp form b --}}
                         @include('simrs.ranap.erm_ranap_mppb')
+                        {{-- rencana pemulangan --}}
+                        @include('simrs.ranap.modal_rencana_pulang')
                         {{-- resume --}}
                         @include('simrs.ranap.modal_resume_ranap')
                         {{-- tindakan --}}

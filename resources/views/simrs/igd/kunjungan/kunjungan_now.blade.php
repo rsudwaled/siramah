@@ -32,6 +32,8 @@
                         </div>
                         <div class="col-lg-6 text-right">
                             <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP BACKDATE</button>
+                            <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
+                                LABEL</button>
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                                 <i class="fas fa-sync"></i> Refresh</a>
                         </div>
@@ -117,7 +119,7 @@
                                             data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
                                             class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
                                             label="ICD-10" /> --}}
-                                            
+
                                         @php
                                             if (empty($item->noKartu)) {
                                                 $nomorKartu = null;
@@ -272,6 +274,33 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                     <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan Pengajuan</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">CETAK LABEL</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="formCetakLabel" action="{{ route('cetak-label-igd') }}" method="get" target="_blank">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputBorderWidth2">RM Pasien</label>
+                            <input type="text" name="label_no_rm" class="form-control" id="label_no_rm">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" form="formCetakLabel"
+                            class="btn btn-primary btn-cetak-label-igd">Cetak</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

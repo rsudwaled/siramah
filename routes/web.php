@@ -42,6 +42,8 @@ use App\Http\Controllers\FormulirRL5Controller;
 use App\Http\Controllers\CPPTController;
 use App\Http\Controllers\EklaimController;
 use App\Http\Controllers\EncounterController;
+use App\Http\Controllers\IcareController;
+use App\Http\Controllers\IGD\SEP\SEPController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JabatanKerjaController;
 use App\Http\Controllers\KepegawaianController;
@@ -55,10 +57,32 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PractitionerController;
 use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
-
-// rekam medis
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
+use App\Livewire\Bpjs\Antrian\AntreanDokter;
+use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
+use App\Livewire\Bpjs\Antrian\AntreanTanggal;
+use App\Livewire\Bpjs\Antrian\DashboardBulan;
+use App\Livewire\Bpjs\Antrian\DashboardTanggal;
+use App\Livewire\Bpjs\Antrian\ListTaskid;
+use App\Livewire\Bpjs\Antrian\RefDokter;
+use App\Livewire\Bpjs\Antrian\RefJadwalDokter;
+use App\Livewire\Bpjs\Antrian\RefPesertaFingerprint;
+use App\Livewire\Bpjs\Antrian\RefPoliklinik;
+use App\Livewire\Bpjs\Antrian\RefPoliklinikFingerprint;
+use App\Livewire\Bpjs\Vclaim\MonitoringDataKlaim;
+use App\Livewire\Bpjs\Vclaim\MonitoringDataKunjungan;
+use App\Livewire\Bpjs\Vclaim\MonitoringKlaimJasaRaharja;
+use App\Livewire\Bpjs\Vclaim\MonitoringPelayananPeserta;
+use App\Livewire\Bpjs\Vclaim\Peserta;
+use App\Livewire\Bpjs\Vclaim\Referensi;
+use App\Livewire\Bpjs\Vclaim\Rujukan;
+use App\Livewire\Bpjs\Vclaim\Sep;
+use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Rekammedis\RekamMedisRajal;
+use App\Livewire\User\RolePermission;
+use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -101,6 +125,14 @@ Route::get('jadwaldokterPoli', [JadwalDokterController::class, 'jadwaldokterPoli
 Route::get('daftarUmumOffline', [PendaftaranController::class, 'daftarUmumOffline'])->name('daftarUmumOffline');
 Route::get('cekPrinter', [ThermalPrintController::class, 'cekPrinter'])->name('cekPrinter');
 Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('checkinUpdate');
+// display antrian
+Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAntrianPoliklinik'])->name('displayAntrianPoliklinik');
+Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
+Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
+Route::get('displayantrian2', [PoliklinikController::class, 'displayantrian2'])->name('displayantrian2');
+Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
+
+
 // cppt
 Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
 Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
@@ -108,7 +140,7 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
-    Route::get('profile', [UserController::class, 'profile'])->name('profile'); #ok
+    Route::get('profile', UserProfil::class)->name('profile')->lazy(); #ok
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
@@ -120,9 +152,8 @@ Route::middleware('auth')->group(function () {
         Route::get('pasienexport', [UserController::class, 'pasienexport'])->name('pasienexport');
         Route::post('userimport', [UserController::class, 'userimport'])->name('userimport');
         Route::get('userexport', [UserController::class, 'userexport'])->name('userexport');
-
-        Route::resource('role', RoleController::class);
-        Route::resource('permission', PermissionController::class);
+        Route::get('role-permission', RolePermission::class)->name('role.permission');
+        Route::get('rekammedis/rajal', RekamMedisRajal::class)->name('rekammedis.rajal');
         Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
         Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
         Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
@@ -176,6 +207,7 @@ Route::middleware('auth')->group(function () {
     Route::get('antrianKasir', [AntrianController::class, 'antrianKasir'])->name('antrianKasir');
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
+    Route::get('monitoringAntrianRajal', [AntrianController::class, 'monitoringAntrianRajal'])->name('monitoringAntrianRajal');
     Route::get('batalAntrian', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
     Route::get('panggilPoliklinik', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
     Route::get('panggilUlangPoliklinik', [AntrianController::class, 'panggilUlangPoliklinik'])->name('panggilUlangPoliklinik');
@@ -183,7 +215,9 @@ Route::middleware('auth')->group(function () {
     Route::get('lanjutFarmasiRacikan', [AntrianController::class, 'lanjutFarmasiRacikan'])->name('lanjutFarmasiRacikan');
     Route::get('selesaiPoliklinik', [AntrianController::class, 'selesaiPoliklinik'])->name('selesaiPoliklinik');
     Route::get('kunjunganPoliklinik', [AntrianController::class, 'kunjunganPoliklinik'])->name('kunjunganPoliklinik');
-    Route::get('kunjungan_rajal', [AntrianController::class, 'kunjungan_rajal'])->name('kunjungan_rajal');
+    Route::get('kunjunganrajal', [AntrianController::class, 'kunjunganrajal'])->name('kunjunganrajal');
+    Route::get('ermrajal', [AntrianController::class, 'ermrajal'])->name('ermrajal');
+    Route::get('icare', [IcareController::class, 'icare'])->name('icare');
     Route::get('get_kunjungan_rajal', [AntrianController::class, 'get_kunjungan_rajal'])->name('get_kunjungan_rajal');
     Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
     Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntrianPoliklinik'])->name('laporanAntrianPoliklinik');
@@ -274,29 +308,57 @@ Route::middleware('auth')->group(function () {
     Route::get('bukakunjungan', [KunjunganController::class, 'bukakunjungan'])->name('bukakunjungan');
     Route::get('tutupkunjungan', [KunjunganController::class, 'tutupkunjungan'])->name('tutupkunjungan');
     Route::get('laporan_eklaim_ranap', [EklaimController::class, 'laporan_eklaim_ranap'])->name('laporan_eklaim_ranap');
+    Route::middleware(['can:antrian-bpjs'])->group(function () {
+        Route::get('bpjs/antrian/refpoliklinik', RefPoliklinik::class)->name('antrian.refpoliklinik')->lazy();
+        Route::get('bpjs/antrian/refdokter', RefDokter::class)->name('antrian.refdokter')->lazy();
+        Route::get('bpjs/antrian/refjadwaldokter', RefJadwalDokter::class)->name('antrian.refjadwaldokter')->lazy();
+        Route::get('bpjs/antrian/refpoliklinik-fingerprint', RefPoliklinikFingerprint::class)->name('antrian.refpoliklinik.fingerprint')->lazy();
+        Route::get('bpjs/antrian/refpeserta-fingerprint', RefPesertaFingerprint::class)->name('antrian.refpeserta.fingerprint')->lazy();
+        Route::get('bpjs/antrian/listtaskid', ListTaskid::class)->name('antrian.listtaskid')->lazy();
+        Route::get('bpjs/antrian/dashboardtanggal', DashboardTanggal::class)->name('antrian.dashboardtanggal')->lazy();
+        Route::get('bpjs/antrian/dashboardbulan', DashboardBulan::class)->name('antrian.dashboardbulan')->lazy();
+        Route::get('bpjs/antrian/antreantanggal', AntreanTanggal::class)->name('antrian.antreantanggal')->lazy();
+        Route::get('bpjs/antrian/antreankodebooking/{kodebooking}', AntreanKodebooking::class)->name('antrian.antreankodebooking')->lazy();
+        Route::get('bpjs/antrian/antreanbelumlayani', AntreanBelumLayani::class)->name('antrian.antreanbelumlayani')->lazy();
+        Route::get('bpjs/antrian/antreandokter', AntreanDokter::class)->name('antrian.antreandokter')->lazy();
+    });
+    Route::middleware(['can:vclaim-bpjs'])->group(function () {
+        Route::get('bpjs/vclaim/monitoring-data-kunjungan', MonitoringDataKunjungan::class)->name('vclaim.monitoring.datakunjungan')->lazy();
+        Route::get('bpjs/vclaim/monitoring-data-klaim', MonitoringDataKlaim::class)->name('vclaim.monitoring.dataklaim')->lazy();
+        Route::get('bpjs/vclaim/monitoring-pelayanan-peserta', MonitoringPelayananPeserta::class)->name('vclaim.monitoring.pelayananpeserta')->lazy();
+        Route::get('bpjs/vclaim/monitoring-klaim-jasa-raharja', MonitoringKlaimJasaRaharja::class)->name('vclaim.monitoring.klaimjasaraharja')->lazy();
+        Route::get('bpjs/vclaim/peserta-bpjs', Peserta::class)->name('vclaim.peserta.bpjs')->lazy();
+        Route::get('bpjs/vclaim/referensi', Referensi::class)->name('vclaim.referensi')->lazy();
+        Route::get('bpjs/vclaim/surat-kontrol', SuratKontrol::class)->name('vclaim.suratkontrol')->lazy();
+        Route::get('bpjs/vclaim/suratkontrol_print', [SuratKontrolController::class, 'suratkontrol_print'])->name('vclaim.suratkontrol_print');
+        Route::get('bpjs/vclaim/rujukan', Rujukan::class)->name('vclaim.rujukan')->lazy();
+        Route::get('bpjs/vclaim/sep', Sep::class)->name('vclaim.sep')->lazy();
+        Route::get('bpjs/vclaim/sep_print', [SEPController::class, 'sep_print'])->name('vclaim.sep_print');
+    });
     // antrian bpjs
-    Route::get('statusAntrianBpjs', [AntrianController::class, 'statusAntrianBpjs'])->name('statusAntrianBpjs');
-    Route::get('poliklikAntrianBpjs', [PoliklinikController::class, 'poliklikAntrianBpjs'])->name('poliklikAntrianBpjs');
-    Route::get('dokterAntrianBpjs', [DokterController::class, 'dokterAntrianBpjs'])->name('dokterAntrianBpjs');
-    Route::get('resetDokter', [DokterController::class, 'resetDokter'])->name('resetDokter');
-    Route::get('jadwalDokterAntrianBpjs', [JadwalDokterController::class, 'jadwalDokterAntrianBpjs'])->name('jadwalDokterAntrianBpjs');
-    Route::get('fingerprintPeserta', [PasienController::class, 'fingerprintPeserta'])->name('fingerprintPeserta');
-    Route::get('antrianBpjsConsole', [AntrianController::class, 'antrianConsole'])->name('antrianBpjsConsole');
-    Route::get('antrianBpjs', [AntrianController::class, 'antrianBpjs'])->name('antrianBpjs');
-    Route::get('listTaskID', [AntrianController::class, 'listTaskID'])->name('listTaskID');
-    Route::get('dashboardTanggalAntrian', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrian');
-    Route::get('dashboardBulanAntrian', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrian');
-    Route::get('jadwalOperasi', [JadwalOperasiController::class, 'jadwalOperasi'])->name('jadwalOperasi');
-    Route::get('antrianPerTanggal', [AntrianController::class, 'antrianPerTanggal'])->name('antrianPerTanggal');
-    Route::get('antrianPerKodebooking', [AntrianController::class, 'antrianPerKodebooking'])->name('antrianPerKodebooking');
-    Route::get('antrianBelumDilayani', [AntrianController::class, 'antrianBelumDilayani'])->name('antrianBelumDilayani');
-    Route::get('antrianPerDokter', [AntrianController::class, 'antrianPerDokter'])->name('antrianPerDokter');
+    // Route::get('statusAntrianBpjs', [AntrianController::class, 'statusAntrianBpjs'])->name('statusAntrianBpjs');
+    // Route::get('poliklikAntrianBpjs', [PoliklinikController::class, 'poliklikAntrianBpjs'])->name('poliklikAntrianBpjs');
+    // Route::get('dokterAntrianBpjs', [DokterController::class, 'dokterAntrianBpjs'])->name('dokterAntrianBpjs');
+    // Route::get('resetDokter', [DokterController::class, 'resetDokter'])->name('resetDokter');
+    // Route::get('jadwalDokterAntrianBpjs', [JadwalDokterController::class, 'jadwalDokterAntrianBpjs'])->name('jadwalDokterAntrianBpjs');
+    // Route::get('fingerprintPeserta', [PasienController::class, 'fingerprintPeserta'])->name('fingerprintPeserta');
+    // Route::get('antrianBpjsConsole', [AntrianController::class, 'antrianConsole'])->name('antrianBpjsConsole');
+    // Route::get('antrianBpjs', [AntrianController::class, 'antrianBpjs'])->name('antrianBpjs');
+    // Route::get('listTaskID', [AntrianController::class, 'listTaskID'])->name('listTaskID');
+    // Route::get('dashboardTanggalAntrian', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrian');
+    // Route::get('dashboardBulanAntrian', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrian');
+    // Route::get('jadwalOperasi', [JadwalOperasiController::class, 'jadwalOperasi'])->name('jadwalOperasi');
+    // Route::get('antmonitoringPelayananPesertarianPerTanggal', [AntrianController::class, 'antrianPerTanggal'])->name('antrianPerTanggal');
+    // Route::get('monitoringAntrian', [AntrianController::class, 'monitoringAntrian'])->name('monitoringAntrian');
+    // Route::get('antrianPerKodebooking', [AntrianController::class, 'antrianPerKodebooking'])->name('antrianPerKodebooking');
+    // Route::get('antrianBelumDilayani', [AntrianController::class, 'antrianBelumDilayani'])->name('antrianBelumDilayani');
+    // Route::get('antrianPerDokter', [AntrianController::class, 'antrianPerDokter'])->name('antrianPerDokter');
     // vclaim bpjs
-    Route::get('monitoringDataKunjungan', [VclaimController::class, 'monitoringDataKunjungan'])->name('monitoringDataKunjungan');
-    Route::get('monitoringDataKlaim', [VclaimController::class, 'monitoringDataKlaim'])->name('monitoringDataKlaim');
+    // Route::get('monitoringDataKunjungan', [VclaimController::class, 'monitoringDataKunjungan'])->name('monitoringDataKunjungan');
+    // Route::get('monitoringDataKlaim', [VclaimController::class, 'monitoringDataKlaim'])->name('monitoringDataKlaim');
     Route::get('monitoringPelayananPeserta', [VclaimController::class, 'monitoringPelayananPeserta'])->name('monitoringPelayananPeserta');
-    Route::get('monitoringKlaimJasaraharja', [VclaimController::class, 'monitoringKlaimJasaraharja'])->name('monitoringKlaimJasaraharja');
-    Route::get('referensiVclaim', [VclaimController::class, 'referensiVclaim'])->name('referensiVclaim');
+    // Route::get('monitoringKlaimJasaraharja', [VclaimController::class, 'monitoringKlaimJasaraharja'])->name('monitoringKlaimJasaraharja');
+    // Route::get('referensiVclaim', [VclaimController::class, 'referensiVclaim'])->name('referensiVclaim');
     Route::get('ref_diagnosa_api', [VclaimController::class, 'ref_diagnosa_api'])->name('ref_diagnosa_api');
     Route::get('ref_diagnosa_api2', [VclaimController::class, 'ref_diagnosa_api2'])->name('ref_diagnosa_api2');
     Route::get('ref_poliklinik_api', [VclaimController::class, 'ref_poliklinik_api'])->name('ref_poliklinik_api');
@@ -305,9 +367,9 @@ Route::middleware('auth')->group(function () {
     Route::get('ref_provinsi_api', [VclaimController::class, 'ref_provinsi_api'])->name('ref_provinsi_api');
     Route::get('ref_kabupaten_api', [VclaimController::class, 'ref_kabupaten_api'])->name('ref_kabupaten_api');
     Route::get('ref_kecamatan_api', [VclaimController::class, 'ref_kecamatan_api'])->name('ref_kecamatan_api');
-    Route::get('suratKontrolBpjs', [SuratKontrolController::class, 'suratKontrolBpjs'])->name('suratKontrolBpjs');
-    Route::get('sep_internal', [VclaimController::class, 'sepInternal'])->name('sep_internal');
-    Route::delete('sep_internal_delete', [VclaimController::class, 'sepInternalDelete'])->name('sep_internal_delete');
+    // Route::get('suratKontrolBpjs', [SuratKontrolController::class, 'suratKontrolBpjs'])->name('suratKontrolBpjs');
+    // Route::get('sep_internal', [VclaimController::class, 'sepInternal'])->name('sep_internal');
+    // Route::delete('sep_internal_delete', [VclaimController::class, 'sepInternalDelete'])->name('sep_internal_delete');
 
     // suratkontrol
     Route::post('suratkontrol_simpan', [SuratKontrolController::class, 'suratkontrol_simpan'])->name('suratkontrol_simpan');
@@ -416,49 +478,48 @@ Route::middleware('auth')->group(function () {
 
     // Display Antrian
     Route::controller(App\Http\Controllers\DisplayAntrian\DisplayAntrianController::class)->prefix('display-antrian')->name('simrs.display-antrian.')->group(function () {
-        Route::get('/farmasi','farmasi')->name('farmasi');
+        Route::get('/farmasi', 'farmasi')->name('farmasi');
     });
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\LaporanIndexRMController::class)->prefix('laporan-index')->name('laporan-index.')->group(function () {
         // Laporan Index
         Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('index_operasi.')->group(function () {
-            Route::get('/','index')->name('index');
+            Route::get('/', 'index')->name('index');
         });
         Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-kematian')->name('index_kematian.')->group(function () {
-            Route::get('/','indexKematian')->name('index');
+            Route::get('/', 'indexKematian')->name('index');
         });
-
     });
 
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexKematianController::class)->prefix('index-operasi')->name('laporanindex.index_operasi.')->group(function () {
-        Route::get('/','index')->name('index');
+        Route::get('/', 'index')->name('index');
     });
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexDokterController::class)->prefix('index-dokter')->name('laporanindex.index_dokter.')->group(function () {
-        Route::get('/','index')->name('index');
+        Route::get('/', 'index')->name('index');
     });
 
     // Start Gizi
     Route::controller(App\Http\Controllers\Gizi\GiziController::class)->prefix('gizi')->name('simrs.gizi.')->group(function () {
-        Route::get('/','index')->name('index');
-        Route::get('/{kunjungan}/{counter}/assesment','createAssesment')->name('create.assesment');
+        Route::get('/', 'index')->name('index');
+        Route::get('/{kunjungan}/{counter}/assesment', 'createAssesment')->name('create.assesment');
         // assesement
-        Route::get('/get-assesment','getAssesment')->name('get-assesment');
-        Route::post('/assesment','addAssesment')->name('add.assesment');
+        Route::get('/get-assesment', 'getAssesment')->name('get-assesment');
+        Route::post('/assesment', 'addAssesment')->name('add.assesment');
 
-        Route::post('/assesment/store','storeAssesment')->name('store.assesment');
+        Route::post('/assesment/store', 'storeAssesment')->name('store.assesment');
         // diagnosis gizi
-        Route::post('/diagnosis/store','storeDiagnosis')->name('store.diagnosis');
-        Route::get('/diagnosis-get','getDiagnosis')->name('get-diagnosis');
+        Route::post('/diagnosis/store', 'storeDiagnosis')->name('store.diagnosis');
+        Route::get('/diagnosis-get', 'getDiagnosis')->name('get-diagnosis');
         // intervensi gizi
-        Route::post('/intervensi/store','storeIntervensi')->name('store.intervensi');
-        Route::get('/intervensi-get','getIntervensi')->name('get-intervensi');
+        Route::post('/intervensi/store', 'storeIntervensi')->name('store.intervensi');
+        Route::get('/intervensi-get', 'getIntervensi')->name('get-intervensi');
         // monitoring dan evaluasi
-        Route::post('/monev/store','storeMonev')->name('store.monev');
-        Route::get('/monev-get','getMonev')->name('get-monev');
+        Route::post('/monev/store', 'storeMonev')->name('store.monev');
+        Route::get('/monev-get', 'getMonev')->name('get-monev');
     });
-  
+
     // End GIZI
 
     // VIEW TERBARU
@@ -509,7 +570,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
     Route::get('/ranap-umum/pasien-bayi', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapUMUMBayi'])->name('ranap-bayi-umum.igk');
     Route::get('/ranap-umum/pasien-bayi/ruangan', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getBedByRuangan'])->name('get-bedruangan-bayi');
-    Route::get('/bayi-daftar/rawat-inap/{rm}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
+    Route::get('/bayi-daftar/rawat-inap/{rm}/{kunjungan}', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'formRanapBayi'])->name('form-umum.ranap-bayi');
     Route::post('/ranap-umum/pasien-bayi/store', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBayiStore'])->name('ranap-bayi.store');
     Route::get('/ranap-bpjs', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJS'])->name('ranapbpjs');
 
@@ -549,7 +610,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/bridging-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'bridgingSEP'])->name('bridging-sep');
     Route::put('/update-sep/igd', [App\Http\Controllers\IGD\SEP\SEPController::class, 'updateSep'])->name('update-sep.igd');
     Route::post('/pengajuan-backdate', [App\Http\Controllers\IGD\SEP\SEPController::class, 'sepBackdate'])->name('backdate-sep');
-    
+
     // Kunjungan
     Route::get('/get-kunjungan-pasien', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'RiwayatKunjunganPasien'])->name('kunjungan-pasien.get');
     Route::get('/daftar-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'daftarKunjungan'])->name('daftar.kunjungan');
@@ -558,7 +619,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-kunjungan/{kunjungan}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updateKunjungan'])->name('update.kunjungan');
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
-
+    Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
@@ -575,11 +636,12 @@ Route::middleware('auth')->group(function () {
     Route::get('daftar/pasien-igd', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'index'])->name('daftar-igd.v1');
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
+    Route::get('tanpa-daftar/cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJSTanpaDaftar'])->name('cek-status-bpjs.tanpa-daftar');
 
-     // Start Gizi
-     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
-        Route::get('/','index')->name('index');
-        Route::post('/copy-selected','copyTable')->name('copy_totable');
+    // Start Gizi
+    Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/copy-selected', 'copyTable')->name('copy_totable');
     });
     // End GIZI
 });

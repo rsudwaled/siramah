@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Antrian;
 use App\Models\Kunjungan;
 use App\Models\PenjaminSimrs;
 use App\Models\Poliklinik;
@@ -46,6 +47,28 @@ class PoliklinikController extends BaseController
             'poliklinik_save',
         ]));
     }
+    public function displayAntrianPoliklinik(Request $request)
+    {
+        $antrians = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))
+            ->where('lokasi', 2)->get();
+        $polis = Poliklinik::where('lokasi', 2)->get();
+        return view('simrs.display_antrian_poliklinik', compact('antrians', 'polis'));
+    }
+    public function displayantrian2(Request $request)
+    {
+        $antrians = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))
+            ->where('lokasi', 2)->get();
+        $polis = Poliklinik::where('lokasi', 2)->get();
+        return view('simrs.display_antrian_poliklinik', compact('antrians', 'polis'));
+    }
+    public function displayantrian3(Request $request)
+    {
+        $antrians = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))
+            ->where('lokasi', 3)->get();
+        $polis = Poliklinik::where('lokasi', 3)->get();
+        return view('simrs.display_antrian_lt3', compact('antrians', 'polis'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([

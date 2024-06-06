@@ -1,5 +1,5 @@
 @extends('simrs.ranap.pdf_print')
-@section('title', 'Asesmen Awal Rawat Inap')
+@section('title', 'Print Surat Kontrol BPJS')
 
 @section('content')
     <table class="table table-sm" style="font-size: 11px;border-bottom: 2px solid black !important">
@@ -20,7 +20,7 @@
     <table class="table table-sm" style="font-size: 11px">
         <tr>
             <td width="100%" colspan="2" class="text-center">
-                <b class="text-md">SURAT KONTROL RAWAT JALAN</b> <br>
+                <b class="text-md">SURAT KONTROL BPJS RAWAT JALAN</b> <br>
                 <b class="text-md">No. {{ $suratkontrol->noSuratKontrol }}</b>
             </td>
         </tr>
@@ -122,7 +122,14 @@
                     <tr>
                         <td>Asal Rujukan</td>
                         <td>:</td>
-                        <td><b>{{ $sep->provPerujuk->asalRujukan }}</b></td>
+                        <td><b>
+                            @if ( $sep->provPerujuk->asalRujukan == 1)
+                                Faskes Tingkat Pertama
+                            @else
+
+                            @endif
+
+                            </b></td>
                     </tr>
                     <tr>
                         <td>No Rujukan</td>

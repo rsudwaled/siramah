@@ -13,18 +13,24 @@ use App\Models\AlasanMasuk;
 use App\Models\StatusKunjungan;
 use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
+use App\Models\Pasien;
 use DB;
 use Illuminate\Support\Facades\Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use RealRashid\SweetAlert\Facades\Alert;
+use PDF;
 
 class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
-        $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
-        $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
-        
-        return response()->json(['riwayat'=>$riwayat,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        // $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
+        // $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
+        // $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
+        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(10)->get();
+
+        // return response()->json(['riwayat'=>$riwayat,'semua_kunjungan'=>$all_kunj,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        return response()->json(['semua_kunjungan'=>$all_kunj]);
     }
 
     public function daftarKunjungan(Request $request)
@@ -39,12 +45,12 @@ class KunjunganController extends Controller
                 'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jk',
                 'ts_kunjungan.kode_kunjungan as kunjungan',
                 'ts_kunjungan.status_kunjungan as stts_kunjungan',
-                'ts_kunjungan.no_sep as sep', 
-                'ts_kunjungan.form_send_by as form_send_by', 
-                'ts_kunjungan.ref_kunjungan as ref_kunjungan', 
+                'ts_kunjungan.no_sep as sep',
+                'ts_kunjungan.form_send_by as form_send_by',
+                'ts_kunjungan.ref_kunjungan as ref_kunjungan',
                 'ts_kunjungan.is_bpjs_proses as is_bpjs_proses',
                 'ts_kunjungan.tgl_masuk as tgl_kunjungan',
-                'ts_kunjungan.kode_unit as unit', 
+                'ts_kunjungan.kode_unit as unit',
                 'ts_kunjungan.diagx as diagx',
                 'ts_kunjungan.lakalantas as lakaLantas',
                 'ts_kunjungan.jp_daftar as jp_daftar',
@@ -57,12 +63,12 @@ class KunjunganController extends Controller
 
         if($request->tanggal && !empty($request->tanggal))
         {
-            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal); 
+            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal);
         }
 
         // if($request->unit && !empty($request->unit))
         // {
-        //     $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]); 
+        //     $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]);
         // }
 
         if(empty($request->tanggal) && empty($request->unit)){
@@ -92,7 +98,7 @@ class KunjunganController extends Controller
                   'mt_pasien.nama_px as nama',
                   'mt_pasien.tgl_lahir as tgl_lahir',
                   'mt_pasien.no_rm as no_rm',
-                  'mt_pasien.no_Bpjs as bpjs', 
+                  'mt_pasien.no_Bpjs as bpjs',
                   'mt_pasien.nik_bpjs as nik',
                   'mt_alasan_masuk.alasan_masuk as alasan_masuk',
                   'mt_penjamin_bpjs.kode_penjamin_simrs as kode_penjamin',
@@ -127,7 +133,7 @@ class KunjunganController extends Controller
                 'mt_pasien.nama_px as nama',
                 'mt_pasien.tgl_lahir as tgl_lahir',
                 'mt_pasien.no_rm as no_rm',
-                'mt_pasien.no_Bpjs as bpjs', 
+                'mt_pasien.no_Bpjs as bpjs',
                 'mt_pasien.nik_bpjs as nik',
                 'mt_alasan_masuk.alasan_masuk as alasan_masuk',
                 'mt_penjamin.kode_penjamin as kode_penjamin',
@@ -148,7 +154,7 @@ class KunjunganController extends Controller
             )
             ->first();
         }
-        
+
         return view('simrs.igd.kunjungan.detail_kunjungan', compact('kunjungan','paramedis','histories'));
     }
     public function editKunjungan($kunjungan)
@@ -165,7 +171,7 @@ class KunjunganController extends Controller
     public function updateKunjungan(Request $request, $kunjungan)
     {
         // dd($request->all());
-        
+
         if($request->isBpjs == 0)
         {
             $penjamin   = $request->penjamin_id_umum;
@@ -187,18 +193,18 @@ class KunjunganController extends Controller
         $kunjungan->id_alasan_masuk     = $request->alasan_masuk_id;
         $kunjungan->id_alasan_edit      = $request->alasan_edit;
         $kunjungan->status_kunjungan    = $request->status_kunjungan;
-        
+
         if($request->alasan_edit == 3)
         {
             $kunjungan->jp_daftar= 1;
         }
-        
+
         if($request->alasan_edit == 4)
         {
             $kunjungan->jp_daftar= 0;
         }
         $kunjungan->save();
-        return redirect()->route('detail.kunjungan', ['kunjungan'=>$kunjungan]);
+        return redirect()->route('daftar.kunjungan');
     }
 
     public function getKunjunganByUser(Request $request)
@@ -206,7 +212,7 @@ class KunjunganController extends Controller
         $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
         return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
-    
+
     public function sycnDesktopToWebApps(Request $request)
     {
         $kunjungan      = Kunjungan::where('kode_kunjungan', $request->nokunjungan)->first();
@@ -222,7 +228,7 @@ class KunjunganController extends Controller
             }
             $kunjungan->save();
             $message = 'Jenis Pasien Daftar adalah Umum';
-        }     
+        }
         if(!empty($penjaminbpjs))
         {
             $kunjungan->jp_daftar        =1;
@@ -233,10 +239,23 @@ class KunjunganController extends Controller
             }
             $kunjungan->save();
             $message = 'Jenis Pasien Daftar adalah BPJS';
-        } 
+        }
         return response()->json([
             'data'=>$kunjungan,
             'message'=>$message,
-            'code'=>200]);    
+            'code'=>200]);
+    }
+
+    public function cetakLabel(Request $request)
+    {
+        $pasien = Pasien::where('no_rm', $request->label_no_rm)->first();
+        if(is_null($pasien))
+        {
+            Alert::warning('PERHATIAN!!', 'NO RM tidak terdaftar di data pasien. silahkan cek kembali!');
+            return back();
+        }
+        $qrcode = base64_encode(QrCode::format('svg')->size(35)->errorCorrection('H')->generate('string'));
+        $pdf = PDF::loadView('simrs.igd.cetakan_label.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
+        return $pdf->stream('label-pasien.pdf');
     }
 }

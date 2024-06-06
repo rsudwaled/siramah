@@ -1,5 +1,5 @@
 @extends('simrs.ranap.pdf_print')
-@section('title', 'Resume Rawat Inap')
+@section('title', 'RESUME RANAP ' . $pasien->nama_px)
 
 @section('content')
     @include('simrs.ranap.pdf_kop_surat')
@@ -151,7 +151,7 @@
             </tr>
             <tr>
                 <td width="100%" colspan="2" class="unicode">
-                    <b>Pemeriksaan SHK : </b>  <br>
+                    <b>Pemeriksaan SHK : </b> <br>
                     Dilakukan :
                     @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pemeriksaan_shk == 'Ya' : null)
                         &#x2611; Ya
@@ -162,7 +162,7 @@
                         &#x2611; Tidak
                     @else
                         &#x25A2; Tidak
-                    @endif  <br>
+                    @endif <br>
                     Diambil dari :
                     @if ($kunjungan->erm_ranap ? $kunjungan->erm_ranap->pengambilan_shk == 'Tumit' : null)
                         &#x2611; Tumit
@@ -178,7 +178,7 @@
                     @if ($kunjungan->erm_ranap)
                         {{ $kunjungan->erm_ranap->tanggal_shk ? \Carbon\Carbon::parse($kunjungan->erm_ranap->tanggal_shk)->format('d F Y') : '....' }}
                     @endif
-                     <br>
+                    <br>
                 </td>
             </tr>
             <tr>
@@ -278,8 +278,8 @@
                         <tr>
                             <td>
                                 @if ($kunjungan->erm_ranap)
-                                    @if ($kunjungan->erm_ranap->tindakan_operasi)
-                                        @foreach (json_decode($kunjungan->erm_ranap->tindakan_operasi) as $item)
+                                    @if ($kunjungan->erm_ranap->tindakan_prosedur)
+                                        @foreach (json_decode($kunjungan->erm_ranap->tindakan_prosedur) as $item)
                                             {{ $loop->iteration }}. {{ $item }} <br>
                                         @endforeach
                                     @endif
@@ -288,7 +288,7 @@
                             <td>
                                 @if ($kunjungan->erm_ranap)
                                     @if ($kunjungan->erm_ranap->icd9_operasi)
-                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_operasi) as $item)
+                                        @foreach (json_decode($kunjungan->erm_ranap->icd9_prosedur) as $item)
                                             {{ $item }} <br>
                                         @endforeach
                                     @endif
@@ -463,7 +463,9 @@
                     <br>
                     Pasien / Keluarga Pasien <br>
                     Yang Menerima Penjelasan
-                    @if ($kunjungan->erm_ranap)
+                    <br>
+                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) !!} ">
+                    {{-- @if ($kunjungan->erm_ranap)
                         @if ($kunjungan->erm_ranap->ttdkeluarga)
                             <br>
                             <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttdkeluarga->image }}"
@@ -480,7 +482,8 @@
                         <br>
                         <br>
                         <br>
-                    @endif
+                    @endif --}}
+                    <br>
                     <b><u>{{ $kunjungan->erm_ranap->nama_keluarga ?? 'Keluarga Pasien' }}</u></b><br>
                     NIK. {{ $kunjungan->erm_ranap->nik_keluarga ?? '' }}
                 </td>
@@ -488,7 +491,9 @@
                     Waled, {{ now()->format('d F y h:i:s') }} <br>
                     Dokter Penanggung Jawab Pelayanan <br>
                     (DPJP)
-                    @if ($kunjungan->erm_ranap)
+                    <br>
+                    <img src="data:image/png;base64, {!! base64_encode(QrCode::format('png')->size(100)->generate('Make me into an QrCode!')) !!} ">
+                    {{-- @if ($kunjungan->erm_ranap)
                         @if ($kunjungan->erm_ranap->ttddokter)
                             <br>
                             <img width="200" height="100" src="{{ $kunjungan->erm_ranap->ttddokter->image }}"
@@ -505,7 +510,8 @@
                         <br>
                         <br>
                         <br>
-                    @endif
+                    @endif --}}
+                    <br>
                     <b><u>{{ $kunjungan->dokter->nama_paramedis }}</u></b><br>
                     SIP. {{ $kunjungan->dokter->sip_dr ?? '..................' }}
                 </td>

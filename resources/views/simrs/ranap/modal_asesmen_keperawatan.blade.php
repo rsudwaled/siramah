@@ -8,7 +8,8 @@
                 <i class="fas fa-edit"></i> Edit Asesmen
             </button>
             @if ($kunjungan->asesmen_ranap_keperawatan)
-                <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenAwal()" title="Print">
+                <button type="button" class="btn btn-tool bg-warning" onclick="printAsesmenKeperawatan()"
+                    title="Print">
                     <i class="fas fa-print"></i> Print
                 </button>
                 <button type="button" class="btn btn-tool bg-success">
@@ -23,7 +24,8 @@
     </a>
     <div id="cAsesemenKeperawatan" class="collapse" role="tabpanel">
         <div class="card-body">
-            Asesmen Keperawatan Rawat Inap
+            <iframe src="{{ route('print_asesmen_ranap_keperawatan') }}?kode={{ $kunjungan->kode_kunjungan }}"
+                width="100%" height="700px" frameborder="0"></iframe>
         </div>
     </div>
 </div>
@@ -694,6 +696,11 @@
             $.LoadingOverlay("show");
             $('#modalAsesmenKeperawatan').modal('show');
             $.LoadingOverlay("hide");
+        }
+
+        function printAsesmenKeperawatan() {
+            var url = "{{ route('print_asesmen_ranap_keperawatan') }}?kode={{ $kunjungan->kode_kunjungan }}";
+            window.open(url, '_blank');
         }
     </script>
 @endpush

@@ -10,7 +10,7 @@
             hoverable compressed>
         </x-adminlte-datatable>
     </x-adminlte-modal>
-    <x-adminlte-modal id="modalRongsen" name="modalRongsen" title="Hasil Rongsen Pasien" theme="success"
+    <x-adminlte-modal id="modalRongsen" name="modalRongsen" title="Hasil Rontgen Pasien" theme="success"
         icon="fas fa-file-medical" size="xl">
         <iframe id="dataUrlRongsen" src="" height="600px" width="100%" title="Iframe Example"></iframe>
         <x-slot name="footerSlot">
@@ -37,7 +37,7 @@
                         $.each(data.response, function(key, value) {
                             var btnrongsen =
                                 '<button class="btn btn-xs btn-primary" onclick="lihatHasilRongsen(this)"  data-norm="' +
-                                value.no_rm + '">Rongsen</button> ';
+                                value.no_rm + '">Rontgen</button> ';
                             var btnexpertise =
                                 '<button class="btn btn-xs btn-primary" onclick="lihatExpertiseRad(this)"  data-header="' +
                                 value.header_id + '" data-detail="' + value.detail_id + '">Expertise</button> ';

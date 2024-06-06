@@ -78,6 +78,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(Paramedis::class, 'kode_paramedis', 'kode_paramedis');
     }
+    public function order_obat_header()
+    {
+        return $this->hasOne(OrderObatHeader::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function assesmen_dokter()
     {
         return $this->hasOne(AssesmenDokter::class, 'id_kunjungan', 'kode_kunjungan');
