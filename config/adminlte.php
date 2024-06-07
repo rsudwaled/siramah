@@ -512,6 +512,13 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Pasien Pulang',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'cek-pasien-pulang',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Riwayat Pendaftaran byUser',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'get-kunjungan/by-user',

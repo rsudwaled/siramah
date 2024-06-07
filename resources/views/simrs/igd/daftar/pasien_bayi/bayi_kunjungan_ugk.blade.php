@@ -72,7 +72,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alamat', 'Alasan','Status', 'Penjamin', 'Status'];
+                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alasan','Status', 'Penjamin', 'Status'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -85,17 +85,15 @@
                         @foreach ($kunjungan_igd as $item)
                             <tr>
                                 <td>
-                                    {{ $item->kode_kunjungan }} <br>
+                                    {{ $item->kode_kunjungan }} | {{$item->unit->nama_unit}} <br>
                                     <b>Masuk : {{ $item->tgl_masuk }}</b>
                                 </td>
                                 <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM :
                                     {{ $item->pasien->no_rm }}
                                     <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
-                                    {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }}
-                                </td>
-                                <td>
+                                    {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }} <br><br>
                                     <small>
-                                        alamat : {{ $item->pasien->alamat ?? '-' }} / <br>
+                                        ALAMAT : {{ $item->pasien->alamat ?? '-' }} / <br>
                                         {{ $item->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($item->desa == null ? 'Desa: -' : 'Desa. ' . $item->desas->nama_desa_kelurahan) . ($item->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $item->kecamatans->nama_kecamatan) . ($item->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $item->kabupatens->nama_kabupaten_kota) }}</small>
                                     </small>
                                 </td>
@@ -135,8 +133,8 @@
                             <div class="col-lg-6">
                                 <input type="hidden" name="isbpjs" id="isbpjs">
                                 <input type="hidden" name="isbpjs_keterangan" id="isbpjs_keterangan">
-                                <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *" required
-                                    placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback />
+                                {{-- <x-adminlte-input name="nama_bayi" id="nama_bayi" label="Nama Bayi *" required
+                                    placeholder="masukan nama bayi" fgroup-class="col-md-12" disable-feedback /> --}}
 
                                 <x-adminlte-input name="tempat_lahir_bayi" id="tempat_lahir_bayi" label="Kota Lahir *"
                                     required placeholder="masukan kota ketika bayi lahir" fgroup-class="col-md-12"

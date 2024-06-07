@@ -206,10 +206,11 @@ class DaftarIGDController extends Controller
             ]
         );
 
-        $query          = Kunjungan::where('no_rm', $request->rm);
-        $data           = $query->where('status_kunjungan', 1)->get();
+        $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+
+        $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->where('status_kunjungan','=', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
-        // dd($pasien);
         if(is_null($pasien->no_hp))
         {
             $pasien->no_hp = $request->noTelp;
@@ -222,13 +223,10 @@ class DaftarIGDController extends Controller
         }
 
         // counter increment
-        $counter = $query->latest('counter')
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            $c = $counter->counter + 1;
+            $c = $latestCounter->counter + 1;
         }
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');

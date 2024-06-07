@@ -99,7 +99,7 @@
             <div class="card card-outline card-success">
                 <div class="card-header">
                     @php
-                        $heads = ['DATA BAYI', 'RM ORANGTUA', 'DATA ORANGTUA', 'AKSI'];
+                        $heads = ['DATA BAYI', 'RM ORANGTUA', 'DATA ORANGTUA'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -129,8 +129,8 @@
                                     <small>{{ $item->alamat_lengkap_ortu }}</small>
                                 </td>
                                 <td>
-                                    <a href="{{ route('form-umum.ranap-bayi', ['rm' => $item->rm_bayi]) }}"
-                                        class="btn bg-purple btn-xs" action="">Daftarkan</a>
+                                    {{-- <a href="{{ route('form-umum.ranap-bayi', ['rm' => $item->rm_bayi]) }}"
+                                        class="btn bg-purple btn-xs" action="">Daftarkan</a> --}}
                                 </td>
                             </tr>
                         @endforeach
