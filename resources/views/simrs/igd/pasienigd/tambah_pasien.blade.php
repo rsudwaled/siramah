@@ -74,7 +74,7 @@
                                             <option value="P">Perempuan
                                             </option>
                                         </x-adminlte-select>
-                                        <div class="col-md-6">
+                                        {{-- <div class="col-md-6">
                                             @php
                                                 $config = ['format' => 'YYYY-MM-DD'];
                                             @endphp
@@ -85,6 +85,10 @@
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-input-date>
+                                        </div> --}}
+                                        <div class="col-lg-6">
+                                            <label for="">Tanggal Lahir (bulan/tanggal/tahun)</label>
+                                            <input type="date" class="form-control" name="tgl_lahir">
                                         </div>
                                         <x-adminlte-select name="agama" label="Agama *" fgroup-class="col-md-6">
                                             @foreach ($agama as $item)
