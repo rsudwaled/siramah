@@ -557,9 +557,9 @@
                             if (data.code == 200) {
                                 Swal.fire({
                                     title: "Success!",
-                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( jenis : ' +
+                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( JENIS : ' +
                                         data
-                                        .jenisPeserta + ')',
+                                        .jenisPeserta +' - KELAS: '+data.kelas+')',
                                     icon: "success",
                                     confirmButtonText: "oke!",
                                 }).then((result) => {
