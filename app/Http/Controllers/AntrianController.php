@@ -818,6 +818,10 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 3;
+            $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
+            $res = $this->update_antrean($request);
+            $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 4;
             $request['waktu'] = now();
             $res = $this->update_antrean($request);
