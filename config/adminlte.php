@@ -483,6 +483,13 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
+                    'text' => 'Daftar Penunjang',
+                    'icon'    => 'fas fa-chalkboard-teacher',
+                    'url'  => 'daftar/pasien-igd',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
+                [
                     'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-address-book',
                     'url'  => 'daftar-kunjungan',
