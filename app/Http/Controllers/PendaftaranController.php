@@ -258,6 +258,13 @@ class PendaftaranController extends APIController
                     'no_sep' => $antrian->nomorsep,
                 ]);
             }
+            if (env('BRIDGING_ANTRIAN_BPJS')) {
+                $request['kodebooking'] = $antrian->kodebooking;
+                $request['taskid'] = 3;
+                $request['waktu'] = now();
+                $api = new AntrianController();
+                $res = $api->update_antrean($request);
+            }
             $antrian->update([
                 'taskid' => $request->taskid,
                 'taskid1' => now()->setTimezone('Asia/Jakarta'),

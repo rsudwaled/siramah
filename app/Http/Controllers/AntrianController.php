@@ -49,31 +49,23 @@ class AntrianController extends APIController
     public function selesaiPoliklinik(Request $request)
     {
         $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 5;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+            Alert::success('Success', $res->metadata->code);
+        }
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
+        $request['waktu'] = now();
         $request['keterangan'] = "Selesai poliklinik";
-        $request['waktu'] = Carbon::now()->timestamp * 1000;
-        $response = $this->update_antrean($request);
-        if ($response->metadata->code == 200) {
-            $antrian->update([
-                'taskid' => $request->taskid,
-                'status_api' => 1,
-                'keterangan' => $request->keterangan,
-                'user' => 'Sistem Siramah',
-            ]);
-            // try {
-            //     // notif wa
-            //     $wa = new WhatsappController();
-            //     $request['message'] = "Pelayanan di poliklinik atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
-            //     $request['number'] = $antrian->nohp;
-            //     $wa->send_message($request);
-            // } catch (\Throwable $th) {
-            //     //throw $th;
-            // }
-            Alert::success('Success', 'Pasien Selesai Di Poliklinik');
-        } else {
-            Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
-        }
+        $antrian->update([
+            'taskid' => $request->taskid,
+            'status_api' => 1,
+            'keterangan' => $request->keterangan,
+            'user' => 'Sistem Siramah',
+        ]);
         return redirect()->back();
     }
     public function antrianFarmasi(Request $request)
@@ -112,6 +104,12 @@ class AntrianController extends APIController
     public function racikFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 6;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+        }
         $antrian->update([
             'taskid' => 6,
             'taskid6' => now(),
@@ -124,6 +122,12 @@ class AntrianController extends APIController
     public function selesaiFarmasi($kodebooking, Request $request)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 7;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+        }
         $antrian->update([
             'taskid' => 7,
             'taskid7' => now(),
@@ -812,6 +816,12 @@ class AntrianController extends APIController
     public function panggilPoliklinik(Request $request)
     {
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 4;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+        }
         $antrian->update([
             'taskid' => 4,
             'taskid4' =>  now(),
@@ -876,6 +886,12 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'non racikan';
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 5;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+        }
         $antrian->update([
             'taskid' => 5,
             'taskid5' => now(),
@@ -893,6 +909,12 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'racikan';
+        if (env('BRIDGING_ANTRIAN_BPJS')) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 5;
+            $request['waktu'] = now();
+            $res = $this->update_antrean($request);
+        }
         $antrian->update([
             'taskid' => 5,
             'taskid5' => now(),
@@ -2592,6 +2614,12 @@ class AntrianController extends APIController
             }
             // update antrian print tracer wa
             try {
+                if (env('BRIDGING_ANTRIAN_BPJS')) {
+                    $request['kodebooking'] = $antrian->kodebooking;
+                    $request['taskid'] = 3;
+                    $request['waktu'] = now();
+                    $res = $this->update_antrean($request);
+                }
                 $antrian->update([
                     "taskid" => $request->taskid,
                     "keterangan" => $request->keterangan,
