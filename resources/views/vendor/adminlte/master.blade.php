@@ -23,15 +23,16 @@
     @yield('adminlte_css_pre')
 
     {{-- Base Stylesheets --}}
-    @if(!config('adminlte.enabled_laravel_mix'))
+    @if (!config('adminlte.enabled_laravel_mix'))
         {{-- <link rel="stylesheet" href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}"> --}}
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css">
         {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" /> --}}
         <link rel="stylesheet" href="{{ asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
         <link rel="stylesheet" href="{{ asset('vendor/adminlte/dist/css/adminlte.min.css') }}">
 
-        @if(config('adminlte.google_fonts.allowed', true))
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        @if (config('adminlte.google_fonts.allowed', true))
+            <link rel="stylesheet"
+                href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
         @endif
     @else
         <link rel="stylesheet" href="{{ mix(config('adminlte.laravel_mix_css_path', 'css/app.css')) }}">
@@ -41,8 +42,8 @@
     @include('adminlte::plugins', ['type' => 'css'])
 
     {{-- Livewire Styles --}}
-    @if(config('adminlte.livewire'))
-        @if(intval(app()->version()) >= 7)
+    @if (config('adminlte.livewire'))
+        @if (intval(app()->version()) >= 7)
             @livewireStyles
         @else
             <livewire:styles />
@@ -53,7 +54,7 @@
     @yield('adminlte_css')
 
     {{-- Favicon --}}
-    @if(config('adminlte.use_ico_only'))
+    @if (config('adminlte.use_ico_only'))
         <link rel="shortcut icon" href="{{ asset('rswaled.png') }}" />
     @elseif(config('adminlte.use_full_favicon'))
         <link rel="shortcut icon" href="{{ asset('favicons/favicon.ico') }}" />
@@ -69,7 +70,7 @@
         <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicons/favicon-16x16.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicons/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="96x96" href="{{ asset('favicons/favicon-96x96.png') }}">
-        <link rel="icon" type="image/png" sizes="192x192"  href="{{ asset('favicons/android-icon-192x192.png') }}">
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicons/android-icon-192x192.png') }}">
         <link rel="manifest" crossorigin="use-credentials" href="{{ asset('favicons/manifest.json') }}">
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="{{ asset('favicon/ms-icon-144x144.png') }}">
@@ -83,7 +84,7 @@
     @yield('body')
 
     {{-- Base Scripts --}}
-    @if(!config('adminlte.enabled_laravel_mix'))
+    @if (!config('adminlte.enabled_laravel_mix'))
         <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
@@ -96,8 +97,8 @@
     @include('adminlte::plugins', ['type' => 'js'])
 
     {{-- Livewire Script --}}
-    @if(config('adminlte.livewire'))
-        @if(intval(app()->version()) >= 7)
+    @if (config('adminlte.livewire'))
+        @if (intval(app()->version()) >= 7)
             @livewireScripts
         @else
             <livewire:scripts />
@@ -107,6 +108,218 @@
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
+
+    <div class="modal fade" id="modalCekBpjs" style="display: none;" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">CEK STATUS BPJS</h5>
+                </div>
+                <form id="cekbpjs-status-tanpa-daftar" method="get">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">Nomor Kartu</label>
+                                <input type="text" name="cek_nomorkartu" class="form-control" id="cek_nomorkartu">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">Nomor NIK</label>
+                                <input type="text" name="cek_nik" class="form-control" id="cek_nik">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-primary btn-cek-bpjs-tanpa-daftar"
+                            form="cekbpjs-status-tanpa-daftar">Cek Status</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCekKunjunganPoli" style="display: none;" aria-hidden="true"
+        data-backdrop="static">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Cek Kunjungan Pasien</h4>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label for="exampleInputBorderWidth2">No RM PASIEN</label>
+                                <input type="text" name="no_rm" id="no_rm" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default btnCreateSPRIBatal"
+                            data-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-primary btn-cekKunjungan" id="btn-cekKunjungan">CARI
+                            KUNJUNGAN</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true"
+        data-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">RIWAYAT KUNJUNGAN</h4>
+                    <button type="button" class="btn btn-sm btn-default close" onclick="batalPilih()"
+                        data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="row">
+                            <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>KUNJUNGAN</th>
+                                        <th>NO RM</th>
+                                        <th>PASIEN</th>
+                                        <th>POLI</th>
+                                        <th>STATUS</th>
+                                        <th>TGL MASUK</th>
+                                        <th>TGL PULANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
+
+@section('plugins.Sweetalert2', true)
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
+        var cek_nik = document.getElementById('cek_nik').value;
+        var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
+        var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
+        Swal.fire({
+            title: "CEK STATUS BPJS?",
+            text: "silahkan pilih tombol cek status!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Cek Status!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'GET',
+                    url: cekStatusBPJS,
+                    dataType: 'json',
+                    data: {
+                        cek_nomorkartu: cek_nomorkartu,
+                        cek_nik: cek_nik,
+                    },
+                    success: function(data) {
+                        console.log(data)
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: "Success!",
+                                text: data.pasien + '\n ( NIK: ' + data.nik +
+                                    ' ) \n' + data.keterangan + ' ' + '( jenis : ' +
+                                    data
+                                    .jenisPeserta + ')',
+                                icon: "success",
+                                confirmButtonText: "oke!",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                    document.getElementById('nomorkartu').value =
+                                    '';
+                                    document.getElementById('nik').value = '';
+                                    $('#modalCekBpjs').modal('hide');
+                                }
+                            });
+                            $.LoadingOverlay("hide");
+                        } else {
+                            Swal.fire({
+                                title: "INFO!",
+                                text: data.keterangan + ' ' + '( KODE : ' + data
+                                    .jenisPeserta + ')',
+                                icon: "info",
+                                confirmButtonText: "oke!",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                            $.LoadingOverlay("hide");
+                        }
+                    },
+                });
+            }
+        });
+    });
+
+    function batalPilih() {
+        $(".riwayat-kunjungan").remove();
+        $('#modalCekKunjungan').modal('hide');
+        location.reload();
+    }
+
+    $(function() {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('.cekKunjunganPoli').click(function(e) {
+            $('#modalCekKunjunganPoli').modal('toggle');
+        });
+
+        $('.btn-cekKunjungan').click(function(e) {
+            $('#modalCekKunjunganPoli').modal('hide');
+            $('#modalCekKunjungan').modal('toggle');
+            var rm = $('#no_rm').val();
+            if (rm) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
+                    dataType: 'JSON',
+                    success: function(data) {
+                        $.each(data.semua_kunjungan, function(index, riwayat) {
+                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                                .kode_kunjungan + "</td><td>" +
+                                riwayat.no_rm + "</td><td>" + riwayat.pasien
+                                .nama_px +
+                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
+                                riwayat.status.status_kunjungan + "</td><td>" +
+                                riwayat.tgl_masuk + "</td><td>" + (riwayat
+                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                    .tgl_keluar) +
+                                "</td></tr>";
+                            $('.semuaKunjungan tbody').append(row);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        // Handle error appropriately
+                    }
+                });
+            }
+
+        });
+    });
+</script>
 
 </html>

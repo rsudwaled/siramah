@@ -13,8 +13,15 @@
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
-        <li class="nav-item d-none d-sm-inline-block">
+        {{-- <li class="nav-item d-none d-sm-inline-block">
             <a class="nav-link">Waktu Server {{ now() }}</a>
+        </li> --}}
+        <li class="nav-item d-none d-sm-inline-block mr-2">
+            <a href="#" data-toggle="modal" data-target="#modalCekBpjs" class="btn btn-sm btn-success">CEK STATUS
+                BPJS</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <button class="btn btn-sm bg-purple cekKunjunganPoli" data-toggle="modal" data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
         </li>
     </ul>
 
