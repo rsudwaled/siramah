@@ -129,8 +129,8 @@
                                     <small>{{ $item->alamat_lengkap_ortu }}</small>
                                 </td>
                                 <td>
-                                    <a href="{{ route('form-umum.ranap-bayi', ['rm' => $item->rm_bayi]) }}"
-                                        class="btn bg-purple btn-xs" action="">Daftarkan</a>
+                                    {{-- <a href="{{ route('form-umum.ranap-bayi', ['rm' => $item->rm_bayi]) }}"
+                                        class="btn bg-purple btn-xs" action="">Daftarkan</a> --}}
                                 </td>
                             </tr>
                         @endforeach

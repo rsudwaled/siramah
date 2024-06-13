@@ -485,7 +485,7 @@ return [
                 [
                     'text' => 'Daftar Penunjang',
                     'icon'    => 'fas fa-chalkboard-teacher',
-                    'url'  => 'daftar/pasien-igd',
+                    'url'  => 'penujang/daftar',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

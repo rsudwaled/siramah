@@ -1,21 +1,24 @@
 @extends('adminlte::page')
 @section('title', 'DAFTAR IGD')
 @section('content_header')
-    <div class="container-fluid">
-        <div class="row mb-2">
+    <div class="alert bg-primary alert-dismissible">
+        <div class="row">
             <div class="col-sm-4">
-                <h1>DAFTAR PENDAFTARAN</h1>
+                <h5>
+                    <i class="fas fa-user-tag"></i> PENDAFTARAN IGD :
+                </h5>
             </div>
             <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#" data-toggle="modal" data-target="#modalCekBpjs"
-                        class="btn btn-sm btn-success">Cek BPJS</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
-                            Baru</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
-                            class="btn btn-sm btn-primary">Daftar Pasien Kecelakaan</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"><i
-                                class="fas fa-sync"></i></a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm btn-danger" style="text-decoration: none;">Daftar Pasien
+                            Kecelakaan</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning" style="text-decoration: none;">
+                            Refresh Halaman
+                        </a>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -138,7 +141,8 @@
                                                             NIK : {{ $data->nik_bpjs }} <br>
                                                             BPJS : {{ $data->no_Bpjs }} <br>
                                                             PASIEN : {{ $data->nama_px }} <br>
-                                                            Jenis Kelamin : {{ $data->jenis_kelamin=='L'?'Laki-Laki':'Perempuan' }}
+                                                            Jenis Kelamin :
+                                                            {{ $data->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}
                                                         </b> <br><br>
                                                         <small>
                                                             <b>TTL :
@@ -220,7 +224,9 @@
                                             <div class="col-lg-6">
                                                 <x-adminlte-select2 name="antrian_triase" label="Nomor Triase">
                                                     @foreach ($antrian_triase as $triase)
-                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} | <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien:'BELUM DI TRIASE' }}</b></option>
+                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} |
+                                                            <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien : 'BELUM DI TRIASE' }}</b>
+                                                        </option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <div class="form-group">
@@ -332,36 +338,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCekBpjs" style="display: none;" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEK STATUS BPJS</h5>
-                </div>
-                <form id="cekbpjs-status-tanpa-daftar" method="get">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor Kartu</label>
-                                <input type="text" name="cek_nomorkartu" class="form-control" id="cek_nomorkartu">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor NIK</label>
-                                <input type="text" name="cek_nik" class="form-control" id="cek_nik">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary btn-cek-bpjs-tanpa-daftar"
-                            form="cekbpjs-status-tanpa-daftar">Cek Status</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -440,23 +416,23 @@
                     </div> --}}
                     <div class="row">
                         <div class="col-lg-12">
-                         <table id="table1" class="semuaKunjungan data-table table table-bordered">
-                             <thead>
-                                 <tr>
-                                     <th>KUNJUNGAN</th>
-                                     <th>NO RM</th>
-                                     <th>PASIEN</th>
-                                     <th>POLI</th>
-                                     <th>STATUS</th>
-                                     <th>TGL MASUK</th>
-                                     <th>TGL PULANG</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                             </tbody>
-                         </table>
+                            <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>KUNJUNGAN</th>
+                                        <th>NO RM</th>
+                                        <th>PASIEN</th>
+                                        <th>POLI</th>
+                                        <th>STATUS</th>
+                                        <th>TGL MASUK</th>
+                                        <th>TGL PULANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                     </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
@@ -556,7 +532,8 @@
                             if (data.code == 200) {
                                 Swal.fire({
                                     title: "Success!",
-                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( jenis : ' +
+                                    text: data.pasien + '\n ( NIK: ' + data.nik +
+                                        ' ) \n' + data.keterangan + ' ' + '( jenis : ' +
                                         data
                                         .jenisPeserta + ')',
                                     icon: "success",
@@ -564,7 +541,8 @@
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         location.reload();
-                                        document.getElementById('nomorkartu').value = '';
+                                        document.getElementById('nomorkartu').value =
+                                            '';
                                         document.getElementById('nik').value = '';
                                         $('#modalCekBpjs').modal('hide');
                                     }

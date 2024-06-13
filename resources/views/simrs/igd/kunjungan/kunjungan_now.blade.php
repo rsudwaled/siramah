@@ -32,8 +32,8 @@
                         </div>
                         <div class="col-lg-6 text-right">
                             <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP BACKDATE</button>
-                            <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
-                                LABEL</button>
+                            {{-- <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
+                                LABEL</button> --}}
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                                 <i class="fas fa-sync"></i> Refresh</a>
                         </div>
@@ -278,7 +278,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
+    {{-- <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -303,7 +303,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 @stop
 
 @section('plugins.Select2', true)
@@ -352,8 +352,6 @@
                 $("#jp_daftar").val($(this).data('jpdaftar'));
                 $('#formDiagnosa').modal('show');
             });
-
-
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";
                 // var urlBridging = "{{ route('bridging-sep') }}";
