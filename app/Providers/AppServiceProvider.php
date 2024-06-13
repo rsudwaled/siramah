@@ -31,8 +31,10 @@ class AppServiceProvider extends ServiceProvider
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
         URL::forceScheme('http');
-        Livewire::setUpdateRoute(function ($handle) {
-            return Route::post('/siramah/livewire/update', $handle);
-        });
+        if (env('APP_ENV') === 'production') {
+            Livewire::setUpdateRoute(function ($handle) {
+                return Route::post('/siramah/livewire/update', $handle);
+            });
+        }
     }
 }

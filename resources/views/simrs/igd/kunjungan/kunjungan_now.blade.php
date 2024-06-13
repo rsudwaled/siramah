@@ -1,16 +1,14 @@
 @extends('adminlte::page')
 @section('title', 'DATA KUNJUNGAN ')
 @section('content_header')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3">
-                <h5>DATA KUNJUNGAN PASIEN</h5>
-            </div>
-        </div>
+    <div class="alert bg-primary alert-dismissible">
+        <h5>
+            <i class="fas fa-user-tag"></i> DAFTAR KUNJUNGAN PASIEN :
+        </h5>
     </div>
 @stop
 @section('content')
-    <div class="row mt-3">
+    <div class="row">
         <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">

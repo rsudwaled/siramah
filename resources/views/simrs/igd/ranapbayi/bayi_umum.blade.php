@@ -112,14 +112,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
-                                                    <option value="">--Pilih Dpjp--</option>
-                                                    @foreach ($paramedis as $item)
-                                                        <option value="{{ $item->kode_paramedis }}">
-                                                            {{ $item->nama_paramedis }}</option>
-                                                    @endforeach
-                                                </x-adminlte-select2>
-
 
                                                 {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     <option value="">--Pilih Penjamin--</option>
@@ -145,6 +137,13 @@
                                                         @endforeach
                                                     </x-adminlte-select2>
                                                 </div>
+                                                <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
+                                                    <option value="">--Pilih Dpjp--</option>
+                                                    @foreach ($paramedis as $item)
+                                                        <option value="{{ $item->kode_paramedis }}">
+                                                            {{ $item->nama_paramedis }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select2>
                                             </div>
                                         </div>
                                         <x-adminlte-button type="submit"

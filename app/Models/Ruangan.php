@@ -11,4 +11,6 @@ class Ruangan extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_ruangan';
     protected $guarded = ['id_ruangan'];
+    //baru ditambahkan
+    protected $primaryKey = 'id_ruangan';
 }
