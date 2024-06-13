@@ -2201,7 +2201,6 @@ class AntrianController extends APIController
             } else {
                 $printer = env('PRINTER_CHECKIN2');
             }
-
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
             $printer->close();
