@@ -59,6 +59,7 @@ use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
 use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
@@ -129,7 +130,7 @@ Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('
 Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAntrianPoliklinik'])->name('displayAntrianPoliklinik');
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
-Route::get('displayantrian2', [PoliklinikController::class, 'displayantrian2'])->name('displayantrian2');
+Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
 Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
 
 
