@@ -65,12 +65,6 @@ class KunjunganController extends Controller
         {
             $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal);
         }
-
-        // if($request->unit && !empty($request->unit))
-        // {
-        //     $query->whereIn('ts_kunjungan.kode_unit', [$request->unit]);
-        // }
-
         if(empty($request->tanggal) && empty($request->unit)){
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
@@ -209,16 +203,17 @@ class KunjunganController extends Controller
 
     public function getKunjunganByUser(Request $request)
     {
-        $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
+        // $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
+        $kunjungan = Kunjungan::whereIn('pic2', [Auth::user()->id, 294, 318,329,330,331,332])->get();
         return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
     }
 
     public function sycnDesktopToWebApps(Request $request)
     {
         $kunjungan      = Kunjungan::where('kode_kunjungan', $request->nokunjungan)->first();
-        $penjamin       = PenjaminSimrs::where('kode_penjamin', $kunjungan->kode_penjamin)->first();
-        $penjaminbpjs   = Penjamin::where('kode_penjamin_simrs', $kunjungan->kode_penjamin)->first();
-        if(!empty($penjamin))
+        $penjamin       = PenjaminSimrs::whereIn('kode_penjamin', ['P07', 'P08', 'P09','P10','P11','P13','P14'])->where('kode_penjamin', $kunjungan->kode_penjamin)->first();
+
+        if(empty($penjamin))
         {
             $kunjungan->jp_daftar        =0;
             $kunjungan->form_send_by     =0;
@@ -229,8 +224,39 @@ class KunjunganController extends Controller
             $kunjungan->save();
             $message = 'Jenis Pasien Daftar adalah Umum';
         }
-        if(!empty($penjaminbpjs))
+        if(!empty($penjamin))
         {
+            HistoriesIGDBPJS::create([
+                'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                'noAntrian'      =>null,
+                'noMR'           => $kunjungan->no_rm,
+                'noKartu'        => $kunjungan->pasien->no_Bpjs?? null,
+                'tglSep'         => $kunjungan->tgl_masuk,
+                'ppkPelayanan'   => '1018R001',
+                'jnsPelayanan'   => 2,
+                'klsRawatHak'    => null,
+                'klsRawatNaik'   => null,
+                'pembiayaan'     => null,
+                'penanggungJawab'=> null,
+                'asalRujukan'    => 2,
+                'tglRujukan'     => $kunjungan->tgl_masuk,
+                'noRujukan'      => null,
+                'ppkRujukan'     => null,
+                'diagAwal'       => $kunjungan->diagx,
+                'lakaLantas'     => null,
+                'noLP'           => null,
+                'tglKejadian'    => null,
+                'keterangan'     => null,
+                'kdPropinsi'     => null,
+                'kdKabupaten'    => null,
+                'kdKecamatan'    => null,
+                'dpjpLayan'      => null,
+                'noTelp'         => $kunjungan->pasien->no_tlp==null?$kunjungan->pasien->no_hp:$kunjungan->pasien->no_tlp,
+                'user'           => Auth::user()->username,
+                'response'       => null,
+                'is_bridging'    => 0,
+            ]);
+
             $kunjungan->jp_daftar        =1;
             $kunjungan->form_send_by     =0;
             if($kunjungan->id_ruangan==null)

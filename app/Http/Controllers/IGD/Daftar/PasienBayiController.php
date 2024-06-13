@@ -20,6 +20,7 @@ use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use Carbon\Carbon;
+use Auth;
 
 class PasienBayiController extends Controller
 {
@@ -29,8 +30,10 @@ class PasienBayiController extends Controller
         $start         = Carbon::parse($request->start)->format('Y-m-d');
         $finish        = Carbon::parse($request->finish)->format('Y-m-d');
         $bayi          = PasienBayiIGD::get();
-        $query         = Kunjungan::where('prefix_kunjungan','UGK')
+        $query         = Kunjungan::whereIn('kode_unit',['1012','1023','1032'])
                         ->whereNull('tgl_keluar');
+        // $query         = Kunjungan::where('prefix_kunjungan','UGK')
+        //                 ->whereNull('tgl_keluar');
 
         if(!empty($request->start) && !empty($request->finish))
         {
@@ -112,23 +115,18 @@ class PasienBayiController extends Controller
     {
         $request->validate(
             [
-                'nama_bayi'         => 'required',
+                // 'nama_bayi'         => 'required',
                 'tempat_lahir_bayi' => 'required',
                 'jam_lahir_bayi'    => 'required',
             ],
             [
-                'nama_bayi'         => 'Nama bayi wajib diisi !',
+                // 'nama_bayi'         => 'Nama bayi wajib diisi !',
                 'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
                 'jam_lahir_bayi'    => 'Jam lahir bayi belum dipilih !',
             ]);
         $ortubayi   = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi);
         $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
 
-        // $last_rm    = Pasien::latest('no_rm')->first(); // 23982846
-        // $rm_last    = substr($last_rm->no_rm, -6); //982846
-        // $add_rm_new = $rm_last + 1; //982847
-        // $th         = substr(Carbon::now()->format('Y'), -2); //23
-        // $rm_bayi    = $th . $add_rm_new;
         $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
                 ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
                 ->whereRaw("LEFT(no_rm, 2) = '01'")
@@ -149,7 +147,7 @@ class PasienBayiController extends Controller
 
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);
+        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', Bayi Ny ');
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -173,7 +171,7 @@ class PasienBayiController extends Controller
             $pasien = Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px),
+                'nama_px'           => strtoupper( $ortubayi->nama_px.', Bayi Ny '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,
@@ -198,6 +196,8 @@ class PasienBayiController extends Controller
                 'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                 'kode_desa'         => $ortubayi->kode_desa,
                 'no_ktp'            => '',
+                'pic'               => Auth::user()->id_simrs,
+                'user_create'       => Auth::user()->username,
             ]);
         }
         return redirect()->route('form-umum.ranap-bayi', ['rm'=> $rm_bayi, 'kunjungan'=>$bayi->kunjungan_ortu]);
@@ -285,7 +285,7 @@ class PasienBayiController extends Controller
 
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px);
+        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', Bayi Ny ');
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -307,7 +307,7 @@ class PasienBayiController extends Controller
             Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper($request->nama_bayi.' bayi Ny '. $ortubayi->nama_px),
+                'nama_px'           => strtoupper( $ortubayi->nama_px.', Bayi Ny '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,
@@ -332,6 +332,8 @@ class PasienBayiController extends Controller
                 'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                 'kode_desa'         => $ortubayi->kode_desa,
                 'no_ktp'            => '',
+                'pic'               => Auth::user()->id_simrs,
+                'user_create'       => Auth::user()->username,
             ]);
         }
         Alert::success('Tambah Bayi Berhasil!!', 'pasien bayi dengan  RM: ' . $bayi->rm_bayi . ' berhasil di tambahkan!');

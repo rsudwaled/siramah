@@ -1123,7 +1123,7 @@ class RanapController extends APIController
         }
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs == 0 ? $request->penjamin_id_umum:$request->penjamin_id_bpjs ;
-        $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
+        $ruangan    = Ruangan::where('id_ruangan', $request->idRuangan)->first();
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
 
         $createKunjungan = new Kunjungan();
@@ -1213,6 +1213,8 @@ class RanapController extends APIController
                             $createLH->status_layanan       = 2;
                         }
                         $createLH->update();
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }

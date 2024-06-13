@@ -1,28 +1,18 @@
 <div class="row">
-    @if (flash()->message)
-        <div class="col-md-12">
-            <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }} !" dismissable>
-                {{ flash()->message }}
-            </x-adminlte-alert>
-        </div>
-    @endif
+
     @if (isset($antrians))
         <div class="col-md-12">
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <x-adminlte-small-box title="{{ $antrians->total() }}" text="Sisa Antrian" theme="warning"
+                    <x-adminlte-small-box title="{{ $antrians_total }}" text="Total Antrian" theme="primary"
                         icon="fas fa-user-injured" />
                 </div>
                 <div class="col-lg-3 col-6">
-                    <x-adminlte-small-box title="{{ $antrians->where('sync_antrian', 1)->count() }}" text="Sisa Antrian"
-                        theme="warning" icon="fas fa-user-injured" />
+                    <x-adminlte-small-box title="{{ $antrians_sync }}" text="Antrian Syncron" theme="success"
+                        icon="fas fa-user-injured" />
                 </div>
                 <div class="col-lg-3 col-6">
-                    <x-adminlte-small-box title="{{ $antrians->where('taskid', '!=', 99)->count() }}"
-                        text="Total Antrian" theme="success" icon="fas fa-user-injured" />
-                </div>
-                <div class="col-lg-3 col-6">
-                    <x-adminlte-small-box title="{{ $antrians->where('taskid', 99)->count() }}" text="Batal Antrian"
+                    <x-adminlte-small-box title="{{ $antrians_total - $antrians_sync }}" text="Antrian Belum Sync"
                         theme="danger" icon="fas fa-user-injured" />
                 </div>
             </div>
@@ -30,6 +20,11 @@
     @endif
     <div class="col-md-12">
         <x-adminlte-card title="Table Antrian Pendaftaran" theme="secondary">
+            @if (flash()->message)
+                <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }} !" dismissable>
+                    {{ flash()->message }}
+                </x-adminlte-alert>
+            @endif
             <div class="row">
                 <div class="col-md-4">
                     <x-adminlte-input wire:model.change='tanggalperiksa' type="date" name="tanggalperiksa"
@@ -45,7 +40,8 @@
                     </x-adminlte-input>
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-button class="btn-sm" wire:click='onsyncall' theme="{{ $this->syncall ? 'success' : 'danger' }}"
+                    <x-adminlte-button class="btn-sm" wire:click='onsyncall'
+                        theme="{{ $this->syncall ? 'success' : 'danger' }}"
                         label="Sync All {{ $this->syncall ? 'ON' : 'OFF' }}" />
                 </div>
                 <div class="col-md-4">
@@ -61,7 +57,6 @@
                     </x-adminlte-input>
                 </div>
             </div>
-
             @php
                 $heads = [
                     'No',

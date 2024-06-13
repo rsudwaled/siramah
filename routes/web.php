@@ -556,6 +556,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-desa-keluarga-pasien', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'getKlgDesaPasien'])->name('klg-desa-pasien.get');
     Route::get('/pasien-edit/{rm}', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'editPasien'])->name('edit-pasien');
     Route::put('/pasien-update', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'updatePasien'])->name('update-pasien.update');
+    Route::get('/cek-pasien-pulang', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'cekPasien'])->name('cek-pasien-pulang');
+    Route::get('export/cek-pasien-pulang', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'cekPasienExport'])->name('cek-pasien-pulang.export');
 
     // pasien bayi
     Route::get('/pasien-bayi/kunjungan-kebidanan', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'index'])->name('pasien-bayi.index');

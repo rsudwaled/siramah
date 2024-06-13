@@ -18,6 +18,7 @@ class FarmasiController extends APIController
         if ($request->depo) {
             $orders = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])->whereDate('tgl_entry', $request->tanggal)
                 ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
                 ->where('kode_unit', $request->depo)
                 ->where('unit_pengirim', '!=', '1016')
                 ->get();
@@ -25,6 +26,7 @@ class FarmasiController extends APIController
         if ($request->depo == 4002) {
             $orders_yasmin = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])->whereDate('tgl_entry',  $request->tanggal)
                 ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
                 ->where('unit_pengirim', '1016')
                 ->get();
             $orders = $orders->merge($orders_yasmin);

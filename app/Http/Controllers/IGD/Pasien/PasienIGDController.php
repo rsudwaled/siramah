@@ -4,6 +4,8 @@ namespace App\Http\Controllers\IGD\Pasien;
 
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\CekPasienPulangExport;
 use Illuminate\Http\Request;
 use App\Models\Provinsi;
 use App\Models\Kabupaten;
@@ -16,8 +18,10 @@ use App\Models\Agama;
 use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\KeluargaPasien;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Auth;
+use DB;
 
 class PasienIGDController extends Controller
 {
@@ -219,7 +223,6 @@ class PasienIGDController extends Controller
 
     public function updatePasien(Request $request)
     {
-        // dd($request->all());
         $pasien         = Pasien::firstWhere('no_rm',$request->rm);
         $kabUpdate      = is_numeric($request->kabupaten_pasien);
         $kecUpdate      = is_numeric($request->kecamatan_pasien);
@@ -277,6 +280,60 @@ class PasienIGDController extends Controller
             }
         }
         return response()->json(['pasien'=>$pasien, 'status'=>200]);
+    }
+
+    public function cekPasien(Request $request)
+    {
+        $query = DB::connection('mysql2')->table('ts_kunjungan')
+            ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
+            ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
+            ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
+            ->select(
+                'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jk',
+                'ts_kunjungan.kode_kunjungan as kunjungan',
+                'ts_kunjungan.status_kunjungan as stts_kunjungan',
+                'ts_kunjungan.no_sep as sep',
+                'ts_kunjungan.form_send_by as form_send_by',
+                'ts_kunjungan.ref_kunjungan as ref_kunjungan',
+                'ts_kunjungan.is_bpjs_proses as is_bpjs_proses',
+                'ts_kunjungan.tgl_keluar as tgl_pulang',
+                'ts_kunjungan.kode_unit as unit',
+                'ts_kunjungan.diagx as diagx',
+                'ts_kunjungan.lakalantas as lakaLantas',
+                'ts_kunjungan.jp_daftar as jp_daftar',
+                'ts_kunjungan.id_ruangan as ruangan',
+                'ts_kunjungan.kamar as kamar',
+                'ts_kunjungan.no_bed as bed',
+                'mt_unit.nama_unit as nama_unit',
+                'mt_status_kunjungan.status_kunjungan as status',
+                'mt_status_kunjungan.ID as id_status',
+            )
+            ->orderBy('ts_kunjungan.tgl_keluar', 'desc');
+
+        if($request->tanggal && !empty($request->tanggal))
+        {
+            $query->whereDate('ts_kunjungan.tgl_keluar', $request->tanggal);
+        }
+
+        if($request->unit && !empty($request->unit))
+        {
+            $query->where('ts_kunjungan.kode_unit', $request->unit);
+        }
+
+        if(empty($request->tanggal) && empty($request->tanggal)){
+            $query->whereDate('ts_kunjungan.tgl_keluar', now());
+        }
+
+        $kunjungan  = $query->get();
+        $unit = Unit::where('kelas_unit', 2)->get();
+        return view('simrs.igd.pasienigd.cek_pasien_pulang', compact('kunjungan','unit','request'));
+    }
+
+    public function cekPasienExport(Request $request)
+    {
+        $unit = Unit::where('kode_unit', $request->unit)->first();
+        $namaFile = 'Data-Pasien-Pulang'.$request->tanggal.'_s.d_'.$unit->nama_unit.'.xlsx';
+        return Excel::download(new CekPasienPulangExport($request), $namaFile);
     }
 
 }

@@ -39,7 +39,14 @@
                                             Perempuan
                                         </option>
                                     </x-adminlte-select>
-                                   @php $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir)) @endphp
+                                    @php
+                                        $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir));
+                                    @endphp
+                                    <div class="col-lg-6">
+                                        <label for="">Tanggal Lahir (bulan/tanggal/tahun)</label>
+                                        <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir" value="{{ $tgl_lahir }}" :config="$config">
+                                    </div>
+                                   {{-- @php $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir)) @endphp
                                     <x-adminlte-input-date name="tgl_lahir" value="{{ $tgl_lahir }}"
                                         fgroup-class="col-md-6" label="Tanggal Lahir" :config="$config">
                                         <x-slot name="prependSlot">
@@ -47,14 +54,7 @@
                                                 <i class="fas fa-calendar-alt"></i>
                                             </div>
                                         </x-slot>
-                                    </x-adminlte-input-date>
-                                    {{-- @php
-                                        $tgl = Carbon\Carbon::parse($pasien->tgl_lahir)->format('d/m/Y');
-                                    @endphp
-                                    <div class="form-group col-md-6">
-                                        <label for="exampleInputBorderWidth2">Tgl Lahir</label>
-                                        <input type="text" name="tgl_lahir" id="tgl_lahir" class=" form-control" value="{{ Carbon\Carbon::parse($pasien->tgl_lahir)->format('Y-m-d'); }}">
-                                    </div> --}}
+                                    </x-adminlte-input-date> --}}
                                     <x-adminlte-select name="agama" label="Agama" fgroup-class="col-md-6">
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->ID }}"

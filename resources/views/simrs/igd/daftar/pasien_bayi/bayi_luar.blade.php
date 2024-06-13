@@ -99,7 +99,7 @@
             <div class="card card-outline card-success">
                 <div class="card-header">
                     @php
-                        $heads = ['DATA BAYI', 'RM ORANGTUA', 'DATA ORANGTUA', 'AKSI'];
+                        $heads = ['DATA BAYI', 'RM ORANGTUA', 'DATA ORANGTUA'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;

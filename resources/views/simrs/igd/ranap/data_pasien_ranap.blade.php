@@ -2,7 +2,7 @@
 @section('title', 'Pasien Rawat Inap')
 
 @section('content_header')
-   
+
 @stop
 @section('content')
     <div class="row mt-3">
@@ -26,7 +26,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <button class="btn btn-sm bg-purple cekKunjunganPoli" data-toggle="modal" data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
+                            <button class="btn btn-sm bg-purple cekKunjunganPoli" data-toggle="modal"
+                                data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                                 <i class="fas fa-sync"></i> Refresh</a>
                         </div>
@@ -171,7 +172,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -182,13 +183,13 @@
                 </div>
                 <form>
                     <div class="modal-body">
-                        <div class="row">
+                        {{-- <div class="row">
                             <div class="col-5 col-sm-3">
                                 <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
                                     aria-orientation="vertical">
                                     <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab"
-                                        data-toggle="pill" href="#rawat-jalan" role="tab"
-                                        aria-controls="rawat-jalan" aria-selected="false">Rawat Jalan</a>
+                                        data-toggle="pill" href="#rawat-jalan" role="tab" aria-controls="rawat-jalan"
+                                        aria-selected="false">Rawat Jalan</a>
                                     <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab"
                                         data-toggle="pill" href="#rawat-inap" role="tab" aria-controls="rawat-inap"
                                         aria-selected="true">Rawat
@@ -252,8 +253,26 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
+                        </div> --}}
+                        <div class="row">
+                            <div class="col-lg-12">
+                             <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                                 <thead>
+                                     <tr>
+                                         <th>KUNJUNGAN</th>
+                                         <th>NO RM</th>
+                                         <th>PASIEN</th>
+                                         <th>POLI</th>
+                                         <th>STATUS</th>
+                                         <th>TGL MASUK</th>
+                                         <th>TGL PULANG</th>
+                                     </tr>
+                                 </thead>
+                                 <tbody>
+                                 </tbody>
+                             </table>
+                            </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -288,8 +307,38 @@
                         url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
                         dataType: 'JSON',
                         success: function(data) {
-                            console.log(data.riwayat);
-                            $.each(data.riwayat, function(index, riwayat) {
+                            console.log(data.semua_kunjungan);
+                            // $.each(data.riwayat, function(index, riwayat) {
+                            //     var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                            //         .kode_kunjungan + "</td><td>" +
+                            //         riwayat.no_rm + "</td><td>" + riwayat.pasien
+                            //         .nama_px +
+                            //         "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
+                            //         riwayat.status.status_kunjungan + "</td><td>" +
+                            //         riwayat.tgl_masuk + "</td><td>" + (riwayat
+                            //             .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                            //             .tgl_keluar) +
+                            //         "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
+                            //         riwayat.kode_kunjungan + "," + riwayat.no_rm +
+                            //         ")>Pilih Riwayat</button></td></tr>";
+                            //     $('.riwayatKunjungan tbody').append(row);
+                            // });
+                            // $.each(data.ranap, function(index, ranap) {
+                            //     var row = "<tr class='riwayat-kunjungan'><td>" + ranap
+                            //         .kode_kunjungan + "</td><td>" +
+                            //         ranap.no_rm + "</td><td>" + ranap.pasien
+                            //         .nama_px +
+                            //         "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
+                            //         ranap.status.status_kunjungan + "</td><td>" +
+                            //         ranap
+                            //         .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
+                            //             null ? 'Belum Pulang' : ranap.tgl_keluar) +
+                            //         "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
+                            //         ranap.kode_kunjungan + "," + ranap.no_rm +
+                            //         ")>Pilih Riwayat</button></td></tr>";
+                            //     $('.riwayatRanap tbody').append(row);
+                            // });
+                            $.each(data.semua_kunjungan, function(index, riwayat) {
                                 var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
                                     .kode_kunjungan + "</td><td>" +
                                     riwayat.no_rm + "</td><td>" + riwayat.pasien
@@ -299,25 +348,8 @@
                                     riwayat.tgl_masuk + "</td><td>" + (riwayat
                                         .tgl_keluar == null ? 'Belum Pulang' : riwayat
                                         .tgl_keluar) +
-                                    "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
-                                    riwayat.kode_kunjungan + "," + riwayat.no_rm +
-                                    ")>Pilih Riwayat</button></td></tr>";
-                                $('.riwayatKunjungan tbody').append(row);
-                            });
-                            $.each(data.ranap, function(index, ranap) {
-                                var row = "<tr class='riwayat-kunjungan'><td>" + ranap
-                                    .kode_kunjungan + "</td><td>" +
-                                    ranap.no_rm + "</td><td>" + ranap.pasien
-                                    .nama_px +
-                                    "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
-                                    ranap.status.status_kunjungan + "</td><td>" +
-                                    ranap
-                                    .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
-                                        null ? 'Belum Pulang' : ranap.tgl_keluar) +
-                                    "</td><td><button class='btn btn-primary btn-xs'onclick=pilihRiwayat(" +
-                                    ranap.kode_kunjungan + "," + ranap.no_rm +
-                                    ")>Pilih Riwayat</button></td></tr>";
-                                $('.riwayatRanap tbody').append(row);
+                                    "</td></tr>";
+                                $('.semuaKunjungan tbody').append(row);
                             });
                         },
                         error: function(xhr, status, error) {

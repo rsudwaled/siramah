@@ -20,18 +20,18 @@ class DiagnosaSynchController extends APIController
     {
         $query = DiagnosaFrunit::with(['pasien','jpDaftar'])->where('status_bridging', 0)
                   ->where('isSynch', 0)->orderBy('input_date','desc');
-                
+
         if($request->tanggal && !empty($request->tanggal))
         {
             $dataYesterday  = Carbon::createFromFormat('Y-m-d',  $request->tanggal);
             $yesterday      = $dataYesterday->subDays(2)->format('Y-m-d');
 
-            $query->whereDate('input_date','>=', $yesterday); 
-            $query->whereDate('input_date','<=', $request->tanggal); 
+            $query->whereDate('input_date','>=', $yesterday);
+            $query->whereDate('input_date','<=', $request->tanggal);
         }
         if($request->unit && !empty($request->unit))
         {
-            $query->whereIn('kode_unit', [$request->unit]); 
+            $query->whereIn('kode_unit', [$request->unit]);
         }
         if(empty($request->tanggal) && empty($request->unit)){
             $query->whereDate('input_date', now());
@@ -111,22 +111,22 @@ class DiagnosaSynchController extends APIController
             'diagAwal'  => 'required',
             'dpjp'      => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400]);
         }
-    
+
         $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
         $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
         if($kunjungan->jp_daftar == 0)
         {
             return response()->json([
                 'data'=>$kunjungan,
-                'code'=>401, 
+                'code'=>401,
                 'message'=>'MOHON MAAF BUKAN PASIEN BPJS!!. silahkan pilih tombol only update untuk pasien umum'
             ]);
         }
-               
+
         if($kunjungan->jp_daftar ==1)
         {
             $url        = env('VCLAIM_URL') . 'SEP/2.0/insert';
@@ -191,7 +191,7 @@ class DiagnosaSynchController extends APIController
                         ],
                         'dpjpLayan'     => $request->dpjp, // ini request dari view modal
                         // 'dpjpLayan'     => $histories->dpjpLayanan,
-                        'noTelp'        => $histories->noTelp,
+                        'noTelp'        => $histories->noTelp??'000000000000',
                         'user'          => $histories->user,
                     ],
                 ],
@@ -206,9 +206,10 @@ class DiagnosaSynchController extends APIController
               $histories->is_bridging   = 1;
               $histories->respon_nosep  = $sep;
               $histories->save();
-              
-              $kunjungan->diagx     = $request->diagAwal;
+
               $kunjungan->no_sep    = $sep;
+              $diagnosa_ts          = Icd10::where('diag', $request->diagAwal)->first();
+              $kunjungan->diagx     = $diagnosa_ts->diag.' | '.$diagnosa_ts->nama;
               $kunjungan->save();
 
             //   $isSynch->status_bridging = 1;
@@ -232,7 +233,7 @@ class DiagnosaSynchController extends APIController
             'diagAwal'  => 'required',
             'dpjp'      => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400]);
         }
@@ -297,14 +298,14 @@ class DiagnosaSynchController extends APIController
         if ($callback->metaData->code == 200) {
             $resdescrtipt               = $this->response_decrypt($response, $signature);
             $sep                        = $resdescrtipt->response->sep->noSep;
-            
+
             $histories->diagnosa_update = $diagnosa_update;
             $histories->dpjp_update     = $dpjp_update;
 
             $histories->diagAwal        = $request->diagAwal;
             $histories->respon_nosep    = $sep;
             $histories->save();
-            
+
             $kunjungan->diagx           = $request->diagAwal;
             $kunjungan->no_sep          = $sep;
             $kunjungan->save();
@@ -317,7 +318,7 @@ class DiagnosaSynchController extends APIController
 
     public function sepBackdate(Request $request)
     {
-        
+
     }
 
     public function synchDiagnosa(Request $request)
@@ -327,7 +328,7 @@ class DiagnosaSynchController extends APIController
             'diagAwal'  => 'required',
             'kunjungan' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json(['data'=>$validator,'code'=>400, 'message'=>'Data yang dikirim tidak lengkap!']);
         }
@@ -337,8 +338,8 @@ class DiagnosaSynchController extends APIController
         {
             return response()->json(['data'=>$kunjungan,'code'=>401,'message'=>'Kunjungan Tidak Ada!']);
         }
-        $icd                = Icd10::firstWhere('diag', $request->diagAwal);
-        $kunjungan->diagx   = $request->diagAwal.' - '.$icd->nama ;
+        $diagnosa_ts          = Icd10::where('diag', $request->diagAwal)->first();
+        $kunjungan->diagx     = $diagnosa_ts->diag.' | '.$diagnosa_ts->nama;
         $kunjungan->save();
 
         // $isSynch    = DiagnosaFrunit::firstWhere('kode_kunjungan', $request->kunjungan);

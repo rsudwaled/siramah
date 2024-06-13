@@ -126,7 +126,8 @@ class DaftarIGDController extends Controller
         {
             $pasien         = $query->get();
         }else{
-            $pasien         = null;
+            // $pasien         = null;
+            $pasien         = $query->orderBy('tgl_entry','desc')->take(3)->get();
         }
 
         $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
@@ -206,10 +207,11 @@ class DaftarIGDController extends Controller
             ]
         );
 
-        $query          = Kunjungan::where('no_rm', $request->rm);
-        $data           = $query->where('status_kunjungan', 1)->get();
+        $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+
+        $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->where('status_kunjungan','=', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
-        // dd($pasien);
         if(is_null($pasien->no_hp))
         {
             $pasien->no_hp = $request->noTelp;
@@ -222,13 +224,10 @@ class DaftarIGDController extends Controller
         }
 
         // counter increment
-        $counter = $query->latest('counter')
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            $c = $counter->counter + 1;
+            $c = $latestCounter->counter + 1;
         }
 
         $unit       = Unit::firstWhere('kode_unit', $request->jp == 1? '1002':'1023');
@@ -469,6 +468,7 @@ class DaftarIGDController extends Controller
             $pasien         = $resdescrtipt->response->peserta->nama;
             $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
             $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
+            $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
             $code           = $resdescrtipt->metadata->code;
             $nik            = $resdescrtipt->response->peserta->nik;
         }else{
@@ -476,6 +476,13 @@ class DaftarIGDController extends Controller
             $jenisPeserta   = $resdescrtipt->metadata->code;
         }
 
-        return response()->json(['nik'=>$nik,'pasien'=>$pasien,'keterangan' => $keterangan, 'jenisPeserta' =>$jenisPeserta, 'code'=>$code]);
+        return response()->json([
+            'nik'=>$nik,
+            'pasien'=>$pasien,
+            'keterangan' => $keterangan,
+            'jenisPeserta' =>$jenisPeserta,
+            'code'=>$code,
+            'kelas'=>$kelas
+        ]);
     }
 }
