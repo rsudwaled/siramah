@@ -18,6 +18,7 @@
     <audio id="puluh" src="{{ asset('rekaman/puluh.mp3') }}"></audio>
 @stop
 @section('adminlte_css')
+    @livewireStyles
     <style>
         body {
             background-color: yellow;
@@ -25,6 +26,7 @@
     </style>
 @endsection
 @section('adminlte_js')
+    @livewireScripts
     <script>
         function panggilpendaftaran(angkaantrian, hurufantrian) {
             document.getElementById('suarabel').pause();
