@@ -118,6 +118,10 @@
                                     @if ($item->antrian)
                                         @if ($item->antrian->taskid == 0)
                                             <span class="badge bg-secondary">Belum Checkin</span>
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil"
+                                                theme="warning" data-toggle="tooltip"
+                                                title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->antrian->kodebooking }}'" />
                                         @endif
                                         @if ($item->antrian->taskid == 1)
                                             <span class="badge bg-secondary">{{ $item->antrian->taskid }}. Chekcin</span>
@@ -168,6 +172,12 @@
                                         @endif
                                     @else
                                         <span class="badge bg-secondary">3. Tidak Bridging</span>
+                                        {{-- @if ($item->method == 'Bridging')
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil"
+                                                theme="warning" data-toggle="tooltip"
+                                                title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
+                                        @endif --}}
                                         {{-- <x-adminlte-button class="btn-xs mt-1 withLoad" label="Panggil" theme="warning"
                                             icon="fas fa-volume-down" data-toggle="tooltip"
                                             title="Panggil dan Bridgingkan" /> --}}

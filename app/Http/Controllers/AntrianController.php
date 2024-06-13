@@ -819,7 +819,15 @@ class AntrianController extends APIController
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 3;
-            $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
+            if ($antrian->taskid3) {
+                $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
+            } else {
+                $request['waktu'] = Carbon::now()->subMinutes(rand(30, 60));
+                $antrian->update([
+                    'taskid3' =>  $request->waktu,
+                    'user3' => auth()->user()->name,
+                ]);
+            }
             $res = $this->update_antrean($request);
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 4;
@@ -830,7 +838,7 @@ class AntrianController extends APIController
             'taskid' => 4,
             'taskid4' =>  now(),
             'status_api' => 0,
-            'user3' => $request->user,
+            'user3' => auth()->user()->name,
             'keterangan' => "Panggilan ke poliklinik yang anda pilih",
         ]);
         Alert::success('Success', 'Panggil Pasien Berhasil');
@@ -2198,8 +2206,12 @@ class AntrianController extends APIController
             Log::notice('Checkin Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
-            } else {
+            } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
+            } else {
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -2962,8 +2974,12 @@ class AntrianController extends APIController
         $now = Carbon::now();
         if ($request->ip() == "192.168.2.133") {
             $printer = env('PRINTER_CHECKIN');
-        } else {
+        } else if ($request->ip() == "192.168.2.51") {
             $printer = env('PRINTER_CHECKIN2');
+        } else if ($request->ip() == "192.168.2.232") {
+            $printer = env('PRINTER_CHECKIN3');
+        } else {
+            $printer = env('PRINTER_CHECKIN_MJKN');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -3103,8 +3119,12 @@ class AntrianController extends APIController
         foreach ($for_sep as  $value) {
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
-            } else {
+            } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
+            } else {
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);

@@ -526,8 +526,12 @@ class PendaftaranController extends APIController
             Log::notice('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
+            } else if ($request->ip() == "192.168.2.51") {
+                $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -565,8 +569,12 @@ class PendaftaranController extends APIController
                 Log::notice('Antrian Printer ip : ' . $request->ip());
                 if ($request->ip() == "192.168.2.133") {
                     $printer = env('PRINTER_CHECKIN');
+                } else if ($request->ip() == "192.168.2.51") {
+                    $printer = env('PRINTER_CHECKIN2');
+                } else if ($request->ip() == "192.168.2.232") {
+                    $printer = env('PRINTER_CHECKIN3');
                 } else {
-                    $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                    $printer = env('PRINTER_CHECKIN_MJKN');
                 }
                 $connector = new WindowsPrintConnector($printer);
                 $printer = new Printer($connector);
@@ -589,8 +597,12 @@ class PendaftaranController extends APIController
             Log::notice('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
+            } else if ($request->ip() == "192.168.2.51") {
+                $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -827,8 +839,12 @@ class PendaftaranController extends APIController
             Log::notice('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
+            } else if ($request->ip() == "192.168.2.51") {
+                $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -870,8 +886,12 @@ class PendaftaranController extends APIController
         $now = Carbon::now();
         if ($request->ip() == "192.168.2.133") {
             $printer = env('PRINTER_CHECKIN');
+        } else if ($request->ip() == "192.168.2.51") {
+            $printer = env('PRINTER_CHECKIN2');
+        } else if ($request->ip() == "192.168.2.232") {
+            $printer = env('PRINTER_CHECKIN3');
         } else {
-            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+            $printer = env('PRINTER_CHECKIN_MJKN');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -942,8 +962,12 @@ class PendaftaranController extends APIController
             Log::notice('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
+            } else if ($request->ip() == "192.168.2.51") {
+                $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -995,8 +1019,12 @@ class PendaftaranController extends APIController
             Log::notice('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = env('PRINTER_CHECKIN');
+            } else if ($request->ip() == "192.168.2.51") {
+                $printer = env('PRINTER_CHECKIN2');
+            } else if ($request->ip() == "192.168.2.232") {
+                $printer = env('PRINTER_CHECKIN3');
             } else {
-                $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
+                $printer = env('PRINTER_CHECKIN_MJKN');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);

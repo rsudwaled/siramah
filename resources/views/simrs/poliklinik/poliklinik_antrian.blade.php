@@ -128,7 +128,11 @@
                                 <td>
                                     @switch($item->taskid)
                                         @case(0)
-                                            <span class="badge bg-secondary">96.Belum Checkin</span>
+                                            @if ($item->method == 'Bridging')
+                                                <span class="badge bg-secondary">3.Tunggu Poli</span>
+                                            @else
+                                                <span class="badge bg-secondary">96.Belum Checkin</span>
+                                            @endif
                                         @break
 
                                         @case(1)
@@ -180,6 +184,14 @@
                                     @switch($item->taskid)
                                         @case(3)
                                             @if ($item->status_api == 1)
+                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
+                                                    data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                    onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
+                                            @endif
+                                        @break
+
+                                        @case(0)
+                                            @if ($item->method == 'Bridging')
                                                 <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
                                                     data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
                                                     onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
