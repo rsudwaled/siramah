@@ -642,6 +642,10 @@ Route::middleware('auth')->group(function () {
     // DAFTAR PENUNJANG
     Route::get('penujang/daftar', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'index'])->name('penunjang.index');
     Route::post('post/daftar-penunjang', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'store'])->name('daftar-penunjang.store');
+    Route::get('kunjungan-penunjang', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'kunjunganPenunjang'])->name('kunjungan-penunjang.list');
+    // PPRI
+    Route::get('kunjungan-poli', [App\Http\Controllers\IGD\PPRI\PPRIController::class, 'kunjunganPoli'])->name('kunjungan-poli.ppri');
+    Route::post('post/kunjungan-poli', [App\Http\Controllers\IGD\PPRI\PPRIController::class, 'postPPRI'])->name('kunjungan-post.ppri');
 
     // Start Gizi
     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {

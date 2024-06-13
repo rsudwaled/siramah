@@ -113,8 +113,10 @@
 </body>
 
 @section('plugins.Sweetalert2', true)
+@section('plugins.Datatables', true)
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    
     $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
         var cek_nik = document.getElementById('cek_nik').value;
         var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
@@ -207,15 +209,9 @@
                     dataType: 'JSON',
                     success: function(data) {
                         $.each(data.semua_kunjungan, function(index, riwayat) {
-                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                                .kode_kunjungan + "</td><td>" +
-                                riwayat.no_rm + "</td><td>" + riwayat.pasien
-                                .nama_px +
-                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
-                                riwayat.status.status_kunjungan + "</td><td>" +
-                                riwayat.tgl_masuk + "</td><td>" + (riwayat
-                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
-                                    .tgl_keluar) +
+                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat.kode_kunjungan + "</td><td>" +riwayat.no_rm + "</td><td>" + riwayat.pasien
+                                .nama_px +"</td><td>" + riwayat.unit.nama_unit + "</td><td>" +riwayat.status.status_kunjungan + "</td><td>" +
+                                riwayat.tgl_masuk + "</td><td>" + (riwayat.tgl_keluar == null ? 'Belum Pulang' : riwayat.tgl_keluar) +"</td><td> <a href='{{ route('kunjungan-poli.ppri') }}?kode="+riwayat.kode_kunjungan +"' class='btn btn-sm btn-primary' style='text-decoration: none;'>Daftar</a>"
                                 "</td></tr>";
                             $('.semuaKunjungan tbody').append(row);
                         });

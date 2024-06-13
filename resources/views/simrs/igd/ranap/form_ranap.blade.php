@@ -231,7 +231,6 @@
                                                     </x-slot>
                                                 </x-adminlte-input>
                                                 <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
-                                                    <option value="">--Pilih Alasan--</option>
                                                     @foreach ($alasanmasuk as $item)
                                                         <option value="{{ $item->id }}">
                                                             {{ $item->alasan_masuk }}</option>
@@ -255,7 +254,6 @@
                                                 </div>
 
                                                 <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                                    <option value="">--Pilih Penjamin--</option>
                                                     @foreach ($penjamin as $item)
                                                         <option value="{{ $item->kode_penjamin }}">
                                                             {{ $item->nama_penjamin }}</option>

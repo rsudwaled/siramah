@@ -159,7 +159,7 @@ class RanapController extends APIController
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
         $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
         $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::get();
+        $alasanmasuk    = AlasanMasuk::orderBy('id','asc')->get();
         $penjamin       = PenjaminSimrs::get();
         $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
         // dd($rujukan);
@@ -299,6 +299,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }

@@ -257,7 +257,6 @@ class DaftarIGDController extends Controller
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            // $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
             $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
@@ -310,7 +309,7 @@ class DaftarIGDController extends Controller
             }
 
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-            if ($kodelayanan == null) {
+            if ($kodelayanan === null) {
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
             }
 
