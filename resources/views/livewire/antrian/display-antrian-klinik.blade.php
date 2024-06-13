@@ -110,12 +110,15 @@
     <script>
         document.addEventListener('livewire:init', () => {
             Livewire.on('panggil-antrian', (event) => {
-                // $('#myAudio').trigger('play');
                 console.log("{{ $antrianpanggil->angkaantrean ?? '1' }}");
                 panggilpoliklinik("{{ $antrianpanggil->angkaantrean ?? 1 }}", "A",
                     "{{ $antrianpanggil->angkaantrean ?? 'ANA' }}");
             });
         });
     </script>
-
+    <script>
+        setInterval(function() {
+            $('#myAudio').trigger('play');
+        }, 1000 * 3);
+    </script>
 </div>
