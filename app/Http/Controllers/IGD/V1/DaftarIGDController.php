@@ -250,7 +250,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->is_bpjs_proses    = $bpjsProses;
         $createKunjungan->jp_daftar         = $request->isBpjs==2?0:$request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
 
         if ($createKunjungan->save()) {
 
@@ -258,7 +258,6 @@ class DaftarIGDController extends Controller
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            // $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
             $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
@@ -311,7 +310,7 @@ class DaftarIGDController extends Controller
             }
 
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-            if ($kodelayanan == null) {
+            if ($kodelayanan === null) {
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
             }
 
@@ -328,7 +327,7 @@ class DaftarIGDController extends Controller
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 1) {
                 $createLH->kode_tipe_transaksi  = 1;

@@ -2,11 +2,22 @@
 
 @section('title', 'DAFTAR PENUNJANG')
 @section('content_header')
-    <div class="alert bg-success alert-dismissible">
-        <h5>
-            <i class="fas fa-user-tag"></i> DAFTAR PENUNJANG :
-        </h5>
+<div class="alert bg-success alert-dismissible">
+    <div class="row">
+        <div class="col-sm-4">
+            <h5>
+                <i class="fas fa-user-tag"></i> PENDAFTARAN PENUNJANG :
+            </h5>
+        </div>
+        <div class="col-sm-8">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                    <a href="{{ route('kunjungan-penunjang.list') }}" class="btn btn-sm btn-primary" style="text-decoration: none;">KUNJUNGAN PENUNJANG</a>
+                </li>
+            </ol>
+        </div>
     </div>
+</div>
 @stop
 
 @section('content')
@@ -196,45 +207,50 @@
                                                     <input type="number" name="no_bpjs" id="no_bpjs"
                                                         class="form-control">
                                                 </div>
-                                                {{-- <x-adminlte-input name="noTelp" id="noTelp" type="number"
-                                                    label="No Telpon" /> --}}
+
+
+                                            </div>
+                                            <div class="col-lg-6">
                                                 @php
                                                     $config = ['format' => 'YYYY-MM-DD'];
                                                 @endphp
                                                 <x-adminlte-input-date name="tanggal"
                                                     value="{{ Carbon\Carbon::now()->format('Y-m-d') }}" label="Tanggal"
                                                     :config="$config" />
-
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <x-adminlte-select2 name="antrian_triase" label="Nomor Triase">
-                                                    @foreach ($antrian_triase as $triase)
-                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} |
-                                                            <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien : 'BELUM DI TRIASE' }}</b>
-                                                        </option>
-                                                    @endforeach
-                                                </x-adminlte-select2>
                                                 <x-adminlte-select2 name="unit_penunjang" label="Pilih Penunjang">
                                                     @foreach ($unit as $item)
                                                         <option value="{{ $item->kode_unit }}">
                                                             {{ $item->nama_unit }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
-                                                <div class="form-group" >
-                                                    <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
+                                                <div class="form-group">
+                                                    <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                         @foreach ($penjamin as $item)
                                                             <option value="{{ $item->kode_penjamin }}">
                                                                 {{ $item->nama_penjamin }}</option>
                                                         @endforeach
                                                     </x-adminlte-select2>
                                                 </div>
-                                                
+
                                                 <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
                                                     @foreach ($alasanmasuk as $item)
                                                         <option value="{{ $item->id }}">
                                                             {{ $item->alasan_masuk }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
+                                                <div class="form-group">
+                                                    <label for="exampleInputBorderWidth2">Perujuk
+                                                        <code>(nama faskes yang merujuk)</code></label>
+                                                    <select name="isPerujuk" id="isPerujuk" class="form-control">
+                                                        <option value="0">Tanpa Perujuk</option>
+                                                        <option value="1">Tambah Perujuk</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group" id="perujuk">
+                                                    <label for="exampleInputBorderWidth2">Nama Perujuk</label>
+                                                    <input type="text" name="nama_perujuk" class="form-control"
+                                                        id="nama_perujuk">
+                                                </div>
 
                                                 <x-slot name="footerSlot">
                                                     <x-adminlte-button type="submit"
@@ -285,7 +301,14 @@
             $('#no_bpjs').val(nomorkartu);
             $('#noTelp').val(kontak);
         });
-
+        $('#perujuk').hide();
+        $(perujuk).on('change', function() {
+            if (perujuk.value > 0 || perujuk.value == null) {
+                $('#perujuk').show();
+            } else {
+                $('#perujuk').hide();
+            }
+        });
         $('.btn-cekBPJS').on('click', function() {
             var rm = $(this).data('rm');
             var nik = $(this).data('nik');
@@ -384,7 +407,5 @@
             $(".riwayat-kunjungan").remove();
             $('#modalCekKunjungan').modal('hide');
         }
-
     </script>
 @endsection
-

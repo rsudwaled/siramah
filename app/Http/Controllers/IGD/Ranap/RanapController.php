@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\IGD\Ranap;
 
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\PenjaminSimrs;
@@ -23,7 +24,6 @@ use App\Models\HistoriesIGDBPJS;
 use App\Models\RujukanIntern;
 use Carbon\Carbon;
 use DB;
-use Auth;
 
 class RanapController extends APIController
 {
@@ -159,7 +159,7 @@ class RanapController extends APIController
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
         $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
         $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::get();
+        $alasanmasuk    = AlasanMasuk::orderBy('id','asc')->get();
         $penjamin       = PenjaminSimrs::get();
         $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
         // dd($rujukan);
@@ -229,6 +229,8 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip)){
             $createKunjungan->is_ranap_daftar   = 3;
         }else{
@@ -236,8 +238,6 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 0;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
 
@@ -254,7 +254,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -299,6 +299,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -415,6 +418,8 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->crad              = $request->crad??0;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip)){
             $createKunjungan->is_ranap_daftar   = 2;
         }else{
@@ -422,8 +427,7 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        
 
         if ($createKunjungan->save()) {
 
@@ -491,7 +495,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -536,6 +540,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -686,6 +693,8 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->crad              = $request->crad??0;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip && $request->pasienNitip ==1)){
             $createKunjungan->is_ranap_daftar   = 2;
         }else{
@@ -693,8 +702,6 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
 
@@ -762,7 +769,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -807,6 +814,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -1143,7 +1153,7 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = $request->isBpjs;
@@ -1163,7 +1173,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;

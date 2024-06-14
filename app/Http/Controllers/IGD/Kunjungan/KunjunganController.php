@@ -24,12 +24,7 @@ class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        // $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
-        // $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
-        // $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
-        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(10)->get();
-
-        // return response()->json(['riwayat'=>$riwayat,'semua_kunjungan'=>$all_kunj,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(8)->orderBy('tgl_masuk','desc')->get();
         return response()->json(['semua_kunjungan'=>$all_kunj]);
     }
 
