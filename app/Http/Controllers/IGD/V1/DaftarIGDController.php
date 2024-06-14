@@ -126,7 +126,6 @@ class DaftarIGDController extends Controller
         {
             $pasien         = $query->get();
         }else{
-            // $pasien         = null;
             $pasien         = $query->orderBy('tgl_entry','desc')->take(3)->get();
         }
 

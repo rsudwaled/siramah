@@ -646,6 +646,9 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
     Route::get('tanpa-daftar/cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJSTanpaDaftar'])->name('cek-status-bpjs.tanpa-daftar');
+    // DAFTAR PENUNJANG
+    Route::get('penujang/daftar', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'index'])->name('penunjang.index');
+    Route::post('post/daftar-penunjang', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'store'])->name('daftar-penunjang.store');
 
     // Start Gizi
     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
