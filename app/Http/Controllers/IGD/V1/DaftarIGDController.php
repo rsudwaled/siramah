@@ -242,6 +242,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = 3;
+        $createKunjungan->hak_kelas         = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
@@ -249,7 +250,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->is_bpjs_proses    = $bpjsProses;
         $createKunjungan->jp_daftar         = $request->isBpjs==2?0:$request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
 
         if ($createKunjungan->save()) {
 
@@ -326,7 +327,7 @@ class DaftarIGDController extends Controller
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 1) {
                 $createLH->kode_tipe_transaksi  = 1;

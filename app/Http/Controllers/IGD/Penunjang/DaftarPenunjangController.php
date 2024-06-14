@@ -181,13 +181,14 @@ class DaftarPenunjangController extends Controller
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $request->penjamin_id;
         $createKunjungan->kelas             = 3;
+        $createKunjungan->hak_kelas         = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->jp_daftar         = 0;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         $createKunjungan->save();
         return redirect()->route('kunjungan-penunjang.list');
     }
