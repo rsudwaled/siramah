@@ -90,11 +90,11 @@ class ModalAntrian extends Component
             'keterangan' => $this->keterangan,
             'user1' => auth()->user()->id,
         ]);
-        $pasien = Pasien::where('norm', $this->norm)->first();
-        $pasien->nohp = $this->nohp;
-        $pasien->nomorkartu = $this->nomorkartu;
-        $pasien->nik = $this->nik;
-        $pasien->nama = $this->nama;
+        $pasien = Pasien::where('no_rm', $this->norm)->first();
+        $pasien->no_hp = $this->nohp;
+        $pasien->no_Bpjs = $this->nomorkartu;
+        $pasien->nik_bpjs = $this->nik;
+        $pasien->nama_px = $this->nama;
         $pasien->update();
         // status antrean
         $api = new AntrianController();
@@ -143,14 +143,12 @@ class ModalAntrian extends Component
         ]);
         $res =  $api->tambah_antrean($request);
         if ($res->metadata->code == 200) {
-            $antrian->status = 1;
+            $antrian->sync_antrian = 1;
             $antrian->update();
             flash('Antrian atas nama pasien ' . $antrian->nama .  ' saved successfully.', 'success');
-            $this->dispatch('formAntrian');
         } else {
             flash($res->metadata->message, 'danger');
         }
-        $this->dispatch('refreshPage');
     }
     public function cariRujukan()
     {
@@ -279,10 +277,6 @@ class ModalAntrian extends Component
             $this->nama = $pasien->nama_px;
             $this->nohp = $pasien->no_hp;
         }
-    }
-    public function formAntrian()
-    {
-        $this->dispatch('formAntrian');
     }
     public function mount(Antrian $antrian)
     {

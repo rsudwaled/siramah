@@ -16,12 +16,12 @@
     <div class="col-md-9" style="overflow-y: auto ;max-height: 600px ;">
         @livewire('pendaftaran.modal-pasien')
         @livewire('pendaftaran.modal-antrian', ['antrian' => $antrian])
-        {{-- @livewire('pendaftaran.modal-kunjungan-rajal', ['antrian' => $antrian])
+        {{-- @livewire('pendaftaran.modal-kunjungan-rajal', ['antrian' => $antrian]) --}}
         @if ($antrian->pasien && $antrian->jenispasien == 'JKN')
             @livewire('pendaftaran.modal-sep', ['antrian' => $antrian])
             @livewire('pendaftaran.modal-suratkontrol', ['antrian' => $antrian])
         @endif
-        @if ($antrian->kunjungan)
+        {{-- @if ($antrian->kunjungan)
             @livewire('dokter.modal-cppt', ['antrian' => $antrian])
             @livewire('perawat.modal-layanan-tindakan', ['antrian' => $antrian])
             <div id="invoice">

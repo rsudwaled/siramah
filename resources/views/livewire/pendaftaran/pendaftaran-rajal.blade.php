@@ -125,13 +125,13 @@
                             <td>
                                 @if ($loket && $lantai)
                                     @if ($item->taskid <= 2)
-                                        <a wire:navigate
+                                        <a
                                             href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
                                             <x-adminlte-button class="btn-xs" label="Proses" theme="success"
                                                 icon="fas fa-user-plus" />
                                         </a>
                                     @else
-                                        <a wire:navigate
+                                        <a
                                             href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
                                             <x-adminlte-button class="btn-xs" label="Lihat" theme="secondary"
                                                 icon="fas fa-user-plus" />

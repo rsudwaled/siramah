@@ -11,8 +11,8 @@
                 <td>Antrian</td>
                 <td>:</td>
                 <th>
-                    <span class="badge badge-{{ $antrian->status ? 'success' : 'danger' }}"
-                        title="{{ $antrian->status ? 'Sudah' : 'Belum' }} Integrasi">
+                    <span class="badge badge-{{ $antrian->sync_antrian ? 'success' : 'danger' }}"
+                        title="{{ $antrian->sync_antrian ? 'Sudah' : 'Belum' }} Integrasi">
                         {{ $antrian->nomorantrean }} / {{ $antrian->kodebooking }}
                     </span>
                 </th>
@@ -144,8 +144,8 @@
                 <td>SEP</td>
                 <td>:</td>
                 <th>
-                    @if ($antrian->sep)
-                        {{ $antrian->sep }}
+                    @if ($antrian->nomorsep)
+                        {{ $antrian->nomorsep }}
                     @else
                         -
                     @endif
