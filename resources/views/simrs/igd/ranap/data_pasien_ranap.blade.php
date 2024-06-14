@@ -2,10 +2,21 @@
 @section('title', 'Pasien Rawat Inap')
 
 @section('content_header')
-
+<div class="alert bg-success alert-dismissible">
+    <div class="row">
+        <div class="col-sm-4">
+            <h5>
+                <i class="fas fa-user-tag"></i> DAFTAR PASIEN RANAP :
+            </h5>
+        </div>
+        <div class="col-sm-8">
+            
+        </div>
+    </div>
+</div>
 @stop
 @section('content')
-    <div class="row mt-3">
+    <div class="row">
         <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
