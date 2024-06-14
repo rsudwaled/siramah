@@ -162,7 +162,6 @@ class DaftarPenunjangController extends Controller
 
     public function store(Request $request)
     {
-
         $query          = Kunjungan::where('no_rm', $request->rm);
         return redirect()->route('daftar.kunjungan');
     }

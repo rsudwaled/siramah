@@ -242,6 +242,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = 3;
+        $createKunjungan->hak_kelas         = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
