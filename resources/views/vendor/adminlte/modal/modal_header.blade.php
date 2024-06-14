@@ -67,7 +67,7 @@
             <form>
                 <div class="modal-body">
                     <div class="row">
-                        <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                        <table id="table1" class="semuaKunjungan  table table-bordered">
                             <thead>
                                 <tr>
                                     <th>KUNJUNGAN</th>
@@ -77,6 +77,7 @@
                                     <th>STATUS</th>
                                     <th>TGL MASUK</th>
                                     <th>TGL PULANG</th>
+                                    <th>PPRI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,7 +93,7 @@
 </div>
 
 <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">CETAK LABEL</h4>

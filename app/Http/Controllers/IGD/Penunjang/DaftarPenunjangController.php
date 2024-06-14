@@ -162,8 +162,47 @@ class DaftarPenunjangController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        $unit           = Unit::firstWhere('kode_unit', $request->unit_penunjang);
+        $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+         // counter increment
+        if ($latestCounter === null) {
+            $c = 1;
+        } else {
+            $c = $latestCounter->counter + 1;
+        }
+        $createKunjungan                    = new Kunjungan();
+        $createKunjungan->counter           = $c;
+        $createKunjungan->no_rm             = $request->rm;
+        $createKunjungan->kode_unit         = $unit->kode_unit;
+        $createKunjungan->tgl_masuk         = now();
+        $createKunjungan->status_kunjungan  = 1;
+        $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
+        $createKunjungan->kode_penjamin     = $request->penjamin_id;
+        $createKunjungan->kelas             = 3;
+        $createKunjungan->hak_kelas         = 3;
+        $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
+        $createKunjungan->perujuk           = $request->nama_perujuk??null;
+        $createKunjungan->is_ranap_daftar   = 0;
+        $createKunjungan->form_send_by      = 0;
+        $createKunjungan->jp_daftar         = 0;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
+        $createKunjungan->save();
+        return redirect()->route('kunjungan-penunjang.list');
+    }
 
-        $query          = Kunjungan::where('no_rm', $request->rm);
-        return redirect()->route('daftar.kunjungan');
+    public function kunjunganPenunjang(Request $request)
+    {
+        $query = Kunjungan::whereIn('kode_unit', ['4002','4008','4010','4011','3014','3002','3003','3007','3020']);
+        if(!empty($request->tanggal))
+        {
+            $query->whereDate('tgl_masuk', $request->tanggal); 
+        }else{
+            $query->whereDate('tgl_masuk', now());
+        }
+        $penunjang = $query->get();
+        return view('simrs.igd.daftar_penunjang.list_daftar', compact('request','penunjang'));
     }
 }
