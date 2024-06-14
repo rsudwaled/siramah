@@ -59,6 +59,7 @@ use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
@@ -81,6 +82,9 @@ use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Pendaftaran\PendaftaranRajal;
+use App\Livewire\Pendaftaran\PendaftaranRajalProses;
+use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserProfil;
@@ -197,6 +201,8 @@ Route::middleware('auth')->group(function () {
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+    Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
+    Route::get('pendaftaran-rajal-proses', PendaftaranRajalProses::class)->name('pendaftaran.rajal.proses');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
     Route::post('daftarBridgingAntrian', [AntrianController::class, 'daftarBridgingAntrian'])->name('daftarBridgingAntrian');
     Route::get('selanjutnyaPendaftaran/{loket}/{lantai}/{jenispasien}/{tanggal}', [AntrianController::class, 'selanjutnyaPendaftaran'])->name('selanjutnyaPendaftaran');
