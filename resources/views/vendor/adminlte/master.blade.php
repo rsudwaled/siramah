@@ -109,14 +109,14 @@
     @yield('adminlte_js')
 
     @include('vendor.adminlte.modal.modal_header')
-   
+
 </body>
 
 @section('plugins.Sweetalert2', true)
 @section('plugins.Datatables', true)
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    
+
     $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
         var cek_nik = document.getElementById('cek_nik').value;
         var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
@@ -145,10 +145,9 @@
                         if (data.code == 200) {
                             Swal.fire({
                                 title: "Success!",
-                                text: data.pasien + '\n ( NIK: ' + data.nik +
-                                    ' ) \n' + data.keterangan + ' ' + '( jenis : ' +
-                                    data
-                                    .jenisPeserta + ')',
+                                text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( JENIS : ' +
+                                        data
+                                        .jenisPeserta +' - KELAS: '+data.kelas+')',
                                 icon: "success",
                                 confirmButtonText: "oke!",
                             }).then((result) => {

@@ -183,11 +183,11 @@
                                 <td>
                                     @switch($item->taskid)
                                         @case(3)
-                                            @if ($item->status_api == 1)
-                                                <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
-                                                    data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
-                                                    onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
-                                            @endif
+                                            {{-- @if ($item->status_api == 1) --}}
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
+                                                data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
+                                            {{-- @endif --}}
                                         @break
 
                                         @case(0)
@@ -199,6 +199,9 @@
                                         @break
 
                                         @case(4)
+                                            <x-adminlte-button class="btn-xs mt-1 withLoad" label="3. Panggil" theme="warning"
+                                                data-toggle="tooltip" title="Panggil Antrian {{ $item->nomorantrean }}"
+                                                onclick="window.location='{{ route('panggilPoliklinik') }}?kodebooking={{ $item->kodebooking }}'" />
                                             <x-adminlte-button class="btn-xs mt-1 btnLayani" label="4. Layani" theme="success"
                                                 icon="fas fa-hand-holding-medical" data-toggle="tooltop"
                                                 title="Layani Pasien {{ $item->nomorantrean }}" data-id="{{ $item->id }}" />
@@ -207,9 +210,10 @@
                                         @default
                                         @break
                                     @endswitch
-                                    <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times" data-toggle="tooltop"
-                                        title="Batal Antrian {{ $item->nomorantrean }}" onclick="btnBatal(this)"
-                                        data-kodebooking="{{ $item->kodebooking }}" data-nama="{{ $item->nama }}" />
+                                    <x-adminlte-button class="btn-xs" theme="danger" icon="fas fa-times"
+                                        data-toggle="tooltop" title="Batal Antrian {{ $item->nomorantrean }}"
+                                        onclick="btnBatal(this)" data-kodebooking="{{ $item->kodebooking }}"
+                                        data-nama="{{ $item->nama }}" />
                                 </td>
                                 <td>
                                     @switch($item->jeniskunjungan)

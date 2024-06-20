@@ -59,6 +59,8 @@ use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\Antrian\AntrianPendaftaran;
+use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
 use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
@@ -80,6 +82,9 @@ use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Pendaftaran\PendaftaranRajal;
+use App\Livewire\Pendaftaran\PendaftaranRajalProses;
+use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserProfil;
@@ -129,7 +134,7 @@ Route::get('checkinUpdate', [AntrianController::class, 'checkinUpdate'])->name('
 Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAntrianPoliklinik'])->name('displayAntrianPoliklinik');
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
-Route::get('displayantrian2', [PoliklinikController::class, 'displayantrian2'])->name('displayantrian2');
+Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
 Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
 
 
@@ -196,6 +201,8 @@ Route::middleware('auth')->group(function () {
     });
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+    Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
+    Route::get('pendaftaran-rajal-proses', PendaftaranRajalProses::class)->name('pendaftaran.rajal.proses');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
     Route::post('daftarBridgingAntrian', [AntrianController::class, 'daftarBridgingAntrian'])->name('daftarBridgingAntrian');
     Route::get('selanjutnyaPendaftaran/{loket}/{lantai}/{jenispasien}/{tanggal}', [AntrianController::class, 'selanjutnyaPendaftaran'])->name('selanjutnyaPendaftaran');
@@ -622,6 +629,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
     Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
+    Route::get('/cetak/{sep}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakSEPPrint'])->name('cetak-sep-igd');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');

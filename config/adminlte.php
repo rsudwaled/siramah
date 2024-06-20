@@ -319,6 +319,24 @@ return [
         ],
         // PELAYANAN
         [
+            'text'    => 'Pelayanan Rawat Jalan',
+            'icon'    => 'fas fa-clinic-medical',
+            'label' => 'proses',
+            'label_color' => 'warning',
+            'submenu' => [
+                [
+                    'text' => 'Pendaftaran Rawat Jalan',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'pendaftaran-rajal',
+                    'active'  => ['pendaftaran-rajal', 'pendaftaran-rajal-proses'],
+                    'shift'   => 'ml-2',
+                    'label' => 'proses',
+                    'label_color' => 'warning',
+                    'can' => ['pendaftaran'],
+                ],
+            ]
+        ],
+        [
             'text'    => 'Aplikasi Pelayanan',
             'icon'    => 'fas fa-clinic-medical',
             'submenu' => [
@@ -327,42 +345,42 @@ return [
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'antrianConsole',
                     'shift'   => 'ml-2',
-                    'can' => ['pendaftaran', 'rekam-medis'],
+                    'can' => ['pendaftaran'],
                 ],
                 [
                     'text' => 'Anjungan Checkin Antrian',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'checkinAntrian',
                     'shift'   => 'ml-2',
-                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                    'can' =>  ['bpjs', 'pendaftaran'],
                 ],
                 [
                     'text' => 'Display Antrian Lt 2',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'displayantrian2',
                     'shift'   => 'ml-2',
-                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                    'can' =>  ['bpjs', 'pendaftaran'],
                 ],
                 [
                     'text' => 'Display Antrian Lt 3',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'displayantrian3',
                     'shift'   => 'ml-2',
-                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                    'can' =>  ['bpjs', 'pendaftaran'],
                 ],
                 [
                     'text' => 'Display Antrian Farmasi',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'displayAntrianFarmasi',
                     'shift'   => 'ml-2',
-                    'can' =>  ['bpjs', 'pendaftaran', 'rekam-medis'],
+                    'can' =>  ['bpjs', 'pendaftaran'],
                 ],
                 [
                     'text' => 'Antrian Pendaftaran',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'antrianPendaftaran',
                     'shift'   => 'ml-2',
-                    'can' => ['pendaftaran', 'rekam-medis'],
+                    'can' => ['pendaftaran'],
                 ],
                 [
                     'text' => 'Antrian Pembayaran',

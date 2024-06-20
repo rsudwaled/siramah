@@ -29,7 +29,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP BACKDATE</button>
+                            <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP
+                                BACKDATE</button>
                             {{-- <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
                                 LABEL</button> --}}
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
@@ -77,7 +78,8 @@
                                     {{ $item->sep }} <br>
                                     @if ($item->sep)
                                         <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
-                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
+                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" /> <br><br>
+                                            <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="form-control btn btn-primary">Cetak SEP</a>
                                     @endif
                                 </td>
                                 <td>
@@ -270,7 +272,8 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan Pengajuan</button>
+                    <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan
+                        Pengajuan</button>
                 </div>
             </div>
         </div>
@@ -552,7 +555,7 @@
                             },
                             success: function(data) {
                                 console.info(data);
-                                if(data.code ==400){
+                                if (data.code == 400) {
                                     Swal.fire({
                                         title: "FORM INPUT TIDAK LENGKAP!",
                                         text: data.message,

@@ -837,6 +837,7 @@ class AntrianController extends APIController
         $antrian->update([
             'taskid' => 4,
             'taskid4' =>  now(),
+            'sync_panggil' => 0,
             'status_api' => 0,
             'user3' => auth()->user()->name,
             'keterangan' => "Panggilan ke poliklinik yang anda pilih",

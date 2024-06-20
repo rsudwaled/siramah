@@ -138,9 +138,22 @@
                                 @endswitch
                             </td>
                             <td>
-                                <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
-                                    label="{{ $item->sync_antrian ? 'Sudah' : 'Belum' }}  Sync"
-                                    theme="{{ $item->sync_antrian ? 'success' : 'warning' }}" icon="fas fa-user-clock" />
+                                @switch($item->sync_antrian)
+                                    @case(1)
+                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
+                                            label="Sudah Sync" theme="success" icon="fas fa-user-clock" />
+                                    @break
+
+                                    @case(2)
+                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
+                                            label="Error Sync" theme="danger" icon="fas fa-user-clock" />
+                                    @break
+
+                                    @default
+                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
+                                            label="Belum Sync" theme="warning" icon="fas fa-user-clock" />
+                                @endswitch
+
                                 <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit" />
                                 <div wire:loading>Loading</div>
                             </td>

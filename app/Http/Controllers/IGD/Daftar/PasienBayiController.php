@@ -147,7 +147,7 @@ class PasienBayiController extends Controller
 
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', Bayi Ny ');
+        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', BY NY ');
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -171,7 +171,7 @@ class PasienBayiController extends Controller
             $pasien = Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper( $ortubayi->nama_px.', Bayi Ny '),
+                'nama_px'           => strtoupper( $ortubayi->nama_px.', BY NY '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,
@@ -285,7 +285,7 @@ class PasienBayiController extends Controller
 
         $bayi->rm_bayi              = $rm_bayi;
         $bayi->rm_ibu               = $ortubayi->no_rm;
-        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', Bayi Ny ');
+        $bayi->nama_bayi            = strtoupper( $ortubayi->nama_px.', BY NY ');
         $bayi->jk_bayi              = $request->jk_bayi;
         $bayi->tempat_lahir         = $request->tempat_lahir_bayi;
         $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
@@ -307,7 +307,7 @@ class PasienBayiController extends Controller
             Pasien::create([
                 'no_rm'             => $rm_bayi,
                 'no_Bpjs'           => '',
-                'nama_px'           => strtoupper( $ortubayi->nama_px.', Bayi Ny '),
+                'nama_px'           => strtoupper( $ortubayi->nama_px.', BY NY '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
                 'tgl_lahir'         => $tgl_lahir_bayi,
