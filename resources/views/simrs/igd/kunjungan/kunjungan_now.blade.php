@@ -84,13 +84,13 @@
                                 </td>
                                 <td>
                                     <b>
-                                        @if (empty($item->jp_daftar) && !empty($item->sep))
+                                        {{-- @if (empty($item->jp_daftar) && !empty($item->sep))
                                             PASIEN BPJS
                                         @elseif ($item->jp_daftar == 1 && $item->is_bpjs_proses)
                                             BPJS PROSES
                                         @else
                                             {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                        @endif
+                                        @endif --}}
                                     </b> <br>
                                     <small>
                                         <a class="btn btn-warning btn-xs">
