@@ -55,21 +55,30 @@ class RekamMedisRajal extends Component
                 $antrian->sync_antrian = 1;
                 $antrian->user5 = auth()->user()->id;
                 $antrian->save();
-                flash($res->metadata->message, 'success');
+                flash($antrian->kodebooking . " " . $res->metadata->message, 'success');
                 if ($this->syncall) {
                     $this->dispatch('antriansync');
                 }
             } else {
-                $wa = new WhatsappController();
-                $request = new Request([
-                    "number" => '089529909036',
-                    "message" =>  $res->metadata->message,
+                // $wa = new WhatsappController();
+                // $request = new Request([
+                //     "number" => '089529909036',
+                //     "message" =>  $res->metadata->message,
+                // ]);
+                // $wa->send_message($request);
+                $antrian->update([
+                    "sync_antrian" => 2,
                 ]);
-                $wa->send_message($request);
-                flash($res->metadata->message, 'danger');
+                if ($this->syncall) {
+                    $this->dispatch('antriansync');
+                }
+                flash($antrian->kodebooking . " " . $res->metadata->message, 'danger');
             }
         } catch (\Throwable $th) {
-            flash($th->getMessage(), 'danger');
+            flash($antrian->kodebooking . " " . $th->getMessage(), 'danger');
+            if ($this->syncall) {
+                $this->dispatch('antriansync');
+            }
         }
     }
     public function onsyncall()
@@ -84,7 +93,8 @@ class RekamMedisRajal extends Component
             ->where('method', '!=', 'Offline')
             ->where('taskid', '!=', 99)
             ->orderBy('taskid', 'desc')
-            ->orWhere('sync_antrian', '<>',  1)
+            ->orWhere('sync_antrian', '<',  1)
+            ->where('tanggalperiksa', $this->tanggalperiksa)
             ->whereIn('taskid', [7, 5])
             ->where('method', '!=', 'Offline')
             ->where('taskid', '!=', 99)

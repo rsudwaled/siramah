@@ -198,7 +198,7 @@ class DaftarPenunjangController extends Controller
         $query = Kunjungan::whereIn('kode_unit', ['4002','4008','4010','4011','3014','3002','3003','3007','3020']);
         if(!empty($request->tanggal))
         {
-            $query->whereDate('tgl_masuk', $request->tanggal); 
+            $query->whereDate('tgl_masuk', $request->tanggal);
         }else{
             $query->whereDate('tgl_masuk', now());
         }
