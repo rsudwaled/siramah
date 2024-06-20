@@ -629,6 +629,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
     Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
+    Route::get('/cetak/{sep}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakSEPPrint'])->name('cetak-sep-igd');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');

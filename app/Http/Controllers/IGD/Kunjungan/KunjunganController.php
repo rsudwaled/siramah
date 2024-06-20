@@ -276,7 +276,15 @@ class KunjunganController extends Controller
             return back();
         }
         $qrcode = base64_encode(QrCode::format('svg')->size(35)->errorCorrection('H')->generate('string'));
-        $pdf = PDF::loadView('simrs.igd.cetakan_label.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
         return $pdf->stream('label-pasien.pdf');
+    }
+
+    public function cetakSEPPrint($sep)
+    {
+        $histories = HistoriesIGDBPJS::where('respon_nosep', $sep)->first();
+        $pasien = Pasien::where('no_rm', $histories->noMR)->first();
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['seppasien' => $histories, 'pasien'=>$pasien]);
+        return $pdf->stream('cetak-sep-pasien.pdf');
     }
 }
