@@ -11,11 +11,13 @@
             <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm btn-danger" style="text-decoration: none;">Daftar Pasien
+                        <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm btn-danger"
+                            style="text-decoration: none;">Daftar Pasien
                             Kecelakaan</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning" style="text-decoration: none;">
+                        <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"
+                            style="text-decoration: none;">
                             Refresh Halaman
                         </a>
                     </li>
@@ -123,6 +125,7 @@
                                     @php
                                         $heads = ['Pasien', 'Aksi'];
                                         $config['paging'] = false;
+                                        $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
                                         $config['searching'] = false;
                                         $config['scrollY'] = '500px';
@@ -400,6 +403,7 @@
             });
         });
 
+
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {
                 document.getElementById('div_stts_kecelakaan').style.display = "block";
@@ -463,9 +467,10 @@
                             if (data.code == 200) {
                                 Swal.fire({
                                     title: "Success!",
-                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( JENIS : ' +
+                                    text: data.pasien + '\n ( NIK: ' + data.nik +
+                                        ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
                                         data
-                                        .jenisPeserta +' - KELAS: '+data.kelas+')',
+                                        .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
                                     icon: "success",
                                     confirmButtonText: "oke!",
                                 }).then((result) => {

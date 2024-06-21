@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\IGD\Kunjungan;
-
+use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Unit;
@@ -15,6 +15,7 @@ use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\Pasien;
 use DB;
+
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -282,9 +283,13 @@ class KunjunganController extends Controller
 
     public function cetakSEPPrint($sep)
     {
-        $histories = HistoriesIGDBPJS::where('respon_nosep', $sep)->first();
-        $pasien = Pasien::where('no_rm', $histories->noMR)->first();
-        $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['seppasien' => $histories, 'pasien'=>$pasien]);
+        $api = new VclaimController();
+        $request = new Request([
+            'noSep' => $sep,
+        ]); 
+        $res    = $api->sep_nomor($request);
+        $histories  = HistoriesIGDBPJS::where('respon_nosep', $sep)->first();
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
 }

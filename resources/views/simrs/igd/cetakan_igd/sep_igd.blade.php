@@ -1,92 +1,87 @@
 @php
     use Carbon\Carbon;
 @endphp
-{{-- <div class="col-lg-12">
-    <div class="row">
-        <div class="col-lg-5">
-            <img src="">
-        </div>
-        <div class="col-lg-7">
-            <h5 style=" padding-left:50px;">SURAT ELEGIBILITAS PESERTA RSUD WALED</h5>
-        </div>
-    </div>
-</div> --}}
-<div class="col-lg-12">
-    <h5 style=" padding-left:50px;">SURAT ELEGIBILITAS PESERTA RSUD WALED</h5>
-</div>
-<table style="font-size: 10px; ">
+<table style="font-size: 10px; margin-top:50px; width:100%;">
     <tr>
-        <td style="padding-left:50px; ">
-            <table cellspacing="0" cellpadding="5" style="margin-top: 5px;">
+        <td colspan="2" style="padding-left:50px;">
+            <table>
+                <td><img  src="{{ public_path('logo_sep_bpjs.png') }}" style="height:40px; padding-righ:5px;"></td>
+                <td><span style="font-size: 18px; padding-left:10px; padding-bottom:0px;">SURAT ELEGIBILITAS PESERTA <br>&nbsp;&nbsp;RSUD WALED</span></td>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-left:50px; width:60%;">
+            <table cellspacing="0" cellpadding="5" style="width:100%">
                 <tr>
                     <td>No. SEP</td>
                     <td>:</td>
-                    <td>{{ $seppasien->respon_nosep }}</td>
+                    <td>{{ $data->noSep }}</td>
                 </tr>
                 <tr>
                     <td>Tgl. SEP</td>
                     <td>:</td>
-                    <td>{{ \Carbon\Carbon::parse($seppasien->tglSep)->format('d-m-Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->tglSep)->format('d-m-Y') }}</td>
                 </tr>
                 <tr>
                     <td>No. Kartu</td>
                     <td>:</td>
-                    <td>{{ $seppasien->noKartu }}</td>
+                    <td>{{ $data->peserta->noKartu }} (MR. {{$data->peserta->noMr}})</td>
                 </tr>
                 <tr>
                     <td>Nama Peserta</td>
                     <td>:</td>
-                    <td>{{ $pasien->nama_px }}</td>
+                    <td>{{ $data->peserta->nama }}</td>
                 </tr>
                 <tr>
                     <td>Tgl. Lahir</td>
                     <td>:</td>
-                    <td>{{ \Carbon\Carbon::parse($pasien->tgl_lahir)->format('d-m-Y') }} Kelamin :
-                        {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data->peserta->tglLahir)->format('d-m-Y') }} &nbsp;&nbsp;Kelamin :
+                        {{ $data->peserta->kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
                 </tr>
                 <tr>
                     <td>No. Telepon</td>
                     <td>:</td>
-                    <td>{{ $seppasien->noTelp }}</td>
+                    <td>{{$history->noTelp}}</td>
                 </tr>
                 <tr>
                     <td>Sub/Spesialis</td>
                     <td>:</td>
-                    <td>INSTALASI GAWAT DARURAT</td>
+                    <td>{{$data->poli}}</td>
                 </tr>
                 <tr>
                     <td>Dokter</td>
                     <td>:</td>
-                    <td>Doddy</td>
+                    <td>{{$data->dpjp->nmDPJP}}</td>
                 </tr>
                 <tr>
                     <td>Faskes Perujuk</td>
                     <td>:</td>
-                    <td>-</td>
+                    <td>RSUD WALED</td>
                 </tr>
                 <tr>
                     <td>Diagnosa Awal</td>
                     <td>:</td>
-                    <td>{{ $seppasien->diagAwal }}</td>
+                    <td>{{ $data->diagnosa }}</td>
                 </tr>
             </table>
         </td>
-        <td style="padding-left:200px; ">
-            <table cellspacing="0" cellpadding="5" style="width:100%;">
+        <td style="width:40%;">
+            <table cellspacing="0" cellpadding="5" style="width:60%">
                 <tr>
                     <td>Peserta</td>
                     <td>:</td>
-                    <td>{{ $seppasien->respon_nosep }}</td>
+                    <td>{{$data->peserta->jnsPeserta}}</td>
                 </tr>
                 <tr>
                     <td>Jns. Rawat</td>
                     <td>:</td>
-                    <td>{{ $seppasien->tglSEP }}</td>
+                    <td>{{ $data->jnsPelayanan }}</td>
                 </tr>
                 <tr>
                     <td>Jns. Kunjungan</td>
                     <td>:</td>
-                    <td>{{ $seppasien->noKartu }}</td>
+                    <td>-</td>
                 </tr>
                 <tr>
                     <td>Poli Perujuk</td>
@@ -94,14 +89,57 @@
                     <td>-</td>
                 </tr>
                 <tr>
+                    <td>Kls. Hak</td>
+                    <td>:</td>
+                    <td>{{$data->peserta->hakKelas}}</td>
+                </tr>
+                <tr>
                     <td>Kls. Rawat</td>
                     <td>:</td>
-                    <td>Kelas -</td>
+                    <td>Kelas {{$data->klsRawat->klsRawatHak}}</td>
                 </tr>
                 <tr>
                     <td>Penjamin</td>
                     <td>:</td>
                     <td>-</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding-left:50px; width:60%;">
+            <table style="font-size: 7px; ">
+                <tr>
+                    <td colspan="2">*Saya menyetujui BPJS Kesehatan untuk :</td>
+                </tr>
+                <tr>
+                    <td style="width:4px;">a. </td>
+                    <td>membuka dan atau menggunakan informasi medis Pasien untuk keperluan administrasi, pembayaran asuransi atau jaminan pembiayaan kesehatan</td>
+                </tr>
+                <tr>
+                    <td>b. </td>
+                    <td>memberikan akses informasi medis atau riwayat pelayanan kepada dokter/tenaga medis pada RSUD WALED untuk kepentingan pemeliharaan kesehatan, pengobatan, penyembuhan, dan perawatan pasien.</td>
+                </tr>
+                <tr>
+                    <td colspan="2">*Saya mengetahui dan memahami :</td>
+                </tr>
+                <tr>
+                    <td>a. </td>
+                    <td>Rumah Sakit dapat melakukan koordinasi dengan PT Jasa Raharja / PT Taspen / PT ASABRI / BPJS Ketenagakerjaan atau Penjamin lainnya, jika Peserta merupakan pasien yang mengalami kecelakaan lalulintas dan / atau kecelakaan kerja.</td>
+                </tr>
+                <tr>
+                    <td>b. </td>
+                    <td>SEP bukan sebagai bukti penjamin peserta.</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width:40%;">
+            <table style="font-size: 10px; width:100%;">
+                <tr>
+                    <td colspan="2" style="text-align: center; ">Persetujuan <br>Pasien/Keluarga Pasien</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align: center; padding-top:100px; font-size: 8px;">Waktu: {{Carbon::now()}} WIB</td>
                 </tr>
             </table>
         </td>

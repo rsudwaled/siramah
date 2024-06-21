@@ -31,8 +31,8 @@
                         <div class="col-lg-6 text-right">
                             <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP
                                 BACKDATE</button>
-                            {{-- <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
-                                LABEL</button> --}}
+                            <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
+                                LABEL</button>
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
                                 <i class="fas fa-sync"></i> Refresh</a>
                         </div>
@@ -75,22 +75,22 @@
 
                                 <td>{{ $item->diagx }}</td>
                                 <td>
-                                    {{ $item->sep }} <br>
+                                    <strong><h6>{{ $item->sep }}</h6></strong>
                                     @if ($item->sep)
                                         <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
-                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" /> <br><br>
-                                            <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="form-control btn btn-primary">Cetak SEP</a>
+                                            class="btn-block btn btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
+                                            <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
                                     @endif
                                 </td>
                                 <td>
                                     <b>
-                                        {{-- @if (empty($item->jp_daftar) && !empty($item->sep))
+                                        @if (empty($item->jp_daftar) && !empty($item->sep))
                                             PASIEN BPJS
                                         @elseif ($item->jp_daftar == 1 && $item->is_bpjs_proses)
                                             BPJS PROSES
                                         @else
                                             {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                        @endif --}}
+                                        @endif
                                     </b> <br>
                                     <small>
                                         <a class="btn btn-warning btn-xs">
@@ -279,7 +279,7 @@
         </div>
     </div>
 
-    {{-- <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
+    <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -304,7 +304,7 @@
                 </form>
             </div>
         </div>
-    </div> --}}
+    </div>
 @stop
 
 @section('plugins.Select2', true)
