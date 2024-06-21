@@ -92,7 +92,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true" data-backdrop="static">
+{{-- <div class="modal fade" id="modal-label" style="display: none;" aria-hidden="true" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -115,6 +115,18 @@
                         class="btn btn-primary btn-cetak-label-igd">Cetak</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div> --}}
+
+<div class="modal fade" id="modalLabel" style="display: none;" aria-hidden="true"
+    data-backdrop="static">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Cek Kunjungan Pasien</h4>
+            </div>
+            
         </div>
     </div>
 </div>

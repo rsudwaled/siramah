@@ -86,13 +86,10 @@ class PasienIGDController extends Controller
                 'pendidikan'        =>'required',
                 'no_telp'           =>'required|numeric',
                 'provinsi_pasien'   =>'required',
-                // 'negara'            =>'required',
                 'kewarganegaraan'   =>'required',
                 'alamat_lengkap_pasien' =>'required',
                 'nama_keluarga'     =>'required',
-                'kontak'            =>'required',
                 'hub_keluarga'      =>'required',
-                'alamat_lengkap_sodara' =>'required',
             ],
             [
                 'nik_pasien_baru'       =>'nik pasien wajib diisi',
@@ -109,50 +106,29 @@ class PasienIGDController extends Controller
                 'no_telp.max'           =>'no telpon maksimal 13 digit',
                 'no_telp.min'           =>'no telpon minimal 12 digit',
                 'provinsi_pasien'       =>'provinsi pasien wajib dipilih',
-                // 'negara'                =>'negara wajib dipilih',
                 'kewarganegaraan'       =>'kewarganegaraan wajib dipilih',
                 'alamat_lengkap_pasien' =>'alamat lengkap pasien wajib diisi',
                 'nama_keluarga'         =>'nama keluarga wajib diisi',
-                'kontak'                =>'kontak keluarga wajib diisi',
-                'kontak.max'            =>'maksimal 13 digit',
-                'kontak.min'            =>'minimal 12 digit',
                 'hub_keluarga'          =>'hubungan keluarga dengan pasien wajib dipilih',
-                'alamat_lengkap_sodara' =>'alamat lengkap keluarga pasien wajib diisi',
             ]);
 
         $tgl_lahir  = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
-        // $last_rm = Pasien::orderBy('tgl_entry','desc')->first();
-
-        // if ($last_rm) {
-        //     // Cek apakah no_rm terakhir memiliki prefiks '24A'
-        //     if (strpos($last_rm->no_rm, '24A') === 0) {
-        //         // Jika prefiks '24A', maka no_rm baru dimulai dari '01000001'
-        //         $rm_new = '01000001';
-        //     } elseif (strpos($last_rm->no_rm, '01') === 0) {
-        //         // Jika prefiks '01', increment no_rm terakhir
-        //         $current_no = substr($last_rm->no_rm, 2); // Mengambil bagian setelah '01'
-        //         $new_no = (int)$current_no + 1;
-        //         // Format nomor baru dengan leading zeros sesuai format
-        //         $new_no_rm = '01' . str_pad($new_no, 6, '0', STR_PAD_LEFT);
-        //     } else {
-        //         // Logika tambahan jika ada skenario lain yang perlu ditangani
-        //         $new_no_rm = '01000001'; // Default value jika tidak memenuhi kondisi
-        //     }
-        // } else {
-        //     // Jika belum ada no_rm, mulai dari nomor pertama
-        //     $new_no_rm = '01000001';
-        // }
+        $same_address = $request->has('default_alamat_checkbox')??Null;
+        
         $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
                 ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
                 ->whereRaw("LEFT(no_rm, 2) = '01'")
                 ->first();
         $rm_new ='0'.$cek_last_rm->rm_baru;
+        $kecamatan      = Kecamatan::where('kode_kecamatan', $request->kecamatan_pasien)->first();
+        $desa           = Desa::where('kode_desa_kelurahan', $request->desa_pasien)->first();
+
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
             'nama_keluarga'     => $request->nama_keluarga,
             'hubungan_keluarga' => $request->hub_keluarga,
-            'alamat_keluarga'   => $request->alamat_lengkap_sodara,
-            'tlp_keluarga'      => $request->kontak,
+            'alamat_keluarga'   => !empty($same_address) ? $desa->nama_desa_kelurahan.' Kecamatan '.$kecamatan->nama_kecamatan.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
+            'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
             'input_date'        => Carbon::now(),
             'Update_date'       => Carbon::now(),
         ]);
@@ -178,7 +154,7 @@ class PasienIGDController extends Controller
             'kabupaten'         => $request->kabupaten_pasien,
             'kecamatan'         => $request->kecamatan_pasien,
             'desa'              => $request->desa_pasien,
-            'alamat'            => strtoupper($request->alamat_lengkap_pasien),
+            'alamat'            => strtoupper($desa->nama_desa_kelurahan.' Kecamatan '.$kecamatan->nama_kecamatan.' '.$request->alamat_lengkap_pasien),
             'no_telp'           => $request->no_telp,
             'no_hp'             => $request->no_telp,
             'tgl_entry'         => Carbon::now(),

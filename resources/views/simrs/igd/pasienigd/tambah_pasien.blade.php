@@ -55,37 +55,28 @@
                                         <div class="form-group col-md-6">
                                             <label for="exampleInputRounded0">NIK <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
-                                            <input class="form-control rounded-0" name="nik_pasien_baru" value="{{old('nik_pasien_baru')}}" type="number"
+                                            <input class="form-control rounded-0" name="nik_pasien_baru"
+                                                value="{{ old('nik_pasien_baru') }}" type="number"
                                                 placeholder="masukan nik">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="exampleInputRounded0">BPJS <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_bpjs" type="number" value="{{old('no_bpjs')}}"
-                                                placeholder="masukan bpjs">
+                                            <input class="form-control rounded-0" name="no_bpjs" type="number"
+                                                value="{{ old('no_bpjs') }}" placeholder="masukan bpjs">
                                         </div>
-                                        <x-adminlte-input name="nama_pasien_baru" label="Nama *" value="{{old('nama_pasien_baru')}}"
-                                            placeholder="masukan nama pasien" fgroup-class="col-md-12" disable-feedback />
-                                        <x-adminlte-input name="tempat_lahir" label="Tempat lahir *" value="{{old('tempat_lahir')}}"
-                                            placeholder="masukan tempat" fgroup-class="col-md-6" disable-feedback />
+                                        <x-adminlte-input name="nama_pasien_baru" label="Nama *"
+                                            value="{{ old('nama_pasien_baru') }}" placeholder="masukan nama pasien"
+                                            fgroup-class="col-md-12" disable-feedback />
+                                        <x-adminlte-input name="tempat_lahir" label="Tempat lahir *"
+                                            value="{{ old('tempat_lahir') }}" placeholder="masukan tempat"
+                                            fgroup-class="col-md-6" disable-feedback />
                                         <x-adminlte-select name="jk" label="Jenis Kelamin *" fgroup-class="col-md-6">
                                             <option value="L">Laki-Laki
                                             </option>
                                             <option value="P">Perempuan
                                             </option>
                                         </x-adminlte-select>
-                                        {{-- <div class="col-md-6">
-                                            @php
-                                                $config = ['format' => 'YYYY-MM-DD'];
-                                            @endphp
-                                            <x-adminlte-input-date name="tgl_lahir" value="{{old('tgl_lahir')}}" label="Tanggal " :config="$config">
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text bg-primary">
-                                                        <i class="fas fa-calendar-alt"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input-date>
-                                        </div> --}}
                                         <div class="col-lg-6">
                                             <label for="">Tanggal Lahir (bulan/tanggal/tahun)</label>
                                             <input type="date" class="form-control" name="tgl_lahir">
@@ -116,8 +107,8 @@
                                         <div class="form-group col-md-6">
                                             <label for="exampleInputRounded0">No Telpon <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_telp" type="number" value="{{old('no_telp')}}"
-                                                placeholder="masukan no tlp">
+                                            <input class="form-control rounded-0" name="no_telp" type="number"
+                                                value="{{ old('no_telp') }}" placeholder="masukan no tlp">
                                         </div>
                                         <x-adminlte-select name="provinsi_pasien" label="Provinsi *" id="provinsi_pasien"
                                             fgroup-class="col-md-6">
@@ -183,21 +174,37 @@
                                     <i class="icon fas fa-users"></i>Info Keluarga
                                     Pasien :
                                 </h5>
+                                <h6>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="default_alamat_checkbox" value="1" id="default_alamat">
+                                        <label class="form-check-label" for="default_alamat">CEKLIS UNTUK MENYAMAKAN
+                                            ALAMAT</label>
+                                    </div>
+                                </h6>
                             </div>
                             <div class="row">
-                                <x-adminlte-input name="nama_keluarga" label="Nama Keluarga *" value="{{old('nama_keluarga')}}"
-                                    placeholder="masukan nama keluarga" fgroup-class="col-md-12" disable-feedback />
-                                <x-adminlte-input name="kontak" label="Kontak *" value="{{old('kontak')}}" placeholder="no tlp"
-                                    fgroup-class="col-md-6" disable-feedback />
-                                <x-adminlte-select name="hub_keluarga" label="Hubungan Dengan Pasien *"
-                                    fgroup-class="col-md-6">
-                                    @foreach ($hb_keluarga as $item)
-                                        <option value="{{ $item->kode }}">
-                                            {{ $item->nama_hubungan }}</option>
-                                    @endforeach
-                                </x-adminlte-select>
-                                <x-adminlte-textarea name="alamat_lengkap_sodara" label="Alamat Lengkap (RT/RW) *"
-                                    placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
+                                <div class="form-group col-lg-6">
+                                    <label for="exampleInputBorderWidth2">Nama Keluarga</label>
+                                    <input type="text" name="nama_keluarga" class="form-control"
+                                        id="nama_keluarga">
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label for="exampleInputBorderWidth2">Hubungan Dengan Pasien</label>
+                                    <select name="hub_keluarga" id="hub_keluarga" class="form-control">
+                                        @foreach ($hb_keluarga as $item)
+                                            <option value="{{ $item->kode }}">
+                                                {{ $item->nama_hubungan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-lg-6" id="div_kontak">
+                                    <label for="exampleInputBorderWidth2">Kontak</label>
+                                    <input type="text" name="kontak" id="kontak" class="form-control">
+                                </div>
+                                <div class="form-group col-lg-6" id="div_alamat_keluarga">
+                                    <label for="exampleInputBorderWidth2">Alamat Keluarga</label>
+                                    <textarea name="alamat_lengkap_sodara" class="form-control" id="alamat_lengkap_sodara" cols="30" rows="2"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -298,6 +305,29 @@
                     });
                 } else {
                     $("#desa_pasien").empty();
+                }
+            });
+        });
+        $(document).ready(function() {
+            const defaultCheckbox = document.getElementById('default_alamat');
+
+            $(defaultCheckbox).on('change', function() {
+                if (this.checked) {
+                    var kontak = $('#no_telp').val();
+                    var alamat = $('#alamat_lengkap_pasien').val();
+
+                    $('#alamat_lengkap_sodara').val(alamat); // Mengisi alamat sodara dengan alamat pasien
+                    $('#kontak').val(kontak); // Mengisi nomor telepon dengan nomor telepon pasien
+
+                    $('#div_alamat_keluarga').hide();
+                    $('#div_kontak').hide(); // Menampilkan nomor telepon
+
+                } else {
+                    $('#alamat_lengkap_sodara').val(''); 
+                    $('#kontak').val(''); 
+
+                    $('#div_alamat_keluarga').show();
+                    $('#div_kontak').show(); // Menyembunyikan nomor telepon
                 }
             });
         });

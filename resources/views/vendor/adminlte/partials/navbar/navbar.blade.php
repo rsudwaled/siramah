@@ -25,10 +25,9 @@
             <li class="nav-item d-none d-sm-inline-block mr-1">
                 <a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien Baru</a>
             </li>
-            <li class="nav-item d-none d-sm-inline-block mr-1">
-                <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
-                    LABEL</button>
-            </li>
+            {{-- <li class="nav-item d-none d-sm-inline-block mr-1">
+                <a href="#" data-toggle="modal" data-target="#modalLabel" class="btn btn-sm btn-primary">CETAK LABEL</a>
+            </li> --}}
         @else
             <li class="nav-item d-none d-sm-inline-block">
                 <a class="nav-link">Waktu Server {{ now() }}</a>
