@@ -1080,7 +1080,7 @@ class RanapController extends APIController
         $cekKunjungan = Kunjungan::where('no_rm', $rm)->whereDate('tgl_masuk', now())->get();
         if($cekKunjungan->count() > 0)
         {
-            Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan hari!');
+            Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan!');
             return redirect()->route('pasien-bayi.cari');
         }
         $pasien         = Pasien::firstWhere('no_rm', $rm);

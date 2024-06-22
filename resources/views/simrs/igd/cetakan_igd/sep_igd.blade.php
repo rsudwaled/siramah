@@ -1,7 +1,7 @@
 @php
     use Carbon\Carbon;
 @endphp
-<table style="font-size: 10px; margin-top:50px; width:100%;">
+<table style="font-size: 12px; margin-top:50px; width:100%;">
     <tr>
         <td colspan="2" style="padding-left:50px;">
             <table>
@@ -134,7 +134,7 @@
             </table>
         </td>
         <td style="width:40%;">
-            <table style="font-size: 10px; width:100%;">
+            <table style="font-size: 12px; width:100%;">
                 <tr>
                     <td colspan="2" style="text-align: center; ">Persetujuan <br>Pasien/Keluarga Pasien</td>
                 </tr>

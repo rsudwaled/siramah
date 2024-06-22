@@ -113,27 +113,27 @@
                                         <x-adminlte-select name="provinsi_pasien" label="Provinsi *" id="provinsi_pasien"
                                             fgroup-class="col-md-6">
                                             @foreach ($provinsi as $item)
-                                                <option value="{{ $item->kode_provinsi }}"
-                                                    {{ $item->kode_provinsi == 32 ? 'selected' : '' }}>
-                                                    {{ $item->nama_provinsi }}
+                                                <option value="{{ $item->id }}"
+                                                    {{ $item->id == 32 ? 'selected' : '' }}>
+                                                    {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </x-adminlte-select>
                                         <x-adminlte-select name="kabupaten_pasien" label="Kabupaten *" id="kab_pasien"
                                             fgroup-class="col-md-6">
                                             @foreach ($kabupaten as $item)
-                                                <option value="{{ $item->kode_kabupaten_kota }}"
-                                                    {{ $item->kode_kabupaten_kota == 3209 ? 'selected' : '' }}>
-                                                    {{ $item->nama_kabupaten_kota }}
+                                                <option value="{{ $item->id }}"
+                                                    {{ $item->id == 3209 ? 'selected' : '' }}>
+                                                    {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </x-adminlte-select>
                                         <x-adminlte-select name="kecamatan_pasien" label="Kecamatan *" id="kec_pasien"
                                             fgroup-class="col-md-6">
                                             @foreach ($kecamatan as $item)
-                                                <option value="{{ $item->kode_kecamatan }}"
-                                                    {{ $item->kode_kecamatan == 3209020 ? 'selected' : '' }}>
-                                                    {{ $item->nama_kecamatan }}
+                                                <option value="{{ $item->id }}"
+                                                    {{ $item->id == 3209020 ? 'selected' : '' }}>
+                                                    {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </x-adminlte-select>
@@ -241,8 +241,8 @@
                                     ' < option > --Pilih Kabupaten-- < /option>');
                                 $.each(kabupatenpasien, function(key, value) {
                                     $('#kab_pasien').append('<option value="' + value
-                                        .kode_kabupaten_kota + '">' + value
-                                        .nama_kabupaten_kota + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#kab_pasien').empty();
@@ -268,8 +268,8 @@
                                     ' < option > --Pilih Kecamatan-- < /option>');
                                 $.each(kecamatanpasien, function(key, value) {
                                     $('#kec_pasien').append('<option value="' + value
-                                        .kode_kecamatan + '">' + value
-                                        .nama_kecamatan + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#kec_pasien').empty();
@@ -295,8 +295,8 @@
                                     ' < option > --Pilih Desa-- < /option>');
                                 $.each(desapasien, function(key, value) {
                                     $('#desa_pasien').append('<option value="' + value
-                                        .kode_desa_kelurahan + '">' + value
-                                        .nama_desa_kelurahan + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#desa_pasien').empty();
