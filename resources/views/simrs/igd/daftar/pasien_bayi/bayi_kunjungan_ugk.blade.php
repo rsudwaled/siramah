@@ -9,7 +9,8 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Daftar Data Bayi</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('pasien-bayi.cari') }}" class="btn btn-sm bg-purple">Daftar
+                            Data Bayi</a></li>
                 </ol>
             </div>
         </div>
@@ -72,7 +73,7 @@
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     @php
-                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alasan','Status', 'Penjamin', 'Status'];
+                        $heads = ['Tgl Masuk / Kunjungan', 'Orangtua', 'Alasan', 'Status', 'Penjamin', 'Status'];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
                         $config['info'] = false;
@@ -85,7 +86,7 @@
                         @foreach ($kunjungan_igd as $item)
                             <tr>
                                 <td>
-                                    {{ $item->kode_kunjungan }} | {{$item->unit->nama_unit}} <br>
+                                    {{ $item->kode_kunjungan }} | {{ $item->unit->nama_unit }} <br>
                                     <b>Masuk : {{ $item->tgl_masuk }}</b>
                                 </td>
                                 <td><b>Nama: {{ $item->pasien->nama_px }}</b><br>RM :
@@ -111,7 +112,8 @@
                     </x-adminlte-datatable>
                 </div>
             </div>
-            <x-adminlte-modal id="formBayi" title="FORM DAFTARKAN DATA BAYI PADA SISTEM" theme="success" size='lg' disable-animations static-backdrop>
+            <x-adminlte-modal id="formBayi" title="FORM DAFTARKAN DATA BAYI PADA SISTEM" theme="success" size='lg'
+                disable-animations static-backdrop>
                 <div class="col-lg-12">
                     <div class="alert alert-warning alert-dismissible">
                         <h5>
@@ -129,6 +131,12 @@
                                     disabled fgroup-class="col-md-12" disable-feedback />
                                 <x-adminlte-input name="kunjungan" id="kunjungan" label="Kunjungan **" type="text"
                                     disabled fgroup-class="col-md-12" disable-feedback />
+                                <div class="col-lg-12">
+                                    <div class="card-body p-0">
+                                        <ul class="products-list product-list-in-card" id="bayi_created">
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-6">
                                 <input type="hidden" name="isbpjs" id="isbpjs">
@@ -237,7 +245,49 @@
                 $("#kunjungan").val($(this).data('kunjungan'));
                 $("#kunjungan_ortu").val($(this).data('kunjungan'));
                 $('#formBayi').modal('show');
+                var detail = $(this).data('rmibu');
+                $.ajax({
+                    type: 'get',
+                    url: "{{ route('detailbayi.byortu') }}",
+                    data: {
+                        detail: detail
+                    },
+                    dataType: 'json',
 
+                    success: function(data) {
+                        console.info(data);
+                        $.LoadingOverlay("show");
+                        $.each(data.data, function(key, value) {
+                            var link =
+                                "{{ route('form-umum.ranap-bayi', ['rm' => ':rm', 'kunjungan' => ':kunjungan']) }}"
+                                .replace(':rm', value.rm_bayi)
+                                .replace(':kunjungan', value.kunjungan_ortu);
+
+                            var createdDate = new Date(value.created_at);
+                            var formattedCreatedAt = createdDate.toLocaleString(
+                            'id-ID', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric'
+                            });
+
+                            var newItem = "<li class='item'><div><a href='" + link +
+                                "' class='product-title'>RM: " + value.rm_bayi +
+                                "<span class='badge badge-success float-right'>Baru</span></a><span class='product-description'>" +
+                                value.nama_bayi + "| ditambahkan pada : " + formattedCreatedAt + "</span></div></li>";
+
+                            $('#bayi_created').append(newItem);
+                        });
+
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(res) {
+                        console.log('Error:', res);
+                    }
+                });
             });
 
             $('.detail-bayi').click(function(e) {
@@ -255,18 +305,17 @@
                         $.LoadingOverlay("show");
                         $.each(data.data, function(key, value) {
                             $('#table1').append("<tr>\
-                                                                <td>" + value.rm_bayi + "</td>\
-                                                                <td>" + value.nama_bayi + "</td>\
-                                                                <td>" + value.jk_bayi + "</td>\
-                                                                <td>" + value.tgl_lahir_bayi + "</td>\
-                                                            </tr>");
+                                            <td>" + value.rm_bayi + "</td>\
+                                            <td>" + value.nama_bayi + "</td>\
+                                            <td>" + value.jk_bayi + "</td>\
+                                            <td>" + value.tgl_lahir_bayi + "</td>\
+                                        </tr>");
                         })
                         $.LoadingOverlay("hide");
                     },
                     error: function(res) {
                         console.log('Error:', res);
                     }
-
                 });
 
                 $('#databayi').modal('show');

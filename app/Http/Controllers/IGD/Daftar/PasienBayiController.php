@@ -32,8 +32,6 @@ class PasienBayiController extends Controller
         $bayi          = PasienBayiIGD::get();
         $query         = Kunjungan::whereIn('kode_unit',['1012','1023','1032'])
                         ->whereNull('tgl_keluar');
-        // $query         = Kunjungan::where('prefix_kunjungan','UGK')
-        //                 ->whereNull('tgl_keluar');
 
         if(!empty($request->start) && !empty($request->finish))
         {
@@ -115,12 +113,10 @@ class PasienBayiController extends Controller
     {
         $request->validate(
             [
-                // 'nama_bayi'         => 'required',
                 'tempat_lahir_bayi' => 'required',
                 'jam_lahir_bayi'    => 'required',
             ],
             [
-                // 'nama_bayi'         => 'Nama bayi wajib diisi !',
                 'tempat_lahir_bayi' => 'Tempat lahir bayi wajib diisi !',
                 'jam_lahir_bayi'    => 'Jam lahir bayi belum dipilih !',
             ]);
