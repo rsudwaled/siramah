@@ -198,14 +198,22 @@ class RanapController extends APIController
                 'kode_paramedis'    => 'Dokter DPJP wajib dipilih',
             ],
         );
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
+        // $counter = Kunjungan::latest('counter')
+        //     ->where('no_rm', $request->noMR)
+        //     ->where('status_kunjungan', 2)
+        //     ->first();
+        // if ($counter === null) {
+        //     $c = 1;
+        // } else {
+        //     $c = $counter->counter + 1;
+        // }
+        $query          = Kunjungan::where('no_rm', $request->noMR)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        // counter increment
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            $c = $counter->counter + 1;
+            $c = $latestCounter->counter + 1;
         }
 
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
@@ -385,14 +393,22 @@ class RanapController extends APIController
             ],
         );
 
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
+        // $counter = Kunjungan::latest('counter')
+        //     ->where('no_rm', $request->noMR)
+        //     ->where('status_kunjungan', 2)
+        //     ->first();
+        // if ($counter === null) {
+        //     $c = 1;
+        // } else {
+        //     $c = $counter->counter + 1;
+        // }
+        $query          = Kunjungan::where('no_rm', $request->noMR)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        // counter increment
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            $c = $counter->counter + 1;
+            $c = $latestCounter->counter + 1;
         }
         // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
@@ -656,18 +672,26 @@ class RanapController extends APIController
             ],
         );
 
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->first();
-        if ($counter == null) {
+        // $counter = Kunjungan::latest('counter')
+        //     ->where('no_rm', $request->noMR)
+        //     ->first();
+        // if ($counter === null) {
+        //     $c = 1;
+        // } else {
+        //     if($request->diffInHours == 0)
+        //     {
+        //         $c = $counter->counter;
+        //     }else{
+        //         $c = $counter->counter + 1;
+        //     }
+        // }
+        $query          = Kunjungan::where('no_rm', $request->noMR)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        // counter increment
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            if($request->diffInHours == 0)
-            {
-                $c = $counter->counter;
-            }else{
-                $c = $counter->counter + 1;
-            }
+            $c = $latestCounter->counter + 1;
         }
         // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
@@ -1122,15 +1146,24 @@ class RanapController extends APIController
                 'dpjp'              => 'Anda harus memilih dokter dpjp !',
             ]);
 
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
+        // $counter = Kunjungan::latest('counter')
+        //     ->where('no_rm', $request->noMR)
+        //     ->where('status_kunjungan', 2)
+        //     ->first();
+        // if ($counter === null) {
+        //     $c = 1;
+        // } else {
+        //     $c = $counter->counter + 1;
+        // }
+        $query          = Kunjungan::where('no_rm', $request->noMR)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        // counter increment
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            $c = $counter->counter + 1;
+            $c = $latestCounter->counter + 1;
         }
+
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs == 0 ? $request->penjamin_id_umum:$request->penjamin_id_bpjs ;
         $ruangan    = Ruangan::where('id_ruangan', $request->idRuangan)->first();
