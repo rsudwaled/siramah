@@ -132,6 +132,7 @@
             cancelButtonText: "Batal!",
         }).then((result) => {
             if (result.isConfirmed) {
+                $.LoadingOverlay("show");
                 $.ajax({
                     type: 'GET',
                     url: cekStatusBPJS,
@@ -142,6 +143,7 @@
                     },
                     success: function(data) {
                         console.log(data)
+                        $.LoadingOverlay("hide");
                         if (data.code == 200) {
                             Swal.fire({
                                 title: "Success!",
@@ -149,7 +151,10 @@
                                         data
                                         .jenisPeserta +' - KELAS: '+data.kelas+')',
                                 icon: "success",
-                                confirmButtonText: "oke!",
+                                // confirmButtonText: "oke!",
+                                showCancelButton: true,
+                                confirmButtonText: "Daftar Pasien Baru!",
+                                cancelButtonText: "Tutup!",
                             }).then((result) => {
                                 if (result.isConfirmed) {
                                     location.reload();
@@ -159,7 +164,7 @@
                                     $('#modalCekBpjs').modal('hide');
                                 }
                             });
-                            $.LoadingOverlay("hide");
+                            
                         } else {
                             Swal.fire({
                                 title: "INFO!",

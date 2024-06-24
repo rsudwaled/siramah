@@ -112,14 +112,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                {{-- <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                                    <option value="">--Pilih Penjamin--</option>
-                                                    @foreach ($penjamin as $item)
-                                                        <option value="{{ $item->kode_penjamin }}">
-                                                            {{ $item->nama_penjamin }}</option>
-                                                    @endforeach
-                                                </x-adminlte-select2> --}}
                                                 <div class="form-group" id="show_penjamin_umum">
                                                     <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
                                                         @foreach ($penjamin as $item)
@@ -149,7 +141,7 @@
                                         <x-adminlte-button type="submit"
                                             class="withLoad btn btn-sm m-1 bg-green float-right" form="submitRanap"
                                             label="Simpan Data" />
-                                        <a href="{{ route('pasien-bayi.cari') }}"
+                                        <a href="{{ route('list-kunjungan.ugk') }}"
                                             class="btn btn-secondary m-1 btn-sm float-right">Kembali</a>
                                     </div>
                                 </form>
