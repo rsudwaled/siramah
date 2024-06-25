@@ -112,14 +112,7 @@
                                         <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
                                             class="btn btn-success btn-xs withLoad mt-1">Detail</a>
                                     @endif
-                                    @if ($item->id_status == 1 || $item->id_status == 12)
-                                        {{-- <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
-                                            data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
-                                            data-nokartu="{{ $item->noKartu }}" data-kunjungan="{{ $item->kunjungan }}"
-                                            data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
-                                            class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                            label="ICD-10" /> --}}
-
+                                    @if ($item->id_status === 1)
                                         @php
                                             if (empty($item->noKartu)) {
                                                 $nomorKartu = null;
@@ -135,7 +128,7 @@
                                                     class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                             @endif
                                         @endif
-                                    @else
+                                    {{-- @else
                                         @if (auth()->user()->hasRole('Admin Super'))
                                             @php
                                                 if (empty($item->noKartu)) {
@@ -152,9 +145,7 @@
                                                         class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                                 @endif
                                             @endif
-                                        @else
-                                            {{-- <button class="btn btn-xs btn-danger mt-1">SILAHKAN HUBUNGI IT</button> --}}
-                                        @endif
+                                       @endif --}}
                                     @endif
                                     <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                         data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
