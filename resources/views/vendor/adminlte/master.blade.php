@@ -116,11 +116,11 @@
 @section('plugins.Datatables', true)
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
     $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
         var cek_nik = document.getElementById('cek_nik').value;
         var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
         var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
+        var urlDaftarPasienBaru = "{{ route('pasien-baru.create') }}";
         Swal.fire({
             title: "CEK STATUS BPJS?",
             text: "silahkan pilih tombol cek status!",
@@ -145,26 +145,87 @@
                         console.log(data)
                         $.LoadingOverlay("hide");
                         if (data.code == 200) {
-                            Swal.fire({
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: "btn btn-success m-2",
+                                    cancelButton: "btn btn-danger m-2"
+                                },
+                                buttonsStyling: false
+                            });
+                            swalWithBootstrapButtons.fire({
                                 title: "Success!",
-                                text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( JENIS : ' +
-                                        data
-                                        .jenisPeserta +' - KELAS: '+data.kelas+')',
+                                text: data.pasien + '\n ( NIK: ' + data.nik +
+                                    ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
+                                    data
+                                    .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
                                 icon: "success",
-                                // confirmButtonText: "oke!",
+                                padding: "3em",
                                 showCancelButton: true,
                                 confirmButtonText: "Daftar Pasien Baru!",
                                 cancelButtonText: "Tutup!",
+                                reverseButtons: false
                             }).then((result) => {
                                 if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: urlDaftarPasienBaru,
+                                        dataType: 'json',
+                                        data: {
+                                            NoKartu: data.nomorkartu,
+                                            Nik: data.nik,
+                                            Nama: data.pasien,
+                                        },
+                                        success: function(data) {
+                                            console.info(data.code);
+                                            var redirectUrl =
+                                                '/new_page'; // Ganti dengan URL tujuan Anda
+                                            redirectUrl += '?NoKartu=' +
+                                                requestData
+                                                .NoKartu; // Tambahkan parameter pertama
+                                            redirectUrl += '&Nik=' +
+                                                requestData
+                                                .Nik; // Tambahkan parameter kedua
+
+                                            // Redirect dengan parameter
+                                            window.location.href =
+                                                redirectUrl;
+                                        },
+                                    });
+
+                                } else if (
+                                    /* Read more about handling dismissals below */
+                                    result.dismiss === Swal.DismissReason.cancel
+
+                                ) {
                                     location.reload();
                                     document.getElementById('nomorkartu').value =
-                                    '';
+                                        '';
                                     document.getElementById('nik').value = '';
                                     $('#modalCekBpjs').modal('hide');
                                 }
                             });
-                            
+                            // alert lama
+                            // Swal.fire({
+                            //     title: "Success!",
+                            //     text: data.pasien + '\n ( NIK: ' + data.nik +
+                            //         ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
+                            //         data
+                            //         .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
+                            //     icon: "success",
+                            //     // confirmButtonText: "oke!",
+                            //     showCancelButton: true,
+                            //     confirmButtonText: "Daftar Pasien Baru!",
+                            //     cancelButtonText: "Tutup!",
+                            // }).then((result) => {
+                            //     if (result.isConfirmed) {
+                            //         location.reload();
+                            //         document.getElementById('nomorkartu').value =
+                            //             '';
+                            //         document.getElementById('nik').value = '';
+                            //         $('#modalCekBpjs').modal('hide');
+                            //     }
+                            // });
+
                         } else {
                             Swal.fire({
                                 title: "INFO!",
@@ -213,10 +274,19 @@
                     dataType: 'JSON',
                     success: function(data) {
                         $.each(data.semua_kunjungan, function(index, riwayat) {
-                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat.kode_kunjungan + "</td><td>" +riwayat.no_rm + "</td><td>" + riwayat.pasien
-                                .nama_px +"</td><td>" + riwayat.unit.nama_unit + "</td><td>" +riwayat.status.status_kunjungan + "</td><td>" +
-                                riwayat.tgl_masuk + "</td><td>" + (riwayat.tgl_keluar == null ? 'Belum Pulang' : riwayat.tgl_keluar) +"</td><td> <a href='{{ route('kunjungan-poli.ppri') }}?kode="+riwayat.kode_kunjungan +"' class='btn btn-sm btn-primary' style='text-decoration: none;'>Daftar</a>"
-                                "</td></tr>";
+                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                                .kode_kunjungan + "</td><td>" + riwayat.no_rm +
+                                "</td><td>" + riwayat.pasien
+                                .nama_px + "</td><td>" + riwayat.unit.nama_unit +
+                                "</td><td>" + riwayat.status.status_kunjungan +
+                                "</td><td>" +
+                                riwayat.tgl_masuk + "</td><td>" + (riwayat
+                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                    .tgl_keluar) +
+                                "</td><td> <a href='{{ route('kunjungan-poli.ppri') }}?kode=" +
+                                riwayat.kode_kunjungan +
+                                "' class='btn btn-sm btn-primary' style='text-decoration: none;'>Daftar</a>"
+                            "</td></tr>";
                             $('.semuaKunjungan tbody').append(row);
                         });
                     },

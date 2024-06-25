@@ -207,7 +207,7 @@ class DaftarIGDController extends Controller
         );
 
         $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
-        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        $latestCounter  = $query->whereIn('status_kunjungan', [2,3,8,11])->first();
 
         $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->where('status_kunjungan','=', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
@@ -470,6 +470,7 @@ class DaftarIGDController extends Controller
             $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
             $code           = $resdescrtipt->metadata->code;
             $nik            = $resdescrtipt->response->peserta->nik;
+            $nomorkartu     = $resdescrtipt->response->peserta->noKartu;
         }else{
             $keterangan     = $resdescrtipt->metadata->message;
             $jenisPeserta   = $resdescrtipt->metadata->code;
@@ -481,6 +482,7 @@ class DaftarIGDController extends Controller
             'keterangan' => $keterangan,
             'jenisPeserta' =>$jenisPeserta,
             'code'=>$code,
+            'nomorkartu'=>$nomorkartu,
             'kelas'=>$kelas
         ]);
     }

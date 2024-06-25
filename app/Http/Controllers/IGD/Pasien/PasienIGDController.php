@@ -87,7 +87,6 @@ class PasienIGDController extends Controller
 
     public function pasienBaruIGD(Request $request)
     {
-        // dd($request->all());
         $request->validate(
             [
                 'nik_pasien_baru'   =>'required|numeric',
