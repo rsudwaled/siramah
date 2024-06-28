@@ -85,6 +85,12 @@ class PasienIGDController extends Controller
             ));
     }
 
+    public function createPasienBaruFromBpjsCek(Request $request)
+    {
+        dd($request->all());
+        return view('simrs.igd.pasienigd.tambah_pasien');
+    }
+
     public function pasienBaruIGD(Request $request)
     {
         $request->validate(

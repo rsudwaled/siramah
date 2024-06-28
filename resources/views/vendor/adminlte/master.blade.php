@@ -120,7 +120,7 @@
         var cek_nik = document.getElementById('cek_nik').value;
         var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
         var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
-        var urlDaftarPasienBaru = "{{ route('pasien-baru.create') }}";
+        var urlDaftarPasienBaru = "{{ route('pasien-baru.create_frombpjs') }}";
         Swal.fire({
             title: "CEK STATUS BPJS?",
             text: "silahkan pilih tombol cek status!",
@@ -177,18 +177,7 @@
                                         },
                                         success: function(data) {
                                             console.info(data.code);
-                                            var redirectUrl =
-                                                '/new_page'; // Ganti dengan URL tujuan Anda
-                                            redirectUrl += '?NoKartu=' +
-                                                requestData
-                                                .NoKartu; // Tambahkan parameter pertama
-                                            redirectUrl += '&Nik=' +
-                                                requestData
-                                                .Nik; // Tambahkan parameter kedua
-
-                                            // Redirect dengan parameter
-                                            window.location.href =
-                                                redirectUrl;
+                                            window.location.href = redirectUrl;
                                         },
                                     });
 

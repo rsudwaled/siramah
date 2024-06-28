@@ -14,6 +14,7 @@ use App\Models\StatusKunjungan;
 use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\Pasien;
+use Carbon\Carbon;
 use DB;
 
 use Illuminate\Support\Facades\Auth;
@@ -199,9 +200,13 @@ class KunjunganController extends Controller
 
     public function getKunjunganByUser(Request $request)
     {
-        // $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
         $kunjungan = Kunjungan::whereIn('pic2', [Auth::user()->id, 294, 318,329,330,331,332])->get();
-        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
+        $currentDate = Carbon::now()->toDateString();
+        $pasiens = Pasien::where('no_rm', '>=', '01000001')
+                //   ->whereDate('tgl_entry', '<=', $currentDate)
+                ->paginate(100);
+        // dd($pasiens);
+        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan','pasiens'));
     }
 
     public function sycnDesktopToWebApps(Request $request)
@@ -292,4 +297,6 @@ class KunjunganController extends Controller
         $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
+
+   
 }
