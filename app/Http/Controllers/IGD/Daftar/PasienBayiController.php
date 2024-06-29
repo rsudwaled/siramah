@@ -194,6 +194,7 @@ class PasienBayiController extends Controller
                 'no_ktp'            => '',
                 'pic'               => Auth::user()->id_simrs,
                 'user_create'       => Auth::user()->username,
+                'status_px'         => 1,
             ]);
         }
         return redirect()->route('form-umum.ranap-bayi', ['rm'=> $rm_bayi, 'kunjungan'=>$bayi->kunjungan_ortu]);
@@ -330,6 +331,8 @@ class PasienBayiController extends Controller
                 'no_ktp'            => '',
                 'pic'               => Auth::user()->id_simrs,
                 'user_create'       => Auth::user()->username,
+                'status_px'         => 1,
+
             ]);
         }
         Alert::success('Tambah Bayi Berhasil!!', 'pasien bayi dengan  RM: ' . $bayi->rm_bayi . ' berhasil di tambahkan!');

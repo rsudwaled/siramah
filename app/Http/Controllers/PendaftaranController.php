@@ -528,7 +528,7 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.232") {
+            } else if ($request->ip() == "192.168.2.58") {
                 $printer = env('PRINTER_CHECKIN3');
             } else {
                 $printer = env('PRINTER_CHECKIN_MJKN');
@@ -571,7 +571,7 @@ class PendaftaranController extends APIController
                     $printer = env('PRINTER_CHECKIN');
                 } else if ($request->ip() == "192.168.2.51") {
                     $printer = env('PRINTER_CHECKIN2');
-                } else if ($request->ip() == "192.168.2.232") {
+                } else if ($request->ip() == "192.168.2.58") {
                     $printer = env('PRINTER_CHECKIN3');
                 } else {
                     $printer = env('PRINTER_CHECKIN_MJKN');
@@ -599,7 +599,7 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.232") {
+            } else if ($request->ip() == "192.168.2.58") {
                 $printer = env('PRINTER_CHECKIN3');
             } else {
                 $printer = env('PRINTER_CHECKIN_MJKN');
@@ -841,7 +841,7 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.232") {
+            } else if ($request->ip() == "192.168.2.58") {
                 $printer = env('PRINTER_CHECKIN3');
             } else {
                 $printer = env('PRINTER_CHECKIN_MJKN');
@@ -888,7 +888,7 @@ class PendaftaranController extends APIController
             $printer = env('PRINTER_CHECKIN');
         } else if ($request->ip() == "192.168.2.51") {
             $printer = env('PRINTER_CHECKIN2');
-        } else if ($request->ip() == "192.168.2.232") {
+        } else if ($request->ip() == "192.168.2.58") {
             $printer = env('PRINTER_CHECKIN3');
         } else {
             $printer = env('PRINTER_CHECKIN_MJKN');
@@ -964,7 +964,7 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.232") {
+            } else if ($request->ip() == "192.168.2.58") {
                 $printer = env('PRINTER_CHECKIN3');
             } else {
                 $printer = env('PRINTER_CHECKIN_MJKN');
@@ -1021,7 +1021,7 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.232") {
+            } else if ($request->ip() == "192.168.2.58") {
                 $printer = env('PRINTER_CHECKIN3');
             } else {
                 $printer = env('PRINTER_CHECKIN_MJKN');
