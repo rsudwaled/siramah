@@ -48,11 +48,11 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form action="" method="get">
-                                <div class="row">
-                                    <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
                                         <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
-                                            placeholder="Cari Berdasarkan NIK">
+                                            placeholder="Masukan nomor NIK ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -63,24 +63,8 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
-                                            value="{{ $request->nomorkartu }}" placeholder="Berdasarkan Nomor Kartu BPJS">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
                                         <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $request->nama }}"
-                                            placeholder="Berdasarkan Nama Pasien">
+                                            placeholder="Masukan Nama Pasien ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -91,35 +75,87 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
-                                            placeholder="Berdasarkan Nomor RM">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                    </div>
+                                    </form>
                                 </div>
-                            </form>
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
+                                        <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
+                                            value="{{ $request->nomorkartu }}" placeholder="Masukan Nomor Kartu BPJS ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
+                                            placeholder="Masukan Nomor RM ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </form>
+                                </div>
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
+                                        <x-adminlte-input name="cari_desa" label="Cari Berdasarkan Desa"
+                                            value="{{ $request->cari_desa }}" placeholder="Masukan nama desa dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="cari_kecamatan" label="Cari Berdasarkan Kecamatan"
+                                            value="{{ $request->cari_kecamatan }}"
+                                            placeholder="Masukan nama kecamatan dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </form>
+                                </div>
+                            </div>
+                            {{-- </form> --}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-5">
-                            <div class="alert alert-success alert-dismissible">
-                                <h5>
-                                    DATA PENCARIAN PASIEN : <x-adminlte-button label="Refresh Data Pasien"
-                                        class="btn-flat btn-sm" theme="warning" icon="fas fa-retweet"
-                                        onClick="window.location.reload();" />
-                                </h5>
+                            @if (is_null($ketCariAlamat))
+                                <div class="alert alert-success alert-dismissible">
+                                    <h5>
+                                        DATA PENCARIAN PASIEN : <x-adminlte-button label="Refresh Data Pasien"
+                                            class="btn-flat btn-sm" theme="warning" icon="fas fa-retweet"
+                                            onClick="window.location.reload();" />
+                                    </h5>
+                                </div>
+                            @else
+                                <div class="alert alert-danger alert-dismissible">
+                                    <h5>
+                                        {{ strtoupper($ketCariAlamat) }}
+                                    </h5>
+                                </div>
+                            @endif
 
-                            </div>
                             @if (isset($pasien))
                                 <div class="row">
                                     @php
@@ -127,18 +163,17 @@
                                         $config['paging'] = false;
                                         $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
-                                        $config['searching'] = false;
+                                        $config['searching'] = true;
                                         $config['scrollY'] = '500px';
                                         $config['scrollCollapse'] = true;
                                         $config['scrollX'] = true;
                                     @endphp
-                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
-                                        :config="$config" striped bordered hoverable compressed>
+                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads"
+                                        head-theme="dark" :config="$config" striped bordered hoverable compressed>
                                         @foreach ($pasien as $data)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
-                                                        target="__blank">
+                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}" target="__blank">
                                                         <b>
                                                             RM : {{ $data->no_rm }}<br>
                                                             NIK : {{ $data->nik_bpjs }} <br>
@@ -162,7 +197,8 @@
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
-                                                        data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
+                                                        data-nama="{{ $data->nama_px }}"
+                                                        data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
                                                         class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
@@ -404,7 +440,6 @@
                 }
             });
         });
-
 
         $(select).on('change', function() {
             if (select.value > 0 || select.value == null) {

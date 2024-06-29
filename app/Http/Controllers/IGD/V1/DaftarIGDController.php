@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use App\Models\LokasiDesa;
+use App\Models\LokasiKecamatan;
 use App\Models\Pasien;
 use App\Models\Unit;
 use App\Models\Kunjungan;
@@ -106,9 +108,39 @@ class DaftarIGDController extends Controller
         return json_decode(json_encode($response));
     }
 
+
     public function index(Request $request)
     {
-        $query          = Pasien::query();
+        $searchVillages     = LokasiDesa ::query();
+        $searchDistricts    = LokasiKecamatan ::query();
+        $query              = Pasien::query();
+        $ketCariAlamat      = null;
+        if ($request->filled('cari_desa')) {
+            // Lakukan pencarian desa berdasarkan nama
+            $desa = $searchVillages->where('name', 'LIKE', '%' . $request->cari_desa . '%')->first();
+        
+            // Periksa apakah desa ditemukan
+            if (!is_null($desa)) {
+                $query->where('desa', 'LIKE', '%' . $desa->id . '%');
+            }
+            else {
+                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
+                $query->orderBy('tgl_entry','desc')->take(4)->get();
+            }  
+        } 
+              
+        if ($request->filled('cari_kecamatan')) {
+            $kecamatan = $searchDistricts->where('name','LIKE', '%' . $request->cari_kecamatan. '%')->first();
+           
+            if(!is_null($kecamatan))
+            {
+                $query->where('desa','LIKE', '%' . $kecamatan->id. '%');
+            }
+            else {
+                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
+                $query->orderBy('tgl_entry','desc')->take(4)->get();
+            } 
+        }
         if ($request->rm && !empty($request->rm)) {
             $query->where('no_rm','LIKE', '%' . $request->rm. '%');
         }
@@ -122,11 +154,17 @@ class DaftarIGDController extends Controller
         {
             $query->where('nik_bpjs','LIKE', '%' .  $request->nik. '%');
         }
-        if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
+        if( !empty($request->nama) || 
+            !empty($request->nik) || 
+            !empty($request->nomorkartu) || 
+            !empty($request->rm) || 
+            !empty($request->cari_desa) || 
+            !empty($request->cari_kecamatan)
+            )
         {
             $pasien         = $query->get();
         }else{
-            $pasien         = $query->orderBy('tgl_entry','desc')->take(3)->get();
+            $pasien         = $query->orderBy('tgl_entry','desc')->take(4)->get();
         }
 
         $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
@@ -153,14 +191,12 @@ class DaftarIGDController extends Controller
         }
 
         $antrian_triase = AntrianPasienIGD::with('isTriase')
-            // ->whereBetween('tgl', ['2023-12-11', now()])
             ->whereDate('tgl', now())
             ->where('status', 1)
             ->where('kode_kunjungan', null)
             ->orderBy('tgl', 'desc')
             ->get();
-        // dd($antrian_triase);
-        return view('simrs.igd.daftar.index',compact('antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.index',compact('searchVillages','searchDistricts','ketCariAlamat','antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function storeTanpaNoAntrian(Request $request)
@@ -261,9 +297,9 @@ class DaftarIGDController extends Controller
             $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
-            $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
-            $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
-            $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
+            $desa   = 'Desa '. $pasien->desa==""?'-' : ($pasien->desa==null?'-':$pasien->lokasiDesa->name);
+            $kec    = 'Kec. ' . $pasien->kecamatan==""?'-' : ($pasien->kecamatan==null?'-':$pasien->lokasiKecamatan->name);
+            $kab    = 'Kab. ' . $pasien->kabupaten==""?'-' : ($pasien->kabupaten==null?'-':$pasien->lokasiKabupaten->name);
             $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , '.' kec: ' . $kec . ' , '.' Kab: ' . $kab . ' )';
             $ant_upd= AntrianPasienIGD::find($request->antrian_triase);
             if(!empty($ant_upd))

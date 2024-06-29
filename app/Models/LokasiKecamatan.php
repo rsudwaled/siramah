@@ -10,4 +10,9 @@ class LokasiKecamatan extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_lokasi_districts';
     protected $primaryKey = 'id';
+
+    public function kabupatenKota()
+    {
+        return $this->hasOne(LokasiKabupaten::class,'id','regency_id');
+    }
 }

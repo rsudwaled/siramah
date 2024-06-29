@@ -1057,7 +1057,7 @@ class RanapController extends APIController
         if($cekKunjungan->count() > 0)
         {
             Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan!');
-            return redirect()->route('pasien-bayi.cari');
+            return redirect()->route('list-kunjungan.ugk');
         }
         $pasien         = Pasien::firstWhere('no_rm', $rm);
         $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
@@ -1098,7 +1098,7 @@ class RanapController extends APIController
                 'dpjp'              => 'Anda harus memilih dokter dpjp !',
             ]);
 
-        $query_counter= Kunjungan::where('kode_kunjungan', $request->kodeKunjungan)->where('status_kunjungan', 1)->first();
+        $query_counter= Kunjungan::where('kode_kunjungan', $request->ref_kunjungan_ortu)->where('status_kunjungan', 1)->first();
 
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs == 0 ? $request->penjamin_id_umum:$request->penjamin_id_bpjs ;
@@ -1194,6 +1194,10 @@ class RanapController extends APIController
                         $createLH->update();
                         $ruangan->status_incharge = 1;
                         $ruangan->save();
+                        
+                        $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
+                        $bayikembar->is_kembar_daftar = 1;
+                        $bayikembar->save();
                     }
                 }
             }

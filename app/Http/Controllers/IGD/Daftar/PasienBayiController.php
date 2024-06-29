@@ -150,6 +150,8 @@ class PasienBayiController extends Controller
         $bayi->is_bpjs              = (int) $request->isbpjs;
         $bayi->isbpjs_keterangan    = $request->isbpjs_keterangan;
         $bayi->jam_lahir_bayi       = $request->jam_lahir_bayi;
+        $bayi->is_kembar            = 0;
+        $bayi->is_kembar_daftar     = 0;
         if($bayi->save())
         {
             $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
@@ -192,12 +194,104 @@ class PasienBayiController extends Controller
                 'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                 'kode_desa'         => $ortubayi->kode_desa,
                 'no_ktp'            => '',
+                'status_px'         => 1,
                 'pic'               => Auth::user()->id_simrs,
                 'user_create'       => Auth::user()->username,
                 'status_px'         => 1,
             ]);
         }
         return redirect()->route('form-umum.ranap-bayi', ['rm'=> $rm_bayi, 'kunjungan'=>$bayi->kunjungan_ortu]);
+      
+    }
+
+    public function bayiKembarStore(Request $request)
+    {
+        foreach ($request['nama_bayi'] as $index => $data) {
+            $ortubayi = Pasien::firstWhere('no_rm', $request->rm_ibu_bayi_kembar);
+            $cekOrtu    = KeluargaPasien::firstWhere('no_rm', $ortubayi->no_rm);
+            $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
+                ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
+                ->whereRaw("LEFT(no_rm, 2) = '01'")
+                ->first();
+            $rm_bayi ='0'.$cek_last_rm->rm_baru;
+
+            // Mengambil kontak
+            $kontak = $ortubayi->no_hp ?? $request->no_tlp;
+            // Mengambil data bayi dari request
+            $jk_bayi_kembar = $request->jenis_kelamin[$index];
+            $tgl_lahir_bayi = $request->tanggal_lahir[$index];
+            $jam_lahir_bayi = $request->jam_lahir[$index];
+        
+            $bayi                       = new PasienBayiIGD();
+            $bayi->nik_ortu             = $ortubayi->nik_bpjs;
+            $bayi->no_bpjs_ortu         = $ortubayi->no_Bpjs;
+            $bayi->nama_ortu            = $ortubayi->nama_px;
+            $bayi->tempat_lahir_ortu    = $ortubayi->tempat_lahir;
+            $bayi->alamat_lengkap_ortu  = $ortubayi->alamat;
+            $bayi->no_hp_ortu           = $kontak;
+            $bayi->kunjungan_ortu       = $request->kunjungan_ortu_kembar;
+        
+            $bayi->rm_bayi              = $rm_bayi;
+            $bayi->rm_ibu               = $ortubayi->no_rm;
+            $bayi->nama_bayi            = strtoupper($ortubayi->nama_px . ', BY NY ' . ($index + 1));
+            $bayi->tempat_lahir         = 'CIREBON';
+            $bayi->is_bpjs              = (int) $request->isbpjs;
+            $bayi->isbpjs_keterangan    = $request->isbpjs_keterangan;
+            $bayi->jk_bayi              = $jk_bayi_kembar;
+            $bayi->tgl_lahir_bayi       = $tgl_lahir_bayi;
+            $bayi->jam_lahir_bayi       = $jam_lahir_bayi;
+            $bayi->is_kembar            = 1;
+            $bayi->is_kembar_daftar     = 0;
+            if($bayi->save())
+            {
+                $hub =  $ortubayi->jenis_kelamin=='L'? 1 : 2 ;
+                if($cekOrtu){
+                    KeluargaPasien::create([
+                        'no_rm'             => $rm_bayi,
+                        'nama_keluarga'     => $ortubayi->nama_px,
+                        'hubungan_keluarga' => $hub,
+                        'alamat_keluarga'   => $ortubayi->alamat,
+                        'telp_keluarga'     => $kontak,
+                        'input_date'        => Carbon::now(),
+                        'Update_date'       => Carbon::now(),
+                    ]);
+                }
+                Pasien::create([
+                    'no_rm'             => $rm_bayi,
+                    'no_Bpjs'           => '',
+                    'nama_px'           => strtoupper($ortubayi->nama_px . ', BY NY ' . ($index + 1)),
+                    'jenis_kelamin'     => $jk_bayi_kembar,
+                    'tempat_lahir'      => 'CIREBON',
+                    'tgl_lahir'         => $tgl_lahir_bayi,
+                    'agama'             => $ortubayi->agama,
+                    'pendidikan'        => '',
+                    'pekerjaan'         => '',
+                    'kewarganegaraan'   => $ortubayi->kewarganegaraan,
+                    'negara'            => $ortubayi->negara,
+                    'propinsi'          => $ortubayi->propinsi==null?$ortubayi->kode_propinsi:$ortubayi->propinsi,
+                    'kabupaten'         => $ortubayi->kabupaten==null? $ortubayi->kode_kabupaten:$ortubayi->kabupaten,
+                    'kecamatan'         => $ortubayi->kecamatan==null?$ortubayi->kode_kecamatan:$ortubayi->kecamatan,
+                    'desa'              => $ortubayi->desa==null?$ortubayi->kode_desa:$ortubayi->desa,
+                    'alamat'            => $ortubayi->alamat,
+                    'no_telp'           => '',
+                    'status_px'         => 1,
+                    'no_hp'             => '',
+                    'tgl_entry'         => Carbon::now(),
+                    'nik_bpjs'          => '',
+                    'update_date'       => Carbon::now(),
+                    'update_by'         => Carbon::now(),
+                    'kode_propinsi'     => $ortubayi->kode_propinsi,
+                    'kode_kabupaten'    => $ortubayi->kode_kabupaten,
+                    'kode_kecamatan'    => $ortubayi->kode_kecamatan,
+                    'kode_desa'         => $ortubayi->kode_desa,
+                    'no_ktp'            => '',
+                    'pic'               => Auth::user()->id_simrs,
+                    'user_create'       => Auth::user()->username,
+                ]);
+            }
+        }
+        return back();
+        
     }
 
     public function ranapUMUMBayi(Request $request)
@@ -266,11 +360,13 @@ class PasienBayiController extends Controller
         ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
         ->whereRaw("LEFT(no_rm, 2) = '01'")
         ->first();
-        $rm_bayi ='0'.$cek_last_rm->rm_baru;
+        $rm_bayi        ='0'.$cek_last_rm->rm_baru;
 
-        $kontak     = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp;
+        $kontak         = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp;
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
-
+        
+        $cekBayiKembar  = $request->check_kembar; 
+        dd($cekBayiKembar);
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu             = $ortubayi->nik_bpjs;
         $bayi->no_bpjs_ortu         = $ortubayi->no_Bpjs;
