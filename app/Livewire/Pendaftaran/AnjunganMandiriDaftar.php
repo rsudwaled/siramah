@@ -4,6 +4,7 @@ namespace App\Livewire\Pendaftaran;
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\VclaimController;
+use App\Models\Antrian;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
 use Illuminate\Http\Request;
@@ -12,6 +13,8 @@ use Livewire\Component;
 class AnjunganMandiriDaftar extends Component
 {
     public $pasienbaru = 1;
+    public $antriansebelumnya;
+    public $inputidentitas = 'nik';
     public $jenispasien, $nik, $nomorkartu, $nomorreferensi, $poliklinik, $kodepoli, $jadwaldokter, $jeniskunjungan;
     public $polikliniks = [], $jadwals = [];
     public $rujukans = [], $suratkontrols = [], $rujukanrs = [];
@@ -31,7 +34,7 @@ class AnjunganMandiriDaftar extends Component
         $request = new Request([
             'nomorkartu' => $pasien->no_Bpjs,
             'nik' => $pasien->nik_bpjs,
-            'nohp' => $pasien->nohp ?? '000000000000',
+            'nohp' =>  '089529909036',
             'norm' => $pasien->no_rm,
             'tanggalperiksa' => now()->format('Y-m-d'),
             'kodedokter' => $jadwal->kodedokter,
@@ -46,6 +49,12 @@ class AnjunganMandiriDaftar extends Component
         if ($res->metadata->code == 200) {
             dd($res);
             flash($res->metadata->message, 'success');
+        } else if ($res->metadata->code == 409) {
+            $this->antriansebelumnya = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
+                ->where('nik', $request->nik)
+                ->where('taskid', '<=', 5)
+                ->first();
+            flash($res->metadata->message, 'danger');
         } else {
             flash($res->metadata->message, 'danger');
         }
@@ -70,12 +79,22 @@ class AnjunganMandiriDaftar extends Component
         $this->nomorreferensi = null;
         $this->kodepoli = null;
         $this->jadwals = [];
-        $pasien = Pasien::firstWhere('nik_bpjs', $this->nik);
+        $this->rujukans = [];
+        $this->suratkontrols = [];
+        $this->rujukanrs = [];
+        if ($this->nik) {
+            $pasien = Pasien::firstWhere('nik_bpjs', $this->nik);
+        } else if ($this->nomorkartu) {
+            $pasien = Pasien::firstWhere('no_Bpjs', $this->nomorkartu);
+        } else {
+            return flash("Mohon maaf, Silahkan isi salah satu nik atau nomor BPJS", 'danger');
+        }
         if ($pasien) {
-            $nomorkartu = $pasien->nomorkartu;
+            $this->nomorkartu = $pasien->no_Bpjs;
+            $this->nik = $pasien->nik_bpjs;
             $api = new VclaimController();
             $request = new Request([
-                'nik' => $this->nik,
+                'nik' => $pasien->nik_bpjs,
                 'tanggal' => now()->format('Y-m-d'),
             ]);
             $res = $api->peserta_nik($request);
@@ -95,12 +114,11 @@ class AnjunganMandiriDaftar extends Component
                     if ($res->metadata->code == 200) {
                         $this->rujukans = $res->response->rujukan;
                     }
-                    // $res = $api->rujukan_rs_peserta($request);
-                    // if ($res->metadata->code == 200) {
-                    //     $rujukanrs = $res->response->rujukan;
-                    // }
-                    // dd($request->all(), $rujukanrs);
-                    flash("Pasien Ditemukan", 'success');
+                    $res = $api->rujukan_rs_peserta($request);
+                    if ($res->metadata->code == 200) {
+                        $this->rujukanrs = $res->response->rujukan;
+                    }
+                    flash("Pasien Ditemukan atas nama " . $pasien->nama_px, 'success');
                 } else {
                     return flash("Mohon maaf, Status Peserta BPJS " . $peserta->statusPeserta->keterangan, 'danger');
                 }
