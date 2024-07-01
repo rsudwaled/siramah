@@ -82,6 +82,8 @@ use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Pendaftaran\AnjunganMandiri;
+use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
@@ -121,6 +123,8 @@ Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_
 
 
 
+Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri');
+Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
 Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');

@@ -325,6 +325,30 @@ return [
             'label_color' => 'warning',
             'submenu' => [
                 [
+                    'text' => 'Anjungan Mandiri',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'anjungan-mandiri',
+                    'active'  => ['anjungan-mandiri'],
+                    'shift'   => 'ml-2',
+                    'label' => 'proses',
+                    'label_color' => 'warning',
+                    'can' => ['pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 2',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianklinik/2',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 3',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianklinik/3',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
                     'text' => 'Pendaftaran Rawat Jalan',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'pendaftaran-rajal',

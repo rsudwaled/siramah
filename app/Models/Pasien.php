@@ -58,5 +58,4 @@ class Pasien extends Model
     {
         return $this->belongsTo(KeluargaPasien::class,'no_rm');
     }
-
 }
