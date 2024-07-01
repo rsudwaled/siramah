@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\IGD\Kunjungan;
-
+use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Unit;
@@ -14,7 +14,9 @@ use App\Models\StatusKunjungan;
 use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\Pasien;
+use Carbon\Carbon;
 use DB;
+
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -24,12 +26,7 @@ class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        // $riwayat        = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(5)->get();
-        // $ranap          = Kunjungan::with(['unit','pasien','status'])->whereNotNull('id_ruangan')->where('no_rm', $request->rm)->limit(5)->get();
-        // $kebidanan      = Kunjungan::with(['unit','pasien','status'])->whereIn('kode_unit', ['1023'])->where('no_rm', $request->rm)->limit(5)->get();
-        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(10)->get();
-
-        // return response()->json(['riwayat'=>$riwayat,'semua_kunjungan'=>$all_kunj,'ranap'=>$ranap, 'kebidanan'=>$kebidanan]);
+        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(8)->orderBy('tgl_masuk','desc')->get();
         return response()->json(['semua_kunjungan'=>$all_kunj]);
     }
 
@@ -203,9 +200,13 @@ class KunjunganController extends Controller
 
     public function getKunjunganByUser(Request $request)
     {
-        // $kunjungan = Kunjungan::where('pic2', Auth::user()->id)->get();
         $kunjungan = Kunjungan::whereIn('pic2', [Auth::user()->id, 294, 318,329,330,331,332])->get();
-        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan'));
+        $currentDate = Carbon::now()->toDateString();
+        $pasiens = Pasien::where('no_rm', '>=', '01000001')
+                //   ->whereDate('tgl_entry', '<=', $currentDate)
+                ->paginate(100);
+        // dd($pasiens);
+        return view('simrs.igd.kunjungan.list_pasien_byuser', compact('kunjungan','pasiens'));
     }
 
     public function sycnDesktopToWebApps(Request $request)
@@ -281,7 +282,21 @@ class KunjunganController extends Controller
             return back();
         }
         $qrcode = base64_encode(QrCode::format('svg')->size(35)->errorCorrection('H')->generate('string'));
-        $pdf = PDF::loadView('simrs.igd.cetakan_label.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.label', ['pasien' => $pasien,'qrcode'=>$qrcode]);
         return $pdf->stream('label-pasien.pdf');
     }
+
+    public function cetakSEPPrint($sep)
+    {
+        $api = new VclaimController();
+        $request = new Request([
+            'noSep' => $sep,
+        ]); 
+        $res    = $api->sep_nomor($request);
+        $histories  = HistoriesIGDBPJS::where('respon_nosep', $sep)->first();
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
+        return $pdf->stream('cetak-sep-pasien.pdf');
+    }
+
+   
 }

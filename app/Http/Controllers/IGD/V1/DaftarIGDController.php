@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use App\Models\LokasiDesa;
+use App\Models\LokasiKecamatan;
 use App\Models\Pasien;
 use App\Models\Unit;
 use App\Models\Kunjungan;
@@ -106,9 +108,39 @@ class DaftarIGDController extends Controller
         return json_decode(json_encode($response));
     }
 
+
     public function index(Request $request)
     {
-        $query          = Pasien::query();
+        $searchVillages     = LokasiDesa ::query();
+        $searchDistricts    = LokasiKecamatan ::query();
+        $query              = Pasien::query();
+        $ketCariAlamat      = null;
+        if ($request->filled('cari_desa')) {
+            // Lakukan pencarian desa berdasarkan nama
+            $desa = $searchVillages->where('name', 'LIKE', '%' . $request->cari_desa . '%')->first();
+        
+            // Periksa apakah desa ditemukan
+            if (!is_null($desa)) {
+                $query->where('desa', 'LIKE', '%' . $desa->id . '%');
+            }
+            else {
+                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
+                $query->orderBy('tgl_entry','desc')->take(4)->get();
+            }  
+        } 
+              
+        if ($request->filled('cari_kecamatan')) {
+            $kecamatan = $searchDistricts->where('name','LIKE', '%' . $request->cari_kecamatan. '%')->first();
+           
+            if(!is_null($kecamatan))
+            {
+                $query->where('desa','LIKE', '%' . $kecamatan->id. '%');
+            }
+            else {
+                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
+                $query->orderBy('tgl_entry','desc')->take(4)->get();
+            } 
+        }
         if ($request->rm && !empty($request->rm)) {
             $query->where('no_rm','LIKE', '%' . $request->rm. '%');
         }
@@ -122,12 +154,17 @@ class DaftarIGDController extends Controller
         {
             $query->where('nik_bpjs','LIKE', '%' .  $request->nik. '%');
         }
-        if(!empty($request->nama) || !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm))
+        if( !empty($request->nama) || 
+            !empty($request->nik) || 
+            !empty($request->nomorkartu) || 
+            !empty($request->rm) || 
+            !empty($request->cari_desa) || 
+            !empty($request->cari_kecamatan)
+            )
         {
             $pasien         = $query->get();
         }else{
-            // $pasien         = null;
-            $pasien         = $query->orderBy('tgl_entry','desc')->take(3)->get();
+            $pasien         = $query->orderBy('tgl_entry','desc')->take(4)->get();
         }
 
         $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
@@ -154,14 +191,12 @@ class DaftarIGDController extends Controller
         }
 
         $antrian_triase = AntrianPasienIGD::with('isTriase')
-            // ->whereBetween('tgl', ['2023-12-11', now()])
             ->whereDate('tgl', now())
             ->where('status', 1)
             ->where('kode_kunjungan', null)
             ->orderBy('tgl', 'desc')
             ->get();
-        // dd($antrian_triase);
-        return view('simrs.igd.daftar.index',compact('antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.index',compact('searchVillages','searchDistricts','ketCariAlamat','antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function storeTanpaNoAntrian(Request $request)
@@ -208,7 +243,7 @@ class DaftarIGDController extends Controller
         );
 
         $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
-        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        $latestCounter  = $query->whereIn('status_kunjungan', [2,3,8,11])->first();
 
         $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->where('status_kunjungan','=', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
@@ -243,6 +278,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = 3;
+        $createKunjungan->hak_kelas         = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
         $createKunjungan->perujuk           = $request->nama_perujuk??null;
         $createKunjungan->is_ranap_daftar   = 0;
@@ -250,7 +286,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->is_bpjs_proses    = $bpjsProses;
         $createKunjungan->jp_daftar         = $request->isBpjs==2?0:$request->isBpjs;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
 
         if ($createKunjungan->save()) {
 
@@ -258,13 +294,12 @@ class DaftarIGDController extends Controller
             $jpPasien->kunjungan    = $createKunjungan->kode_kunjungan;
             $jpPasien->rm           = $request->rm;
             $jpPasien->nomorkartu   = $pasien->no_Bpjs;
-            // $jpPasien->is_bpjs      = $bpjsProses == 1 ? $request->isBpjs : 2;
             $jpPasien->is_bpjs      = $bpjsProses == null ? $request->isBpjs : 2;
             $jpPasien->save();
 
-            $desa   = 'Desa '. $pasien->desa==null?'-' : ($pasien->desa==""?'-':$pasien->desas->nama_desa_kelurahan);
-            $kec    = 'Kec. ' . $pasien->kecamatan==null?'-' : ($pasien->kecamatan==""?'-':$pasien->kecamatans->nama_kecamatan);
-            $kab    = 'Kab. ' . $pasien->kabupaten==null?'-' : ($pasien->kabupaten==""?'-':$pasien->kabupatens->nama_kabupaten_kota);
+            $desa   = 'Desa '. $pasien->desa==""?'-' : ($pasien->desa==null?'-':$pasien->lokasiDesa->name);
+            $kec    = 'Kec. ' . $pasien->kecamatan==""?'-' : ($pasien->kecamatan==null?'-':$pasien->lokasiKecamatan->name);
+            $kab    = 'Kab. ' . $pasien->kabupaten==""?'-' : ($pasien->kabupaten==null?'-':$pasien->lokasiKabupaten->name);
             $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , '.' kec: ' . $kec . ' , '.' Kab: ' . $kab . ' )';
             $ant_upd= AntrianPasienIGD::find($request->antrian_triase);
             if(!empty($ant_upd))
@@ -311,7 +346,7 @@ class DaftarIGDController extends Controller
             }
 
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-            if ($kodelayanan == null) {
+            if ($kodelayanan === null) {
                 $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
             }
 
@@ -328,7 +363,7 @@ class DaftarIGDController extends Controller
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 1) {
                 $createLH->kode_tipe_transaksi  = 1;
@@ -471,6 +506,7 @@ class DaftarIGDController extends Controller
             $kelas          = $resdescrtipt->response->peserta->hakKelas->keterangan;
             $code           = $resdescrtipt->metadata->code;
             $nik            = $resdescrtipt->response->peserta->nik;
+            $nomorkartu     = $resdescrtipt->response->peserta->noKartu;
         }else{
             $keterangan     = $resdescrtipt->metadata->message;
             $jenisPeserta   = $resdescrtipt->metadata->code;
@@ -482,6 +518,7 @@ class DaftarIGDController extends Controller
             'keterangan' => $keterangan,
             'jenisPeserta' =>$jenisPeserta,
             'code'=>$code,
+            'nomorkartu'=>$nomorkartu,
             'kelas'=>$kelas
         ]);
     }

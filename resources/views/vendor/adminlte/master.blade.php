@@ -108,108 +108,19 @@
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
 
+    @include('vendor.adminlte.modal.modal_header')
 
-    <div class="modal fade" id="modalCekBpjs" style="display: none;" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEK STATUS BPJS</h5>
-                </div>
-                <form id="cekbpjs-status-tanpa-daftar" method="get">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor Kartu</label>
-                                <input type="text" name="cek_nomorkartu" class="form-control" id="cek_nomorkartu">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor NIK</label>
-                                <input type="text" name="cek_nik" class="form-control" id="cek_nik">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary btn-cek-bpjs-tanpa-daftar"
-                            form="cekbpjs-status-tanpa-daftar">Cek Status</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalCekKunjunganPoli" style="display: none;" aria-hidden="true"
-        data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Cek Kunjungan Pasien</h4>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="col-lg-12">
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">No RM PASIEN</label>
-                                <input type="text" name="no_rm" id="no_rm" class="form-control">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default btnCreateSPRIBatal"
-                            data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary btn-cekKunjungan" id="btn-cekKunjungan">CARI
-                            KUNJUNGAN</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true"
-        data-backdrop="static">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">RIWAYAT KUNJUNGAN</h4>
-                    <button type="button" class="btn btn-sm btn-default close" onclick="batalPilih()"
-                        data-dismiss="modal"><span aria-hidden="true">×</span></button>
-                </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="row">
-                            <table id="table1" class="semuaKunjungan data-table table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>KUNJUNGAN</th>
-                                        <th>NO RM</th>
-                                        <th>PASIEN</th>
-                                        <th>POLI</th>
-                                        <th>STATUS</th>
-                                        <th>TGL MASUK</th>
-                                        <th>TGL PULANG</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
-                        </div>
-                </form>
-            </div>
-        </div>
-    </div>
 </body>
 
 @section('plugins.Sweetalert2', true)
+@section('plugins.Datatables', true)
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
         var cek_nik = document.getElementById('cek_nik').value;
         var cek_nomorkartu = document.getElementById('cek_nomorkartu').value;
         var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
+        var urlDaftarPasienBaru = "{{ route('pasien-baru.create_frombpjs') }}";
         Swal.fire({
             title: "CEK STATUS BPJS?",
             text: "silahkan pilih tombol cek status!",
@@ -221,6 +132,7 @@
             cancelButtonText: "Batal!",
         }).then((result) => {
             if (result.isConfirmed) {
+                $.LoadingOverlay("show");
                 $.ajax({
                     type: 'GET',
                     url: cekStatusBPJS,
@@ -231,25 +143,78 @@
                     },
                     success: function(data) {
                         console.log(data)
+                        $.LoadingOverlay("hide");
                         if (data.code == 200) {
-                            Swal.fire({
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: "btn btn-success m-2",
+                                    cancelButton: "btn btn-danger m-2"
+                                },
+                                buttonsStyling: false
+                            });
+                            swalWithBootstrapButtons.fire({
                                 title: "Success!",
                                 text: data.pasien + '\n ( NIK: ' + data.nik +
-                                    ' ) \n' + data.keterangan + ' ' + '( jenis : ' +
+                                    ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
                                     data
-                                    .jenisPeserta + ')',
+                                    .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
                                 icon: "success",
-                                confirmButtonText: "oke!",
+                                padding: "3em",
+                                showCancelButton: true,
+                                confirmButtonText: "Daftar Pasien Baru!",
+                                cancelButtonText: "Tutup!",
+                                reverseButtons: false
                             }).then((result) => {
                                 if (result.isConfirmed) {
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: urlDaftarPasienBaru,
+                                        dataType: 'json',
+                                        data: {
+                                            NoKartu: data.nomorkartu,
+                                            Nik: data.nik,
+                                            Nama: data.pasien,
+                                        },
+                                        success: function(data) {
+                                            console.info(data.code);
+                                            window.location.href = redirectUrl;
+                                        },
+                                    });
+
+                                } else if (
+                                    /* Read more about handling dismissals below */
+                                    result.dismiss === Swal.DismissReason.cancel
+
+                                ) {
                                     location.reload();
                                     document.getElementById('nomorkartu').value =
-                                    '';
+                                        '';
                                     document.getElementById('nik').value = '';
                                     $('#modalCekBpjs').modal('hide');
                                 }
                             });
-                            $.LoadingOverlay("hide");
+                            // alert lama
+                            // Swal.fire({
+                            //     title: "Success!",
+                            //     text: data.pasien + '\n ( NIK: ' + data.nik +
+                            //         ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
+                            //         data
+                            //         .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
+                            //     icon: "success",
+                            //     // confirmButtonText: "oke!",
+                            //     showCancelButton: true,
+                            //     confirmButtonText: "Daftar Pasien Baru!",
+                            //     cancelButtonText: "Tutup!",
+                            // }).then((result) => {
+                            //     if (result.isConfirmed) {
+                            //         location.reload();
+                            //         document.getElementById('nomorkartu').value =
+                            //             '';
+                            //         document.getElementById('nik').value = '';
+                            //         $('#modalCekBpjs').modal('hide');
+                            //     }
+                            // });
+
                         } else {
                             Swal.fire({
                                 title: "INFO!",
@@ -299,15 +264,18 @@
                     success: function(data) {
                         $.each(data.semua_kunjungan, function(index, riwayat) {
                             var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                                .kode_kunjungan + "</td><td>" +
-                                riwayat.no_rm + "</td><td>" + riwayat.pasien
-                                .nama_px +
-                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
-                                riwayat.status.status_kunjungan + "</td><td>" +
+                                .kode_kunjungan + "</td><td>" + riwayat.no_rm +
+                                "</td><td>" + riwayat.pasien
+                                .nama_px + "</td><td>" + riwayat.unit.nama_unit +
+                                "</td><td>" + riwayat.status.status_kunjungan +
+                                "</td><td>" +
                                 riwayat.tgl_masuk + "</td><td>" + (riwayat
                                     .tgl_keluar == null ? 'Belum Pulang' : riwayat
                                     .tgl_keluar) +
-                                "</td></tr>";
+                                "</td><td> <a href='{{ route('kunjungan-poli.ppri') }}?kode=" +
+                                riwayat.kode_kunjungan +
+                                "' class='btn btn-sm btn-primary' style='text-decoration: none;'>Daftar</a>"
+                            "</td></tr>";
                             $('.semuaKunjungan tbody').append(row);
                         });
                     },

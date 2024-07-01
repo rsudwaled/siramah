@@ -557,6 +557,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/update-nik-bpjs-pasien', [App\Http\Controllers\IGD\Daftar\DaftarTanpaNomorController::class, 'updateNOBPJS'])->name('update-nobpjs.pasien');
 
     // pasien baru
+    Route::get('/bpjs-pasien-baru/create', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'createPasienBaruFromBpjsCek'])->name('pasien-baru.create_frombpjs');
     Route::get('/pasien-igd/baru', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'index'])->name('pasien-baru.create');
     Route::post('/pasien-igd/baru/store', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'pasienBaruIGD'])->name('pasien-baru.store');
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
@@ -578,6 +579,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cari-detail-bayi', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiPerorangtua'])->name('detailbayi.byortu');
     Route::post('/pasien-bayi/store', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiStore'])->name('pasien-bayi.store');
     Route::post('/store-bayi-baru', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'formBayiStore'])->name('pasien-bayi.store-bayi');
+    Route::post('/store-bayi-kembar', [App\Http\Controllers\IGD\Daftar\PasienBayiController::class, 'bayiKembarStore'])->name('bayi-kembar.store');
 
     //RANAP BAYI
     Route::get('/ranap-bpjs/pasien-bayi/', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'ranapBPJSBayi'])->name('ranap-bayi-bpjs.igk');
@@ -633,6 +635,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/get-kunjungan/by-user', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganByUser'])->name('kunjungan-byuser.get');
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
     Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
+    Route::get('/cetak/{sep}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakSEPPrint'])->name('cetak-sep-igd');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
@@ -650,6 +653,14 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
     Route::get('tanpa-daftar/cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJSTanpaDaftar'])->name('cek-status-bpjs.tanpa-daftar');
+
+    // DAFTAR PENUNJANG
+    Route::get('penujang/daftar', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'index'])->name('penunjang.index');
+    Route::post('post/daftar-penunjang', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'store'])->name('daftar-penunjang.store');
+    Route::get('kunjungan-penunjang', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'kunjunganPenunjang'])->name('kunjungan-penunjang.list');
+    // PPRI
+    Route::get('kunjungan-poli', [App\Http\Controllers\IGD\PPRI\PPRIController::class, 'kunjunganPoli'])->name('kunjungan-poli.ppri');
+    Route::post('post/kunjungan-poli', [App\Http\Controllers\IGD\PPRI\PPRIController::class, 'postPPRI'])->name('kunjungan-post.ppri');
 
     // Start Gizi
     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {

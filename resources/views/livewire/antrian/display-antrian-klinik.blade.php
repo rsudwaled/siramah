@@ -116,9 +116,9 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         setInterval(function() {
             $('#myAudio').trigger('play');
         }, 1000 * 3);
-    </script>
+    </script> --}}
 </div>

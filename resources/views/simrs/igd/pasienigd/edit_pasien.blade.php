@@ -40,21 +40,14 @@
                                         </option>
                                     </x-adminlte-select>
                                     @php
-                                        $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir));
+                                        $config = ['format' => 'YYYY-MM-DD'];
+                                        $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir));
                                     @endphp
                                     <div class="col-lg-6">
                                         <label for="">Tanggal Lahir (bulan/tanggal/tahun)</label>
-                                        <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir" value="{{ $tgl_lahir }}" :config="$config">
+                                        <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir"
+                                            value="{{ $tgl_lahir }}" :config="$config">
                                     </div>
-                                   {{-- @php $config = ['format' => 'YYYY-MM-DD']; $tgl_lahir = date('Y-m-d', strtotime($pasien->tgl_lahir)) @endphp
-                                    <x-adminlte-input-date name="tgl_lahir" value="{{ $tgl_lahir }}"
-                                        fgroup-class="col-md-6" label="Tanggal Lahir" :config="$config">
-                                        <x-slot name="prependSlot">
-                                            <div class="input-group-text bg-primary">
-                                                <i class="fas fa-calendar-alt"></i>
-                                            </div>
-                                        </x-slot>
-                                    </x-adminlte-input-date> --}}
                                     <x-adminlte-select name="agama" label="Agama" fgroup-class="col-md-6">
                                         @foreach ($agama as $item)
                                             <option value="{{ $item->ID }}"
@@ -81,34 +74,41 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon" value="{{ $pasien->no_tlp==null?$pasien->no_hp:$pasien->no_tlp }}"
+                                    <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon"
+                                        value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
                                         placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
 
                                     <x-adminlte-select name="provinsi_pasien" label="Provinsi" id="provinsi_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($provinsi as $item)
-                                            <option value="{{ $item->kode_provinsi }}"
-                                                {{ $pasien->kode_propinsi == $item->kode_provinsi ? 'selected' : '' }}>
-                                                {{ $item->nama_provinsi }}
+                                            <option value="{{ $item->id }}"
+                                                {{ $pasien->kode_propinsi == $item->id ? 'selected' : '' }}>
+                                                {{ $item->name }}
                                             </option>
                                         @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kabupaten_pasien" label="Kabupaten" id="kab_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($kota as $item)
-                                            <option value="{{$item->kode_kabupaten_kota}}" {{$item->kode_kabupaten_kota==$pasien->kode_kabupaten ?'selected':''}}>{{$item->nama_kabupaten_kota}}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ $item->id == $pasien->kode_kabupaten ? 'selected' : '' }}>
+                                                {{ $item->name }}</option>
                                         @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select name="kecamatan_pasien" label="Kecamatan" id="kec_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($kecamatan as $item)
-                                            <option value="{{$item->kode_kecamatan}}" {{$item->kode_kecamatan == $pasien->kode_kecamatan ? 'selected':''}}>{{$item->nama_kecamatan}}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ $item->id == $pasien->kode_kecamatan ? 'selected' : '' }}>
+                                                {{ $item->name }}</option>
                                         @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select name="desa_pasien" label="Desa" id="desa_pasien"
                                         fgroup-class="col-md-6">
                                         @foreach ($desa as $item)
-                                            <option value="{{$item->kode_desa_kelurahan}}" {{$item->kode_desa_kelurahan == $pasien->kode_desa? 'selected':''}}>{{$item->nama_desa_kelurahan}}</option>
+                                            <option value="{{ $item->id }}"
+                                                {{ $item->id == $pasien->kode_desa ? 'selected' : '' }}>
+                                                {{ $item->name }}</option>
                                         @endforeach
                                     </x-adminlte-select>
                                     <x-adminlte-select2 name="negara" label="Negara" id="negara_pasien"
@@ -141,11 +141,12 @@
                             </h5>
                         </div>
                         <div class="row">
-                            <x-adminlte-input name="nama_keluarga" id="nama_keluarga" value="{{ $klp == null ? '' : $klp->nama_keluarga }}"
-                                label="Nama Keluarga" placeholder="masukan nama keluarga" fgroup-class="col-md-12"
-                                disable-feedback />
+                            <x-adminlte-input name="nama_keluarga" id="nama_keluarga"
+                                value="{{ $klp == null ? '' : $klp->nama_keluarga }}" label="Nama Keluarga"
+                                placeholder="masukan nama keluarga" fgroup-class="col-md-12" disable-feedback />
                             <x-adminlte-input name="tlp_keluarga" id="tlp_keluarga" label="Kontak" placeholder="no tlp"
-                                value="{{ $klp == null ? '' : $klp->tlp_keluarga }}" fgroup-class="col-md-6" disable-feedback />
+                                value="{{ $klp == null ? '' : $klp->tlp_keluarga }}" fgroup-class="col-md-6"
+                                disable-feedback />
                             <x-adminlte-select name="hub_keluarga" id="hub_keluarga" label="Hubungan Dengan Pasien"
                                 fgroup-class="col-md-6">
                                 @foreach ($hb_keluarga as $item)
@@ -155,14 +156,16 @@
                                 @endforeach
                             </x-adminlte-select>
 
-                            <x-adminlte-textarea name="alamat_lengkap_sodara" id="alamat_lengkap_sodara" label="Alamat Lengkap (RT/RW)"
-                                placeholder="Alamat Lengkap (RT/RW)"
+                            <x-adminlte-textarea name="alamat_lengkap_sodara" id="alamat_lengkap_sodara"
+                                label="Alamat Lengkap (RT/RW)" placeholder="Alamat Lengkap (RT/RW)"
                                 fgroup-class="col-md-12">{{ $klp == null ? '' : $klp->alamat_keluarga }}</x-adminlte-textarea>
                         </div>
                     </div>
                 </div>
-                <x-adminlte-button id="updatePasien" class="float-right btn-sm ml-2" theme="primary" label="Update Data" />
-                <button type="button" id="selesaiEdit" class="btn btn-success btn-sm ml-2 float-right">Selesai Edit</button>
+                <x-adminlte-button id="updatePasien" class="float-right btn-sm ml-2" theme="primary"
+                    label="Update Data" />
+                <button type="button" id="selesaiEdit" class="btn btn-success btn-sm ml-2 float-right">Selesai
+                    Edit</button>
 
                 <x-adminlte-button label="Refresh" class="btn btn-flat btn-sm" theme="danger" icon="fas fa-retweet"
                     onClick="window.location.reload();" />
@@ -202,8 +205,8 @@
                                     ' < option > --Pilih Kabupaten-- < /option>');
                                 $.each(kabupatenpasien, function(key, value) {
                                     $('#kab_pasien').append('<option value="' + value
-                                        .kode_kabupaten_kota + '">' + value
-                                        .nama_kabupaten_kota + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#kab_pasien').empty();
@@ -236,8 +239,8 @@
                                     ' < option > --Pilih Kecamatan-- < /option>');
                                 $.each(kecamatanpasien, function(key, value) {
                                     $('#kec_pasien').append('<option value="' + value
-                                        .kode_kecamatan + '">' + value
-                                        .nama_kecamatan + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#kec_pasien').empty();
@@ -265,8 +268,8 @@
                                     ' < option > --Pilih Desa-- < /option>');
                                 $.each(desapasien, function(key, value) {
                                     $('#desa_pasien').append('<option value="' + value
-                                        .kode_desa_kelurahan + '">' + value
-                                        .nama_desa_kelurahan + '</option>');
+                                        .id + '">' + value
+                                        .name + '</option>');
                                 });
                             } else {
                                 $('#desa_pasien').empty();
@@ -291,9 +294,9 @@
                     // {
                     //     Swal.fire('kontak pasien wajib diisi', 'boleh diisi di telpon atau no hp', 'info');
                     // }
-                    if($('#kab_pasien').val() == null)
-                    {
-                        Swal.fire('alamat wajib diisi lengkap', 'provinsi-kabupaten/kota-kecamatan-desa/kelurahan', 'info');
+                    if ($('#kab_pasien').val() == null) {
+                        Swal.fire('alamat wajib diisi lengkap',
+                            'provinsi-kabupaten/kota-kecamatan-desa/kelurahan', 'info');
                     }
                     var urlUpdate = "{{ route('update-pasien.update') }}?rm=" + $('#rm').val();
                     $.ajax({
@@ -330,7 +333,7 @@
                             if (res.status == 200) {
                                 Swal.fire('data pasien berhasil diupdate', '', 'success');
                                 window.location.reload(history.back());
-                            }else{
+                            } else {
                                 Swal.fire('data keluarga harus dilengkapi', '', 'error');
                             }
                         }

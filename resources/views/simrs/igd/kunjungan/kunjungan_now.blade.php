@@ -29,7 +29,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP BACKDATE</button>
+                            <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP
+                                BACKDATE</button>
                             <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
                                 LABEL</button>
                             <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
@@ -74,10 +75,11 @@
 
                                 <td>{{ $item->diagx }}</td>
                                 <td>
-                                    {{ $item->sep }} <br>
+                                    <strong><h6>{{ $item->sep }}</h6></strong>
                                     @if ($item->sep)
                                         <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
-                                            class="btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
+                                            class="btn-block btn btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
+                                            <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
                                     @endif
                                 </td>
                                 <td>
@@ -110,14 +112,7 @@
                                         <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
                                             class="btn btn-success btn-xs withLoad mt-1">Detail</a>
                                     @endif
-                                    @if ($item->id_status == 1 || $item->id_status == 12)
-                                        {{-- <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
-                                            data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
-                                            data-nokartu="{{ $item->noKartu }}" data-kunjungan="{{ $item->kunjungan }}"
-                                            data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
-                                            class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                            label="ICD-10" /> --}}
-
+                                    @if ($item->id_status === 1)
                                         @php
                                             if (empty($item->noKartu)) {
                                                 $nomorKartu = null;
@@ -133,7 +128,7 @@
                                                     class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                             @endif
                                         @endif
-                                    @else
+                                    {{-- @else
                                         @if (auth()->user()->hasRole('Admin Super'))
                                             @php
                                                 if (empty($item->noKartu)) {
@@ -150,9 +145,7 @@
                                                         class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                                 @endif
                                             @endif
-                                        @else
-                                            {{-- <button class="btn btn-xs btn-danger mt-1">SILAHKAN HUBUNGI IT</button> --}}
-                                        @endif
+                                       @endif --}}
                                     @endif
                                     <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                         data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
@@ -270,7 +263,8 @@
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan Pengajuan</button>
+                    <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan
+                        Pengajuan</button>
                 </div>
             </div>
         </div>
@@ -350,8 +344,6 @@
                 $("#jp_daftar").val($(this).data('jpdaftar'));
                 $('#formDiagnosa').modal('show');
             });
-
-
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";
                 // var urlBridging = "{{ route('bridging-sep') }}";
@@ -554,7 +546,7 @@
                             },
                             success: function(data) {
                                 console.info(data);
-                                if(data.code ==400){
+                                if (data.code == 400) {
                                     Swal.fire({
                                         title: "FORM INPUT TIDAK LENGKAP!",
                                         text: data.message,

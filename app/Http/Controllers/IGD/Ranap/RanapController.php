@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\IGD\Ranap;
 
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Models\PenjaminSimrs;
@@ -23,7 +24,6 @@ use App\Models\HistoriesIGDBPJS;
 use App\Models\RujukanIntern;
 use Carbon\Carbon;
 use DB;
-use Auth;
 
 class RanapController extends APIController
 {
@@ -159,10 +159,9 @@ class RanapController extends APIController
         $kunjungan      = Kunjungan::where('kode_kunjungan', $kunjungan)->get();
         $paramedis      = Paramedis::where('spesialis', 'UMUM')->where('act', 1)->get();
         $unit           = Unit::where('kelas_unit', 2)->get();
-        $alasanmasuk    = AlasanMasuk::get();
+        $alasanmasuk    = AlasanMasuk::orderBy('id','asc')->get();
         $penjamin       = PenjaminSimrs::get();
         $rujukan        = RujukanIntern::firstWhere('kode_kunjungan', $kode);
-        // dd($rujukan);
         return view('simrs.igd.ranap.form_ranap', compact('pasien', 'kunjungan', 'unit', 'penjamin', 'alasanmasuk', 'paramedis','kode','rujukan'));
     }
 
@@ -198,22 +197,14 @@ class RanapController extends APIController
                 'kode_paramedis'    => 'Dokter DPJP wajib dipilih',
             ],
         );
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
-            $c = 1;
-        } else {
-            $c = $counter->counter + 1;
-        }
 
+        $query_counter= Kunjungan::where('kode_kunjungan', $request->kodeKunjungan)->where('status_kunjungan', 1)->first();
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
 
         $createKunjungan = new Kunjungan();
-        $createKunjungan->counter           = $c;
+        $createKunjungan->counter           = $query_counter->counter;
         $createKunjungan->ref_kunjungan     = $request->kodeKunjungan;
         $createKunjungan->no_rm             = $request->noMR;
         $createKunjungan->kode_unit         = $unit->kode_unit;
@@ -229,6 +220,8 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip)){
             $createKunjungan->is_ranap_daftar   = 3;
         }else{
@@ -236,8 +229,6 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 0;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
 
@@ -254,7 +245,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -299,6 +290,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -381,24 +375,14 @@ class RanapController extends APIController
                 'lakaLantas'        => 'Status kecelakaan wajib dipilih',
             ],
         );
-
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
-            $c = 1;
-        } else {
-            $c = $counter->counter + 1;
-        }
-        // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
+        $query_counter= Kunjungan::where('kode_kunjungan', $request->kodeKunjungan)->where('status_kunjungan', 1)->first();
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
         $ruangan    = Ruangan::firstWhere('id_ruangan', $request->idRuangan);
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
         $dokter     = Paramedis::firstWhere('kode_dokter_jkn', $request->kode_paramedis);
 
         $createKunjungan = new Kunjungan();
-        $createKunjungan->counter           = $c;
+        $createKunjungan->counter           = $query_counter->counter;
         $createKunjungan->ref_kunjungan     = $request->kodeKunjungan;
         $createKunjungan->no_rm             = $request->noMR;
         $createKunjungan->kode_unit         = $unit->kode_unit;
@@ -415,6 +399,8 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->crad              = $request->crad??0;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip)){
             $createKunjungan->is_ranap_daftar   = 2;
         }else{
@@ -422,8 +408,7 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        
 
         if ($createKunjungan->save()) {
 
@@ -491,7 +476,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -536,6 +521,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -649,18 +637,13 @@ class RanapController extends APIController
             ],
         );
 
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->first();
-        if ($counter == null) {
+        $query          = Kunjungan::where('no_rm', $request->noMR)->orderBy('tgl_masuk','desc');
+        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        // counter increment
+        if ($latestCounter === null) {
             $c = 1;
         } else {
-            if($request->diffInHours == 0)
-            {
-                $c = $counter->counter;
-            }else{
-                $c = $counter->counter + 1;
-            }
+            $c = $latestCounter->counter + 1;
         }
         // $pasien     = Pasien::firstWhere('no_rm', $request->noMR);
         $penjamin   = PenjaminSimrs::firstWhere('kode_penjamin', $request->penjamin_id);
@@ -686,6 +669,8 @@ class RanapController extends APIController
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->diagx             = $request->diagAwal??NULL;
         $createKunjungan->crad              = $request->crad??0;
+        $createKunjungan->pic2              = Auth::user()->id;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         if(!is_null($request->pasienNitip && $request->pasienNitip ==1)){
             $createKunjungan->is_ranap_daftar   = 2;
         }else{
@@ -693,8 +678,6 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
 
         if ($createKunjungan->save()) {
 
@@ -762,7 +745,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -807,6 +790,9 @@ class RanapController extends APIController
 
                         $createLH->status_layanan = 1; // status 3 nanti di update jadi 1
                         $createLH->update();
+
+                        $ruangan->status_incharge = 1;
+                        $ruangan->save();
                     }
                 }
             }
@@ -1070,8 +1056,8 @@ class RanapController extends APIController
         $cekKunjungan = Kunjungan::where('no_rm', $rm)->whereDate('tgl_masuk', now())->get();
         if($cekKunjungan->count() > 0)
         {
-            Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan hari!');
-            return redirect()->route('pasien-bayi.cari');
+            Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan!');
+            return redirect()->route('list-kunjungan.ugk');
         }
         $pasien         = Pasien::firstWhere('no_rm', $rm);
         $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
@@ -1112,22 +1098,15 @@ class RanapController extends APIController
                 'dpjp'              => 'Anda harus memilih dokter dpjp !',
             ]);
 
-        $counter = Kunjungan::latest('counter')
-            ->where('no_rm', $request->noMR)
-            ->where('status_kunjungan', 2)
-            ->first();
-        if ($counter == null) {
-            $c = 1;
-        } else {
-            $c = $counter->counter + 1;
-        }
+        $query_counter= Kunjungan::where('kode_kunjungan', $request->ref_kunjungan_ortu)->where('status_kunjungan', 1)->first();
+
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs == 0 ? $request->penjamin_id_umum:$request->penjamin_id_bpjs ;
         $ruangan    = Ruangan::where('id_ruangan', $request->idRuangan)->first();
         $unit       = Unit::firstWhere('kode_unit', $ruangan->kode_unit);
 
         $createKunjungan = new Kunjungan();
-        $createKunjungan->counter           = $c;
+        $createKunjungan->counter           = $query_counter->counter;
         $createKunjungan->no_rm             = $request->noMR;
         $createKunjungan->kode_unit         = $unit->kode_unit;
         $createKunjungan->ref_kunjungan     = $request->ref_kunjungan_ortu;
@@ -1143,7 +1122,7 @@ class RanapController extends APIController
         $createKunjungan->no_bed            = $ruangan->no_bed;
         $createKunjungan->kamar             = $ruangan->nama_kamar;
         $createKunjungan->pic2              = Auth::user()->id;
-        $createKunjungan->pic               = Auth::user()->id_simrs;
+        $createKunjungan->pic               = Auth::user()->id_simrs??2;
         $createKunjungan->is_ranap_daftar   = 1;
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = $request->isBpjs;
@@ -1163,7 +1142,7 @@ class RanapController extends APIController
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id_simrs??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 2) {
                 $createLH->total_layanan = $total_bayar_k_a;
@@ -1215,6 +1194,10 @@ class RanapController extends APIController
                         $createLH->update();
                         $ruangan->status_incharge = 1;
                         $ruangan->save();
+                        
+                        $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
+                        $bayikembar->is_kembar_daftar = 1;
+                        $bayikembar->save();
                     }
                 }
             }

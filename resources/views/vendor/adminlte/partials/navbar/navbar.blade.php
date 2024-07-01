@@ -13,16 +13,27 @@
 
         {{-- Custom left links --}}
         @yield('content_top_nav_left')
-        {{-- <li class="nav-item d-none d-sm-inline-block">
-            <a class="nav-link">Waktu Server {{ now() }}</a>
-        </li> --}}
-        <li class="nav-item d-none d-sm-inline-block mr-2">
-            <a href="#" data-toggle="modal" data-target="#modalCekBpjs" class="btn btn-sm btn-success">CEK STATUS
-                BPJS</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <button class="btn btn-sm bg-purple cekKunjunganPoli" data-toggle="modal" data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
-        </li>
+        @can(['pendaftaran-igd'])
+            <li class="nav-item d-none d-sm-inline-block mr-1">
+                <a href="#" data-toggle="modal" data-target="#modalCekBpjs" class="btn btn-sm btn-success">CEK STATUS
+                    BPJS</a>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block mr-1">
+                <button class="btn btn-sm bg-warning cekKunjunganPoli" data-toggle="modal"
+                    data-target="modalCekKunjunganPoli">CEK KUNJUNGAN</button>
+            </li>
+            <li class="nav-item d-none d-sm-inline-block mr-1">
+                <a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien Baru</a>
+            </li>
+            {{-- <li class="nav-item d-none d-sm-inline-block mr-1">
+                <a href="#" data-toggle="modal" data-target="#modalLabel" class="btn btn-sm btn-primary">CETAK LABEL</a>
+            </li> --}}
+        @else
+            <li class="nav-item d-none d-sm-inline-block">
+                <a class="nav-link">Waktu Server {{ now() }}</a>
+            </li>
+        @endcan
+
     </ul>
 
     {{-- Navbar right links --}}

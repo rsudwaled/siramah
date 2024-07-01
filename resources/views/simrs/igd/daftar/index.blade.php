@@ -1,21 +1,26 @@
 @extends('adminlte::page')
 @section('title', 'DAFTAR IGD')
 @section('content_header')
-    <div class="container-fluid">
-        <div class="row mb-2">
+    <div class="alert bg-primary alert-dismissible">
+        <div class="row">
             <div class="col-sm-4">
-                <h1>DAFTAR PENDAFTARAN</h1>
+                <h5>
+                    <i class="fas fa-user-tag"></i> PENDAFTARAN IGD :
+                </h5>
             </div>
             <div class="col-sm-8">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#" data-toggle="modal" data-target="#modalCekBpjs"
-                        class="btn btn-sm btn-success">Cek BPJS</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien
-                            Baru</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('pasien-kecelakaan.index') }}"
-                            class="btn btn-sm btn-primary">Daftar Pasien Kecelakaan</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"><i
-                                class="fas fa-sync"></i></a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('pasien-kecelakaan.index') }}" class="btn btn-sm btn-danger"
+                            style="text-decoration: none;">Daftar Pasien
+                            Kecelakaan</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"
+                            style="text-decoration: none;">
+                            Refresh Halaman
+                        </a>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -43,11 +48,11 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <form action="" method="get">
-                                <div class="row">
-                                    <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
                                         <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
-                                            placeholder="Cari Berdasarkan NIK">
+                                            placeholder="Masukan nomor NIK ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -58,24 +63,8 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
-                                            value="{{ $request->nomorkartu }}" placeholder="Berdasarkan Nomor Kartu BPJS">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
                                         <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $request->nama }}"
-                                            placeholder="Berdasarkan Nama Pasien">
+                                            placeholder="Masukan Nama Pasien ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -86,66 +75,121 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
-                                            placeholder="Berdasarkan Nomor RM">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                    </div>
+                                    </form>
                                 </div>
-                            </form>
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
+                                        <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
+                                            value="{{ $request->nomorkartu }}" placeholder="Masukan Nomor Kartu BPJS ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
+                                            placeholder="Masukan Nomor RM ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </form>
+                                </div>
+                                <div class="col-lg-4">
+                                    <form action="" method="get">
+                                        <x-adminlte-input name="cari_desa" label="Cari Berdasarkan Desa"
+                                            value="{{ $request->cari_desa }}" placeholder="Masukan nama desa dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="cari_kecamatan" label="Cari Berdasarkan Kecamatan"
+                                            value="{{ $request->cari_kecamatan }}"
+                                            placeholder="Masukan nama kecamatan dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </form>
+                                </div>
+                            </div>
+                            {{-- </form> --}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-5">
-                            <div class="alert alert-success alert-dismissible">
-                                <h5>
-                                    DATA PENCARIAN PASIEN : <x-adminlte-button label="Refresh Data Pasien"
-                                        class="btn-flat btn-sm" theme="warning" icon="fas fa-retweet"
-                                        onClick="window.location.reload();" />
-                                </h5>
+                            @if (is_null($ketCariAlamat))
+                                <div class="alert alert-success alert-dismissible">
+                                    <h5>
+                                        DATA PENCARIAN PASIEN : <x-adminlte-button label="Refresh Data Pasien"
+                                            class="btn-flat btn-sm" theme="warning" icon="fas fa-retweet"
+                                            onClick="window.location.reload();" />
+                                    </h5>
+                                </div>
+                            @else
+                                <div class="alert alert-danger alert-dismissible">
+                                    <h5>
+                                        {{ strtoupper($ketCariAlamat) }}
+                                    </h5>
+                                </div>
+                            @endif
 
-                            </div>
                             @if (isset($pasien))
                                 <div class="row">
                                     @php
                                         $heads = ['Pasien', 'Aksi'];
                                         $config['paging'] = false;
+                                        $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
-                                        $config['searching'] = false;
+                                        $config['searching'] = true;
                                         $config['scrollY'] = '500px';
                                         $config['scrollCollapse'] = true;
                                         $config['scrollX'] = true;
                                     @endphp
-                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
-                                        :config="$config" striped bordered hoverable compressed>
+                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads"
+                                        head-theme="dark" :config="$config" striped bordered hoverable compressed>
                                         @foreach ($pasien as $data)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
-                                                        target="__blank">
+                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}" target="__blank">
                                                         <b>
                                                             RM : {{ $data->no_rm }}<br>
                                                             NIK : {{ $data->nik_bpjs }} <br>
                                                             BPJS : {{ $data->no_Bpjs }} <br>
                                                             PASIEN : {{ $data->nama_px }} <br>
-                                                            Jenis Kelamin : {{ $data->jenis_kelamin=='L'?'Laki-Laki':'Perempuan' }}
+                                                            Jenis Kelamin :
+                                                            {{ $data->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}
                                                         </b> <br><br>
                                                         <small>
                                                             <b>TTL :
                                                                 {{ date('d-m-Y', strtotime($data->tgl_lahir)) ?? '-' }}
                                                             </b> <br>
+                                                            {{-- Alamat : {{ $data->alamat ?? '-' }} / <br>
+                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }} --}}
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
-                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }}
+                                                            {{($data->lokasiDesa == null ? 'Desa: -' : 'Desa. ' . $data->lokasiDesa->name) . ($data->lokasiKecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->lokasiKecamatan->name) . ($data->lokasiKabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->lokasiKabupaten->name) }}
                                                         </small> <br>
                                                         <small>Kontak :
                                                             {{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}</small>
@@ -153,7 +197,8 @@
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
-                                                        data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
+                                                        data-nama="{{ $data->nama_px }}"
+                                                        data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
                                                         class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
@@ -220,7 +265,9 @@
                                             <div class="col-lg-6">
                                                 <x-adminlte-select2 name="antrian_triase" label="Nomor Triase">
                                                     @foreach ($antrian_triase as $triase)
-                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} | <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien:'BELUM DI TRIASE' }}</b></option>
+                                                        <option value="{{ $triase->id }}">{{ $triase->no_antri }} |
+                                                            <b>{{ $triase->isTriase != null ? $triase->isTriase->klasifikasi_pasien : 'BELUM DI TRIASE' }}</b>
+                                                        </option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <div class="form-group">
@@ -332,36 +379,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCekBpjs" style="display: none;" aria-hidden="true" data-backdrop="static">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEK STATUS BPJS</h5>
-                </div>
-                <form id="cekbpjs-status-tanpa-daftar" method="get">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor Kartu</label>
-                                <input type="text" name="cek_nomorkartu" class="form-control" id="cek_nomorkartu">
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleInputBorderWidth2">Nomor NIK</label>
-                                <input type="text" name="cek_nik" class="form-control" id="cek_nik">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary btn-cek-bpjs-tanpa-daftar"
-                            form="cekbpjs-status-tanpa-daftar">Cek Status</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -369,94 +386,25 @@
                     <h4 class="modal-title">Riwayat Kunjungan</h4>
                 </div>
                 <div class="modal-body">
-                    {{-- <div class="row">
-                        <div class="col-5 col-sm-3">
-                            <div class="nav flex-column nav-tabs h-100" id="vert-tabs-tab" role="tablist"
-                                aria-orientation="vertical">
-                                <a class="nav-link active btn btn-block btn-success btn-flat" id="rawat-jalan-tab"
-                                    data-toggle="pill" href="#rawat-jalan" role="tab" aria-controls="rawat-jalan"
-                                    aria-selected="false">Rawat Jalan</a>
-                                <a class="nav-link  btn btn-block btn-primary btn-flat" id="rawat-inap-tab"
-                                    data-toggle="pill" href="#rawat-inap" role="tab" aria-controls="rawat-inap"
-                                    aria-selected="true">Rawat Inap</a>
-                            </div>
-                        </div>
-                        <div class="col-7 col-sm-9">
-                            <div class="tab-content" id="vert-tabs-tabContent">
-                                <div class="tab-pane fade active show" id="rawat-jalan" role="tabpanel"
-                                    aria-labelledby="rawat-jalan-tab">
-                                    <div class="info-box mb-3 bg-success ">
-                                        <span class="info-box-icon"><i class="fas fa-user-injured"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">RAWAT JALAN</span>
-                                            <span class="info-box-number">Riwayat Pasien Rawat Jalan</span>
-                                        </div>
-
-                                    </div>
-                                    <table id="table1" class="riwayatKunjungan data-table table table-bordered">
-
-                                        <thead>
-                                            <tr>
-                                                <th>KUNJUNGAN</th>
-                                                <th>NO RM</th>
-                                                <th>PASIEN</th>
-                                                <th>POLI</th>
-                                                <th>STATUS</th>
-                                                <th>TGL MASUK</th>
-                                                <th>TGL PULANG</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="tab-pane text-left " id="rawat-inap" role="tabpanel"
-                                    aria-labelledby="rawat-inap-tab">
-                                    <div class="info-box mb-3 bg-primary">
-                                        <span class="info-box-icon"><i class="fas fa-procedures"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">RAWAT INAP</span>
-                                            <span class="info-box-number">Riwayat Pasien Rawat Inap</span>
-                                        </div>
-                                    </div>
-                                    <table id="table2" class="riwayatRanap data-table table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>KUNJUNGAN</th>
-                                                <th>NO RM</th>
-                                                <th>PASIEN</th>
-                                                <th>RUANGAN</th>
-                                                <th>STATUS</th>
-                                                <th>TGL MASUK</th>
-                                                <th>TGL PULANG</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="row">
                         <div class="col-lg-12">
-                         <table id="table1" class="semuaKunjungan data-table table table-bordered">
-                             <thead>
-                                 <tr>
-                                     <th>KUNJUNGAN</th>
-                                     <th>NO RM</th>
-                                     <th>PASIEN</th>
-                                     <th>POLI</th>
-                                     <th>STATUS</th>
-                                     <th>TGL MASUK</th>
-                                     <th>TGL PULANG</th>
-                                 </tr>
-                             </thead>
-                             <tbody>
-                             </tbody>
-                         </table>
+                            <table id="table1" class="semuaKunjungan data-table table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>KUNJUNGAN</th>
+                                        <th>NO RM</th>
+                                        <th>PASIEN</th>
+                                        <th>POLI</th>
+                                        <th>STATUS</th>
+                                        <th>TGL MASUK</th>
+                                        <th>TGL PULANG</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                     </div>
+                    </div>
                 </div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-default" onclick="batalPilih()">Tutup</button>
@@ -556,15 +504,17 @@
                             if (data.code == 200) {
                                 Swal.fire({
                                     title: "Success!",
-                                    text: data.pasien + '\n ( NIK: '+data.nik + ' ) \n'+data.keterangan + ' ' + '( JENIS : ' +
+                                    text: data.pasien + '\n ( NIK: ' + data.nik +
+                                        ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
                                         data
-                                        .jenisPeserta +' - KELAS: '+data.kelas+')',
+                                        .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
                                     icon: "success",
                                     confirmButtonText: "oke!",
                                 }).then((result) => {
                                     if (result.isConfirmed) {
                                         location.reload();
-                                        document.getElementById('nomorkartu').value = '';
+                                        document.getElementById('nomorkartu').value =
+                                            '';
                                         document.getElementById('nik').value = '';
                                         $('#modalCekBpjs').modal('hide');
                                     }
