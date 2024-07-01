@@ -113,59 +113,40 @@ class DaftarIGDController extends Controller
     {
         $searchVillages     = LokasiDesa ::query();
         $searchDistricts    = LokasiKecamatan ::query();
-        $query              = Pasien::query();
         $ketCariAlamat      = null;
-        if ($request->filled('cari_desa')) {
-            // Lakukan pencarian desa berdasarkan nama
-            $desa = $searchVillages->where('name', 'LIKE', '%' . $request->cari_desa . '%')->first();
-        
-            // Periksa apakah desa ditemukan
-            if (!is_null($desa)) {
-                $query->where('desa', 'LIKE', '%' . $desa->id . '%');
+        $ketCariAlamat      = null;
+        $search = Pasien::query()
+                ->when($request->nik, function ($query, $nik) {
+                    $query->where('nik_bpjs', 'LIKE', '%' . $nik . '%');
+                })
+                ->when($request->nomorkartu, function ($query, $bpjsNumber) {
+                    $query->where('no_Bpjs', 'LIKE', '%' . $bpjsNumber . '%');
+                })
+                ->when($request->nama, function ($query, $name) {
+                    $query->where('nama_px', 'LIKE', '%' . $name . '%');
+                })
+                ->when($request->rm, function ($query, $mrn) {
+                    $query->where('no_rm', 'LIKE', '%' . $mrn . '%');
+                })
+                ->when($request->cari_desa, function ($query) use ($request) {
+                    $villageName = $request->cari_desa;
+                    $query->whereHas('lokasiDesa', function ($query) use ($villageName) {
+                        $query->where('name', 'LIKE', '%' . $villageName . '%');
+                    });
+                })
+                ->when($request->cari_kecamatan, function ($query) use ($request) {
+                    $villageName = $request->cari_kecamatan;
+                    $query->whereHas('lokasiKecamatan', function ($query) use ($villageName) {
+                        $query->where('name', 'LIKE', '%' . $villageName . '%');
+                    });
+                });
+
+            if (!empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
+                !empty($request->cari_desa)|| !empty($request->cari_kecamatan)) {
+                $pasien = $search->get();
+            } else {
+                $pasien = $search->orderBy('tgl_entry', 'desc')->take(4)->get();
             }
-            else {
-                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
-                $query->orderBy('tgl_entry','desc')->take(4)->get();
-            }  
-        } 
-              
-        if ($request->filled('cari_kecamatan')) {
-            $kecamatan = $searchDistricts->where('name','LIKE', '%' . $request->cari_kecamatan. '%')->first();
-           
-            if(!is_null($kecamatan))
-            {
-                $query->where('desa','LIKE', '%' . $kecamatan->id. '%');
-            }
-            else {
-                $ketCariAlamat = 'alamat yang dimasukan tidak ditemukan. MOHON CEK DATA YANG DIINPUTKAN KEMBALI';
-                $query->orderBy('tgl_entry','desc')->take(4)->get();
-            } 
-        }
-        if ($request->rm && !empty($request->rm)) {
-            $query->where('no_rm','LIKE', '%' . $request->rm. '%');
-        }
-        if ($request->nama && !empty($request->nama)) {
-            $query->where('nama_px', 'LIKE', '%' . $request->nama . '%')->limit(100);
-        }
-        if ($request->nomorkartu && !empty($request->nomorkartu)) {
-            $query->where('no_Bpjs','LIKE', '%' . $request->nomorkartu. '%');
-        }
-        if($request->nik && !empty($request->nik))
-        {
-            $query->where('nik_bpjs','LIKE', '%' .  $request->nik. '%');
-        }
-        if( !empty($request->nama) || 
-            !empty($request->nik) || 
-            !empty($request->nomorkartu) || 
-            !empty($request->rm) || 
-            !empty($request->cari_desa) || 
-            !empty($request->cari_kecamatan)
-            )
-        {
-            $pasien         = $query->get();
-        }else{
-            $pasien         = $query->orderBy('tgl_entry','desc')->take(4)->get();
-        }
 
         $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->take(2)->get();
         $knj_aktif   = Kunjungan::where('no_rm', $request->rm)

@@ -59,20 +59,4 @@ class Pasien extends Model
         return $this->belongsTo(KeluargaPasien::class,'no_rm');
     }
 
-    public function lokasiDesa()
-    {
-        return $this->hasOne(LokasiDesa::class,'id','kode_desa');
-    }
-    public function lokasiKecamatan()
-    {
-        return $this->hasOne(LokasiKecamatan::class,  'id','kecamatan');
-    }
-    public function lokasiKabupaten()
-    {
-        return $this->hasOne(LokasiKabupaten::class,  'id','kabupaten');
-    }
-    public function lokasiProvinsi()
-    {
-        return $this->hasOne(LokasiProvinsi::class,  'id','propinsi');
-    }
 }

@@ -48,9 +48,10 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
+                            <form action="" method="get">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        {{-- <form action="" method="get"> --}}
                                         <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
                                             placeholder="Masukan nomor NIK ....">
                                             <x-slot name="appendSlot">
@@ -75,10 +76,10 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </form>
-                                </div>
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
+                                        {{-- </form> --}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        {{-- <form action="" method="get"> --}}
                                         <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
                                             value="{{ $request->nomorkartu }}" placeholder="Masukan Nomor Kartu BPJS ....">
                                             <x-slot name="appendSlot">
@@ -103,12 +104,13 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </form>
-                                </div>
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
+                                        {{-- </form> --}}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        {{-- <form action="" method="get"> --}}
                                         <x-adminlte-input name="cari_desa" label="Cari Berdasarkan Desa"
-                                            value="{{ $request->cari_desa }}" placeholder="Masukan nama desa dengan lengkap...">
+                                            value="{{ $request->cari_desa }}"
+                                            placeholder="Masukan nama desa dengan lengkap...">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -132,10 +134,10 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </form>
+                                        {{-- </form> --}}
+                                    </div>
                                 </div>
-                            </div>
-                            {{-- </form> --}}
+                            </form>
                         </div>
                     </div>
                     <div class="row">
@@ -173,7 +175,8 @@
                                         @foreach ($pasien as $data)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}" target="__blank">
+                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
+                                                        target="__blank">
                                                         <b>
                                                             RM : {{ $data->no_rm }}<br>
                                                             NIK : {{ $data->nik_bpjs }} <br>
@@ -189,7 +192,7 @@
                                                             {{-- Alamat : {{ $data->alamat ?? '-' }} / <br>
                                                             {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }} --}}
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
-                                                            {{($data->lokasiDesa == null ? 'Desa: -' : 'Desa. ' . $data->lokasiDesa->name) . ($data->lokasiKecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->lokasiKecamatan->name) . ($data->lokasiKabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->lokasiKabupaten->name) }}
+                                                            {{ ($data->lokasiDesa == null ? 'Desa: -' : 'Desa. ' . $data->lokasiDesa->name) . ($data->lokasiKecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->lokasiKecamatan->name) . ($data->lokasiKabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->lokasiKabupaten->name) }}
                                                         </small> <br>
                                                         <small>Kontak :
                                                             {{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}</small>
