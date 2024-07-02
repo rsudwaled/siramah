@@ -163,7 +163,7 @@
                             icon="fas fa-user-plus" />
                     @endif
                     @if ($antriansebelumnya)
-                        <x-adminlte-button wire:click='cetakUlang' class="btn-lg" label="Cetak Ulang"
+                        <x-adminlte-button wire:click="cetakUlang('{{ $antriansebelumnya->kodebooking }}')" class="btn-lg" label="Cetak Ulang"
                             theme="warning" icon="fas fa-print" />
                     @endif
 

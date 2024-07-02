@@ -20,6 +20,64 @@ class AnjunganMandiriDaftar extends Component
     public $rujukans = [], $suratkontrols = [], $rujukanrs = [];
     protected $queryString = ['pasienbaru', 'jenispasien'];
 
+
+    public function cetakUlang($kodebooking)
+    {
+        $antrian = Antrian::where('kodebooking', $kodebooking)->first();
+        $pasien = Pasien::firstWhere('nik_bpjs', $antrian->nik);
+
+
+        if (!$antrian->sep) {
+            $tujuanKunjungan = "0";
+            $assesmentPel = "";
+            switch ($antrian->jeniskunjungan) {
+                case '1':
+                    dd($antrian);
+                    break;
+                case '3':
+                    $tujuanKunjungan = "2";
+                    $assesmentPel = "2";
+                    break;
+                case '4':
+                    dd($antrian);
+                    break;
+
+                default:
+                    break;
+            }
+            $request = new Request([
+                'noKartu' => $antrian->nomorkartu,
+                'tglSep' => $antrian->tanggalperiksa,
+                'ppkPelayanan' => "1018R001",
+                'jnsPelayanan' => "2",
+                'klsRawatHak' => "3",
+                // rujukan
+                // 'asalRujukan' => "1",
+                // 'tglRujukan' => "1",
+                // "tglRujukan" => "required",
+                // "noRujukan" => "required",
+                // "ppkRujukan" => "required",
+
+                "catatan" => "cetak sep mesin anjungan",
+                "diagAwal" => "required",
+                "tujuan" => $antrian->kodepoli,
+                "eksekutif" => 0, #0
+                "tujuanKunj" => $tujuanKunjungan, #0
+                "flagProcedure" => "", #0
+                "kdPenunjang" => "", #0
+                "assesmentPel" =>  $assesmentPel, #0
+                "dpjpLayan" => $antrian->kodedokter,
+                "noTelp" => $antrian->nohp,
+                "noSurat" => $antrian->nomorsuratkontrol,
+                "kodeDPJP" => $antrian->kodedokter,
+                "user" => "Anjungan Pelayanan Mandiri RSUD Waled",
+            ]);
+            $api = new VclaimController();
+            $res = $api->sep_insert($request);
+            dd($request->all(), $res);
+        }
+    }
+
     public function daftar()
     {
         $this->validate([
