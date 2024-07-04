@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Livewire\Pendaftaran;
+namespace App\Livewire\Poliklinik;
 
 use App\Models\Antrian;
 use Illuminate\Http\Request;
 use Livewire\Component;
 
-class PendaftaranRajal extends Component
+class AntrianPoliklinikRajal extends Component
 {
     public $antrians = [];
     public $tanggalperiksa, $lantai, $loket, $jenispasien;
     public $search = '';
-
     public function mount(Request $request)
     {
 
@@ -30,7 +29,6 @@ class PendaftaranRajal extends Component
                 ->where('lantaipendaftaran',  'LIKE', '%' . $this->lantai . '%')
                 ->get();
         }
-        return view('livewire.pendaftaran.pendaftaran-rajal')
-            ->title('Pendaftaran Rawat Jalan');
+        return view('livewire.poliklinik.antrian-poliklinik-rajal')->title("Antrian Poliklinik");
     }
 }

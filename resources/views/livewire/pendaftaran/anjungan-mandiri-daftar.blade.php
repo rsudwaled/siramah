@@ -156,15 +156,18 @@
                         @endforeach
                     </x-adminlte-select>
                     <a href="{{ route('anjungan.mandiri') }}">
-                        <x-adminlte-button class="btn-lg" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
+                        <x-adminlte-button class="btn-lg withLoad" label="Kembali" theme="danger"
+                            icon="fas fa-arrow-left" />
                     </a>
                     @if ($jadwaldokter)
                         <x-adminlte-button wire:click='daftar' class="btn-lg" label="Daftar" theme="primary"
                             icon="fas fa-user-plus" />
                     @endif
                     @if ($antriansebelumnya)
-                        <x-adminlte-button wire:click="cetakUlang('{{ $antriansebelumnya->kodebooking }}')" class="btn-lg" label="Cetak Ulang"
-                            theme="warning" icon="fas fa-print" />
+                        <a href="{{ route('karcis.antrian', $antriansebelumnya->kodebooking) }}">
+                            <x-adminlte-button class="btn-lg" label="Cetak Ulang" theme="warning"
+                                icon="fas fa-print" />
+                        </a>
                     @endif
 
                     <div wire:loading>
@@ -187,7 +190,7 @@
                 <h1>PENDAFTARAN PASIEN</h1>
             </div>
             <a href="{{ route('anjungan.mandiri') }}">
-                <x-adminlte-card class="m-2" body-class="bg-danger">
+                <x-adminlte-card class="m-2 withLoad" body-class="bg-danger">
                     <h1>KEMBALI</h1>
                 </x-adminlte-card>
             </a>

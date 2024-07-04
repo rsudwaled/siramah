@@ -8,7 +8,10 @@ use App\Models\Antrian;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 
 class AnjunganMandiriDaftar extends Component
 {
@@ -20,64 +23,108 @@ class AnjunganMandiriDaftar extends Component
     public $rujukans = [], $suratkontrols = [], $rujukanrs = [];
     protected $queryString = ['pasienbaru', 'jenispasien'];
 
-
     public function cetakUlang($kodebooking)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         $pasien = Pasien::firstWhere('nik_bpjs', $antrian->nik);
-
-
         if (!$antrian->sep) {
-            $tujuanKunjungan = "0";
-            $assesmentPel = "";
-            switch ($antrian->jeniskunjungan) {
-                case '1':
-                    dd($antrian);
-                    break;
-                case '3':
-                    $tujuanKunjungan = "2";
-                    $assesmentPel = "2";
-                    break;
-                case '4':
-                    dd($antrian);
-                    break;
-
-                default:
-                    break;
+            $res = $this->cetakSepAntrian($antrian);
+            if ($res->metadata->code == 200) {
+                dd($res);
+                // return flash("Berhasil Cetak Ulang Antrian", 'success');
+            } else {
+                // return $res->metadata->message;
             }
-            $request = new Request([
-                'noKartu' => $antrian->nomorkartu,
-                'tglSep' => $antrian->tanggalperiksa,
-                'ppkPelayanan' => "1018R001",
-                'jnsPelayanan' => "2",
-                'klsRawatHak' => "3",
-                // rujukan
-                // 'asalRujukan' => "1",
-                // 'tglRujukan' => "1",
-                // "tglRujukan" => "required",
-                // "noRujukan" => "required",
-                // "ppkRujukan" => "required",
-
-                "catatan" => "cetak sep mesin anjungan",
-                "diagAwal" => "required",
-                "tujuan" => $antrian->kodepoli,
-                "eksekutif" => 0, #0
-                "tujuanKunj" => $tujuanKunjungan, #0
-                "flagProcedure" => "", #0
-                "kdPenunjang" => "", #0
-                "assesmentPel" =>  $assesmentPel, #0
-                "dpjpLayan" => $antrian->kodedokter,
-                "noTelp" => $antrian->nohp,
-                "noSurat" => $antrian->nomorsuratkontrol,
-                "kodeDPJP" => $antrian->kodedokter,
-                "user" => "Anjungan Pelayanan Mandiri RSUD Waled",
-            ]);
-            $api = new VclaimController();
-            $res = $api->sep_insert($request);
-            dd($request->all(), $res);
         }
+        // $antrian->update([
+        //     'taskid' => 3,
+        //     'taskid3' => now(),
+        //     'user1' => "Anjungan Pelayanan Mandiri RSUD Waled",
+        // ]);
+        return view('livewire.pendaftaran.karcis-antrian', compact('antrian', 'pasien'));
     }
+    public function cetakSepAntrian(Antrian $antrian)
+    {
+        $tujuanKunjungan = "0";
+        $assesmentPel = "";
+        $asalRujukan = null;
+        $tglRujukan = null;
+        $noRujukan = null;
+        $ppkRujukan = null;
+        $diagAwal = null;
+        $kodedokter = null;
+        $api = new VclaimController();
+        switch ($antrian->jeniskunjungan) {
+            case '1':
+                dd($antrian);
+                break;
+            case '3':
+                $tujuanKunjungan = "2";
+                $assesmentPel = "2";
+                $request = new Request([
+                    'noSuratKontrol' => $antrian->nomorsuratkontrol,
+                ]);
+                $res = $api->suratkontrol_nomor($request);
+                if ($res->metadata->code == 200) {
 
+                    $kodedokter =  $res->response->kodeDokter;
+                    $asalRujukan = $res->response->sep->provPerujuk->asalRujukan;
+                    $tglRujukan = $res->response->sep->provPerujuk->tglRujukan;
+                    $noRujukan = $res->response->sep->provPerujuk->noRujukan;
+                    $ppkRujukan = $res->response->sep->provPerujuk->kdProviderPerujuk;
+                    $diagAwal = str_replace(" ", "", explode('-', $res->response->sep->diagnosa)[0]);
+                    if ($res->response->tglRencanaKontrol != now()->format('Y-m-d')) {
+                        $request = new Request([
+                            "noSuratKontrol" => $res->response->noSuratKontrol,
+                            "noSEP" => $res->response->sep->noSep,
+                            "kodeDokter" => $res->response->kodeDokter,
+                            "poliKontrol" => $res->response->poliTujuan,
+                            "tglRencanaKontrol" => now()->format('Y-m-d'),
+                            "user" => "Anjungan Pelayanan Mandiri RSUD Waled",
+                        ]);
+                        $api = new VclaimController();
+                        $updatesuratkontrol = $api->suratkontrol_update($request);
+                    }
+                }
+                break;
+            case '4':
+                dd($antrian);
+                break;
+
+            default:
+                break;
+        }
+        $request = new Request([
+            'noKartu' => $antrian->nomorkartu,
+            'noMR' => $antrian->norm,
+            'tglSep' => $antrian->tanggalperiksa,
+            'ppkPelayanan' => "1018R001",
+            'jnsPelayanan' => "2",
+            'klsRawatHak' => "3",
+            // rujukan
+            'asalRujukan' => $asalRujukan,
+            'tglRujukan' => $tglRujukan,
+            "noRujukan" => $noRujukan,
+            "ppkRujukan" => $ppkRujukan,
+            "diagAwal" => $diagAwal,
+            // data sep
+            "catatan" => "cetak sep mesin anjungan",
+            "tujuan" => $antrian->kodepoli,
+            "eksekutif" => 0, #0
+            "tujuanKunj" => $tujuanKunjungan, #0
+            "flagProcedure" => "", #0
+            "kdPenunjang" => "", #0
+            "assesmentPel" =>  $assesmentPel, #0
+            "dpjpLayan" => $kodedokter,
+            "noTelp" => $antrian->nohp,
+            "noSurat" => $antrian->nomorsuratkontrol ?? "",
+            "kodeDPJP" => $kodedokter ?? $antrian->kodedokter,
+            "user" => "Anjungan Pelayanan Mandiri RSUD Waled",
+        ]);
+        $api = new VclaimController();
+        $res = $api->sep_insert($request);
+        return $res;
+    }
     public function daftar()
     {
         $this->validate([
@@ -105,6 +152,8 @@ class AnjunganMandiriDaftar extends Component
         $api = new AntrianController();
         $res = $api->ambil_antrian($request);
         if ($res->metadata->code == 200) {
+            $antrian  = Antrian::firstWhere('kodebooking', $res->response->kodebooking);
+            $res = $this->cetakSepAntrian($antrian);
             dd($res);
             flash($res->metadata->message, 'success');
         } else if ($res->metadata->code == 409) {

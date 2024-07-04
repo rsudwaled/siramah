@@ -2189,7 +2189,7 @@ class AntrianController extends APIController
             $wa = new WhatsappController();
             $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
             $request['number'] = $antrian->nohp;
-            $wa->send_message($request);
+            // $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan
