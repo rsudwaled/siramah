@@ -329,7 +329,7 @@ class KunjunganController extends Controller
         $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
-
+    
     public function tutupKunjungan(Request $request)
     {
         $updateStatus = Kunjungan::where('kode_kunjungan', $request->kode)->first();
@@ -357,5 +357,4 @@ class KunjunganController extends Controller
         $kunjunganSama = Kunjungan::where('counter', $query->counter)->where('no_rm', $query->no_rm)->get();
         return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama'));
     }
-   
 }

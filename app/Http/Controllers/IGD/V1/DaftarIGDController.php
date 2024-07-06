@@ -137,7 +137,6 @@ class DaftarIGDController extends Controller
                         $query->where('name', 'LIKE', '%' . $villageName . '%');
                     });
                 });
-                
             if (!empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
                 !empty($request->cari_desa)|| !empty($request->cari_kecamatan)) {
                 $pasien = $search->get();
