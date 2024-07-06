@@ -408,7 +408,7 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        
+
 
         if ($createKunjungan->save()) {
 
@@ -1166,7 +1166,7 @@ class RanapController extends APIController
                     $createAdm = new LayananDetail();
                     $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                     $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
+                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
                     $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
                     $createAdm->jumlah_layanan          = 1;
                     $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
@@ -1194,7 +1194,7 @@ class RanapController extends APIController
                         $createLH->update();
                         $ruangan->status_incharge = 1;
                         $ruangan->save();
-                        
+
                         $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
                         $bayikembar->is_kembar_daftar = 1;
                         $bayikembar->save();

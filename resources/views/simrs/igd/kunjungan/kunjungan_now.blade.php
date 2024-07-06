@@ -80,6 +80,12 @@
                                         <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
                                             class="btn-block btn btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
                                             <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
+                                    @else
+                                    <x-adminlte-button
+                                        data-kode="{{ $item->kunjungan }}" type="button"
+                                        theme="success" data-toggle="modal" data-target="#modal-insert-sep"
+                                        class="btn-block btn btn-xs btn-insert-sep"
+                                        id="btn-insert-sep" label="Insert SEP Vclaim" />
                                     @endif
                                 </td>
                                 <td>
@@ -104,8 +110,6 @@
                                             @endif
                                         </a>
                                     </small>
-
-
                                 </td>
                                 <td>
                                     @if (!empty($item->jp_daftar))
@@ -128,24 +132,6 @@
                                                     class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
                                             @endif
                                         @endif
-                                    {{-- @else
-                                        @if (auth()->user()->hasRole('Admin Super'))
-                                            @php
-                                                if (empty($item->noKartu)) {
-                                                    $nomorKartu = null;
-                                                } else {
-                                                    $nomorKartu = trim($item->noKartu);
-                                                }
-                                            @endphp
-                                            <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                                class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                            @if ($item->jp_daftar !== 0)
-                                                @if (!empty($nomorKartu) && $item->jp_daftar == 1)
-                                                    <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                        class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
-                                                @endif
-                                            @endif
-                                       @endif --}}
                                     @endif
                                     <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                         data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
@@ -296,6 +282,37 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modal-insert-sep" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">INSERT SEP VCLAIM</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="insertSep" action="{{ route('insert-sep.kunjungan') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputBorderWidth2">Kode Kunjungan</label>
+                            <input type="text" name="kode_insert_sep" class="form-control" id="kode_insert_sep" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputBorderWidth2">NO SEP</label>
+                            <input type="text" name="insert_no_sep" class="form-control" id="insert_no_sep">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" form="insertSep"
+                            class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('plugins.Select2', true)
@@ -343,6 +360,9 @@
                 $("#nama_pasien").val($(this).data('nama'));
                 $("#jp_daftar").val($(this).data('jpdaftar'));
                 $('#formDiagnosa').modal('show');
+            });
+            $('.btn-insert-sep').click(function(e) {
+                $("#kode_insert_sep").val($(this).data('kode'));
             });
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";

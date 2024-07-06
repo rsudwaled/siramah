@@ -1386,13 +1386,13 @@ class AntrianController extends APIController
     public function ref_pasien_fingerprint(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "jenisIdentitas" => "required",
-            "noIdentitas" =>  "required",
+            "identitas" => "required",
+            "noidentitas" =>  "required",
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(),  400);
         }
-        $url = $this->baseurl . "ref/pasien/fp/identitas/" . $request->jenisIdentitas . "/noidentitas/" . $request->noIdentitas;
+        $url = $this->baseurl . "ref/pasien/fp/identitas/" . $request->identitas . "/noidentitas/" . $request->noidentitas;
         $signature = $this->signature();
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
@@ -1891,9 +1891,6 @@ class AntrianController extends APIController
     }
     public function ambil_antrian(Request $request) #ambil antrian api
     {
-        // if ($this->authtoken($request)) {
-        //     return $this->sendError("Unauthorized (Token Invalid)", 401);
-        // }
         $validator = Validator::make($request->all(), [
             "nomorkartu" => "required|numeric|digits:13",
             "nik" => "required|numeric|digits:16",
@@ -1972,9 +1969,9 @@ class AntrianController extends APIController
                             return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 400);
                         }
                         // cek surat tanggal kontrol
-                        if (Carbon::parse($suratkontrol->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                            return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
-                        }
+                        // if (Carbon::parse($suratkontrol->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
+                        //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
+                        // }
                     } else {
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
                     }
@@ -2192,7 +2189,7 @@ class AntrianController extends APIController
             $wa = new WhatsappController();
             $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
             $request['number'] = $antrian->nohp;
-            $wa->send_message($request);
+            // $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan

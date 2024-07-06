@@ -72,7 +72,7 @@ class PasienIGDController extends Controller
         // $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
         // $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
         $provinsi       = LokasiProvinsi::all();
-        $kabupaten      = LokasiKabupaten::where('province_id','3209')->get();
+        $kabupaten      = LokasiKabupaten::where('province_id','32')->get();
         $kecamatan      = LokasiKecamatan::where('regency_id','3209')->get();
         $negara         = Negara::all();
         $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
@@ -200,7 +200,7 @@ class PasienIGDController extends Controller
     {
         $pasien         = Pasien::firstWhere('no_rm',$rm);
         $klp            = KeluargaPasien::firstWhere('no_rm',$rm);
-        
+
         // $provinsi       = Provinsi::get();
         // $kota           = Kabupaten::where('kode_provinsi', $pasien->kode_propinsi)->get();
         // $kecamatan      = Kecamatan::where('kode_kabupaten_kota', $pasien->kode_kabupaten)->get();
@@ -210,7 +210,7 @@ class PasienIGDController extends Controller
         $kota           = LokasiKabupaten::where('province_id',$pasien->kode_propinsi)->get();
         $kecamatan      = LokasiKecamatan::where('regency_id',$pasien->kode_kabupaten)->get();
         $desa           = LokasiDesa::where('district_id', $pasien->kode_kecamatan)->get();
-        
+
         $negara         = Negara::get();
         $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
         $agama          = Agama::orderBy('ID','asc')->get();
