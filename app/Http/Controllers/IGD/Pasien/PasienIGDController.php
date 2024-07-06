@@ -46,10 +46,25 @@ class PasienIGDController extends Controller
     }
     public function getDesaPasien(Request $request)
     {
-        // $desapasien = Desa::where('kode_kecamatan', $request->desa_kec_id)->get();
-        $desapasien = LokasiDesa::where('district_id', $request->desa_kec_id)->get();
-        return response()->json($desapasien);
+        $search = $request->get('q');
+
+        $desa = LokasiDesa::where('name', 'LIKE', "%$search%")
+                    ->limit(100)
+                    ->with('kecamatan.kabupatenKota') // Memuat relasi kecamatan dan kabupaten/kota
+                    ->get(['id', 'name', 'district_id']);
+
+        return response()->json($desa->map(function($item) {
+            $kecamatanName = $item->kecamatan ? $item->kecamatan->name : null;
+            $kabupatenName = $item->kecamatan && $item->kecamatan->kabupatenKota ? $item->kecamatan->kabupatenKota->name : null;
+
+            return [
+                'id' => $item->id,
+                'name' => $item->name . ($kecamatanName ? ' - ' . $kecamatanName.' - '.$kabupatenName : ''), 
+            ];
+        }));
     }
+
+
     // alamat keluarga pasien
     public function getKlgKabPasien(Request $request)
     {
@@ -68,17 +83,13 @@ class PasienIGDController extends Controller
     }
     public function index(Request $request)
     {
-        $provinsi       = LokasiProvinsi::all();
-        $kabupaten      = LokasiKabupaten::where('province_id','32')->get();
-        $kecamatan      = LokasiKecamatan::where('regency_id','3209')->get();
         $negara         = Negara::all();
         $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
         $agama          = Agama::orderBy('ID','asc')->get();
         $pekerjaan      = Pekerjaan::all();
         $pendidikan     = Pendidikan::all();
         return view('simrs.igd.pasienigd.tambah_pasien',
-            compact('provinsi','kabupaten','kecamatan',
-                'negara','hb_keluarga','agama','pekerjaan','pendidikan'
+            compact('negara','hb_keluarga','agama','pekerjaan','pendidikan'
             ));
     }
 
@@ -101,7 +112,7 @@ class PasienIGDController extends Controller
                 'pekerjaan'         =>'required',
                 'pendidikan'        =>'required',
                 'no_telp'           =>'required|numeric',
-                'provinsi_pasien'   =>'required',
+                'desa_pasien'       =>'required',
                 'kewarganegaraan'   =>'required',
                 'alamat_lengkap_pasien' =>'required',
                 'nama_keluarga'     =>'required',
@@ -121,7 +132,7 @@ class PasienIGDController extends Controller
                 'no_telp'               =>'no telpon wajib diisi',
                 'no_telp.max'           =>'no telpon maksimal 13 digit',
                 'no_telp.min'           =>'no telpon minimal 12 digit',
-                'provinsi_pasien'       =>'provinsi pasien wajib dipilih',
+                'desa_pasien'           =>'desa pasien wajib dipilih',
                 'kewarganegaraan'       =>'kewarganegaraan wajib dipilih',
                 'alamat_lengkap_pasien' =>'alamat lengkap pasien wajib diisi',
                 'nama_keluarga'         =>'nama keluarga wajib diisi',
@@ -136,14 +147,13 @@ class PasienIGDController extends Controller
                 ->whereRaw("LEFT(no_rm, 2) = '01'")
                 ->first();
         $rm_new ='0'.$cek_last_rm->rm_baru;
-        $kecamatan      = LokasiKecamatan::where('id', $request->kecamatan_pasien)->first();
-        $desa           = LokasiDesa::where('id', $request->desa_pasien)->first();
+        $desa           = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
 
         $keluarga = KeluargaPasien::create([
             'no_rm'             => $rm_new,
             'nama_keluarga'     => strtoupper($request->nama_keluarga),
             'hubungan_keluarga' => $request->hub_keluarga,
-            'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$kecamatan->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
+            'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
             'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
             'input_date'        => Carbon::now(),
             'Update_date'       => Carbon::now(),
@@ -166,21 +176,21 @@ class PasienIGDController extends Controller
             'pekerjaan'         => $request->pekerjaan,
             'kewarganegaraan'   => $request->kewarganegaraan,
             'negara'            => $request->kewarganegaraan==1?'INDONESIA':strtoupper($request->negara),
-            'alamat'            => strtoupper($desa->name.' Kecamatan '.$kecamatan->name.' '.$request->alamat_lengkap_pasien),
+            'alamat'            => strtoupper($desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien),
             'no_telp'           => $request->no_telp,
             'no_hp'             => $request->no_telp,
             'tgl_entry'         => Carbon::now(),
             'nik_bpjs'          => $request->nik_pasien_baru,
             'update_date'       => Carbon::now(),
             'update_by'         => Carbon::now(),
-            'propinsi'          => $request->provinsi_pasien,
-            'kabupaten'         => $request->kabupaten_pasien,
-            'kecamatan'         => $request->kecamatan_pasien,
-            'desa'              => $request->desa_pasien,
-            'kode_propinsi'     => $request->provinsi_pasien,
-            'kode_kabupaten'    => $request->kabupaten_pasien,
-            'kode_kecamatan'    => $request->kecamatan_pasien,
-            'kode_desa'         => $request->desa_pasien,
+            'propinsi'          => $desa->kecamatan->kabupatenKota->provinsi->id??Null,
+            'kabupaten'         => $desa->kecamatan->kabupatenKota->id??Null,
+            'kecamatan'         => $desa->kecamatan->id??Null,
+            'desa'              => $desa->id??Null,
+            'kode_propinsi'     => $desa->kecamatan->kabupatenKota->provinsi->id??Null,
+            'kode_kabupaten'    => $desa->kecamatan->kabupatenKota->id??Null,
+            'kode_kecamatan'    => $desa->kecamatan->id??Null,
+            'kode_desa'         => $desa->id??Null,
             'no_ktp'            => $request->nik_pasien_baru,
             'user_create'       =>  Auth::user()->name,
             'status_px'         =>  1,
@@ -198,15 +208,7 @@ class PasienIGDController extends Controller
         $pasien         = Pasien::firstWhere('no_rm',$rm);
         $klp            = KeluargaPasien::firstWhere('no_rm',$rm);
 
-        // $provinsi       = Provinsi::get();
-        // $kota           = Kabupaten::where('kode_provinsi', $pasien->kode_propinsi)->get();
-        // $kecamatan      = Kecamatan::where('kode_kabupaten_kota', $pasien->kode_kabupaten)->get();
-        // $desa           = Desa::where('kode_kecamatan', $pasien->kode_kecamatan)->get();
-
-        $provinsi       = LokasiProvinsi::all();
-        $kota           = LokasiKabupaten::where('province_id',$pasien->kode_propinsi)->get();
-        $kecamatan      = LokasiKecamatan::where('regency_id',$pasien->kode_kabupaten)->get();
-        $desa           = LokasiDesa::where('district_id', $pasien->kode_kecamatan)->get();
+        $desa           = LokasiDesa::with('kecamatan')->where('id', $pasien->desa??$pasien->kode_desa)->first();
 
         $negara         = Negara::get();
         $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
@@ -214,24 +216,17 @@ class PasienIGDController extends Controller
         $pekerjaan      = Pekerjaan::get();
         $pendidikan     = Pendidikan::get();
         return view('simrs.igd.pasienigd.edit_pasien',compact(
-            'klp','pasien','provinsi','negara',
+            'klp','pasien','negara',
             'hb_keluarga','agama','pekerjaan','pendidikan',
-            'kota','kecamatan','desa'
+            'desa'
         ));
     }
 
     public function updatePasien(Request $request)
     {
         $pasien         = Pasien::firstWhere('no_rm',$request->rm);
-        $kabUpdate      = is_numeric($request->kabupaten_pasien);
-        $kecUpdate      = is_numeric($request->kecamatan_pasien);
-        $desaUpdate     = is_numeric($request->desa_pasien);
-        if ($kabUpdate==false && $kecUpdate==false && $desaUpdate==false) {
-            $kab    = LokasiKabupaten::firstWhere('name', $request->kabupaten_pasien);
-            $kec    = LokasiKecamatan::firstWhere('name', $request->kecamatan_pasien);
-            $desa   = LokasiDesa::firstWhere('name', $request->desa_pasien);
-        }
-
+        $desa           = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
+        
         $pasien->no_Bpjs            = $request->no_bpjs;
         $pasien->nama_px            = strtoupper($request->nama_pasien_baru);
         $pasien->jenis_kelamin      = $request->jk;
@@ -242,14 +237,17 @@ class PasienIGDController extends Controller
         $pasien->pekerjaan          = $request->pekerjaan;
         $pasien->kewarganegaraan    = $request->kewarganegaraan;
         $pasien->negara             = 'INDONESIA';
-        $pasien->propinsi           = $request->provinsi_pasien;
-        $pasien->kabupaten          = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
-        $pasien->kecamatan          = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
-        $pasien->desa               = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
-        $pasien->kode_propinsi      = $request->provinsi_pasien;
-        $pasien->kode_kabupaten     = $kabUpdate==false? $kab->kode_kabupaten_kota:$request->kabupaten_pasien;
-        $pasien->kode_kecamatan     = $kecUpdate==false? $kec->kode_kecamatan:$request->kecamatan_pasien;
-        $pasien->kode_desa          = $desaUpdate==false? $desa->kode_desa_kelurahan:$request->desa_pasien;
+
+        $pasien->propinsi          = $desa ? $desa->kecamatan->kabupatenKota->provinsi->id : $pasien->provinsi;
+        $pasien->kabupaten         = $desa ? $desa->kecamatan->kabupatenKota->id : $pasien->kabupaten;
+        $pasien->kecamatan         = $desa ? $desa->kecamatan->id : $pasien->kecamatan;
+        $pasien->desa              = $desa ? $desa->id : $pasien->desa;
+        $pasien->kode_propinsi     = $desa ? $desa->kecamatan->kabupatenKota->provinsi->id : $pasien->kode_propinsi;
+        $pasien->kode_kabupaten    = $desa ? $desa->kecamatan->kabupatenKota->id : $pasien->kode_kabupaten;
+        $pasien->kode_kecamatan    = $desa ? $desa->kecamatan->id : $pasien->kode_kecamatan;
+        $pasien->kode_desa         = $desa ? $desa->id : $pasien->kode_desa;
+
+        
         $pasien->alamat             = strtoupper($request->alamat_lengkap_pasien);
         $pasien->no_tlp             = $request->no_tlp??$request->no_hp;
         $pasien->no_hp              = $request->no_hp??$request->no_tlp;

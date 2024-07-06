@@ -64,6 +64,7 @@
                             $web = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
                                 ->whereNotNull('jp_daftar')
+                                ->where('status_kunjungan', '!=', 8)
                                 ->count();
                             $desktop = \App\Models\Kunjungan::whereBetween('tgl_masuk', [
                                 $start,
@@ -71,6 +72,7 @@
                             ])
                                 ->where('pic', $user->id_simrs)
                                 ->whereNull('jp_daftar')
+                                ->where('status_kunjungan', '!=', 8)
                                 ->count();
                             $total = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
@@ -79,10 +81,16 @@
                             $web = \App\Models\Kunjungan::whereDate('tgl_masuk', now())
                                 ->where('pic', $user->id_simrs)
                                 ->whereNotNull('jp_daftar')
+                                ->where('status_kunjungan', '!=', 8)
                                 ->count();
                             $desktop = \App\Models\Kunjungan::whereDate('tgl_masuk', now())
                                 ->where('pic', $user->id_simrs)
+                                ->where('status_kunjungan', '!=', 8)
                                 ->whereNull('jp_daftar')
+                                ->count();
+                            $batal = \App\Models\Kunjungan::whereDate('tgl_masuk', now())
+                                ->where('pic', $user->id_simrs)
+                                ->where('status_kunjungan', 8)
                                 ->count();
                             $total = \App\Models\Kunjungan::whereDate('tgl_masuk', now())
                                 ->where('pic', $user->id_simrs)
@@ -98,20 +106,25 @@
                             </div>
                             <div class="card-footer">
                                 <div class="row">
-                                    <div class="col-sm-4 border-right">
+                                    <div class="col-sm-3 border-right">
                                         <div class="description-block">
                                             <h5 class="description-header">{{ $web }} Pasien</h5>
                                             <span class="description-text">SISTEM WEB</span>
                                         </div>
                                     </div>
-
-                                    <div class="col-sm-4 border-right">
+                                    <div class="col-sm-3 border-right">
                                         <div class="description-block">
                                             <h5 class="description-header">{{ $desktop }} Pasien</h5>
                                             <span class="description-text">DESKTOP</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3 border-right">
+                                        <div class="description-block">
+                                            <h5 class="description-header">{{ $batal }} Pasien</h5>
+                                            <span class="description-text">BATAL</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
                                         <div class="description-block">
                                             <h5 class="description-header">{{ $total }} Pasien</h5>
                                             <span class="description-text">TOTAL PASIEN</span>

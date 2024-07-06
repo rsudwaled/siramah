@@ -14,6 +14,7 @@ use App\Models\StatusKunjungan;
 use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\Pasien;
+use App\Models\Icd10;
 use Carbon\Carbon;
 use DB;
 
@@ -34,9 +35,9 @@ class KunjunganController extends Controller
     {
         $showData           = $request->view;
         $showDataSepCount   = null;
-        // $start_date         = Carbon::now()->format('Y-m').'-01';
-        $start_date         = '2024-06-01';
-        $end_date           = now();
+        
+        $start_date         = Carbon::parse('2024-07-01')->startOfDay();
+        $end_date           = Carbon::parse(now())->endOfDay();
 
         $query = DB::connection('mysql2')->table('ts_kunjungan')
             ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
@@ -67,7 +68,8 @@ class KunjunganController extends Controller
                 if ($showData === 'kunjungan_sep_berhasil') {
                     $query->whereDate('ts_kunjungan.tgl_masuk', $tanggal)->whereNotNull('ts_kunjungan.no_sep');
                 } elseif ($showData === 'kunjungan_ranap') {
-                    $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                    // $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                    $query->whereDate('tgl_masuk', $tanggal);
                 } else {
                     $query->whereDate('ts_kunjungan.tgl_masuk', $tanggal)->whereNull('ts_kunjungan.no_sep');
                 }
@@ -76,7 +78,8 @@ class KunjunganController extends Controller
                 if ($showData === 'kunjungan_sep_berhasil') {
                     $query->whereDate('ts_kunjungan.tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep');
                 } elseif ($showData === 'kunjungan_ranap') {
-                    $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                    // $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                    $query->whereDate('tgl_masuk', now());
                 } else {
                     $query->whereDate('ts_kunjungan.tgl_masuk', now())->whereNull('ts_kunjungan.no_sep');
                 }
@@ -88,8 +91,8 @@ class KunjunganController extends Controller
         }else{
             $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }
-        $showDataSepCount   = $query->whereDate('tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep')->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->count();
         
+        $showDataSepCount   = $query->whereDate('tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep')->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->count();
         $unit       = Unit::where('kelas_unit', 1)->get();
         $paramedis  = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         return view('simrs.igd.kunjungan.kunjungan_now', compact('showDataSepCount','kunjungan','request','unit','paramedis'));
@@ -298,9 +301,11 @@ class KunjunganController extends Controller
 
     public function insertSepKunjungan(Request $request)
     {
-        $sep_insert = Kunjungan::where('kode_kunjungan', $request->kode_insert_sep)->first();
-        $sep_insert->no_sep = $request->insert_no_sep;
+        $diagnosa_ts                = Icd10::where('diag', $request->diagnosa_sepinsert)->first();
+        $sep_insert                 = Kunjungan::where('kode_kunjungan', $request->kode_insert_sep)->first();
+        $sep_insert->no_sep         = $request->insert_no_sep;
         $sep_insert->id_alasan_edit = 9;
+        $sep_insert->diagx          = $diagnosa_ts->diag.' | '.$diagnosa_ts->nama;
         $sep_insert->save();
         return back();
     }

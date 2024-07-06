@@ -155,10 +155,7 @@
                             });
                             swalWithBootstrapButtons.fire({
                                 title: "Success!",
-                                text: data.pasien + '\n ( NIK: ' + data.nik +
-                                    ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
-                                    data
-                                    .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
+                                html: `${data.pasien}<br>RM: ${data.rm}<br>No Kartu: ${data.noKartu}<br>NIK: ${data.nik}<br>Status: ${data.keterangan} <br>JENIS : ${data.jenisPeserta} - ${data.kelas}`,
                                 icon: "success",
                                 padding: "3em",
                                 showCancelButton: true,
@@ -253,11 +250,6 @@
         $('.cekKunjunganPoli').click(function(e) {
             $('#modalCekKunjunganPoli').modal('toggle');
         });
-        // $('#table1').DataTable({
-        //     scrollY: '400px', // Adjust the height as needed
-        //     scrollCollapse: true,
-        //     paging: false
-        // });
         $('.btn-cekKunjungan').click(function(e) {
             $('#modalCekKunjunganPoli').modal('hide');
             $('#modalCekKunjungan').modal('toggle');
@@ -372,6 +364,96 @@
                     // Handle error appropriately
                 }
             });
+        });
+    });
+    // Menggunakan delegasi event
+    $(document).on('click', '.btn-tutupkunjungan', function() {
+        var kode = $(this).data('kode');
+        var tutupKunjungan = "{{ route('status.tutup-kunjungan') }}";
+        Swal.fire({
+            title: "YAKIN TUTUP KUNJUNGAN?",
+            text: "Status kunjungan ini akan ditutup!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Tutup!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'PUT',
+                    url: tutupKunjungan,
+                    dataType: 'json',
+                    data: {
+                        kode: kode,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire({
+                            title: "SUCCESS!",
+                            text: 'Kunjungan Berhasil Di TUTUP',
+                            icon: "info",
+                            confirmButtonText: "oke!",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Tampilkan pesan kesalahan jika perlu
+                    }
+                });
+            }
+        });
+    });
+    // Menggunakan delegasi event
+    $(document).on('click', '.btn-bukakunjungan', function() {
+        var kode = $(this).data('kode');
+        var bukaKunjungan = "{{ route('status.buka-kunjungan') }}";
+        Swal.fire({
+            title: "YAKIN MEMBUKA KUNJUNGAN?",
+            text: "Status kunjungan ini akan di buka!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Buka!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'PUT',
+                    url: bukaKunjungan,
+                    dataType: 'json',
+                    data: {
+                        kode: kode,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire({
+                            title: "SUCCESS!",
+                            text: 'Kunjungan Berhasil Di BUKA',
+                            icon: "info",
+                            confirmButtonText: "oke!",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Tampilkan pesan kesalahan jika perlu
+                    }
+                });
+            }
         });
     });
 </script>

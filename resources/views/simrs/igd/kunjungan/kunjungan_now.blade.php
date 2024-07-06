@@ -15,7 +15,7 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a href="{{ url('daftar-kunjungan') }}"
-                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? '' : 'active' }}">
+                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? '' : (Request::get('view') == 'kunjungan_ranap'?'':'active') }}">
                                 SEMUA KUNJUNGAN&nbsp;
                                 <span class="badge badge-primary">0</span>
                             </a>
@@ -30,7 +30,7 @@
                         <li class="nav-item">
                             <a href="?view=kunjungan_ranap"
                                 class="nav-link {{ Request::get('view') == 'kunjungan_ranap' ? 'active' : '' }}">
-                                RAWAT INAP&nbsp;
+                                DAFTAR RAWAT INAP&nbsp;
                                 <span class="badge badge-danger active"></span>
                             </a>
                         </li>
@@ -45,9 +45,10 @@
                                                 @php
                                                     $config = ['format' => 'YYYY-MM-DD'];
                                                 @endphp
-                                                <input type="hidden" value="{{$request->view}}" name="view">
+                                                <input type="hidden" value="{{ $request->view }}" name="view">
                                                 <x-adminlte-input-date fgroup-class="row" label-class="text-right"
-                                                    igroup-size="md" igroup-class="col-10" igroup-size="md" name="tanggal" :config="$config"
+                                                    igroup-size="md" igroup-class="col-10" igroup-size="md" name="tanggal"
+                                                    :config="$config"
                                                     value="{{ $request->tanggal ?? now()->format('Y-m-d') }}">
                                                     <x-slot name="appendSlot">
                                                         <button class="btn btn-sm btn-primary withLoad" type="submit"><i
@@ -60,7 +61,7 @@
                                     </form>
                                 </div>
                                 <div class="col-lg-6 text-right">
-                                   
+
                                     <button class="btn btn-sm bg-purple" data-toggle="modal"
                                         data-target="#modal-sep-backdate">SEP
                                         BACKDATE</button>
@@ -82,7 +83,7 @@
                                     'Tanggal Masuk',
                                     'Diagnosa / SEP',
                                     'Status Pasien',
-                                    'Detail',
+                                    'Aksi',
                                 ];
                                 $config['order'] = ['3', 'desc'];
                                 $config['paging'] = false;
@@ -132,9 +133,14 @@
                                                     id="btn-deleteSEP" label="Hapus SEP" />
                                                 <a href="{{ route('cetak-sep-igd', ['sep' => $item->sep]) }}"
                                                     target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
+                                            @else
+                                                <x-adminlte-button data-kode="{{ $item->kunjungan }}" type="button"
+                                                    theme="success" data-toggle="modal" data-target="#modal-insert-sep"
+                                                    class="btn-block btn btn-xs btn-insert-sep" id="btn-insert-sep"
+                                                    label="Insert SEP Vclaim" />
                                             @endif
                                         </td>
-                                        <td>
+                                        <td style="width: 10%;">
                                             <b>
                                                 @if (empty($item->jp_daftar) && !empty($item->sep))
                                                     PASIEN BPJS
@@ -157,38 +163,40 @@
                                                     @endif
                                                 </a>
                                             </small>
-
-
                                         </td>
-                                        <td>
-                                            @if (!empty($item->jp_daftar))
+                                        <td style="width: 10%;">
+                                            {{-- @if (!empty($item->jp_daftar))
                                                 <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
                                                     class="btn btn-success btn-xs withLoad mt-1">Detail</a>
-                                            @endif
-                                            @if ($item->id_status === 1)
-                                                @php
-                                                    if (empty($item->noKartu)) {
-                                                        $nomorKartu = null;
-                                                    } else {
-                                                        $nomorKartu = trim($item->noKartu);
-                                                    }
-                                                @endphp
-                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                                    class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                                @if ($item->jp_daftar !== 0)
-                                                    @if (!empty($nomorKartu) && $item->jp_daftar == 1)
-                                                        <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                            class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                            @endif --}}
+                                            @if ($request->view == 'kunjungan_ranap')
+                                                @if ($item->id_status === 1)
+                                                    @php
+                                                        if (empty($item->noKartu)) {
+                                                            $nomorKartu = null;
+                                                        } else {
+                                                            $nomorKartu = trim($item->noKartu);
+                                                        }
+                                                    @endphp
+                                                    <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
+                                                        class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
+                                                    @if ($item->jp_daftar !== 0)
+                                                        @if (!empty($nomorKartu) && $item->jp_daftar == 1)
+                                                            <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                                class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                                        @endif
                                                     @endif
                                                 @endif
+                                            @else
+                                                <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
+                                                    data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
+                                                    data-nokartu="{{ $item->noKartu }}"
+                                                    data-kunjungan="{{ $item->kunjungan }}"
+                                                    data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
+                                                    class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
+                                                    label="Diagnosa" />
                                             @endif
-                                            <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
-                                                data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
-                                                data-nokartu="{{ $item->noKartu }}"
-                                                data-kunjungan="{{ $item->kunjungan }}"
-                                                data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
-                                                class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                                label="Diagnosa" />
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -199,37 +207,10 @@
             </div>
         </div>
     </div>
+    @include('simrs.igd.kunjungan.modal.modal_bridgin-diaganosa_sep')
+    @include('simrs.igd.kunjungan.modal.modal_cetak_label')
+    @include('simrs.igd.kunjungan.modal.insert_sep_vclaim')
 
-    <div class="modal fade" id="modal-insert-sep" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">INSERT SEP VCLAIM</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form id="insertSep" action="{{ route('insert-sep.kunjungan') }}" method="post">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Kode Kunjungan</label>
-                            <input type="text" name="kode_insert_sep" class="form-control" id="kode_insert_sep" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">NO SEP</label>
-                            <input type="text" name="insert_no_sep" class="form-control" id="insert_no_sep">
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="submit" form="insertSep"
-                            class="btn btn-primary">Simpan</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 @stop
 
 @section('plugins.Select2', true)
@@ -267,6 +248,26 @@
                     cache: true
                 }
             });
+            $("#diagICD10").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_diagnosa_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            diagnosa: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
 
             $('.show-formdiagnosa').click(function(e) {
                 $("#noMR").val($(this).data('rm'));
@@ -282,7 +283,6 @@
             });
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";
-                // var urlBridging = "{{ route('bridging-sep') }}";
                 var urlUpdateOnly = "{{ route('synch-diagnosa.only') }}";
                 const swalWithBootstrapButtons = Swal.mixin({
                     customClass: {

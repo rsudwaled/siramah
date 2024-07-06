@@ -10,4 +10,9 @@ class LokasiKabupaten extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_lokasi_regencies';
     protected $primaryKey = 'id';
+
+    public function provinsi()
+    {
+        return $this->hasOne(LokasiProvinsi::class,'id','province_id');
+    }
 }
