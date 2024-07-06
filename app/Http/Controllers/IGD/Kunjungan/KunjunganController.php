@@ -273,6 +273,15 @@ class KunjunganController extends Controller
             'code'=>200]);
     }
 
+    public function insertSepKunjungan(Request $request)
+    {
+        $sep_insert = Kunjungan::where('kode_kunjungan', $request->kode_insert_sep)->first();
+        $sep_insert->no_sep = $request->insert_no_sep;
+        $sep_insert->id_alasan_edit = 9;
+        $sep_insert->save();
+        return back();
+    }
+
     public function cetakLabel(Request $request)
     {
         $pasien = Pasien::where('no_rm', $request->label_no_rm)->first();
@@ -291,12 +300,12 @@ class KunjunganController extends Controller
         $api = new VclaimController();
         $request = new Request([
             'noSep' => $sep,
-        ]); 
+        ]);
         $res    = $api->sep_nomor($request);
         $histories  = HistoriesIGDBPJS::where('respon_nosep', $sep)->first();
         $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
 
-   
+
 }
