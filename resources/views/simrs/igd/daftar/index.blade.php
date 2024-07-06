@@ -48,38 +48,64 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
-                                        <x-adminlte-input name="nik" label="NIK" value="{{ $request->nik }}"
-                                            placeholder="Masukan nomor NIK ....">
+                            <form action="" method="get">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="rm" label="NO RM" value="{{ $request->rm }}"
+                                            placeholder="Masukan Nomor RM ....">
                                             <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
                                                     label="Cari!" />
                                             </x-slot>
                                             <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
+                                                <div class="input-group-text text-primary">
                                                     <i class="fas fa-search"></i>
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                        <x-adminlte-input name="nama" label="Nama Pasien" value="{{ $request->nama }}"
+                                        <x-adminlte-input name="nama" label="NAMA PASIEN" value="{{ $request->nama }}"
                                             placeholder="Masukan Nama Pasien ....">
                                             <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
                                                     label="Cari!" />
                                             </x-slot>
                                             <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
+                                                <div class="input-group-text text-primary">
                                                     <i class="fas fa-search"></i>
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </form>
-                                </div>
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
-                                        <x-adminlte-input name="nomorkartu" label="Nomor Kartu"
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="cari_desa" label="CARI BERDASARKAN DESA"
+                                            value="{{ $request->cari_desa }}"
+                                            placeholder="Masukan nama desa dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="cari_kecamatan" label="CARI BERDASARKAN KECAMATAN"
+                                            value="{{ $request->cari_kecamatan }}"
+                                            placeholder="Masukan nama kecamatan dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="nomorkartu" label="NOMOR KARTU"
                                             value="{{ $request->nomorkartu }}" placeholder="Masukan Nomor Kartu BPJS ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
@@ -91,8 +117,8 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                        <x-adminlte-input name="rm" label="No RM" value="{{ $request->rm }}"
-                                            placeholder="Masukan Nomor RM ....">
+                                        <x-adminlte-input name="nik" label="NIK (NOMOR INDUK KEPENDUDUKAN)"
+                                            value="{{ $request->nik }}" placeholder="Masukan nomor NIK ....">
                                             <x-slot name="appendSlot">
                                                 <x-adminlte-button theme="success" class="withLoad" type="submit"
                                                     label="Cari!" />
@@ -103,39 +129,9 @@
                                                 </div>
                                             </x-slot>
                                         </x-adminlte-input>
-                                    </form>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <form action="" method="get">
-                                        <x-adminlte-input name="cari_desa" label="Cari Berdasarkan Desa"
-                                            value="{{ $request->cari_desa }}" placeholder="Masukan nama desa dengan lengkap...">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                        <x-adminlte-input name="cari_kecamatan" label="Cari Berdasarkan Kecamatan"
-                                            value="{{ $request->cari_kecamatan }}"
-                                            placeholder="Masukan nama kecamatan dengan lengkap...">
-                                            <x-slot name="appendSlot">
-                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                    label="Cari!" />
-                                            </x-slot>
-                                            <x-slot name="prependSlot">
-                                                <div class="input-group-text text-success">
-                                                    <i class="fas fa-search"></i>
-                                                </div>
-                                            </x-slot>
-                                        </x-adminlte-input>
-                                    </form>
-                                </div>
-                            </div>
-                            {{-- </form> --}}
+                            </form>
                         </div>
                     </div>
                     <div class="row">
@@ -173,7 +169,8 @@
                                         @foreach ($pasien as $data)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}" target="__blank">
+                                                    <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
+                                                        target="__blank">
                                                         <b>
                                                             RM : {{ $data->no_rm }}<br>
                                                             NIK : {{ $data->nik_bpjs }} <br>
@@ -206,9 +203,9 @@
                                                         data-rm="{{ $data->no_rm }}"
                                                         class="btn-xs btn-cekBPJS bg-success" label="Cek Status BPJS" />
 
-                                                    <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
-                                                        class="btn-xs btn-cekKunjungan bg-warning mt-1"
-                                                        label="Riwayat Kunjungan" />
+                                                    {{-- <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
+                                                        class="btn-xs btn-cek-kunjunganuser bg-warning mt-1"
+                                                        label="Riwayat Kunjungan" /> --}}
 
                                                 </td>
                                             </tr>
@@ -362,8 +359,6 @@
                                                         onclick="javascript: form.action='{{ route('v1.store-tanpa-noantrian') }}';"
                                                         class="withLoad btn  btn-sm bg-green float-right"
                                                         form="formPendaftaranIGD" label="Simpan Data" />
-                                                    {{-- <a href="{{ route('list.antrian') }}"
-                                                        class="float-right btn btn-sm btn-secondary">Kembali</a> --}}
                                                 </x-slot>
                                             </div>
                                         </div>
@@ -377,7 +372,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalCekKunjungan" style="display: none;" aria-hidden="true" data-backdrop="static">
+    {{-- <div class="modal fade" id="modalCekKunjunganPasien" style="display: none;" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -409,7 +404,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 @endsection
 @section('plugins.TempusDominusBs4', true)
@@ -601,66 +596,138 @@
             }
         });
 
-        $('.btn-cekKunjungan').click(function(e) {
-            $('#modalCekKunjungan').modal('toggle');
-            var rm = $(this).data('rm');
-            if (rm) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
-                    dataType: 'JSON',
-                    success: function(data) {
-                        // $.each(data.riwayat, function(index, riwayat) {
-                        //     var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                        //         .kode_kunjungan + "</td><td>" +
-                        //         riwayat.no_rm + "</td><td>" + riwayat.pasien
-                        //         .nama_px +
-                        //         "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
-                        //         riwayat.status.status_kunjungan + "</td><td>" +
-                        //         riwayat.tgl_masuk + "</td><td>" + (riwayat
-                        //             .tgl_keluar == null ? 'Belum Pulang' : riwayat
-                        //             .tgl_keluar) +
-                        //         "</td></tr>";
-                        //     $('.riwayatKunjungan tbody').append(row);
-                        // });
-                        // $.each(data.ranap, function(index, ranap) {
-                        //     var row = "<tr class='riwayat-kunjungan'><td>" + ranap
-                        //         .kode_kunjungan + "</td><td>" +
-                        //         ranap.no_rm + "</td><td>" + ranap.pasien
-                        //         .nama_px +
-                        //         "</td><td>" + ranap.unit.nama_unit + "</td><td>" +
-                        //         ranap.status.status_kunjungan + "</td><td>" +
-                        //         ranap
-                        //         .tgl_masuk + "</td><td>" + (ranap.tgl_keluar ==
-                        //             null ? 'Belum Pulang' : ranap.tgl_keluar) +
-                        //         "</td></tr>";
-                        //     $('.riwayatRanap tbody').append(row);
-                        // });
-                        $.each(data.semua_kunjungan, function(index, riwayat) {
-                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                                .kode_kunjungan + "</td><td>" +
-                                riwayat.no_rm + "</td><td>" + riwayat.pasien
-                                .nama_px +
-                                "</td><td>" + riwayat.unit.nama_unit + "</td><td>" +
-                                riwayat.status.status_kunjungan + "</td><td>" +
-                                riwayat.tgl_masuk + "</td><td>" + (riwayat
-                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
-                                    .tgl_keluar) +
-                                "</td></tr>";
-                            $('.semuaKunjungan tbody').append(row);
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        // Handle error appropriately
-                    }
-                });
-            }
+        // $('.btn-cek-kunjunganuser').click(function(e) {
+        //     $('#modalCekKunjunganPasien').modal('toggle');
+        //     var rm = $(this).data('rm');
+        //     if (rm) {
+        //         $.ajax({
+        //             type: "GET",
+        //             url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
+        //             dataType: 'JSON',
+        //             success: function(data) {
+        //                 $.each(data.semua_kunjungan, function(index, riwayat) {
+        //                     var statusButton = riwayat.status.status_kunjungan == 'Open' ?
+        //                         `<button type='button' class='btn btn-primary btn-xs btn-block btn-tutupkunjungan' data-kode='${riwayat.kode_kunjungan}'>TUTUP</button>` :
+        //                         `<button type='button' class='btn btn-success btn-xs btn-block btn-bukakunjungan' data-kode='${riwayat.kode_kunjungan}'>OPEN</button>`;
+
+        //                     var row = `
+        //                             <tr class='riwayat-kunjungan'>
+        //                                 <td>${riwayat.kode_kunjungan}</td>
+        //                                 <td>${riwayat.no_rm}</td>
+        //                                 <td>${riwayat.pasien.nama_px}</td>
+        //                                 <td>${riwayat.unit.nama_unit}</td>
+        //                                 <td>${riwayat.status.status_kunjungan} ${statusButton}</td>
+        //                                 <td>${riwayat.tgl_masuk}</td>
+        //                                 <td>${riwayat.tgl_keluar == null ? 'Belum Pulang' : riwayat.tgl_keluar}</td>
+        //                             </tr>
+        //                         `;
+
+        //                     $('.semuaKunjungan tbody').append(row);
+        //                 });
+
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 console.error(xhr.responseText);
+        //                 // Handle error appropriately
+        //             }
+        //         });
+        //     }
+        // });
+
+        // Menggunakan delegasi event
+        $(document).on('click', '.btn-tutupkunjungan', function() {
+            var kode = $(this).data('kode');
+            var tutupKunjungan = "{{ route('status.tutup-kunjungan') }}";
+            Swal.fire({
+                title: "YAKIN TUTUP KUNJUNGAN?",
+                text: "Status kunjungan ini akan ditutup!",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Tutup!",
+                cancelButtonText: "Batal!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.LoadingOverlay("show");
+                    $.ajax({
+                        type: 'PUT',
+                        url: tutupKunjungan,
+                        dataType: 'json',
+                        data: {
+                            kode: kode,
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            Swal.fire({
+                                title: "SUCCESS!",
+                                text: 'Kunjungan Berhasil Di TUTUP',
+                                icon: "info",
+                                confirmButtonText: "oke!",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                            $.LoadingOverlay("hide");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            // Tampilkan pesan kesalahan jika perlu
+                        }
+                    });
+                }
+            });
+        });
+        // Menggunakan delegasi event
+        $(document).on('click', '.btn-bukakunjungan', function() {
+            var kode = $(this).data('kode');
+            var bukaKunjungan = "{{ route('status.buka-kunjungan') }}";
+            Swal.fire({
+                title: "YAKIN MEMBUKA KUNJUNGAN?",
+                text: "Status kunjungan ini akan di buka!",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Buka!",
+                cancelButtonText: "Batal!",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.LoadingOverlay("show");
+                    $.ajax({
+                        type: 'PUT',
+                        url: bukaKunjungan,
+                        dataType: 'json',
+                        data: {
+                            kode: kode,
+                        },
+                        success: function(data) {
+                            console.log(data);
+                            Swal.fire({
+                                title: "SUCCESS!",
+                                text: 'Kunjungan Berhasil Di BUKA',
+                                icon: "info",
+                                confirmButtonText: "oke!",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                            $.LoadingOverlay("hide");
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            // Tampilkan pesan kesalahan jika perlu
+                        }
+                    });
+                }
+            });
         });
 
         function batalPilih() {
             $(".riwayat-kunjungan").remove();
-            $('#modalCekKunjungan').modal('hide');
+            $('#modalCekKunjunganPasien').modal('hide');
         }
 
         $(function() {

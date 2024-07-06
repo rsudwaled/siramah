@@ -36,4 +36,8 @@ class User extends Authenticatable
             return asset('rsudwaled_icon_qrcode.png');
         }
     }
+    public function userSimrs()
+    {
+        return $this->hasOne(UserSimrs::class, 'id', 'id_simrs');
+    }
 }

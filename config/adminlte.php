@@ -550,9 +550,17 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
+                [
+                    'text' => 'Tracer Pendaftaran',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'tracer-pendaftaran',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
 
             ],
         ],
+       
         // KEUANGAN
         [
             'text'    => 'Aplikasi Keuangan',

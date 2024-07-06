@@ -32,11 +32,15 @@ class KunjunganController extends Controller
 
     public function daftarKunjungan(Request $request)
     {
+        $showData           = $request->view;
+        $showDataSepCount   = null;
+        // $start_date         = Carbon::now()->format('Y-m').'-01';
+        $start_date         = '2024-06-01';
+        $end_date           = now();
 
         $query = DB::connection('mysql2')->table('ts_kunjungan')
             ->join('mt_pasien','ts_kunjungan.no_rm','=', 'mt_pasien.no_rm' )
             ->join('mt_unit', 'ts_kunjungan.kode_unit', '=', 'mt_unit.kode_unit')
-            // ->join('ts_jp_igd', 'ts_kunjungan.kode_kunjungan', '=', 'ts_jp_igd.kunjungan')
             ->join('mt_status_kunjungan', 'ts_kunjungan.status_kunjungan', '=', 'mt_status_kunjungan.ID')
             ->select(
                 'mt_pasien.no_Bpjs as noKartu', 'mt_pasien.nik_bpjs as nik', 'mt_pasien.no_rm as rm','mt_pasien.nama_px as pasien','mt_pasien.alamat as alamat','mt_pasien.jenis_kelamin as jk',
@@ -51,25 +55,44 @@ class KunjunganController extends Controller
                 'ts_kunjungan.diagx as diagx',
                 'ts_kunjungan.lakalantas as lakaLantas',
                 'ts_kunjungan.jp_daftar as jp_daftar',
+                'ts_kunjungan.id_ruangan as id_ruangan',
                 'mt_unit.nama_unit as nama_unit',
                 'mt_status_kunjungan.status_kunjungan as status',
                 'mt_status_kunjungan.ID as id_status',
             )
-            ->where('ts_kunjungan.ref_kunjungan','=',0)
             ->orderBy('ts_kunjungan.tgl_masuk', 'desc');
-
-        if($request->tanggal && !empty($request->tanggal))
+            // Apply date filters based on showData and request parameters
+            if ($request->has('tanggal') && !empty($request->tanggal)) {
+                $tanggal = $request->tanggal;
+                if ($showData === 'kunjungan_sep_berhasil') {
+                    $query->whereDate('ts_kunjungan.tgl_masuk', $tanggal)->whereNotNull('ts_kunjungan.no_sep');
+                } elseif ($showData === 'kunjungan_ranap') {
+                    $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                } else {
+                    $query->whereDate('ts_kunjungan.tgl_masuk', $tanggal)->whereNull('ts_kunjungan.no_sep');
+                }
+            } else {
+                // Default filtering if no specific date is provided
+                if ($showData === 'kunjungan_sep_berhasil') {
+                    $query->whereDate('ts_kunjungan.tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep');
+                } elseif ($showData === 'kunjungan_ranap') {
+                    $query->whereBetween('ts_kunjungan.tgl_masuk', [$start_date, $end_date])->whereNotNull('ts_kunjungan.id_ruangan');
+                } else {
+                    $query->whereDate('ts_kunjungan.tgl_masuk', now())->whereNull('ts_kunjungan.no_sep');
+                }
+            }
+        
+        if($showData ==='kunjungan_ranap')
         {
-            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal);
+            $kunjungan          = $query->get();
+        }else{
+            $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }
-        if(empty($request->tanggal) && empty($request->unit)){
-            $query->whereDate('ts_kunjungan.tgl_masuk', now());
-        }
-        // $kunjungan = $query->get();
-        $kunjungan  = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
+        $showDataSepCount   = $query->whereDate('tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep')->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->count();
+        
         $unit       = Unit::where('kelas_unit', 1)->get();
         $paramedis  = Paramedis::whereNotNull('kode_dokter_jkn')->get();
-        return view('simrs.igd.kunjungan.kunjungan_now', compact('kunjungan','request','unit','paramedis'));
+        return view('simrs.igd.kunjungan.kunjungan_now', compact('showDataSepCount','kunjungan','request','unit','paramedis'));
     }
 
     public function detailKunjungan($jpdaftar, $kunjungan)
@@ -298,5 +321,32 @@ class KunjunganController extends Controller
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
 
+    public function tutupKunjungan(Request $request)
+    {
+        $updateStatus = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $updateStatus->status_kunjungan =3;
+        $updateStatus->id_alasan_edit   =7;
+        $updateStatus->pic2             =Auth::user()->id_simrs??2;
+        $updateStatus->save();
+        return response()->json(['status'=>$updateStatus]);
+
+    }
+    public function bukaKunjungan(Request $request)
+    {
+        $updateStatus = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $updateStatus->status_kunjungan =1;
+        $updateStatus->id_alasan_edit   =8;
+        $updateStatus->pic2             =Auth::user()->id_simrs??2;
+        $updateStatus->save();
+        return response()->json(['status'=>$updateStatus]);
+
+    }
+
+    public function getKunjunganEp(Request $request)
+    {
+        $query = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjunganSama = Kunjungan::where('counter', $query->counter)->where('no_rm', $query->no_rm)->get();
+        return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama'));
+    }
    
 }

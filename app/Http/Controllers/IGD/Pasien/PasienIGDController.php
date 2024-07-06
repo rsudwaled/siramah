@@ -68,11 +68,8 @@ class PasienIGDController extends Controller
     }
     public function index(Request $request)
     {
-        // $provinsi       = Provinsi::all();
-        // $kabupaten      = Kabupaten::where('kode_kabupaten_kota','3209')->get();
-        // $kecamatan      = Kecamatan::where('kode_kabupaten_kota','3209')->get();
         $provinsi       = LokasiProvinsi::all();
-        $kabupaten      = LokasiKabupaten::where('province_id','3209')->get();
+        $kabupaten      = LokasiKabupaten::where('province_id','32')->get();
         $kecamatan      = LokasiKecamatan::where('regency_id','3209')->get();
         $negara         = Negara::all();
         $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
@@ -169,10 +166,6 @@ class PasienIGDController extends Controller
             'pekerjaan'         => $request->pekerjaan,
             'kewarganegaraan'   => $request->kewarganegaraan,
             'negara'            => $request->kewarganegaraan==1?'INDONESIA':strtoupper($request->negara),
-            'propinsi'          => $request->provinsi_pasien,
-            'kabupaten'         => $request->kabupaten_pasien,
-            'kecamatan'         => $request->kecamatan_pasien,
-            'desa'              => $request->desa_pasien,
             'alamat'            => strtoupper($desa->name.' Kecamatan '.$kecamatan->name.' '.$request->alamat_lengkap_pasien),
             'no_telp'           => $request->no_telp,
             'no_hp'             => $request->no_telp,
@@ -180,6 +173,10 @@ class PasienIGDController extends Controller
             'nik_bpjs'          => $request->nik_pasien_baru,
             'update_date'       => Carbon::now(),
             'update_by'         => Carbon::now(),
+            'propinsi'          => $request->provinsi_pasien,
+            'kabupaten'         => $request->kabupaten_pasien,
+            'kecamatan'         => $request->kecamatan_pasien,
+            'desa'              => $request->desa_pasien,
             'kode_propinsi'     => $request->provinsi_pasien,
             'kode_kabupaten'    => $request->kabupaten_pasien,
             'kode_kecamatan'    => $request->kecamatan_pasien,

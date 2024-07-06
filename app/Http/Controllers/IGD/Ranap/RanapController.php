@@ -1166,7 +1166,7 @@ class RanapController extends APIController
                     $createAdm = new LayananDetail();
                     $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
                     $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_karcis;
+                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
                     $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
                     $createAdm->jumlah_layanan          = 1;
                     $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;

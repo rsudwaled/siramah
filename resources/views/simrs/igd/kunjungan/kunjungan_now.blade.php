@@ -10,292 +10,199 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
-            <div class="card card-primary card-outline card-tabs">
+            <div class="card">
                 <div class="card-body">
-                    <div class="row mb-2">
-                        <div class="col-lg-6">
-                            <form action="" method="get">
-                                <div class="col-md-8">
-                                    <div class="input-group">
-                                        <input id="new-event" type="date" name="tanggal" class="form-control"
-                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
-                                            placeholder="Event Title">
-                                        <div class="input-group-append">
-                                            <button id="add-new-event" type="submit"
-                                                class="btn btn-primary btn-sm withLoad">CARI DATA</button>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a href="{{ url('daftar-kunjungan') }}"
+                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? '' : 'active' }}">
+                                SEMUA KUNJUNGAN&nbsp;
+                                <span class="badge badge-primary">0</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="?view=kunjungan_sep_berhasil"
+                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? 'active' : '' }}">
+                                KUNJUNGAN SEP BERHASIL&nbsp;
+                                <span class="badge badge-danger active">{{ $showDataSepCount }}</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="?view=kunjungan_ranap"
+                                class="nav-link {{ Request::get('view') == 'kunjungan_ranap' ? 'active' : '' }}">
+                                RAWAT INAP&nbsp;
+                                <span class="badge badge-danger active"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="col-lg-12">
+                            <div class="row mt-3">
+                                <div class="col-lg-6">
+                                    <form action="" method="get">
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                @php
+                                                    $config = ['format' => 'YYYY-MM-DD'];
+                                                @endphp
+                                                <input type="hidden" value="{{$request->view}}" name="view">
+                                                <x-adminlte-input-date fgroup-class="row" label-class="text-right"
+                                                    igroup-size="md" igroup-class="col-10" igroup-size="md" name="tanggal" :config="$config"
+                                                    value="{{ $request->tanggal ?? now()->format('Y-m-d') }}">
+                                                    <x-slot name="appendSlot">
+                                                        <button class="btn btn-sm btn-primary withLoad" type="submit"><i
+                                                                class="fas fa-search "></i>
+                                                            Pencarian</button>
+                                                    </x-slot>
+                                                </x-adminlte-input-date>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
-                            </form>
+                                <div class="col-lg-6 text-right">
+                                   
+                                    <button class="btn btn-sm bg-purple" data-toggle="modal"
+                                        data-target="#modal-sep-backdate">SEP
+                                        BACKDATE</button>
+                                    <button class="btn btn-sm bg-primary" data-toggle="modal"
+                                        data-target="#modal-cetak-label">CETAK
+                                        LABEL</button>
+                                    <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-sync"></i> Refresh</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-lg-6 text-right">
-                            <button class="btn btn-sm bg-purple" data-toggle="modal" data-target="#modal-sep-backdate">SEP
-                                BACKDATE</button>
-                            <button class="btn btn-sm bg-primary" data-toggle="modal" data-target="#modal-cetak-label">CETAK
-                                LABEL</button>
-                            <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
-                                <i class="fas fa-sync"></i> Refresh</a>
-                        </div>
-                    </div>
-                    @php
-                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Diagnosa', 'SEP', 'Status Pasien', 'Detail'];
-                        $config['order'] = ['3', 'desc'];
-                        $config['paging'] = false;
-                        $config['info'] = false;
-                        $config['scrollY'] = '600px';
-                        $config['scrollCollapse'] = true;
-                        $config['scrollX'] = true;
-                    @endphp
-                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
-                        :config="$config" striped bordered hoverable compressed>
-                        @foreach ($kunjungan as $item)
-                            <tr>
-                                <td>
-                                    <a href="{{ route('edit-pasien', ['rm' => $item->rm]) }}" target="__blank">
-                                        <b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
-                                        {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
-                                    </a>
-                                </td>
-                                <td>{!! wordwrap($item->alamat, 30, "<br>\n") !!}</td>
-                                </td>
-                                <td>
-                                    @if ($item->lakaLantas > 0)
-                                        <small>
-                                            <b>PASIEN KECELAKAAN</b>
-                                        </small> <br>
-                                    @endif
-                                    {{ $item->rm }} | <b>(RM PASIEN)</b> <br>
-                                    {{ $item->kunjungan }} | <b>({{ $item->nama_unit }})</b>
-                                    <br>
-                                    <b>
-                                        {{ $item->status }}
-                                    </b> <br>
-                                    {{ $item->tgl_kunjungan }} | TANGGAL
-                                </td>
 
-                                <td>{{ $item->diagx }}</td>
-                                <td>
-                                    <strong><h6>{{ $item->sep }}</h6></strong>
-                                    @if ($item->sep)
-                                        <x-adminlte-button type="button" data-sep="{{ $item->sep }}" theme="danger"
-                                            class="btn-block btn btn-xs btn-deleteSEP" id="btn-deleteSEP" label="Hapus SEP" />
-                                            <a href="{{ route('cetak-sep-igd',['sep'=>$item->sep]) }}" target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
-                                    @endif
-                                </td>
-                                <td>
-                                    <b>
-                                        @if (empty($item->jp_daftar) && !empty($item->sep))
-                                            PASIEN BPJS
-                                        @elseif ($item->jp_daftar == 1 && $item->is_bpjs_proses)
-                                            BPJS PROSES
-                                        @else
-                                            {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
-                                        @endif
-                                    </b> <br>
-                                    <small>
-                                        <a class="btn btn-warning btn-xs">
-                                            @if (is_null($item->form_send_by))
-                                                DEKSTOP
-                                                <x-adminlte-button type="button" data-kunjungan="{{ $item->kunjungan }}"
-                                                    theme="primary" class="btn-xs btn-sync-sistem" id="btn-sync-sistem"
-                                                    label="Sync Sistem" />
-                                            @else
-                                                {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
+                        <div class="tab-pane show active">
+                            @php
+                                $heads = [
+                                    'Pasien',
+                                    'Alamat',
+                                    'Kunjungan',
+                                    'Tanggal Masuk',
+                                    'Diagnosa / SEP',
+                                    'Status Pasien',
+                                    'Detail',
+                                ];
+                                $config['order'] = ['3', 'desc'];
+                                $config['paging'] = false;
+                                $config['info'] = false;
+                                $config['scrollY'] = '600px';
+                                $config['scrollCollapse'] = true;
+                                $config['scrollX'] = true;
+                            @endphp
+                            <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
+                                :config="$config" striped bordered hoverable compressed>
+                                @foreach ($kunjungan as $item)
+                                    <tr>
+                                        <td>
+                                            <a href="{{ route('edit-pasien', ['rm' => $item->rm]) }}" target="__blank">
+                                                <b>{{ $item->pasien }}</b> <br>RM : {{ $item->rm }} <br>NIK :
+                                                {{ $item->nik }} <br>No Kartu : {{ $item->noKartu }}
+                                            </a>
+                                        </td>
+                                        <td>{!! wordwrap($item->alamat, 30, "<br>\n") !!}</td>
+                                        </td>
+                                        <td>
+                                            @if ($item->lakaLantas > 0)
+                                                <small>
+                                                    <b>PASIEN KECELAKAAN</b>
+                                                </small> <br>
                                             @endif
-                                        </a>
-                                    </small>
+                                            {{ $item->rm }} | <b>(RM PASIEN)</b> <br>
+                                            {{ $item->kunjungan }} | <b>({{ $item->nama_unit }})</b>
+                                            <br>
+                                            <b>
+                                                {{ $item->status }}
+                                            </b> <br>
+                                            {{ $item->tgl_kunjungan }} | TANGGAL
+                                        </td>
 
-
-                                </td>
-                                <td>
-                                    @if (!empty($item->jp_daftar))
-                                        <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
-                                            class="btn btn-success btn-xs withLoad mt-1">Detail</a>
-                                    @endif
-                                    @if ($item->id_status === 1)
-                                        @php
-                                            if (empty($item->noKartu)) {
-                                                $nomorKartu = null;
-                                            } else {
-                                                $nomorKartu = trim($item->noKartu);
-                                            }
-                                        @endphp
-                                        <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                            class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                        @if ($item->jp_daftar !== 0)
-                                            @if (!empty($nomorKartu) && $item->jp_daftar == 1)
-                                                <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                    class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                        <td style="width: 20%;">{{ $item->tgl_kunjungan }}</td>
+                                        <td style="width: 20%;">
+                                            <strong>
+                                                - DIAGNOSA: {{ $item->diagx }}
+                                            </strong> <br>
+                                            <strong>
+                                                - SEP: {{ $item->sep }}
+                                            </strong>
+                                            @if ($item->sep)
+                                                <x-adminlte-button type="button" data-sep="{{ $item->sep }}"
+                                                    theme="danger" class="btn-block btn btn-xs btn-deleteSEP"
+                                                    id="btn-deleteSEP" label="Hapus SEP" />
+                                                <a href="{{ route('cetak-sep-igd', ['sep' => $item->sep]) }}"
+                                                    target="_blank" class="btn-block btn btn-primary btn-xs">Cetak SEP</a>
                                             @endif
-                                        @endif
-                                    {{-- @else
-                                        @if (auth()->user()->hasRole('Admin Super'))
-                                            @php
-                                                if (empty($item->noKartu)) {
-                                                    $nomorKartu = null;
-                                                } else {
-                                                    $nomorKartu = trim($item->noKartu);
-                                                }
-                                            @endphp
-                                            <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
-                                                class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
-                                            @if ($item->jp_daftar !== 0)
-                                                @if (!empty($nomorKartu) && $item->jp_daftar == 1)
-                                                    <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
-                                                        class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                @if (empty($item->jp_daftar) && !empty($item->sep))
+                                                    PASIEN BPJS
+                                                @elseif ($item->jp_daftar == 1 && $item->is_bpjs_proses)
+                                                    BPJS PROSES
+                                                @else
+                                                    {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
+                                                @endif
+                                            </b> <br>
+                                            <small>
+                                                <a class="btn btn-warning btn-xs">
+                                                    @if (is_null($item->form_send_by))
+                                                        DEKSTOP
+                                                        <x-adminlte-button type="button"
+                                                            data-kunjungan="{{ $item->kunjungan }}" theme="primary"
+                                                            class="btn-xs btn-sync-sistem" id="btn-sync-sistem"
+                                                            label="Sync Sistem" />
+                                                    @else
+                                                        {{ $item->form_send_by == 0 ? 'FORM DAFTAR' : 'FORM RANAP' }}
+                                                    @endif
+                                                </a>
+                                            </small>
+
+
+                                        </td>
+                                        <td>
+                                            @if (!empty($item->jp_daftar))
+                                                <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
+                                                    class="btn btn-success btn-xs withLoad mt-1">Detail</a>
+                                            @endif
+                                            @if ($item->id_status === 1)
+                                                @php
+                                                    if (empty($item->noKartu)) {
+                                                        $nomorKartu = null;
+                                                    } else {
+                                                        $nomorKartu = trim($item->noKartu);
+                                                    }
+                                                @endphp
+                                                <a href="{{ route('form-umum.pasien-ranap', ['rm' => $item->rm, 'kunjungan' => $item->kunjungan]) }}"
+                                                    class="btn btn-xs btn-warning withLoad mt-1">RANAP UMUM</a> <br>
+                                                @if ($item->jp_daftar !== 0)
+                                                    @if (!empty($nomorKartu) && $item->jp_daftar == 1)
+                                                        <a href="{{ route('daftar.ranap-bpjs', ['nomorkartu' => $nomorKartu, 'kode' => $item->kunjungan]) }}"
+                                                            class="btn btn-xs bg-purple withLoad mt-1">RANAP BPJS </a>
+                                                    @endif
                                                 @endif
                                             @endif
-                                       @endif --}}
-                                    @endif
-                                    <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
-                                        data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
-                                        data-nokartu="{{ $item->noKartu }}" data-kunjungan="{{ $item->kunjungan }}"
-                                        data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
-                                        class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                        label="Diagnosa" />
-                                </td>
-                            </tr>
-                        @endforeach
-                    </x-adminlte-datatable>
-                </div>
-            </div>
-        </div>
-    </div>
-    <x-adminlte-modal id="formDiagnosa" title="Diagnosa Pasien" theme="primary" size='lg' disable-animations>
-        <div class="col-lg-12">
-            <div class="alert alert-warning alert-dismissible">
-                <h5>
-                    <i class="icon fas fa-users"></i>Diagnosa dan Bridging SEP :
-                </h5>
-            </div>
-            <form id="formUpdateDiagnosa" method="post" action="">
-                @csrf
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="exampleInputBorderWidth2">KODE KUNJUNGAN</label>
-                                    <input type="text" name="kode_kunjungan" id="kunjungan" readonly
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="exampleInputBorderWidth2">RM PASIEN</label>
-                                    <input type="text" name="noMR" id="noMR" readonly class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">NO KARTU</label>
-                            <input type="text" name="no_Bpjs" id="no_Bpjs" readonly class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">NIK</label>
-                            <input type="text" name="nik_bpjs" id="nik_bpjs" readonly class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Nama PASIEN</label>
-                            <input type="text" name="nama_pasien" id="nama_pasien" readonly class="form-control">
-                        </div>
-
-                        <div class="form-group" style="display: none">
-                            <label for="exampleInputBorderWidth2">JENIS PASIEN DAFTAR</label>
-                            <input type="text" name="jp_daftar" id="jp_daftar" readonly class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">DPJP</label>
-                            <select name="dpjp" id="dpjp" class="select2 form-control">
-                                @foreach ($paramedis as $dpjp)
-                                    <option value="{{ $dpjp->kode_dokter_jkn }}">{{ $dpjp->nama_paramedis }}</option>
+                                            <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
+                                                data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
+                                                data-nokartu="{{ $item->noKartu }}"
+                                                data-kunjungan="{{ $item->kunjungan }}"
+                                                data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
+                                                class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
+                                                label="Diagnosa" />
+                                        </td>
+                                    </tr>
                                 @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">PILIH DIAGNOSA ICD 10</label>
-                            <select name="diagAwal" id="diagnosa" class="select2 form-control">
-
-                            </select>
+                            </x-adminlte-datatable>
                         </div>
                     </div>
-                </div>
-                <x-slot name="footerSlot">
-                    <x-adminlte-button type="button" class="btn btn-sm bg-primary btn-synchronize-sep"
-                        form="formUpdateDiagnosa" label="Update Diagnosa" />
-                    <x-adminlte-button theme="danger" label="batal update" class="btn btn-sm" data-dismiss="modal" />
-                </x-slot>
-            </form>
-        </div>
-    </x-adminlte-modal>
-
-    <div class="modal fade" id="modal-sep-backdate" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">PENGAJUAN BACKDATE</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="pengajuanBackDate" action="" method="post">
-                        @csrf
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Kode Kunjungan</label>
-                            <input type="text" name="bd_kunjungan" class="form-control" id="bd_kunjungan">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Nomor Kartu</label>
-                            <input type="text" name="bd_noKartu" class="form-control" id="bd_noKartu">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Tanggal SEP</label>
-                            <input type="date" name="tglSep" class="form-control" id="tglSep">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">Keterangan</label>
-                            <input type="text" name="keterangan" class="form-control" id="keterangan">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="button" form="pengajuanBackDate" class="btn btn-primary btn-pengajuan-backdate">Simpan
-                        Pengajuan</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="modal-cetak-label" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">CETAK LABEL</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <form id="formCetakLabel" action="{{ route('cetak-label-igd') }}" method="get" target="_blank">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleInputBorderWidth2">RM Pasien</label>
-                            <input type="text" name="label_no_rm" class="form-control" id="label_no_rm">
-                        </div>
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                        <button type="submit" form="formCetakLabel"
-                            class="btn btn-primary btn-cetak-label-igd">Cetak</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    
+    @include('simrs.igd.kunjungan.modal.modal_bridgin-diaganosa_sep')
+    @include('simrs.igd.kunjungan.modal.modal_sep_backdate')
+    @include('simrs.igd.kunjungan.modal.modal_cetak_label')
 @stop
 
 @section('plugins.Select2', true)
@@ -306,14 +213,13 @@
 @section('js')
 
     <script>
+        $('.select2').select2();
         $(function() {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $('.select2').select2();
-
             $("#diagnosa").select2({
                 theme: "bootstrap4",
                 ajax: {

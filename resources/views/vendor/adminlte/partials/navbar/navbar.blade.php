@@ -26,7 +26,7 @@
                 <a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien Baru</a>
             </li>
             {{-- <li class="nav-item d-none d-sm-inline-block mr-1">
-                <a href="#" data-toggle="modal" data-target="#modalLabel" class="btn btn-sm btn-primary">CETAK LABEL</a>
+                <button class="btn btn-sm bg-success" data-toggle="modal" data-target="#modalEditPenjamin">EDIT PENJAMIN</button>
             </li> --}}
         @else
             <li class="nav-item d-none d-sm-inline-block">
