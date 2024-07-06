@@ -42,7 +42,7 @@
                 <tr>
                     <td>No. Telepon</td>
                     <td>:</td>
-                    <td>{{$history->noTelp}}</td>
+                    <td>{{$history===null?'-':$history->noTelp}}</td>
                 </tr>
                 <tr>
                     <td>Sub/Spesialis</td>

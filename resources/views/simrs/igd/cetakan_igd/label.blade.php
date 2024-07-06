@@ -13,7 +13,7 @@
                                 <div class="row"
                                     style=" text-align:left; font-size:10px; font-family: sans-serif; display: grid; grid-template-columns: 1fr 1fr;">
                                     <div class="col-lg-5">
-                                        {{ $pasien->no_rm }}-<br>
+                                        {{ $pasien->no_rm }}<br>
                                         {{ $pasien->nama_px }}<br><br><br>
                                         {{ $pasien->tempat_lahir }}, {{ Carbon::parse($pasien->tgl_lahir)->format('d/M/Y') }}<br>
                                         {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}<br>
@@ -57,7 +57,7 @@
                                 <div class="row"
                                     style=" text-align:left; font-size:10px; font-family: sans-serif; display: grid; grid-template-columns: 1fr 1fr;">
                                     <div class="col-lg-4" style="padding-left: 7px;">
-                                        {{ $pasien->no_rm }}*<br>
+                                        {{ $pasien->no_rm }}<br>
                                         {{ $pasien->nama_px }}<br><br><br>
                                         {{ $pasien->tempat_lahir }}, {{ Carbon::parse($pasien->tgl_lahir)->format('d/M/Y') }}<br>
                                         {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}<br>

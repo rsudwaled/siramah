@@ -408,7 +408,7 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 1;
-        
+
 
         if ($createKunjungan->save()) {
 
@@ -1194,7 +1194,7 @@ class RanapController extends APIController
                         $createLH->update();
                         $ruangan->status_incharge = 1;
                         $ruangan->save();
-                        
+
                         $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
                         $bayikembar->is_kembar_daftar = 1;
                         $bayikembar->save();

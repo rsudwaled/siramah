@@ -199,10 +199,37 @@
             </div>
         </div>
     </div>
-    
-    @include('simrs.igd.kunjungan.modal.modal_bridgin-diaganosa_sep')
-    @include('simrs.igd.kunjungan.modal.modal_sep_backdate')
-    @include('simrs.igd.kunjungan.modal.modal_cetak_label')
+
+    <div class="modal fade" id="modal-insert-sep" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">INSERT SEP VCLAIM</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form id="insertSep" action="{{ route('insert-sep.kunjungan') }}" method="post">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputBorderWidth2">Kode Kunjungan</label>
+                            <input type="text" name="kode_insert_sep" class="form-control" id="kode_insert_sep" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputBorderWidth2">NO SEP</label>
+                            <input type="text" name="insert_no_sep" class="form-control" id="insert_no_sep">
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                        <button type="submit" form="insertSep"
+                            class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('plugins.Select2', true)
@@ -249,6 +276,9 @@
                 $("#nama_pasien").val($(this).data('nama'));
                 $("#jp_daftar").val($(this).data('jpdaftar'));
                 $('#formDiagnosa').modal('show');
+            });
+            $('.btn-insert-sep').click(function(e) {
+                $("#kode_insert_sep").val($(this).data('kode'));
             });
             $('.btn-synchronize-sep').click(function(e) {
                 var urlBridging = "{{ route('synch.diagnosa') }}";

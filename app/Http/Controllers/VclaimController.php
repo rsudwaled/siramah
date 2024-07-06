@@ -901,103 +901,103 @@ class VclaimController extends APIController
     }
 
     // SEP RANAP
-    public function sep_ranap_insert(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            // "asalRujukan" => "required",
-            // "tglRujukan" => "required",
-            // "noRujukan" => "required",
-            // "ppkRujukan" => "required",
-            "noKartu" => "required",
-            "tglSep" => "required",
-            "klsRawatHak" => "required",
-            "catatan" => "required",
-            "diagAwal" => "required",
-            "tujuan" => "required",
-            "eksekutif" => "required",
-            "tujuanKunj" => "required",
-            "dpjpLayan" => "required",
-            "noTelp" => "required",
-            "user" => "required",
+    // public function sep_ranap_insert(Request $request)
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         // "asalRujukan" => "required",
+    //         // "tglRujukan" => "required",
+    //         // "noRujukan" => "required",
+    //         // "ppkRujukan" => "required",
+    //         "noKartu" => "required",
+    //         "tglSep" => "required",
+    //         "klsRawatHak" => "required",
+    //         "catatan" => "required",
+    //         "diagAwal" => "required",
+    //         "tujuan" => "required",
+    //         "eksekutif" => "required",
+    //         "tujuanKunj" => "required",
+    //         "dpjpLayan" => "required",
+    //         "noTelp" => "required",
+    //         "user" => "required",
 
-            'tanggal_daftar' => 'required',
-            'noSurat' => 'required',
-            'kodeDPJP' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), 400);
-        }
-        $vclaim = new VclaimController();
-        $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
-        $signature = $this->signature();
-        $signature['Content-Type'] = 'application/x-www-form-urlencoded';
-        $data = [
-            'request' => [
-                't_sep' => [
-                    'noKartu' => $request->noKartu,
-                    'tglSep' => $request->tanggal_daftar,
-                    'ppkPelayanan' => '1018R001',
-                    'jnsPelayanan' => '1',
-                    'klsRawat' => [
-                        'klsRawatHak' => $request->klsRawatHak,
-                        'klsRawatNaik' => '',
-                        'pembiayaan' => '',
-                        'penanggungJawab' => '',
-                    ],
-                    'noMR' => $request->noMR,
-                    'rujukan' => [
-                        'asalRujukan' => "",
-                        'tglRujukan' => '',
-                        'noRujukan' => '',
-                        'ppkRujukan' => '',
-                    ],
-                    'catatan' => '',
-                    'diagAwal' => $request->diagAwal,
-                    'poli' => [
-                        'tujuan' => 'IGD',
-                        'eksekutif' => '0',
-                    ],
-                    'cob' => [
-                        'cob' => '0',
-                    ],
-                    'katarak' => [
-                        'katarak' => '0',
-                    ],
-                    // "lakaLantas":" 0 : Bukan Kecelakaan lalu lintas [BKLL], 1 : KLL dan bukan kecelakaan Kerja [BKK], 2 : KLL dan KK, 3 : KK",
-                    'jaminan' => [
-                        'lakaLantas' => $request->lakaLantas,
-                        'noLP' => $request->noLP == null ? '' : $request->noLP,
-                        'penjamin' => [
-                            'tglKejadian' => $request->lakaLantas == 0 ? '' : $request->tglKejadian,
-                            'keterangan' => $request->keterangan == null ? '' : $request->keterangan,
-                            'suplesi' => [
-                                'suplesi' => '0',
-                                'noSepSuplesi' => '',
-                                'lokasiLaka' => [
-                                    'kdPropinsi' => $request->provinsi == null ? '' : $request->provinsi,
-                                    'kdKabupaten' => $request->kabupaten == null ? '' : $request->kabupaten,
-                                    'kdKecamatan' => $request->kecamatan == null ? '' : $request->kecamatan,
-                                ],
-                            ],
-                        ],
-                    ],
-                    'tujuanKunj' => '0',
-                    'flagProcedure' => '',
-                    'kdPenunjang' => '',
-                    'assesmentPel' => '',
-                    'skdp' => [
-                        'noSurat' => $request->noSurat,
-                        'kodeDPJP' => $request->kodeDPJP,
-                    ],
-                    'dpjpLayan' => '',
-                    'noTelp' => $request->noTelp,
-                    'user' => $user,
-                ],
-            ],
-        ];
-        $response = Http::withHeaders($signature)->post($url, $data);
-        return $this->response_decrypt($response, $signature);
-    }
+    //         'tanggal_daftar' => 'required',
+    //         'noSurat' => 'required',
+    //         'kodeDPJP' => 'required',
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return $this->sendError($validator->errors()->first(), 400);
+    //     }
+    //     $vclaim = new VclaimController();
+    //     $url = env('VCLAIM_URL') . 'SEP/2.0/insert';
+    //     $signature = $this->signature();
+    //     $signature['Content-Type'] = 'application/x-www-form-urlencoded';
+    //     $data = [
+    //         'request' => [
+    //             't_sep' => [
+    //                 'noKartu' => $request->noKartu,
+    //                 'tglSep' => $request->tanggal_daftar,
+    //                 'ppkPelayanan' => '1018R001',
+    //                 'jnsPelayanan' => '1',
+    //                 'klsRawat' => [
+    //                     'klsRawatHak' => $request->klsRawatHak,
+    //                     'klsRawatNaik' => '',
+    //                     'pembiayaan' => '',
+    //                     'penanggungJawab' => '',
+    //                 ],
+    //                 'noMR' => $request->noMR,
+    //                 'rujukan' => [
+    //                     'asalRujukan' => "",
+    //                     'tglRujukan' => '',
+    //                     'noRujukan' => '',
+    //                     'ppkRujukan' => '',
+    //                 ],
+    //                 'catatan' => '',
+    //                 'diagAwal' => $request->diagAwal,
+    //                 'poli' => [
+    //                     'tujuan' => 'IGD',
+    //                     'eksekutif' => '0',
+    //                 ],
+    //                 'cob' => [
+    //                     'cob' => '0',
+    //                 ],
+    //                 'katarak' => [
+    //                     'katarak' => '0',
+    //                 ],
+    //                 // "lakaLantas":" 0 : Bukan Kecelakaan lalu lintas [BKLL], 1 : KLL dan bukan kecelakaan Kerja [BKK], 2 : KLL dan KK, 3 : KK",
+    //                 'jaminan' => [
+    //                     'lakaLantas' => $request->lakaLantas,
+    //                     'noLP' => $request->noLP == null ? '' : $request->noLP,
+    //                     'penjamin' => [
+    //                         'tglKejadian' => $request->lakaLantas == 0 ? '' : $request->tglKejadian,
+    //                         'keterangan' => $request->keterangan == null ? '' : $request->keterangan,
+    //                         'suplesi' => [
+    //                             'suplesi' => '0',
+    //                             'noSepSuplesi' => '',
+    //                             'lokasiLaka' => [
+    //                                 'kdPropinsi' => $request->provinsi == null ? '' : $request->provinsi,
+    //                                 'kdKabupaten' => $request->kabupaten == null ? '' : $request->kabupaten,
+    //                                 'kdKecamatan' => $request->kecamatan == null ? '' : $request->kecamatan,
+    //                             ],
+    //                         ],
+    //                     ],
+    //                 ],
+    //                 'tujuanKunj' => '0',
+    //                 'flagProcedure' => '',
+    //                 'kdPenunjang' => '',
+    //                 'assesmentPel' => '',
+    //                 'skdp' => [
+    //                     'noSurat' => $request->noSurat,
+    //                     'kodeDPJP' => $request->kodeDPJP,
+    //                 ],
+    //                 'dpjpLayan' => '',
+    //                 'noTelp' => $request->noTelp,
+    //                 'user' => $user,
+    //             ],
+    //         ],
+    //     ];
+    //     $response = Http::withHeaders($signature)->post($url, $data);
+    //     return $this->response_decrypt($response, $signature);
+    // }
     // RUJUKAN
     public function rujukan_nomor(Request $request)
     {
@@ -1071,6 +1071,7 @@ class VclaimController extends APIController
     {
         $validator = Validator::make($request->all(), [
             "noKartu" => "required",
+            "noMR" => "required",
             "tglSep" => "required",
             "ppkPelayanan" => "required",
             "jnsPelayanan" => "required",
