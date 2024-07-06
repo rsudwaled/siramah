@@ -87,6 +87,7 @@ use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
+use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserProfil;
@@ -125,6 +126,7 @@ Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_
 
 Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri');
 Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
+Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
 Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
@@ -218,6 +220,7 @@ Route::middleware('auth')->group(function () {
     Route::get('antrianKasir', [AntrianController::class, 'antrianKasir'])->name('antrianKasir');
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
+    Route::get('antrian-poliklinik-rajal', AntrianPoliklinikRajal::class)->name('antrian-poliklinik-rajal');
     Route::get('monitoringAntrianRajal', [AntrianController::class, 'monitoringAntrianRajal'])->name('monitoringAntrianRajal');
     Route::get('batalAntrian', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
     Route::get('panggilPoliklinik', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');
