@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 @php
-                    $heads = ['Id', 'Nama', 'Username', 'Phone', 'Email', 'Role', 'Verify', 'Updated_at', 'Action'];
+                    $heads = ['Id', 'Nama', 'Username', 'Phone', 'Email', 'Role', 'Simrs', 'Verify', 'Updated_at', 'Action'];
                     $config['paging'] = false;
                     $config['lengthMenu'] = false;
                     $config['searching'] = false;
@@ -69,6 +69,9 @@
                                 @foreach ($item->roles as $role)
                                     <span class="badge bg-success">{{ $role->name }}</span>
                                 @endforeach
+                            </td>
+                            <td>
+                                {{ $item->id_simrs }}
                             </td>
                             <td>
                                 @if ($item->email_verified_at == null)

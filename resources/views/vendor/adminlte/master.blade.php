@@ -107,10 +107,11 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
-
-    @include('vendor.adminlte.modal.modal_header')
-
 </body>
+
+@include('vendor.adminlte.modal.cek_bpjs_status')
+@include('vendor.adminlte.modal.cek_kunjungan_poli')
+{{-- @include('vendor.adminlte.modal.edit_penjamin') --}}
 
 @section('plugins.Sweetalert2', true)
 @section('plugins.Datatables', true)
@@ -154,10 +155,7 @@
                             });
                             swalWithBootstrapButtons.fire({
                                 title: "Success!",
-                                text: data.pasien + '\n ( NIK: ' + data.nik +
-                                    ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
-                                    data
-                                    .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
+                                html: `${data.pasien}<br>RM: ${data.rm}<br>No Kartu: ${data.noKartu}<br>NIK: ${data.nik}<br>Status: ${data.keterangan} <br>JENIS : ${data.jenisPeserta} - ${data.kelas}`,
                                 icon: "success",
                                 padding: "3em",
                                 showCancelButton: true,
@@ -177,7 +175,8 @@
                                         },
                                         success: function(data) {
                                             console.info(data.code);
-                                            window.location.href = redirectUrl;
+                                            window.location.href =
+                                                redirectUrl;
                                         },
                                     });
 
@@ -251,7 +250,6 @@
         $('.cekKunjunganPoli').click(function(e) {
             $('#modalCekKunjunganPoli').modal('toggle');
         });
-
         $('.btn-cekKunjungan').click(function(e) {
             $('#modalCekKunjunganPoli').modal('hide');
             $('#modalCekKunjungan').modal('toggle');
@@ -262,22 +260,62 @@
                     url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
                     dataType: 'JSON',
                     success: function(data) {
+                        var tableHtml = `
+                                <table id="table1" class="semuaKunjungan table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>KUNJUNGAN</th>
+                                            <th>NO RM</th>
+                                            <th>PASIEN</th>
+                                            <th>POLI</th>
+                                            <th>STATUS</th>
+                                            <th>TANGGAL</th>
+                                            <th>PENJAMIN</th>
+                                            <th>PPRI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            `;
+
+                        $('#tableContainer').html(tableHtml);
+
                         $.each(data.semua_kunjungan, function(index, riwayat) {
-                            var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
-                                .kode_kunjungan + "</td><td>" + riwayat.no_rm +
-                                "</td><td>" + riwayat.pasien
-                                .nama_px + "</td><td>" + riwayat.unit.nama_unit +
-                                "</td><td>" + riwayat.status.status_kunjungan +
-                                "</td><td>" +
-                                riwayat.tgl_masuk + "</td><td>" + (riwayat
-                                    .tgl_keluar == null ? 'Belum Pulang' : riwayat
-                                    .tgl_keluar) +
-                                "</td><td> <a href='{{ route('kunjungan-poli.ppri') }}?kode=" +
-                                riwayat.kode_kunjungan +
-                                "' class='btn btn-sm btn-primary' style='text-decoration: none;'>Daftar</a>"
-                            "</td></tr>";
-                            $('.semuaKunjungan tbody').append(row);
+                            var statusButton = riwayat.status.status_kunjungan ==
+                                'Open' ?
+                                `<button type='button' class='btn btn-primary btn-xs btn-block btn-tutupkunjungan' data-kode='${riwayat.kode_kunjungan}'>TUTUP</button>` :
+                                `<button type='button' class='btn btn-success btn-xs btn-block btn-bukakunjungan' data-kode='${riwayat.kode_kunjungan}'>OPEN</button>`;
+
+                            var row = `
+                                <tr class='riwayat-kunjungan'>
+                                    <td>${riwayat.kode_kunjungan}</td>
+                                    <td>${riwayat.no_rm}</td>
+                                    <td>${riwayat.pasien.nama_px}</td>
+                                    <td>${riwayat.unit.nama_unit}</td>
+                                    <td>${riwayat.status.status_kunjungan} ${statusButton}</td>
+                                    <td>
+                                        MASUK: ${riwayat.tgl_masuk} <br>
+                                        PULANG: ${riwayat.tgl_keluar == null ? 'Belum Pulang' : riwayat.tgl_keluar}
+                                    </td>
+                                    <td>
+                                        <a href='{{ route('get-kunjungan.ep') }}?kode=${riwayat.kode_kunjungan}'
+                                        class='btn btn-xs btn-warning' style='text-decoration: none;'>
+                                        Ubah Penjamin
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href='{{ route('kunjungan-poli.ppri') }}?kode=${riwayat.kode_kunjungan}'
+                                        class='btn btn-xs btn-primary' style='text-decoration: none;'>
+                                        Daftar PPRI
+                                        </a>
+                                    </td>
+                                </tr>
+                            `;
+                            $('#table1 tbody').append(row);
                         });
+
+
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
@@ -285,7 +323,137 @@
                     }
                 });
             }
+        });
 
+        $('.btn-kunjungan-ep').click(function(e) {
+            $('#epKunjungan').modal('toggle');
+            $('#modalEditPenjamin').modal('hide');
+            var ep_kunjungan = $('#ep_kunjungan').val();
+            var ep_tglMasuk = $('#ep_tglMasuk').val();
+            var ep_rm = $('#ep_rm').val();
+            var ep_nama = $('#ep_nama').val();
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get-kunjungan.ep') }}",
+                data: {
+                    ep_kunjungan: ep_kunjungan,
+                    ep_tglMasuk: ep_tglMasuk,
+                    ep_rm: ep_rm,
+                    ep_nama: ep_nama,
+                },
+                success: function(data) {
+                    $.each(data.semua_kunjungan, function(index, riwayat) {
+                        var row = "<tr class='riwayat-kunjungan'><td>" + riwayat
+                            .kode_kunjungan + "</td> <td > " + riwayat.no_rm +
+                            "</td> <td > " + riwayat.pasien.nama_px +
+                            "</td> <td > " + riwayat.unit.nama_unit +
+                            "</td> <td > " + riwayat.status.status_kunjungan +
+                            "</td> <td > " + riwayat.tgl_masuk + "</td> <td > " + (
+                                riwayat
+                                .tgl_keluar == null ? 'Belum Pulang' : riwayat
+                                .tgl_keluar) +
+                            "</td> <td > < a href = '{{ route('kunjungan-poli.ppri') }}?kode=" +
+                            riwayat.kode_kunjungan +
+                            "'class = 'btn btn-sm btn-primary'style = 'text-decoration: none;' > Ubah < /a>"
+                        "</td> < /tr > ";
+                        $('.epKunjungan tbody').append(row);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    // Handle error appropriately
+                }
+            });
+        });
+    });
+    // Menggunakan delegasi event
+    $(document).on('click', '.btn-tutupkunjungan', function() {
+        var kode = $(this).data('kode');
+        var tutupKunjungan = "{{ route('status.tutup-kunjungan') }}";
+        Swal.fire({
+            title: "YAKIN TUTUP KUNJUNGAN?",
+            text: "Status kunjungan ini akan ditutup!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Tutup!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'PUT',
+                    url: tutupKunjungan,
+                    dataType: 'json',
+                    data: {
+                        kode: kode,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire({
+                            title: "SUCCESS!",
+                            text: 'Kunjungan Berhasil Di TUTUP',
+                            icon: "info",
+                            confirmButtonText: "oke!",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Tampilkan pesan kesalahan jika perlu
+                    }
+                });
+            }
+        });
+    });
+    // Menggunakan delegasi event
+    $(document).on('click', '.btn-bukakunjungan', function() {
+        var kode = $(this).data('kode');
+        var bukaKunjungan = "{{ route('status.buka-kunjungan') }}";
+        Swal.fire({
+            title: "YAKIN MEMBUKA KUNJUNGAN?",
+            text: "Status kunjungan ini akan di buka!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Buka!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+                $.ajax({
+                    type: 'PUT',
+                    url: bukaKunjungan,
+                    dataType: 'json',
+                    data: {
+                        kode: kode,
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        Swal.fire({
+                            title: "SUCCESS!",
+                            text: 'Kunjungan Berhasil Di BUKA',
+                            icon: "info",
+                            confirmButtonText: "oke!",
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                        $.LoadingOverlay("hide");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Tampilkan pesan kesalahan jika perlu
+                    }
+                });
+            }
         });
     });
 </script>

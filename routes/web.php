@@ -639,8 +639,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/sync-desktop-to-webapps', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'sycnDesktopToWebApps'])->name('sync-dekstop-towebapps');
     Route::get('/label/cetak', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakLabel'])->name('cetak-label-igd');
     Route::get('/cetak/{sep}', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'cetakSEPPrint'])->name('cetak-sep-igd');
+    Route::put('close/status-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'tutupKunjungan'])->name('status.tutup-kunjungan');
+    Route::put('open/status-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'bukaKunjungan'])->name('status.buka-kunjungan');
+    Route::get('ep/get-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganEp'])->name('get-kunjungan.ep');
     Route::post('/insert-sep/kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'insertSepKunjungan'])->name('insert-sep.kunjungan');
-
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
@@ -671,6 +673,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\Keuangan\KeuanganController::class)->prefix('keuangan')->name('simrs.keuangan.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/copy-selected', 'copyTable')->name('copy_totable');
+    });
+    // Tracer User Pendaftaran
+    Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
+        Route::get('/', 'index')->name('index');
     });
     // End GIZI
 });

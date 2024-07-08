@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('avatar_original')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('user_verify')->nullable();
-            $table->string('id_dduser')->nullable();
+            $table->string('id_simrs')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
