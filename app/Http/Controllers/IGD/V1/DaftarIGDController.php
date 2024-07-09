@@ -111,9 +111,6 @@ class DaftarIGDController extends Controller
 
     public function index(Request $request)
     {
-        $searchVillages     = LokasiDesa ::query();
-        $searchDistricts    = LokasiKecamatan ::query();
-        $ketCariAlamat      = null;
         $ketCariAlamat      = null;
         $search = Pasien::query()
                 ->when($request->nik, function ($query, $nik) {
@@ -140,7 +137,6 @@ class DaftarIGDController extends Controller
                         $query->where('name', 'LIKE', '%' . $villageName . '%');
                     });
                 });
-
             if (!empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
                 !empty($request->cari_desa)|| !empty($request->cari_kecamatan)) {
                 $pasien = $search->get();
@@ -177,7 +173,7 @@ class DaftarIGDController extends Controller
             ->where('kode_kunjungan', null)
             ->orderBy('tgl', 'desc')
             ->get();
-        return view('simrs.igd.daftar.index',compact('searchVillages','searchDistricts','ketCariAlamat','antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
+        return view('simrs.igd.daftar.index',compact('ketCariAlamat','antrian_triase','pasien','request','penjaminbpjs','paramedis','alasanmasuk','paramedis','penjamin','kunjungan','knj_aktif','resdescrtipt'));
     }
 
     public function storeTanpaNoAntrian(Request $request)
@@ -481,6 +477,8 @@ class DaftarIGDController extends Controller
         $jenisPeserta   = null;
         $code           = null;
         if(!empty($resdescrtipt->response)){
+            $rm             = $resdescrtipt->response->peserta->mr->noMR;
+            $noKartu        = $resdescrtipt->response->peserta->noKartu;
             $pasien         = $resdescrtipt->response->peserta->nama;
             $keterangan     = $resdescrtipt->response->peserta->statusPeserta->keterangan;
             $jenisPeserta   = $resdescrtipt->response->peserta->jenisPeserta->keterangan;
@@ -494,6 +492,8 @@ class DaftarIGDController extends Controller
         }
 
         return response()->json([
+            'rm'=>$rm,
+            'noKartu'=>$noKartu,
             'nik'=>$nik,
             'pasien'=>$pasien,
             'keterangan' => $keterangan,

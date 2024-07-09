@@ -13,6 +13,6 @@ class LokasiDesa extends Model
 
     public function kecamatan()
     {
-        return $this->belongsTo(LokasiKecamatan::class,'id','district_id');
+        return $this->belongsTo(LokasiKecamatan::class,'district_id');
     }
 }

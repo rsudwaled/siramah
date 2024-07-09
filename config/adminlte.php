@@ -618,6 +618,12 @@ return [
 
             ],
         ],
+        [
+            'text'      => 'Tracer Pendaftaran',
+            'icon'      => 'fas fa-user-astronaut',
+            'url'       => 'tracer-pendaftaran',
+            'can'       => 'tracer-pendaftaran-igd',
+        ],
         // KEUANGAN
         [
             'text'    => 'Aplikasi Keuangan',

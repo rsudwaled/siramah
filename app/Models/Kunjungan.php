@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Kunjungan extends Model
 {
@@ -199,6 +200,11 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(HistoriesIGDBPJS::class, 'kode_kunjungan', 'kode_kunjungan' );
     }
+    public function pic()
+    {
+        return $this->belongsTo(UserSimrs::class, 'pic', 'id');
+    }
+
 
     // protected $appends = ['nama_pasien'];
     // public function getNamaPasienAttribute()

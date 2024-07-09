@@ -56,14 +56,14 @@
                                             <label for="exampleInputRounded0">NIK <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
                                             <input class="form-control rounded-0" name="nik_pasien_baru"
-                                                value="{{ old('nik_pasien_baru') }}" type="number"
+                                                value="{{ old('nik_pasien_baru', '0000000000000000') }}" type="text"
                                                 placeholder="masukan nik">
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="exampleInputRounded0">BPJS <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_bpjs" type="number"
-                                                value="{{ old('no_bpjs') }}" placeholder="masukan bpjs">
+                                            <input class="form-control rounded-0" name="no_bpjs" type="text"
+                                                value="{{ old('no_bpjs', '0000000000000000') }}" placeholder="masukan bpjs">
                                         </div>
                                         <x-adminlte-input name="nama_pasien_baru" label="Nama *"
                                             value="{{ old('nama_pasien_baru') }}" placeholder="masukan nama pasien"
@@ -104,54 +104,32 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="row">
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-12">
                                             <label for="exampleInputRounded0">No Telpon <code>*<i>( maksimal 16 angka
                                                         )</i></code></label>
-                                            <input class="form-control rounded-0" name="no_telp" type="number"
-                                                value="{{ old('no_telp') }}" placeholder="masukan no tlp">
+                                            <input class="form-control rounded-0" name="no_telp" type="text"
+                                                value="{{ old('no_telp', '000000000000') }}" placeholder="masukan no tlp">
                                         </div>
-                                        <x-adminlte-select name="provinsi_pasien" label="Provinsi *" id="provinsi_pasien"
-                                            fgroup-class="col-md-6">
-                                            @foreach ($provinsi as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $item->id == 32 ? 'selected' : '' }}>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach
-                                        </x-adminlte-select>
-                                        <x-adminlte-select name="kabupaten_pasien" label="Kabupaten *" id="kab_pasien"
-                                            fgroup-class="col-md-6">
-                                            @foreach ($kabupaten as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $item->id == 3209 ? 'selected' : '' }}>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach
-                                        </x-adminlte-select>
-                                        <x-adminlte-select name="kecamatan_pasien" label="Kecamatan *" id="kec_pasien"
-                                            fgroup-class="col-md-6">
-                                            @foreach ($kecamatan as $item)
-                                                <option value="{{ $item->id }}"
-                                                    {{ $item->id == 3209020 ? 'selected' : '' }}>
-                                                    {{ $item->name }}
-                                                </option>
-                                            @endforeach
-                                        </x-adminlte-select>
-                                        <x-adminlte-select name="desa_pasien" label="Desa *" id="desa_pasien"
-                                            fgroup-class="col-md-6">
-                                        </x-adminlte-select>
+                                        <x-adminlte-select2 name="desa_pasien" id="desa_pasien" label="Desa *"
+                                            fgroup-class="col-md-12">
+                                            <option value="">Cari Desa</option>
+                                        </x-adminlte-select2>
+                                        <div class="form-group col-md-12">
+                                            <label for="selected_desa_info">Informasi Terpilih</label>
+                                            <input type="text" id="selected_desa_info" class="form-control" placeholder="Pilih desa terlebih dahulu" readonly>
+                                        </div>
                                         <x-adminlte-textarea name="alamat_lengkap_pasien" label="Alamat Lengkap (RT/RW) *"
-                                            placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-6" />
+                                            placeholder="Alamat Lengkap (RT/RW)" fgroup-class="col-md-12" />
                                         <div class="form-group col-md-12">
                                             <div class="col-md-12 row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_pasien"
                                                         label="Kewarganegaraan *">
                                                         <option value="1">WNI</option>
                                                         <option value="0">WNA</option>
                                                     </x-adminlte-select>
                                                 </div>
-                                                <div class="col-md-6" style="display: none;" id="pilih_negara">
+                                                <div class="col-md-12" style="display: none;" id="pilih_negara">
                                                     <label for="" class="col-md-12">Pilih Negara</label>
                                                     <select id="negara_pasien" name="negara"
                                                         class="form-control select2 ">
@@ -176,7 +154,8 @@
                                 </h5>
                                 <h6>
                                     <div class="form-check">
-                                        <input type="checkbox" class="form-check-input" name="default_alamat_checkbox" value="1" id="default_alamat">
+                                        <input type="checkbox" class="form-check-input" name="default_alamat_checkbox"
+                                            value="1" id="default_alamat">
                                         <label class="form-check-label" for="default_alamat">CEKLIS UNTUK MENYAMAKAN
                                             ALAMAT</label>
                                     </div>
@@ -185,8 +164,7 @@
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <label for="exampleInputBorderWidth2">Nama Keluarga</label>
-                                    <input type="text" name="nama_keluarga" class="form-control"
-                                        id="nama_keluarga">
+                                    <input type="text" name="nama_keluarga" class="form-control" id="nama_keluarga">
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <label for="exampleInputBorderWidth2">Hubungan Dengan Pasien</label>
@@ -203,7 +181,8 @@
                                 </div>
                                 <div class="form-group col-lg-6" id="div_alamat_keluarga">
                                     <label for="exampleInputBorderWidth2">Alamat Keluarga</label>
-                                    <textarea name="alamat_lengkap_sodara" class="form-control" id="alamat_lengkap_sodara" cols="30" rows="2"></textarea>
+                                    <textarea name="alamat_lengkap_sodara" class="form-control" id="alamat_lengkap_sodara" cols="30"
+                                        rows="2"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -224,90 +203,36 @@
 @section('js')
     <script>
         $(document).ready(function() {
-            $('#provinsi_pasien').change(function() {
-                var prov_pasien = $(this).val();
-                if (prov_pasien) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('kab-pasien.get') }}?kab_prov_id=" + prov_pasien,
-                        dataType: 'JSON',
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(kabupatenpasien) {
-                            if (kabupatenpasien) {
-                                $('#kab_pasien').empty();
-                                $("#kab_pasien").append(
-                                    ' < option > --Pilih Kabupaten-- < /option>');
-                                $.each(kabupatenpasien, function(key, value) {
-                                    $('#kab_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#kab_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#kab_pasien").empty();
-                }
+            $('#desa_pasien').select2({
+                ajax: {
+                    url: "{{ route('desa-pasien.get') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.name,
+                                    kecamatanName: item.kecamatan_name,
+                                    kabupatenName: item.kabupaten_name
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Cari Desa',
+                minimumInputLength: 1
             });
-            $('#kab_pasien').change(function() {
-                var kec_kab_id = $("#kab_pasien").val();
-                if (kec_kab_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('kec-pasien.get') }}?kec_kab_id=" + kec_kab_id,
-                        dataType: 'JSON',
-                        success: function(kecamatanpasien) {
-                            console.log(kecamatanpasien);
-                            if (kecamatanpasien) {
-                                $('#kec_pasien').empty();
-                                $("#kec_pasien").append(
-                                    ' < option > --Pilih Kecamatan-- < /option>');
-                                $.each(kecamatanpasien, function(key, value) {
-                                    $('#kec_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#kec_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#kec_pasien").empty();
-                }
-            });
-            $('#kec_pasien').change(function() {
-                var desa_kec_id = $("#kec_pasien").val();
-                if (desa_kec_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('desa-pasien.get') }}?desa_kec_id=" + desa_kec_id,
-                        dataType: 'JSON',
-                        success: function(desapasien) {
-                            console.log(desapasien);
-                            if (desapasien) {
-                                $('#desa_pasien').empty();
-                                $("#desa_pasien").append(
-                                    ' < option > --Pilih Desa-- < /option>');
-                                $.each(desapasien, function(key, value) {
-                                    $('#desa_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#desa_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#desa_pasien").empty();
-                }
+
+            $('#desa_pasien').on('select2:select', function(e) {
+                var data = e.params.data;
+                var info = 'Desa: ' + data.text;
+                $('#selected_desa_info').val(info);
             });
         });
+
         $(document).ready(function() {
             const defaultCheckbox = document.getElementById('default_alamat');
 
@@ -323,8 +248,8 @@
                     $('#div_kontak').hide(); // Menampilkan nomor telepon
 
                 } else {
-                    $('#alamat_lengkap_sodara').val(''); 
-                    $('#kontak').val(''); 
+                    $('#alamat_lengkap_sodara').val('');
+                    $('#kontak').val('');
 
                     $('#div_alamat_keluarga').show();
                     $('#div_kontak').show(); // Menyembunyikan nomor telepon

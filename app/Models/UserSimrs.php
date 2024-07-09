@@ -14,7 +14,6 @@ class UserSimrs extends Model
 
     public function kunjungans()
     {
-        return $this->hasMany(Kunjungan::class, 'pic', 'id');
+        return $this->hasMany(Kunjungan::class, 'pic','id');
     }
-
 }

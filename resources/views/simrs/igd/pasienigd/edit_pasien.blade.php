@@ -70,49 +70,23 @@
                                             </option>
                                         @endforeach
                                     </x-adminlte-select>
+                                    <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon"
+                                        value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
+                                        placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="row">
-                                    <x-adminlte-input name="no_telp" id="no_telp" label="No Telpon"
-                                        value="{{ $pasien->no_tlp == null ? $pasien->no_hp : $pasien->no_tlp }}"
-                                        placeholder="masukan no tlp" fgroup-class="col-md-6" disable-feedback />
-
-                                    <x-adminlte-select name="provinsi_pasien" label="Provinsi" id="provinsi_pasien"
-                                        fgroup-class="col-md-6">
-                                        @foreach ($provinsi as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $pasien->kode_propinsi == $item->id ? 'selected' : '' }}>
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="kabupaten_pasien" label="Kabupaten" id="kab_pasien"
-                                        fgroup-class="col-md-6">
-                                        @foreach ($kota as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $item->id == $pasien->kode_kabupaten ? 'selected' : '' }}>
-                                                {{ $item->name }}</option>
-                                        @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="kecamatan_pasien" label="Kecamatan" id="kec_pasien"
-                                        fgroup-class="col-md-6">
-                                        @foreach ($kecamatan as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $item->id == $pasien->kode_kecamatan ? 'selected' : '' }}>
-                                                {{ $item->name }}</option>
-                                        @endforeach
-                                    </x-adminlte-select>
-                                    <x-adminlte-select name="desa_pasien" label="Desa" id="desa_pasien"
-                                        fgroup-class="col-md-6">
-                                        @foreach ($desa as $item)
-                                            <option value="{{ $item->id }}"
-                                                {{ $item->id == $pasien->kode_desa ? 'selected' : '' }}>
-                                                {{ $item->name }}</option>
-                                        @endforeach
-                                    </x-adminlte-select>
+                                        <x-adminlte-select2 name="desa_pasien" id="desa_pasien" label="Desa *"
+                                        fgroup-class="col-md-12">
+                                        <option value="">Cari Desa</option>
+                                    </x-adminlte-select2>
+                                    <div class="form-group col-md-12">
+                                        <label for="selected_desa_info">Informasi Terpilih</label>
+                                        <input type="text" id="selected_desa_info" placeholder="{{ $desa ? 'Desa ' . $desa->name . ' - ' . optional($desa->kecamatan)->name . ' - ' . optional(optional($desa->kecamatan)->kabupatenKota)->name : 'Pilih desa terlebih dahulu' }}"  class="form-control" readonly>
+                                    </div>
                                     <x-adminlte-select2 name="negara" label="Negara" id="negara_pasien"
-                                        fgroup-class="col-md-6">
+                                        fgroup-class="col-md-12">
                                         @foreach ($negara as $item)
                                             <option value="{{ $item->id }}"
                                                 {{ ucfirst(strtolower($pasien->negara)) == $item->nama_negara ? 'selected' : ($pasien->negara == $item->id ? 'selected' : '') }}>
@@ -121,7 +95,7 @@
                                         @endforeach
                                     </x-adminlte-select2>
                                     <x-adminlte-select name="kewarganegaraan" id="kewarganegaraan_pasien"
-                                        label="Kewarganegaraan" fgroup-class="col-md-6">
+                                        label="Kewarganegaraan" fgroup-class="col-md-12">
                                         <option value="1" {{ $pasien->kewarganegaraan == '1' ? 'selected' : '' }}>WNI
                                         </option>
                                         <option value="0" {{ $pasien->kewarganegaraan == '0' ? 'selected' : '' }}>WNA
@@ -181,106 +155,37 @@
 @section('plugins.Sweetalert2', true)
 @section('js')
     <script>
-        // alamat pasien
         $(document).ready(function() {
-            $('#provinsi_pasien').change(function() {
-                var prov_pasien = $(this).val();
-                if (prov_pasien) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('kab-pasien.get') }}?kab_prov_id=" + prov_pasien,
-                        dataType: 'JSON',
-                        data: {
-                            "_token": "{{ csrf_token() }}"
-                        },
-                        success: function(kabupatenpasien) {
-                            if (kabupatenpasien) {
-                                $('#kab_pasien_first').empty();
-                                $('#kec_pasien_first').empty();
-                                $('#desa_pasien_first').empty();
-                                $('#kab_pasien').empty();
-                                $('#kec_pasien').empty();
-                                $("#desa_pasien").empty();
-                                $("#kab_pasien").append(
-                                    ' < option > --Pilih Kabupaten-- < /option>');
-                                $.each(kabupatenpasien, function(key, value) {
-                                    $('#kab_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#kab_pasien').empty();
-                                $('#kec_pasien').empty();
-                                $("#desa_pasien").empty();
-
-                            }
-                        }
-                    });
-                } else {
-                    $("#kab_pasien").empty();
-                    $('#kec_pasien').empty();
-                    $("#desa_pasien").empty();
-
-                }
+            $('#desa_pasien').select2({
+                ajax: {
+                    url: "{{ route('desa-pasien.get') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function(data) {
+                        return {
+                            results: data.map(function(item) {
+                                return {
+                                    id: item.id,
+                                    text: item.name,
+                                    kecamatanName: item.kecamatan_name,
+                                    kabupatenName: item.kabupaten_name
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                },
+                placeholder: 'Cari Desa',
+                minimumInputLength: 1
             });
-            $('#kab_pasien').change(function() {
-                var kec_kab_id = $("#kab_pasien").val();
-                if (kec_kab_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('kec-pasien.get') }}?kec_kab_id=" + kec_kab_id,
-                        dataType: 'JSON',
-                        success: function(kecamatanpasien) {
-                            console.log(kecamatanpasien);
-                            if (kecamatanpasien) {
-                                $('#kec_pasien').empty();
-                                $("#desa_pasien").empty();
-                                $("#kec_pasien").append(
-                                    ' < option > --Pilih Kecamatan-- < /option>');
-                                $.each(kecamatanpasien, function(key, value) {
-                                    $('#kec_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#kec_pasien').empty();
-                                $("#desa_pasien").empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#kec_pasien").empty();
-                    $("#desa_pasien").empty();
-                }
-            });
-            $('#kec_pasien').change(function() {
-                var desa_kec_id = $("#kec_pasien").val();
-                if (desa_kec_id) {
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('desa-pasien.get') }}?desa_kec_id=" + desa_kec_id,
-                        dataType: 'JSON',
-                        success: function(desapasien) {
-                            console.log(desapasien);
-                            if (desapasien) {
-                                $('#desa_pasien').empty();
-                                $("#desa_pasien").append(
-                                    ' < option > --Pilih Desa-- < /option>');
-                                $.each(desapasien, function(key, value) {
-                                    $('#desa_pasien').append('<option value="' + value
-                                        .id + '">' + value
-                                        .name + '</option>');
-                                });
-                            } else {
-                                $('#desa_pasien').empty();
-                            }
-                        }
-                    });
-                } else {
-                    $("#desa_pasien").empty();
-                }
+
+            $('#desa_pasien').on('select2:select', function(e) {
+                var data = e.params.data;
+                var info = 'Desa: ' + data.text;
+                $('#selected_desa_info').val(info);
             });
         });
+
         $('#updatePasien').on('click', function() {
             swal.fire({
                 icon: 'question',
@@ -290,14 +195,6 @@
                 denyButtonText: `Batal`,
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // if($('#no_tlp').val() == null || $('#no_hp').val() == null)
-                    // {
-                    //     Swal.fire('kontak pasien wajib diisi', 'boleh diisi di telpon atau no hp', 'info');
-                    // }
-                    if ($('#kab_pasien').val() == null) {
-                        Swal.fire('alamat wajib diisi lengkap',
-                            'provinsi-kabupaten/kota-kecamatan-desa/kelurahan', 'info');
-                    }
                     var urlUpdate = "{{ route('update-pasien.update') }}?rm=" + $('#rm').val();
                     $.ajax({
                         type: 'PUT',
@@ -316,9 +213,6 @@
                             pendidikan: $('#pendidikan').val(),
                             no_tlp: $('#no_telp').val(),
                             no_hp: $('#no_telp').val(),
-                            provinsi_pasien: $('#provinsi_pasien').val(),
-                            kabupaten_pasien: $('#kab_pasien').val(),
-                            kecamatan_pasien: $('#kec_pasien').val(),
                             desa_pasien: $('#desa_pasien').val(),
                             negara: $('#negara_pasien').val(),
                             kewarganegaraan: $('#kewarganegaraan_pasien').val(),
