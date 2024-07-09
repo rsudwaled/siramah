@@ -61,6 +61,7 @@ use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
+use App\Livewire\Antrian\DisplayJadwalRajal;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
 use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
@@ -141,7 +142,7 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
-Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
+Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display-jadwal-rajal');
 
 
 // cppt
