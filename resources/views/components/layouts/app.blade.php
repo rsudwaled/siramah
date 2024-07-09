@@ -15,3 +15,5 @@
 @section('content')
     {{ $slot }}
 @stop
+
+@section('plugins.Select2', true)
