@@ -29,9 +29,10 @@
     </div>
     {{-- form --}}
     <div class="col-md-9" style="overflow-y: auto ;max-height: 600px ;">
-        @livewire('rekammedis.histori-kunjungan', ['kunjungan' => $kunjungan])
-        @livewire('rekammedis.rincian-biaya', ['kunjungan' => $kunjungan])
-        @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan])
-        @livewire('rekammedis.casemix-manager', ['kunjungan' => $kunjungan])
+        @livewire('rekammedis.histori-kunjungan', ['kunjungan' => $kunjungan, 'lazy' => true])
+        @livewire('rekammedis.file-penunjang', ['kunjungan' => $kunjungan, 'lazy' => true])
+        @livewire('rekammedis.rincian-biaya', ['kunjungan' => $kunjungan, 'lazy' => true])
+        @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan, 'lazy' => true])
+        @livewire('rekammedis.casemix-manager', ['kunjungan' => $kunjungan, 'lazy' => true])
     </div>
 </div>
