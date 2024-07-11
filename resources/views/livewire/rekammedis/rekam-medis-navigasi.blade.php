@@ -34,7 +34,7 @@
 
         </ul>
         <x-slot name="footerSlot">
-            <x-adminlte-button class="btn-xs mb-1" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
+            <x-adminlte-button class="btn-xs" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
             <div wire:loading>
                 <div class="spinner-border spinner-border-sm text-primary" role="status">
                 </div>

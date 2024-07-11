@@ -1,4 +1,4 @@
-<div>
+<div class="row">
     {{-- profile --}}
     <div class="col-md-12">
         @if (flash()->message)
@@ -12,5 +12,8 @@
     </div>
     {{-- navigasi --}}
     @include('livewire.rekammedis.rekam-medis-navigasi')
-
+    {{-- form --}}
+    <div class="col-md-9" style="overflow-y: auto ;max-height: 600px ;">
+        @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan])
+    </div>
 </div>
