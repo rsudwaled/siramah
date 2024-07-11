@@ -1,6 +1,6 @@
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <a href="#sep" class="nav-link">
+        <a href="#historikunjungan" class="nav-link">
             <i class="fas fa-file-invoice-dollar"></i> Histori Kunjungan
         </a>
     </li>
@@ -20,17 +20,17 @@
         </a>
     </li>
     <li class="nav-item">
-        <a href="#rincianbiaya" class="nav-link">
+        <a href="#asesmenperawat" class="nav-link">
             <i class="fas fa-user-nurse"></i> Asesmen Perawat
         </a>
     </li>
     <li class="nav-item">
-        <a href="#rincianbiaya" class="nav-link">
+        <a href="#asesmendokter" class="nav-link">
             <i class="fas fa-user-md"></i> Asesmen Dokter
         </a>
     </li>
     <li class="nav-item">
-        <a href="#casemix" class="nav-link">
+        <a href="#casemixmanager" class="nav-link">
             <i class="fas fa-user-md"></i> Casemix Manager
         </a>
     </li>
