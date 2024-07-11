@@ -10,6 +10,11 @@ class RekamMedisRajal extends Component
 {
     public  $kunjungans = [], $units = [], $dokters = [];
     public $tgl_masuk, $unit, $dokter;
+    protected $queryString = ['tgl_masuk', 'unit'];
+    public function mount()
+    {
+    //    dd($this->unit );
+    }
     public function render()
     {
         $this->units = Unit::where('kelas_unit', 1)->where('KDPOLI', '!=', null)->pluck('nama_unit', 'kode_unit');
