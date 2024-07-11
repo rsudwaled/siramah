@@ -245,7 +245,7 @@ Route::middleware('auth')->group(function () {
     //  rekammedis
     Route::get('rekam-medis-rajal',RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail',RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
-    Route::get('monitoring-antrian-rajal',MonitoringAntrianRajal::class)->name('rekam-medis-rajal');
+    Route::get('monitoring-antrian-rajal',MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');
