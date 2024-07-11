@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>RESUME_DOKTER</title>
+    <link rel="icon" href="public/vendor/adminlte/img/logo rsudwaled bulet.png" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('rswaled.png') }}" />
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <style>
@@ -306,7 +308,7 @@
                         <td id="td_right">{{ $data->diagnosakerja }}</td>
                     </tr>
                     <tr>
-                        <td>Diagnosa Branding</td>
+                        <td>Diagnosa Tambahan</td>
                         <td id="td_right">{{ $data->diagnosabanding }}</td>
                     </tr>
                     <tr>
