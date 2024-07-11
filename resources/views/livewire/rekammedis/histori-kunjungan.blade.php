@@ -14,8 +14,8 @@
                 <tr>
                     <td>
                         <b>{{ $item->unit->nama_unit }}</b><br>
-                        Tgl Masuk : <b>{{ $item->tgl_masuk }}</b>
-                    </td>
+                        Tgl Masuk : <b>{{ $item->tgl_masuk }}</b><br>
+                        Counter : <b>{{ $item->counter }}</b> / <b>{{ $item->kode_kunjungan }}</b>
                     <td></td>
                     <td></td>
                     <td></td>
