@@ -394,6 +394,7 @@ return [
                     'text' => 'Rekam Medis Rawat Jalan',
                     'icon'    => 'fas fa-file-medical',
                     'url'  => 'rekam-medis-rajal',
+                    'active'  => ['rekam-medis-rajal', 'rekam-medis-rajal-detail'],
                     'shift'   => 'ml-2',
                     'label' => 'proses',
                     'label_color' => 'warning',
