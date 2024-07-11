@@ -36,12 +36,16 @@
                     <tr>
                         <td>Pemeriksaan Fisik</td>
                         <td>:</td>
-                        <th>{{ $asesmendokter->pemeriksaan_fisik }}</th>
+                        <th>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->pemeriksaan_fisik }}</pre>
+                        </th>
                     </tr>
                     <tr>
                         <td>Diagnosa Kerja</td>
                         <td>:</td>
-                        <th>{{ $asesmendokter->diagnosakerja }}</th>
+                        <th>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->diagnosakerja }}</pre>
+                        </th>
                     </tr>
                     <tr>
                         <td>Diagnosa Banding</td>
