@@ -392,8 +392,9 @@ return [
                 ],
                 [
                     'text' => 'Rekam Medis Rawat Jalan',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'rekammedis-rajal',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'rekam-medis-rajal',
+                    'active'  => ['rekam-medis-rajal', 'rekam-medis-rajal-detail'],
                     'shift'   => 'ml-2',
                     'label' => 'proses',
                     'label_color' => 'warning',
@@ -405,6 +406,14 @@ return [
                     'shift'   => 'ml-2',
                     'label' => 'proses',
                     'label_color' => 'warning',
+                ],
+                [
+                    'text' => 'Monitoring Antrian Rajal',
+                    'icon'    => 'fas fa-user-plus',
+                    'url'  => 'monitoring-antrian-rajal',
+                    'shift'   => 'ml-2',
+                    'label' => 'baru',
+                    'label_color' => 'success',
                 ],
             ]
         ],
@@ -512,13 +521,6 @@ return [
                     'url'   => 'gizi',
                     'shift'   => 'ml-2',
                     // 'can' => 'ranap',
-                ],
-                [
-                    'text' => 'Rekam Medis Rajal',
-                    'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'rekammedis/rajal',
-                    'shift'   => 'ml-2',
-                    'can' => 'poliklinik',
                 ],
                 // [
                 //     'text' => 'Pasien Ranap',

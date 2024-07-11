@@ -89,7 +89,9 @@ use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
+use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
+use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
@@ -240,6 +242,10 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
+    //  rekammedis
+    Route::get('rekam-medis-rajal',RekamMedisRajal::class)->name('rekam-medis-rajal');
+    Route::get('rekam-medis-rajal-detail',RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
+    Route::get('monitoring-antrian-rajal',MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');

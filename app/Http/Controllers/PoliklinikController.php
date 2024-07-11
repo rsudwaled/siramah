@@ -209,6 +209,7 @@ class PoliklinikController extends BaseController
                 ->where('kode_unit', $poli->kode_unit)
                 ->with(['unit', 'pasien', 'assesmen_dokter'])
                 ->get();
+                // coding urutkan berdasarkan nama
             // $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
         }
         $unit = Unit::where('KDPOLI', "!=", null)->where('KDPOLI', "!=", "")->get();
