@@ -24,6 +24,6 @@ class RekamMedisRajal extends Component
                 ->where('kode_unit', $this->unit)
                 ->get();
         }
-        return view('livewire.rekammedis.rekam-medis-rajal')->title('Rekam Medis Rajal');
+        return view('livewire.rekammedis.rekam-medis-rajal')->title('Rekam Medis Rawat Jalan');
     }
 }

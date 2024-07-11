@@ -3,6 +3,7 @@
 namespace App\Livewire\Rekammedis;
 
 use App\Http\Controllers\VclaimController;
+use App\Models\BudgetControl;
 use App\Models\Kunjungan;
 use Illuminate\Http\Request;
 use Livewire\Component;
@@ -10,7 +11,47 @@ use Livewire\Component;
 class CasemixManager extends Component
 {
     public $diagnosa = [], $diagnosas = [], $icd = [], $icd9s = [];
-    public $sumber_data, $keluhan_utama, $riwayat_pengobatan, $riwayat_penyakit, $riwayat_alergi, $pernah_berobat, $denyut_jantung, $pernapasan, $sistole, $distole, $suhu, $berat_badan, $tinggi_badan, $bsa, $pemeriksaan_fisik_perawat, $pemeriksaan_fisik_dokter, $pemeriksaan_lab, $pemeriksaan_rad, $pemeriksaan_penunjang, $icd1, $icd2 = [], $icd9 = [], $diagnosa_dokter, $diagnosa_keperawatan, $rencana_medis, $rencana_keperawatan, $tindakan_medis, $instruksi_medis;
+    public $kunjungan, $icd1, $icd2 = [], $icd9 = [];
+    public function simpan()
+    {
+        // dd($this->icd1, $this->icd2);
+        $budget = BudgetControl::updateOrCreate(
+            [
+                'rm_counter' => $this->kunjungan->no_rm . '|' . $this->kunjungan->counter,
+            ],
+            [
+                'tarif_inacbg' =>  '0',
+                'no_rm' =>  $this->kunjungan->no_rm,
+                'counter' => $this->kunjungan->counter,
+                'diagnosa_kode' =>  $this->icd1, #kode
+                'diagnosa_utama' => $this->icd1,
+                'diagnosa' =>  $this->icd1,
+                'prosedur' => $this->icd1, #kode | deskripsi
+                'kode_cbg' =>  $this->icd1,
+                'kelas' => $this->kunjungan->kelas,
+                'tgl_grouper' => now(),
+                'tgl_edit' => now(),
+                'deskripsi' =>  $this->icd1,
+                "pic" => 1,
+            ]
+        );
+    }
+    public function final()
+    {
+        $budget = BudgetControl::where('rm_counter', $this->kunjungan->no_rm . '|' . $this->kunjungan->counter)->first();
+        $budget->update([
+            'user' => auth()->user()->name,
+            'final' => 1,
+        ]);
+    }
+    public function belumFinal()
+    {
+        $budget = BudgetControl::where('rm_counter', $this->kunjungan->no_rm . '|' . $this->kunjungan->counter)->first();
+        $budget->update([
+            'user' => auth()->user()->name,
+            'final' => 0,
+        ]);
+    }
 
     public function updatedIcd2($inputicd2, $index)
     {
@@ -75,7 +116,7 @@ class CasemixManager extends Component
     }
     public function mount(Kunjungan $kunjungan)
     {
-        // dd($kunjungan);
+        $this->kunjungan = $kunjungan;
     }
     public function render()
     {

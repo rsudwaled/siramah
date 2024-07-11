@@ -29,5 +29,16 @@
                 <option value="{{ $item['nama'] }}"></option>
             @endforeach
         </datalist>
+
+        <x-slot name="footerSlot">
+            <x-adminlte-button wire:click='simpan' class="btn-xs" label="Simpan" theme="success" icon="fas fa-save" />
+            <x-adminlte-button wire:click='belumFinal' class="btn-xs" label="Belum Final" theme="warning" icon="fas fa-save" />
+            <x-adminlte-button wire:click='final' class="btn-xs" label="Final" theme="primary" icon="fas fa-check" />
+            <div wire:loading>
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                </div>
+                Loading ...
+            </div>
+        </x-slot>
     </x-adminlte-card>
 </div>

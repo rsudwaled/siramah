@@ -65,7 +65,7 @@
                     </x-adminlte-input>
                 </div>
             </div>
-            <table class="table table-sm table-bordered">
+            <table class="table table-sm table-bordered table-hover ">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -77,6 +77,7 @@
                         <th>SEP</th>
                         <th>Poliklinik</th>
                         <th>Dokter</th>
+                        <th>Casemix</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +97,17 @@
                             <td>{{ $item->no_sep }}</td>
                             <td>{{ $item->unit->nama_unit }}</td>
                             <td>{{ $item->dokter->nama_paramedis }}</td>
-
+                            <td>
+                                @if ($item->budget)
+                                    <span class="badge badge-{{ $item->budget->final ? 'success' : 'warning' }}">
+                                        {{ $item->budget->user }}
+                                    </span>
+                                @else
+                                    <span class="badge badge-danger">
+                                        Belum Ada Data
+                                    </span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
