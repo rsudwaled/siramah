@@ -32,6 +32,7 @@
                                 <i class="fas fa-hospital"></i>
                             </div>
                         </x-slot>
+                        <option value="">Pilih Poliklinik</option>
                         @foreach ($units as $key => $nama)
                             <option value="{{ $key }}">{{ $nama }}</option>
                         @endforeach

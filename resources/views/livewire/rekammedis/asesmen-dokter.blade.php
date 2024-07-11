@@ -31,7 +31,9 @@
                     <tr>
                         <td>Keluhan Pasien</td>
                         <td>:</td>
-                        <th>{{ $asesmendokter->keluhan_pasien }}</th>
+                        <th>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->keluhan_pasien }}</pre>
+                        </th>
                     </tr>
                     <tr>
                         <td>Pemeriksaan Fisik</td>
@@ -50,7 +52,16 @@
                     <tr>
                         <td>Diagnosa Banding</td>
                         <td>:</td>
-                        <th>{{ $asesmendokter->diagnosabanding }}</th>
+                        <th>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->diagnosabanding }}</pre>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>Tindakan Medis</td>
+                        <td>:</td>
+                        <th>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->tindakanmedis }}</pre>
+                        </th>
                     </tr>
                     <tr>
                         <td>Tindak Lanjut</td>

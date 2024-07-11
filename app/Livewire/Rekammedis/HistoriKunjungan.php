@@ -4,9 +4,11 @@ namespace App\Livewire\Rekammedis;
 
 use App\Models\Kunjungan;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class HistoriKunjungan extends Component
 {
+    use WithPagination;
     // public $kunjungans = [];
     public $kunjungan, $pasien;
     public function mount(Kunjungan $kunjungan)
