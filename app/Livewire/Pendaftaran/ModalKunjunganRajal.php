@@ -67,7 +67,6 @@ class ModalKunjunganRajal extends Component
         try {
             $antrian = Antrian::find($this->antrianId);
             $counter = Kunjungan::where('norm', $antrian->norm)->first()?->counter ?? 1;
-            dd($counter);
             // update pasien
             $pasien = Pasien::firstWhere('norm', $this->norm);
             $pasien->update([

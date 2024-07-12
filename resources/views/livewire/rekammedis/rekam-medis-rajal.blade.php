@@ -52,6 +52,8 @@
                     </x-adminlte-input>
                 </div>
                 <div class="col-md-4">
+                </div>
+                <div class="col-md-4">
                     <x-adminlte-input wire:model.live='search' name="search"
                         placeholder="Pencarian Berdasarkan Nama Pasien / No RM" igroup-size="sm">
                         <x-slot name="appendSlot">
