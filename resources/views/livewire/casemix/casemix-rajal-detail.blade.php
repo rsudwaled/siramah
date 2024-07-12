@@ -34,5 +34,7 @@
         @livewire('rekammedis.rincian-biaya', ['kunjungan' => $kunjungan, 'lazy' => true])
         @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan, 'lazy' => true])
         @livewire('rekammedis.casemix-manager', ['kunjungan' => $kunjungan, 'lazy' => true])
+        @livewire('rekammedis.resume-rajal', ['kunjungan' => $kunjungan, 'lazy' => true])
+
     </div>
 </div>

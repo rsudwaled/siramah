@@ -57,6 +57,7 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PractitionerController;
 use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
+use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AntrianPendaftaran;
@@ -245,12 +246,14 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
     //  rekammedis
-    Route::get('rekam-medis-rajal',RekamMedisRajal::class)->name('rekam-medis-rajal');
-    Route::get('rekam-medis-rajal-detail',RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
-    Route::get('monitoring-antrian-rajal',MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
+    Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
+    Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
+    Route::get('monitoring-antrian-rajal', MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
     //  casemix
-    Route::get('casemix-rajal',CasemixRajal::class)->name('casemix-rajal');
-    Route::get('casemix-rajal-detail',CasemixRajalDetail::class)->name('casemix-rajal-detail');
+    Route::get('casemix-rajal', CasemixRajal::class)->name('casemix-rajal');
+    Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');
+    // rajal
+    Route::get('resume-rajal-print',[RekamMedisController::class, 'resumerajalprint'] )->name('resume-rajal-print');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');

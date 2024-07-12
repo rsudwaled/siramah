@@ -43,5 +43,9 @@
             @endif
         </a>
     </li>
-
+    <li class="nav-item">
+        <a href="#resumerajal" class="nav-link">
+            <i class="fas fa-file-medical"></i> Resume Rawat Jalan
+        </a>
+    </li>
 </ul>
