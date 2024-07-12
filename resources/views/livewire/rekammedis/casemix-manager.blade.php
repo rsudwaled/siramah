@@ -1,6 +1,5 @@
 <div id="casemixmanager">
     <x-adminlte-card title="Casemix Manager" theme="primary" icon="fas fa-user-md">
-        diagnosa
         <x-adminlte-input wire:model.live="icd1" list="icdlist" name="icd1" label="ICD-10 Primer" igroup-size="sm" />
         <label>ICD-10 Sekunder</label>
         @foreach ($icd2 as $index => $item)
@@ -29,16 +28,21 @@
                 <option value="{{ $item['nama'] }}"></option>
             @endforeach
         </datalist>
-
         <x-slot name="footerSlot">
             <x-adminlte-button wire:click='simpan' class="btn-xs" label="Simpan" theme="success" icon="fas fa-save" />
-            <x-adminlte-button wire:click='belumFinal' class="btn-xs" label="Belum Final" theme="warning" icon="fas fa-save" />
+            <x-adminlte-button wire:click='belumFinal' class="btn-xs" label="Belum Final" theme="warning"
+                icon="fas fa-save" />
             <x-adminlte-button wire:click='final' class="btn-xs" label="Final" theme="primary" icon="fas fa-check" />
             <div wire:loading>
                 <div class="spinner-border spinner-border-sm text-primary" role="status">
                 </div>
                 Loading ...
             </div>
+            @if (flash()->message)
+                <div class="text-{{ flash()->class }}" wire:loading.remove>
+                    Loading Result : {{ flash()->message }}
+                </div>
+            @endif
         </x-slot>
     </x-adminlte-card>
 </div>

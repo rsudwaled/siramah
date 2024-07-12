@@ -14,7 +14,6 @@ class CasemixManager extends Component
     public $kunjungan, $icd1, $icd2 = [], $icd9 = [];
     public function simpan()
     {
-        // dd($this->icd1, $this->icd2);
         $budget = BudgetControl::updateOrCreate(
             [
                 'rm_counter' => $this->kunjungan->no_rm . '|' . $this->kunjungan->counter,
@@ -23,18 +22,21 @@ class CasemixManager extends Component
                 'tarif_inacbg' =>  '0',
                 'no_rm' =>  $this->kunjungan->no_rm,
                 'counter' => $this->kunjungan->counter,
-                'diagnosa_kode' =>  $this->icd1, #kode
                 'diagnosa_utama' => $this->icd1,
-                'diagnosa' =>  $this->icd1,
+                'diagnosa_kode' =>  $this->icd1,
+                'diagnosa' =>  implode(';', $this->icd2),
                 'prosedur' => $this->icd1, #kode | deskripsi
                 'kode_cbg' =>  $this->icd1,
                 'kelas' => $this->kunjungan->kelas,
                 'tgl_grouper' => now(),
                 'tgl_edit' => now(),
                 'deskripsi' =>  $this->icd1,
-                "pic" => 1,
+                "pic" => auth()->user()->id,
+                "user" => auth()->user()->name,
             ]
         );
+        flash('Data berhasil disimpan oleh ' . auth()->user()->name, 'success');
+        $this->dispatch('refreshPage');
     }
     public function final()
     {
@@ -43,6 +45,8 @@ class CasemixManager extends Component
             'user' => auth()->user()->name,
             'final' => 1,
         ]);
+        flash('Data sudah final disimpan oleh ' . auth()->user()->name, 'success');
+        $this->dispatch('refreshPage');
     }
     public function belumFinal()
     {
@@ -51,8 +55,9 @@ class CasemixManager extends Component
             'user' => auth()->user()->name,
             'final' => 0,
         ]);
+        flash('Data belum final disimpan oleh ' . auth()->user()->name, 'success');
+        $this->dispatch('refreshPage');
     }
-
     public function updatedIcd2($inputicd2, $index)
     {
         $this->validate([
@@ -117,6 +122,8 @@ class CasemixManager extends Component
     public function mount(Kunjungan $kunjungan)
     {
         $this->kunjungan = $kunjungan;
+        $this->icd1 = $kunjungan->budget?->diagnosa_utama;
+        $this->icd2 = explode(';',  $kunjungan->budget?->diagnosa);
     }
     public function render()
     {

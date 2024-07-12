@@ -8,6 +8,7 @@ use Livewire\Component;
 class CasemixRajalDetail extends Component
 {
     public $kode, $kunjungan;
+    protected $listeners = ['refreshPage' => '$refresh'];
     protected $queryString = ['kode'];
     public function mount()
     {
