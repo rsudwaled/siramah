@@ -28,6 +28,33 @@
                 <option value="{{ $item['nama'] }}"></option>
             @endforeach
         </datalist>
+        <label>ICD-9 Procedure</label>
+        @foreach ($icd9 as $index => $item)
+            <div class="row" wire:key="icd9-field-{{ $index }}">
+                <div class="col-md-6">
+                    <x-adminlte-input wire:model.live="icd9.{{ $index }}" list="icd9list" name="icd9[]"
+                        placeholder="ICD-9 Procedure" igroup-size="sm" />
+                </div>
+                <div class="col-md-6">
+                    <button wire:click.prevent="removeIcd9({{ $index }})"
+                        class="btn btn-danger btn-sm">Hapus</button>
+                </div>
+            </div>
+        @endforeach
+        <div class="row" wire:key="icd9-field-{{ count($icd9) }}">
+            <div class="col-md-6">
+                <x-adminlte-input wire:model.live="icd9.{{ count($icd9) }}" list="icd9list" name="icd9[]"
+                    placeholder="ICD-9 Procedure" igroup-size="sm" />
+            </div>
+            <div class="col-md-6">
+                <button wire:click.prevent="addIcd9" class="btn btn-success btn-sm">Tambah</button>
+            </div>
+        </div>
+        <datalist id="icd9list">
+            @foreach ($icd9s as $key => $item)
+                <option value="{{ $item['nama'] }}"></option>
+            @endforeach
+        </datalist>
         <x-slot name="footerSlot">
             <x-adminlte-button wire:click='simpan' class="btn-xs" label="Simpan" theme="success" icon="fas fa-save" />
             <x-adminlte-button wire:click='belumFinal' class="btn-xs" label="Belum Final" theme="warning"

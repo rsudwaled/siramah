@@ -25,7 +25,7 @@ class CasemixManager extends Component
                 'diagnosa_utama' => $this->icd1,
                 'diagnosa_kode' =>  $this->icd1,
                 'diagnosa' =>  implode(';', $this->icd2),
-                'prosedur' => $this->icd1, #kode | deskripsi
+                'prosedur' => implode(';', $this->icd9), #kode | deskripsi
                 'kode_cbg' =>  $this->icd1,
                 'kelas' => $this->kunjungan->kelas,
                 'tgl_grouper' => now(),
@@ -57,6 +57,41 @@ class CasemixManager extends Component
         ]);
         flash('Data belum final disimpan oleh ' . auth()->user()->name, 'success');
         $this->dispatch('refreshPage');
+    }
+    public function updatedIcd9($input, $index)
+    {
+        $this->validate([
+            "icd9.{$index}" => 'required|min:3',
+        ]);
+        try {
+            $api = new VclaimController();
+            $request = new Request([
+                'procedure' => $input,
+            ]);
+            $res = $api->ref_procedure($request);
+            if ($res->metadata->code == 200) {
+                $this->icd9s = [];
+                foreach ($res->response->procedure as $key => $value) {
+                    $this->icd9s[] = [
+                        'kode' => $value->kode,
+                        'nama' => $value->nama,
+                    ];
+                }
+            } else {
+                return flash($res->metadata->message, 'danger');
+            }
+        } catch (\Throwable $th) {
+            return flash($th->getMessage(), 'danger');
+        }
+    }
+    public function addIcd9()
+    {
+        $this->icd9[] = '';
+    }
+    public function removeIcd9($index)
+    {
+        unset($this->icd9[$index]);
+        $this->icd2 = array_values($this->icd2);
     }
     public function updatedIcd2($inputicd2, $index)
     {
@@ -124,6 +159,7 @@ class CasemixManager extends Component
         $this->kunjungan = $kunjungan;
         $this->icd1 = $kunjungan->budget?->diagnosa_utama;
         $this->icd2 = explode(';',  $kunjungan->budget?->diagnosa);
+        $this->icd9 = explode(';',  $kunjungan->budget?->prosedur);
     }
     public function render()
     {
