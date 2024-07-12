@@ -96,7 +96,7 @@
                                 <td>{{ $item->pasien->no_Bpjs }}</td>
                                 <td>
                                     <a
-                                        href="{{ route('rekam-medis-rajal-detail') }}?kode={{ $item->kode_kunjungan }}">
+                                        href="{{ route('casemix-rajal-detail') }}?kode={{ $item->kode_kunjungan }}">
                                         <x-adminlte-button class="btn-xs" label="Lihat" theme="primary"
                                             icon="fas fa-file-medical" />
                                     </a>

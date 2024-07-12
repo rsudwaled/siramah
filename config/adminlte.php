@@ -401,15 +401,16 @@ return [
                 ],
                 [
                     'text' => 'Casemix Rawat Jalan',
-                    'icon'    => 'fas fa-user-plus',
+                    'icon'    => 'fas fa-diagnoses',
                     'url'  => 'casemix-rajal',
+                    'active'  => ['casemix-rajal', 'casemix-rajal-detail'],
                     'shift'   => 'ml-2',
                     'label' => 'proses',
                     'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Monitoring Antrian Rajal',
-                    'icon'    => 'fas fa-user-plus',
+                    'icon'    => 'fas fa-chart-bar',
                     'url'  => 'monitoring-antrian-rajal',
                     'shift'   => 'ml-2',
                     'label' => 'baru',

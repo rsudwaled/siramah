@@ -83,6 +83,8 @@ use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Casemix\CasemixRajal;
+use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
@@ -246,6 +248,9 @@ Route::middleware('auth')->group(function () {
     Route::get('rekam-medis-rajal',RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail',RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
     Route::get('monitoring-antrian-rajal',MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
+    //  casemix
+    Route::get('casemix-rajal',CasemixRajal::class)->name('casemix-rajal');
+    Route::get('casemix-rajal-detail',CasemixRajalDetail::class)->name('casemix-rajal-detail');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');

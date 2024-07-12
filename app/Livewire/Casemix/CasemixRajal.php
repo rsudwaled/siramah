@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Rekammedis;
+namespace App\Livewire\Casemix;
 
 use App\Models\Kunjungan;
 use App\Models\Unit;
 use Livewire\Component;
 
-class RekamMedisRajal extends Component
+class CasemixRajal extends Component
 {
     public  $kunjungans = [], $units = [], $dokters = [];
     public $tgl_masuk, $unit, $search;
@@ -47,6 +47,7 @@ class RekamMedisRajal extends Component
                 })
                 ->get();
         }
-        return view('livewire.rekammedis.rekam-medis-rajal')->title('Rekam Medis Rawat Jalan');
+        return view('livewire.casemix.casemix-rajal')->title('Casemix Rawat Jalan');
     }
 }
+
