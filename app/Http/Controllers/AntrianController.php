@@ -1909,16 +1909,16 @@ class AntrianController extends APIController
             ]);
         }
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), 400);
+            return $this->sendError($validator->errors()->first(), 201);
         }
         try {
             // check tanggal backdate
             if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
-                return $this->sendError("Tanggal periksa sudah terlewat", 400);
+                return $this->sendError("Tanggal periksa sudah terlewat", 201);
             }
             // check tanggal hanya 7 hari
             if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
-                return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 400);
+                return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
             }
             // cek duplikasi nik antrian
             $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -1926,7 +1926,7 @@ class AntrianController extends APIController
                 ->where('taskid', '<=', 5)
                 ->first();
             if ($antrian_nik) {
-                return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  409);
+                return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
             }
             // cek pasien baru
             $request['pasienbaru'] = 0;
@@ -1966,11 +1966,11 @@ class AntrianController extends APIController
                         $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
                         // cek surat kontrol orang lain
                         if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
-                            return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 400);
+                            return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 201);
                         }
                         // cek surat tanggal kontrol
                         // if (Carbon::parse($suratkontrol->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                        //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
+                        //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
@@ -2007,7 +2007,7 @@ class AntrianController extends APIController
                 $request['namadokter'] = $jadwal->namadokter;
             } else {
                 $message = $jadwal->metadata->message;
-                return $this->sendError('Mohon maaf , ' . $message, 400);
+                return $this->sendError('Mohon maaf , ' . $message, 201);
             }
             // menghitung nomor antrian
             $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -2086,10 +2086,10 @@ class AntrianController extends APIController
                     "nama" => $request->nama,
                 ]);
                 // kirim notif wa
-                // $wa = new WhatsappController();
-                // $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                // $request['number'] = $request->nohp;
-                // $wa->send_message($request);
+                $wa = new WhatsappController();
+                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                $request['number'] = $request->nohp;
+                $wa->send_message($request);
                 // kirim notif
                 // $wa = new WhatsappController();
                 // $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
@@ -2119,10 +2119,10 @@ class AntrianController extends APIController
                 ];
                 return $this->sendResponse($response, 200);
             } else {
-                return $this->sendError($response->metadata->message, 400);
+                return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
-            return $this->sendError($th->getMessage(), 400);
+            return $this->sendError($th->getMessage(), 201);
         }
     }
     public function sisa_antrian(Request $request)

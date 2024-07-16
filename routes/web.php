@@ -254,6 +254,7 @@ Route::middleware('auth')->group(function () {
     Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');
     // rajal
     Route::get('resume-rajal-print',[RekamMedisController::class, 'resumerajalprint'] )->name('resume-rajal-print');
+    Route::get('sep-print',[RekamMedisController::class, 'seprajalprint'] )->name('sep-rajal-print');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');

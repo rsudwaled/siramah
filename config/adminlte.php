@@ -732,6 +732,13 @@ return [
                     'can' => 'bagian-umum',
                 ],
                 [
+                    'text' => 'Laporan Surat Masuk',
+                    'icon'    => 'fas fa-envelope',
+                    'url'  => 'laporan-suratmasuk',
+                    'shift'   => 'ml-2',
+                    'can' => 'bagian-umum',
+                ],
+                [
                     'text' => 'Disposisi',
                     'icon'    => 'fas fa-file-signature',
                     'url'  => 'disposisi',
