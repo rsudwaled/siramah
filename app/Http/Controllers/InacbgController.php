@@ -23,7 +23,7 @@ class InacbgController extends APIController
 
     public function search_diagnosis(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -59,7 +59,7 @@ class InacbgController extends APIController
     }
     public function get_diagnosis_eclaim(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -95,7 +95,7 @@ class InacbgController extends APIController
     }
     public function search_procedures(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -131,7 +131,7 @@ class InacbgController extends APIController
     }
     public function get_procedure_eclaim(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -167,7 +167,7 @@ class InacbgController extends APIController
     }
     public function search_diagnosis_inagrouper(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -186,7 +186,7 @@ class InacbgController extends APIController
     }
     public function search_procedures_inagrouper(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "keyword" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -205,7 +205,7 @@ class InacbgController extends APIController
     }
     public function new_claim(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomorkartu" =>  "required",
             "noSEP" =>  "required",
             "norm" =>  "required",
@@ -354,7 +354,7 @@ class InacbgController extends APIController
     }
     public function set_claim(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required|date",
@@ -587,7 +587,7 @@ class InacbgController extends APIController
     }
     public function set_claim_rajal(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomor_sep" =>  "required",
             "nomor_kartu" =>  "required",
             "tgl_masuk" =>  "required|date",
@@ -667,7 +667,7 @@ class InacbgController extends APIController
     }
     public function set_claim_ranap(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "noSEP" =>  "required",
             "nomorkartu" =>  "required",
             "tglmasuk" =>  "required",
@@ -846,7 +846,7 @@ class InacbgController extends APIController
     }
     public function set_claim_ranap_v2(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "noSEP" =>  "required",
             "nomorkartu" =>  "required",
             "tglmasuk" =>  "required",
@@ -1023,7 +1023,7 @@ class InacbgController extends APIController
     }
     public function grouper(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "noSEP" =>  "required",
             "nomorkartu" =>  "required",
         ]);
@@ -1044,7 +1044,7 @@ class InacbgController extends APIController
     }
     public function get_claim_data(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomor_sep" =>  "required",
         ]);
         if ($validator->fails()) {
@@ -1063,7 +1063,7 @@ class InacbgController extends APIController
     }
     public function get_claim_status(Request $request)
     {
-        $validator = Validator::make(request()->all(), [
+        $validator = Validator::make($request->all(), [
             "nomor_sep" =>  "required",
         ]);
         if ($validator->fails()) {

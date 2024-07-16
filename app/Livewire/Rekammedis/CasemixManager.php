@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Rekammedis;
 
+use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\VclaimController;
 use App\Models\BudgetControl;
 use App\Models\Kunjungan;
@@ -134,17 +135,17 @@ class CasemixManager extends Component
             'icd1' => 'required|min:3',
         ]);
         try {
-            $api = new VclaimController();
+            $api = new InacbgController();
             $request = new Request([
-                'diagnosa' => $this->icd1,
+                'keyword' => $this->icd1,
             ]);
-            $res = $api->ref_diagnosa($request);
+            $res = $api->search_diagnosis($request);
             if ($res->metadata->code == 200) {
                 $this->icd = [];
                 foreach ($res->response->diagnosa as $key => $value) {
                     $this->icd[] = [
-                        'kode' => $value->kode,
-                        'nama' => $value->nama,
+                        'kode' => $value->id,
+                        'nama' => $value->text,
                     ];
                 }
             } else {

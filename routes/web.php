@@ -63,6 +63,7 @@ use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Antrian\DisplayJadwalRajal;
+use App\Livewire\Bagianumum\LaporanSuratMasuk;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
 use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
@@ -183,6 +184,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('jadwaldokter', JadwalDokterController::class);
     Route::resource('jadwaloperasi', JadwalOperasiController::class);
     Route::resource('suratmasuk', SuratMasukController::class);
+    Route::get('laporan-suratmasuk', LaporanSuratMasuk::class)->name('laporan.suratmasuk');
+    Route::get('laporan-suratmasuk-print', [SuratMasukController::class, 'laporansuratmasukprint'])->name('laporan.suratmasuk.print');
     Route::resource('suratlampiran', SuratLampiranController::class);
     Route::resource('disposisi', DisposisiController::class);
     Route::resource('pasien', PasienController::class);
@@ -253,8 +256,8 @@ Route::middleware('auth')->group(function () {
     Route::get('casemix-rajal', CasemixRajal::class)->name('casemix-rajal');
     Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');
     // rajal
-    Route::get('resume-rajal-print',[RekamMedisController::class, 'resumerajalprint'] )->name('resume-rajal-print');
-    Route::get('sep-print',[RekamMedisController::class, 'seprajalprint'] )->name('sep-rajal-print');
+    Route::get('resume-rajal-print', [RekamMedisController::class, 'resumerajalprint'])->name('resume-rajal-print');
+    Route::get('sep-print', [RekamMedisController::class, 'seprajalprint'])->name('sep-rajal-print');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');

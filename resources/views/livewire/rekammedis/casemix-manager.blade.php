@@ -25,7 +25,7 @@
         </div>
         <datalist id="icdlist">
             @foreach ($icd as $key => $item)
-                <option value="{{ $item['nama'] }}"></option>
+                <option value="{{ $item->name }}"></option>
             @endforeach
         </datalist>
         <label>ICD-9 Procedure</label>

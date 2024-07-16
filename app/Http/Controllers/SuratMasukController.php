@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SuratMasuk;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +11,21 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class SuratMasukController extends Controller
 {
+
+    public function laporansuratmasukprint(Request $request)
+    {
+        $awalbulan = Carbon::parse($request->tanggal)->startOfMonth();
+        $akhirbulan = Carbon::parse($request->tanggal)->endOfMonth();
+        $suratmasuks = SuratMasuk::with(['lampiran'])
+            ->whereBetween('created_at', [$awalbulan, $akhirbulan])
+            ->get();
+        // return view('livewire.print.pdf_laporan_suratmasuk', compact('suratmasuks'));
+        $pdf = Pdf::loadView('livewire.print.pdf_laporan_suratmasuk', compact('suratmasuks', 'request'))
+            ->setPaper('a4', 'landscape');
+        return $pdf->stream('laporan_surat_masuk.pdf');
+
+        dd($request->all(), $suratmasuks);
+    }
     public function index(Request $request)
     {
         $surats = SuratMasuk::with(['lampiran'])
