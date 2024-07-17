@@ -25,7 +25,7 @@
         </div>
         <datalist id="icdlist">
             @foreach ($icd as $key => $item)
-                <option value="{{ $item->name }}"></option>
+                <option value="{{ $item['kode'] }}">{{ $item['nama'] }}</option>
             @endforeach
         </datalist>
         <label>ICD-9 Procedure</label>
@@ -52,7 +52,7 @@
         </div>
         <datalist id="icd9list">
             @foreach ($icd9s as $key => $item)
-                <option value="{{ $item['nama'] }}"></option>
+                <option value="{{ $item['kode'] }}">{{ $item['nama'] }}</option>
             @endforeach
         </datalist>
         <x-slot name="footerSlot">

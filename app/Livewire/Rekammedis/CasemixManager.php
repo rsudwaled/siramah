@@ -100,21 +100,17 @@ class CasemixManager extends Component
             "icd2.{$index}" => 'required|min:3',
         ]);
         try {
-            $api = new VclaimController();
+            $api = new InacbgController();
             $request = new Request([
-                'diagnosa' => $inputicd2,
+                'keyword' => $inputicd2,
             ]);
-            $res = $api->ref_diagnosa($request);
-            if ($res->metadata->code == 200) {
-                $this->icd = [];
-                foreach ($res->response->diagnosa as $key => $value) {
-                    $this->icd[] = [
-                        'kode' => $value->kode,
-                        'nama' => $value->nama,
-                    ];
-                }
-            } else {
-                return flash($res->metadata->message, 'danger');
+            $res = $api->search_diagnosis($request);
+            $this->icd = [];
+            foreach (json_decode($res->content()) as $key => $value) {
+                $this->icd[] = [
+                    'kode' => $value->id,
+                    'nama' => $value->text,
+                ];
             }
         } catch (\Throwable $th) {
             return flash($th->getMessage(), 'danger');
@@ -140,16 +136,12 @@ class CasemixManager extends Component
                 'keyword' => $this->icd1,
             ]);
             $res = $api->search_diagnosis($request);
-            if ($res->metadata->code == 200) {
-                $this->icd = [];
-                foreach ($res->response->diagnosa as $key => $value) {
-                    $this->icd[] = [
-                        'kode' => $value->id,
-                        'nama' => $value->text,
-                    ];
-                }
-            } else {
-                return flash($res->metadata->message, 'danger');
+            $this->icd = [];
+            foreach (json_decode($res->content()) as $key => $value) {
+                $this->icd[] = [
+                    'kode' => $value->id,
+                    'nama' => $value->text,
+                ];
             }
         } catch (\Throwable $th) {
             return flash($th->getMessage(), 'danger');
