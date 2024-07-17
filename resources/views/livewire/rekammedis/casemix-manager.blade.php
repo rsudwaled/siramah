@@ -50,7 +50,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <td>Diagnosa Banding</td>
+                        <td>Diagnosa Sekunder</td>
                         <td>:</td>
                         <th>
                             <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->diagnosabanding ?? '-' }}</pre>
@@ -60,7 +60,7 @@
                         <td>Rencana Kerja</td>
                         <td>:</td>
                         <th>
-                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->tindakanmedis ?? '-' }}</pre>
+                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->rencanakerja ?? '-' }}</pre>
                         </th>
                     </tr>
                     <tr>
@@ -105,7 +105,7 @@
                 </div>
                 <datalist id="icdlist">
                     @foreach ($icd as $key => $item)
-                        <option value="{{ $item['kode'] }}">{{ $item['nama'] }}</option>
+                        <option value="{{ $item['nama'] }}"></option>
                     @endforeach
                 </datalist>
                 <label>ICD-9 Procedure</label>
@@ -132,7 +132,7 @@
                 </div>
                 <datalist id="icd9list">
                     @foreach ($icd9s as $key => $item)
-                        <option value="{{ $item['kode'] }}">{{ $item['nama'] }}</option>
+                        <option value="{{ $item['nama'] }}"></option>
                     @endforeach
                 </datalist>
             </div>

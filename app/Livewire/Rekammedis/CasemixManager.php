@@ -64,24 +64,20 @@ class CasemixManager extends Component
     public function updatedIcd9($input, $index)
     {
         $this->validate([
-            "icd9.{$index}" => 'required|min:3',
+            "icd9.{$index}" => 'required|min:2',
         ]);
         try {
-            $api = new VclaimController();
+            $api = new InacbgController();
             $request = new Request([
-                'procedure' => $input,
+                'keyword' => $input,
             ]);
-            $res = $api->ref_procedure($request);
-            if ($res->metadata->code == 200) {
-                $this->icd9s = [];
-                foreach ($res->response->procedure as $key => $value) {
-                    $this->icd9s[] = [
-                        'kode' => $value->kode,
-                        'nama' => $value->nama,
-                    ];
-                }
-            } else {
-                return flash($res->metadata->message, 'danger');
+            $res = $api->search_procedures($request);
+            $this->icd9s = [];
+            foreach (json_decode($res->content()) as $key => $value) {
+                $this->icd9s[] = [
+                    'kode' => $value->id,
+                    'nama' => $value->text,
+                ];
             }
         } catch (\Throwable $th) {
             return flash($th->getMessage(), 'danger');
