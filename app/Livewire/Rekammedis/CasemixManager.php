@@ -12,7 +12,9 @@ use Livewire\Component;
 class CasemixManager extends Component
 {
     public $diagnosa = [], $diagnosas = [], $icd = [], $icd9s = [];
-    public $kunjungan, $icd1, $icd2 = [], $icd9 = [];
+    public $kunjungan, $asesmendokter, $icd1, $icd2 = [], $icd9 = [];
+
+
     public function simpan()
     {
         $budget = BudgetControl::updateOrCreate(
@@ -150,6 +152,7 @@ class CasemixManager extends Component
     public function mount(Kunjungan $kunjungan)
     {
         $this->kunjungan = $kunjungan;
+        $this->asesmendokter = $kunjungan->assesmen_dokter;
         $this->icd1 = $kunjungan->budget?->diagnosa_utama;
         $this->icd2 = explode(';',  $kunjungan->budget?->diagnosa);
         $this->icd9 = explode(';',  $kunjungan->budget?->prosedur);
