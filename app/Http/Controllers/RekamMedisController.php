@@ -26,7 +26,22 @@ class RekamMedisController extends Controller
         $ttddokter = "data:image/png;base64," . base64_encode($qrttddokter);
 
         // return view('livewire.print.pdf_resume_rajal', compact('kunjungan','asesmendokter','grouping','ttddokter'));
-        $pdf = Pdf::loadView('livewire.print.pdf_resume_rajal', compact('kunjungan', 'asesmendokter', 'grouping','ttddokter'));
+        $pdf = Pdf::loadView('livewire.print.pdf_resume_rajal', compact('kunjungan', 'asesmendokter', 'grouping', 'ttddokter'));
         return $pdf->stream('resumerajal.pdf');
+    }
+    public function seprajalprint(Request $request)
+    {
+        $api = new VclaimController();
+        $request['noSep'] = $request->kode;
+        $res  = $api->sep_nomor($request);
+        if ($res->metadata->code == 200) {
+            $sep = $res->response;
+            $qr = QrCode::format('png')->size(150)->generate($sep->peserta->noKartu);
+            $qrpasien = "data:image/png;base64," . base64_encode($qr);
+            // return view('livewire.print.pdf_sep', compact('sep'));
+            $pdf = Pdf::loadView('livewire.print.pdf_sep', compact('sep', 'qrpasien'));
+            return $pdf->stream('sep.pdf');
+        } else {
+        }
     }
 }
