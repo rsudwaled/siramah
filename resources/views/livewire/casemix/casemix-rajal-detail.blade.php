@@ -13,7 +13,7 @@
     {{-- navigasi --}}
     <div class="col-md-3">
         <x-adminlte-card theme="primary" title="Navigasi" body-class="p-0">
-            @include('livewire.rekammedis.rekam-medis-navigasi')
+            @include('livewire.casemix.casemix-navigasi')
             <x-slot name="footerSlot">
                 <a
                     href="{{ route('casemix-rajal') }}?unit={{ $kunjungan->kode_unit }}&tgl_masuk={{ \Carbon\Carbon::parse($kunjungan->tgl_masuk)->format('Y-m-d') }}">
@@ -32,7 +32,7 @@
         @livewire('rekammedis.histori-kunjungan', ['kunjungan' => $kunjungan, 'lazy' => true])
         @livewire('rekammedis.file-penunjang', ['kunjungan' => $kunjungan, 'lazy' => true])
         @livewire('rekammedis.rincian-biaya', ['kunjungan' => $kunjungan, 'lazy' => true])
-        @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan, 'lazy' => true])
+        {{-- @livewire('rekammedis.asesmen-dokter', ['kunjungan' => $kunjungan, 'lazy' => true]) --}}
         @livewire('rekammedis.casemix-manager', ['kunjungan' => $kunjungan, 'lazy' => true])
         @livewire('rekammedis.resume-rajal', ['kunjungan' => $kunjungan, 'lazy' => true])
 

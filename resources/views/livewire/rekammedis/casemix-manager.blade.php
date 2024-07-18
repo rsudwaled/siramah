@@ -2,9 +2,9 @@
     <x-adminlte-card title="Casemix Manager" theme="primary" icon="fas fa-user-md">
         <div class="row">
             <div class="col-md-6">
-                <table class="table table-xs table-borderless text-nowrap">
+                <table class="table table-xs table-borderless">
                     <tr>
-                        <td>Pasien</td>
+                        <td style="width: 130px;">Pasien</td>
                         <td>:</td>
                         <th>{{ $kunjungan->pasien->nama_px ?? '-' }}</th>
                     </tr>
@@ -32,14 +32,14 @@
                         <td>Keluhan Pasien</td>
                         <td>:</td>
                         <th>
-                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->keluhan_pasien ?? '-' }}</pre>
+                            {!! nl2br(e($asesmendokter->keluhan_pasien ?? '-')) !!}
                         </th>
                     </tr>
                     <tr>
                         <td>Pemeriksaan Fisik</td>
                         <td>:</td>
                         <th>
-                            <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->pemeriksaan_fisik ?? '-' }}</pre>
+                            {!! nl2br(e($asesmendokter->pemeriksaan_fisik ?? '-')) !!}
                         </th>
                     </tr>
                     <tr>
@@ -50,7 +50,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <td>Diagnosa Sekunder</td>
+                        <td  style="width: 130px;">Diagnosa Sekunder</td>
                         <td>:</td>
                         <th>
                             <pre style="padding: 0px;font-family: sans-serif;font-size: 13px">{{ $asesmendokter->diagnosabanding ?? '-' }}</pre>

@@ -14,7 +14,6 @@ class CasemixManager extends Component
     public $diagnosa = [], $diagnosas = [], $icd = [], $icd9s = [];
     public $kunjungan, $asesmendokter, $icd1, $icd2 = [], $icd9 = [];
 
-
     public function simpan()
     {
         $budget = BudgetControl::updateOrCreate(
