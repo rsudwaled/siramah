@@ -8,11 +8,13 @@
         $total = 0;
     @endphp
     <div class="row">
+        {{-- profil --}}
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
                 @include('simrs.ranap.erm_ranap_profil')
             </x-adminlte-card>
         </div>
+        {{-- nafigasi --}}
         <div class="col-md-3">
             <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
                 <ul class="nav nav-pills flex-column">

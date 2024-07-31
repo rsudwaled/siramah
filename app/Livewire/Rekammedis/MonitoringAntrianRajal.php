@@ -142,7 +142,7 @@ class MonitoringAntrianRajal extends Component
                 ->where('taskid', '!=', 99)
                 ->where('sync_antrian', 1)->count();
         }
-        return view('livewire.rekammedis.monitoring-antrian-rajal', compact('antrians', 'antrians_total', 'antrians_sync'))->title('Rekam Medis Rajal');
+        return view('livewire.rekammedis.monitoring-antrian-rajal', compact('antrians', 'antrians_total', 'antrians_sync'))->title('Monitroing Antrian Rajal');
     }
 }
 

@@ -7,8 +7,8 @@
             </div>
             <div class="col-lg-3 col-6">
                 <x-adminlte-small-box
-                    title="{{ count($antrians) ? $antrians->where('jenispasien', 'JKN')->count() : 0 }}" text="Pasien JKN"
-                    theme="primary" icon="fas fa-user-injured" />
+                    title="{{ count($antrians) ? $antrians->where('jenispasien', 'JKN')->count() : 0 }}"
+                    text="Pasien JKN" theme="primary" icon="fas fa-user-injured" />
             </div>
             <div class="col-lg-3 col-6">
                 <x-adminlte-small-box
