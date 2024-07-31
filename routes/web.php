@@ -87,6 +87,8 @@ use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
 use App\Livewire\Casemix\CasemixRajal;
 use App\Livewire\Casemix\CasemixRajalDetail;
+use App\Livewire\Farmasi\AntrianFarmasiRajal;
+use App\Livewire\Farmasi\DisplayAntrianFarmasi;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
@@ -148,6 +150,7 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
+Route::get('displayantrianfarmasi/{lantai}', DisplayAntrianFarmasi::class)->name('displayantrianfarmasi');
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display-jadwal-rajal');
 
 
@@ -322,6 +325,7 @@ Route::middleware('auth')->group(function () {
     Route::get('hasillabpa', [PatologiAnatomiController::class, 'hasillabpa'])->name('hasillabpa');
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
+    Route::get('antrian-farmasi-rajal', AntrianFarmasiRajal::class)->name('antrian.farmasi.rajal');
     Route::get('getAntrianFarmasi', [AntrianController::class, 'getAntrianFarmasi'])->name('getAntrianFarmasi');
     Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
     Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');

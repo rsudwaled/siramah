@@ -349,6 +349,13 @@ return [
                     'can' =>  ['bpjs', 'pendaftaran'],
                 ],
                 [
+                    'text' => 'Display Farmasi Lt 2',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianfarmasi/2',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
                     'text' => 'Display Jadwal Rajal',
                     'icon'    => 'fas fa-desktop',
                     'url'  => 'display-jadwal-rajal',
@@ -386,6 +393,14 @@ return [
                     'text' => 'Antrian Dokter',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'antrian-dokter-rajal',
+                    'shift'   => 'ml-2',
+                    'label' => 'proses',
+                    'label_color' => 'warning',
+                ],
+                [
+                    'text' => 'Antrian Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'antrian-farmasi-rajal',
                     'shift'   => 'ml-2',
                     'label' => 'proses',
                     'label_color' => 'warning',

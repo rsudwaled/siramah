@@ -1,5 +1,4 @@
 <div class="row">
-
     @if (isset($antrians))
         <div class="col-md-12">
             <div class="row">

@@ -80,6 +80,7 @@
                 document.getElementById('panggilannomorantrian').play();
             }, totalwaktu);
             totalwaktu = totalwaktu + 2500;
+            console.log('panggilannomorantrian');
             panggilangka(angkaantrian);
             setTimeout(function() {
                 document.getElementById('difarmasi').pause();
