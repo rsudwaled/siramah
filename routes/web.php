@@ -158,6 +158,7 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
+    Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
     Route::get('profile', UserProfil::class)->name('profile')->lazy(); #ok
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');

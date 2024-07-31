@@ -528,10 +528,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -571,10 +571,10 @@ class PendaftaranController extends APIController
                     $printer = env('PRINTER_CHECKIN');
                 } else if ($request->ip() == "192.168.2.51") {
                     $printer = env('PRINTER_CHECKIN2');
-                } else if ($request->ip() == "192.168.2.58") {
-                    $printer = env('PRINTER_CHECKIN3');
-                } else {
+                } else if ($request->ip() == "192.168.2.218") {
                     $printer = env('PRINTER_CHECKIN_MJKN');
+                } else {
+                    $printer = env('PRINTER_CHECKIN3');
                 }
                 $connector = new WindowsPrintConnector($printer);
                 $printer = new Printer($connector);
@@ -599,10 +599,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -752,9 +752,9 @@ class PendaftaranController extends APIController
         } else {
             $message = $jadwal->metadata->message;
             // kirim notif
-            $wa = new WhatsappController();
-            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
-            $wa->send_notif($request);
+            // $wa = new WhatsappController();
+            // $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
+            // $wa->send_notif($request);
             return $this->sendError('Mohon maaf , ' . $message, 400);
         }
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -841,10 +841,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -888,10 +888,10 @@ class PendaftaranController extends APIController
             $printer = env('PRINTER_CHECKIN');
         } else if ($request->ip() == "192.168.2.51") {
             $printer = env('PRINTER_CHECKIN2');
-        } else if ($request->ip() == "192.168.2.58") {
-            $printer = env('PRINTER_CHECKIN3');
-        } else {
+        } else if ($request->ip() == "192.168.2.218") {
             $printer = env('PRINTER_CHECKIN_MJKN');
+        } else {
+            $printer = env('PRINTER_CHECKIN3');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -964,10 +964,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -1021,10 +1021,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\DB;
+use Exception;
 
 class HomeController extends Controller
 {
@@ -26,5 +28,15 @@ class HomeController extends Controller
         return view('vendor.medilab.landingpage', compact([
             'jadwal'
         ]));
+    }
+
+    public function checkConnection()
+    {
+        try {
+            DB::connection('mysql2')->getPdo();
+            return response()->json(['status' => 'success', 'message' => 'Database connection is alive']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Database connection is dead']);
+        }
     }
 }

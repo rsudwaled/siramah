@@ -124,7 +124,7 @@ class WhatsappController extends Controller
             $pesan = strtoupper($request->message);
             switch ($pesan) {
                 default:
-                    $request['message'] = "Layanan pendaftaran rawat jalan RSUD Waled dapat melalui dua aplikasi beriku \n\n1. Web SIRAMAH-RS Waled : https://siramah.rsudwaled.id\n\n2. Aplikasi JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
+                    $request['message'] = "Mohon maaf untuk saat ini layanan pendaftaran antrian pasien BPJS hanya bisa melalui Aplikasi Mobile JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
                     // $request['message'] = "test wa api";
                     return $this->send_message($request);
                     break;

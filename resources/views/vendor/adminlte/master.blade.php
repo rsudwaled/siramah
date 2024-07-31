@@ -456,6 +456,17 @@
             }
         });
     });
+    // cek connection database
+    document.getElementById('check-connection').addEventListener('click', function() {
+            fetch('{{ route('cek-connection') }}')
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                })
+                .catch(error => {
+                    alert('Error: ' + error);
+                });
+        });
 </script>
 
 </html>
