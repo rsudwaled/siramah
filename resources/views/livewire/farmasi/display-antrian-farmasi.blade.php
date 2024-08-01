@@ -132,18 +132,19 @@
                 </div>
             </div>
         </div>
-        <audio id="myAudio" autoplay>
+        {{-- <audio id="myAudio" autoplay>
             <source src="{{ asset('rekaman/Airport_Bell.mp3') }}" type="audio/mp3">
             Your browser does not support the audio element.
-        </audio>
-        <script>
-            document.addEventListener('livewire:init', () => {
-                Livewire.on('play-audio', (event) => {
-                    // $('#myAudio').trigger('play');
-                    panggilfarmasi("100");
-                    console.log('Playing audio addEventListener');
-                });
-            });
+        </audio> --}}
+        <script type="text/javascript">
+            // function playVideo() {
+            //     $('.ytp-large-play-button').click();
+            // }
+            setInterval(function() {
+                panggilfarmasi("100");
+                // location.reload();
+            }, 1000 * 3);
         </script>
+        {{-- panggilfarmasi("100"); --}}
     </div>
 </div>
