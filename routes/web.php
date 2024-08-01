@@ -150,8 +150,11 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
-Route::get('displayantrianfarmasi/{lantai}', DisplayAntrianFarmasi::class)->name('displayantrianfarmasi');
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display-jadwal-rajal');
+
+Route::get('displayantrianfarmasi/{lantai}', [AntrianController::class, 'displayantrianfarmasi'])->name('displayantrianfarmasi');
+Route::get('displaynomorfarmasi/{lantai}', [AntrianController::class, 'displaynomorfarmasi'])->name('displaynomorfarmasi');
+Route::get('panggilnomorfarmasi', [AntrianController::class, 'panggilnomorfarmasi'])->name('panggilnomorfarmasi');
 
 
 // cppt

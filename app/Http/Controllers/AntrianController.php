@@ -9,6 +9,7 @@ use App\Models\JadwalOperasi;
 use App\Models\Kunjungan;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
+use App\Models\OrderObatHeader;
 use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Penjamin;
@@ -67,6 +68,68 @@ class AntrianController extends APIController
             'user' => 'Sistem Siramah',
         ]);
         return redirect()->back();
+    }
+    public function displayantrianfarmasi($lantai)
+    {
+        return view('livewire.farmasi.display-antrian-farmasi', compact('lantai'));
+    }
+    public function displaynomorfarmasi($lantai)
+    {
+        if ($lantai == 2) {
+            $unit = 4008;
+        } else {
+            $unit = 4002;
+        }
+        $orders = [];
+        $tanggal = now()->format('Y-m-d');
+        if ($tanggal && $unit) {
+            $ordersx = OrderObatHeader::with(['pasien'])
+                ->whereDate('tgl_entry', $tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
+                ->where('kode_unit', $unit)
+                ->where('unit_pengirim', '!=', '1016')
+                ->get();
+
+            $orders = $ordersx;
+        }
+        if ($tanggal && $unit == 4002) {
+            $orders_yasmin = OrderObatHeader::with(['pasien'])
+                ->whereDate('tgl_entry',  $tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
+                ->where('unit_pengirim', '1016')
+                ->get();
+            $ordersx = $ordersx->merge($orders_yasmin);
+            $orders = $ordersx;
+        }
+        $antrianpanggil = $orders->where('panggil', 1)->sortByDesc('updated_at')->first();
+        $antriansudahpanggil = $orders->where('panggil', 2)->sortByDesc('updated_at')->first();
+        // dd($antrianpanggil);
+        // $farmasipanggil = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('taskid', 6)->first();
+        // $antrianfarmasi = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('taskid', 6)->get(['nomorantrean', 'nama']);
+        $data = [
+            "nomorsudahpanggil" => $antriansudahpanggil ? substr($antriansudahpanggil->kode_layanan_header, -3) : '-',
+            "namasudahpanggil" => $antriansudahpanggil ? $antriansudahpanggil->pasien?->nama_px : '-',
+            "kodepanggil" => $antrianpanggil ? $antrianpanggil->kode_layanan_header : '-',
+            "nomorpanggil" => $antrianpanggil ? intval(substr($antrianpanggil->kode_layanan_header, -3))  : '-',
+            "statuspanggil" => $antrianpanggil ?  $antrianpanggil->panggil : 0,
+            "daftarantrian" => $orders->where('panggil', 0)->pluck('pasien.nama_px', 'kode_layanan_header'),
+            "totalantrian" => $orders->count(),
+        ];
+        return $this->sendResponse($data, 200);
+    }
+    public function panggilnomorfarmasi(Request $request)
+    {
+        $antrian = OrderObatHeader::where('kode_layanan_header', $request->kodebooking)->first();
+        if ($antrian) {
+            $antrian->update([
+                'panggil' => 2,
+            ]);
+            return $this->sendResponse('Antrian telah dipanggil', 200);
+        } else {
+            return $this->sendError('Antrian tidak ditemukan', 400);
+        }
     }
     public function antrianFarmasi(Request $request)
     {
