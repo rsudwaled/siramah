@@ -43,7 +43,7 @@
                         <div class="text-center">
                             @if ($orders)
                                 <h1>
-                                    {{ $orders->where('panggil', 2)->first() ? substr($orders->where('panggil', 2)->first()->kode_layanan_header, 12) : '-' }}
+                                    {{ $orders->where('panggil', 2)->first() ? substr($orders->where('panggil', 2)->sortByDesc('updated_at')->first()->kode_layanan_header, 12) : '-' }}
                                 </h1>
                                 <h4>{{ $orders->where('panggil', 2)->first()->pasien->nama_px ?? '-' }}</h4>
                             @endif
@@ -140,7 +140,7 @@
             document.addEventListener('livewire:init', () => {
                 Livewire.on('play-audio', (event) => {
                     // $('#myAudio').trigger('play');
-                    panggilfarmasi("1");
+                    panggilfarmasi("100");
                     console.log('Playing audio addEventListener');
                 });
             });
