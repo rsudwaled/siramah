@@ -12,10 +12,11 @@ use Mike42\Escpos\Printer;
 class AntrianFarmasiRajal extends Component
 {
     public $tanggal;
+    public $search = "";
     public $unit;
-    public $tracerstatus;
+    public $tracerstatus = 0;
     public $playAudio;
-    public $orders = [];
+    public $orders = [], $pasienpanggil;
     // public function refreshComponent()
     // {
     //     $this->antrianresep = OrderObatHeader::where('taskid', 5)->where('status', 0)->first();
@@ -26,6 +27,18 @@ class AntrianFarmasiRajal extends Component
     //         $this->playAudio = false;
     //     }
     // }
+    public function traceraktif()
+    {
+        $this->tracerstatus =  $this->tracerstatus  ? 0 : 1;
+    }
+    public function panggil($id)
+    {
+        $order = OrderObatHeader::find($id);
+        $order->update([
+            'panggil' => 1,
+        ]);
+        flash('Berhasil panggil antrian', 'success');
+    }
     public function selesai($id)
     {
         $order = OrderObatHeader::find($id);
@@ -134,6 +147,7 @@ class AntrianFarmasiRajal extends Component
     }
     public function render()
     {
+        $search = "%" . $this->search . "%";
         try {
             if ($this->tanggal && $this->unit) {
                 $ordersx = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])
@@ -142,23 +156,41 @@ class AntrianFarmasiRajal extends Component
                     ->where('status_order', '!=', 99)
                     ->where('kode_unit', $this->unit)
                     ->where('unit_pengirim', '!=', '1016')
+                    ->where(function ($query) use ($search) {
+                        if ($search != '%%') {
+                            $query->where('no_rm', 'LIKE', $search)
+                                ->orWhereHas('pasien', function ($q) use ($search) {
+                                    $q->where('nama_px', 'LIKE', $search);
+                                });
+                        }
+                    })
                     ->get();
                 $this->orders = $ordersx;
+                $this->pasienpanggil = $this->orders->where('panggil', 2)->sortByDesc('updated_at')->first();
             }
             if ($this->tanggal && $this->unit == 4002) {
                 $orders_yasmin = OrderObatHeader::with(['kunjungan', 'pasien', 'unit', 'asal_unit', 'dokter', 'penjamin_simrs', 'kunjungan.antrian'])
                     ->whereDate('tgl_entry',  $this->tanggal)
                     ->where('status_order', '!=', 0)
                     ->where('status_order', '!=', 99)
+                    ->where('no_rm', 'LIKE', $search)
                     ->where('unit_pengirim', '1016')
+                    ->where(function ($query) use ($search) {
+                        if ($search != '%%') {
+                            $query->where('no_rm', 'LIKE', $search)
+                                ->orWhereHas('pasien', function ($q) use ($search) {
+                                    $q->where('nama_px', 'LIKE', $search);
+                                });
+                        }
+                    })
                     ->get();
                 $ordersx = $ordersx->merge($orders_yasmin);
                 $this->orders = $ordersx;
+                $this->pasienpanggil =  $this->orders->where('panggil', 2)->sortByDesc('updated_at')->first();
             }
         } catch (\Throwable $th) {
             flash($th->getMessage(), 'danger');
         }
-
         return view('livewire.farmasi.antrian-farmasi-rajal')->title('Antrian Farmasi Rawat Jalan');
     }
 }

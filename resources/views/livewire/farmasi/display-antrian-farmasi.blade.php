@@ -218,8 +218,8 @@
                             type: "GET",
                             dataType: 'json',
                             success: function(res) {
-                                console.log(data.response.nomorpanggil);
-                                panggilfarmasi(data.response.nomorpanggil);
+                                console.log(String(data.response.nomorpanggil));
+                                panggilfarmasi(String(data.response.nomorpanggil));
                             },
                         });
                     }
@@ -282,6 +282,7 @@
                 }, totalwaktu);
                 totalwaktu = totalwaktu + 1000;
             } else if (angkaantrian < 20) {
+                console.log(angkaantrian);
                 var nomor1 = angkaantrian.charAt(1);
                 $("#nomor0").attr("src",
                     "{{ route('landingpage') }}{{ env('APP_ENV') === 'production' ? '/public' : null }}/rekaman/" +

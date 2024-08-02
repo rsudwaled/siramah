@@ -6,6 +6,12 @@
                     theme="success" icon="fas fa-user-injured" />
             </div>
             <div class="col-lg-3 col-6">
+                <x-adminlte-small-box
+                    title="{{ $pasienpanggil ? substr($pasienpanggil->kode_layanan_header, -3) : '-' }}"
+                    text="{{ $pasienpanggil ? $pasienpanggil->pasien->nama_px : '-' }}" theme="warning"
+                    icon="fas fa-user-injured" />
+            </div>
+            <div class="col-lg-3 col-6">
                 <x-adminlte-small-box title="{{ $orders != null ? count($orders->where('status_order', 1)) : '-' }}"
                     text="Resep Belum Print" theme="danger" icon="fas fa-user-injured" />
             </div>
@@ -42,22 +48,21 @@
                         <option value="4002">DEPO FARAMSI 1</option>
                     </x-adminlte-select2>
                 </div>
-                <div class="col-md-1">
-                    <div class="form-group row">
+                <div class="col-md-4">
+                    <button wire:click="traceraktif"
+                        class="btn btn-sm {{ $tracerstatus ? 'btn-success' : 'btn-danger' }}">
+                        Tracer {{ $tracerstatus ? 'ON' : 'OFF' }}
+                    </button>
+                    <div wire:loading>
+                        Loading...
+                    </div>
+                    {{-- <div class="form-group row">
                         <div class="custom-control custom-radio">
                             <input class="custom-control-input" type="radio" wire:model.live='tracerstatus'
                                 value="on" id="customRadio1" name="customRadio">
                             <label for="customRadio1" class="custom-control-label">Tracer On</label>
                         </div>
-
-                    </div>
-                </div>
-                <div class="col-md-1">
-                    <div class="custom-control custom-radio">
-                        <input class="custom-control-input" type="radio" wire:model.live='tracerstatus' value="off"
-                            id="customRadio2" name="customRadio">
-                        <label for="customRadio2" class="custom-control-label">Tracer Off</label>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-4">
                     <x-adminlte-input wire:model.live="search" name="search"
@@ -81,6 +86,7 @@
                             <th>Tgl Entry</th>
                             <th>No RM</th>
                             <th>Nama Pasien</th>
+                            <th>Status</th>
                             <th>Action</th>
                             <th>Poliklinik</th>
                             <th>Dokter</th>
@@ -91,53 +97,58 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($orders as $item)
-                            <tr>
-                                <td>{{ substr($item->kode_layanan_header, 12) }}</td>
-                                <td>{{ $item->tgl_entry }}</td>
-                                <td>{{ $item->no_rm }}</td>
-                                <td>{{ $item->pasien->nama_px ?? '-' }}</td>
-                                <td>{{ $item->asal_unit->nama_unit ?? '-' }}</td>
-                                <td>
-                                    <x-adminlte-button wire:click="selesai('{{ $item->id }}')"
-                                        class="btn-xs" theme="success" label="Selesai" />
-                                    <x-adminlte-button wire:click="panggil('{{ $item->id }}')" class="btn-xs" theme="primary"
-                                        label="Panggil" />
-                                    <x-adminlte-button wire:click='cetak' class="btn-xs" theme="warning"
-                                        label="Cetak" />
-                                    <x-adminlte-button wire:click='lihat' class="btn-xs" theme="secondary"
-                                        label="Lihat" />
-                                    {{-- <button class="btnObat btn btn-xs btn-primary" data-id="{{ $item->id }}"><i
-                                            class="fas fa-info-circle"></i> Lihat</button>
-                                    <a href="{{ route('cetakUlangOrderObat') }}?kode={{ $item->kode_layanan_header }}"
-                                        class="btn btn-xs btn-warning"><i class="fas fa-sync"></i>Cetak
-                                        Ulang</a> --}}
-                                </td>
-                                <td>{{ $item->dokter->nama_paramedis ?? '-' }}</td>
-                                <td>{{ $item->penjamin_simrs->nama_penjamin ?? '-' }}</td>
-                                <td>{{ $item->kunjungan->no_sep ?? '-' }}</td>
-                                <td>
-                                    {{ $item->kunjungan->antrian->kodebooking ?? '-' }}
-                                </td>
-                                <td>
-                                    @if ($item->status_order == 1)
-                                        <span class="badge badge-danger"> Belum Cetak</span>
-                                    @else
-                                        <span class="badge badge-success"> Sudah Cetak</span>
-                                    @endif
-                                </td>
-
-                            </tr>
-                        @endforeach
+                        @if ($orders)
+                            @foreach ($orders->sortBy('panggil') as $item)
+                                <tr>
+                                    <td>{{ substr($item->kode_layanan_header, 12) }}</td>
+                                    <td>{{ $item->tgl_entry }}</td>
+                                    <td>{{ $item->no_rm }}</td>
+                                    <td>{{ $item->pasien->nama_px ?? '-' }}</td>
+                                    <td>{{ $item->asal_unit->nama_unit ?? '-' }}</td>
+                                    <td>
+                                        @if ($item->panggil)
+                                            <span class="badge badge-success"> Sudah Panggil</span>
+                                        @else
+                                            <span class="badge badge-danger"> Belum Panggil</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($item->panggil == 0)
+                                            <x-adminlte-button wire:click="selesai('{{ $item->id }}')"
+                                                class="btn-xs" theme="success" label="Selesai" />
+                                        @else
+                                            <x-adminlte-button wire:click="panggil('{{ $item->id }}')"
+                                                class="btn-xs" theme="primary" label="Panggil" />
+                                        @endif
+                                        <x-adminlte-button wire:click='cetak' class="btn-xs" theme="warning"
+                                            label="Cetak" />
+                                        <x-adminlte-button wire:click='lihat' class="btn-xs" theme="secondary"
+                                            label="Lihat" />
+                                    </td>
+                                    <td>{{ $item->dokter->nama_paramedis ?? '-' }}</td>
+                                    <td>{{ $item->penjamin_simrs->nama_penjamin ?? '-' }}</td>
+                                    <td>{{ $item->kunjungan->no_sep ?? '-' }}</td>
+                                    <td>
+                                        {{ $item->kunjungan->antrian->kodebooking ?? '-' }}
+                                    </td>
+                                    <td>
+                                        @if ($item->status_order == 1)
+                                            <span class="badge badge-danger"> Belum Cetak</span>
+                                        @else
+                                            <span class="badge badge-success"> Sudah Cetak</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
-            <div wire:loading>
-                Loading...
-            </div>
-            <div wire:poll.4s="refreshComponent">
-                test
-            </div>
+            @if ($tracerstatus)
+                <div wire:poll.4s="refreshComponent">
+                    Tracer Status On - reload setiap 4 detik
+                </div>
+            @endif
         </x-adminlte-card>
     </div>
     <audio id="myAudio" autoplay>
