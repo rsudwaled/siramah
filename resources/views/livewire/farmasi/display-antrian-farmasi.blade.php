@@ -205,7 +205,8 @@
                     $('#namapanggil').html(data.response.namasudahpanggil);
                     $('#tablefarmasi').empty()
                     $.each(data.response.daftarantrian, function(i, val) {
-                        $('#tablefarmasi').append('<tr><th><h4>' + i.slice(-3) +
+                        var iStr = String(i);
+                        $('#tablefarmasi').append('<tr><th><h4>' + iStr.slice(-3) +
                             '</h4></th><th><h4>' + val +
                             '</h4></th></tr>');
                     });
@@ -217,7 +218,7 @@
                             type: "GET",
                             dataType: 'json',
                             success: function(res) {
-                                console.log(res);
+                                console.log(data.response.nomorpanggil);
                                 panggilfarmasi(data.response.nomorpanggil);
                             },
                         });
@@ -230,48 +231,7 @@
         }, 3000);
     </script>
     <script>
-        function panggilpendaftaran(angkaantrian, hurufantrian) {
-            document.getElementById('suarabel').pause();
-            document.getElementById('suarabel').currentTime = 0;
-            document.getElementById('suarabel').play();
-            totalwaktu = document.getElementById('suarabel').duration * 1000;
-            setTimeout(function() {
-                document.getElementById('panggilannomorantrian').pause();
-                document.getElementById('panggilannomorantrian').currentTime = 0;
-                document.getElementById('panggilannomorantrian').play();
-            }, totalwaktu);
-            totalwaktu = totalwaktu + 2500;
-            panggilhuruf(hurufantrian);
-            panggilangka(angkaantrian);
-            setTimeout(function() {
-                document.getElementById('diloketpendaftaran').pause();
-                document.getElementById('diloketpendaftaran').currentTime = 0;
-                document.getElementById('diloketpendaftaran').play();
-            }, totalwaktu);
-        }
-
-        function panggilpoliklinik(angkaantrian, hurufantrian, poliklinik) {
-            document.getElementById('suarabel').pause();
-            document.getElementById('suarabel').currentTime = 0;
-            document.getElementById('suarabel').play();
-            totalwaktu = document.getElementById('suarabel').duration * 1000;
-            setTimeout(function() {
-                document.getElementById('panggilannomorantrian').pause();
-                document.getElementById('panggilannomorantrian').currentTime = 0;
-                document.getElementById('panggilannomorantrian').play();
-            }, totalwaktu);
-            totalwaktu = totalwaktu + 2500;
-            panggilhuruf(hurufantrian);
-            panggilangka(angkaantrian);
-            panggilklinik(poliklinik);
-            // setTimeout(function() {
-            //     document.getElementById('dipoliklinik').pause();
-            //     document.getElementById('dipoliklinik').currentTime = 0;
-            //     document.getElementById('dipoliklinik').play();
-            // }, totalwaktu);
-        }
-
-        function panggilfarmasi(angkaantrian) {
+        function panggilfarmasi(angkaantrian, hurufantrian) {
             document.getElementById('suarabel').pause();
             document.getElementById('suarabel').currentTime = 0;
             document.getElementById('suarabel').play();
@@ -369,30 +329,6 @@
                     totalwaktu = totalwaktu + 1000;
                 }
             }
-        }
-
-        function panggilhuruf(hurufantrian) {
-            $("#huruf").attr("src",
-                "{{ route('landingpage') }}{{ env('APP_ENV') === 'production' ? '/public' : null }}/rekaman/huruf/" +
-                hurufantrian + ".mp3");
-            setTimeout(function() {
-                document.getElementById('huruf').pause();
-                document.getElementById('huruf').currentTime = 0;
-                document.getElementById('huruf').play();
-            }, totalwaktu);
-            totalwaktu = totalwaktu + 1000;
-        }
-
-        function panggilklinik(poliklinik) {
-            $("#suarapoli").attr("src",
-                "{{ route('landingpage') }}{{ env('APP_ENV') === 'production' ? '/public' : null }}/rekaman/poliklinik/" +
-                poliklinik + ".mp3");
-            setTimeout(function() {
-                document.getElementById('suarapoli').pause();
-                document.getElementById('suarapoli').currentTime = 0;
-                document.getElementById('suarapoli').play();
-            }, totalwaktu);
-            totalwaktu = totalwaktu + 1000;
         }
     </script>
 @stop
