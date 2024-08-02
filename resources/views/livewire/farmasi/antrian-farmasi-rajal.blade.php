@@ -99,9 +99,9 @@
                                 <td>{{ $item->pasien->nama_px ?? '-' }}</td>
                                 <td>{{ $item->asal_unit->nama_unit ?? '-' }}</td>
                                 <td>
-                                    <x-adminlte-button wire:click="selesai('{{ $item->kunjungan->kode_kunjungan }}')"
+                                    <x-adminlte-button wire:click="selesai('{{ $item->id }}')"
                                         class="btn-xs" theme="success" label="Selesai" />
-                                    <x-adminlte-button wire:click='panggil' class="btn-xs" theme="primary"
+                                    <x-adminlte-button wire:click="panggil('{{ $item->id }}')" class="btn-xs" theme="primary"
                                         label="Panggil" />
                                     <x-adminlte-button wire:click='cetak' class="btn-xs" theme="warning"
                                         label="Cetak" />
@@ -135,7 +135,7 @@
             <div wire:loading>
                 Loading...
             </div>
-            <div wire:poll.3000ms="refreshComponent">
+            <div wire:poll.4s="refreshComponent">
                 test
             </div>
         </x-adminlte-card>

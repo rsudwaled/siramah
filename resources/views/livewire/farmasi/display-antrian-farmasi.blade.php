@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-8">
                 <div class="row">
-                    <div class="col-md-4">
+                    {{-- <div class="col-md-4">
                         <div class="card">
                             <div class="card-header bg-blue">
                                 <div class="text-center">
@@ -99,7 +99,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-4"></div> --}}
                     <div class="col-md-12">
                         <x-adminlte-card body-class="p-1">
                             <video width="100%" height="500px" controls autoplay muted loop>
@@ -110,10 +110,8 @@
                         </x-adminlte-card>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-4">
-
                 {{-- <x-adminlte-card body-class="p-1 m-0">
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">

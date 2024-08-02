@@ -111,7 +111,7 @@ class AntrianController extends APIController
         $data = [
             "nomorsudahpanggil" => $antriansudahpanggil ? substr($antriansudahpanggil->kode_layanan_header, -3) : '-',
             "namasudahpanggil" => $antriansudahpanggil ? $antriansudahpanggil->pasien?->nama_px : '-',
-            "kodepanggil" => $antrianpanggil ? $antrianpanggil->kode_layanan_header : '-',
+            "kodepanggil" => $antrianpanggil ? $antrianpanggil->id : '-',
             "nomorpanggil" => $antrianpanggil ? intval(substr($antrianpanggil->kode_layanan_header, -3))  : '-',
             "statuspanggil" => $antrianpanggil ?  $antrianpanggil->panggil : 0,
             "daftarantrian" => $orders->where('panggil', 0)->pluck('pasien.nama_px', 'kode_layanan_header'),
@@ -121,7 +121,7 @@ class AntrianController extends APIController
     }
     public function panggilnomorfarmasi(Request $request)
     {
-        $antrian = OrderObatHeader::where('kode_layanan_header', $request->kodebooking)->first();
+        $antrian = OrderObatHeader::find($request->kodebooking);
         if ($antrian) {
             $antrian->update([
                 'panggil' => 2,
