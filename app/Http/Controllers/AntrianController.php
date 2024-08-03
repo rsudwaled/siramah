@@ -81,7 +81,7 @@ class AntrianController extends APIController
             $unit = 4002;
         }
         $orders = [];
-        $tanggal = now()->format('Y-m-d');
+        $tanggal = now()->format('2024-08-02');
         if ($tanggal && $unit) {
             $ordersx = OrderObatHeader::with(['pasien'])
                 ->whereDate('tgl_entry', $tanggal)

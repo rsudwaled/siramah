@@ -164,5 +164,12 @@
                 });
             });
         </script>
+        <script>
+            document.addEventListener('livewire:load', () => {
+                Livewire.onPageExpired((response, message) => {
+                    alert(message);
+                })
+            })
+        </script>
     @endpush
 </div>

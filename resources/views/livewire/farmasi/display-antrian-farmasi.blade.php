@@ -31,13 +31,13 @@
                 <div class="card">
                     <div class="card-header bg-blue">
                         <div class="text-center">
-                            <h4>ANTRIAN DIPANGGIL FARMASI</h4>
+                            ANTRIAN DIPANGGIL FARMASI
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="text-center">
-                            <h1><span id="nomorpanggil"></span></h1>
-                            <h3><span id="namapanggil">-</span></h3>
+                            <h1><span id="nomorpanggil" style="font-size: 80px"></span></h1>
+                            <h4><span id="namapanggil">-</span</h4>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         <h4>ANTRIAN FARMASI</h4>
                     </div>
                     <div class="card-body p-0">
-                        <table class="table text-nowrap" id="tablefarmasi">
+                        <table class="table table-sm text-nowrap" id="tablefarmasi">
                             <tbody>
                                 <tr>
                                     <th>-</th>
@@ -200,6 +200,10 @@
                 type: "GET",
                 dataType: 'json',
                 success: function(data) {
+                    // alert('test');
+                    // $('#suarabel').trigger('play');
+                    // document.getElementById('suarabel').pay();
+
                     // console.log(data);
                     $('#nomorpanggil').html(data.response.nomorsudahpanggil);
                     $('#namapanggil').html(data.response.namasudahpanggil);
