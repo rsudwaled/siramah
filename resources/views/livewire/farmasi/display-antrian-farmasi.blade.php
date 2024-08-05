@@ -29,21 +29,8 @@
             </div>
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header bg-blue">
-                        <div class="text-center">
-                            ANTRIAN DIPANGGIL FARMASI
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center">
-                            <h1><span id="nomorpanggil" style="font-size: 80px"></span></h1>
-                            <h4><span id="namapanggil">-</span</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
                     <div class="card-header bg-primary">
-                        <h4>ANTRIAN FARMASI</h4>
+                        <h4>DAFTAR ANTRIAN FARMASI</h4>
                     </div>
                     <div class="card-body p-0">
                         <table class="table table-sm text-nowrap" id="tablefarmasi">
@@ -71,99 +58,123 @@
             </div>
             <div class="col-md-8">
                 <div class="row">
-                    {{-- <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header bg-blue">
-                                <div class="text-center">
-                                    <h4>TOTAL ANTRIAN RESEP</h4>
+                    <div class="col-md-6">
+                        <div class="row">
+                            {{-- <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header bg-blue">
+                                        <div class="text-center">
+                                            <h4>TOTAL ANTRIAN RESEP</h4>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h1>234</h1>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <h1>234</h1>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header bg-blue">
+                                        <div class="text-center">
+                                            <h4>TOTAL ANTRIAN RESEP</h4>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h1>234</h1>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="col-md-4"></div> --}}
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header bg-blue">
+                                        <div class="text-center">
+                                            ANTRIAN DIPANGGIL FARMASI
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h1><span id="nomorpanggil" style="font-size: 140px"></span></h1>
+                                            <h4><span id="namapanggil">-</span< /h4>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-header bg-blue">
-                                <div class="text-center">
-                                    <h4>TOTAL ANTRIAN RESEP</h4>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <h1>234</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4"></div> --}}
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <x-adminlte-card body-class="p-1">
-                            <video width="100%" height="500px" controls autoplay muted loop>
+                            <video width="100%" height="100%" controls autoplay muted loop>
                                 <source src="{{ asset('bpjs/Video Sosialisasi Program Rehab 30sec.mp4') }}"
                                     type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         </x-adminlte-card>
+
+                    </div>
+                    <div class="col-md-12">
+                        <x-adminlte-card body-class="p-1 m-0">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                <ol class="carousel-indicators">
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                </ol>
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img class="d-block w-100" height="450" width="100%"
+                                            src="{{ asset('rsud-waled-sejarah-scaled.jpg') }}" alt="First slide">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>...</h5>
+                                            <p>...</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100" height="450" width="100%"
+                                            src="{{ asset('rs-bagus-min.png') }}" alt="First slide">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>...</h5>
+                                            <p>...</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100" height="450" width="100%"
+                                            src="{{ asset('kitasehat/ruangdokter.jpg') }}" alt="First slide">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>...</h5>
+                                            <p>...</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100" height="450" width="100%"
+                                            src="{{ asset('kitasehat/pendaftaran.jpg') }}" alt="First slide">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>...</h5>
+                                            <p>...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                                    data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                                    data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </x-adminlte-card>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                {{-- <x-adminlte-card body-class="p-1 m-0">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                        <ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img class="d-block w-100" height="450" width="100%"
-                                    src="{{ asset('kitasehat/depan.jpg') }}" alt="First slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>...</h5>
-                                    <p>...</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" height="450" width="100%"
-                                    src="{{ asset('kitasehat/ranap1.jpg') }}" alt="First slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>...</h5>
-                                    <p>...</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" height="450" width="100%"
-                                    src="{{ asset('kitasehat/ruangdokter.jpg') }}" alt="First slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>...</h5>
-                                    <p>...</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" height="450" width="100%"
-                                    src="{{ asset('kitasehat/pendaftaran.jpg') }}" alt="First slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>...</h5>
-                                    <p>...</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </x-adminlte-card> --}}
-            </div>
+
         </div>
     </div>
     <audio id="suarabel" src="{{ asset('rekaman/Airport_Bell.mp3') }}"></audio>
