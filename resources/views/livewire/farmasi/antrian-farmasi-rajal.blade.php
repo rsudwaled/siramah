@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-lg-3 col-6">
-                <x-adminlte-small-box title="{{ count($orders) ? count($orders) : '-' }}" text="Total Antrian Resep"
+                <x-adminlte-small-box title="{{ $orders ? count($orders) : '-' }}" text="Total Antrian Resep"
                     theme="success" icon="fas fa-user-injured" />
             </div>
             <div class="col-lg-3 col-6">
@@ -120,7 +120,7 @@
                                             <x-adminlte-button wire:click="panggil('{{ $item->id }}')"
                                                 class="btn-xs" theme="primary" label="Panggil" />
                                         @endif
-                                        <x-adminlte-button wire:click='cetak' class="btn-xs" theme="warning"
+                                        <x-adminlte-button wire:click="cetak('{{ $item->id }}')" class="btn-xs" theme="warning"
                                             label="Cetak" />
                                         <x-adminlte-button wire:click='lihat' class="btn-xs" theme="secondary"
                                             label="Lihat" />

@@ -32,6 +32,14 @@ class AntrianFarmasiRajal extends Component
     {
         $this->tracerstatus =  $this->tracerstatus  ? 0 : 1;
     }
+    public function cetak($id)
+    {
+        $order = OrderObatHeader::find($id);
+        $order->update([
+            'status_order' => 1,
+        ]);
+        flash('Cetak ulang status antrian', 'success');
+    }
     public function panggil($id)
     {
         $order = OrderObatHeader::find($id);
