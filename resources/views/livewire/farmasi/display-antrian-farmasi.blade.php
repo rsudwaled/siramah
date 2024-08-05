@@ -142,22 +142,6 @@
                                             <p>...</p>
                                         </div>
                                     </div>
-                                    <div class="carousel-item">
-                                        <img class="d-block w-100" height="450" width="100%"
-                                            src="{{ asset('kitasehat/ruangdokter.jpg') }}" alt="First slide">
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <h5>...</h5>
-                                            <p>...</p>
-                                        </div>
-                                    </div>
-                                    <div class="carousel-item">
-                                        <img class="d-block w-100" height="450" width="100%"
-                                            src="{{ asset('kitasehat/pendaftaran.jpg') }}" alt="First slide">
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <h5>...</h5>
-                                            <p>...</p>
-                                        </div>
-                                    </div>
                                 </div>
                                 <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
                                     data-slide="prev">

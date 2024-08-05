@@ -158,7 +158,6 @@ class FarmasiController extends APIController
     }
     public function getOrderObat(Request $request)
     {
-        // $order = collect(DB::connection('mysql2')->select('CALL TRACER_RESEP_02 (25)'));
         if ($request->depo == 4008) {
             $order = OrderObatHeader::whereDate('tgl_entry', "LIKE", "%" . $request->tanggal . "%")
                 ->where('status_order', 1)
@@ -182,17 +181,11 @@ class FarmasiController extends APIController
             }
             $connector = "smb://192.168.2.29/EPSON TM-T82X Receipt";
         }
-        // if ($order->kode_unit == 4002) {
-        // }
-        // if ($order->kode_unit == 4008) {
-        // }
         $i = 1;
-        // dd($order->detail->first()->barang);
         if ($order) {
             $no_antrian = OrderObatHeader::whereDate('updated_at', 'LIKE', now()->format('Y-m-d'))
                 ->where('kode_unit', $request->depo)
                 ->get()->count();
-            // dd($order->pasien->desas);
             try {
                 $connector = new WindowsPrintConnector($connector);
                 $printer = new Printer($connector);
@@ -249,7 +242,6 @@ class FarmasiController extends APIController
                     'no_antrian' => $no_antrian + 1,
                 ]);
             } catch (\Throwable $th) {
-                // throw $th;
                 return $this->sendError($th->getMessage(),  200);
             }
             return $this->sendError('Ok', 200);
