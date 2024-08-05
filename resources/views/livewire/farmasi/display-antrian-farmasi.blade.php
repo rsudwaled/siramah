@@ -20,7 +20,7 @@
                                 </div>
                                 <div class="col-md-6 text-md-end">
                                     <h2> Antrian Farmasi Lantai {{ $lantai }} </h2>
-
+                                    <h2>{{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}</h2>
                                 </div>
                             </div>
                         </div>
