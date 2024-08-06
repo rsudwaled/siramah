@@ -290,7 +290,7 @@
                                             </div>
                                             <div class="col-md-6 ">
                                                 <div class="text-center">
-                                                    <b>Direktur RSUD Waled</b>
+                                                    <b>Plt. Direktur RSUD Waled</b>
                                                     <br>
                                                     @if ($surat->ttd_direktur)
                                                         {!! $surat->ttd_direktur ? QrCode::size(100)->generate($pernyataan_direktur) : '-' !!}
@@ -299,7 +299,7 @@
                                                     @endif
                                                     <br>
                                                     <u>
-                                                        <b>dr. M. LUTHFI, Sp.PD-KHOM, FINASIM.,MMRS</b>
+                                                        <b>dr. H. Moh. Thoyib, MARS</b>
                                                     </u>
                                                     <br>
                                                 </div>
