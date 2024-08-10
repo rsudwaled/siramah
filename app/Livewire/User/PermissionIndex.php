@@ -6,7 +6,7 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 
-class PermissionTable extends Component
+class PermissionIndex extends Component
 {
     public $id, $name, $permissions;
     public $form = false;
@@ -54,6 +54,7 @@ class PermissionTable extends Component
     }
     public function mount()
     {
+
     }
     public function render()
     {
@@ -61,6 +62,6 @@ class PermissionTable extends Component
         $this->permissions = Permission::orderBy('name', 'asc')
             ->where('name', 'like', $search)
             ->get();
-        return view('livewire.user.permission-table');
+        return view('livewire.user.permission-index');
     }
 }
