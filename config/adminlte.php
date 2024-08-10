@@ -1541,8 +1541,8 @@ return [
             ],
         ],
         [
-            'text' => 'profile',
-            'url'  => 'profile',
+            'text' => 'Profil',
+            'url'  => 'profil',
             'icon' => 'fas fa-fw fa-user',
         ],
 

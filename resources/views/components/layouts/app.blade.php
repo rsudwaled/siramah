@@ -2,7 +2,7 @@
 
 @section('content_top_nav_left')
     <li class="nav-item d-none d-sm-inline-block">
-        <a href="{{ route('profile') }}" class="nav-link">{{ Auth::user()->name }} </a>
+        <a href="{{ route('profil') }}" class="nav-link">{{ Auth::user()->name }} </a>
     </li>
 @endsection
 

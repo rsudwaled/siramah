@@ -95,11 +95,11 @@ use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
+use App\Livewire\Profil\ProfilIndex;
 use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
-use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -165,7 +165,8 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
     Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
-    Route::get('profile', UserProfil::class)->name('profile')->lazy(); #ok
+    Route::get('profil', ProfilIndex::class)->name('profil')->lazy();
+
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
