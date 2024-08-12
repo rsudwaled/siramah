@@ -76,7 +76,7 @@
                             $total = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
                                 ->count();
-                            $batal = \App\Models\Kunjungan::whereDate('tgl_masuk',  [$start, $end])
+                            $batal = \App\Models\Kunjungan::whereDate('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
                                 ->where('status_kunjungan', 8)
                                 ->count();

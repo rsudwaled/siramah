@@ -113,7 +113,7 @@
                                     <br>
                                     {{ $item->pasien ? $item->pasien->nik_bpjs : null }}
                                 </td>
-                                <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter->nama_paramedis }}</td>
+                                <td>{{ $item->unit->nama_unit }}<br>{{ $item->dokter?->nama_paramedis }}</td>
                                 <td>
                                     @if ($item->antrian)
                                         @if ($item->antrian->taskid == 0)

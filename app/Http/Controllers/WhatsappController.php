@@ -8,6 +8,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class WhatsappController extends Controller
 {
+    public $baseurl = "192.168.2.30:3000/";
+    public $username = "rswld1";
     public $hari = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
     public function whatsapp(Request $request)
     {
@@ -28,11 +30,11 @@ class WhatsappController extends Controller
             'message' => 'required',
             'number' => 'required',
         ]);
-        $url = env('WHATASAPP_URL') . "send-message";
+        $url = $this->baseurl . "send-message";
         $response = Http::post($url, [
             'number' => $request->number,
             'message' => $request->message,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
@@ -42,42 +44,42 @@ class WhatsappController extends Controller
         $request->validate([
             'message' => 'required',
         ]);
-        $url = env('WHATASAPP_URL') . "send-message-group";
+        $url = $this->baseurl . "send-message-group";
         $response = Http::post($url, [
             'group' => $request->number,
             'message' => $request->message,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
     public function send_notif(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "notif";
+        $url = $this->baseurl . "notif";
         $response = Http::post($url, [
             'message' => $request->notif,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
     public function send_button(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "send-button";
+        $url = $this->baseurl . "send-button";
         $response = Http::post($url, [
             'number' => $request->number,
             'contenttext' => $request->contenttext,
             'footertext' => $request->footertext,
             'titletext' => $request->titletext,
             'buttontext' => $request->buttontext, // 'UMUM,BPJS'
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
     public function send_list(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "send-list";
+        $url = $this->baseurl . "send-list";
         $response = Http::post($url, [
             'number' => $request->number,
             'contenttext' => $request->contenttext,
@@ -87,31 +89,31 @@ class WhatsappController extends Controller
             'titlesection' => $request->titlesection,
             'rowtitle' => $request->rowtitle, #wajib
             'rowdescription' => $request->rowdescription,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
     public function send_image(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "send-media";
+        $url = $this->baseurl . "send-media";
         $response = Http::post($url, [
             'number' => $request->number,
             'fileurl' => $request->fileurl,
             'caption' => $request->caption,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
     }
     public function send_filepath(Request $request)
     {
-        $url = env('WHATASAPP_URL') . "send-filepath";
+        $url = $this->baseurl . "send-filepath";
         $response = Http::post($url, [
             'number' => $request->number,
             'filepath' => $request->filepath,
             'caption' => $request->caption,
-            'username' => env('WHATASAPP_USERNAME'),
+            'username' => $this->username,
         ]);
         $response = json_decode($response->getBody());
         return $response;
@@ -122,7 +124,7 @@ class WhatsappController extends Controller
             $pesan = strtoupper($request->message);
             switch ($pesan) {
                 default:
-                    $request['message'] = "Layanan pendaftaran rawat jalan RSUD Waled dapat melalui dua aplikasi beriku \n\n1. Web SIRAMAH-RS Waled : https://siramah.rsudwaled.id\n\n2. Aplikasi JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
+                    $request['message'] = "Mohon maaf untuk saat ini layanan pendaftaran antrian pasien BPJS hanya bisa melalui Aplikasi Mobile JKN : https://play.google.com/store/apps/details?id=app.bpjs.mobile";
                     // $request['message'] = "test wa api";
                     return $this->send_message($request);
                     break;

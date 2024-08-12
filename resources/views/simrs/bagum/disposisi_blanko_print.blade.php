@@ -207,7 +207,7 @@
                                             </div>
                                             <div class="col-md-6 ">
                                                 <div class="text-center">
-                                                    <b>Direktur RSUD Waled</b>
+                                                    <b>Plt. Direktur RSUD Waled</b>
                                                     <br>
                                                     <br><br><br>
                                                     <br>........................................................

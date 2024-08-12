@@ -64,7 +64,7 @@ class PasienIGDController extends Controller
 
             return [
                 'id' => $item->id,
-                'name' => $item->name . ($kecamatanName ? ' - ' . $kecamatanName.' - '.$kabupatenName : ''), 
+                'name' => $item->name . ($kecamatanName ? ' - ' . $kecamatanName.' - '.$kabupatenName : ''),
             ];
         }));
     }
@@ -235,7 +235,7 @@ class PasienIGDController extends Controller
             'pekerjaan'         => $request->pekerjaan,
             'kewarganegaraan'   => $request->kewarganegaraan,
             'negara'            => $request->kewarganegaraan==1?'INDONESIA':strtoupper($request->negara),
-            'alamat'            => strtoupper($desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien),
+            'alamat'            => strtoupper($request->alamat_lengkap_pasien),
             'no_telp'           => $request->no_telp,
             'no_hp'             => $request->no_telp,
             'tgl_entry'         => Carbon::now(),
@@ -285,7 +285,7 @@ class PasienIGDController extends Controller
     {
         $pasien         = Pasien::firstWhere('no_rm',$request->rm);
         $desa           = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
-        
+
         $pasien->no_Bpjs            = $request->no_bpjs;
         $pasien->nama_px            = strtoupper($request->nama_pasien_baru);
         $pasien->jenis_kelamin      = $request->jk;
@@ -306,7 +306,7 @@ class PasienIGDController extends Controller
         $pasien->kode_kecamatan    = $desa ? $desa->kecamatan->id : $pasien->kode_kecamatan;
         $pasien->kode_desa         = $desa ? $desa->id : $pasien->kode_desa;
 
-        
+
         $pasien->alamat             = strtoupper($request->alamat_lengkap_pasien);
         $pasien->no_tlp             = $request->no_tlp??$request->no_hp;
         $pasien->no_hp              = $request->no_hp??$request->no_tlp;

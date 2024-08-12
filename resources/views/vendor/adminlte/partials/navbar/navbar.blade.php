@@ -25,9 +25,11 @@
             <li class="nav-item d-none d-sm-inline-block mr-1">
                 <a href="{{ route('pasien-baru.create') }}" class="btn btn-sm bg-purple">Pasien Baru</a>
             </li>
-            {{-- <li class="nav-item d-none d-sm-inline-block mr-1">
-                <button class="btn btn-sm bg-success" data-toggle="modal" data-target="#modalEditPenjamin">EDIT PENJAMIN</button>
-            </li> --}}
+            {{-- @can(['Admin Super']) --}}
+            <li class="nav-item d-none d-sm-inline-block mr-1">
+                <button class="btn btn-sm bg-info" id="check-connection">Connection</button>
+            </li>
+            {{-- @endcan --}}
         @else
             <li class="nav-item d-none d-sm-inline-block">
                 <a class="nav-link">Waktu Server {{ now() }}</a>

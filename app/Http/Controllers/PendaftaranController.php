@@ -106,9 +106,9 @@ class PendaftaranController extends APIController
                 $tipetransaksi = 2;
                 $statuslayanan = 2;
                 // rj jkn masuk ke tagihan penjamin
-                $tagihanpenjamin_karcis = $tarifkarcis->TOTAL_TARIF_NEW;
-                $tagihanpenjamin_adm = $tarifadm->TOTAL_TARIF_NEW;
-                $totalpenjamin =  $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
+                $tagihanpenjamin_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpenjamin_adm = $tarifadm->tarif_rajal;
+                $totalpenjamin =  $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
                 $tagihanpribadi_karcis = 0;
                 $tagihanpribadi_adm = 0;
                 $totalpribadi =  0;
@@ -126,11 +126,11 @@ class PendaftaranController extends APIController
                 $tagihanpenjamin_karcis = 0;
                 $tagihanpenjamin_adm = 0;
                 $totalpenjamin =  0;
-                $tagihanpribadi_karcis = $tarifkarcis->TOTAL_TARIF_NEW;
-                $tagihanpribadi_adm = $tarifadm->TOTAL_TARIF_NEW;
-                $request['tarifkarcis'] =  $tarifkarcis->TOTAL_TARIF_NEW;
-                $request['tarifadm'] =  $tarifadm->TOTAL_TARIF_NEW;
-                $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
+                $tagihanpribadi_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpribadi_adm = $tarifadm->tarif_rajal;
+                $request['tarifkarcis'] =  $tarifkarcis->tarif_rajal;
+                $request['tarifadm'] =  $tarifadm->tarif_rajal;
+                $totalpribadi = $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
             }
             if ($antrian->kode_kunjungan == null) {
                 try {
@@ -207,12 +207,12 @@ class PendaftaranController extends APIController
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifkarcis->TOTAL_TARIF_NEW,
+                            'total_tarif' => $tarifkarcis->tarif_rajal,
                             'jumlah_layanan' => 1,
                             'tagihan_pribadi' => $tagihanpribadi_karcis,
                             'tagihan_penjamin' => $tagihanpenjamin_karcis,
-                            'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
+                            'total_layanan' => $tarifkarcis->tarif_rajal,
+                            'grantotal_layanan' => $tarifkarcis->tarif_rajal,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
                             'tgl_layanan_detail' =>  $now,
                             'status_layanan_detail' => "OPN",
@@ -228,12 +228,12 @@ class PendaftaranController extends APIController
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifadm->TOTAL_TARIF_NEW,
+                            'total_tarif' => $tarifadm->tarif_rajal,
                             'jumlah_layanan' => 1,
                             'tagihan_pribadi' =>  $tagihanpribadi_adm,
                             'tagihan_penjamin' =>  $tagihanpenjamin_adm,
-                            'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
+                            'total_layanan' => $tarifadm->tarif_rajal,
+                            'grantotal_layanan' => $tarifadm->tarif_rajal,
                             'kode_dokter1' => 0,
                             'tgl_layanan_detail' =>  $now,
                             'status_layanan_detail' => "OPN",
@@ -242,7 +242,7 @@ class PendaftaranController extends APIController
                     );
                     //  update layanan header total tagihan
                     $layananbaru->update([
-                        'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW,
+                        'total_layanan' => $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal,
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
@@ -528,10 +528,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -571,10 +571,10 @@ class PendaftaranController extends APIController
                     $printer = env('PRINTER_CHECKIN');
                 } else if ($request->ip() == "192.168.2.51") {
                     $printer = env('PRINTER_CHECKIN2');
-                } else if ($request->ip() == "192.168.2.58") {
-                    $printer = env('PRINTER_CHECKIN3');
-                } else {
+                } else if ($request->ip() == "192.168.2.218") {
                     $printer = env('PRINTER_CHECKIN_MJKN');
+                } else {
+                    $printer = env('PRINTER_CHECKIN3');
                 }
                 $connector = new WindowsPrintConnector($printer);
                 $printer = new Printer($connector);
@@ -599,10 +599,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -752,9 +752,9 @@ class PendaftaranController extends APIController
         } else {
             $message = $jadwal->metadata->message;
             // kirim notif
-            $wa = new WhatsappController();
-            $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
-            $wa->send_notif($request);
+            // $wa = new WhatsappController();
+            // $request['notif'] = 'Method ' . $request->method . ' jadwal , ' . $message;
+            // $wa->send_notif($request);
             return $this->sendError('Mohon maaf , ' . $message, 400);
         }
         $antrian_poli = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -841,10 +841,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -888,10 +888,10 @@ class PendaftaranController extends APIController
             $printer = env('PRINTER_CHECKIN');
         } else if ($request->ip() == "192.168.2.51") {
             $printer = env('PRINTER_CHECKIN2');
-        } else if ($request->ip() == "192.168.2.58") {
-            $printer = env('PRINTER_CHECKIN3');
-        } else {
+        } else if ($request->ip() == "192.168.2.218") {
             $printer = env('PRINTER_CHECKIN_MJKN');
+        } else {
+            $printer = env('PRINTER_CHECKIN3');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -964,10 +964,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -1021,10 +1021,10 @@ class PendaftaranController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);

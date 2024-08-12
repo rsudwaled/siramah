@@ -16,6 +16,7 @@
         $total = 0;
     @endphp
     <div class="row">
+        {{-- profil --}}
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
                 <div class="row">

@@ -16,6 +16,7 @@
     <audio id="nomor1" src=""></audio>
     <audio id="belas" src="{{ asset('rekaman/belas.mp3') }}"></audio>
     <audio id="puluh" src="{{ asset('rekaman/puluh.mp3') }}"></audio>
+    <audio id="ratus" src="{{ asset('rekaman/ratus.mp3') }}"></audio>
 @stop
 @section('adminlte_css')
     @livewireStyles
@@ -166,6 +167,17 @@
                     }, totalwaktu);
                     totalwaktu = totalwaktu + 1000;
                 }
+            } else if (angkaantrian == 100) {
+                $("#nomor0").attr("src",
+                    "{{ route('landingpage') }}{{ env('APP_ENV') === 'production' ? '/public' : null }}/rekaman/seratus.mp3"
+                );
+                console.log("{{ route('landingpage') }}{{ env('APP_ENV') === 'production' ? '/public' : null }}/rekaman/seratus.mp3");
+                setTimeout(function() {
+                    document.getElementById('nomor0').pause();
+                    document.getElementById('nomor0').currentTime = 0;
+                    document.getElementById('nomor0').play();
+                }, totalwaktu);
+                totalwaktu = totalwaktu + 1000;
             }
         }
 

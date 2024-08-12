@@ -66,31 +66,16 @@
                         <table id="table" class="table table-bordered table-hover datatable">
                             <thead>
                                 <tr>
-                                    {{-- <th>Nama Rumah Sakit/Fasyankes</th> --}}
-                                    <th>No Lab</th>
-                                    <th>Unit</th>
-                                    <th>Usia</th>
-                                    <th>ICD</th>
-                                    <th>NIK</th>
-                                    <th>No RM</th>
-                                    <th>Kode RS</th>
-                                    <th>Nama</th>
-                                    <th>Tempat Lahir</th>
-                                    <th>Tanggal Lahir</th>
-                                    <th>Jenis Kelamin</th>
-                                    {{-- <th>Agama</th>
-                                    <th>Pekerjaan</th>
-                                    <th>Alamat</th>
-                                    <th>Provinsi</th>
-                                    <th>Kabupaten</th>
-                                    <th>Kecamatan</th>
-                                    <th>Desa</th>
-                                    <th>Kontak</th>
+                                    <th>Pasien</th>
                                     <th>Tanggal</th>
+                                    <th>Jenis</th>
                                     <th>Lama Rawat</th>
-                                    <th>Kasus</th>
+                                    <th>Ruangan</th>
+                                    <th>No Lab</th>
+                                    <th>Kasus Baru</th>
+                                    <th>Diagnosa Utama</th>
                                     <th>Diagnosa Sekunder</th>
-                                    <th>Diagnosa Operasi</th> --}}
+                                    <th>Diagnosa Operasi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,10 +99,25 @@
                                             ->get();
                                     @endphp
                                     <tr>
-                                        {{-- <td>RSUD WALED</td> --}}
+                                        <td>
+                                            RM: {{ $pasien->no_rm }} <br>
+                                            NAMA: {{ $pasien->nama_px }} <br>
+                                            JK: {{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }} <br>
+                                            alamat : {{$pasien->desa_name}} - {{$pasien->kecamatan_name}} {{$pasien->kabupaten_name}} {{$pasien->provinsi_name}}
+                                        </td>
+                                        <td>
+                                            Masuk: {{ $pasien->tgl_masuk }} <br>
+                                            Keluar: {{ $pasien->tgl_keluar??'-' }} <br>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge {{ $pasien->id_ruangan == null ? 'badge-danger' : 'badge-success' }}">{{ $pasien->id_ruangan == null ? 'RAJAL' : 'RANAP' }}</span>
+                                        </td>
+                                        <td>{{ $keluar ? $keluar->diffInDays($masuk) : 0 }}</td>
+                                        <td>{{ $pasien->kamar??'-' }} | {{ $pasien->no_bed??'-' }}</td>
                                         <td>
                                             @if ($labDetails->isNotEmpty())
-                                                <p>Data Lab:</p>
+                                                <p>No Lab:</p>
                                                 <ul>
                                                     @foreach ($labDetails as $item)
                                                         <li>{{ $item->LisNoLab }}</li>
@@ -127,35 +127,10 @@
                                                 <p>Data lab tidak ditemukan.</p>
                                             @endif
                                         </td>
-                                        <td>
-                                            <span
-                                                class="badge {{ $pasien->id_ruangan == null ? 'badge-danger' : 'badge-success' }}">{{ $pasien->id_ruangan == null ? 'RAJAL' : 'RANAP' }}</span>
-                                        </td>
-                                        <td>{{ $tanggalLahir->age }}</td>
-                                        <td>{{ $pasien->diag_utama }}</td>
-                                        <td>{{ $pasien->nik_bpjs }}</td>
-                                        <td>3209014</td>
-                                        <td>{{ $pasien->no_rm }}</td>
-                                        <td>{{ $pasien->nama_px }}</td>
-                                        <td>{{ $pasien->tempat_lahir }}</td>
-                                        <td>{{ $pasien->tgl_lahir }}</td>
-                                        <td>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                                        {{-- <td>{{ $pasien->agama}}</td>
-                                        <td>{{ $pasien->pekerjaan}}</td>
-                                        <td>{{$pasien->alamat}}</td>
-                                        <td>{{$pasien->provinsi_name}}</td>
-                                        <td>{{$pasien->kabupaten_name}} </td>
-                                        <td>{{$pasien->kecamatan_name}}  </td>
-                                        <td>{{$pasien->desa_name}}  </td>
-                                        <td>{{$pasien->no_hp??$pasien->no_tlp}} </td>
-                                        <td>
-                                            Masuk: {{ $pasien->tgl_masuk }} <br>
-                                            Keluar: {{ $pasien->tgl_keluar }} <br>
-                                        </td>
-                                        <td>{{$keluar ? $keluar->diffInDays($masuk) : 0}}</td>
                                         <td>{{ $pasien->kasus_baru }}</td>
+                                        <td>{{ $pasien->diag_utama }} | {{ $pasien->diag_utama_desc }}</td>
                                         <td>{{ $pasien->diagnosa_sekunder }}</td>
-                                        <td>{{ $pasien->diag_sekunder_04.' | '.$pasien->diag_sekunder4_desc }}</td> --}}
+                                        <td>{{ $pasien->diag_sekunder_04.' - '.$pasien->diag_sekunder4_desc }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

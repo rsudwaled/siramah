@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Laporan Diagnosa C00</title>
 </head>
 
 <body>
@@ -65,31 +62,29 @@
                     <td>{{ $pasien->id_ruangan == null ? 'RAJAL' : 'RANAP' }}</td>
                     <td>{{ $tanggalLahir->age }}</td>
                     <td>{{ $pasien->diag_utama }}</td>
-                    <td>{{ $pasien->nik_bpjs ? "'" . $pasien->nik_bpjs : '' }}</td>
+                    <td>{{ $pasien->nik_bpjs ? "'".$pasien->nik_bpjs : "" }}</td>
                     <td>{{ $pasien->no_rm }}</td>
                     <td>3209014</td>
                     <td>{{ $pasien->nama_px }}</td>
                     <td>{{ $pasien->tempat_lahir }}</td>
                     <td>{{ $pasien->tgl_lahir }}</td>
                     <td>{{ $pasien->jenis_kelamin == 'L' ? 'Laki-Laki' : 'Perempuan' }}</td>
-                    {{-- <td>{{ $pasien->agama}}</td>
-                    <td>{{ $pasien->pekerjaan}}</td> --}}
-                    <td>-</td>
-                    <td>-</td>
-                    <td>{{ $pasien->alamat }}</td>
-                    <td>{{ $pasien->provinsi_name }}</td>
-                    <td>{{ $pasien->kabupaten_name }} </td>
-                    <td>{{ $pasien->kecamatan_name }} </td>
-                    <td>{{ $pasien->desa_name }} </td>
-                    <td>{{ $pasien->no_hp ?? $pasien->no_tlp }} </td>
-                    <td>{{ $pasien->tgl_masuk ?? '-' }}</td>
-                    <td>{{ $pasien->tgl_keluar ?? '-' }}</td>
-                    <td>{{ $keluar ? $keluar->diffInDays($masuk) : 0 }}</td>
+                    <td>{{ $pasien->agama}}</td>
+                    <td>{{ $pasien->pekerjaan}}</td>
+                    <td>{{$pasien->alamat}}</td>
+                    <td>{{$pasien->provinsi_name}}</td>
+                    <td>{{$pasien->kabupaten_name}} </td>
+                    <td>{{$pasien->kecamatan_name}}  </td>
+                    <td>{{$pasien->desa_name}}  </td>
+                    <td>{{$pasien->no_hp??$pasien->no_tlp}} </td>
+                    <td>{{ $pasien->tgl_masuk??'-' }}</td>
+                    <td>{{ $pasien->tgl_keluar??'-' }}</td>
+                    <td>{{$keluar ? $keluar->diffInDays($masuk) : 0}}</td>
                     <td>{{ $pasien->kasus_baru }}</td>
                     <td>{{ $pasien->diagnosa_sekunder }}</td>
-                    <td>{{ $pasien->diag_sekunder_04 . ' | ' . $pasien->diag_sekunder4_desc }}</td>
-                    <td>{{ $pasien->meninggal_lb_48jam == 0 ? '-' : 'Ya' }}</td>
-                    <td>{{ $pasien->meninggal_kr_48jam == 0 ? '-' : 'Ya' }}</td>
+                    <td>{{ $pasien->diag_sekunder_04.' | '.$pasien->diag_sekunder4_desc }}</td>
+                    <td>{{$pasien->meninggal_lb_48jam==0?'-':'Ya'}}</td>
+                    <td>{{$pasien->meninggal_kr_48jam==0?'-':'Ya'}}</td>
                     <td>
                         @if ($labDetails->isNotEmpty())
                             <p>Data Lab:</p>

@@ -7,8 +7,8 @@
             </div>
             <div class="col-lg-3 col-6">
                 <x-adminlte-small-box
-                    title="{{ count($antrians) ? $antrians->where('jenispasien', 'JKN')->count() : 0 }}" text="Pasien JKN"
-                    theme="primary" icon="fas fa-user-injured" />
+                    title="{{ count($antrians) ? $antrians->where('jenispasien', 'JKN')->count() : 0 }}"
+                    text="Pasien JKN" theme="primary" icon="fas fa-user-injured" />
             </div>
             <div class="col-lg-3 col-6">
                 <x-adminlte-small-box
@@ -35,7 +35,7 @@
                     </x-adminlte-input>
                 </div>
                 <div class="col-md-2">
-                    <x-adminlte-select wire:model.change="jenispasien" name="jenispasien" igroup-size="sm">
+                    <x-adminlte-select2 wire:model.change="jenispasien" name="jenispasien" igroup-size="sm">
                         <x-slot name="prependSlot">
                             <div class="input-group-text text-primary">
                                 <i class="fas fa-user"></i>
@@ -44,7 +44,7 @@
                         <option value="">Semua Jenis Pasien</option>
                         <option value="JKN">JKN</option>
                         <option value="NON-JKN">NON-JKN</option>
-                    </x-adminlte-select>
+                    </x-adminlte-select2>
                 </div>
                 <div class="col-md-4">
                     <x-adminlte-input wire:model.live="search" name="search"
@@ -170,3 +170,12 @@
         </x-adminlte-card>
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:load', function() {
+        alert('test');
+        // $('.select2').select2();
+        // Livewire.hook('message.processed', (message, component) => {
+        //     $('.select2').select2();
+        // });
+    });
+</script>

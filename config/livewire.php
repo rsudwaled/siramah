@@ -157,5 +157,5 @@ return [
     */
 
     'pagination_theme' => 'bootstrap',
-    'asset_url' =>  env('APP_ENV') === 'production' ?    'http://sim.rsudwaled.id/siramah/public/vendor/livewire/livewire.js' : null,
+    'asset_url' =>  env('APP_ENV') === 'production' ?    'https://app.rsudwaled.id/vendor/livewire/livewire.js?id=cc800bf4' : null,
 ];

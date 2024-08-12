@@ -33,6 +33,7 @@ use App\Http\Controllers\LaporanPenyakitRawatInapPenelitianController;
 use App\Http\Controllers\LaporanPenyakitRawatJalanPenelitianController;
 use App\Http\Controllers\LaporanDiagnosaSurvailansInapController;
 use App\Http\Controllers\LaporanDiagnosaSurvailansRawatJalanController;
+use App\Http\Controllers\RM\LaporanRmController;
 use App\Http\Controllers\FormulirRL1Controller;
 use App\Http\Controllers\FormulirRL2Controller;
 use App\Http\Controllers\FormulirRL3Controller;
@@ -56,10 +57,13 @@ use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\PractitionerController;
 use App\Http\Controllers\RadiologiController;
 use App\Http\Controllers\RanapController;
+use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
+use App\Livewire\Antrian\DisplayJadwalRajal;
+use App\Livewire\Bagianumum\LaporanSuratMasuk;
 use App\Livewire\Bpjs\Antrian\AntreanBelumLayani;
 use App\Livewire\Bpjs\Antrian\AntreanDokter;
 use App\Livewire\Bpjs\Antrian\AntreanKodebooking;
@@ -81,15 +85,21 @@ use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
+use App\Livewire\Casemix\CasemixRajal;
+use App\Livewire\Casemix\CasemixRajalDetail;
+use App\Livewire\Farmasi\AntrianFarmasiRajal;
+use App\Livewire\Farmasi\DisplayAntrianFarmasi;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
+use App\Livewire\Profil\ProfilIndex;
+use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
+use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
-use App\Livewire\User\UserProfil;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -140,7 +150,11 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
-Route::get('displayantrian3', [PoliklinikController::class, 'displayantrian3'])->name('displayantrian3');
+Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display-jadwal-rajal');
+
+Route::get('displayantrianfarmasi/{lantai}', [AntrianController::class, 'displayantrianfarmasi'])->name('displayantrianfarmasi');
+Route::get('displaynomorfarmasi/{lantai}', [AntrianController::class, 'displaynomorfarmasi'])->name('displaynomorfarmasi');
+Route::get('panggilnomorfarmasi', [AntrianController::class, 'panggilnomorfarmasi'])->name('panggilnomorfarmasi');
 
 
 // cppt
@@ -150,7 +164,9 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
-    Route::get('profile', UserProfil::class)->name('profile')->lazy(); #ok
+    Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
+    Route::get('profil', ProfilIndex::class)->name('profil')->lazy();
+
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
@@ -176,6 +192,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('jadwaldokter', JadwalDokterController::class);
     Route::resource('jadwaloperasi', JadwalOperasiController::class);
     Route::resource('suratmasuk', SuratMasukController::class);
+    Route::get('laporan-suratmasuk', LaporanSuratMasuk::class)->name('laporan.suratmasuk');
+    Route::get('laporan-suratmasuk-print', [SuratMasukController::class, 'laporansuratmasukprint'])->name('laporan.suratmasuk.print');
     Route::resource('suratlampiran', SuratLampiranController::class);
     Route::resource('disposisi', DisposisiController::class);
     Route::resource('pasien', PasienController::class);
@@ -238,6 +256,16 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
+    //  rekammedis
+    Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
+    Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
+    Route::get('monitoring-antrian-rajal', MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
+    //  casemix
+    Route::get('casemix-rajal', CasemixRajal::class)->name('casemix-rajal');
+    Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');
+    // rajal
+    Route::get('resume-rajal-print', [RekamMedisController::class, 'resumerajalprint'])->name('resume-rajal-print');
+    Route::get('sep-print', [RekamMedisController::class, 'seprajalprint'])->name('sep-rajal-print');
     // ranap
     Route::get('pasienRanapAktif', [RanapController::class, 'kunjunganranap'])->name('pasienRanapAktif');
     Route::get('pasienRanap', [RanapController::class, 'kunjunganranap'])->name('pasienRanap');
@@ -306,6 +334,7 @@ Route::middleware('auth')->group(function () {
     Route::get('hasillabpa', [PatologiAnatomiController::class, 'hasillabpa'])->name('hasillabpa');
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
+    Route::get('antrian-farmasi-rajal', AntrianFarmasiRajal::class)->name('antrian.farmasi.rajal');
     Route::get('getAntrianFarmasi', [AntrianController::class, 'getAntrianFarmasi'])->name('getAntrianFarmasi');
     Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
     Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');
@@ -682,10 +711,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
         Route::get('/', 'index')->name('index');
     });
-    // Tracer User Pendaftaran
+
     Route::controller(App\Http\Controllers\RM\LaporanRmController::class)->prefix('laporan-rm')->name('simrs.laporan-rm.')->group(function () {
         Route::get('/diagnosa-m80-m82', 'laporanM80ToM82')->name('laporan.m80-m82');
         Route::get('/diagnosa-C00-C99', 'laporanc00')->name('laporan.C00');
         Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
     });
+    // End GIZI
 });

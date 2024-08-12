@@ -37,8 +37,6 @@ class KunjunganController extends Controller
     {
         $showData           = $request->view;
         $showDataSepCount   = null;
-        
-        $start_date         = Carbon::parse(now())->startOfDay();
         $end_date           = Carbon::parse(now())->endOfDay();
 
         $query = DB::connection('mysql2')->table('ts_kunjungan')
@@ -86,14 +84,14 @@ class KunjunganController extends Controller
                     $query->whereDate('ts_kunjungan.tgl_masuk', now())->whereNull('ts_kunjungan.no_sep');
                 }
             }
-        
+
         if($showData ==='kunjungan_ranap')
         {
             $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }else{
             $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }
-        
+
         $showDataSepCount   = $query->whereDate('tgl_masuk', now())->whereNotNull('ts_kunjungan.no_sep')->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->count();
         $unit       = Unit::where('kelas_unit', 1)->get();
         $paramedis  = Paramedis::whereNotNull('kode_dokter_jkn')->get();
@@ -336,7 +334,7 @@ class KunjunganController extends Controller
         $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_igd', ['data'=>$res->response,'history'=>$histories]);
         return $pdf->stream('cetak-sep-pasien.pdf');
     }
-    
+
     public function tutupKunjungan(Request $request)
     {
         $updateStatus = Kunjungan::where('kode_kunjungan', $request->kode)->first();

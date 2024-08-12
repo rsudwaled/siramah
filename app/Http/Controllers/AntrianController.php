@@ -9,6 +9,7 @@ use App\Models\JadwalOperasi;
 use App\Models\Kunjungan;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
+use App\Models\OrderObatHeader;
 use App\Models\Paramedis;
 use App\Models\Pasien;
 use App\Models\Penjamin;
@@ -67,6 +68,68 @@ class AntrianController extends APIController
             'user' => 'Sistem Siramah',
         ]);
         return redirect()->back();
+    }
+    public function displayantrianfarmasi($lantai)
+    {
+        return view('livewire.farmasi.display-antrian-farmasi', compact('lantai'));
+    }
+    public function displaynomorfarmasi($lantai)
+    {
+        if ($lantai == 2) {
+            $unit = 4008;
+        } else {
+            $unit = 4002;
+        }
+        $orders = [];
+        $tanggal = now()->format('Y-m-d');
+        if ($tanggal && $unit) {
+            $ordersx = OrderObatHeader::with(['pasien'])
+                ->whereDate('tgl_entry', $tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
+                ->where('kode_unit', $unit)
+                ->where('unit_pengirim', '!=', '1016')
+                ->get();
+
+            $orders = $ordersx;
+        }
+        if ($tanggal && $unit == 4002) {
+            $orders_yasmin = OrderObatHeader::with(['pasien'])
+                ->whereDate('tgl_entry',  $tanggal)
+                ->where('status_order', '!=', 0)
+                ->where('status_order', '!=', 99)
+                ->where('unit_pengirim', '1016')
+                ->get();
+            $ordersx = $ordersx->merge($orders_yasmin);
+            $orders = $ordersx;
+        }
+        $antrianpanggil = $orders->where('panggil', 1)->sortByDesc('updated_at')->first();
+        $antriansudahpanggil = $orders->where('panggil', 2)->sortByDesc('updated_at')->first();
+        // dd($antrianpanggil);
+        // $farmasipanggil = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('taskid', 6)->first();
+        // $antrianfarmasi = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('taskid', 6)->get(['nomorantrean', 'nama']);
+        $data = [
+            "nomorsudahpanggil" => $antriansudahpanggil ? substr($antriansudahpanggil->kode_layanan_header, -3) : '-',
+            "namasudahpanggil" => $antriansudahpanggil ? $antriansudahpanggil->pasien?->nama_px : '-',
+            "kodepanggil" => $antrianpanggil ? $antrianpanggil->id : '-',
+            "nomorpanggil" => $antrianpanggil ? intval(substr($antrianpanggil->kode_layanan_header, -3))  : '-',
+            "statuspanggil" => $antrianpanggil ?  $antrianpanggil->panggil : 0,
+            "daftarantrian" => $orders->where('panggil', 0)->pluck('pasien.nama_px', 'kode_layanan_header'),
+            "totalantrian" => $orders->count(),
+        ];
+        return $this->sendResponse($data, 200);
+    }
+    public function panggilnomorfarmasi(Request $request)
+    {
+        $antrian = OrderObatHeader::find($request->kodebooking);
+        if ($antrian) {
+            $antrian->update([
+                'panggil' => 2,
+            ]);
+            return $this->sendResponse('Antrian telah dipanggil', 200);
+        } else {
+            return $this->sendError('Antrian tidak ditemukan', 400);
+        }
     }
     public function antrianFarmasi(Request $request)
     {
@@ -822,7 +885,7 @@ class AntrianController extends APIController
             if ($antrian->taskid3) {
                 $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
             } else {
-                $request['waktu'] = Carbon::now()->subMinutes(rand(30, 60));
+                $request['waktu'] = Carbon::now()->subMinutes(rand(30, 45));
                 $antrian->update([
                     'taskid3' =>  $request->waktu,
                     'user3' => auth()->user()->name,
@@ -1555,9 +1618,9 @@ class AntrianController extends APIController
             ]);
         }
         // kirim notif
-        $wa = new WhatsappController();
-        $request['notif'] = 'Daftar antrian bridging ' . $request->kodebooking;
-        $wa->send_notif($request);
+        // $wa = new WhatsappController();
+        // $request['notif'] = 'Daftar antrian bridging ' . $request->kodebooking;
+        // $wa->send_notif($request);
         return response()->json($response);
     }
     public function bridging_taskid_4(Request $request)
@@ -1639,8 +1702,8 @@ class AntrianController extends APIController
         $res = $this->update_antrean($request);
         // kirim notif
         $wa = new WhatsappController();
-        $request['notif'] = $res->metadata->message . '-' . $res->metadata->code . " \n Panggil Antrian Bridging " . $antrian->nama . " di Poliklinik " . $antrian->namapoli;
-        $wa->send_notif($request);
+        // $request['notif'] = $res->metadata->message . '-' . $res->metadata->code . " \n Panggil Antrian Bridging " . $antrian->nama . " di Poliklinik " . $antrian->namapoli;
+        // $wa->send_notif($request);
         if ($res->metadata->code == 200 || $res->metadata->code == 208) {
             $antrian->update([
                 'taskid' => 4
@@ -1909,16 +1972,16 @@ class AntrianController extends APIController
             ]);
         }
         if ($validator->fails()) {
-            return $this->sendError($validator->errors()->first(), 400);
+            return $this->sendError($validator->errors()->first(), 201);
         }
         try {
             // check tanggal backdate
             if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
-                return $this->sendError("Tanggal periksa sudah terlewat", 400);
+                return $this->sendError("Tanggal periksa sudah terlewat", 201);
             }
             // check tanggal hanya 7 hari
             if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
-                return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 400);
+                return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
             }
             // cek duplikasi nik antrian
             $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -1926,7 +1989,7 @@ class AntrianController extends APIController
                 ->where('taskid', '<=', 5)
                 ->first();
             if ($antrian_nik) {
-                return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  409);
+                return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
             }
             // cek pasien baru
             $request['pasienbaru'] = 0;
@@ -1966,11 +2029,11 @@ class AntrianController extends APIController
                         $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
                         // cek surat kontrol orang lain
                         if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
-                            return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 400);
+                            return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 201);
                         }
                         // cek surat tanggal kontrol
                         // if (Carbon::parse($suratkontrol->tglRencanaKontrol) != Carbon::parse($request->tanggalperiksa)) {
-                        //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 400);
+                        //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
@@ -2007,7 +2070,7 @@ class AntrianController extends APIController
                 $request['namadokter'] = $jadwal->namadokter;
             } else {
                 $message = $jadwal->metadata->message;
-                return $this->sendError('Mohon maaf , ' . $message, 400);
+                return $this->sendError('Mohon maaf , ' . $message, 201);
             }
             // menghitung nomor antrian
             $antrian_all = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
@@ -2086,14 +2149,14 @@ class AntrianController extends APIController
                     "nama" => $request->nama,
                 ]);
                 // kirim notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                $request['number'] = $request->nohp;
-                $wa->send_message($request);
+                // $wa = new WhatsappController();
+                // $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                // $request['number'] = $request->nohp;
+                // $wa->send_message($request);
                 // kirim notif
-                $wa = new WhatsappController();
-                $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
-                $wa->send_notif($request);
+                // $wa = new WhatsappController();
+                // $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
+                // $wa->send_notif($request);
                 if ($request->method == 'Bridging') {
                     $antrian->update([
                         'taskid' => 3,
@@ -2107,7 +2170,7 @@ class AntrianController extends APIController
                     "nomorantrean" => $request->nomorantrean,
                     "angkaantrean" => $request->angkaantrean,
                     "kodebooking" => $request->kodebooking,
-                    "norm" =>  substr($request->norm, 2),
+                    "norm" =>  $request->norm,
                     "namapoli" => $request->namapoli,
                     "namadokter" => $request->namadokter,
                     "estimasidilayani" => $request->estimasidilayani,
@@ -2119,10 +2182,10 @@ class AntrianController extends APIController
                 ];
                 return $this->sendResponse($response, 200);
             } else {
-                return $this->sendError($response->metadata->message, 400);
+                return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
-            return $this->sendError($th->getMessage(), 400);
+            return $this->sendError($th->getMessage(), 201);
         }
     }
     public function sisa_antrian(Request $request)
@@ -2186,9 +2249,9 @@ class AntrianController extends APIController
                 "status_api" => 1,
                 "keterangan" => $request->keterangan,
             ]);
-            $wa = new WhatsappController();
-            $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
-            $request['number'] = $antrian->nohp;
+            // $wa = new WhatsappController();
+            // $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
+            // $request['number'] = $antrian->nohp;
             // $wa->send_message($request);
             return $this->sendError($response->metadata->message, 200);
         }
@@ -2206,10 +2269,10 @@ class AntrianController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);
@@ -2452,9 +2515,9 @@ class AntrianController extends APIController
                 $tipetransaksi = 2;
                 $statuslayanan = 2;
                 // rj jkn masuk ke tagihan penjamin
-                $tagihanpenjamin_karcis = $tarifkarcis->TOTAL_TARIF_NEW;
-                $tagihanpenjamin_adm = $tarifadm->TOTAL_TARIF_NEW;
-                $totalpenjamin =  $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
+                $tagihanpenjamin_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpenjamin_adm = $tarifadm->tarif_rajal;
+                $totalpenjamin =  $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
                 $tagihanpribadi_karcis = 0;
                 $tagihanpribadi_adm = 0;
                 $totalpribadi =  0;
@@ -2474,9 +2537,9 @@ class AntrianController extends APIController
                 $tagihanpenjamin_adm = 0;
                 $totalpenjamin =  0;
 
-                $tagihanpribadi_karcis = $tarifkarcis->TOTAL_TARIF_NEW;
-                $tagihanpribadi_adm = $tarifadm->TOTAL_TARIF_NEW;
-                $totalpribadi = $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW;
+                $tagihanpribadi_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpribadi_adm = $tarifadm->tarif_rajal;
+                $totalpribadi = $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
             }
             // percobaan jika kunjungan kosong
             if ($antrian->kode_kunjungan == null) {
@@ -2551,12 +2614,12 @@ class AntrianController extends APIController
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifkarcis->TOTAL_TARIF_NEW,
+                            'total_tarif' => $tarifkarcis->tarif_rajal,
                             'jumlah_layanan' => 1,
                             'tagihan_pribadi' => $tagihanpribadi_karcis,
                             'tagihan_penjamin' => $tagihanpenjamin_karcis,
-                            'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifkarcis->TOTAL_TARIF_NEW,
+                            'total_layanan' => $tarifkarcis->tarif_rajal,
+                            'grantotal_layanan' => $tarifkarcis->tarif_rajal,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
                             'tgl_layanan_detail' =>   now(),
                             'status_layanan_detail' => "OPN",
@@ -2572,12 +2635,12 @@ class AntrianController extends APIController
                             'row_id_header' => $layananbaru->id,
                             'kode_layanan_header' => $layananbaru->kode_layanan_header,
                             'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
-                            'total_tarif' => $tarifadm->TOTAL_TARIF_NEW,
+                            'total_tarif' => $tarifadm->tarif_rajal,
                             'jumlah_layanan' => 1,
                             'tagihan_pribadi' =>  $tagihanpribadi_adm,
                             'tagihan_penjamin' =>  $tagihanpenjamin_adm,
-                            'total_layanan' => $tarifadm->TOTAL_TARIF_NEW,
-                            'grantotal_layanan' => $tarifadm->TOTAL_TARIF_NEW,
+                            'total_layanan' => $tarifadm->tarif_rajal,
+                            'grantotal_layanan' => $tarifadm->tarif_rajal,
                             'kode_dokter1' => 0,
                             'tgl_layanan_detail' =>  now(),
                             'status_layanan_detail' => "OPN",
@@ -2586,7 +2649,7 @@ class AntrianController extends APIController
                     );
                     //  update layanan header total tagihan
                     $layananbaru->update([
-                        'total_layanan' => $tarifkarcis->TOTAL_TARIF_NEW + $tarifadm->TOTAL_TARIF_NEW,
+                        'total_layanan' => $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal,
                         'tagihan_pribadi' => $totalpribadi,
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
@@ -2643,8 +2706,8 @@ class AntrianController extends APIController
                 ]);
                 // print antrian
                 $print_karcis = new AntrianController();
-                $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
-                $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+                $request['tarifkarcis'] = $tarifkarcis->tarif_rajal;
+                $request['tarifadm'] = $tarifadm->tarif_rajal;
                 $request['norm'] = $antrian->norm;
                 $request['nama'] = $antrian->nama;
                 $request['nik'] = $antrian->nik;
@@ -2663,10 +2726,10 @@ class AntrianController extends APIController
                 $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
                 $print_karcis->print_karcis($request, $kunjungan);
                 // notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "Antrian atas nama pasien " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
-                $request['number'] = $antrian->nohp;
-                $wa->send_message($request);
+                // $wa = new WhatsappController();
+                // $request['message'] = "Antrian atas nama pasien " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
+                // $request['number'] = $antrian->nohp;
+                // $wa->send_message($request);
             } catch (\Throwable $th) {
                 return $this->sendError("Error Update Antrian : " . $th->getMessage(), 201);
             }
@@ -2975,10 +3038,10 @@ class AntrianController extends APIController
             $printer = env('PRINTER_CHECKIN');
         } else if ($request->ip() == "192.168.2.51") {
             $printer = env('PRINTER_CHECKIN2');
-        } else if ($request->ip() == "192.168.2.58") {
-            $printer = env('PRINTER_CHECKIN3');
-        } else {
+        } else if ($request->ip() == "192.168.2.218") {
             $printer = env('PRINTER_CHECKIN_MJKN');
+        } else {
+            $printer = env('PRINTER_CHECKIN3');
         }
         $connector = new WindowsPrintConnector($printer);
         $printer = new Printer($connector);
@@ -3072,8 +3135,8 @@ class AntrianController extends APIController
             default:
                 break;
         }
-        $request['tarifkarcis'] = $tarifkarcis->TOTAL_TARIF_NEW;
-        $request['tarifadm'] = $tarifadm->TOTAL_TARIF_NEW;
+        $request['tarifkarcis'] = $tarifkarcis->tarif_rajal;
+        $request['tarifadm'] = $tarifadm->tarif_rajal;
         $request['norm'] = $antrian->norm;
         $request['nama'] = $antrian->nama;
         $request['nik'] = $antrian->nik;
@@ -3120,10 +3183,10 @@ class AntrianController extends APIController
                 $printer = env('PRINTER_CHECKIN');
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = env('PRINTER_CHECKIN2');
-            } else if ($request->ip() == "192.168.2.58") {
-                $printer = env('PRINTER_CHECKIN3');
-            } else {
+            } else if ($request->ip() == "192.168.2.218") {
                 $printer = env('PRINTER_CHECKIN_MJKN');
+            } else {
+                $printer = env('PRINTER_CHECKIN3');
             }
             $connector = new WindowsPrintConnector($printer);
             $printer = new Printer($connector);

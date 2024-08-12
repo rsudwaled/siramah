@@ -1,6 +1,5 @@
-<div class="row">
-
-    @if (isset($antrians))
+<div>
+    {{-- @if (isset($kunjungans))
         <div class="col-md-12">
             <div class="row">
                 <div class="col-lg-3 col-6">
@@ -17,20 +16,33 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endif --}}
     <div class="col-md-12">
-        <x-adminlte-card title="Table Antrian Pendaftaran" theme="secondary">
+        <x-adminlte-card title="Tabel Pasien Rawat Jalan" theme="secondary">
             @if (flash()->message)
                 <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }} !" dismissable>
                     {{ flash()->message }}
                 </x-adminlte-alert>
             @endif
             <div class="row">
-                <div class="col-md-4">
-                    <x-adminlte-input wire:model.change='tanggalperiksa' type="date" name="tanggalperiksa"
-                        igroup-size="sm">
+                <div class="col-md-2">
+                    <x-adminlte-select wire:model.change="unit" name="unit" igroup-size="sm">
+                        <x-slot name="prependSlot">
+                            <div class="input-group-text text-primary">
+                                <i class="fas fa-hospital"></i>
+                            </div>
+                        </x-slot>
+                        <option value="">Pilih Poliklinik</option>
+                        @foreach ($units as $key => $nama)
+                            <option value="{{ $key }}">{{ $nama }}</option>
+                        @endforeach
+                        <option value="0">SEMUA POLIKLINIK</option>
+                    </x-adminlte-select>
+                </div>
+                <div class="col-md-2">
+                    <x-adminlte-input wire:model.change='tgl_masuk' type="date" name="tgl_masuk" igroup-size="sm">
                         <x-slot name="appendSlot">
-                            <x-adminlte-button wire:click='caritanggal' theme="primary" label="Pilih" />
+                            <x-adminlte-button wire:click='cariTanggal' theme="primary" label="Pilih" />
                         </x-slot>
                         <x-slot name="prependSlot">
                             <div class="input-group-text text-primary">
@@ -40,12 +52,10 @@
                     </x-adminlte-input>
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-button class="btn-sm" wire:click='onsyncall'
-                        theme="{{ $this->syncall ? 'success' : 'danger' }}"
-                        label="Sync All {{ $this->syncall ? 'ON' : 'OFF' }}" />
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / No RM" igroup-size="sm">
+                    <x-adminlte-input wire:model.live='search' name="search"
+                        placeholder="Pencarian Berdasarkan Nama Pasien / No RM" igroup-size="sm">
                         <x-slot name="appendSlot">
                             <x-adminlte-button wire:click='caritanggal' theme="primary" label="Cari" />
                         </x-slot>
@@ -57,127 +67,59 @@
                     </x-adminlte-input>
                 </div>
             </div>
-            @php
-                $heads = [
-                    'No',
-                    'Kodebooking',
-                    'No RM',
-                    'Nama Pasien',
-                    'Action',
-                    'Taskid',
-                    'Sync Antrian',
-                    'Jenis Pasien',
-                    'SEP',
-                    'Unit',
-                    'PIC',
-                    'Dokter',
-                    'Kartu BPJS',
-                    'NIK',
-                    'Taskid3',
-                    'Taskid4',
-                    'Taskid5',
-                    'Taskid6',
-                    'Taskid7',
-                    'Method',
-                    'Status',
-                ];
-                $config['order'] = [5, 'asc'];
-                $config['scrollX'] = true;
-            @endphp
-            <x-adminlte-datatable id="table1" class="text-nowrap" :heads="$heads" :config="$config" bordered
-                hoverable compressed>
-                @isset($antrians)
-                    @foreach ($antrians as $item)
+            <div wire:loading>
+                Loading...
+            </div>
+            <div wire:loading.remove>
+                <table class="table table-sm table-bordered table-hover ">
+                    <thead>
                         <tr>
-                            <td>{{ $item->angkaantrean }}</td>
-                            <td>{{ $item->kodebooking }}</td>
-                            <td>{{ $item->norm }}</td>
-                            <td>{{ $item->nama }}</td>
-                            <td>
-                            </td>
-                            <td>
-                                @switch($item->taskid)
-                                    @case(0)
-                                        <span class="badge badge-secondary">98. Belum Checkin</span>
-                                    @break
-
-                                    @case(1)
-                                        <span class="badge badge-warning">1. Menunggu Pendaftaran</span>
-                                    @break
-
-                                    @case(2)
-                                        <span class="badge badge-primary">0. Proses Pendaftaran</span>
-                                    @break
-
-                                    @case(3)
-                                        <span class="badge badge-warning">3. Menunggu Poliklinik</span>
-                                    @break
-
-                                    @case(4)
-                                        <span class="badge badge-primary">4. Pelayanan Poliklinik</span>
-                                    @break
-
-                                    @case(5)
-                                        <span class="badge badge-warning">5. Tunggu Farmasi</span>
-                                    @break
-
-                                    @case(6)
-                                        <span class="badge badge-primary">6. Racik Obat</span>
-                                    @break
-
-                                    @case(7)
-                                        <span class="badge badge-success">7. Selesai</span>
-                                    @break
-
-                                    @case(99)
-                                        <span class="badge badge-danger">99. Batal</span>
-                                    @break
-
-                                    @default
-                                        {{ $item->taskid }}
-                                @endswitch
-                            </td>
-                            <td>
-                                @switch($item->sync_antrian)
-                                    @case(1)
-                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
-                                            label="Sudah Sync" theme="success" icon="fas fa-user-clock" />
-                                    @break
-
-                                    @case(2)
-                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
-                                            label="Error Sync" theme="danger" icon="fas fa-user-clock" />
-                                    @break
-
-                                    @default
-                                        <x-adminlte-button class="btn-xs" wire:click="syncantrian('{{ $item->kodebooking }}')"
-                                            label="Belum Sync" theme="warning" icon="fas fa-user-clock" />
-                                @endswitch
-
-                                <x-adminlte-button class="btn-xs" theme="warning" icon="fas fa-edit" />
-                                <div wire:loading>Loading</div>
-                            </td>
-                            <td>{{ $item->jenispasien }} </td>
-                            <td>{{ $item->kunjungan->sep ?? '-' }} </td>
-                            <td>{{ $item->kunjungan->units->nama ?? $item->namapoli }} </td>
-                            <td>{{ $item->pic1->name ?? 'Belum Didaftarkan' }} </td>
-                            <td>{{ $item->kunjungan->dokters->namadokter ?? $item->namadokter }}</td>
-                            <td>{{ $item->nomorkartu }}</td>
-                            <td>{{ $item->nik }} </td>
-                            <td>{{ $item->taskid3 }} </td>
-                            <td>{{ $item->taskid4 }} </td>
-                            <td>{{ $item->taskid5 }} </td>
-                            <td>{{ $item->taskid6 }} </td>
-                            <td>{{ $item->taskid7 }} </td>
-                            <td>{{ $item->method }} </td>
-                            <td>{{ $item->status }} </td>
+                            <th>#</th>
+                            <th>No Antrian</th>
+                            <th>No RM</th>
+                            <th>Nama</th>
+                            <th>No BPJS</th>
+                            <th>Action</th>
+                            <th>SEP</th>
+                            <th>Poliklinik</th>
+                            <th>Dokter</th>
+                            <th>Casemix</th>
                         </tr>
-                    @endforeach
-                @endisset
-            </x-adminlte-datatable>
-            @isset($antrians)
-                {{ $antrians->links() }}
-            @endisset
+                    </thead>
+                    <tbody>
+                        @foreach ($kunjungans as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->kode_kunjungan }}</td>
+                                <td>{{ $item->pasien->no_rm }}</td>
+                                <td>{{ $item->pasien->nama_px }}</td>
+                                <td>{{ $item->pasien->no_Bpjs }}</td>
+                                <td>
+                                    <a
+                                        href="{{ route('rekam-medis-rajal-detail') }}?kode={{ $item->kode_kunjungan }}">
+                                        <x-adminlte-button class="btn-xs" label="Lihat" theme="primary"
+                                            icon="fas fa-file-medical" />
+                                    </a>
+                                </td>
+                                <td>{{ $item->no_sep }}</td>
+                                <td>{{ $item->unit->nama_unit }}</td>
+                                <td>{{ $item->dokter->nama_paramedis }}</td>
+                                <td>
+                                    @if ($item->budget)
+                                        <span class="badge badge-{{ $item->budget->final ? 'success' : 'warning' }}">
+                                            {{ $item->budget->user }}
+                                        </span>
+                                    @else
+                                        <span class="badge badge-danger">
+                                            Belum Ada Data
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </x-adminlte-card>
     </div>
 </div>

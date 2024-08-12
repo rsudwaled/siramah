@@ -8,6 +8,7 @@ class RolePermission extends Component
 {
     public function render()
     {
-        return view('livewire.user.role-permission')->title('Role & Permission');
+        return view('livewire.user.role-permission')
+            ->title('Role & Permission');
     }
 }
