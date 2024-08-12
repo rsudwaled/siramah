@@ -916,6 +916,13 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'Lap. Diag C00-C99',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'laporan-rm/diagnosa-C00-C99',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
                     'text' => 'Diagnosa Pola Penyakit',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',
