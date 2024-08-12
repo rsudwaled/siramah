@@ -126,7 +126,7 @@
                             <td>{{ $kunjungan->pasien->nama_px ?? '-' }}</td>
                             <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
                             <td>
-                                <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
+                                <a href="{{ route('pasienranapprofile',['kode'=>$kunjungan->kode_kunjungan]) }}"
                                     class="btn btn-primary btn-xs withLoad"><i class="fas fa-file-medical"></i> ERM</a>
                             </td>
                             <td

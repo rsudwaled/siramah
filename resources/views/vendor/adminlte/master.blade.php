@@ -107,6 +107,7 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+   
 </body>
 
 @include('vendor.adminlte.modal.cek_bpjs_status')
@@ -115,6 +116,9 @@
 
 @section('plugins.Sweetalert2', true)
 @section('plugins.Datatables', true)
+{{-- @section('plugins.TempusDominusBs4', true)
+@section('plugins.DateRangePicker', true) --}}
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $('.btn-cek-bpjs-tanpa-daftar').on('click', function() {
@@ -144,6 +148,7 @@
                     },
                     success: function(data) {
                         console.log(data)
+                        console.log(data.peserta)
                         $.LoadingOverlay("hide");
                         if (data.code == 200) {
                             const swalWithBootstrapButtons = Swal.mixin({
@@ -164,55 +169,19 @@
                                 reverseButtons: false
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    $.ajax({
-                                        type: 'GET',
-                                        url: urlDaftarPasienBaru,
-                                        dataType: 'json',
-                                        data: {
-                                            NoKartu: data.nomorkartu,
-                                            Nik: data.nik,
-                                            Nama: data.pasien,
-                                        },
-                                        success: function(data) {
-                                            console.info(data.code);
-                                            window.location.href =
-                                                redirectUrl;
-                                        },
-                                    });
-
-                                } else if (
-                                    /* Read more about handling dismissals below */
-                                    result.dismiss === Swal.DismissReason.cancel
-
-                                ) {
-                                    location.reload();
-                                    document.getElementById('nomorkartu').value =
-                                        '';
-                                    document.getElementById('nik').value = '';
-                                    $('#modalCekBpjs').modal('hide');
+                                    // Menyusun URL dengan parameter yang dibutuhkan
+                                    let params = new URLSearchParams({
+                                        NoKartu: data.nomorkartu,
+                                        Nik: data.nik,
+                                        Nama: data.pasien,
+                                        Jk: data.peserta.sex,
+                                        ttl: data.peserta.tglLahir
+                                    }).toString();
+                                    // Redirect ke halaman baru dengan parameter di URL
+                                    window.location.href =
+                                        `${urlDaftarPasienBaru}?${params}`;
                                 }
                             });
-                            // alert lama
-                            // Swal.fire({
-                            //     title: "Success!",
-                            //     text: data.pasien + '\n ( NIK: ' + data.nik +
-                            //         ' ) \n' + data.keterangan + ' ' + '( JENIS : ' +
-                            //         data
-                            //         .jenisPeserta + ' - KELAS: ' + data.kelas + ')',
-                            //     icon: "success",
-                            //     // confirmButtonText: "oke!",
-                            //     showCancelButton: true,
-                            //     confirmButtonText: "Daftar Pasien Baru!",
-                            //     cancelButtonText: "Tutup!",
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         location.reload();
-                            //         document.getElementById('nomorkartu').value =
-                            //             '';
-                            //         document.getElementById('nik').value = '';
-                            //         $('#modalCekBpjs').modal('hide');
-                            //     }
-                            // });
 
                         } else {
                             Swal.fire({
@@ -260,8 +229,8 @@
                     url: "{{ route('kunjungan-pasien.get') }}?rm=" + rm,
                     dataType: 'JSON',
                     success: function(data) {
-                        var tableHtml = `
-                                <table id="table1" class="semuaKunjungan table table-bordered">
+                        var tableHtml = `<div class="card-body table-head-fixed ">
+                                <table id="table1" class="semuaKunjungan table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th>KUNJUNGAN</th>

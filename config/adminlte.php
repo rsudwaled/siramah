@@ -317,6 +317,22 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
+        [
+            'text'          => 'Pelayanan Rawat Inap',
+            'label'         => 'proses',
+            'label_color'   => 'warning',
+            'icon'          => 'fas fa-procedures',
+            'submenu'       => [
+                [
+                    'text'      => 'Pasien Rawat Inap',
+                    'url'       => 'kunjunganranap',
+                    'icon'      => 'fas fa-procedures',
+                    'active'    => ['kunjunganranap', 'pasienranapprofile'],
+                    'shift'     => 'ml-2',
+                    'can'       => ['ranap', 'rekam-medis'],
+                ],
+            ]
+        ],
         // PELAYANAN
         [
             'text'    => 'Pelayanan Rawat Jalan',
@@ -505,14 +521,14 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'farmasi',
                 ],
-                [
-                    'text' => 'Pasien Rawat Inap',
-                    'icon'    => 'fas fa-procedures',
-                    'url'  => 'kunjunganranap',
-                    'active' => ['kunjunganranap', 'pasienranapprofile'],
-                    'shift'   => 'ml-2',
-                    'can' => ['ranap', 'rekam-medis'],
-                ],
+                // [
+                //     'text' => 'Pasien Rawat Inap',
+                //     'icon'    => 'fas fa-procedures',
+                //     'url'  => 'kunjunganranap',
+                //     'active' => ['kunjunganranap', 'pasienranapprofile'],
+                //     'shift'   => 'ml-2',
+                //     'can' => ['ranap', 'rekam-medis'],
+                // ],
                 [
                     'text'  => 'Gizi',
                     'icon'  => 'fas fa-user-injured',
@@ -894,6 +910,20 @@ return [
                     'text' => 'CPPT',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'cppt',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Lap. Diag M80-M82',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'laporan-rm/diagnosa-m80-m82',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Lap. Diag C00-C99',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'laporan-rm/diagnosa-C00-C99',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

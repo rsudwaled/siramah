@@ -269,8 +269,8 @@
         <x-adminlte-button theme="success" class="mr-auto" label="Simpan" type="submit" icon="fas fa-save"
             form="formAsesmenRanapAwal" />
         <a href="{{ route('print_asesmen_ranap_awal') }}?kode={{ $kunjungan->kode_kunjungan }}" target="_blank"
-            class="btn btn-warning">Print</a>
-        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+            class="btn btn-info">Print</a>
+        <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
     </x-slot>
 </x-adminlte-modal>
 @push('js')

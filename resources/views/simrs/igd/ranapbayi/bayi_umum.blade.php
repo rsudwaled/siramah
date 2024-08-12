@@ -10,6 +10,16 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-md-4">
+                    <div class="card card-warning card-outline">
+                        <div class="card-body">
+                            <div class="col-lg-12">
+                                <x-adminlte-select2 name="rooming" label="APAKAH PASIEN DISATUKAN DENGAN IBUNYA ??">
+                                    <option value="bukan_rooming">TIDAK</option>
+                                    <option value="pasien_rooming">IYA, SATUKAN</option>
+                                </x-adminlte-select2>
+                            </div>
+                        </div>
+                    </div>
                     <div class="card card-success card-outline">
                         <div class="card-body">
                             <div class="col-lg-12 mb-2">
@@ -22,6 +32,7 @@
                                     <i class="fas fa-bed"></i> Tidak ada
                                 </a>
                             </div>
+                           
                             <div class="col-md-12">
                                 <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                     @foreach ($unit as $item)
@@ -50,6 +61,34 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="col-lg-12">
+                            <div class="card card-outline card-warning">
+                                <div class="card-header">
+                                    <h3 class="card-title">REFERENSI KUNJUNGAN ORANGTUA</h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="card-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <th>Pasien</th>
+                                            <th>Alamat</th>
+                                            <th>Masuk</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{$ref_ortu->pasien->nama_px}}</td>
+                                                <td>{{$ref_ortu->pasien->alamat??'-'}}</td>
+                                                <td>{{$ref_ortu->tgl_masuk}} <br> <strong>{{$ref_ortu->unit->nama_unit}}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
                             <x-adminlte-card theme="success" id="div_ranap" icon="fas fa-info-circle" collapsible
                                 title="DAFTARKAN BAYI : ({{ $pasien->nama_px }})">
                                 <form action="{{ route('ranap-bayi.store') }}" method="post" id="submitRanap">
@@ -67,20 +106,29 @@
                                                             {{ $pasien->no_rm }}</div>
                                                     </x-slot>
                                                 </x-adminlte-input>
-                                                <x-adminlte-input name="ruangan_bayi" id="ruanganBayiTerpilih" readonly
-                                                    label="Ruangan Bayi">
-                                                </x-adminlte-input>
-                                                @php
-                                                    $config = ['format' => 'YYYY-MM-DD'];
-                                                @endphp
-                                                <x-adminlte-input-date name="tanggal_daftar"
-                                                    value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                    label="Tanggal Masuk" :config="$config" />
-                                                <x-adminlte-select name="alasan_masuk_id" label="Alasan Pendaftaran">
+                                                <div class="form-group row">
+                                                    <div class="col-lg-6">
+                                                        <label for="Ruangan Bayi">Ruangan Bayi</label>
+                                                        <input type="text" class="form-control" name="ruangan_bayi"
+                                                            id="ruanganBayiTerpilih" readonly>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        @php
+                                                            $config = ['format' => 'YYYY-MM-DD'];
+                                                        @endphp
+                                                        <label for="Tanggal">Tanggal</label>
+                                                        <input type="date" class="form-control" name="tanggal_daftar" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                            id="ruanganBayiTerpilih">
+                                                    </div>
+                                                </div>
+                                                <x-adminlte-select name="alasan_masuk_id" label="Alasan Pendaftaran" class="col-lg-12">
                                                     <option value="">--Pilih Alasan--</option>
                                                     @foreach ($alasanmasuk as $item)
-                                                        <option value="{{ $item->id }}" @if(old('alasan_masuk_id') == $item->id || (isset($selectedAlasanMasuk) && $selectedAlasanMasuk == $item->id) || $item->id == 5) selected @endif>
-                                                            {{ $item->alasan_masuk }}</option>
+                                                        <option value="{{ $item->id }}"
+                                                            @if (old('alasan_masuk_id') == $item->id ||
+                                                                    (isset($selectedAlasanMasuk) && $selectedAlasanMasuk == $item->id) ||
+                                                                    $item->id == 5) selected @endif>
+                                                            {{ strtoupper($item->alasan_masuk) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select>
                                             </div>
@@ -116,7 +164,7 @@
                                                     <x-adminlte-select2 name="penjamin_id_umum" label="Pilih Penjamin">
                                                         @foreach ($penjamin as $item)
                                                             <option value="{{ $item->kode_penjamin }}">
-                                                                {{ $item->nama_penjamin }}</option>
+                                                                {{ strtoupper($item->nama_penjamin) }}</option>
                                                         @endforeach
                                                     </x-adminlte-select2>
                                                 </div>
@@ -125,17 +173,18 @@
                                                         label="Pilih Penjamin BPJS">
                                                         @foreach ($penjaminbpjs as $item)
                                                             <option value="{{ $item->kode_penjamin_simrs }}">
-                                                                {{ $item->nama_penjamin_bpjs }}</option>
+                                                                {{ strtoupper($item->nama_penjamin_bpjs) }}</option>
                                                         @endforeach
                                                     </x-adminlte-select2>
                                                 </div>
                                                 <x-adminlte-select2 name="dpjp" label="Pilih DPJP">
-                                                    <option value="">--Pilih Dpjp--</option>
+                                                    <option value="">--PILIH DPJP--</option>
                                                     @foreach ($paramedis as $item)
                                                         <option value="{{ $item->kode_paramedis }}">
-                                                            {{ $item->nama_paramedis }}</option>
+                                                            {{ strtoupper($item->nama_paramedis) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
+                                                
                                             </div>
                                         </div>
                                         <x-adminlte-button type="submit"
@@ -231,6 +280,7 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
+
         document.querySelectorAll('input[name="isBpjs"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
                 if (this.value === '0') {

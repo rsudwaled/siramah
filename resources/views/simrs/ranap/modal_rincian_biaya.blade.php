@@ -1,73 +1,68 @@
-<div class="card card-info mb-1">
-    <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cRincian">
-        <h3 class="card-title">
-            Rincian Biaya
-        </h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool bg-warning" onclick="lihatRincianBiaya()">
-                <i class="fas fa-money-check-alt"></i> Detail Rincian
-            </button>
-            <button type="button" class="btn btn-tool bg-success">
-                <i class="fas fa-file-invoice-dollar"></i> {{ money($data->rangkuman->tarif_rs, 'IDR') }}
-            </button>
-        </div>
-    </a>
+<div class="">
     <div id="cRincian" class="collapse show" role="tabpanel">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <style>
-                        dd {
-                            margin-bottom: 0 !important;
-                        }
-                    </style>
-                    <dl class="row">
-                        <dt class="col-sm-5">Prosedur Bedah</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->prosedur_bedah, 'IDR') }} </dd>
-                        <dt class="col-sm-5">Prosedur Non Bedah</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->prosedur_non_bedah, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Tenaga Ahli</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->tenaga_ahli, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Radiologi</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->radiologi, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Laboratorium</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->laboratorium, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Rehabilitasi</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->rehabilitasi, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Sewa Alat</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->sewa_alat, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Keperawatan</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->keperawatan, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Kamar Akomodasi</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->kamar_akomodasi, 'IDR') }}</dd>
-                    </dl>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="info-box bg-success">
+                    <span class="info-box-icon"><i class="fas fa-hand-holding-usd"></i></span>
+                    <div class="info-box-content">
+                        <h5 class="info-box-text"><strong>Rincian Biaya</strong></h5>
+                        <h6 class="info-box-number">Total : {{ money($data->rangkuman->tarif_rs, 'IDR') }}</h6>
+                    </div>
+                    <button class="btn btn-sm btn-warning" onclick="lihatRincianBiaya()">Lihat Detail</button>
                 </div>
-                <div class="col-md-6">
-                    <dl class="row">
-                        <dt class="col-sm-5">Penunjang</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->penunjang, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Konsultasi</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->konsultasi, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Pelayanan Darah</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->pelayanan_darah, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Rawat Intensif</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->rawat_intensif, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Obat</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->obat, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Alkes</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->alkes, 'IDR') }}</dd>
-                        <dt class="col-sm-5">BMHP</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->bmhp, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Obat Kronis</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->obat_kronis, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Obat Kemo</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->obat_kemo, 'IDR') }}</dd>
-                        <dt class="col-sm-5">Tarif TS</dt>
-                        <dd class="col-sm-7">: {{ money($data->rangkuman->tarif_rs, 'IDR') }}</dd>
-                    </dl>
-                </div>
-
             </div>
+            <div class="col-md-6">
+                <style>
+                    dd {
+                        margin-bottom: 0 !important;
+                    }
+                </style>
+                <dl class="row">
+                    <dt class="col-sm-5">Prosedur Bedah</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->prosedur_bedah, 'IDR') }} </dd>
+                    <dt class="col-sm-5">Prosedur Non Bedah</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->prosedur_non_bedah, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Tenaga Ahli</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->tenaga_ahli, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Radiologi</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->radiologi, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Laboratorium</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->laboratorium, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Rehabilitasi</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->rehabilitasi, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Sewa Alat</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->sewa_alat, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Keperawatan</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->keperawatan, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Kamar Akomodasi</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->kamar_akomodasi, 'IDR') }}</dd>
+                </dl>
+            </div>
+            <div class="col-md-6">
+                <dl class="row">
+                    <dt class="col-sm-5">Penunjang</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->penunjang, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Konsultasi</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->konsultasi, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Pelayanan Darah</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->pelayanan_darah, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Rawat Intensif</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->rawat_intensif, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Obat</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->obat, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Alkes</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->alkes, 'IDR') }}</dd>
+                    <dt class="col-sm-5">BMHP</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->bmhp, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Obat Kronis</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->obat_kronis, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Obat Kemo</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->obat_kemo, 'IDR') }}</dd>
+                    <dt class="col-sm-5">Tarif TS</dt>
+                    <dd class="col-sm-7">: {{ money($data->rangkuman->tarif_rs, 'IDR') }}</dd>
+                </dl>
+            </div>
+
         </div>
     </div>
 </div>
@@ -83,7 +78,7 @@
                 $config['info'] = false;
                 $config['scrollY'] = '300px';
             @endphp
-            <x-adminlte-datatable id="tableRincianBiaya" class="nowrap text-xs" :heads="$heads" :config="$config"
+            <x-adminlte-datatable id="tableRincianBiaya1" class="nowrap text-xs" :heads="$heads" :config="$config"
                 bordered hoverable compressed>
                 @foreach ($data->rincian as $item)
                     <tr>
@@ -98,7 +93,7 @@
         </div>
     </div>
     <x-slot name="footerSlot">
-        <x-adminlte-button theme="danger" label="Dismiss" data-dismiss="modal" />
+        <x-adminlte-button theme="danger" label="Tutup" data-dismiss="modal" />
     </x-slot>
 </x-adminlte-modal>
 <script>

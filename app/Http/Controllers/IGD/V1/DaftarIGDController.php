@@ -477,6 +477,7 @@ class DaftarIGDController extends Controller
         $jenisPeserta   = null;
         $code           = null;
         if(!empty($resdescrtipt->response)){
+            $peserta        = $resdescrtipt->response->peserta;
             $rm             = $resdescrtipt->response->peserta->mr->noMR;
             $noKartu        = $resdescrtipt->response->peserta->noKartu;
             $pasien         = $resdescrtipt->response->peserta->nama;
@@ -492,6 +493,7 @@ class DaftarIGDController extends Controller
         }
 
         return response()->json([
+            'peserta'=>$peserta,
             'rm'=>$rm,
             'noKartu'=>$noKartu,
             'nik'=>$nik,

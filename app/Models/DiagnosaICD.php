@@ -15,4 +15,9 @@ class DiagnosaICD extends Model
     protected $keyType = 'string';
     public $timestamps = false;
     protected $guarded = ["id"];
+
+    public function kunjungan()
+    {
+        return $this->belongsTo(Kunjungan::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
 }

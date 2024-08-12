@@ -6,10 +6,32 @@
     </a>
     <div id="colKeperawatan" class="collapse">
         <div class="card-body">
-            <x-adminlte-button label="Input Keperawatan" icon="fas fa-plus" theme="success" class="btn-xs"
+            <div class="col-lg-12" id="formInputImplementasi_EvaluasiKeperawatan" style="display: none">
+                <form id="formKeperawatan" name="formKeperawatan" method="POST">
+                    @csrf
+                    @php
+                        $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                    @endphp
+                    <input type="hidden" class="kode_kunjungan-keperawatan" name="kode_kunjungan"
+                        value="{{ $kunjungan->kode_kunjungan }}">
+                    <input type="hidden" class="counter-keperawatan" name="counter" value="{{ $kunjungan->counter }}">
+                    <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
+                    <x-adminlte-input-date id="tanggal_input-keperawatan" name="tanggal_input" label="Tanggal & Waktu"
+                        :config="$config" />
+                    <x-adminlte-textarea igroup-size="sm" class="keperawatan-keperawatan" name="keperawatan"
+                        label="Implementasi & Evaluasi Keperawatan" placeholder="Implementasi & Evaluasi Keperawatan"
+                        rows=5>
+                    </x-adminlte-textarea>
+                </form>
+            </div>
+            <x-adminlte-button label="Input Keperawatan" id="btnInputKeperawatan" icon="fas fa-plus" theme="success" class="btn-xs"
                 onclick="btnInputKeperawatan()" />
-            <x-adminlte-button icon="fas fa-sync" theme="primary" class="btn-xs" onclick="getKeperawatanRanap()" />
-            <a href="{{ route('print_implementasi_evaluasi_keperawatan') }}?kunjungan={{ $kunjungan->kode_kunjungan }}"
+            <x-adminlte-button id="saveButtonKeperawatan" label="Simpan Data" icon="fas fa-save" theme="success"
+                class="btn-xs" style="display: none;" onclick="tambahKeperawatan()" />
+            <x-adminlte-button id="cancelInputButtonInputKeperawatan" label="Batal Input" icon="fas fa-window-close" theme="danger"
+                class="btn-xs" style="display: none;" onclick="batalInputEvaluasiKeperawatan()" />
+            <x-adminlte-button icon="fas fa-sync" id="btn-getperkembangan-ranap" theme="primary" class="btn-xs" onclick="getKeperawatanRanap()" />
+            <a href="{{ route('print_implementasi_evaluasi_keperawatan') }}?kunjungan={{ $kunjungan->kode_kunjungan }}" id="btn-print-perkembangan-keperawatan"
                 target="_blank" class="btn btn-xs btn-warning"><i class="fas fa-print"></i> Print</a>
             <style>
                 pre {
@@ -33,7 +55,7 @@
     </div>
 </div>
 @push('js')
-    <x-adminlte-modal id="modalInputKeperawatan" title="Implementasi & Evaluasi Keperawatan" theme="warning"
+    {{-- <x-adminlte-modal id="modalInputKeperawatan" title="Implementasi & Evaluasi Keperawatan" theme="warning"
         icon="fas fa-file-medical" size='lg'>
         <form id="formKeperawatan" name="formKeperawatan" method="POST">
             @csrf
@@ -55,7 +77,7 @@
                 Simpan</button>
             <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
         </x-slot>
-    </x-adminlte-modal>
+    </x-adminlte-modal> --}}
     <script>
         $(function() {
             $('#tableKeperawatan').DataTable({
@@ -68,10 +90,27 @@
 
         function btnInputKeperawatan() {
             $.LoadingOverlay("show");
+            $("#formPerkembangan").trigger('reset');
+            $('#formInputImplementasi_EvaluasiKeperawatan').css('display', 'block');
+            $('#saveButtonKeperawatan').css('display', 'inline-block');
+            $('#cancelInputButtonInputKeperawatan').css('display', 'inline-block');
+            $('#btnInputKeperawatan').css('display', 'none');
+            $('#btn-getperkembangan-ranap').css('display', 'none');
+            $('#btn-print-perkembangan-keperawatan').css('display', 'none');
+
             let today = moment().format('yyyy-MM-DD HH:mm:ss');
             $('#tanggal_input-keperawatan').val(today);
-            $('#modalInputKeperawatan').modal('show');
+            // $('#modalInputKeperawatan').modal('show');
             $.LoadingOverlay("hide");
+        }
+
+        function batalInputEvaluasiKeperawatan() {
+            $('#formInputImplementasi_EvaluasiKeperawatan').css('display', 'none');
+            $('#saveButtonKeperawatan').css('display', 'none');
+            $('#cancelInputButtonInputKeperawatan').css('display', 'none');
+            $('#btnInputKeperawatan').css('display', 'inline-block');
+            $('#btn-getperkembangan-ranap').css('display', 'inline-block');
+            $('#btn-print-perkembangan-keperawatan').css('display', 'inline-block');
         }
 
         function tambahKeperawatan() {
@@ -90,7 +129,12 @@
                     });
                     $("#formKeperawatan").trigger('reset');
                     getKeperawatanRanap();
-                    $('#modalInputKeperawatan').modal('hide');
+                    $('#formInputImplementasi_EvaluasiKeperawatan').css('display', 'none');
+                    $('#saveButtonKeperawatan').css('display', 'none');
+                    $('#cancelInputButtonInputKeperawatan').css('display', 'none');
+                    $('#btnInputKeperawatan').css('display', 'inline-block');
+                    $('#btn-getperkembangan-ranap').css('display', 'inline-block');
+                    $('#btn-print-perkembangan-keperawatan').css('display', 'inline-block');
                 } else {
                     Toast.fire({
                         icon: 'error',

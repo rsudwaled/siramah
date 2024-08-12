@@ -271,6 +271,9 @@
             </x-adminlte-card>
         </div>
     </div>
+    <div class="row">
+        @include('simrs.igd.daftar_penunjang.table_kunjungan.table_penunjang')
+    </div>
 @stop
 @section('plugins.Select2', true)
 @section('plugins.Datatables', true)

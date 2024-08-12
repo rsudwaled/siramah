@@ -1066,8 +1066,8 @@ class RanapController extends APIController
         $paramedis      = Paramedis::whereNotNull('kode_dokter_jkn')->get();
         $alasanmasuk    = AlasanMasuk::whereIn('id', [1,4,5,7,12,15,13])->orderBy('id','asc')->get();
         $ref_kunjungan  = $kunjungan;
-        // dd($alasanmasuk);
-        return view('simrs.igd.ranapbayi.bayi_umum', compact('pasien','ref_kunjungan', 'unit','penjamin','paramedis','alasanmasuk','penjaminbpjs'));
+        $ref_ortu       = Kunjungan::where('kode_kunjungan', $kunjungan)->first();
+        return view('simrs.igd.ranapbayi.bayi_umum', compact('ref_ortu','pasien','ref_kunjungan', 'unit','penjamin','paramedis','alasanmasuk','penjaminbpjs'));
     }
 
 

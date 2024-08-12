@@ -204,26 +204,10 @@ class Kunjungan extends Model
     {
         return $this->belongsTo(UserSimrs::class, 'pic', 'id');
     }
+    public function di_diagnosa()
+    {
+        return $this->hasMany(DiagnosaICD::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
 
 
-    // protected $appends = ['nama_pasien'];
-    // public function getNamaPasienAttribute()
-    // {
-    //     $pasien = Pasien::firstWhere('no_rm', $this->no_rm);
-    //     if (isset($pasien)) {
-    //         $pasien = $pasien->nama_px;
-    //     } else {
-    //         $pasien = '';
-    //     }
-    //     return $pasien;
-    // }
-    // public function getNamaPenjaminAttribute()
-    // {
-    //     if (isset($this->kode_penjamin)) {
-    //         $penjamin = PenjaminSimrs::firstWhere('kode_penjamin', $this->kode_penjamin)->nama_penjamin;
-    //     } else {
-    //         $penjamin = '';
-    //     }
-    //     return $penjamin;
-    // }
 }

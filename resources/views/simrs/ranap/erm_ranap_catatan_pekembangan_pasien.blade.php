@@ -6,11 +6,52 @@
     </a>
     <div id="colPerkembangan" class="collapse">
         <div class="card-body">
-            <x-adminlte-button label="Input SOAP" icon="fas fa-plus" theme="success" class="btn-xs"
+            <div class="col-lg-12">
+                <div class="col-lg-12" id="formInputPerkembangan" style="display: none;">
+                    <form id="formPerkembangan" name="formPerkembangan" method="POST">
+                        @csrf
+                        @php
+                            $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
+                        @endphp
+                        <input type="hidden" class="kode_kunjungan-perkembangan" name="kode_kunjungan"
+                            value="{{ $kunjungan->kode_kunjungan }}">
+                        <input type="hidden" class="counter-keperawatan" name="counter"
+                            value="{{ $kunjungan->counter }}">
+                        <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
+                        <x-adminlte-input-date id="tanggal_input-perkembangan" name="tanggal_input"
+                            label="Tanggal & Waktu" :config="$config" />
+                        <x-adminlte-textarea igroup-size="sm" class="perkembangan-perkembangan" name="perkembangan"
+                            label="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya "
+                            placeholder="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya " rows=7>
+                        </x-adminlte-textarea>
+                        <x-adminlte-textarea igroup-size="sm" class="instruksi_medis-perkembangan"
+                            name="instruksi_medis" label="Instruksi Medis"
+                            placeholder="Instruksi Medis termasuk Procedur / Pasca Bedah" rows=5>
+                        </x-adminlte-textarea>
+                    </form>
+                    <x-slot name="footerSlot">
+                        <button class="btn btn-success mr-auto" onclick="tambahPerkembangan()"><i
+                                class="fas fa-save"></i>
+                            Simpan</button>
+                        <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
+                    </x-slot>
+                </div>
+            </div>
+            <x-adminlte-button label="Input SOAP" icon="fas fa-plus" id="btn-input-soap" theme="success" class="btn-xs"
                 onclick="btnInputPerkembangan()" />
-            <x-adminlte-button icon="fas fa-sync" theme="primary" class="btn-xs" onclick="getObservasiRanap()" />
-            <a href="{{ route('print_perkembangan_ranap') }}?kunjungan={{ $kunjungan->kode_kunjungan }}" target="_blank"
+            <x-adminlte-button id="saveButton" label="Simpan Data-SOAP" icon="fas fa-save" theme="success" class="btn-xs"
+                style="display: none;" onclick="btnSavePerkembangan()" />
+            <x-adminlte-button id="cancelInputButton" label="Batal Input" icon="fas fa-window-close" theme="danger" class="btn-xs"
+                style="display: none;" onclick="batalInput()" />
+
+            <x-adminlte-button icon="fas fa-sync" id="btn-get-observasiranap" theme="primary" class="btn-xs" onclick="getObservasiRanap()" />
+            <a href="{{ route('print_perkembangan_ranap') }}?kunjungan={{ $kunjungan->kode_kunjungan }}" target="_blank" id="btn-print-perkembangan"
                 class="btn btn-xs btn-warning"><i class="fas fa-print"></i> Print</a>
+            <div class="alert alert-success alert-dismissible mt-2">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-check"></i> INFORMASI TERSIMPAN!</h5>
+                berikut adalah data yang sudah tersimpan dalam database.
+            </div>
             <table class="table table-sm table-bordered table-hover" id="tablePerkembanganPasien">
                 <thead>
                     <tr>
@@ -27,33 +68,6 @@
     </div>
 </div>
 @push('js')
-    <x-adminlte-modal id="modalPerkembanganPasien" title="Catatan Perkembangan Pasien Rawat Inap" theme="warning"
-        icon="fas fa-file-medical" size='lg'>
-        <form id="formPerkembangan" name="formPerkembangan" method="POST">
-            @csrf
-            @php
-                $config = ['format' => 'YYYY-MM-DD HH:mm:ss'];
-            @endphp
-            <input type="hidden" class="kode_kunjungan-perkembangan" name="kode_kunjungan"
-                value="{{ $kunjungan->kode_kunjungan }}">
-            <input type="hidden" class="counter-keperawatan" name="counter" value="{{ $kunjungan->counter }}">
-            <input type="hidden" class="norm-keperawatan" name="norm" value="{{ $kunjungan->no_rm }}">
-            <x-adminlte-input-date id="tanggal_input-perkembangan" name="tanggal_input" label="Tanggal & Waktu"
-                :config="$config" />
-            <x-adminlte-textarea igroup-size="sm" class="perkembangan-perkembangan" name="perkembangan"
-                label="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya "
-                placeholder="SOAP, Hasil Pemeriksaan, Analisis & Catatan Lainnya " rows=7>
-            </x-adminlte-textarea>
-            <x-adminlte-textarea igroup-size="sm" class="instruksi_medis-perkembangan" name="instruksi_medis"
-                label="Instruksi Medis" placeholder="Instruksi Medis termasuk Procedur / Pasca Bedah" rows=5>
-            </x-adminlte-textarea>
-        </form>
-        <x-slot name="footerSlot">
-            <button class="btn btn-success mr-auto" onclick="tambahPerkembangan()"><i class="fas fa-save"></i>
-                Simpan</button>
-            <x-adminlte-button theme="danger" label="Close" icon="fas fa-times" data-dismiss="modal" />
-        </x-slot>
-    </x-adminlte-modal>
     <script>
         $(function() {
             $('#tablePerkembanganPasien').DataTable({
@@ -65,15 +79,24 @@
         });
 
         function btnInputPerkembangan() {
-            $.LoadingOverlay("show");
             $("#formPerkembangan").trigger('reset');
-            let today = moment().format('yyyy-MM-DD HH:mm:ss');
-            $('#tanggal_input-perkembangan').val(today);
-            $('#modalPerkembanganPasien').modal('show');
-            $.LoadingOverlay("hide");
+            $('#formInputPerkembangan').css('display', 'block');
+            $('#saveButton').css('display', 'inline-block');
+            $('#cancelInputButton').css('display', 'inline-block');
+            $('#btn-input-soap').css('display', 'none');
+            $('#btn-get-observasiranap').css('display', 'none');
+            $('#btn-print-perkembangan').css('display', 'none');
+        }
+        function batalInput() {
+            $('#formInputPerkembangan').css('display', 'none');
+            $('#saveButton').css('display', 'none');
+            $('#cancelInputButton').css('display', 'none');
+            $('#btn-input-soap').css('display', 'inline-block');
+            $('#btn-get-observasiranap').css('display', 'inline-block');
+            $('#btn-print-perkembangan').css('display', 'inline-block');
         }
 
-        function tambahPerkembangan() {
+        function btnSavePerkembangan() {
             $.LoadingOverlay("show");
             $.ajax({
                 type: "POST",
@@ -89,7 +112,12 @@
                     });
                     $("#formPerkembangan").trigger('reset');
                     getPerkembanganPasien();
-                    $('#modalPerkembanganPasien').modal('hide');
+                    $('#formInputPerkembangan').css('display', 'none');
+                    $('#saveButton').css('display', 'none');
+                    $('#cancelInputButton').css('display', 'none');
+                    $('#btn-input-soap').css('display', 'inline-block');
+                    $('#btn-get-observasiranap').css('display', 'inline-block');
+                    $('#btn-print-perkembangan').css('display', 'inline-block');
                 } else {
                     Toast.fire({
                         icon: 'error',

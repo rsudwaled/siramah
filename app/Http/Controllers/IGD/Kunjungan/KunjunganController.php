@@ -27,7 +27,9 @@ class KunjunganController extends Controller
 {
     public function RiwayatKunjunganPasien(Request $request)
     {
-        $all_kunj       = Kunjungan::with(['unit','pasien','status'])->where('no_rm', $request->rm)->limit(8)->orderBy('tgl_masuk','desc')->get();
+        $all_kunj = Kunjungan::with(['unit','pasien','status','layanan'])
+                    ->where('no_rm', $request->rm)->limit(8)
+                    ->orderBy('tgl_masuk','desc')->get();
         return response()->json(['semua_kunjungan'=>$all_kunj]);
     }
 
@@ -36,7 +38,7 @@ class KunjunganController extends Controller
         $showData           = $request->view;
         $showDataSepCount   = null;
         
-        $start_date         = Carbon::parse('2024-07-01')->startOfDay();
+        $start_date         = Carbon::parse(now())->startOfDay();
         $end_date           = Carbon::parse(now())->endOfDay();
 
         $query = DB::connection('mysql2')->table('ts_kunjungan')
@@ -87,7 +89,7 @@ class KunjunganController extends Controller
         
         if($showData ==='kunjungan_ranap')
         {
-            $kunjungan          = $query->get();
+            $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }else{
             $kunjungan          = $query->whereIn('nama_unit',['UGD','UGD KEBIDANAN'])->get();
         }
@@ -341,6 +343,7 @@ class KunjunganController extends Controller
         $updateStatus->status_kunjungan =3;
         $updateStatus->id_alasan_edit   =7;
         $updateStatus->pic2             =Auth::user()->id_simrs??2;
+        $updateStatus->updated_at       =now();
         $updateStatus->save();
         return response()->json(['status'=>$updateStatus]);
 
@@ -358,8 +361,9 @@ class KunjunganController extends Controller
 
     public function getKunjunganEp(Request $request)
     {
-        $query = Kunjungan::where('kode_kunjungan', $request->kode)->first();
-        $kunjunganSama = Kunjungan::where('counter', $query->counter)->where('no_rm', $query->no_rm)->get();
-        return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama'));
+        $query          = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $kunjunganSama  = Kunjungan::where('counter', $query->counter)->where('no_rm', $query->no_rm)->get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_penjamin','asc')->get();
+        return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama','penjamin'));
     }
 }

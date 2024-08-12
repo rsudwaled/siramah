@@ -25,6 +25,11 @@ use App\Models\Pekerjaan;
 use App\Models\Pendidikan;
 use App\Models\KeluargaPasien;
 use App\Models\Unit;
+
+use App\Models\AlasanMasuk;
+use App\Models\Paramedis;
+use App\Models\PenjaminSimrs;
+use App\Models\Penjamin;
 use Carbon\Carbon;
 use Auth;
 use DB;
@@ -95,8 +100,62 @@ class PasienIGDController extends Controller
 
     public function createPasienBaruFromBpjsCek(Request $request)
     {
-        dd($request->all());
-        return view('simrs.igd.pasienigd.tambah_pasien');
+        $nama           = $request->Nama;
+        $nik            = $request->Nik;
+        $noKartu        = $request->NoKartu;
+        $gender         = $request->Jk;
+        $tglLahir       = $request->ttl;
+        $negara         = Negara::all();
+        $hb_keluarga    = HubunganKeluarga::orderBy('kode','asc')->get();
+        $agama          = Agama::orderBy('ID','asc')->get();
+        $pekerjaan      = Pekerjaan::all();
+        $pendidikan     = Pendidikan::all();
+        $pasienTerdaftar= Pasien::where('nik_bpjs', $nik)->get();
+        $alasanmasuk    = AlasanMasuk::orderBy('id', 'asc')->get();
+        $paramedis      = Paramedis::where('act', 1)->get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
+        $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
+        return view('simrs.igd.pasienigd.cekbpjs_tambah_pasien', compact(
+            'nik','nama','noKartu','gender','tglLahir',
+            'negara','hb_keluarga',
+            'agama','pekerjaan','pendidikan',
+            'pasienTerdaftar',
+            'penjamin','penjaminbpjs','paramedis','alasanmasuk','paramedis'
+        ));
+    }
+
+    public function updatePasienBaruFromBpjsCek(Request $request)
+    {
+        $pasien         = Pasien::firstWhere('no_rm',$request->rm);
+        $desa           = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
+        
+        $pasien->no_Bpjs            = $request->no_bpjs;
+        $pasien->nama_px            = strtoupper($request->nama_pasien_baru);
+        $pasien->jenis_kelamin      = $request->jk;
+        $pasien->tempat_lahir       = strtoupper($request->tempat_lahir);
+        $pasien->tgl_lahir          = $request->tgl_lahir;
+        $pasien->agama              = $request->agama;
+        $pasien->pendidikan         = $request->pendidikan;
+        $pasien->pekerjaan          = $request->pekerjaan;
+        $pasien->kewarganegaraan    = $request->kewarganegaraan;
+        $pasien->negara             = 'INDONESIA';
+
+        $pasien->propinsi          = $desa ? $desa->kecamatan->kabupatenKota->provinsi->id : $pasien->provinsi;
+        $pasien->kabupaten         = $desa ? $desa->kecamatan->kabupatenKota->id : $pasien->kabupaten;
+        $pasien->kecamatan         = $desa ? $desa->kecamatan->id : $pasien->kecamatan;
+        $pasien->desa              = $desa ? $desa->id : $pasien->desa;
+        $pasien->kode_propinsi     = $desa ? $desa->kecamatan->kabupatenKota->provinsi->id : $pasien->kode_propinsi;
+        $pasien->kode_kabupaten    = $desa ? $desa->kecamatan->kabupatenKota->id : $pasien->kode_kabupaten;
+        $pasien->kode_kecamatan    = $desa ? $desa->kecamatan->id : $pasien->kode_kecamatan;
+        $pasien->kode_desa         = $desa ? $desa->id : $pasien->kode_desa;
+
+        
+        $pasien->alamat             = strtoupper($request->alamat_lengkap_pasien);
+        $pasien->no_tlp             = $request->no_tlp??$request->no_hp;
+        $pasien->no_hp              = $request->no_hp??$request->no_tlp;
+        $pasien->nik_bpjs           = $request->nik;
+        $pasien->save();
+        return back();
     }
 
     public function pasienBaruIGD(Request $request)

@@ -333,7 +333,7 @@
                                                     <option value="">--Pilih Dokter--</option>
                                                     @foreach ($paramedis as $item)
                                                         <option value="{{ $item->kode_paramedis }}">
-                                                            {{ $item->nama_paramedis }}</option>
+                                                            {{ strtoupper($item->nama_paramedis) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <x-adminlte-select2 name="alasan_masuk_id" label="Alasan Masuk">
@@ -383,11 +383,6 @@
     <script>
         const isbpjs = document.getElementById('isBpjs');
         const perujuk = document.getElementById('isPerujuk');
-        const select = document.getElementById('status_kecelakaan');
-        const pilihUnit = document.getElementById('div_stts_kecelakaan');
-        const nolaporan = document.getElementById('noLP');
-        const keterangan = document.getElementById('keterangan');
-        const tanggalkejadian = document.getElementById('tglKejadian');
         const provinsi = document.getElementById('provinsi');
 
         document.querySelectorAll('input[name="isBpjs"]').forEach(function(radio) {
@@ -400,18 +395,6 @@
                     document.getElementById('show_penjamin_umum').style.display = 'none';
                 }
             });
-        });
-
-        $(select).on('change', function() {
-            if (select.value > 0 || select.value == null) {
-                document.getElementById('div_stts_kecelakaan').style.display = "block";
-            } else {
-                nolaporan.value = '';
-                keterangan.value = '';
-                tanggalkejadian.value = '';
-                provinsi.value = '';
-                document.getElementById('div_stts_kecelakaan').style.display = "none";
-            }
         });
 
         $('#perujuk').hide();

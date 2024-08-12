@@ -1,7 +1,15 @@
 @extends('adminlte::page')
-@section('title', 'ERM Ranap ' . $pasien->nama_px)
+@section('title', 'ERM RANAP ' . $pasien->nama_px)
 @section('content_header')
-    <h1>ERM Ranap {{ $pasien->nama_px }}</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <h1>ERM RANAP : {{ $pasien->nama_px }}</h1>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="{{ route('kunjunganranap') }}?kodeunit={{ $kunjungan->kode_unit }}"
+                class="btn btn-sm mb-2 btn-danger withLoad"><i class="fas fa-arrow-left"></i> Kembali</a>
+        </div>
+    </div>
 @stop
 @section('content')
     @php
@@ -10,507 +18,90 @@
     <div class="row">
         <div class="col-md-12">
             <x-adminlte-card theme="primary" theme-mode="outline">
-                @include('simrs.ranap.erm_ranap_profil')
+                <div class="row">
+                    @include('simrs.ranap.erm_ranap_profil')
+                </div>
             </x-adminlte-card>
         </div>
-        <div class="col-md-3">
-            <x-adminlte-card id="nav" theme="primary" title="Navigasi" body-class="p-0">
-                <ul class="nav nav-pills flex-column">
-                    <li class="nav-item" onclick="lihatHasilLaboratorium()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-vials"></i> Laboratorium
-                        </a>
-                    </li>
-                    <li class="nav-item" onclick="lihatHasilRadiologi()">
-                        <a href="#nav" class="nav-link">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <p>Silahkan Klik Tombol dibawah ini untuk memunculkan tampilan :</p>
+                    <div class="row">
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'radiologi']) }}"
+                            class="btn btn-app {{ $activeButton === 'radiologi' ? 'bg-success' : '' }}">
                             <i class="fas fa-x-ray"></i> Radiologi
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="lihatLabPa()">
-                        <a href="#nav" class="nav-link">
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'laboratorium']) }}"
+                            class="btn btn-app {{ $activeButton === 'laboratorium' ? 'bg-success' : '' }}">
+                            <i class="fas fa-vials"></i> Laboratorium
+                        </a>
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'lab_patologianatomi']) }}"
+                            class="btn btn-app {{ $activeButton === 'lab_patologianatomi' ? 'bg-success' : '' }}">
                             <i class="fas fa-microscope"></i> Lab Patologi Anatomi
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="lihatFileUpload()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Berkas File Upload
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'triase']) }}"
+                            class="btn btn-app {{ $activeButton === 'triase' ? 'bg-success' : '' }}">
+                            <i class="fas fa-file-invoice"></i> Triase IGD
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="lihatRincianBiaya()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-invoice-dollar"></i> Rincian Biaya
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'berkas']) }}"
+                            class="btn btn-app {{ $activeButton === 'berkas' ? 'bg-success' : '' }}">
+                            <i class="fas fa-file-medical"></i> Berkas
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="modalAsesmenAwal()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical-alt"></i> Asesmen Awal Medis
-                            @if ($kunjungan->asesmen_ranap)
-                                <span class="badge bg-success float-right">Sudah</span>
-                            @else
-                                <span class="badge bg-danger float-right">Belum</span>
-                            @endif
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'rencana_asuhan']) }}"
+                            class="btn btn-app {{ $activeButton === 'rencana_asuhan' ? 'bg-success' : '' }}">
+                            <i class="fas fa-file-contract"></i> Rencana Asuhan
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="modalAsuhanTerpadu()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-user-md"></i> Rencana Asuhan Terpadu
-                            <span class="badge bg-primary float-right">{{ $kunjungan->asuhan_terpadu->count() }}</span>
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'assesmen_awal_medis']) }}"
+                            class="btn btn-app {{ $activeButton === 'assesmen_awal_medis' ? 'bg-success' : '' }}">
+                            <i class="fas fa-file-medical-alt"></i> Assesmen Awal Medis
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="modalAsesmenKeperawatan()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical-alt"></i> Asesmen Keperawatan
-                            @if ($kunjungan->asesmen_ranap_keperawatan)
-                                <span class="badge bg-success float-right">Sudah</span>
-                            @else
-                                <span class="badge bg-danger float-right">Belum</span>
-                            @endif
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'assesmen_keperawatan']) }}"
+                            class="btn btn-app {{ $activeButton === 'assesmen_keperawatan' ? 'bg-success' : '' }}">
+                            <i class="fas fa-file-signature"></i> Assesmen Keperawatan
                         </a>
-                    </li>
-                    <li class="nav-item" onclick="btnModalGroupping()">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-diagnoses"></i> Groupping E-Klaim
-                            @if ($groupping)
-                                <span class="badge bg-success float-right">Sudah</span>
-                            @else
-                                <span class="badge bg-danger float-right">Belum</span>
-                            @endif
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'soap']) }}"
+                            class="btn btn-app {{ $activeButton === 'soap' ? 'bg-success' : '' }}">
+                            <i class="fas fa-laptop-medical"></i> SOAP
                         </a>
-                    </li>
-                    {{-- <li class="nav-item">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Evaluasi Awal MPP A
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'implementasi_evaluasi']) }}"
+                            class="btn btn-app {{ $activeButton === 'implementasi_evaluasi' ? 'bg-success' : '' }}">
+                            <i class="fas fa-user-nurse"></i> Implementasi & Evaluasi
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Catatan Implementasi MPP B
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'observasi_24jam']) }}"
+                            class="btn btn-app {{ $activeButton === 'observasi_24jam' ? 'bg-success' : '' }}">
+                            <i class="fas fa-user-clock"></i> Observasi 24Jam
                         </a>
-                    </li> --}}
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link">
-                            <i class="fas fa-file-medical"></i> Rencana Pemulangan
-                            <span class="badge bg-danger float-right">Belum</span>
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'kpo_elektronik']) }}"
+                            class="btn btn-app {{ $activeButton === 'kpo_elektronik' ? 'bg-success' : '' }}">
+                            <i class="fas fa-laptop-code"></i> KPO Elektronik
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link" onclick="modalResumeRanap()">
-                            <i class="fas fa-file-medical-alt"></i> Resume Rawat Inap
-                            @if ($kunjungan->erm_ranap)
-                                <span class="badge bg-success float-right">Sudah</span>
-                            @else
-                                <span class="badge bg-danger float-right">Belum</span>
-                            @endif
-                            {{-- <span class="badge bg-danger float-right">On Building</span> --}}
-                        </a>
-                    </li>
-                    {{-- <li class="nav-item">
-                        <a href="#nav" class="nav-link btnCariRujukanFKTP">
-                            <i class="fas fa-inbox"></i> Rujukan FKTP
-                            <span class="badge bg-danger float-right">On Building</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link btnCariRujukanRS">
-                            <i class="fas fa-inbox"></i> Rujukan RS
-                            <span class="badge bg-danger float-right">On Building</span>
-                        </a>
-                    </li> --}}
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link btnCariSEP">
-                            <i class="fas fa-file-medical"></i> SEP
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#nav" class="nav-link" onclick="cariSuratKontrol()">
-                            <i class="fas fa-file-medical"></i> Surat Kontrol
-                        </a>
-                    </li>
-                </ul>
-            </x-adminlte-card>
-        </div>
-        <div class="col-md-9">
-            <div class="card card-primary card-outline">
-                <div class="card-body box-profile p-3" style="overflow-y: auto ;max-height: 600px ;">
-                    <div id="accordion" role="tablist" aria-multiselectable="true">
-                        {{-- riwayat --}}
-                        {{-- @include('simrs.ranap.erm_ranap_riwayat') --}}
-                        {{-- IGD --}}
-                        <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cIGD">
-                                <h3 class="card-title">
-                                    Riwayat & Triase IGD
-                                </h3>
-                            </a>
-                            <div id="cIGD" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    <iframe
-                                        src="http://192.168.2.30/simrs/public/scanner/tmp/22965731-23122108034448266.pdf"
-                                        height="780" width="100%" frameborder="0"></iframe>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- rincian --}}
-                        <div id="rincian_biaya"></div>
-                        {{-- asesmen awal --}}
-                        @include('simrs.ranap.modal_asesmen_awal')
-                        {{-- asuhan terpadu --}}
-                        @include('simrs.ranap.modal_asuhan_terpadu')
-                        {{-- asesmen perawat --}}
-                        @include('simrs.ranap.modal_asesmen_keperawatan')
-                        {{-- groupping --}}
-                        @include('simrs.ranap.modal_groupping')
-                        {{-- perkembangan --}}
-                        @include('simrs.ranap.erm_ranap_catatan_pekembangan_pasien')
-                        {{-- keperawatan --}}
-                        @include('simrs.ranap.erm_ranap_keperawatan')
-                        {{-- observasi --}}
-                        @include('simrs.ranap.erm_ranap_observasi')
-                        {{-- KPO --}}
-                        <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKPO">
-                                <h3 class="card-title">
-                                    KPO Elektronik
-                                </h3>
-                            </a>
-                            <div id="cKPO" class="collapse" role="tabpanel">
-                                <div class="card-body p-0">
-                                    <iframe id="kpoFrame" src="" height="780" width="100%"
-                                        frameborder="0"></iframe>
-                                </div>
-                            </div>
-                        </div>
-                        {{-- tindakan --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakanDokter">
-                                <h3 class="card-title">
-                                    Pemberian Tindakan Kedokteran
-                                </h3>
-                            </a>
-                            <div id="cTindakanDokter" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- konsultasi --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cKonsultasi">
-                                <h3 class="card-title">
-                                    Pemeriksaan Konsultasi
-                                </h3>
-                            </a>
-                            <div id="cKonsultasi" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- nyeri --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cNyeri">
-                                <h3 class="card-title">
-                                    Pengkajian Nyeri
-                                </h3>
-                            </a>
-                            <div id="cNyeri" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- jatuh --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cJatuh">
-                                <h3 class="card-title">
-                                    Pengkajian Resiko Jatuh
-                                </h3>
-                            </a>
-                            <div id="cJatuh" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- mpp form a --}}
-                        @include('simrs.ranap.modal_mpp_a')
-                        {{-- mpp form b --}}
-                        @include('simrs.ranap.erm_ranap_mppb')
-                        {{-- rencana pemulangan --}}
-                        @include('simrs.ranap.modal_rencana_pulang')
-                        {{-- resume --}}
-                        @include('simrs.ranap.modal_resume_ranap')
-                        {{-- tindakan --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cTindakan">
-                                <h3 class="card-title">
-                                    Tindakan
-                                </h3>
-                            </a>
-                            <div id="cTindakan" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- resep --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cResepObat">
-                                <h3 class="card-title">
-                                    Resep Obat
-                                </h3>
-                            </a>
-                            <div id="cResepObat" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    test
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- suratkontrol --}}
-                        {{-- <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion"
-                                href="#cSuratKontrol">
-                                <h3 class="card-title">
-                                    Surat Kontrol
-                                </h3>
-                                <div class="card-tools">
-                                    @if ($kunjungan->surat_kontrol)
-                                        Sudah Dibuatkan Surat Kontrol {{ $kunjungan->surat_kontrol->noSuratKontrol }}
-                                        <i class="fas fa-check-circle"></i>
-                                    @else
-                                        Belum Dibuatkan Surat Kontrol <i class="fas fa-times-circle"></i>
-                                    @endif
-                                </div>
-                            </a>
-                            <div id="cSuratKontrol" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    @if ($kunjungan->surat_kontrol)
-                                        <input type="hidden" name="nomorsuratkontrol" class="nomorsuratkontrol-id"
-                                            value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}">
-                                        <form action="{{ route('suratkontrol_update_v2') }}" method="POST">
-                                            @csrf
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
-                                                        value="{{ $pasien->no_Bpjs }}" igroup-size="sm"
-                                                        label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
-                                                    <x-adminlte-input name="norm" class="norm-id" label="No RM"
-                                                        igroup-size="sm" placeholder="No RM "
-                                                        value="{{ $pasien->no_rm }}" readonly />
-                                                    <x-adminlte-input name="nama" class="nama-id"
-                                                        value="{{ $pasien->nama_px }}" label="Nama Pasien"
-                                                        igroup-size="sm" placeholder="Nama Pasien" readonly />
-                                                    <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
-                                                        igroup-size="sm" placeholder="Nomor HP" />
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <x-adminlte-input name="noSuratKontrol" igroup-size="sm"
-                                                        label="Nomor Surat Kontrol" placeholder="Nomor SEP"
-                                                        value="{{ $kunjungan->surat_kontrol->noSuratKontrol }}" readonly />
-                                                    <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
-                                                        label="Nomor SEP" placeholder="Nomor SEP"
-                                                        value="{{ $kunjungan->surat_kontrol->noSepAsalKontrol }}"
-                                                        readonly />
-                                                    @php
-                                                        $config = ['format' => 'YYYY-MM-DD'];
-                                                    @endphp
-                                                    <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm"
-                                                        label="Tanggal Rencana Kontrol"
-                                                        value="{{ $kunjungan->surat_kontrol->tglRencanaKontrol }}"
-                                                        placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
-                                                        <x-slot name="appendSlot">
-                                                            <div class="btn btn-primary btnCariPoli">
-                                                                <i class="fas fa-search"></i> Cari Poli
-                                                            </div>
-                                                        </x-slot>
-                                                    </x-adminlte-input-date>
-                                                    <x-adminlte-select2 igroup-size="sm" name="poliKontrol"
-                                                        label="Poliklinik">
-                                                        <option value="{{ $kunjungan->surat_kontrol->poliTujuan }}"
-                                                            selected>{{ $kunjungan->surat_kontrol->namaPoliTujuan }}
-                                                        </option>
-                                                        <option disabled>Silahkan Klik Cari Poliklinik</option>
-                                                        <x-slot name="appendSlot">
-                                                            <div class="btn btn-primary btnCariDokter">
-                                                                <i class="fas fa-search"></i> Cari Dokter
-                                                            </div>
-                                                        </x-slot>
-                                                    </x-adminlte-select2>
-                                                    <x-adminlte-select2 igroup-size="sm" name="kodeDokter"
-                                                        label="Dokter">
-                                                        <option value="{{ $kunjungan->surat_kontrol->kodeDokter }}"
-                                                            selected>{{ $kunjungan->surat_kontrol->namaDokter }}</option>
-                                                        <option disabled>Silahkan Klik Cari Dokter</option>
-                                                    </x-adminlte-select2>
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-warning withLoad">
-                                                <i class="fas fa-save"></i> Update</button>
-                                            <div class="btn  btn-success btnPrintSuratKontrol"> <i
-                                                    class="fas fa-print"></i> Print</div>
-                                            <a href="{{ route('suratkontrol_delete') }}?nomorsuratkontrol={{ $kunjungan->surat_kontrol->noSuratKontrol }}"
-                                                class="btn btn-danger withLoad">
-                                                <i class="fas fa-trash-alt"></i> Hapus
-                                            </a>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('suratkontrol_simpan') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="counter" id="counter"
-                                                value="{{ $kunjungan->counter }}" class="counter-id" value="">
-                                            <input type="hidden" name="kodekunjungan" id="kodekunjungan"
-                                                class="kodekunjungan-id" value="{{ $kunjungan->kode_kunjungan }}">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <x-adminlte-input name="noSEP" class="nomorsep-id" igroup-size="sm"
-                                                        label="Nomor SEP" value="{{ $kunjungan->no_sep }}"
-                                                        placeholder="Nomor SEP" readonly>
-                                                        <x-slot name="appendSlot">
-                                                            <div class="btn btn-primary btnCariSEP">
-                                                                <i class="fas fa-search"></i> Cari SEP
-                                                            </div>
-                                                        </x-slot>
-                                                    </x-adminlte-input>
-                                                    <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
-                                                        value="{{ $pasien->no_Bpjs }}" igroup-size="sm"
-                                                        label="Nomor Kartu" placeholder="Nomor Kartu" readonly />
-                                                    <x-adminlte-input name="norm" class="norm-id" label="No RM"
-                                                        igroup-size="sm" placeholder="No RM "
-                                                        value="{{ $pasien->no_rm }}" readonly />
-                                                    <x-adminlte-input name="nama" class="nama-id"
-                                                        value="{{ $pasien->nama_px }}" label="Nama Pasien"
-                                                        igroup-size="sm" placeholder="Nama Pasien" readonly />
-                                                    <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
-                                                        igroup-size="sm" placeholder="Nomor HP" />
-                                                </div>
-                                                <div class="col-md-6">
-                                                    @php
-                                                        $config = ['format' => 'YYYY-MM-DD'];
-                                                    @endphp
-                                                    <x-adminlte-input-date name="tglRencanaKontrol" igroup-size="sm"
-                                                        label="Tanggal Rencana Kontrol"
-                                                        placeholder="Pilih Tanggal Rencana Kontrol" :config="$config">
-                                                        <x-slot name="appendSlot">
-                                                            <div class="btn btn-primary btnCariPoli">
-                                                                <i class="fas fa-search"></i> Cari Poli
-                                                            </div>
-                                                        </x-slot>
-                                                    </x-adminlte-input-date>
-                                                    <x-adminlte-select igroup-size="sm" name="poliKontrol"
-                                                        label="Poliklinik">
-                                                        <option selected disabled>Silahkan Klik Cari Poliklinik</option>
-                                                        <x-slot name="appendSlot">
-                                                            <div class="btn btn-primary btnCariDokter">
-                                                                <i class="fas fa-search"></i> Cari Dokter
-                                                            </div>
-                                                        </x-slot>
-                                                    </x-adminlte-select>
-                                                    <x-adminlte-select igroup-size="sm" name="kodeDokter" label="Dokter">
-                                                        <option selected disabled>Silahkan Klik Cari Dokter</option>
-                                                    </x-adminlte-select>
-                                                    <x-adminlte-textarea igroup-size="sm" label="Catatan" name="catatan"
-                                                        placeholder="Catatan Pasien" />
-                                                </div>
-                                            </div>
-                                            <button type="submit" class="btn btn-warning withLoad"> <i
-                                                    class="fas fa-save"></i>
-                                                Buat
-                                                Surat Kontrol</button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </div>
-                        </div> --}}
-                        {{-- pemulangan --}}
-                        <div class="card card-info mb-1">
-                            <a class="card-header" data-toggle="collapse" data-parent="#accordion" href="#cPulang">
-                                <h3 class="card-title">
-                                    Pemulangan Pasien
-                                </h3>
-                                <div class="card-tools">
-                                    @if ($kunjungan->tgl_keluar)
-                                        Sudah Dipulangkan {{ $kunjungan->tgl_keluar }}
-                                        <i class="fas fa-check-circle"></i>
-                                    @else
-                                        Belum Dipulangkan <i class="fas fa-times-circle"></i>
-                                    @endif
-                                </div>
-                            </a>
-                            <div id="cPulang" class="collapse" role="tabpanel">
-                                <div class="card-body">
-                                    <form action="{{ route('pemulangan_sep_pasien') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="kodebooking" class="kodebooking-id">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <x-adminlte-input name="nomorkartu" class="nomorkartu-id"
-                                                    value="{{ $pasien->no_Bpjs }}" igroup-size="sm" label="Nomor Kartu"
-                                                    placeholder="Nomor Kartu" readonly />
-                                                <x-adminlte-input name="norm" class="norm-id" label="No RM"
-                                                    igroup-size="sm" placeholder="No RM " value="{{ $pasien->no_rm }}"
-                                                    readonly />
-                                                <x-adminlte-input name="nama" class="nama-id"
-                                                    value="{{ $pasien->nama_px }}" label="Nama Pasien" igroup-size="sm"
-                                                    placeholder="Nama Pasien" readonly />
-                                                <x-adminlte-input name="nohp" class="nohp-id" label="Nomor HP"
-                                                    igroup-size="sm" placeholder="Nomor HP" />
-                                                <input type="hidden" name="gender"
-                                                    value="{{ $pasien->jenis_kelamin }}">
-                                                <input type="hidden" name="tgllahir" value="{{ $pasien->tgl_lahir }}">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <x-adminlte-input name="noSep" class="nomorsep-id" igroup-size="sm"
-                                                    label="Nomor SEP" value="{{ $kunjungan->no_sep }}"
-                                                    placeholder="Nomor SEP" readonly>
-                                                    <x-slot name="appendSlot">
-                                                        <div class="btn btn-primary btnCariSEP">
-                                                            <i class="fas fa-search"></i> Cari SEP
-                                                        </div>
-                                                    </x-slot>
-                                                </x-adminlte-input>
-                                                <x-adminlte-select igroup-size="sm" name="statusPulang"
-                                                    label="Alasan Pulang">
-                                                    <option selected disabled>Pilih Alasan Pulang</option>
-                                                    <option value="1">Atas Persetujuan Dokter</option>
-                                                    <option value="3">Atas Permintaan Sendiri</option>
-                                                    <option value="4">Meninggal</option>
-                                                    <option value="5">Lain-lain</option>
-                                                </x-adminlte-select>
-                                                @php
-                                                    $config = ['format' => 'YYYY-MM-DD'];
-                                                @endphp
-                                                <x-adminlte-input-date name="tglPulang" igroup-size="sm"
-                                                    label="Tanggal Pulang" value="{{ now()->format('Y-m-d') }}"
-                                                    placeholder="Pilih Tanggal Pulang" :config="$config" />
-                                                <p class="text-danger">Isi Jika Pasien Meninggal</p>
-                                                <x-adminlte-input-date name="tglMeninggal" igroup-size="sm"
-                                                    label="Tanggal Meninggal" placeholder="Pilih Tanggal Meninggal"
-                                                    :config="$config" />
-                                                <x-adminlte-input name="noSuratMeninggal" class="suratmeninggal-id"
-                                                    igroup-size="sm" label="Nomor Surat Meninggal"
-                                                    placeholder="Nomor Surat Meninggal" />
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-warning withLoad">
-                                            <i class="fas fa-save"></i> Pulangkan Pasien</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        @include('simrs.ranap.modal_suratkontrol')
-                        @include('simrs.ranap.modal_laboratorium')
-                        @include('simrs.ranap.modal_radiologi')
-                        @include('simrs.ranap.modal_patologi')
-                        @include('simrs.ranap.modal_file_rm')
                     </div>
+                    <!-- Tambahkan tombol lainnya dengan logika yang sama -->
                 </div>
             </div>
         </div>
+        @if ($activeButton)
+            <div class="col-md-12">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {{ $cardContent['title'] }}
+                        </h3>
+                    </div>
+                    <div class="card-body pad table-responsive">
+                        {!! $cardContent['content'] !!}
+                    </div>
+
+                </div>
+            </div>
+        @endif
+
     </div>
 @stop
-@section('plugins.Datatables', true)
-@section('plugins.TempusDominusBs4', true)
+@section('plugins.TempusDominusBs4', false)
 @section('plugins.DateRangePicker', true)
+@section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 
@@ -826,4 +417,44 @@
             });
         }
     </script>
+    <script>
+        function showHasilLab(button) {
+            var kode = $(button).data('kode');
+            var url = "http://192.168.2.74/smartlab_waled/his/his_report?hisno=" + kode;
+            $('#dataHasilLab').attr('src', url);
+            $('#urlHasilLab').attr('href', url);
+            $('#modalHasilLab').modal('show');
+        }
+
+        function lihatHasilRongsen(button) {
+            var norm = $(button).data('norm');
+            var url = "http://192.168.10.17/ZFP?mode=proxy&lights=on&titlebar=on#View&ris_pat_id=" + norm +
+                "&un=radiologi&pw=YnanEegSoQr0lxvKr59DTyTO44qTbzbn9koNCrajqCRwHCVhfQAddGf%2f4PNjqOaV";
+            $('#dataUrlRongsen').attr('src', url);
+            $('#modalRongsen').modal('show');
+        }
+
+        function lihatExpertiseRad(button) {
+            var header = $(button).data('header');
+            var detail = $(button).data('detail');
+            var url = "http://192.168.2.233/expertise/cetak0.php?IDs=" + header + "&IDd=" + detail +
+                "&tgl_cetak={{ now()->format('Y-m-d') }}";
+            $('#dataUrlRongsen').attr('src', url);
+            $('#modalRongsen').modal('show');
+        }
+
+        function showHasilPa(button) {
+            var kode = $(button).data('kode');
+            var url = "http://192.168.2.212:81/simrswaled/SimrsPrint/printEX/" +
+                kode;
+            $('#dataHasilLabPa').attr('src', url);
+            $('#urlHasilLabPa').attr('href', url);
+            $('#modalLabPA').modal('show');
+        }
+    </script>
 @endsection
+@push('js')
+    @include('simrs.ranap.function_script.soap.soap_function_js')
+    @include('simrs.ranap.function_script.implementasi_evaluasi.implementasi_evaluasi_function_js')
+    @include('simrs.ranap.function_script.rencana_asuhan.rencana_asuh_function_js')
+@endpush

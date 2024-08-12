@@ -15,8 +15,6 @@ use App\Models\ErmRanapPerkembangan;
 use App\Models\FileRekamMedis;
 use App\Models\FileUpload;
 use App\Models\Kunjungan;
-use App\Models\Pasien;
-use App\Models\TagihanPasien;
 use App\Models\TtdDokter;
 use App\Models\Unit;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -66,8 +64,10 @@ class RanapController extends APIController
             'kunjungans',
         ));
     }
-    public function pasienranapprofile(Request $request)
+    public function pasienranapprofile(Request $request, $kode)
     {
+        $activeButton   = $request->query('active_button', '');
+        $kode           = $kode;
         $kunjungan = Kunjungan::with([
             'dokter',
             'unit',
@@ -81,14 +81,218 @@ class RanapController extends APIController
             'asesmen_ranap',
             'asuhan_terpadu',
             'asesmen_ranap_keperawatan',
-        ])->firstWhere('kode_kunjungan', $request->kode);
-        $pasien = $kunjungan->pasien;
-        $groupping = $kunjungan->groupping;
+        ])->firstWhere('kode_kunjungan', $kode);
+        
+        $pasien         = $kunjungan->pasien;
+        $groupping      = $kunjungan->groupping;
+        $cardContent    = $this->getCardContent($activeButton, $kunjungan, $pasien);
+
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
             'pasien',
             'groupping',
+            'kode',
+            'activeButton', 'cardContent'
         ]));
+    }
+    private function getCardContent($activeButton, $kunjungan, $pasien)
+    {
+        switch ($activeButton) {
+            case 'triase':
+                return [
+                    'title' => 'Triase IGD',
+                    'content' => view('simrs.ranap.partials.triase')->render()
+                ];
+            case 'radiologi':
+                $data = $this->get_hasil_radiologi($pasien->no_rm);
+                return [
+                    'title' => 'Radiologi',
+                    'content' => view('simrs.ranap.partials.radiologi', compact('data','kunjungan'))->render()
+                ];
+            case 'laboratorium':
+                $data = $this->getHasilLaboratoriumData($pasien->no_rm);
+                return [
+                    'title' => 'Laboratorium',
+                    'content' => view('simrs.ranap.partials.laboratorium', compact('data','kunjungan'))->render()
+                ];
+            case 'lab_patologianatomi':
+                $data = $this->getHasilPatologi($pasien->no_rm);
+                return [
+                    'title' => 'Lab Patologi Anatomi',
+                    'content' => view('simrs.ranap.partials.lab_patologi_anatomi', compact('data','kunjungan'))->render()
+                ];
+            case 'berkas':
+                $files = FileRekamMedis::where('norm', $pasien->no_rm)->get();
+                $fileupload = FileUpload::where('no_rm', $pasien->no_rm)->get();
+                return [
+                    'title' => 'Berkas',
+                    'content' => view('simrs.ranap.partials.berkas', compact('files','fileupload'))->render()
+                ];
+            case 'rencana_asuhan':
+                return [
+                    'title' => 'Rencana Asuhan',
+                    'content' => view('simrs.ranap.partials.rencana_asuhan', compact('kunjungan'))->render()
+                ];
+            case 'assesmen_awal_medis':
+                return [
+                    'title' => 'Assesmen Awal Medis',
+                    'content' => view('simrs.ranap.partials.assesmen_awal_medis', compact('kunjungan'))->render()
+                ];
+            case 'assesmen_keperawatan':
+                return [
+                    'title' => 'Assesmen Keperawatan',
+                    'content' => view('simrs.ranap.partials.assesmen_keperawatan', compact('kunjungan'))->render()
+                ];
+            case 'soap':
+                return [
+                    'title' => 'SOAP & Perkembangan',
+                    'content' => view('simrs.ranap.partials.soap', compact('kunjungan'))->render()
+                ];
+            case 'implementasi_evaluasi':
+                return [
+                    'title' => 'Implementasi & Evaluasi',
+                    'content' => view('simrs.ranap.partials.implementasi_evaluasi', compact('kunjungan'))->render()
+                ];
+            case 'observasi_24jam':
+                return [
+                    'title' => 'Observasi 24 Jam',
+                    'content' => view('simrs.ranap.partials.observasi_24jam', compact('kunjungan'))->render()
+                ];
+            case 'kpo_elektronik':
+                return [
+                    'title' => 'KPO Elektronik',
+                    'content' => view('simrs.ranap.partials.kpo_elektronik', compact('kunjungan'))->render()
+                ];
+
+            default:
+                return [
+                    'title' => '',
+                    'content' => ''
+                ];
+        }
+    }
+
+    private function getHasilLaboratoriumData($no_rm)
+    {
+        $kodeUnit = '3002';
+        $data = [];
+
+        $kunjungans = Kunjungan::where('no_rm', $no_rm)
+            ->whereHas('layanans', function ($query) use ($kodeUnit) {
+                $query->where('kode_unit', $kodeUnit);
+            })
+            ->with([
+                'unit',
+                'pasien',
+                'layanans', 'layanans.layanan_details',
+                'layanans.layanan_details.tarif_detail',
+                'layanans.layanan_details.tarif_detail.tarif',
+            ])
+            ->orderBy('tgl_masuk', 'desc')
+            ->get();
+
+        foreach ($kunjungans as $kunjungan) {
+            foreach ($kunjungan->layanans->where('kode_unit', $kodeUnit) as $layanan) {
+                $pemeriksaan = $layanan->layanan_details->map(function ($detail) {
+                    return $detail->tarif_detail->tarif->NAMA_TARIF;
+                })->toArray();
+
+                $data[] = [
+                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    'tgl_masuk' => $kunjungan->tgl_masuk,
+                    'counter' => $kunjungan->counter,
+                    'no_rm' => $kunjungan->no_rm,
+                    'nama_px' => $kunjungan->pasien->nama_px,
+                    'nama_unit' => $kunjungan->unit->nama_unit,
+                    'laboratorium' => $layanan->kode_layanan_header,
+                    'pemeriksaan' => $pemeriksaan,
+                ];
+            }
+        }
+
+        return $data;
+    }
+
+    public function get_hasil_radiologi($no_rm)
+    {
+        $kodeunit = '3003';
+        $data = [];
+        
+        if ($no_rm) {
+            // Ambil kunjungan pasien berdasarkan no_rm dan kode_unit
+            $kunjungans = Kunjungan::where('no_rm', $no_rm)
+                ->orderBy('tgl_masuk', 'desc')
+                ->whereHas('layanans', function ($query) use ($kodeunit) {
+                    $query->where('kode_unit', $kodeunit);
+                })
+                ->with([
+                    'unit',
+                    'pasien',
+                    'layanans.layanan_details.tarif_detail.tarif',
+                ])
+                ->get();
+        
+            // Iterasi melalui kunjungan
+            foreach ($kunjungans as $kunjungan) {
+                // Iterasi melalui layanan yang memiliki kode_unit = 3003
+                foreach ($kunjungan->layanans->where('kode_unit', $kodeunit) as $value) {
+                    // Iterasi melalui layanan_details
+                    foreach ($value->layanan_details as $laydet) {
+                        $data[] = [
+                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                            'tgl_masuk' => $kunjungan->tgl_masuk,
+                            'counter' => $kunjungan->counter,
+                            'no_rm' => $kunjungan->no_rm,
+                            'nama_px' => $kunjungan->pasien->nama_px,
+                            'nama_unit' => $kunjungan->unit->nama_unit,
+                            'header_id' => $value->id,
+                            'detail_id' => $laydet->id,
+                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
+                        ];
+                    }
+                }
+            }
+        }
+        
+        return $data;        
+    }
+
+    public function getHasilPatologi($no_rm)
+    {
+        $kodeunit = '3020';
+        $data = [];
+        if ($no_rm) {
+            $kunjungans = Kunjungan::where('no_rm', $no_rm)->orderBy('tgl_masuk', 'desc')
+                ->whereHas('layanans', function ($query) use ($kodeunit) {
+                    $query->where('kode_unit', $kodeunit);
+                })
+                ->with([
+                    'unit',
+                    'pasien',
+                    'layanans', 'layanans.layanan_details',
+                    'layanans.layanan_details.tarif_detail',
+                    'layanans.layanan_details.tarif_detail.tarif',
+                ])
+                ->get();
+            foreach ($kunjungans as $key => $kunjungan) {
+                foreach ($kunjungan->layanans->where('kode_unit', 3020) as $key => $value) {
+                    foreach ($value->layanan_details as $key => $laydet) {
+                        $data[] = [
+                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                            'tgl_masuk' => $kunjungan->tgl_masuk,
+                            'counter' => $kunjungan->counter,
+                            'no_rm' => $kunjungan->no_rm,
+                            'nama_px' => $kunjungan->pasien->nama_px,
+                            'nama_unit' => $kunjungan->unit->nama_unit,
+                            'header_id' =>   $value->id,
+                            'detail_id' =>   $laydet->id,
+                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
+                        ];
+                    }
+                }
+            }
+        }
+        return $data;
     }
     public function get_kunjungan_pasien(Request $request)
     {
@@ -144,17 +348,43 @@ class RanapController extends APIController
         Alert::success('Success', 'Asesmen Awal Rawat Inap Disimpan');
         return redirect()->back();
     }
+    // rencana asuhan
     public function simpan_rencana_asuhan_terpadu(Request $request)
     {
         AsuhanTerpadu::updateOrCreate(
             [
-                'kode' => $request->kode
+                'kode'              => $request->kode,
+                'kode_kunjungan'    => $request->kode_kunjungan,
+                'no_rm'             => $request->no_rm,
+                'id'                => $request->id_asuhan, 
+                'tgl_waktu'         => $request->tgl_waktu, 
             ],
-            $request->all()
+            [
+                'kode'                  => $request->kode,
+                'kode_kunjungan'        => $request->kode_kunjungan,
+                'no_rm'                 => $request->no_rm,
+                'rm_counter'            => $request->rm_counter,
+                'nama'                  => $request->nama,
+                'rencana_asuhan'        => $request->rencana_asuhan,
+                'capaian_diharapkan'    => $request->capaian_diharapkan,
+                'profesi'               => $request->profesi,
+                'pic'                   => $request->pic,
+                'kode_unit'             => $request->kode_unit,
+                'user'                  => $request->user,
+            ]
         );
         Alert::success('Success', 'Rencana Asuhan Terpadu Rawat Inap Disimpan');
         return redirect()->back();
     }
+    public function getRencanaAsuhData(Request $request)
+    {
+        $data = AsuhanTerpadu::findOrFail($request->id);
+        if (!$data) {
+            return response()->json(['error' => 'Data not found'], 404);
+        }
+        return response()->json($data);
+    }
+    // assesmen awal
     public function print_asesmen_ranap_awal(Request $request)
     {
         $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $request->kode);
@@ -182,133 +412,7 @@ class RanapController extends APIController
         $pdf = Pdf::loadView('simrs.ranap.pdf_asesmen_keperawatan', compact('kunjungan', 'pasien'));
         return $pdf->stream('pdf_asesmen_ranap_awal.pdf');
     }
-
-    public function get_hasil_laboratorium(Request $request)
-    {
-        $kodeunit = '3002';
-        $data = [];
-        if ($request->norm) {
-            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
-                ->whereHas('layanans', function ($query) use ($kodeunit) {
-                    $query->where('kode_unit', $kodeunit);
-                })
-                ->with([
-                    'unit',
-                    'pasien',
-                    'layanans', 'layanans.layanan_details',
-                    'layanans.layanan_details.tarif_detail',
-                    'layanans.layanan_details.tarif_detail.tarif',
-                ])
-                ->get();
-
-            foreach ($kunjungans as $key => $kunjungan) {
-                $lab = [];
-                $pemeriksaan = [];
-                foreach ($kunjungan->layanans->where('kode_unit', 3002) as $key => $value) {
-                    foreach ($value->layanan_details as $key => $laydet) {
-                        $pemeriksaan[] = $laydet->tarif_detail->tarif->NAMA_TARIF;
-                    }
-                    $data[] = [
-                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                        'tgl_masuk' => $kunjungan->tgl_masuk,
-                        'counter' => $kunjungan->counter,
-                        'no_rm' => $kunjungan->no_rm,
-                        'nama_px' => $kunjungan->pasien->nama_px,
-                        'nama_unit' => $kunjungan->unit->nama_unit,
-                        'laboratorium' =>  $value->kode_layanan_header,
-                        'pemeriksaan' =>  $pemeriksaan,
-                    ];
-                }
-            }
-        }
-        return $this->sendResponse($data);
-    }
-    public function get_hasil_radiologi(Request $request)
-    {
-        $kodeunit = '3003';
-        $data = [];
-        $rad = [];
-        $detail = [];
-        if ($request->norm) {
-            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
-                ->whereHas('layanans', function ($query) use ($kodeunit) {
-                    $query->where('kode_unit', $kodeunit);
-                })
-                ->with([
-                    'unit',
-                    'pasien',
-                    'layanans', 'layanans.layanan_details',
-                    'layanans.layanan_details.tarif_detail',
-                    'layanans.layanan_details.tarif_detail.tarif',
-                ])
-                ->get();
-            foreach ($kunjungans as $key => $kunjungan) {
-                $pemeriksaan = [];
-                foreach ($kunjungan->layanans->where('kode_unit', 3003) as $key => $value) {
-                    foreach ($value->layanan_details as $key => $laydet) {
-                        $data[] = [
-                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                            'tgl_masuk' => $kunjungan->tgl_masuk,
-                            'counter' => $kunjungan->counter,
-                            'no_rm' => $kunjungan->no_rm,
-                            'nama_px' => $kunjungan->pasien->nama_px,
-                            'nama_unit' => $kunjungan->unit->nama_unit,
-                            'header_id' =>   $value->id,
-                            'detail_id' =>   $laydet->id,
-                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
-                        ];
-                    }
-                }
-            }
-        }
-        return $this->sendResponse($data);
-    }
-    public function get_file_upload(Request $request)
-    {
-        $files = FileRekamMedis::where('norm', $request->norm)->get();
-        $fileupload = FileUpload::where('no_rm', $request->norm)->get();
-        return view('simrs.ranap.table_file_upload', compact('files', 'fileupload'));
-    }
-    public function get_hasil_patologi(Request $request)
-    {
-        $kodeunit = '3020';
-        $data = [];
-        $rad = [];
-        $detail = [];
-        if ($request->norm) {
-            $kunjungans = Kunjungan::where('no_rm', $request->norm)->orderBy('tgl_masuk', 'desc')
-                ->whereHas('layanans', function ($query) use ($kodeunit) {
-                    $query->where('kode_unit', $kodeunit);
-                })
-                ->with([
-                    'unit',
-                    'pasien',
-                    'layanans', 'layanans.layanan_details',
-                    'layanans.layanan_details.tarif_detail',
-                    'layanans.layanan_details.tarif_detail.tarif',
-                ])
-                ->get();
-            foreach ($kunjungans as $key => $kunjungan) {
-                $pemeriksaan = [];
-                foreach ($kunjungan->layanans->where('kode_unit', 3020) as $key => $value) {
-                    foreach ($value->layanan_details as $key => $laydet) {
-                        $data[] = [
-                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
-                            'tgl_masuk' => $kunjungan->tgl_masuk,
-                            'counter' => $kunjungan->counter,
-                            'no_rm' => $kunjungan->no_rm,
-                            'nama_px' => $kunjungan->pasien->nama_px,
-                            'nama_unit' => $kunjungan->unit->nama_unit,
-                            'header_id' =>   $value->id,
-                            'detail_id' =>   $laydet->id,
-                            'pemeriksaan' => $laydet->tarif_detail->tarif->NAMA_TARIF,
-                        ];
-                    }
-                }
-            }
-        }
-        return $this->sendResponse($data);
-    }
+    // kunjungan ranap aktif
     public function kunjunganranapaktif(Request $request)
     {
         $units = Unit::whereIn('kelas_unit', ['2'])
@@ -724,17 +828,62 @@ class RanapController extends APIController
     // soap
     public function simpan_perkembangan_ranap(Request $request)
     {
-        $request['pic'] = Auth::user()->name;
-        $request['user_id'] = Auth::user()->id;
-        $observasi = ErmRanapPerkembangan::updateOrCreate(
-            [
-                'tanggal_input' => $request->tanggal_input,
-                'kode_kunjungan' => $request->kode_kunjungan,
-            ],
-            $request->all()
-        );
-        return $this->sendResponse($observasi);
+        $validator = \Validator::make($request->all(), [
+            'tanggal_input'     => 'required|date',
+            'perkembangan'      => 'required',
+            'instruksi_medis'   => 'required',
+        ], [
+            'tanggal_input.required'     => 'Kolom inputan tanggal wajib diisi.',
+            'tanggal_input.date'         => 'Kolom inputan tanggal harus berupa tanggal yang valid.',
+            'perkembangan.required'      => 'Kolom inputan SOAP hasil pemeriksaan wajib diisi.',
+            'instruksi_medis.required'   => 'Kolom inputan instruksi medis wajib diisi.',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'metadata' => [
+                    'code' => 422,
+                    'message' => 'Upps... ada inputan yang belum diisi!',
+                ],
+                'errors' => $validator->errors(), // Kirimkan detail kesalahan
+            ], 422);
+        }
+    
+        try {
+            $data = ErmRanapPerkembangan::updateOrCreate(
+                [
+                    'tanggal_input'     => $request->tanggal_input,
+                    'kode_kunjungan'    => $request->kode_kunjungan,
+                    'counter'           => $request->counter,
+                    'norm'              => $request->norm,
+                ],
+                [
+                    'norm'              => $request->norm,
+                    'perkembangan'      => $request->perkembangan,
+                    'instruksi_medis'   => $request->instruksi_medis,
+                    'instruksi_medis'   => $request->instruksi_medis,
+                    'user_id'           => Auth::user()->id,
+                    'pic'               => Auth::user()->name,
+                ],
+                $request->all()
+            );
+            return response()->json([
+                'metadata' => [
+                    'code' => 200,
+                    'message' => 'Data berhasil disimpan',
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error in simpan_perkembangan_ranap: ' . $e->getMessage());
+            return response()->json([
+                'metadata' => [
+                    'code' => 500,
+                    'message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage(),
+                ],
+            ], 500);
+        }
     }
+
     public function get_perkembangan_ranap(Request $request)
     {
         $observasi = ErmRanapPerkembangan::where('kode_kunjungan', $request->kode)->get();
@@ -760,6 +909,20 @@ class RanapController extends APIController
                 'verifikasi_by' => Auth::user()->name,
             ]);
             return $this->sendResponse('Berhasil diverifikasi');
+        } else {
+            return $this->sendError('Catatan tidak ditemukan');
+        }
+    }
+    public function cancle_verifikasi_soap_ranap(Request $request)
+    {
+        $observasi = ErmRanapPerkembangan::find($request->id);
+        if ($observasi) {
+            # code...
+            $observasi->update([
+                'verifikasi_at' => Null,
+                'verifikasi_by' => Null,
+            ]);
+            return $this->sendResponse('Verifikasi berhasil dibatalkan');
         } else {
             return $this->sendError('Catatan tidak ditemukan');
         }

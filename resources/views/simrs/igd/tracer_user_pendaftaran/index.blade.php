@@ -19,7 +19,9 @@
                         <div class="input-group">
                             <select name="user_pendaftaran" id="user_pendaftaran" class="form-control">
                                 @foreach ($userList as $user)
-                                    <option value="{{ $user->id }}" {{$request->user_pendaftaran == $user->id?'selected':''}}>{{ strtoupper($user->name) }}</option>
+                                    <option value="{{ $user->id }}"
+                                        {{ $request->user_pendaftaran == $user->id ? 'selected' : '' }}>
+                                        {{ strtoupper($user->name) }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -58,24 +60,25 @@
             <div class="row">
                 @foreach ($userPendaftaran as $user)
                     @php
-                    $start = Carbon\Carbon::parse($request->start)->startOfDay();
-                    $end = Carbon\Carbon::parse($request->end)->endOfDay();
+                        $start = Carbon\Carbon::parse($request->start)->startOfDay();
+                        $end = Carbon\Carbon::parse($request->end)->endOfDay();
                         if ($request->start && $request->end) {
                             $web = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
                                 ->whereNotNull('jp_daftar')
                                 ->where('status_kunjungan', '!=', 8)
                                 ->count();
-                            $desktop = \App\Models\Kunjungan::whereBetween('tgl_masuk', [
-                                $start,
-                                $end,
-                            ])
+                            $desktop = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
                                 ->whereNull('jp_daftar')
                                 ->where('status_kunjungan', '!=', 8)
                                 ->count();
                             $total = \App\Models\Kunjungan::whereBetween('tgl_masuk', [$start, $end])
                                 ->where('pic', $user->id_simrs)
+                                ->count();
+                            $batal = \App\Models\Kunjungan::whereDate('tgl_masuk',  [$start, $end])
+                                ->where('pic', $user->id_simrs)
+                                ->where('status_kunjungan', 8)
                                 ->count();
                         } else {
                             $web = \App\Models\Kunjungan::whereDate('tgl_masuk', now())

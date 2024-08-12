@@ -248,12 +248,6 @@
             var data = $('#formFilter').serialize();
             var url = "{{ route('laporan-rawa-jalan.export') }}?" + data;
             window.location = url;
-            // $.get(url, function() {
-            //     setInterval(() => {
-            //         $.LoadingOverlay("hide");
-            //     }, 5000);
-            // })
-
             $.ajax({
                     data: data,
                     url: url,
@@ -269,7 +263,6 @@
                         $.LoadingOverlay("hide");
                     }, 2000);
                 });
-
         });
 
         $(document).ready(function() {

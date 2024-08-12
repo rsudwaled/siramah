@@ -233,7 +233,7 @@
                                                 <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
                                                     @foreach ($alasanmasuk as $item)
                                                         <option value="{{ $item->id }}">
-                                                            {{ $item->alasan_masuk }}</option>
+                                                            {{ strtoupper($item->alasan_masuk) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select>
                                             </div>
@@ -256,7 +256,7 @@
                                                 <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
                                                     @foreach ($penjamin as $item)
                                                         <option value="{{ $item->kode_penjamin }}">
-                                                            {{ $item->nama_penjamin }}</option>
+                                                            {{ strtoupper($item->nama_penjamin) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
 
@@ -264,7 +264,7 @@
                                                     <option value="">--Pilih Dokter DPJP--</option>
                                                     @foreach ($paramedis as $item)
                                                         <option value="{{ $item->kode_paramedis }}">
-                                                            {{ $item->nama_paramedis }}</option>
+                                                            {{ strtoupper($item->nama_paramedis) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                                 <x-adminlte-select2 name="diagAwal" id="diagnosa"

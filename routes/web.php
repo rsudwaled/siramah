@@ -1,5 +1,4 @@
 <?php
-
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\BarcodeController;
 use App\Http\Controllers\BukuTamuController;
@@ -251,7 +250,7 @@ Route::middleware('auth')->group(function () {
     Route::post('claim_ranap', [InacbgController::class, 'claim_ranap'])->name('claim_ranap');
 
     Route::get('kunjunganranap', [RanapController::class, 'kunjunganranap'])->name('kunjunganranap');
-    Route::get('pasienranapprofile', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
+    Route::get('pasienranapprofile/{kode}', [RanapController::class, 'pasienranapprofile'])->name('pasienranapprofile');
     Route::get('get_rincian_biaya', [RanapController::class, 'get_rincian_biaya'])->name('get_rincian_biaya');
 
     Route::get('get_kunjungan_pasien', [RanapController::class, 'get_kunjungan_pasien'])->name('get_kunjungan_pasien');
@@ -283,6 +282,7 @@ Route::middleware('auth')->group(function () {
     Route::post('simpan_perkembangan_ranap', [RanapController::class, 'simpan_perkembangan_ranap'])->name('simpan_perkembangan_ranap');
     Route::post('hapus_perkembangan_ranap', [RanapController::class, 'hapus_perkembangan_ranap'])->name('hapus_perkembangan_ranap');
     Route::post('verifikasi_soap_ranap', [RanapController::class, 'verifikasi_soap_ranap'])->name('verifikasi_soap_ranap');
+    Route::post('cancel_verifikasi_soap_ranap', [RanapController::class, 'cancle_verifikasi_soap_ranap'])->name('cancel_verifikasi_soap_ranap');
     Route::get('get_perkembangan_ranap', [RanapController::class, 'get_perkembangan_ranap'])->name('get_perkembangan_ranap');
     Route::get('print_perkembangan_ranap', [RanapController::class, 'print_perkembangan_ranap'])->name('print_perkembangan_ranap');
     Route::post('simpan_mppa', [RanapController::class, 'simpan_mppa'])->name('simpan_mppa');
@@ -291,7 +291,10 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
 
     Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
+    // rencana asuhan
     Route::post('simpan_rencana_asuhan_terpadu', [RanapController::class, 'simpan_rencana_asuhan_terpadu'])->name('simpan_rencana_asuhan_terpadu');
+    Route::get('edit-rencana-asuhan', [RanapController::class, 'getRencanaAsuhData'])->name('edit-rencana-asuhan');
+
     Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
     Route::post('simpan_asesmen_ranap_keperawatan', [RanapController::class, 'simpan_asesmen_ranap_keperawatan'])->name('simpan_asesmen_ranap_keperawatan');
     Route::get('print_asesmen_ranap_keperawatan', [RanapController::class, 'print_asesmen_ranap_keperawatan'])->name('print_asesmen_ranap_keperawatan');
@@ -561,6 +564,7 @@ Route::middleware('auth')->group(function () {
 
     // pasien baru
     Route::get('/bpjs-pasien-baru/create', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'createPasienBaruFromBpjsCek'])->name('pasien-baru.create_frombpjs');
+    Route::post('/bpjs-pasien-baru/update', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'updatePasienBaruFromBpjsCek'])->name('pasien-update.create_frombpjs');
     Route::get('/pasien-igd/baru', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'index'])->name('pasien-baru.create');
     Route::post('/pasien-igd/baru/store', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'pasienBaruIGD'])->name('pasien-baru.store');
     Route::get('/get-kabupaten-pasien', [App\Http\Controllers\IGD\Pasien\PasienIGDController::class, 'getKabPasien'])->name('kab-pasien.get');
@@ -678,5 +682,10 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
         Route::get('/', 'index')->name('index');
     });
-    // End GIZI
+    // Tracer User Pendaftaran
+    Route::controller(App\Http\Controllers\RM\LaporanRmController::class)->prefix('laporan-rm')->name('simrs.laporan-rm.')->group(function () {
+        Route::get('/diagnosa-m80-m82', 'laporanM80ToM82')->name('laporan.m80-m82');
+        Route::get('/diagnosa-C00-C99', 'laporanc00')->name('laporan.C00');
+        Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
+    });
 });

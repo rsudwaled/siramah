@@ -147,7 +147,7 @@
                                                 @elseif ($item->jp_daftar == 1 && $item->is_bpjs_proses)
                                                     BPJS PROSES
                                                 @else
-                                                    {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}
+                                                    {{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : ($item->jp_daftar===null?'DAFTAR DEKSTOP':'BPJS PROSES')) }}
                                                 @endif
                                             </b> <br>
                                             <small>
