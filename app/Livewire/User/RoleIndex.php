@@ -6,7 +6,7 @@ use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleTable extends Component
+class RoleIndex extends Component
 {
     public $id, $name, $roles;
     public $permissions = [];
@@ -71,6 +71,6 @@ class RoleTable extends Component
             ->where('name', 'like', $search)
             ->get();
         $this->permissions = Permission::pluck('name', 'id');
-        return view('livewire.user.role-table');
+        return view('livewire.user.role-index');
     }
 }

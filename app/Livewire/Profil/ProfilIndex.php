@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Livewire\User;
+namespace App\Livewire\Profil;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class UserProfil extends Component
+
+class ProfilIndex extends Component
 {
     public $user;
-    public $id, $name, $email, $phone, $username;
+    public $id, $name, $email, $phone, $username, $password;
     public function save()
     {
         $user = Auth::user();
@@ -16,12 +18,11 @@ class UserProfil extends Component
         $user->username = $this->username;
         $user->phone = $this->phone;
         $user->email = $this->email;
+        if ($this->password) {
+            $user->password = bcrypt($this->password);
+        }
         $user->save();
         flash('User updated successfully!', 'success');
-    }
-    public function resetForm()
-    {
-        $this->reset('name', 'email', 'phone', 'username');
     }
     public function mount()
     {
@@ -35,10 +36,12 @@ class UserProfil extends Component
     }
     public function placeholder()
     {
-        return view('components.placeholder.placeholder-text');
+        return view('components.placeholder.placeholder-text')
+            ->title('Profil');
     }
     public function render()
     {
-        return view('livewire.user.user-profil');
+        return view('livewire.profil.profil-index')
+            ->title('Profil');
     }
 }

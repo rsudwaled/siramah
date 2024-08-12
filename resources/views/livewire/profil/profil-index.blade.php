@@ -22,6 +22,9 @@
                 <li class="nav-item">
                     <b class="nav-link">Email <b class="float-right ">{{ $user->email }}</b></b>
                 </li>
+                <li class="nav-item">
+                    <b class="nav-link">Verifikasi <b class="float-right ">{{ $user->email_verified_at }}</b></b>
+                </li>
             </ul>
         </x-adminlte-profile-widget>
     </div>
@@ -36,6 +39,9 @@
                     igroup-class="col-9" igroup-size="sm" name="phone" label="Phone" />
                 <x-adminlte-input wire:model="email" fgroup-class="row" label-class="text-left col-3"
                     igroup-class="col-9" igroup-size="sm" name="email" type="email" label="Email" />
+                <x-adminlte-input wire:model="password" fgroup-class="row" label-class="text-left col-3"
+                    igroup-class="col-9" igroup-size="sm" name="password" type="password" label="Password"
+                    placeholder="Isi apabila ingin merubah passowrd" />
             </form>
             <x-slot name="footerSlot">
                 <x-adminlte-button label="Simpan" wire:click="save"
