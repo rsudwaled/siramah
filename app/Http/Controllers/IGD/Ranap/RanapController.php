@@ -167,6 +167,7 @@ class RanapController extends APIController
 
     public function pasienRanapStore(Request $request)
     {
+        dd($request->all());
         if(empty($request->idRuangan))
         {
             Alert::error('RUANGAN BELUM DIPILIH!!', 'silahkan pilih ruangan terlebih dahulu!');
@@ -229,7 +230,7 @@ class RanapController extends APIController
         }
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = 0;
-
+        
         if ($createKunjungan->save()) {
 
             $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
@@ -1112,7 +1113,7 @@ class RanapController extends APIController
         $createKunjungan->ref_kunjungan     = $request->ref_kunjungan_ortu;
         $createKunjungan->tgl_masuk         = now();
         $createKunjungan->kode_paramedis    = $request->dpjp;
-        $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = $ruangan->id_kelas;
@@ -1127,81 +1128,91 @@ class RanapController extends APIController
         $createKunjungan->form_send_by      = 1;
         $createKunjungan->jp_daftar         = $request->isBpjs;
         $createKunjungan->is_bpjs_proses    = $bpjsProses;
+        if($createKunjungan->save())
+        {
+             // PERUBAHAN TARIF BARU
+            $ruangan->status_incharge = 1;
+            $ruangan->save();
 
-        if ($createKunjungan->save()) {
-            $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
-            if ($kodelayanan == null) {
-                $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
-            }
-            $kodeTarifDetail = $unit->kode_tarif_adm . $ruangan->id_kelas; //kode tarif detail
-            $tarif_adm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $kodeTarifDetail);
-            $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT;
-            // create layanan header
-            $createLH = new Layanan();
-            $createLH->kode_layanan_header  = $kodelayanan;
-            $createLH->tgl_entry            = now();
-            $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
-            $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id_simrs??2;
-            $createLH->status_pembayaran    = 'OPN';
-            if ($unit->kelas_unit == 2) {
-                $createLH->total_layanan = $total_bayar_k_a;
-
-                if ($penjamin == 'P01') {
-                    $createLH->kode_tipe_transaksi  = 2;
-                    $createLH->status_layanan       = 3;
-                    $createLH->tagihan_pribadi      = $total_bayar_k_a;
-                } else {
-                    $createLH->kode_tipe_transaksi  = 2;
-                    $createLH->status_layanan       = 3;
-                    $createLH->tagihan_penjamin     = $total_bayar_k_a;
-                }
-                // header create
-                if ($createLH->save()) {
-                    // create layanan detail
-                    $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
-                    $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
-
-                    // create detail admn
-                    $createAdm = new LayananDetail();
-                    $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
-                    $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                    $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
-                    $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->jumlah_layanan          = 1;
-                    $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
-                    $createAdm->status_layanan_detail   = 'OPN';
-                    $createAdm->tgl_layanan_detail      = now();
-                    $createAdm->tgl_layanan_detail_2    = now();
-                    $createAdm->row_id_header           = $createLH->id;
-                    if ($penjamin == 'P01') {
-                        $createAdm->tagihan_pribadi     = $total_bayar_k_a;
-                    } else {
-                        $createAdm->tagihan_penjamin    = $total_bayar_k_a;
-                    }
-
-                    if ($createAdm->save()) {
-                        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
-                        // $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
-                        // $createKunjungan->form_send_by      = 1; //status 1 pasien sudah di daftarkan ranap
-                        $createKunjungan->update();
-                        if ($penjamin == 'P01') {
-                            $createLH->status_layanan       = 1;
-                        } else {
-                            $createLH->status_layanan       = 2;
-                        }
-                        $createLH->update();
-                        $ruangan->status_incharge = 1;
-                        $ruangan->save();
-
-                        $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
-                        $bayikembar->is_kembar_daftar = 1;
-                        $bayikembar->save();
-                    }
-                }
-            }
+            $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
+            $bayikembar->is_kembar_daftar = 1;
+            $bayikembar->save();
         }
+        // INI SEBELUM PERUBAHAN TARIF
+        // if ($createKunjungan->save()) {
+        //     $kodelayanan = collect(\DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+        //     if ($kodelayanan == null) {
+        //         $kodelayanan = $unit->prefix_unit . now()->format('ymd') . str_pad(1, 6, '0', STR_PAD_LEFT);
+        //     }
+        //     $kodeTarifDetail = $unit->kode_tarif_adm . $ruangan->id_kelas; //kode tarif detail
+        //     $tarif_adm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $kodeTarifDetail);
+        //     $total_bayar_k_a = $tarif_adm->TOTAL_TARIF_CURRENT;
+        //     // create layanan header
+        //     $createLH = new Layanan();
+        //     $createLH->kode_layanan_header  = $kodelayanan;
+        //     $createLH->tgl_entry            = now();
+        //     $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
+        //     $createLH->kode_unit            = $unit->kode_unit;
+        //     $createLH->pic                  = Auth::user()->id_simrs??2;
+        //     $createLH->status_pembayaran    = 'OPN';
+        //     if ($unit->kelas_unit == 2) {
+        //         $createLH->total_layanan = $total_bayar_k_a;
+
+        //         if ($penjamin == 'P01') {
+        //             $createLH->kode_tipe_transaksi  = 2;
+        //             $createLH->status_layanan       = 3;
+        //             $createLH->tagihan_pribadi      = $total_bayar_k_a;
+        //         } else {
+        //             $createLH->kode_tipe_transaksi  = 2;
+        //             $createLH->status_layanan       = 3;
+        //             $createLH->tagihan_penjamin     = $total_bayar_k_a;
+        //         }
+        //         // header create
+        //         if ($createLH->save()) {
+        //             // create layanan detail
+        //             $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
+        //             $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
+
+        //             // create detail admn
+        //             $createAdm = new LayananDetail();
+        //             $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
+        //             $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
+        //             $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
+        //             $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
+        //             $createAdm->jumlah_layanan          = 1;
+        //             $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
+        //             $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
+        //             $createAdm->status_layanan_detail   = 'OPN';
+        //             $createAdm->tgl_layanan_detail      = now();
+        //             $createAdm->tgl_layanan_detail_2    = now();
+        //             $createAdm->row_id_header           = $createLH->id;
+        //             if ($penjamin == 'P01') {
+        //                 $createAdm->tagihan_pribadi     = $total_bayar_k_a;
+        //             } else {
+        //                 $createAdm->tagihan_penjamin    = $total_bayar_k_a;
+        //             }
+
+        //             if ($createAdm->save()) {
+        //                 $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
+        //                 // $createKunjungan->is_ranap_daftar   = 1; //status 1 pasien sudah di daftarkan ranap
+        //                 // $createKunjungan->form_send_by      = 1; //status 1 pasien sudah di daftarkan ranap
+        //                 $createKunjungan->update();
+        //                 if ($penjamin == 'P01') {
+        //                     $createLH->status_layanan       = 1;
+        //                 } else {
+        //                     $createLH->status_layanan       = 2;
+        //                 }
+        //                 $createLH->update();
+        //                 $ruangan->status_incharge = 1;
+        //                 $ruangan->save();
+
+        //                 $bayikembar = PasienBayiIGD::where('rm_bayi', $request->noMR)->first();
+        //                 $bayikembar->is_kembar_daftar = 1;
+        //                 $bayikembar->save();
+        //             }
+        //         }
+        //     }
+        // }
         Alert::success('Daftar Sukses!!', 'pasien dg RM: ' . $request->noMR . ' berhasil didaftarkan!');
         return redirect()->route('pasien.ranap');
     }

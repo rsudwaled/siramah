@@ -1,24 +1,25 @@
-
+@section('plugins.TempusDominusBs4', true)
+@section('plugins.DateRangePicker', true)
 <script>
     function editRencanaAsuh(button) {
         const id = $(button).data('id');
-        const url ="{{ route('edit-rencana-asuhan') }}";
+        const url = "{{ route('edit-rencana-asuhan') }}";
         $.LoadingOverlay("show");
         $.ajax({
             url: url,
             method: 'GET',
-            data:{
-                id:id,
+            data: {
+                id: id,
             },
             success: function(data) {
                 if (data.error) {
                     console.error('Error:', data.error);
                     return;
                 }
-                
+
                 // Isi form dengan data yang diterima
                 $('#id_asuhan').val(data.id);
-                $('.tglwaktu').val(data.tgl_waktu);
+                $('#tglwaktuRencanaAsuhan').val(data.tgl_waktu);
                 $('.profesi').val(data.profesi);
                 $('#pic').val(data.pic);
                 $('#kode').val(data.kode);
@@ -37,6 +38,4 @@
         });
         $.LoadingOverlay("hide");
     }
-
 </script>
-

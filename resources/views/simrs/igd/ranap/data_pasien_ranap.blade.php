@@ -140,6 +140,8 @@
                                 <td>
                                     <a href="{{ route('pasien-ranap.detail', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
+                                    <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                        class="btn btn-warning btn-xs btn-block btn-flat">Edit Ruangan</a>
                                     @if ($item->jp_daftar == 1)
                                         @if ($item->no_spri == null && $item->no_sep == null)
                                             <a href="{{ route('create-sepigd.ranap-bpjs', ['kunjungan' => $item->kode_kunjungan]) }}"

@@ -85,7 +85,7 @@ class RanapController extends APIController
         
         $pasien         = $kunjungan->pasien;
         $groupping      = $kunjungan->groupping;
-        $cardContent    = $this->getCardContent($activeButton, $kunjungan, $pasien);
+        $cardContent    = $this->getCardContent($activeButton, $kunjungan, $pasien, $groupping );
 
         return view('simrs.ranap.erm_ranap', compact([
             'kunjungan',
@@ -95,7 +95,7 @@ class RanapController extends APIController
             'activeButton', 'cardContent'
         ]));
     }
-    private function getCardContent($activeButton, $kunjungan, $pasien)
+    private function getCardContent($activeButton, $kunjungan, $pasien, $groupping )
     {
         switch ($activeButton) {
             case 'triase':
@@ -162,6 +162,11 @@ class RanapController extends APIController
                 return [
                     'title' => 'KPO Elektronik',
                     'content' => view('simrs.ranap.partials.kpo_elektronik', compact('kunjungan'))->render()
+                ];
+            case 'grouping_eklaim':
+                return [
+                    'title' => 'Grouping E-Klaim',
+                    'content' => view('simrs.ranap.partials.grouping_eklaim', compact('kunjungan','pasien','groupping'))->render()
                 ];
 
             default:
@@ -353,14 +358,13 @@ class RanapController extends APIController
     {
         AsuhanTerpadu::updateOrCreate(
             [
-                'kode'              => $request->kode,
                 'kode_kunjungan'    => $request->kode_kunjungan,
-                'no_rm'             => $request->no_rm,
-                'id'                => $request->id_asuhan, 
+                'no_rm'             => $request->no_rm, 
                 'tgl_waktu'         => $request->tgl_waktu, 
             ],
             [
                 'kode'                  => $request->kode,
+                'tgl_waktu'             => $request->tgl_waktu, 
                 'kode_kunjungan'        => $request->kode_kunjungan,
                 'no_rm'                 => $request->no_rm,
                 'rm_counter'            => $request->rm_counter,

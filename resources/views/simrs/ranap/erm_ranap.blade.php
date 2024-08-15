@@ -22,6 +22,7 @@
                 <div class="row">
                     @include('simrs.ranap.erm_ranap_profil')
                 </div>
+                
             </x-adminlte-card>
         </div>
         <div class="col-md-12">
@@ -77,6 +78,10 @@
                             class="btn btn-app {{ $activeButton === 'kpo_elektronik' ? 'bg-success' : '' }}">
                             <i class="fas fa-laptop-code"></i> KPO Elektronik
                         </a>
+                        <a href="{{ route('pasienranapprofile', ['kode' => $kode, 'active_button' => 'grouping_eklaim']) }}"
+                            class="btn btn-app {{ $activeButton === 'grouping_eklaim' ? 'bg-success' : '' }}">
+                            <i class="fas fa-laptop-code"></i> Grouping
+                        </a>
                     </div>
                     <!-- Tambahkan tombol lainnya dengan logika yang sama -->
                 </div>
@@ -100,7 +105,7 @@
 
     </div>
 @stop
-@section('plugins.TempusDominusBs4', false)
+@section('plugins.TempusDominusBs4', true)
 @section('plugins.DateRangePicker', true)
 @section('plugins.Datatables', true)
 @section('plugins.Sweetalert2', true)

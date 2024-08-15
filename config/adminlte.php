@@ -571,10 +571,17 @@ return [
             'icon'    => 'fas fa-hospital-alt',
             'can' => 'pendaftaran-igd',
             'submenu' => [
+                // [
+                //     'text' => 'Triase',
+                //     'icon'    => 'fas fa-chalkboard-teacher',
+                //     'url'  => 'list-antrian',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
-                    'text' => 'Triase',
-                    'icon'    => 'fas fa-chalkboard-teacher',
-                    'url'  => 'list-antrian',
+                    'text' => 'Daftar Ranap',
+                    'icon'    => 'fas fa-procedures',
+                    'url'  => 'igd-ranap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
@@ -613,7 +620,6 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
-
                 [
                     'text' => 'Pasien Ranap',
                     'icon'    => 'fas fa-procedures',

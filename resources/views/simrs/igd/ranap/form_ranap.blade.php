@@ -333,7 +333,6 @@
             });
 
             $('#cariRuangan').on('click', function() {
-                // $("#pilihRuangan").show();
                 var unit = $('#unitTerpilih').val();
                 var kelas = $('#r_kelas_id').val();
                 $('#hakKelas').val(kelas);

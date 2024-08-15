@@ -14,11 +14,11 @@
                     <input type="hidden" name="kode_unit" value="{{ $kunjungan->unit->kode_unit }}">
                     <input type="hidden" name="user" value="{{ Auth::user()->id }}">
                     <input type="hidden" name="kode" value="{{ uniqid() }}">
-                    <input type="hidden" name="id_asuhan" value="">
+                    <input type="hidden" name="id_asuhan">
 
                     <div class="form-group">
                         <label>Tanggal & Waktu</label>
-                        <input type="datetime-local" id="tglwaktu" name="tgl_waktu"  class="form-control tglwaktu">
+                        <input type="datetime-local" id="tglwaktuRencanaAsuhan" step="60" name="tgl_waktu"  class="form-control tglwaktuRencanaAsuhan">
                         <div class="invalid-feedback "></div>
                     </div>
                     <div class="form-group">

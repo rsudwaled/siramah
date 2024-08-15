@@ -711,6 +711,14 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
         Route::get('/', 'index')->name('index');
     });
+    
+    // Pendafataran Ranap IGD
+    Route::controller(App\Http\Controllers\IGD\V1\DaftarRanapIGDController::class)->prefix('igd-ranap')->name('simrs.pendaftaran-ranap-igd.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/store', 'store')->name('store');
+        Route::get('/ruangan/edit/{kunjungan}', 'editRuangan')->name('edit-ruangan');
+        Route::post('/ruangan/update', 'updateRuangan')->name('update-ruangan');
+    });
 
     Route::controller(App\Http\Controllers\RM\LaporanRmController::class)->prefix('laporan-rm')->name('simrs.laporan-rm.')->group(function () {
         Route::get('/diagnosa-m80-m82', 'laporanM80ToM82')->name('laporan.m80-m82');

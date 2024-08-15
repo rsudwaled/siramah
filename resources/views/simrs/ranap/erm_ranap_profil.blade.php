@@ -1,5 +1,5 @@
 <div class="col-lg-6">
-   
+
     <div class="row">
         <div class="col-md-6">
             <dl class="row">
@@ -72,3 +72,4 @@
 <div class="col-lg-6">
     <div id="rincian_biaya"></div>
 </div>
+

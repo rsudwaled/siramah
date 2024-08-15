@@ -7,8 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use App\Models\LokasiDesa;
-use App\Models\LokasiKecamatan;
 use App\Models\Pasien;
 use App\Models\Unit;
 use App\Models\Kunjungan;
@@ -277,17 +275,7 @@ class DaftarIGDController extends Controller
             $kec    = 'Kec. ' . $pasien->kecamatan == "" ? '-' : ($pasien->kecamatan == null ? '-' : $pasien->lokasiKecamatan->name);
             $kab    = 'Kab. ' . $pasien->kabupaten == "" ? '-' : ($pasien->kabupaten == null ? '-' : $pasien->lokasiKabupaten->name);
             $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , ' . ' kec: ' . $kec . ' , ' . ' Kab: ' . $kab . ' )';
-            $ant_upd = AntrianPasienIGD::find($request->antrian_triase);
-            if (!empty($ant_upd)) {
-                $ant_upd->no_rm             = $request->rm;
-                $ant_upd->nama_px           = $pasien->nama_px;
-                $ant_upd->kode_kunjungan    = $createKunjungan->kode_kunjungan;
-                $ant_upd->unit              = $unit->kode_unit;
-                $ant_upd->alamat            = $alamat;
-                $ant_upd->status            = 2;
-                $ant_upd->update();
-            }
-
+            
             if ($request->isBpjs == 1) {
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
@@ -328,10 +316,10 @@ class DaftarIGDController extends Controller
 
             // $total_bayar_k_a        = $tarif_adm->tarif_igd + $tarif_karcis->tarif_igd;
             $total_bayar_k_a        =  $tarif_karcis->tarif_igd;
-
+            // dd($total_bayar_k_a);
             $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
             $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
-            $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
+            // $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
             // create layanan header
             $createLH                       = new Layanan();
             $createLH->kode_layanan_header  = $kodelayanan;
