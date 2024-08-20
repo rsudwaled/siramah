@@ -34,6 +34,7 @@ use App\Http\Controllers\LaporanPenyakitRawatInapPenelitianController;
 use App\Http\Controllers\LaporanPenyakitRawatJalanPenelitianController;
 use App\Http\Controllers\LaporanDiagnosaSurvailansInapController;
 use App\Http\Controllers\LaporanDiagnosaSurvailansRawatJalanController;
+use App\Http\Controllers\RM\LaporanRmController;
 use App\Http\Controllers\FormulirRL1Controller;
 use App\Http\Controllers\FormulirRL2Controller;
 use App\Http\Controllers\FormulirRL3Controller;
@@ -710,6 +711,11 @@ Route::middleware('auth')->group(function () {
     // Tracer User Pendaftaran
     Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
         Route::get('/', 'index')->name('index');
+    });
+
+    Route::controller(App\Http\Controllers\RM\LaporanRmController::class)->prefix('laporan-rm')->name('simrs.laporan-rm.')->group(function () {
+        Route::get('/diagnosa-C00-C99', 'laporanc00')->name('laporan.C00');
+        Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
     });
     // End GIZI
 });
