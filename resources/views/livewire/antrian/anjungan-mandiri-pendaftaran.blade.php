@@ -57,14 +57,17 @@
                     <h4>Silahkan pilih dokter : </h4>
                     <div class="row">
                         @foreach ($jadwaldokters as $jadwaldokter)
-                            @if ($jadwaldokter->libur)
+                            @if (
+                                $jadwaldokter->libur ||
+                                    count($antrians->where('kodedokter', $jadwaldokter->kodedokter)) >= $jadwaldokter->kapasitaspasien)
                                 <div class="col-md-3">
                                     <a href="#">
                                         <x-adminlte-card body-class="bg-danger">
                                             <b>{{ strtoupper($jadwaldokter->namadokter) }}</b><br>
                                             <b>{{ strtoupper($jadwaldokter->jadwal) }}
                                                 {{ $jadwaldokter->libur ? '(TUTUP)' : null }}</b><br>
-                                            KUOTA {{ $jadwaldokter->kapasitaspasien }}
+                                            KUOTA {{ $jadwaldokter->kapasitaspasien }} / TERSEDIA
+                                            {{ $jadwaldokter->kapasitaspasien - count($antrians->where('kodedokter', $jadwaldokter->kodedokter)) }}
                                         </x-adminlte-card>
                                     </a>
                                 </div>
@@ -74,7 +77,8 @@
                                         <x-adminlte-card body-class="bg-warning">
                                             <b>{{ strtoupper($jadwaldokter->namadokter) }}</b><br>
                                             <b>{{ strtoupper($jadwaldokter->jadwal) }}</b><br>
-                                            KUOTA {{ $jadwaldokter->kapasitaspasien }}
+                                            KUOTA {{ $jadwaldokter->kapasitaspasien }} / TERSEDIA
+                                            {{ $jadwaldokter->kapasitaspasien - count($antrians->where('kodedokter', $jadwaldokter->kodedokter)) }}
                                         </x-adminlte-card>
                                     </a>
                                 </div>

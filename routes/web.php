@@ -143,7 +143,8 @@ Route::get('test-cetak-karcis', [AnjunganMandiri::class, 'testCetakKarcis'])->na
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jadwal.rajal');
 
 Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
-Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
+// Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
+Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
 Route::get('checkinKarcisAntrian', [PendaftaranController::class, 'checkinKarcisAntrian'])->name('checkinKarcisAntrian');
@@ -390,7 +391,6 @@ Route::middleware('auth')->group(function () {
     // Route::get('resetDokter', [DokterController::class, 'resetDokter'])->name('resetDokter');
     // Route::get('jadwalDokterAntrianBpjs', [JadwalDokterController::class, 'jadwalDokterAntrianBpjs'])->name('jadwalDokterAntrianBpjs');
     // Route::get('fingerprintPeserta', [PasienController::class, 'fingerprintPeserta'])->name('fingerprintPeserta');
-    // Route::get('antrianBpjsConsole', [AntrianController::class, 'antrianConsole'])->name('antrianBpjsConsole');
     // Route::get('antrianBpjs', [AntrianController::class, 'antrianBpjs'])->name('antrianBpjs');
     // Route::get('listTaskID', [AntrianController::class, 'listTaskID'])->name('listTaskID');
     // Route::get('dashboardTanggalAntrian', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrian');

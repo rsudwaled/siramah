@@ -3,18 +3,22 @@
 namespace App\Livewire\Antrian;
 
 use App\Http\Controllers\PendaftaranController;
+use App\Models\Antrian;
 use App\Models\JadwalDokter;
+use App\Models\Poliklinik;
 use Illuminate\Http\Request;
 use Livewire\Component;
 
 class AnjunganMandiriPendaftaran extends Component
 {
     public $jadwals = [], $jadwaldokters;
-    public $jenispasien, $namasubspesialis;
+    public $jenispasien, $namasubspesialis, $antrians;
     protected $queryString = ['jenispasien'];
     public function pilihPoli($key)
     {
         $this->namasubspesialis = $key;
+        $poli = Poliklinik::where('namasubspesialis', $key)->first();
+        $this->antrians = Antrian::where('tanggalperiksa', now()->format('Y-m-d'))->where('method', '!=', 'Bridging')->where('taskid', '!=', 99)->where('kodepoli', $poli->kodesubspesialis)->get('kodedokter');
         $this->jadwaldokters = JadwalDokter::where('hari', now()->dayOfWeek)->where('namasubspesialis', $key)->get();
     }
     public function pilihDokter($id, Request $request)

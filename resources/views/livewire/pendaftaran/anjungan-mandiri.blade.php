@@ -40,7 +40,7 @@
                     <h1>JADWAL DOKTER</h1>
                 </x-adminlte-card>
             </a>
-            <a href="{{ route('test.cetak.karcis') }}">
+            <a href="{{ route('checkinAntrian') }}">
                 <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
                     <h1>CHECKIN ANTRIAN</h1>
                 </x-adminlte-card>
@@ -56,9 +56,9 @@
         </x-adminlte-card>
     </div>
     <div class="col-md-6">
-        <x-adminlte-card title="Cara Pendafataran Melalui MJKN" class="m-2" theme="primary">
+        <x-adminlte-card title="Checkin Melalui MJKN" class="m-2" theme="primary">
             <div class="text-center">
-                <img src="{{ asset('portalbpjs.jpg') }}" width="40%" alt="">
+                <img src="{{ asset('portalbpjs.jpg') }}" width="50%" alt="">
                 <br>
             </div>
         </x-adminlte-card>
