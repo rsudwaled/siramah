@@ -23,6 +23,63 @@
             </header>
         </div>
     </div>
+    <div class="col-md-5">
+        <x-adminlte-card title="Antrian Hari Ini" class="mr-2" theme="primary">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h6>
+                            Antrian Lt 1
+                        </h6>
+                        <h4>
+                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 1)->count() ?? '0' }}
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h6>
+                            Antrian Lt 2
+                        </h6>
+                        <h4>
+                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 2)->count() ?? '0' }}
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h6>
+                            Antrian Online
+                        </h6>
+                        <h4>
+                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', '!=', 'Offline')->count() ?? '0' }}
+                        </h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center">
+                        <h6>
+                            Antrian Total
+                        </h6>
+                        <h4>
+                            {{ $antrians->where('method', '!=', 'Bridging')->count() ?? '0' }}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <x-slot name="footerSlot">
+                <a href="{{ route('anjungan.mandiri') }}">
+                    <x-adminlte-button icon="fas fa-arrow-left" class="withLoad" theme="danger" label="Kembali" />
+                </a>
+            </x-slot>
+        </x-adminlte-card>
+        <x-adminlte-card body-class="p-1" class="mr-2">
+            <video width="100%" height="100%" controls autoplay muted loop>
+                <source src="{{ asset('bpjs/Video Sosialisasi Program Rehab 30sec.mp4') }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </x-adminlte-card>
+    </div>
     <div class="col-md-7">
         <div class="row">
             <div id="jadwalCarousel" class="carousel slide ml-2" data-ride="carousel" data-interval="4000"
@@ -68,57 +125,5 @@
                 </a>
             </div>
         </div>
-    </div>
-    <div class="col-md-5">
-        <x-adminlte-card title="Antrian Hari Ini" class="mr-2" theme="primary">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="text-center">
-                        <h6>
-                            Antrian Lt 1
-                        </h6>
-                        <h4>
-                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 1)->count() ?? '0' }}
-                        </h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="text-center">
-                        <h6>
-                            Antrian Lt 2
-                        </h6>
-                        <h4>
-                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', 'Offline')->where('lantaipendaftaran', 2)->count() ?? '0' }}
-                        </h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="text-center">
-                        <h6>
-                            Antrian Online
-                        </h6>
-                        <h4>
-                            {{ $antrians->where('method', '!=', 'Bridging')->where('method', '!=', 'Offline')->count() ?? '0' }}
-                        </h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="text-center">
-                        <h6>
-                            Antrian Total
-                        </h6>
-                        <h4>
-                            {{ $antrians->where('method', '!=', 'Bridging')->count() ?? '0' }}
-                        </h4>
-                    </div>
-                </div>
-            </div>
-        </x-adminlte-card>
-        <x-adminlte-card body-class="p-1" class="mr-2">
-            <video width="100%" height="100%" controls autoplay muted loop>
-                <source src="{{ asset('bpjs/Video Sosialisasi Program Rehab 30sec.mp4') }}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </x-adminlte-card>
     </div>
 </div>
