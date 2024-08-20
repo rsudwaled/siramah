@@ -2257,7 +2257,7 @@ class AntrianController extends APIController
         }
         // antrian tidak ditemukan
         else {
-            return $this->sendError('Antrian tidak ditemukan',  201);
+            return $this->sendError('Antrian tidak ditemukan',  200);
         }
     }
     public function checkin_antrian(Request $request)

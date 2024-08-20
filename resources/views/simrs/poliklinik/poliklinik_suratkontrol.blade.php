@@ -298,8 +298,8 @@
                         $config = [
                             'format' => 'YYYY-MM-DD',
                             'dayViewHeaderFormat' => 'MMMM YYYY',
-                            'minDate' => 'js:moment()',
-                            'daysOfWeekDisabled' => [0],
+                            // 'minDate' => 'js:moment()',
+                            // 'daysOfWeekDisabled' => [0],
                         ];
                     @endphp
                     <x-adminlte-input-date name="tanggal_suratkontrol" label="Tanggal Rencana Surat Kontrol"

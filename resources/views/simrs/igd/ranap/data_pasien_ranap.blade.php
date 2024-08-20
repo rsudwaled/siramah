@@ -2,18 +2,18 @@
 @section('title', 'Pasien Rawat Inap')
 
 @section('content_header')
-<div class="alert bg-success alert-dismissible">
-    <div class="row">
-        <div class="col-sm-4">
-            <h5>
-                <i class="fas fa-user-tag"></i> DAFTAR PASIEN RANAP :
-            </h5>
-        </div>
-        <div class="col-sm-8">
-            
+    <div class="alert bg-success alert-dismissible">
+        <div class="row">
+            <div class="col-sm-4">
+                <h5>
+                    <i class="fas fa-user-tag"></i> DAFTAR PASIEN RANAP :
+                </h5>
+            </div>
+            <div class="col-sm-8">
+
+            </div>
         </div>
     </div>
-</div>
 @stop
 @section('content')
     <div class="row">
@@ -140,6 +140,8 @@
                                 <td>
                                     <a href="{{ route('pasien-ranap.detail', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
+                                    <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                        class="btn btn-warning btn-xs btn-block btn-flat">Edit Ruangan</a>
                                     @if ($item->jp_daftar == 1)
                                         @if ($item->no_spri == null && $item->no_sep == null)
                                             <a href="{{ route('create-sepigd.ranap-bpjs', ['kunjungan' => $item->kode_kunjungan]) }}"
@@ -156,7 +158,7 @@
         </div>
     </div>
 
-    
+
 @stop
 
 @section('plugins.Select2', true)

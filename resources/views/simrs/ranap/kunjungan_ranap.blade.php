@@ -155,10 +155,10 @@
                                 @endif
                             </td>
                             <td>{{ $kunjungan->no_sep }}</td>
-                            <td>{{ $kunjungan->unit->nama_unit }}</td>
-                            <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
-                            <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
-                            <td>{{ $kunjungan->alasan_masuk->alasan_masuk }}</td>
+                            <td>{{ $kunjungan->unit?->nama_unit }}</td>
+                            <td>{{ $kunjungan->dokter?->nama_paramedis }}</td>
+                            <td>{{ $kunjungan->penjamin_simrs?->nama_penjamin }}</td>
+                            <td>{{ $kunjungan->alasan_masuk?->alasan_masuk }}</td>
                             </tr>
                         @endforeach
                     @endif
