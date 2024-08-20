@@ -24,29 +24,36 @@
         </div>
     </div>
     <div class="col-md-6">
-        <div class="m-2">
-            <h1>ANJUNGAN PENDAFTARAN PASIEN</h1>
-        </div>
-        <a href="{{ route('anjungan.mandiri.daftar') }}?pasienbaru=0&jenispasien=JKN">
-            <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
-                <h1>PASIEN LAMA BPJS</h1>
-            </x-adminlte-card>
-        </a>
-        <a href="{{ route('anjungan.mandiri.daftar') }}?pasienbaru=1&jenispasien=JKN">
-            <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
-                <h1>PASIEN BARU BPJS</h1>
-            </x-adminlte-card>
-        </a>
-        <a href="{{ route('anjungan.mandiri.daftar') }}?jenispasien=NON-JKN">
-            <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
-                <h1>PASIEN UMUM</h1>
-            </x-adminlte-card>
-        </a>
-        <a href="{{ route('anjungan.mandiri.daftar') }}?jenispasien=NON-JKN">
-            <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
-                <h1>JAMINAN LAINNYA</h1>
-            </x-adminlte-card>
-        </a>
+        <x-adminlte-card title="Menu Anjungan Pelayanan Mandiri" class="m-2" theme="primary">
+            <a href="{{ route('anjungan.mandiri.daftar') }}?jenispasien=JKN">
+                <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
+                    <h1>AMBIL ANTRIAN BPJS</h1>
+                </x-adminlte-card>
+            </a>
+            <a href="{{ route('anjungan.mandiri.pendaftaran') }}?jenispasien=NON-JKN">
+                <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
+                    <h1>AMBIL ANTRIAN UMUM</h1>
+                </x-adminlte-card>
+            </a>
+            <a href="{{ route('display.jadwal.rajal') }}">
+                <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
+                    <h1>JADWAL DOKTER</h1>
+                </x-adminlte-card>
+            </a>
+            <a href="{{ route('test.cetak.karcis') }}">
+                <x-adminlte-card class="m-2 withLoad" body-class="bg-primary">
+                    <h1>CHECKIN ANTRIAN</h1>
+                </x-adminlte-card>
+            </a>
+            <x-slot name="footerSlot">
+                <a href="{{ route('test.cetak.karcis') }}">
+                    <x-adminlte-button icon="fas fa-print" class="withLoad" theme="warning" label="Test Print" />
+                </a>
+                <a href="{{ route('anjungan.mandiri.pendaftaran') }}?jenispasien=JKN">
+                    <x-adminlte-button icon="fas fa-print" class="withLoad" theme="warning" label="BPJS Pendaftaran" />
+                </a>
+            </x-slot>
+        </x-adminlte-card>
     </div>
     <div class="col-md-6">
         <x-adminlte-card title="Cara Pendafataran Melalui MJKN" class="m-2" theme="primary">

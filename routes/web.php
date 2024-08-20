@@ -60,6 +60,7 @@ use App\Http\Controllers\RanapController;
 use App\Http\Controllers\RekamMedisController;
 use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
+use App\Livewire\Antrian\AnjunganMandiriPendaftaran;
 use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Antrian\DisplayJadwalRajal;
@@ -135,6 +136,11 @@ Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_
 
 Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri');
 Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
+Route::get('anjungan-mandiri-pendaftaran', AnjunganMandiriPendaftaran::class)->name('anjungan.mandiri.pendaftaran');
+Route::get('anjungan-cetak-karcis-umum', [AnjunganMandiri::class, 'cetakKarcisUmum'])->name('anjungan.cetak.karcis.umum');
+Route::get('test-cetak-karcis', [AnjunganMandiri::class, 'testCetakKarcis'])->name('test.cetak.karcis');
+Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jadwal.rajal');
+
 Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
 Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
@@ -150,7 +156,6 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
-Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display-jadwal-rajal');
 
 Route::get('displayantrianfarmasi/{lantai}', [AntrianController::class, 'displayantrianfarmasi'])->name('displayantrianfarmasi');
 Route::get('displaynomorfarmasi/{lantai}', [AntrianController::class, 'displaynomorfarmasi'])->name('displaynomorfarmasi');

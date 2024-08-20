@@ -3,26 +3,31 @@
 namespace App\Livewire\Pendaftaran;
 
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\VclaimController;
 use App\Models\Antrian;
 use App\Models\JadwalDokter;
 use App\Models\Pasien;
+use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class AnjunganMandiriDaftar extends Component
 {
     public $pasienbaru = 1;
+    public $keyInput = 1;
     public $antriansebelumnya;
     public $inputidentitas = 'nik';
     public $jenispasien, $nik, $nomorkartu, $nomorreferensi, $poliklinik, $kodepoli, $jadwaldokter, $jeniskunjungan;
-    public $polikliniks = [], $jadwals = [];
+    public $polikliniks = [], $jadwals = [], $jadwaldokters = [], $namasubspesialis;
     public $rujukans = [], $suratkontrols = [], $rujukanrs = [];
     protected $queryString = ['pasienbaru', 'jenispasien'];
-
     public function cetakUlang($kodebooking)
     {
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
@@ -129,6 +134,7 @@ class AnjunganMandiriDaftar extends Component
     {
         $this->validate([
             'nik' => 'required',
+            'nomorkartu' => 'required',
             'nomorreferensi' => 'required',
             'kodepoli' => 'required',
             'jadwaldokter' => 'required',
@@ -151,23 +157,29 @@ class AnjunganMandiriDaftar extends Component
         ]);
         $api = new AntrianController();
         $res = $api->ambil_antrian($request);
-        if ($res->metadata->code == 200) {
-            $antrian  = Antrian::firstWhere('kodebooking', $res->response->kodebooking);
-            $res = $this->cetakSepAntrian($antrian);
-            dd($res);
-            flash($res->metadata->message, 'success');
-        } else if ($res->metadata->code == 409) {
-            $this->antriansebelumnya = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
-                ->where('nik', $request->nik)
-                ->where('taskid', '<=', 5)
-                ->first();
-            flash($res->metadata->message, 'danger');
-        } else {
-            flash($res->metadata->message, 'danger');
+        if ($res->metadata->code != 200) {
+            return flash($res->metadata->message, 'danger');
         }
+        $antrian  = Antrian::firstWhere('kodebooking', $res->response->kodebooking);
+        $antrian->update([
+            'taskid' => 99,
+        ]);
+        $request = new Request([
+            'kodebooking' => $antrian->kodebooking,
+            'taskid' => 3,
+            'waktu' => now(),
+        ]);
+        $res = $api->update_antrean($request);
+        dd($request->all(), $res);
+        $res = $this->cetakSepAntrian($antrian);
     }
-    public function updatedJadwaldokter()
+    public function updatedInputidentitas()
     {
+        $this->rujukanrs = [];
+        $this->rujukans = [];
+        $this->suratkontrols = [];
+        $this->keyInput = 1;
+        $this->reset(['nik', 'nomorkartu', 'nomorreferensi', 'jadwaldokter']);
     }
     public function updatedKodepoli()
     {
@@ -175,11 +187,14 @@ class AnjunganMandiriDaftar extends Component
         $this->jadwals = [];
         $this->jadwals = JadwalDokter::where('hari', now()->dayOfWeek)->where('kodesubspesialis', $this->kodepoli)->get();
     }
-    public function pilihSurat($nomorreferensi, $jeniskunjungan)
+    public function pilihSurat($nomorreferensi, $jeniskunjungan, $kodepoli)
     {
         $this->jadwals = [];
         $this->nomorreferensi = $nomorreferensi;
         $this->jeniskunjungan = $jeniskunjungan;
+        $this->kodepoli = $kodepoli;
+        $this->polikliniks = Unit::where('KDPOLI', '!=', null)->get();
+        $this->jadwals = JadwalDokter::where('hari', now()->dayOfWeek)->where('kodesubspesialis', $this->kodepoli)->get();
     }
     public function cariPasien()
     {
@@ -197,6 +212,7 @@ class AnjunganMandiriDaftar extends Component
             return flash("Mohon maaf, Silahkan isi salah satu nik atau nomor BPJS", 'danger');
         }
         if ($pasien) {
+            $this->keyInput = 0;
             $this->nomorkartu = $pasien->no_Bpjs;
             $this->nik = $pasien->nik_bpjs;
             $api = new VclaimController();
@@ -219,11 +235,17 @@ class AnjunganMandiriDaftar extends Component
                     }
                     $res = $api->rujukan_peserta($request);
                     if ($res->metadata->code == 200) {
-                        $this->rujukans = $res->response->rujukan;
+                        $threeMonthsAgo = Carbon::now()->subMonths(3);
+                        $this->rujukans = collect($res->response->rujukan)->filter(function ($rujukan) use ($threeMonthsAgo) {
+                            return Carbon::parse($rujukan->tglKunjungan)->greaterThanOrEqualTo($threeMonthsAgo);
+                        });
                     }
                     $res = $api->rujukan_rs_peserta($request);
                     if ($res->metadata->code == 200) {
-                        $this->rujukanrs = $res->response->rujukan;
+                        $threeMonthsAgo = Carbon::now()->subMonths(3);
+                        $this->rujukans = collect($res->response->rujukan)->filter(function ($rujukan) use ($threeMonthsAgo) {
+                            return Carbon::parse($rujukan->tglKunjungan)->greaterThanOrEqualTo($threeMonthsAgo);
+                        });
                     }
                     flash("Pasien Ditemukan atas nama " . $pasien->nama_px, 'success');
                 } else {
@@ -233,12 +255,56 @@ class AnjunganMandiriDaftar extends Component
                 return flash($res->metadata->message, 'danger');
             }
         } else {
-            return   flash("Mohon maaf, NIK Pasien Tidak Ditemukan", 'danger');
+            return flash("Mohon maaf, NIK Pasien Tidak Ditemukan", 'danger');
+        }
+    }
+    public function addDigit($digit)
+    {
+        if ($this->inputidentitas == 'nik') {
+            $this->nik .= $digit;
+        } else {
+            $this->nomorkartu .= $digit;
+        }
+    }
+    public function deleteDigit()
+    {
+        if ($this->inputidentitas == 'nik') {
+            $this->nik = substr($this->nik, 0, -1);
+        } else {
+            $this->nomorkartu = substr($this->nomorkartu, 0, -1);
+        }
+    }
+    public function pilihPoliUmum($key)
+    {
+        $this->namasubspesialis = $key;
+        $this->jadwaldokters = JadwalDokter::where('hari', now()->dayOfWeek)->where('namasubspesialis', $key)->get();
+    }
+    public function pilihDokterUmum($id, Request $request)
+    {
+        $jadwal = JadwalDokter::find($id);
+        $request['tanggalperiksa'] = now()->format('Y-m-d');
+        $request['kodepoli'] = $jadwal->kodesubspesialis;
+        $request['kodedokter'] = $jadwal->kodedokter;
+        $request['jampraktek'] = $jadwal->jadwal;
+        $request['jenispasien'] = 'NON-JKN';
+        $request['method'] = 'Offline';
+        // ambil antrian offline
+        $api = new PendaftaranController();
+        $res = $api->ambil_antrian_offline($request);
+        if ($res->metadata->code == 200) {
+            $url = route('anjungan.cetak.karcis.umum') . "?kodebooking=" . $res->response->kodebooking;
+            return redirect()->to($url);
+        } else {
+            return flash($res->metadata->message, 'danger');
         }
     }
     public function render()
     {
-        $this->polikliniks = JadwalDokter::where('hari', now()->dayOfWeek)->select('kodesubspesialis', 'namasubspesialis')->groupBy('kodesubspesialis', 'namasubspesialis')->get();
+        if ($this->jenispasien == "NON-JKN") {
+            if (count($this->jadwals) == 0) {
+                $this->jadwals = JadwalDokter::where('hari', now()->dayOfWeek)->get();
+            }
+        }
         return view('livewire.pendaftaran.anjungan-mandiri-daftar')
             ->layout('components.layouts.blank_adminlte');
     }
