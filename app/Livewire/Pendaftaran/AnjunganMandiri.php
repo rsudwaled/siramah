@@ -16,6 +16,10 @@ class AnjunganMandiri extends Component
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         return view('livewire.pendaftaran.antrian-cetak-karcis-umum', compact('antrian'));
     }
+    public function cetakKarcisBpjs(Request $request){
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        return view('livewire.pendaftaran.antrian-cetak-karcis-bpjs', compact('antrian'));
+    }
     public function render()
     {
         return view('livewire.pendaftaran.anjungan-mandiri')
