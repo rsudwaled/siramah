@@ -8,7 +8,20 @@
 </head>
 
 <body>
-    <div class="ticket" style="text-align: center; font-family: sans-serif">
+    <!-- Halaman Pertama -->
+    <div class="ticket" style="text-align: center; font-family: sans-serif; page-break-after: always;">
+        <img src="{{ asset('rswaled.png') }}" height="40px" alt="">
+        <hr style="margin: 0">
+        <b>Nomor Karcis Antrian</b><br>
+        <b style="font-size: 50px">TEST</b><br>
+        <hr style="margin: 0">
+        <p style="line-height:13px;font-size: 8px;">
+            {{ \Carbon\Carbon::now() }} <br>
+            Semoga selalu diberikan kesembuhan dan kesehatan. Terimakasih.
+        </p>
+    </div>
+    <!-- Halaman Kedua -->
+    <div class="ticket" style="text-align: center; font-family: sans-serif;">
         <img src="{{ asset('rswaled.png') }}" height="40px" alt="">
         <hr style="margin: 0">
         <b>Nomor Karcis Antrian</b><br>
