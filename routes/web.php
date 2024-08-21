@@ -139,6 +139,7 @@ Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri')
 Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
 Route::get('anjungan-mandiri-pendaftaran', AnjunganMandiriPendaftaran::class)->name('anjungan.mandiri.pendaftaran');
 Route::get('anjungan-cetak-karcis-umum', [AnjunganMandiri::class, 'cetakKarcisUmum'])->name('anjungan.cetak.karcis.umum');
+Route::get('anjungan-cetak-karcis-bpjs', [AnjunganMandiri::class, 'cetakKarcisBpjs'])->name('anjungan.cetak.karcis.bpjs');
 Route::get('test-cetak-karcis', [AnjunganMandiri::class, 'testCetakKarcis'])->name('test.cetak.karcis');
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jadwal.rajal');
 
