@@ -719,6 +719,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', 'store')->name('store');
         Route::get('/ruangan/edit/{kunjungan}', 'editRuangan')->name('edit-ruangan');
         Route::post('/ruangan/update', 'updateRuangan')->name('update-ruangan');
+        Route::post('/diagnosa-icd10/update', 'updateDiagnosaKunjungan')->name('update-diagnosa-kunjungan');
     });
 
     Route::controller(App\Http\Controllers\RM\LaporanRmController::class)->prefix('laporan-rm')->name('simrs.laporan-rm.')->group(function () {

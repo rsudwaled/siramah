@@ -87,7 +87,7 @@
                                         @if (!empty($item->tgl_keluar))
                                             <b>PASIEN SUDAH KELUAR</b>
                                         @else
-                                            {{ strtoupper($item->status->status_kunjungan) }}
+                                        <strong class="{{$item->status_kunjungan ==1?'text-success':'text-danger'}}">{{ strtoupper($item->status->status_kunjungan) }}</strong>
                                         @endif
                                     </b>
                                 </td>
@@ -127,13 +127,15 @@
                                         @endif
                                     @endif
                                 </td>
-                                <td>
+                                <td style="width: 20%;">
                                     @if ($item->jp_daftar == 1)
                                         <b>
                                             SPRI : {{ $item->no_spri == null ? 'PASIEN BELUM BUAT SPRI' : $item->no_spri }}
                                             <br>
                                             SEP :
-                                            {{ $item->no_sep == null ? 'PASIEN BELUM GENERATE SEP RANAP' : $item->no_sep }}
+                                            {{ $item->no_sep == null ? 'PASIEN BELUM GENERATE SEP' : $item->no_sep }}
+                                            <br>
+                                            <strong>Silahkan Klik Tombol Bridging untuk Tahap Pembuatan</strong>
                                         </b>
                                     @endif
                                 </td>

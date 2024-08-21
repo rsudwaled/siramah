@@ -921,7 +921,7 @@ class RanapController extends APIController
                         'ppkRujukan'        => '1018R001',
                     ],
                     'catatan'               => '',
-                    'diagAwal'              => $kunjungan->diagx==null? $histories->diagAwal:$kunjungan->diagx,
+                    'diagAwal'              => $histories->diagAwal??Null,
                     'poli'      => [
                         'tujuan'    => '',
                         'eksekutif' => '0',

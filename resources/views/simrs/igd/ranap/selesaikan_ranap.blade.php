@@ -43,7 +43,9 @@
                                         <div class="description-block border-right">
                                             <h5 class="description-header ">
                                                 {{ $kunjungan->no_spri ?? 'SILAHKAN BUAT SPRI!' }}</h5>
-                                            <span class="description-text">-{{ $kunjungan->no_spri!= NULL ? 'SPRI SELESAI DIBUAT!':'BUAT SPRI' }} - </span>
+                                            <span
+                                                class="description-text">-{{ $kunjungan->no_spri != null ? 'SPRI SELESAI DIBUAT!' : 'BUAT SPRI' }}
+                                                - </span>
                                         </div>
                                     </div>
 
@@ -51,7 +53,8 @@
                                         <div class="description-block">
                                             <h5 class="description-header ">{{ $kunjungan->no_sep ?? 'SILAHKAN BUAT SEP!' }}
                                             </h5>
-                                            <span class="description-text">- {{ $kunjungan->no_spri!= NULL ? 'SEP SELESAI DIBUAT!':'BUAT SEP' }}  -</span>
+                                            <span class="description-text">-
+                                                {{ $kunjungan->no_spri != null ? 'SEP SELESAI DIBUAT!' : 'BUAT SEP' }} -</span>
                                         </div>
                                     </div>
                                 </div>
@@ -104,6 +107,7 @@
                                     <th>Kunjungan</th>
                                     <th>Pasien</th>
                                     <th>Nomor</th>
+                                    <th>Diagnosa</th>
                                     <th>Tanggal Lahir</th>
                                     <th>BPJS</th>
                                 </tr>
@@ -128,6 +132,9 @@
                                         </b>
                                     </td>
                                     <td>
+                                        {{ $kunjungan->diagx ?? 'Belum Ada diagnosa' }}
+                                    </td>
+                                    <td>
                                         {{ date('d F Y', strtotime($kunjungan->pasien->tgl_lahir)) }}
                                     </td>
                                     <td>
@@ -144,24 +151,35 @@
 
                 <div class="row no-print">
                     <div class="col-12">
-                        <a href="{{route('pasien.ranap')}}" class="btn btn-success float-right m-1 withLoad" style="margin-right: 5px;">
+                        <a href="{{ route('pasien.ranap') }}" class="btn btn-success float-right m-1 withLoad"
+                            style="margin-right: 5px;">
                             <i class="fas fa-file-signature"></i> Selesaikan Pendaftaran
                         </a>
-                        @if (empty($kunjungan->no_sep))
-                            <button type="button" class="btn bg-purple float-right m-1 btnSEPIGD" 
-                                data-spri="{{ $kunjungan->no_spri }}"
-                                data-kunjungan="{{ $kunjungan->kode_kunjungan }}"
-                                data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}">
-                                <i class="fas fa-file-contract"></i>
-                                Generate SEP
-                            </button>
-                        @endif
-                        @if (empty($kunjungan->no_spri))
-                            <button type="button" class="btn btn-primary float-right m-1 btnModalSPRI"
-                                data-id="{{ $kunjungan->kode_kunjungan }}"
-                                data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}" data-toggle="modal"
-                                data-target="modalSPRI"><i class="fas fa-file-contract"></i>
-                                BUAT SPRI </button>
+                        @if ($kunjungan->status_kunjungan == 1)
+                            @if (empty($kunjungan->diagx))
+                                <button type="button" class="btn btn-danger float-right m-1 btnUpdateDiagnosa"
+                                    data-kunjungan="{{ $kunjungan->kode_kunjungan }}">
+                                    <i class="fas fa-file-contract"></i>
+                                    Update Diagnosa
+                                </button>
+                            @else
+                                @if (empty($kunjungan->no_sep))
+                                    <button type="button" class="btn bg-purple float-right m-1 btnSEPIGD"
+                                        data-spri="{{ $kunjungan->no_spri }}"
+                                        data-kunjungan="{{ $kunjungan->kode_kunjungan }}"
+                                        data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}">
+                                        <i class="fas fa-file-contract"></i>
+                                        Generate SEP
+                                    </button>
+                                @endif
+                                @if (empty($kunjungan->no_spri))
+                                    <button type="button" class="btn btn-primary float-right m-1 btnModalSPRI"
+                                        data-id="{{ $kunjungan->kode_kunjungan }}"
+                                        data-nomorkartu="{{ $kunjungan->pasien->no_Bpjs }}" data-toggle="modal"
+                                        data-target="modalSPRI"><i class="fas fa-file-contract"></i>
+                                        BUAT SPRI </button>
+                                @endif
+                            @endif
                         @endif
 
 
@@ -211,6 +229,22 @@
                             </x-slot>
                         </form>
                     </x-adminlte-modal>
+                    <x-adminlte-modal id="modalUpdateDiagnosa" title="Update Diagnosa ICD 10" theme="info"
+                        size='lg' disable-animations>
+                        <form id="formUpdateDiagnosa" method="post"
+                            action="{{ route('simrs.pendaftaran-ranap-igd.update-diagnosa-kunjungan') }}">
+                            @csrf
+                            <input type="hidden" name="kode_update" id="kode_update">
+                            <div class="col-lg-12">
+                                <x-adminlte-select2 name="diagAwal" id="diagnosa" label="Pilih Diagnosa">
+                                </x-adminlte-select2>
+                            </div>
+                            <x-slot name="footerSlot">
+                                <x-adminlte-button type="submit" theme="success" form="formUpdateDiagnosa"
+                                    label="Update Diagnosa" />
+                            </x-slot>
+                        </form>
+                    </x-adminlte-modal>
                 </div>
             </div>
         </div>
@@ -229,6 +263,26 @@
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $("#diagnosa").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: "{{ route('ref_diagnosa_api') }}",
+                    type: "get",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            diagnosa: params.term // search term
+                        };
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
                 }
             });
 
@@ -264,7 +318,7 @@
                     data: function(params) {
                         console.log(params)
                         return {
-                            kodePoli: $("#poliklinik option:selected").val()// search term
+                            kodePoli: $("#poliklinik option:selected").val() // search term
                         };
                     },
                     processResults: function(response) {
@@ -276,6 +330,13 @@
                     cache: true
                 }
             });
+
+            $('.btnUpdateDiagnosa').click(function(e) {
+                var kunjungan = $(this).data('kunjungan');
+                $('#kode_update').val(kunjungan);
+                $('#modalUpdateDiagnosa').modal('toggle');
+            });
+
             $('.btnModalSPRI').click(function(e) {
                 var kunjungan = $(this).data('id');
                 var noKartu = $(this).data('nomorkartu');
@@ -390,7 +451,9 @@
                                 } else {
                                     Swal.fire({
                                         title: "Generate Gagal!",
-                                        text: data.data.metaData.message + '( ERROR : ' + data.data.metaData.code + ')',
+                                        text: data.data.metaData.message +
+                                            '( ERROR : ' + data.data.metaData
+                                            .code + ')',
                                         icon: "error",
                                         confirmButtonText: "oke!",
                                     }).then((result) => {

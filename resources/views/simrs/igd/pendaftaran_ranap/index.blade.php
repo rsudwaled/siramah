@@ -72,61 +72,6 @@
                                                 </x-slot>
                                             </x-adminlte-input>
                                         </div>
-                                        {{-- <div class="col-lg-4">
-                                            <x-adminlte-input name="cari_desa" label="CARI BERDASARKAN DESA"
-                                                value="{{ $request->cari_desa }}"
-                                                placeholder="Masukan nama desa dengan lengkap...">
-                                                <x-slot name="appendSlot">
-                                                    <x-adminlte-button theme="primary" class="withLoad" type="submit"
-                                                        label="Cari!" />
-                                                </x-slot>
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text text-primary">
-                                                        <i class="fas fa-search"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                            <x-adminlte-input name="cari_kecamatan" label="CARI BERDASARKAN KECAMATAN"
-                                                value="{{ $request->cari_kecamatan }}"
-                                                placeholder="Masukan nama kecamatan dengan lengkap...">
-                                                <x-slot name="appendSlot">
-                                                    <x-adminlte-button theme="primary" class="withLoad" type="submit"
-                                                        label="Cari!" />
-                                                </x-slot>
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text text-primary">
-                                                        <i class="fas fa-search"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <x-adminlte-input name="nomorkartu" label="NOMOR KARTU"
-                                                value="{{ $request->nomorkartu }}"
-                                                placeholder="Masukan Nomor Kartu BPJS ....">
-                                                <x-slot name="appendSlot">
-                                                    <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                        label="Cari!" />
-                                                </x-slot>
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text text-success">
-                                                        <i class="fas fa-search"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                            <x-adminlte-input name="nik" label="NIK (NOMOR INDUK KEPENDUDUKAN)"
-                                                value="{{ $request->nik }}" placeholder="Masukan nomor NIK ....">
-                                                <x-slot name="appendSlot">
-                                                    <x-adminlte-button theme="success" class="withLoad" type="submit"
-                                                        label="Cari!" />
-                                                </x-slot>
-                                                <x-slot name="prependSlot">
-                                                    <div class="input-group-text text-success">
-                                                        <i class="fas fa-search"></i>
-                                                    </div>
-                                                </x-slot>
-                                            </x-adminlte-input>
-                                        </div> --}}
                                     </div>
                                 </form>
                             </div>
@@ -135,13 +80,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="card card-outline card-primary">
                         <div class="card-body">
                             @if (isset($kunjungans))
                                 <div class="row">
                                     @php
-                                        $heads = ['Pasien', 'Alamat','Kunjungan', 'Aksi'];
+                                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Aksi'];
                                         $config['paging'] = false;
                                         $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
@@ -150,8 +95,8 @@
                                         $config['scrollCollapse'] = true;
                                         $config['scrollX'] = true;
                                     @endphp
-                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads"
-                                        head-theme="dark" :config="$config" striped bordered hoverable compressed>
+                                    <x-adminlte-datatable id="table" class="text-xs" :heads="$heads" head-theme="dark"
+                                        :config="$config" striped bordered hoverable compressed>
                                         @foreach ($kunjungans as $data)
                                             <tr>
                                                 <td>
@@ -182,13 +127,14 @@
                                                     Kode: {{ $data->kode_kunjungan }} <br>
                                                     Unit: {{ $data->unit->nama_unit ?? '-' }} <br><br>
                                                     @if ($data->is_ranap_daftar == 1)
-                                                    Jenis: <span class="badge badge-danger">PASIEN RANAP</span>
+                                                        Jenis: <span class="badge badge-danger">PASIEN RANAP</span>
                                                     @else
-                                                    Jenis: <span class="badge badge-warning">PASIEN RAJAL</span>
+                                                        Jenis: <span class="badge badge-warning">PASIEN RAJAL</span>
                                                     @endif
                                                     <br>
                                                     Masuk : {{ $data->tgl_masuk }} <br><br>
-                                                    Admin: {{ is_object($data->pic) ? ($data->pic->nama_user ? $data->pic->nama_user : 'Nama Admin tidak tersedia') : '-' }}
+                                                    Admin:
+                                                    {{ is_object($data->pic) ? ($data->pic->nama_user ? $data->pic->nama_user : 'Nama Admin tidak tersedia') : '-' }}
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
@@ -197,8 +143,7 @@
                                                         data-nik="{{ $data->pasien->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->pasien->no_Bpjs }}"
                                                         data-kontak="{{ $data->pasien->no_tlp == null ? $data->pasien->no_hp : $data->pasien->no_tlp }}"
-                                                        class="btn-xs btn-pilihPasien bg-purple"
-                                                        label="PILIH DATA" />
+                                                        class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
 
                                                     {{-- <x-adminlte-button type="button"
                                                         data-nik="{{ $data->pasien->nik_bpjs }}"
@@ -214,128 +159,135 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <form action="" id="formDaftarRanapIgd" method="post">
                         @csrf
-                        <div class="card card-outline card-primary">
-                            <div class="card-body">
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <x-adminlte-input name="rm" id="rm_terpilih" label="RM PASIEN"
-                                                type="text" readonly disable-feedback />
-                                            <x-adminlte-input name="nik" id="nik_pasien" label="NIK"
-                                                type="text" readonly disable-feedback />
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <x-adminlte-input name="kode" id="kode" type="text"
-                                                        readonly label="Kunjungan" />
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="card card-outline card-primary">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <x-adminlte-input name="rm" id="rm_terpilih" label="RM PASIEN"
+                                                    type="text" readonly disable-feedback />
+                                                <x-adminlte-input name="nik" id="nik_pasien" label="NIK"
+                                                    type="text" readonly disable-feedback />
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <x-adminlte-input name="kode" id="kode" type="text"
+                                                            readonly label="Kunjungan" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        @php
+                                                            $config = ['format' => 'YYYY-MM-DD'];
+                                                        @endphp
+                                                        <x-adminlte-input-date name="tanggal"
+                                                            value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
+                                                            label="Tanggal" :config="$config" />
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    @php
-                                                        $config = ['format' => 'YYYY-MM-DD'];
-                                                    @endphp
-                                                    <x-adminlte-input-date name="tanggal"
-                                                        value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
-                                                        label="Tanggal" :config="$config" />
+                                                <div class="form-group">
+                                                    <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
+                                                        @foreach ($penjamin as $item)
+                                                            <option value="{{ $item->kode_penjamin }}">
+                                                                {{ strtoupper($item->nama_penjamin) }}</option>
+                                                        @endforeach
+                                                    </x-adminlte-select2>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <x-adminlte-select2 name="penjamin_id" label="Pilih Penjamin">
-                                                    @foreach ($penjamin as $item)
-                                                        <option value="{{ $item->kode_penjamin }}">
-                                                            {{ strtoupper($item->nama_penjamin) }}</option>
+                                            <div class="col-lg-6">
+                                                <x-adminlte-input name="nama_pasien" id="nama_pasien" label="NAMA"
+                                                    type="text" readonly disable-feedback />
+                                                <x-adminlte-input name="noTelp" id="noTelp" type="text"
+                                                    label="No Telpon" />
+                                                <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
+                                                    @foreach ($alasanmasuk as $item)
+                                                        <option value="{{ $item->id }}">
+                                                            {{ strtoupper($item->alasan_masuk) }}</option>
+                                                    @endforeach
+                                                </x-adminlte-select>
+                                                <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
+                                                    <option value="">--Pilih Dokter--</option>
+                                                    @foreach ($paramedis as $item)
+                                                        <option value="{{ $item->kode_paramedis }}">
+                                                            {{ strtoupper($item->nama_paramedis) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select2>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <x-adminlte-input name="nama_pasien" id="nama_pasien" label="NAMA"
-                                                type="text" readonly disable-feedback />
-                                            <x-adminlte-input name="noTelp" id="noTelp" type="text"
-                                                label="No Telpon" />
-                                            <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
-                                                @foreach ($alasanmasuk as $item)
-                                                    <option value="{{ $item->id }}">
-                                                        {{ strtoupper($item->alasan_masuk) }}</option>
-                                                @endforeach
-                                            </x-adminlte-select>
-                                            <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
-                                                <option value="">--Pilih Dokter--</option>
-                                                @foreach ($paramedis as $item)
-                                                    <option value="{{ $item->kode_paramedis }}">
-                                                        {{ strtoupper($item->nama_paramedis) }}</option>
-                                                @endforeach
-                                            </x-adminlte-select2>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <x-adminlte-select name="is_proses" id="is_proses"
-                                                label="Apakah Penjamin BPJS Proses?">
-                                                <option value="0">TIDAK</option>
-                                                <option value="1">IYA</option>
-                                            </x-adminlte-select>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <x-adminlte-input name="inject_sep" id="inject_sep" label="NO SEP"
-                                                        type="text" />
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <x-adminlte-input name="inject_spri" id="inject_spri" label="NO SPRI/ Rencana Rawat Inap"
-                                                        type="text" />
+                                            <div class="col-lg-6">
+                                                <x-adminlte-select name="is_proses" id="is_proses"
+                                                    label="Apakah Penjamin BPJS Proses?">
+                                                    <option value="0">TIDAK</option>
+                                                    <option value="1">IYA</option>
+                                                </x-adminlte-select>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <x-adminlte-input name="inject_sep" id="inject_sep"
+                                                            label="NO SEP" type="text" />
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <x-adminlte-input name="inject_spri" id="inject_spri"
+                                                            label="NO SPRI/ Rencana Rawat Inap" type="text" />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card card-outline card-primary">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
-                                            @foreach ($unit as $item)
-                                                <option value="{{ $item->kode_unit }}">
-                                                    {{ $item->nama_unit }}</option>
-                                            @endforeach
-                                        </x-adminlte-select>
-                                    </div>
-                                    <div class="col-md-8">
+                            <div class="col-lg-6">
+                                <div class="card card-outline card-primary">
+                                    <div class="card-body">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <x-adminlte-select name="kelas_rawat" id="r_kelas_id"
-                                                    label="Kelas Rawat">
-                                                    <option value="1">KELAS 1</option>
-                                                    <option value="2">KELAS 2</option>
-                                                    <option value="3" selected>KELAS 3</option>
-                                                    <option value="4">VIP</option>
-                                                    <option value="5">VVIP</option>
+                                            <div class="col-md-4">
+                                                <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
+                                                    @foreach ($unit as $item)
+                                                        <option value="{{ $item->kode_unit }}">
+                                                            {{ $item->nama_unit }}</option>
+                                                    @endforeach
                                                 </x-adminlte-select>
                                             </div>
-                                            <div class="col-md-6">
-                                                <x-adminlte-button label="Cari Ruangan" data-toggle="modal"
-                                                    data-target="#pilihRuangan" id="cariRuangan"
-                                                    class="bg-purple mt-4" />
+                                            <div class="col-md-8">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <x-adminlte-select name="kelas_rawat" id="r_kelas_id"
+                                                            label="Kelas Rawat">
+                                                            <option value="1">KELAS 1</option>
+                                                            <option value="2">KELAS 2</option>
+                                                            <option value="3" selected>KELAS 3</option>
+                                                            <option value="4">VIP</option>
+                                                            <option value="5">VVIP</option>
+                                                        </x-adminlte-select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <x-adminlte-button label="Cari Ruangan" data-toggle="modal"
+                                                            data-target="#pilihRuangan" id="cariRuangan"
+                                                            class="bg-purple mt-4" />
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <input type="hidden" id="id_ruangan" name="id_ruangan">
+                                            <div class="col-md-4">
+                                                <x-adminlte-input name="ruangan" label="Ruangan" id="ruanganTerpilih"
+                                                    readonly />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <x-adminlte-input name="bed" label="No Bed" id="bedTerpilih"
+                                                    readonly />
+                                            </div>
+                                            <div class="col-md-4">
+                                                <x-adminlte-input name="hak_kelas" label="Hak Kelas" id="hakKelas"
+                                                    readonly />
+                                            </div>
+                                        </div>
+                                        <x-adminlte-button type="submit"
+                                            onclick="javascript: form.action='{{ route('simrs.pendaftaran-ranap-igd.store') }}';"
+                                            class="withLoad btn  btn-sm bg-green float-right" form="formDaftarRanapIgd"
+                                            label="Simpan Data" />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <input type="hidden" id="id_ruangan" name="id_ruangan">
-                                    <div class="col-md-4">
-                                        <x-adminlte-input name="ruangan" label="Ruangan" id="ruanganTerpilih" readonly />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <x-adminlte-input name="bed" label="No Bed" id="bedTerpilih" readonly />
-                                    </div>
-                                    <div class="col-md-4">
-                                        <x-adminlte-input name="hak_kelas" label="Hak Kelas" id="hakKelas" readonly />
-                                    </div>
-                                </div>
-                                <x-adminlte-button type="submit"
-                                    onclick="javascript: form.action='{{ route('simrs.pendaftaran-ranap-igd.store') }}';"
-                                    class="withLoad btn  btn-sm bg-green float-right" form="formDaftarRanapIgd"
-                                    label="Simpan Data" />
                             </div>
                         </div>
                     </form>

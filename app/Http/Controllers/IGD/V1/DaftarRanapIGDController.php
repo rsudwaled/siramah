@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\IGD\V1;
 
+use App\Http\Controllers\VclaimController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\HistoriesIGDBPJS;
 use Illuminate\Http\Request;
+use App\Models\Icd10;
 use App\Models\Pasien;
 use App\Models\Ruangan;
 use App\Models\Unit;
@@ -52,6 +55,8 @@ class DaftarRanapIGDController extends Controller
         $query_counter  = Kunjungan::where('kode_kunjungan', $request->kode)->where('status_kunjungan', 1)->first();
         $ruangan        = Ruangan::firstWhere('id_ruangan', $request->id_ruangan);
         $unit           = Unit::firstWhere('kode_unit', $request->unitTerpilih);
+        $dokter         = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
+        $pasien         = Pasien::where('no_rm', $request->rm)->first();
         // dd($request->all(), $unit);
         if($query_counter === null || $unit === null)
         {
@@ -86,6 +91,45 @@ class DaftarRanapIGDController extends Controller
         {
             $ruangan->status_incharge = 1;
             $ruangan->save();
+
+            if($createKunjungan->kode_penjamin != 'P01' || $createKunjungan->jp_daftar != 2)
+            {
+                $api = new VclaimController();
+                $request = new Request([
+                    "nik"        => $pasien->nik_bpjs,
+                    "tanggal"    => now()->format('Y-m-d'),
+                ]);
+                $data    = $api->peserta_nik($request);
+
+                $histories = new HistoriesIGDBPJS();
+                $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
+                $histories->noMR            = $pasien->no_rm;
+                $histories->noKartu         = trim($pasien->no_Bpjs)??Null;
+                $histories->ppkPelayanan    = '1018R001';
+                $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
+                $histories->user            = Auth::user()->name;
+                $histories->noTelp          = $pasien->no_hp??$pasien->no_tlp;
+                $histories->tglSep          = now();
+                $histories->jnsPelayanan    = '1';
+                $histories->klsRawatHak     = $data->response->peserta->hakKelas->kode ?? null;
+                $histories->asalRujukan     = '2';
+                $histories->tglRujukan      = now();
+                $histories->noRujukan       = null;
+                $histories->ppkRujukan      = null;
+                $histories->diagAwal        = $request->diagAwal??NULL;
+                $histories->lakaLantas      = Null;
+                $histories->noLP            = Null;
+                $histories->tglKejadian     = Null;
+                $histories->keterangan      = Null;
+                $histories->kdPropinsi      = Null;
+                $histories->kdKabupaten     = Null;
+                $histories->kdKecamatan     = Null;
+                $histories->response        = Null;
+                $histories->is_bridging     = 0;
+                $histories->status_daftar   = 0;
+                $histories->unit            = $unit->kode_unit;
+                $histories->save();
+            }
         }
         return redirect()->route('pasien.ranap');
     }
@@ -113,9 +157,36 @@ class DaftarRanapIGDController extends Controller
             $ruangan    = Ruangan::where('id_ruangan', $kunjungan->id_ruangan)->first();
             $ruangan->status_incharge = 0;
             $ruangan->save();
-
-
         }
         return back();
+    }
+
+    public function updateDiagnosaKunjungan(Request $request)
+    {
+
+        // Ambil data kunjungan dengan relasi yang diperlukan
+        $kunjungan = Kunjungan::with(['bpjsCheckHistories', 'pasien'])
+        ->where('kode_kunjungan', $request->kode_update)
+        ->first();
+
+        // Cek jika kunjungan ada
+        if ($kunjungan) {
+            // Ambil diagnosa berdasarkan kode diagnosa awal
+            $diagnosa_ts = Icd10::where('diag', $request->diagAwal)->first();
+
+            // Cek jika diagnosa ditemukan
+            if ($diagnosa_ts) {
+                $kunjungan->diagx = $diagnosa_ts->diag . ' | ' . $diagnosa_ts->nama;
+            }
+
+            // Cek jika bpjsCheckHistories dan pasien ada
+            if ($kunjungan->bpjsCheckHistories && $kunjungan->pasien) {
+                $kunjungan->bpjsCheckHistories->noKartu     = $kunjungan->pasien->no_Bpjs;
+                $kunjungan->bpjsCheckHistories->diagAwal    = $diagnosa_ts->diag;
+                $kunjungan->bpjsCheckHistories->save();
+            }
+            $kunjungan->save();
+            return back();
+        }
     }
 }
