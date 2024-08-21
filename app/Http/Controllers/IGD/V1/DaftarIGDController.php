@@ -277,16 +277,16 @@ class DaftarIGDController extends Controller
             $kec    = 'Kec. ' . $pasien->kecamatan == "" ? '-' : ($pasien->kecamatan == null ? '-' : $pasien->lokasiKecamatan->name);
             $kab    = 'Kab. ' . $pasien->kabupaten == "" ? '-' : ($pasien->kabupaten == null ? '-' : $pasien->lokasiKabupaten->name);
             $alamat = $pasien->alamat . ' ( desa: ' . $desa . ' , ' . ' kec: ' . $kec . ' , ' . ' Kab: ' . $kab . ' )';
-            $ant_upd = AntrianPasienIGD::find($request->antrian_triase);
-            if (!empty($ant_upd)) {
-                $ant_upd->no_rm             = $request->rm;
-                $ant_upd->nama_px           = $pasien->nama_px;
-                $ant_upd->kode_kunjungan    = $createKunjungan->kode_kunjungan;
-                $ant_upd->unit              = $unit->kode_unit;
-                $ant_upd->alamat            = $alamat;
-                $ant_upd->status            = 2;
-                $ant_upd->update();
-            }
+            // $ant_upd = AntrianPasienIGD::find($request->antrian_triase);
+            // if (!empty($ant_upd)) {
+            //     $ant_upd->no_rm             = $request->rm;
+            //     $ant_upd->nama_px           = $pasien->nama_px;
+            //     $ant_upd->kode_kunjungan    = $createKunjungan->kode_kunjungan;
+            //     $ant_upd->unit              = $unit->kode_unit;
+            //     $ant_upd->alamat            = $alamat;
+            //     $ant_upd->status            = 2;
+            //     $ant_upd->update();
+            // }
 
             if ($request->isBpjs == 1) {
                 $histories = new HistoriesIGDBPJS();
