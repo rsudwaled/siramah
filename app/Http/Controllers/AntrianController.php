@@ -2062,7 +2062,7 @@ class AntrianController extends APIController
             // cek jadwal
             $poli = Poliklinik::where('kodesubspesialis', $request->kodepoli)->first();
             $request['lantaipendaftaran'] = $poli->lantaipendaftaran;
-            $request['lokasi'] = $poli->lantaipendaftaran;
+            $request['lokasi'] = $poli->lokasi;
             $jadwal = $this->status_antrian($request);
             if ($jadwal->metadata->code == 200) {
                 $jadwal = $jadwal->response;

@@ -422,18 +422,15 @@ class AnjunganMandiriDaftar extends Component
             $paramedis = Paramedis::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
             // hitung counter kunjungan
             $kunjungan = Kunjungan::where('no_rm', $antrian->norm)->orderBy('counter', 'DESC')->first();
-            if (empty($kunjungan)) {
-                $counter = 1;
-            } else {
-                $counter = $kunjungan->counter + 1;
-            }
+            $counter = empty($kunjungan) ? 1 : $kunjungan->counter + 1;
+            $currentTime = Carbon::now('Asia/Jakarta');
             // insert ts kunjungan status 8
             $kunjungan  = Kunjungan::create(
                 [
                     'counter' => $counter,
                     'no_rm' => $antrian->norm,
                     'kode_unit' => $unit->kode_unit,
-                    'tgl_masuk' => now(),
+                    'tgl_masuk' => $currentTime,
                     'kode_paramedis' => $paramedis->kode_paramedis,
                     'status_kunjungan' => 8,
                     'prefix_kunjungan' => $unit->prefix_unit,
@@ -445,7 +442,7 @@ class AnjunganMandiriDaftar extends Component
                     'no_sep' =>  $request->nomorsep,
                     'no_rujukan' => $antrian->nomorrujukan,
                     'diagx' =>   $request->catatan,
-                    'created_at' => now(),
+                    'created_at' => $currentTime,
                     'keterangan2' => 'MESIN_2',
                 ]
             );
@@ -454,13 +451,13 @@ class AnjunganMandiriDaftar extends Component
             if ($kodelayanan == null) {
                 //   get transaksi sebelumnya
                 $trx_lama = Transaksi::where('unit', $unit->kode_unit)
-                    ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
+                    ->whereBetween('tgl', [$currentTime->startOfDay(), [$currentTime->endOfDay()]])
                     ->count();
                 // get kode layanan
-                $kodelayanan = $unit->prefix_unit . now()->format('y') . now()->format('m') . now()->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                $kodelayanan = $unit->prefix_unit . $currentTime->format('y') . $currentTime->format('m') . $currentTime->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
                 //  insert transaksi
                 $trx_baru = Transaksi::create([
-                    'tgl' => now()->format('Y-m-d'),
+                    'tgl' => $currentTime->format('Y-m-d'),
                     'no_trx_layanan' => $kodelayanan,
                     'unit' => $unit->kode_unit,
                 ]);
@@ -469,7 +466,7 @@ class AnjunganMandiriDaftar extends Component
             $layananbaru = Layanan::create(
                 [
                     'kode_layanan_header' => $kodelayanan,
-                    'tgl_entry' => now(),
+                    'tgl_entry' => $currentTime,
                     'kode_kunjungan' => $kunjungan->kode_kunjungan,
                     'kode_unit' => $unit->kode_unit,
                     'kode_tipe_transaksi' => $tipetransaksi,
@@ -485,7 +482,7 @@ class AnjunganMandiriDaftar extends Component
             $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
             $karcis = LayananDetail::create(
                 [
-                    'id_layanan_detail' => "DET" . now()->format('ymd') . $nomorlayanandet,
+                    'id_layanan_detail' => "DET" . $currentTime->format('ymd') . $nomorlayanandet,
                     'row_id_header' => $layananbaru->id,
                     'kode_layanan_header' => $layananbaru->kode_layanan_header,
                     'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
@@ -496,9 +493,9 @@ class AnjunganMandiriDaftar extends Component
                     'total_layanan' => $tarifkarcis->tarif_rajal,
                     'grantotal_layanan' => $tarifkarcis->tarif_rajal,
                     'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
-                    'tgl_layanan_detail' =>   now(),
+                    'tgl_layanan_detail' =>   $currentTime,
                     'status_layanan_detail' => "OPN",
-                    'tgl_layanan_detail_2' =>   now(),
+                    'tgl_layanan_detail_2' =>   $currentTime,
                 ]
             );
             //  insert layanan detail admin
@@ -506,7 +503,7 @@ class AnjunganMandiriDaftar extends Component
             $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
             $adm = LayananDetail::create(
                 [
-                    'id_layanan_detail' => "DET" .  now()->format('ymd') . $nomorlayanandet,
+                    'id_layanan_detail' => "DET" .  $currentTime->format('ymd') . $nomorlayanandet,
                     'row_id_header' => $layananbaru->id,
                     'kode_layanan_header' => $layananbaru->kode_layanan_header,
                     'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
@@ -517,9 +514,9 @@ class AnjunganMandiriDaftar extends Component
                     'total_layanan' => $tarifadm->tarif_rajal,
                     'grantotal_layanan' => $tarifadm->tarif_rajal,
                     'kode_dokter1' => 0,
-                    'tgl_layanan_detail' =>  now(),
+                    'tgl_layanan_detail' =>  $currentTime,
                     'status_layanan_detail' => "OPN",
-                    'tgl_layanan_detail_2' =>  now(),
+                    'tgl_layanan_detail_2' =>  $currentTime,
                 ]
             );
             //  update layanan header total tagihan
