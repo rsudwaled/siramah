@@ -330,8 +330,6 @@ return [
                     'url'  => 'anjungan-mandiri',
                     'active'  => ['anjungan-mandiri'],
                     'shift'   => 'ml-2',
-                    'label' => 'proses',
-                    'label_color' => 'warning',
                     'can' => ['pendaftaran'],
                 ],
                 [
