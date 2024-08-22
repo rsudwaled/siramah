@@ -1121,7 +1121,7 @@ class RanapController extends APIController
         $createKunjungan->ref_kunjungan     = $request->ref_kunjungan_ortu;
         $createKunjungan->tgl_masuk         = now();
         $createKunjungan->kode_paramedis    = $request->dpjp;
-        $createKunjungan->status_kunjungan  = 8; //status 8 nanti update setelah header dan detail selesai jadi 1
+        $createKunjungan->status_kunjungan  = 1; //status 8 nanti update setelah header dan detail selesai jadi 1
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kode_penjamin     = $penjamin;
         $createKunjungan->kelas             = $ruangan->id_kelas;

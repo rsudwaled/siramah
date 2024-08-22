@@ -28,19 +28,6 @@
                 <div class="card-body">
                     <div class="col-lg-12">
                         <div class="row">
-                            @if ($errors->any())
-                                <div class="col-lg-12">
-                                    <div class="alert alert-danger">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                        <div class="row">
                             <div class="col-lg-12">
                                 <form action="" method="get">
                                     <div class="row">
@@ -160,6 +147,19 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
+                    <div class="row">
+                        @if ($errors->any())
+                            <div class="col-lg-12">
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li><strong>{{ $error }}</strong></li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
                     <form action="" id="formDaftarRanapIgd" method="post">
                         @csrf
                         <div class="row">
@@ -214,7 +214,7 @@
                                                     @endforeach
                                                 </x-adminlte-select2>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
                                                 <x-adminlte-select name="is_proses" id="is_proses"
                                                     label="Apakah Penjamin BPJS Proses?">
                                                     <option value="0">TIDAK</option>

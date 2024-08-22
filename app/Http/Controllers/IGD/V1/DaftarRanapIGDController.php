@@ -24,22 +24,24 @@ class DaftarRanapIGDController extends Controller
         $rmPasien = $request->input('cari_rm');
         $namaPasien = $request->input('nama');
         $alamatPasien = $request->input('cari_desa');
-        if(!empty($namaPasien) || !empty($alamatPasien) || !empty($rmPasien))
+        if($rmPasien)
         {
             $kunjungans = Kunjungan::with([
                 'pasien.lokasiDesa',
                 'pasien.lokasiKecamatan',
                 'pasien.lokasiKabupaten',
-                'pasien.lokasiProvinsi'
-                ])->whereHas('pasien', function($query) use ($namaPasien, $rmPasien, $alamatPasien) {
-                    $query->where('nama_px', 'like', '%' . $namaPasien . '%');
-                    $query->where('no_rm', 'like', '%' . $rmPasien . '%');
-                    $query->where('desa', 'like', '%' . $alamatPasien . '%');
-                })->where('status_kunjungan', 1)->get();
+                'pasien.lokasiProvinsi'])
+                // ])->whereHas('pasien', function($query) use ($rmPasien) {
+                //     $query->where('no_rm', 'like', '%' . $rmPasien . '%');
+                //     // $query->where('nama_px', 'like', '%' . $namaPasien . '%');
+                //     // $query->where('desa', 'like', '%' . $alamatPasien . '%');
+                // })
+                ->where('no_rm', $rmPasien)
+                ->where('status_kunjungan', 1)->get();
         }else{
             $kunjungans =[];
         }
-
+        // dd($kunjungans, $rmPasien);
         $riwayat        = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk', 'desc')->take(5)->get();
         $alasanmasuk    = AlasanMasuk::orderBy('id', 'asc')->get();
         $paramedis      = Paramedis::where('act', 1)->get();
@@ -58,9 +60,13 @@ class DaftarRanapIGDController extends Controller
         $dokter         = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
         // dd($request->all(), $unit);
-        if($query_counter === null || $unit === null)
-        {
-            return back();
+        if ($query_counter === null || $dokter === null || $ruangan===null || $pasien===null) {
+            return back()->withErrors([
+                'alert' => 'Data yang di input tidak lengkap, silakan periksa kembali! pada bagian : ' .
+                            ($pasien === null ? 'Pasien Belum Dipilih, ' : '') .
+                            ($ruangan === null ? 'Ruangan Belum Dipilih, ' : '') .
+                            ($dokter === null ? ' Dokter Belum Dipilih, ' : '')
+            ]);
         }
         $createKunjungan                    = new Kunjungan();
         $createKunjungan->counter           = $query_counter->counter;

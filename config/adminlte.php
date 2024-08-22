@@ -606,7 +606,7 @@ return [
                 ],
 
                 [
-                    'text' => 'Pasien Ranap',
+                    'text' => 'List Pasien Ranap',
                     'icon'    => 'fas fa-procedures',
                     'url'  => 'pasien-rawat-inap',
                     'shift'   => 'ml-2',
