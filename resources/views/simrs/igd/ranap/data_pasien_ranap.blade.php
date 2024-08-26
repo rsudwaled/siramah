@@ -18,6 +18,20 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
+            @if (session('success'))
+                {{-- <div class="alert alert-success">
+                    {{ session('success') }}
+                </div> --}}
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="icon fas fa-check"></i> SIMPAN PASIEN RANAP BERHASIL!</h5>
+                    {{ session('success') }}
+                </div>
+            @endif
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             <div class="card card-primary card-outline card-tabs">
                 <div class="card-body">
                     <div class="row mb-2">
@@ -25,8 +39,11 @@
                             <form action="" method="get">
                                 <div class="col-md-8">
                                     <div class="input-group">
-                                        <input id="new-event" type="date" name="tanggal" class="form-control"
-                                            value="{{ $request->tanggal != null ? \Carbon\Carbon::parse($request->tanggal)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                        <input id="new-event" type="date" name="start" class="form-control"
+                                            value="{{ $request->start != null ? \Carbon\Carbon::parse($request->start)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
+                                            placeholder="Event Title">
+                                        <input id="new-event" type="date" name="finish" class="form-control"
+                                            value="{{ $request->finish != null ? \Carbon\Carbon::parse($request->finish)->format('Y-m-d') : \Carbon\Carbon::now()->format('Y-m-d') }}"
                                             placeholder="Event Title">
                                         <div class="input-group-append">
                                             <button id="add-new-event" type="submit"
@@ -50,6 +67,7 @@
                             'RUANGAN',
                             'SPRI / SEP RANAP',
                             'DETAIL',
+                            'AKSI',
                         ];
                         $config['order'] = ['0', 'desc'];
                         $config['paging'] = false;
@@ -75,7 +93,7 @@
                                     </a>
                                 </td>
 
-                                <td>
+                                <td style="width: 15%;">
                                     <b>{{ $item->jp_daftar == 1 ? 'BPJS' : ($item->jp_daftar == 0 ? 'UMUM' : 'BPJS PROSES') }}</b>
                                     <br>
                                     {{ $item->penjamin == null ? $item->penjamin_simrs->nama_penjamin : $item->penjamin->nama_penjamin_bpjs }}
@@ -84,10 +102,12 @@
                                     <b>
                                         {{ $item->pasien->no_rm }} | (RM PASIEN) <br>
                                         {{ $item->kode_kunjungan }} | ({{ $item->unit->nama_unit }}) <br>
+                                        {{ strtoupper($item->dokter->nama_paramedis) }}<br>
                                         @if (!empty($item->tgl_keluar))
                                             <b>PASIEN SUDAH KELUAR</b>
                                         @else
-                                        <strong class="{{$item->status_kunjungan ==1?'text-success':'text-danger'}}">{{ strtoupper($item->status->status_kunjungan) }}</strong>
+                                            <strong
+                                                class="{{ $item->status_kunjungan == 1 ? 'text-success' : 'text-danger' }}">{{ strtoupper($item->status->status_kunjungan) }}</strong>
                                         @endif
                                     </b>
                                 </td>
@@ -135,21 +155,28 @@
                                             SEP :
                                             {{ $item->no_sep == null ? 'PASIEN BELUM GENERATE SEP' : $item->no_sep }}
                                             <br>
-                                            <strong>Silahkan Klik Tombol Bridging untuk Tahap Pembuatan</strong>
+                                            {{-- <strong>Silahkan Klik Tombol Bridging untuk Tahap Pembuatan</strong> --}}
                                         </b>
                                     @endif
                                 </td>
                                 <td>
                                     <a href="{{ route('pasien-ranap.detail', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs btn-block btn-flat">Detail</a>
-                                    <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $item->kode_kunjungan]) }}"
-                                        class="btn btn-warning btn-xs btn-block btn-flat">Edit Ruangan</a>
-                                    @if ($item->jp_daftar == 1)
+                                    {{-- @if ($item->jp_daftar == 1)
                                         @if ($item->no_spri == null && $item->no_sep == null)
                                             <a href="{{ route('create-sepigd.ranap-bpjs', ['kunjungan' => $item->kode_kunjungan]) }}"
-                                                class="btn btn-danger btn-xs btn-block btn-flat">Bridging</a>
+                                                class="btn btn-primary btn-xs btn-block btn-flat">Bridging</a>
                                         @endif
-                                    @endif
+                                    @endif --}}
+                                </td>
+                                <td>
+
+                                    <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
+                                        data-nama="{{ $item->pasien->nama_px }}" data-kunjungan="{{ $item->kode_kunjungan }}"
+                                        theme="danger" class="btn-xs btn-cancelVisit" id="btn-cancelVisit"
+                                        label="Batal Kunjungan" />
+                                    <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $item->kode_kunjungan]) }}"
+                                        class="btn btn-warning btn-xs btn-block btn-flat mt-2">Edit Ruangan</a>
 
                                 </td>
                             </tr>
@@ -203,4 +230,81 @@
             });
         }
     </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tangkap event klik pada tombol dengan ID 'btn-cancelVisit'
+        document.querySelectorAll('#btn-cancelVisit').forEach(button => {
+            button.addEventListener('click', function() {
+                // Ambil data dari atribut HTML
+                const rm = this.getAttribute('data-rm');
+                const kunjungan = this.getAttribute('data-kunjungan');
+                const nama = this.getAttribute('data-nama');
+                // Tampilkan SweetAlert
+                Swal.fire({
+                    title: `BATALKAN KUNJUNGAN A.N ${nama}`,
+                    input: 'textarea',
+                    inputLabel: 'Masukkan keterangan',
+                    inputPlaceholder: 'Masukkan alasan pembatalan',
+                    inputAttributes: {
+                        'aria-label': 'Masukkan alasan pembatalan',
+                        'required': true
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Kirim',
+                    cancelButtonText: 'Batal',
+                    showLoaderOnConfirm: true,
+                    preConfirm: (keterangan) => {
+                        if (!keterangan) {
+                            Swal.showValidationMessage('Keterangan wajib diisi!');
+                            return false;
+                        }
+
+                        // Kirim data ke server menggunakan fetch atau metode lain
+                        return fetch('{{ route('update-batal.kunjungan') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ganti dengan token CSRF Anda jika diperlukan
+                                },
+                                body: JSON.stringify({
+                                    rm,
+                                    kunjungan,
+                                    keterangan
+                                })
+                            })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        'Network response was not ok.');
+                                }
+                                return response.json();
+                            })
+                            .then(result => {
+                                if (result.success) {
+                                    Swal.fire({
+                                        title: 'Berhasil!',
+                                        text: 'Kunjungan telah dibatalkan.',
+                                        icon: 'success'
+                                    }).then(() => {
+                                        // Segarkan halaman setelah menutup SweetAlert
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire('Gagal!',
+                                        'Terjadi kesalahan saat membatalkan kunjungan.',
+                                        'error');
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire('Gagal!',
+                                    'Terjadi kesalahan saat membatalkan kunjungan.',
+                                    'error');
+                            });
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

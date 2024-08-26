@@ -19,7 +19,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">FILTER KUNJUNGAN BY <br> PERIODE TANGGAL</h3>
@@ -34,7 +34,7 @@
                 <div class="card-body">
                     <form action="" method="get">
                         <div class="row ">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 @php
                                     $config = ['format' => 'YYYY-MM-DD'];
                                 @endphp
@@ -47,7 +47,7 @@
                                     </x-slot>
                                 </x-adminlte-input-date>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 @php
                                     $config = ['format' => 'YYYY-MM-DD'];
                                 @endphp
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-9">
+        <div class="col-lg-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
                     @php
@@ -94,8 +94,8 @@
                                     <br> NIK : {{ $item->pasien->nik_bpjs }} <br>BPJS :
                                     {{ $item->pasien->no_Bpjs == null ? '-' : $item->pasien->no_Bpjs }} <br><br>
                                     <small>
-                                        ALAMAT : {{ $item->pasien->alamat ?? '-' }} / <br>
-                                        {{ $item->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($item->desa == null ? 'Desa: -' : 'Desa. ' . $item->desas->nama_desa_kelurahan) . ($item->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $item->kecamatans->nama_kecamatan) . ($item->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $item->kabupatens->nama_kabupaten_kota) }}</small>
+                                        Alamat : {{ $item->pasien->alamat ?? '-' }} / <br>
+                                                            {{ ($item->pasien->lokasiDesa == null ? 'Desa: -' : 'Desa. ' . $item->pasien->lokasiDesa->name) . ($item->pasien->lokasiKecamatan == null ? 'Kec. ' : ' , Kec. ' . $item->pasien->lokasiKecamatan->name) . ($item->pasien->lokasiKabupaten == null ? 'Kab. ' : ' - Kab. ' . $item->pasien->lokasiKabupaten->name) }}
                                     </small>
                                 </td>
                                 <td>{{ $item->alasan_masuk->alasan_masuk }}</td>

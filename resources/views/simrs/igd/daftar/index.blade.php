@@ -183,8 +183,7 @@
                                                             <b>TTL :
                                                                 {{ date('d-m-Y', strtotime($data->tgl_lahir)) ?? '-' }}
                                                             </b> <br>
-                                                            {{-- Alamat : {{ $data->alamat ?? '-' }} / <br>
-                                                            {{ $data->kode_desa < 1101010001 ? 'ALAMAT LENGKAP BELUM DI ISI!' : ($data->desa == null ? 'Desa: -' : 'Desa. ' . $data->desas->nama_desa_kelurahan) . ($data->kecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->kecamatans->nama_kecamatan) . ($data->kabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->kabupatens->nama_kabupaten_kota) }} --}}
+
                                                             Alamat : {{ $data->alamat ?? '-' }} / <br>
                                                             {{ ($data->lokasiDesa == null ? 'Desa: -' : 'Desa. ' . $data->lokasiDesa->name) . ($data->lokasiKecamatan == null ? 'Kec. ' : ' , Kec. ' . $data->lokasiKecamatan->name) . ($data->lokasiKabupaten == null ? 'Kab. ' : ' - Kab. ' . $data->lokasiKabupaten->name) }}
                                                         </small> <br>

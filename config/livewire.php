@@ -170,6 +170,6 @@ return [
     */
 
     'pagination_theme' => 'bootstrap',
-    'asset_url' =>  'https://app.rsudwaled.id/vendor/livewire/livewire.js?id=cc800bf4',
+    'asset_url' =>  'https://app.rsudwaled.id/vendor/livewire/livewire.js',
     // 'asset_url' =>  env('APP_ENV') === 'production' ? 'https://app.rsudwaled.id/vendor/livewire/livewire.js?id=cc800bf4' : null,
 ];

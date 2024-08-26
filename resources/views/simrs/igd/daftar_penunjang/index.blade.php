@@ -12,7 +12,7 @@
         <div class="col-sm-8">
             <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item">
-                    <a href="{{ route('kunjungan-penunjang.list') }}" class="btn btn-sm btn-primary" style="text-decoration: none;">KUNJUNGAN PENUNJANG</a>
+                    <a href="{{ route('kunjungan-penunjang.list') }}" class="btn btn-sm btn-warning text-black" style="text-decoration: none;">KUNJUNGAN PENUNJANG</a>
                 </li>
             </ol>
         </div>
@@ -156,16 +156,16 @@
                                                         data-nama="{{ $data->nama_px }}" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
-                                                        class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
+                                                        class="btn-xs btn-pilihPasien bg-purple btn-block" label="PILIH DATA" />
 
-                                                    <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
+                                                    {{-- <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-rm="{{ $data->no_rm }}" class="btn-xs btn-cekBPJS bg-success"
                                                         label="Cek Status BPJS" />
 
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         class="btn-xs btn-cekKunjungan bg-warning mt-1"
-                                                        label="Riwayat Kunjungan" />
+                                                        label="Riwayat Kunjungan" /> --}}
 
                                                 </td>
                                             </tr>

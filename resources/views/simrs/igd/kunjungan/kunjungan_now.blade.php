@@ -27,13 +27,13 @@
                                 <span class="badge badge-danger active">{{ $showDataSepCount }}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="?view=kunjungan_ranap"
                                 class="nav-link {{ Request::get('view') == 'kunjungan_ranap' ? 'active' : '' }}">
-                                DAFTAR RAWAT INAP&nbsp;
+                                PASIEN RAWAT INAP&nbsp;
                                 <span class="badge badge-danger active"></span>
                             </a>
-                        </li>
+                        </li> --}}
                     </ul>
                     <div class="tab-content">
                         <div class="col-lg-12">
@@ -61,10 +61,6 @@
                                     </form>
                                 </div>
                                 <div class="col-lg-6 text-right">
-
-                                    <button class="btn btn-sm bg-purple" data-toggle="modal"
-                                        data-target="#modal-sep-backdate">SEP
-                                        BACKDATE</button>
                                     <button class="btn btn-sm bg-primary" data-toggle="modal"
                                         data-target="#modal-cetak-label">CETAK
                                         LABEL</button>
@@ -165,10 +161,6 @@
                                             </small>
                                         </td>
                                         <td style="width: 10%;">
-                                            {{-- @if (!empty($item->jp_daftar))
-                                                <a href="{{ route('detail.kunjungan', ['jpdaftar' => $item->jp_daftar, 'kunjungan' => $item->kunjungan]) }}"
-                                                    class="btn btn-success btn-xs withLoad mt-1">Detail</a>
-                                            @endif --}}
                                             @if ($request->view == 'kunjungan_ranap')
                                                 @if ($item->id_status === 1)
                                                     @php
@@ -196,7 +188,10 @@
                                                     class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
                                                     label="Diagnosa" />
                                             @endif
-
+                                            <x-adminlte-button type="button" data-rm="{{ $item->rm }}"
+                                                data-nama="{{ $item->pasien }}" data-kunjungan="{{ $item->kunjungan }}"
+                                                theme="danger" class="btn-xs btn-cancelVisit mt-1" id="btn-cancelVisit"
+                                                label="Batal Kunjungan" />
                                         </td>
                                     </tr>
                                 @endforeach
@@ -578,6 +573,82 @@
                             },
                         });
                     }
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tangkap event klik pada tombol dengan ID 'btn-cancelVisit'
+            document.querySelectorAll('#btn-cancelVisit').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Ambil data dari atribut HTML
+                    const rm = this.getAttribute('data-rm');
+                    const kunjungan = this.getAttribute('data-kunjungan');
+                    const nama = this.getAttribute('data-nama');
+                    // Tampilkan SweetAlert
+                    Swal.fire({
+                        title: `BATALKAN KUNJUNGAN A.N ${nama}`,
+                        input: 'textarea',
+                        inputLabel: 'Masukkan keterangan',
+                        inputPlaceholder: 'Masukkan alasan pembatalan',
+                        inputAttributes: {
+                            'aria-label': 'Masukkan alasan pembatalan',
+                            'required': true
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Kirim',
+                        cancelButtonText: 'Batal',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (keterangan) => {
+                            if (!keterangan) {
+                                Swal.showValidationMessage('Keterangan wajib diisi!');
+                                return false;
+                            }
+
+                            // Kirim data ke server menggunakan fetch atau metode lain
+                            return fetch('{{ route('update-batal.kunjungan') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ganti dengan token CSRF Anda jika diperlukan
+                                    },
+                                    body: JSON.stringify({
+                                        rm,
+                                        kunjungan,
+                                        keterangan
+                                    })
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(
+                                            'Network response was not ok.');
+                                    }
+                                    return response.json();
+                                })
+                                .then(result => {
+                                    if (result.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: 'Kunjungan telah dibatalkan.',
+                                            icon: 'success'
+                                        }).then(() => {
+                                            // Segarkan halaman setelah menutup SweetAlert
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire('Gagal!',
+                                            'Terjadi kesalahan saat membatalkan kunjungan.',
+                                            'error');
+                                    }
+                                })
+                                .catch(error => {
+                                    Swal.fire('Gagal!',
+                                        'Terjadi kesalahan saat membatalkan kunjungan.',
+                                        'error');
+                                });
+                        }
+                    });
                 });
             });
         });

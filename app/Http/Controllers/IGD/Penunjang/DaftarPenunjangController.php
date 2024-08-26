@@ -163,6 +163,14 @@ class DaftarPenunjangController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        if(empty($request->rm))
+        {
+            return back()->withErrors([
+                'alert' => 'Data yang di input tidak lengkap, silakan periksa kembali! pada bagian : ' .
+                            ($request->rm === null ? 'Pasien Belum Dipilih, ' : '')
+            ]);
+        }
+
         $unit           = Unit::firstWhere('kode_unit', $request->unit_penunjang);
         $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
         $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
