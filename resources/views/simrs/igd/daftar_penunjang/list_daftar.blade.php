@@ -30,7 +30,7 @@
                             </form>
                         </div>
                         <div class="col-lg-6 text-right">
-                            
+
                         </div>
                     </div>
                     @php
@@ -52,8 +52,13 @@
                                         TGL: {{ $daftar_penunjang->tgl_masuk }}
                                     </strong>
                                 </td>
-                                <td>{{ $daftar_penunjang->pasien->nama_px }}</td>
-                                <td>{{ $daftar_penunjang->pasien->nama_px }}</td>
+                                <td>
+                                    {{ $daftar_penunjang->pasien->nama_px }} <br>
+                                    {{ $daftar_penunjang->no_rm }}
+                                </td>
+                                <td>
+                                    {{ $daftar_penunjang->pasien->alamat }}
+                                </td>
                                 <td>{{ $daftar_penunjang->unit->nama_unit }}</td>
                                 <td>{{ $daftar_penunjang->status->status_kunjungan }}</td>
                             </tr>

@@ -678,7 +678,9 @@ Route::middleware('auth')->group(function () {
     Route::put('close/status-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'tutupKunjungan'])->name('status.tutup-kunjungan');
     Route::put('open/status-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'bukaKunjungan'])->name('status.buka-kunjungan');
     Route::get('ep/get-kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'getKunjunganEp'])->name('get-kunjungan.ep');
+    Route::post('ep/update-penjamin', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'updatePenjamin'])->name('update-penjamin.ep');
     Route::post('/insert-sep/kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'insertSepKunjungan'])->name('insert-sep.kunjungan');
+    Route::post('/batalkan/kunjungan', [App\Http\Controllers\IGD\Kunjungan\KunjunganController::class, 'batalKunjungan'])->name('update-batal.kunjungan');
     // Pasien Kecelakaan
     Route::get('/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'index'])->name('pasien-kecelakaan.index');
     Route::get('list/pasien-kecelakaan', [App\Http\Controllers\IGD\PasienKecelakaan\PasienKecelakaanController::class, 'listPasienKecelakaan'])->name('pasien-kecelakaan.list');
@@ -728,5 +730,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/diagnosa-C00-C99', 'laporanc00')->name('laporan.C00');
         Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
     });
-    // End GIZI
+
+    // pencarian pasien
+    Route::controller(App\Http\Controllers\IGD\V1\PencarianPasienController::class)->prefix('pencarian')->name('data-pasien.')->group(function () {
+        Route::get('/pasien-terdaftar', 'cariPasienTerdaftar')->name('cari-pasien-terdaftar');
+    });
 });

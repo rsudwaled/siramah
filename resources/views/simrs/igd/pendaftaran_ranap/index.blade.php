@@ -9,14 +9,14 @@
                 </h5>
             </div>
             <div class="col-sm-8">
-                <ol class="breadcrumb float-sm-right">
+                {{-- <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
                         <a href="{{ route('daftar-igd.v1') }}" class="btn btn-sm btn-warning"
                             style="text-decoration: none; color:black; font-weight:500;">
                             Cari Kunjungan
                         </a>
                     </li>
-                </ol>
+                </ol> --}}
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
                             <div class="col-lg-12">
                                 <form action="" method="get">
                                     <div class="row">
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-12">
                                             <x-adminlte-input name="cari_rm" label="NO RM" value="{{ $request->rm }}"
                                                 placeholder="Masukan Nomor RM ....">
                                                 <x-slot name="appendSlot">
@@ -45,7 +45,7 @@
                                                 </x-slot>
                                             </x-adminlte-input>
                                         </div>
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <x-adminlte-input name="nama" label="NAMA PASIEN"
                                                 value="{{ $request->nama }}" placeholder="Masukan Nama Pasien ....">
                                                 <x-slot name="appendSlot">
@@ -58,7 +58,7 @@
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-input>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </form>
                             </div>
@@ -73,7 +73,7 @@
                             @if (isset($kunjungans))
                                 <div class="row">
                                     @php
-                                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Aksi'];
+                                        $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Penjamin', 'Aksi'];
                                         $config['paging'] = false;
                                         $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
@@ -114,17 +114,22 @@
                                                     Kode: {{ $data->kode_kunjungan }} <br>
                                                     Unit: {{ $data->unit->nama_unit ?? '-' }} <br><br>
                                                     @if ($data->is_ranap_daftar == 1)
-                                                        Jenis: <span class="badge badge-danger">PASIEN RANAP</span>
+                                                        Jenis: <span class="badge badge-success">PASIEN RANAP</span>
                                                     @else
                                                         Jenis: <span class="badge badge-warning">PASIEN RAJAL</span>
                                                     @endif
                                                     <br>
                                                     Masuk : {{ $data->tgl_masuk }} <br><br>
-                                                    Admin:
-                                                    {{ is_object($data->pic) ? ($data->pic->nama_user ? $data->pic->nama_user : 'Nama Admin tidak tersedia') : '-' }}
+                                                    @php
+                                                        $user = App\Models\UserSimrs::where('id', $data->pic)->first();
+                                                    @endphp
+                                                    <strong> Admin: {{ $user->nama_user ?? '-' }}</strong>
+                                                <td>
+                                                    {{ $data->penjamin_simrs->nama_penjamin }}
                                                 </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
+                                                        data-penjamin="{{ $data->kode_penjamin }}"
                                                         data-kode="{{ $data->kode_kunjungan }}"
                                                         data-nama="{{ $data->pasien->nama_px }}"
                                                         data-nik="{{ $data->pasien->nik_bpjs }}"
@@ -150,11 +155,18 @@
                     <div class="row">
                         @if ($errors->any())
                             <div class="col-lg-12">
-                                <div class="alert alert-danger">
+                                <div class="alert alert-warning alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i> WARNING.... SIMPAN DATA GAGAL!</h5>
                                     <ul>
                                         @foreach ($errors->all() as $error)
                                             <li><strong>{{ $error }}</strong></li>
                                         @endforeach
+                                        <li>
+                                            <strong>
+                                            JIKA MASIH BINGUNG SILAHKAN HUBUNGI: 085722797175 (KONSULTASI ERROR DENGAN IT)
+                                        </strong>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -206,13 +218,13 @@
                                                             {{ strtoupper($item->alasan_masuk) }}</option>
                                                     @endforeach
                                                 </x-adminlte-select>
-                                                <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
+                                                {{-- <x-adminlte-select2 name="dokter_id" label="Pilih Dokter">
                                                     <option value="">--Pilih Dokter--</option>
                                                     @foreach ($paramedis as $item)
                                                         <option value="{{ $item->kode_paramedis }}">
                                                             {{ strtoupper($item->nama_paramedis) }}</option>
                                                     @endforeach
-                                                </x-adminlte-select2>
+                                                </x-adminlte-select2> --}}
                                             </div>
                                             <div class="col-lg-12">
                                                 <x-adminlte-select name="is_proses" id="is_proses"
@@ -316,12 +328,14 @@
             let nik = $(this).data('nik');
             let nomorkartu = $(this).data('nomorkartu');
             let kontak = $(this).data('kontak');
+            let penjamin = $(this).data('penjamin');
             $('#kode').val(kode);
             $('#rm_terpilih').val(rm);
             $('#nik_pasien').val(nik);
             $('#nama_pasien').val(nama);
             $('#no_bpjs').val(nomorkartu);
             $('#noTelp').val(kontak);
+            $('#penjamin_id').val(penjamin).trigger('change');
         });
 
         $(function() {

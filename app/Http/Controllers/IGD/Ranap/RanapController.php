@@ -127,15 +127,29 @@ class RanapController extends APIController
 
     public function dataPasienRanap(Request $request)
     {
-        $query = Kunjungan::with('bpjsCheckHistories','pasien','unit')->whereIn('is_ranap_daftar',['1','2','3']);
-        if($request->tanggal && !empty($request->tanggal))
-        {
-            $query->whereDate('ts_kunjungan.tgl_masuk', $request->tanggal);
+        $start  = $request->start;
+        $finish = $request->finish;
+
+        // Buat query dasar dengan relasi yang dibutuhkan
+        $query  = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit'])
+                            ->whereIn('is_ranap_daftar', ['1', '2', '3']);
+
+        if ($start && $finish) {
+            // Konversi tanggal ke format awal hari dan akhir hari
+            $startDate = Carbon::parse($start)->startOfDay();
+            $endDate = Carbon::parse($finish)->endOfDay();
+
+            // Tambahkan kondisi whereBetween pada query
+            $query->whereBetween('tgl_masuk', [$startDate, $endDate]);
         }
 
-        if(empty($request->tanggal) && empty($request->unit)){
+        // Cek jika request tanggal dan unit kosong
+        if (empty($start) && empty($finish)) {
+            // Tambahkan kondisi untuk mengecek kunjungan hari ini
             $query->whereDate('ts_kunjungan.tgl_masuk', now());
         }
+
+        // Eksekusi query dan dapatkan hasilnya
         $kunjungan = $query->get();
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }

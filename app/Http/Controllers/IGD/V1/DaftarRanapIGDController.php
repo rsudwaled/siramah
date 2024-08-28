@@ -31,11 +31,6 @@ class DaftarRanapIGDController extends Controller
                 'pasien.lokasiKecamatan',
                 'pasien.lokasiKabupaten',
                 'pasien.lokasiProvinsi'])
-                // ])->whereHas('pasien', function($query) use ($rmPasien) {
-                //     $query->where('no_rm', 'like', '%' . $rmPasien . '%');
-                //     // $query->where('nama_px', 'like', '%' . $namaPasien . '%');
-                //     // $query->where('desa', 'like', '%' . $alamatPasien . '%');
-                // })
                 ->where('no_rm', $rmPasien)
                 ->where('status_kunjungan', 1)->get();
         }else{
@@ -54,18 +49,33 @@ class DaftarRanapIGDController extends Controller
 
     public function store(Request $request)
     {
+        if(empty($request->rm))
+        {
+            return back()->withErrors([
+                'alert' => 'Data yang di input tidak lengkap, silakan periksa kembali! pada bagian : ' .
+                            ($request->rm === null ? 'Pasien Belum Dipilih, ' : '')
+            ]);
+        }
+        $cekKunjungan   = Kunjungan::where('no_rm',$request->rm)->whereNotNull('id_ruangan')->where('status_kunjungan', 1)->first();
+        if(!empty($cekKunjungan))
+        {
+            return back()->withErrors([
+                'alert' => 'PASIEN SUDAH DIDAFTARKAN RANAP!!', 'KAMAR : '. $cekKunjungan->kamar.' BED : '.$cekKunjungan->no_bed
+            ]);
+
+        }
         $query_counter  = Kunjungan::where('kode_kunjungan', $request->kode)->where('status_kunjungan', 1)->first();
         $ruangan        = Ruangan::firstWhere('id_ruangan', $request->id_ruangan);
         $unit           = Unit::firstWhere('kode_unit', $request->unitTerpilih);
-        $dokter         = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
+        // $dokter         = Paramedis::firstWhere('kode_paramedis', $request->dokter_id);
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
         // dd($request->all(), $unit);
-        if ($query_counter === null || $dokter === null || $ruangan===null || $pasien===null) {
+        if ($query_counter === null || $ruangan===null || $pasien===null) {
             return back()->withErrors([
                 'alert' => 'Data yang di input tidak lengkap, silakan periksa kembali! pada bagian : ' .
                             ($pasien === null ? 'Pasien Belum Dipilih, ' : '') .
-                            ($ruangan === null ? 'Ruangan Belum Dipilih, ' : '') .
-                            ($dokter === null ? ' Dokter Belum Dipilih, ' : '')
+                            ($ruangan === null ? 'Ruangan Belum Dipilih, ' : '')
+                            // ($dokter === null ? ' Dokter Belum Dipilih, ' : '')
             ]);
         }
         $createKunjungan                    = new Kunjungan();
@@ -73,7 +83,7 @@ class DaftarRanapIGDController extends Controller
         $createKunjungan->ref_kunjungan     = $request->kode;
         $createKunjungan->no_rm             = $request->rm;
         $createKunjungan->tgl_masuk         = now();
-        $createKunjungan->kode_paramedis    = $request->dokter_id;
+        $createKunjungan->kode_paramedis    = 0;
         $createKunjungan->kode_unit         = $unit->kode_unit;
         $createKunjungan->prefix_kunjungan  = $unit->prefix_unit;
         $createKunjungan->kelas             = $ruangan->id_kelas;
@@ -92,52 +102,52 @@ class DaftarRanapIGDController extends Controller
         $createKunjungan->jp_daftar         = ($request->is_proses == 1)? 2 : ($request->penjamin_id == 'P01' ? 0 : 1);
         $createKunjungan->no_sep            = $request->inject_sep??Null;
         $createKunjungan->no_spri           = $request->inject_spri??Null;
+        $createKunjungan->save();
+        // if($createKunjungan->save())
+        // {
+        //     $ruangan->status_incharge = 1;
+        //     $ruangan->save();
 
-        if($createKunjungan->save())
-        {
-            $ruangan->status_incharge = 1;
-            $ruangan->save();
+        //     if($createKunjungan->kode_penjamin != 'P01' || $createKunjungan->jp_daftar != 2)
+        //     {
+        //         $api = new VclaimController();
+        //         $request = new Request([
+        //             "nik"        => $pasien->nik_bpjs,
+        //             "tanggal"    => now()->format('Y-m-d'),
+        //         ]);
+        //         $data    = $api->peserta_nik($request);
 
-            if($createKunjungan->kode_penjamin != 'P01' || $createKunjungan->jp_daftar != 2)
-            {
-                $api = new VclaimController();
-                $request = new Request([
-                    "nik"        => $pasien->nik_bpjs,
-                    "tanggal"    => now()->format('Y-m-d'),
-                ]);
-                $data    = $api->peserta_nik($request);
-
-                $histories = new HistoriesIGDBPJS();
-                $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
-                $histories->noMR            = $pasien->no_rm;
-                $histories->noKartu         = trim($pasien->no_Bpjs)??Null;
-                $histories->ppkPelayanan    = '1018R001';
-                $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
-                $histories->user            = Auth::user()->name;
-                $histories->noTelp          = $pasien->no_hp??$pasien->no_tlp;
-                $histories->tglSep          = now();
-                $histories->jnsPelayanan    = '1';
-                $histories->klsRawatHak     = $data->response->peserta->hakKelas->kode ?? null;
-                $histories->asalRujukan     = '2';
-                $histories->tglRujukan      = now();
-                $histories->noRujukan       = null;
-                $histories->ppkRujukan      = null;
-                $histories->diagAwal        = $request->diagAwal??NULL;
-                $histories->lakaLantas      = Null;
-                $histories->noLP            = Null;
-                $histories->tglKejadian     = Null;
-                $histories->keterangan      = Null;
-                $histories->kdPropinsi      = Null;
-                $histories->kdKabupaten     = Null;
-                $histories->kdKecamatan     = Null;
-                $histories->response        = Null;
-                $histories->is_bridging     = 0;
-                $histories->status_daftar   = 0;
-                $histories->unit            = $unit->kode_unit;
-                $histories->save();
-            }
-        }
-        return redirect()->route('pasien.ranap');
+        //         $histories = new HistoriesIGDBPJS();
+        //         $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
+        //         $histories->noMR            = $pasien->no_rm;
+        //         $histories->noKartu         = trim($pasien->no_Bpjs)??Null;
+        //         $histories->ppkPelayanan    = '1018R001';
+        //         $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
+        //         $histories->user            = Auth::user()->name;
+        //         $histories->noTelp          = $pasien->no_hp??$pasien->no_tlp;
+        //         $histories->tglSep          = now();
+        //         $histories->jnsPelayanan    = '1';
+        //         $histories->klsRawatHak     = $data->response->peserta->hakKelas->kode ?? null;
+        //         $histories->asalRujukan     = '2';
+        //         $histories->tglRujukan      = now();
+        //         $histories->noRujukan       = null;
+        //         $histories->ppkRujukan      = null;
+        //         $histories->diagAwal        = $request->diagAwal??NULL;
+        //         $histories->lakaLantas      = Null;
+        //         $histories->noLP            = Null;
+        //         $histories->tglKejadian     = Null;
+        //         $histories->keterangan      = Null;
+        //         $histories->kdPropinsi      = Null;
+        //         $histories->kdKabupaten     = Null;
+        //         $histories->kdKecamatan     = Null;
+        //         $histories->response        = Null;
+        //         $histories->is_bridging     = 0;
+        //         $histories->status_daftar   = 0;
+        //         $histories->unit            = $unit->kode_unit;
+        //         $histories->save();
+        //     }
+        // }
+        return redirect()->route('pasien.ranap')->with('success', 'Pasien dengan data! Nama: '.$pasien->nama_px.' | RM : '.$pasien->no_rm.' BERHASIL DISIMPAN KE PASIEN RAWAT INAP!!');
     }
 
     public function editRuangan($kunjungan)

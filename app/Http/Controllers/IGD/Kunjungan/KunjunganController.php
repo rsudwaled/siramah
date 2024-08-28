@@ -15,6 +15,8 @@ use App\Models\MtAlasanEdit;
 use App\Models\HistoriesIGDBPJS;
 use App\Models\Pasien;
 use App\Models\Icd10;
+use App\Models\Ruangan;
+use App\Models\Layanan;
 use Carbon\Carbon;
 use DB;
 
@@ -224,6 +226,47 @@ class KunjunganController extends Controller
         return redirect()->route('daftar.kunjungan');
     }
 
+    public function batalKunjungan(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'rm' => 'required|string',
+            'kunjungan' => 'required|string',
+            'keterangan' => 'required|string',
+        ]);
+
+        // Ambil data dari request
+        $rm = $request->input('rm');
+        $kunjungan = $request->input('kunjungan');
+        $keterangan = $request->input('keterangan');
+
+        try {
+            // Temukan kunjungan berdasarkan RM dan ID kunjungan
+            $visit = Kunjungan::where('no_rm', $rm)
+                          ->where('kode_kunjungan', $kunjungan)
+                          ->firstOrFail();
+
+            // Update status kunjungan menjadi dibatalkan dan simpan keterangan
+            $visit->status_kunjungan = 8; // Misalkan status pembatalan adalah 'Dibatalkan'
+            $visit->keterangan3 = $keterangan;
+            if(!empty($visit->id_ruangan))
+            {
+                $ruangan = Ruangan::where('id_ruangan', $visit->id_ruangan)->first();
+                $ruangan->status_incharge = 0;
+                $ruangan->save();
+
+                $visit->id_ruangan = NULL;
+                $visit->kamar = NULL;
+                $visit->no_bed = NULL;
+            }
+            $visit->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            // Tangani kesalahan dan kirimkan respons gagal
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
     public function getKunjunganByUser(Request $request)
     {
         $kunjungan = Kunjungan::whereIn('pic2', [Auth::user()->id, 294, 318,329,330,331,332])->get();
@@ -361,6 +404,22 @@ class KunjunganController extends Controller
     {
         $query = Kunjungan::where('kode_kunjungan', $request->kode)->first();
         $kunjunganSama = Kunjungan::where('counter', $query->counter)->where('no_rm', $query->no_rm)->get();
-        return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama'));
+        $penjamin = PenjaminSimrs::get();
+        return view('simrs.igd.kunjungan.edit_penjamin', compact('query','kunjunganSama','penjamin'));
+    }
+
+    public function updatePenjamin(Request $request)
+    {
+        // dd($request->all());
+        $updatePenjamin = Kunjungan::where('kode_kunjungan', $request->kode)->first();
+        $updatePenjamin->kode_penjamin = $request->id_penjamin_update;
+        $updatePenjamin->save();
+        $layananHeader = Layanan::where('kode_kunjungan', $request->kode)->get();
+        foreach ($layananHeader as $split) {
+            $split->status_layanan = 2;
+            $split->status_pembayaran = 'CLS';
+            $split->save();
+        }
+        return back();
     }
 }

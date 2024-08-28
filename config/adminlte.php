@@ -553,13 +553,13 @@ return [
             'icon'    => 'fas fa-hospital-alt',
             'can' => 'pendaftaran-igd',
             'submenu' => [
-                // [
-                //     'text' => 'Triase',
-                //     'icon'    => 'fas fa-chalkboard-teacher',
-                //     'url'  => 'list-antrian',
-                //     'shift'   => 'ml-2',
-                //     'can' => 'pendaftaran-igd',
-                // ],
+                [
+                    'text' => 'Pencarian Pasien',
+                    'icon'    => 'fas fa-search',
+                    'url'  => 'pencarian\pasien-terdaftar',
+                    'shift'   => 'ml-2',
+                    'can' => 'pendaftaran-igd',
+                ],
                 [
                     'text' => 'Daftar Ranap',
                     'icon'    => 'fas fa-procedures',

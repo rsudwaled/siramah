@@ -30,7 +30,7 @@ class PasienBayiController extends Controller
         $start         = Carbon::parse($request->start)->format('Y-m-d');
         $finish        = Carbon::parse($request->finish)->format('Y-m-d');
         $bayi          = PasienBayiIGD::get();
-        $query         = Kunjungan::whereIn('kode_unit',['1012','1023','1032'])
+        $query         = Kunjungan::with(['pasien'])->whereIn('kode_unit',['1012','1023','1032'])
                         ->whereNull('tgl_keluar');
 
         if(!empty($request->start) && !empty($request->finish))
@@ -201,7 +201,7 @@ class PasienBayiController extends Controller
             ]);
         }
         return redirect()->route('form-umum.ranap-bayi', ['rm'=> $rm_bayi, 'kunjungan'=>$bayi->kunjungan_ortu]);
-      
+
     }
 
     public function bayiKembarStore(Request $request)
@@ -221,7 +221,7 @@ class PasienBayiController extends Controller
             $jk_bayi_kembar = $request->jenis_kelamin[$index];
             $tgl_lahir_bayi = $request->tanggal_lahir[$index];
             $jam_lahir_bayi = $request->jam_lahir[$index];
-        
+
             $bayi                       = new PasienBayiIGD();
             $bayi->nik_ortu             = $ortubayi->nik_bpjs;
             $bayi->no_bpjs_ortu         = $ortubayi->no_Bpjs;
@@ -230,7 +230,7 @@ class PasienBayiController extends Controller
             $bayi->alamat_lengkap_ortu  = $ortubayi->alamat;
             $bayi->no_hp_ortu           = $kontak;
             $bayi->kunjungan_ortu       = $request->kunjungan_ortu_kembar;
-        
+
             $bayi->rm_bayi              = $rm_bayi;
             $bayi->rm_ibu               = $ortubayi->no_rm;
             $bayi->nama_bayi            = strtoupper($ortubayi->nama_px . ', BY NY ' . ($index + 1));
@@ -291,7 +291,7 @@ class PasienBayiController extends Controller
             }
         }
         return back();
-        
+
     }
 
     public function ranapUMUMBayi(Request $request)
@@ -364,8 +364,8 @@ class PasienBayiController extends Controller
 
         $kontak         = $ortubayi->no_hp==null? $request->no_tlp:$ortubayi->no_hp;
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
-        
-        $cekBayiKembar  = $request->check_kembar; 
+
+        $cekBayiKembar  = $request->check_kembar;
         dd($cekBayiKembar);
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu             = $ortubayi->nik_bpjs;
