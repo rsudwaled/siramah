@@ -371,7 +371,7 @@ return [
                     'can' => ['pendaftaran'],
                 ],
                 [
-                    'text' => 'Antrian Poliklinik',
+                    'text' => 'Kunjungan Poliklinik',
                     'icon'    => 'fas fa-user-plus',
                     'url'  => 'antrian-poliklinik-rajal',
                     'active'  => ['antrian-poliklinik-rajal', 'antrian-poliklinik-rajal-proses'],
