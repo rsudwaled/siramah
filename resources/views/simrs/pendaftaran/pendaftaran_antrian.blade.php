@@ -48,7 +48,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <x-adminlte-small-box
-                            title="{{ $antrians->where('method', 'Offline')->where('taskid', 0)->where('lantaipendaftaran', $request->lantai)->first()->angkaantrean ?? '0' }}"
+                            title="{{ $antrians->where('method', 'Offline')->where('taskid', 0)->where('lantaipendaftaran', $request->lantai)->first()->angkaantrean ?? '0' }} {{ $antrians->where('method', 'Offline')->where('taskid', 0)->where('lantaipendaftaran', $request->lantai)->first()->namapoli ?? '' }}"
                             text="Antrian Selanjutnya" theme="success" icon="fas fa-user-injured"
                             url="{{ route('selanjutnyaPendaftaran', [$request->loket, $request->lantai, $request->jenispasien, $request->tanggal]) }}"
                             url-text="Panggil Selanjutnya" />
