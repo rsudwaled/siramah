@@ -414,12 +414,14 @@ class KunjunganController extends Controller
         $updatePenjamin = Kunjungan::where('kode_kunjungan', $request->kode)->first();
         $updatePenjamin->kode_penjamin = $request->id_penjamin_update;
         $updatePenjamin->save();
-        $layananHeader = Layanan::where('kode_kunjungan', $request->kode)->get();
-        foreach ($layananHeader as $split) {
-            $split->status_layanan = 2;
-            $split->status_pembayaran = 'CLS';
-            $split->save();
-        }
+        // status layanan pribadi ke bpjs 2  sebaliknya status 1
+        // $layananHeader = Layanan::where('kode_kunjungan', $request->kode)->get();
+        // foreach ($layananHeader as $split) {
+        //     $split->status_layanan = 2;
+
+        //     $split->status_pembayaran = 'OPN';
+        //     $split->save();
+        // }
         return back();
     }
 }

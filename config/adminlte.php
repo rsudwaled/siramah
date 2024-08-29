@@ -928,6 +928,22 @@ return [
                     'can' => 'rekam-medis',
                 ],
                 [
+                    'text' => 'Laporan Rekam Medis',
+                    'icon'    => 'fas fa-chart-bar',
+                    'shift'   => 'ml-2',
+                    'can' => ['rekam-medis'],
+                    'submenu' => [
+                        [
+                            'text' => 'Pasien Rujukan FKTP',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'laporan-rm\pasien-rujukan-fktp',
+                            'shift'   => 'ml-3',
+                            'can' => ['rekam-medis'],
+                        ],
+
+                    ]
+                ],
+                [
                     'text' => 'Diagnosa Pola Penyakit',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',
