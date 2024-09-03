@@ -732,6 +732,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
     });
 
+     // Laporan Rekam Medis
+     Route::controller(App\Http\Controllers\LaporanRekamMedis\LaporanRekamMedisController::class)->prefix('laporan-rm')->name('laporan-rm.')->group(function () {
+        Route::get('/laporan-rl-51', 'laporanRL51')->name('rl-51');
+        Route::get('detail-kunjungan/laporan-rl51', 'detailLaporanRL51')->name('detail-laporan-rl51');
+        // laporan pasien rujukan fktp
+        Route::get('/pasien-rujukan-fktp', 'pasienRujukanFktp')->name('pasien-rujukan');
+        Route::get('/get-fktp', 'getFktp')->name('get-fktp');
+        Route::get('/download-fktp', 'download')->name('download');
+    });
+
     // pencarian pasien
     Route::controller(App\Http\Controllers\IGD\V1\PencarianPasienController::class)->prefix('pencarian')->name('data-pasien.')->group(function () {
         Route::get('/pasien-terdaftar', 'cariPasienTerdaftar')->name('cari-pasien-terdaftar');
