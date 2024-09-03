@@ -233,7 +233,8 @@ Route::middleware('auth')->group(function () {
     // pendaftaran
     Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
     // Route::get('antrianPendaftaran', PendaftaranRajal::class)->name('antrianPendaftaran');
-    Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
+    Route::get('pendaftaran-rajal', [PendaftaranController::class, 'antrianPendaftaran'])->name('pendaftaran-rajal');
+    // Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
     Route::get('pendaftaran-rajal-proses', PendaftaranRajalProses::class)->name('pendaftaran.rajal.proses');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
     Route::post('daftarBridgingAntrian', [AntrianController::class, 'daftarBridgingAntrian'])->name('daftarBridgingAntrian');
