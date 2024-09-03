@@ -2,7 +2,7 @@
 
 @section('title', 'EDIT PASIEN')
 @section('content_header')
-    <h1>EDIT PASIEN : {{ $pasien->nama_px }}</h1>
+    <h1>EDIT PASIEN : {{$pasien->no_rm}} || {{ $pasien->nama_px }}</h1>
 @stop
 
 @section('content')

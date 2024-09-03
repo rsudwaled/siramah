@@ -934,6 +934,13 @@ return [
                     'can' => ['rekam-medis'],
                     'submenu' => [
                         [
+                            'text' => 'Ranap Peruangan',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'laporan-rm\pasien-ranap\peruangan',
+                            'shift'   => 'ml-3',
+                            'can' => ['rekam-medis'],
+                        ],
+                        [
                             'text' => 'Pasien Rujukan FKTP',
                             'icon'    => 'fas fa-disease',
                             'url'  => 'laporan-rm\pasien-rujukan-fktp',
@@ -1218,14 +1225,14 @@ return [
                         [
                             'text' => 'Formulir RL 5.1',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'laporan-rm\laporan-rl-51',
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],
                         [
                             'text' => 'Formulir RL 5.2',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL1',
+                            'url'  => 'laporan-rm\laporan-rl-52',
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],

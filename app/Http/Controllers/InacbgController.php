@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class InacbgController extends APIController
 {
-    public $key_eclaim = "d6eb94b409ee88c34a20984278612f70c29c683c81a4c48c21ea96880450ad2d";
+    public $key_eclaim = "3230f0fd49b6a2dc56ba3ea779004e44298717a914354b4a0be1014da9c88da4";
 
     public function search_diagnosis(Request $request)
     {

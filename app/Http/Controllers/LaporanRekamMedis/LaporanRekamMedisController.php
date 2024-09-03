@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\Ruangan;
 use App\Exports\LaporanFKTP;
 use App\Models\Unit;
 use Carbon\Carbon;
@@ -16,126 +17,147 @@ class LaporanRekamMedisController extends Controller
 {
     public function laporanRL51(Request $request)
     {
-        $startdate = $request->startdate ?? null;
-        $enddate = $request->enddate ?? null;
+        $startdate  = $request->startdate ?? null;
+        $enddate    = $request->enddate ?? null;
 
-        $kunjunganPerBulan = null;
-        $jumlahPasienBaru = 0;
-        $jumlahPasienLama = 0;
-        $kunjunganPerBulan = [];
+        $kunjungans     = [];
+        $kunjungans1    = [];
+        $kunjungans2    = [];
+        $baru           = 0;
+        $lama           = 0;
         if ($startdate && $enddate) {
-            // Mengonversi startdate menjadi objek Carbon
-            $startDateObject = Carbon::parse($startdate);
 
-            $currentMonth = $startDateObject->format('m');
-            $currentYear = $startDateObject->format('Y');
 
-            // Menggunakan Carbon untuk mendapatkan bulan dan tahun sebelumnya
-            $previousMonthObject = $startDateObject->copy()->subMonth();
-            $previousMonth = $previousMonthObject->format('m');
-            $previousYear = $previousMonthObject->format('Y');
-
-            // Subquery untuk kunjungan bulan ini
-            $currentMonthQuery = DB::connection('mysql2')->table('ts_kunjungan')
-                ->select('no_rm', DB::raw('COUNT(*) as jumlah_kunjungan'))
-                ->whereYear('tgl_masuk', $currentYear)
-                ->whereMonth('tgl_masuk', $currentMonth)
-                ->groupBy('no_rm');
-
-            // Subquery untuk kunjungan bulan sebelumnya
-            $previousMonthQuery = DB::connection('mysql2')->table('ts_kunjungan')
-                ->select('no_rm', DB::raw('COUNT(*) as jumlah_kunjungan'))
-                ->whereYear('tgl_masuk', $previousYear)
-                ->whereMonth('tgl_masuk', $previousMonth)
-                ->groupBy('no_rm');
-
-            // Main query untuk mendapatkan data pasien dan status
-            $kunjunganPerBulan = DB::connection('mysql2')->table('mt_pasien')
-                ->leftJoinSub($currentMonthQuery, 'current_month_kunjungan', function ($join) {
-                    $join->on('mt_pasien.no_rm', '=', 'current_month_kunjungan.no_rm');
+            $kunjungans2 = Kunjungan::whereBetween('tgl_masuk', [$startdate, $enddate])
+                ->whereIn('status_kunjungan', [2, 3])
+                ->where(function ($query) {
+                    $query->where('counter', '>', 1)
+                        ->orWhereRaw('CAST(SUBSTR(no_rm, 1, 2) AS UNSIGNED) < 23');
                 })
-                ->leftJoinSub($previousMonthQuery, 'previous_month_kunjungan', function ($join) {
-                    $join->on('mt_pasien.no_rm', '=', 'previous_month_kunjungan.no_rm');
-                })
-                ->select(
-                    'mt_pasien.nama_px',
-                    'mt_pasien.no_rm',
-                    DB::raw('COALESCE(current_month_kunjungan.jumlah_kunjungan, 0) as jumlah_kunjungan'),
-                    DB::raw('CASE
-                        WHEN COALESCE(previous_month_kunjungan.jumlah_kunjungan, 0) > 0 THEN "Lama"
-                        WHEN MONTH(mt_pasien.tgl_entry) = MONTH(CURDATE()) AND YEAR(mt_pasien.tgl_entry) = YEAR(CURDATE()) AND COALESCE(current_month_kunjungan.jumlah_kunjungan, 0) = 1 THEN "Baru"
-                        ELSE "Lama"
-                    END as status_pasien')
-                )
-                ->groupBy('mt_pasien.no_rm', 'mt_pasien.nama_px', 'current_month_kunjungan.jumlah_kunjungan', 'previous_month_kunjungan.jumlah_kunjungan', 'mt_pasien.tgl_entry')
+                ->groupBy('no_rm')
                 ->get();
 
-            // Hitung jumlah pasien baru dan lama
-            $jumlahPasienBaru = $kunjunganPerBulan->where('status_pasien', 'Baru')->count();
-            $jumlahPasienLama = $kunjunganPerBulan->where('status_pasien', 'Lama')->count();
+            $noRMs = $kunjungans2->pluck('no_rm');
+            $kunjungans1= Kunjungan::with(['pasien'])
+                ->whereBetween('tgl_masuk', [$startdate, $enddate])
+                ->whereNotIn('no_rm', $noRMs)
+                ->whereIn('status_kunjungan', [2,3])
+                ->where('counter', 1)
+                ->where('counter','<=', 1)
+                ->groupBy('no_rm')
+                ->get();
 
-            // Menghitung total kunjungan dari hasil query
-            $totalKunjungan = $kunjunganPerBulan->sum('jumlah_kunjungan');
+            $baru   = $kunjungans1->count();
+            $lama   = $kunjungans2->count();
         }
-        dd($kunjunganPerBulan, $jumlahPasienBaru, $jumlahPasienLama, $totalKunjungan);
-
-        return view('simrs.rekammedis.laporan-rl.rl_5_1', compact('enddate', 'startdate', 'request', 'kunjunganPerBulan'));
+        return view('simrs.rekammedis.laporan-rl.rl_5_1', compact('enddate','startdate','request','kunjungans','kunjungans1','kunjungans2','baru','lama'));
     }
     public function detailLaporanRL51(Request $request)
     {
-        $detailKunjungan = DB::table('ts_kunjungan')
+        $startdate      = $request->startdate ?? null;
+        $enddate        = $request->enddate ?? null;
+        $detailKunjungan = Kunjungan::with(['pasien','unit'])
+            ->whereBetween('tgl_masuk', [$startdate, $enddate])
             ->where('no_rm', $request->no_rm)
-            ->select('kode_kunjungan', 'tgl_masuk', 'counter')
+            ->select('kode_kunjungan', 'tgl_masuk', 'counter','prefix_kunjungan','no_rm')
             ->orderBy('tgl_masuk')
             ->get();
 
-        $html = '<ul>';
-        foreach ($detailKunjungan as $detail) {
-            $html .= '<li>Kode Kunjungan: ' . $detail->kode_kunjungan . ' - Tanggal Masuk: ' . $detail->tgl_masuk . ' - Counter: ' . $detail->counter . '</li>';
-        }
-        $html .= '</ul>';
+        // Membuat header tabel
+        $html = '<table border="1" class="table table-bordered table-hover table-sm nowrap">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th>Counter</th>';
+        $html .= '<th>No RM</th>';
+        $html .= '<th>Kunjungan</th>';
+        $html .= '<th>Tanggal Masuk</th>';
+        $html .= '<th>Unit</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
 
+        // Menambahkan baris tabel untuk setiap detail kunjungan
+        foreach ($detailKunjungan as $detail) {
+            $html .= '<tr>';
+            $html .= '<td>' . htmlspecialchars($detail->counter) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->no_rm) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->kode_kunjungan) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->tgl_masuk) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->prefix_kunjungan) . '</td>';
+            $html .= '</tr>';
+        }
+
+        // Menutup elemen tabel
+        $html .= '</tbody>';
+        $html .= '</table>';
         return response()->json($html);
     }
 
     public function LaporanRL52(Request $request)
     {
-        $startdate = $request->startdate ?? null;
-        $enddate = $request->enddate ?? null;
-        $kunjunganPerBulan = null;
-        $totalKunjungan = 0;
-        if ($startdate && $enddate) {
+        $startdate      = $request->startdate ?? null;
+        $enddate        = $request->enddate ?? null;
+        $kunjungan      = [];
+        $pengunjung      = [];
+        $totalKunjungan     = 0;
+        $totalPengunjung    = 0;
+        if ($startdate && $enddate)
+        {
+            $kunjungan = Kunjungan::whereBetween('tgl_masuk', [$startdate, $enddate])
+                    ->whereIn('status_kunjungan', [2,3])
+                    ->get();
 
-            $query = DB::table('ts_kunjungan')
-                ->join('pasien', 'ts_kunjungan.no_rm', '=', 'pasien.no_rm')
-                ->select(
-                    'pasien.nama',
-                    'ts_kunjungan.no_rm',
-                    DB::raw('COUNT(DISTINCT DATE_FORMAT(ts_kunjungan.tgl_masuk, "%Y-%m")) as jumlah_kunjungan')
-                )
-                ->groupBy('ts_kunjungan.no_rm', 'pasien.nama');
-
-            // Tambahkan filter tanggal jika ada
-            if ($startdate && $enddate) {
-                $query->whereBetween('ts_kunjungan.tgl_masuk', [$startdate, $enddate]);
-            }
-
-            $kunjunganPerBulan = $query->get();
-
-            // Query untuk menghitung jumlah pasien yang berkunjung
-            $jumlahPasienQuery = DB::table('ts_kunjungan')
-                ->join('pasien', 'ts_kunjungan.no_rm', '=', 'pasien.no_rm')
-                ->select(DB::raw('COUNT(DISTINCT ts_kunjungan.no_rm) as jumlah_pasien'));
-            if ($startdate && $enddate) {
-                $jumlahPasienQuery->whereBetween('ts_kunjungan.tgl_masuk', [$startdate, $enddate]);
-            }
-
-            $jumlahPasien = $jumlahPasienQuery->value('jumlah_pasien');
-            // Hitung total kunjungan
-            $totalKunjungan = $kunjunganPerBulan->sum('jumlah_kunjungan');
+            $pengunjung= Kunjungan::selectRaw('no_rm, count(*) as visit_count')->whereBetween('tgl_masuk', [$startdate, $enddate])
+                    ->whereIn('status_kunjungan', [2,3])
+                    ->groupBy('no_rm')
+                    ->get();
+            $totalPengunjung = $pengunjung->count();
+            $totalKunjungan = $kunjungan->count();
         }
 
-        return view('simrs.rekammedis.laporan-rl.rl_5_2', compact('startdate', 'enddate', 'kunjunganPerBulan', 'totalKunjungan', 'jumlahPasien'));
+        return view('simrs.rekammedis.laporan-rl.rl_5_2', compact('startdate','enddate','request','kunjungan','pengunjung','totalPengunjung','totalKunjungan'));
+    }
+
+    public function detailLaporanRL52(Request $request)
+    {
+        $startdate      = $request->startdate ?? null;
+        $enddate        = $request->enddate ?? null;
+
+        $detailKunjungan = Kunjungan::with(['pasien','unit'])
+            ->whereBetween('tgl_masuk', [$startdate, $enddate])
+            ->where('no_rm', $request->no_rm)
+            ->select('kode_kunjungan', 'tgl_masuk', 'counter','prefix_kunjungan','no_rm')
+            ->orderBy('tgl_masuk')
+            ->get();
+
+        // Membuat header tabel
+        $html = '<table border="1" class="table table-bordered table-hover table-sm nowrap">';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th>Counter</th>';
+        $html .= '<th>No RM</th>';
+        $html .= '<th>Kunjungan</th>';
+        $html .= '<th>Tanggal Masuk</th>';
+        $html .= '<th>Unit</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
+
+        // Menambahkan baris tabel untuk setiap detail kunjungan
+        foreach ($detailKunjungan as $detail) {
+            $html .= '<tr>';
+            $html .= '<td>' . htmlspecialchars($detail->counter) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->no_rm) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->kode_kunjungan) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->tgl_masuk) . '</td>';
+            $html .= '<td>' . htmlspecialchars($detail->prefix_kunjungan) . '</td>';
+            $html .= '</tr>';
+        }
+
+        // Menutup elemen tabel
+        $html .= '</tbody>';
+        $html .= '</table>';
+        return response()->json($html);
     }
 
     public function pasienRujukanFktp(Request $request)
@@ -281,4 +303,44 @@ class LaporanRekamMedisController extends Controller
         $namaFile = 'Data-fktp-'.$startdate.'_'.$enddate.'.xlsx';
         return Excel::download(new LaporanFKTP, $namaFile);
     }
+
+    public function laporanRanapPeruangan(Request $request)
+    {
+        $startdate = $request->startdate ?? null;
+        $enddate = $request->enddate ?? null;
+
+        $units = Unit::whereIn('kelas_unit', ['2'])
+            ->orderBy('nama_unit', 'asc')
+            ->pluck('nama_unit', 'kode_unit');
+
+        $ruangan = Ruangan::select('kode_unit','id_kelas',
+            DB::raw('SUM(CASE WHEN status_incharge = 0 THEN 1 ELSE 0 END) as count_status_0'),
+            DB::raw('SUM(CASE WHEN status_incharge = 1 THEN 1 ELSE 0 END) as count_status_1'),
+            DB::raw('SUM(CASE WHEN status_incharge = 2 THEN 1 ELSE 0 END) as count_status_2')
+        )
+        ->with('unit') // Memuat relasi unit jika diperlukan
+        ->groupBy('kode_unit', 'id_kelas') // Mengelompokkan berdasarkan kode_unit dan unit_id
+        ->get();
+
+        $query = Kunjungan::query()
+            ->join('mt_ruangan', 'ts_kunjungan.id_ruangan', '=', 'mt_ruangan.id_ruangan')
+            ->where('mt_ruangan.status_incharge', 1) // Menambahkan kondisi status_incharge
+            ->select('ts_kunjungan.*', 'mt_ruangan.*'); // Pilih kolom yang ingin ditampilkan
+
+        // Tambahkan filter berdasarkan parameter jika ada
+        if ($startdate && $enddate && $request->kodeunit) {
+            $query->whereBetween('ts_kunjungan.tgl_masuk', [$startdate, $enddate])
+                ->whereNotNull('ts_kunjungan.id_ruangan')
+                ->where('ts_kunjungan.kode_unit', $request->kodeunit);
+        } else {
+            // Jika tidak ada filter, ambil data untuk tanggal hari ini
+            $query->whereDate('ts_kunjungan.tgl_masuk', now()->format('Y-m-d'))
+                ->whereNotNull('ts_kunjungan.id_ruangan');
+        }
+
+        $kunjungans = $query->get();
+        $jumlah     = $query->count();
+        return view('simrs.rekammedis.pasien-ranap-peruangan.pasien_peruangan', compact('ruangan','enddate', 'startdate', 'request', 'kunjungans', 'units','jumlah'));
+    }
+
 }
