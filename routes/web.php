@@ -231,7 +231,8 @@ Route::middleware('auth')->group(function () {
         Route::post('encounter_update', [EncounterController::class, 'encounter_update'])->name('encounter_update');
     });
     // pendaftaran
-    Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+    // Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+    Route::get('antrianPendaftaran', PendaftaranRajal::class)->name('antrianPendaftaran');
     Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
     Route::get('pendaftaran-rajal-proses', PendaftaranRajalProses::class)->name('pendaftaran.rajal.proses');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');

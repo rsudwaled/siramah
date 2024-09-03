@@ -4,15 +4,18 @@ namespace App\Livewire\Pendaftaran;
 
 use App\Http\Controllers\AntrianController;
 use App\Models\Antrian;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PendaftaranRajalProses extends Component
 {
-    public $kodebooking, $lantai, $loket;
+    public $kodebooking, $tanggalperiksa, $lantai, $loket, $jenispasien;
     public $antrian;
-    public function panggilPendaftaran()
+    public function panggilpendaftaran()
     {
         $antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
         if ($antrian->taskid <= 2) {
@@ -71,12 +74,64 @@ class PendaftaranRajalProses extends Component
             flash('Nomor antrian ' . $antrian->nomorantrean . ' sudah mendapatkan pelayanan.', 'danger');
         }
     }
+    public function selesaipendaftaran(Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $this->kodebooking)->first();
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 3;
+        $request['waktu'] = Carbon::now();
+        if ($antrian->jenispasien == 'JKN') {
+            $request['keterangan'] = "Silahkan menunggu dipoliklinik";
+            $request['status_api'] = 1;
+        } else {
+            $request['keterangan'] = "Silahkan lakukan pembayaran di Loket Pembayaran, setelah itu dapat menunggu dipoliklinik";
+            $request['status_api'] = 0;
+        }
+        // $response = $vclaim->update_antrean($request);
+        // if ($response->metadata->code == 200) {
+        // } else {
+        //     Alert::error('Error ' . $response->metadata->code, $response->metadata->message);
+        // }
+        $antrian->update([
+            'taskid' => $request->taskid,
+            'taskid3' => $request->waktu,
+            'status_api' => $request->status_api,
+            'keterangan' => $request->keterangan,
+            'user' => 'Sistem Siramah',
+        ]);
+        // try {
+        //     // notif wa
+        //     $wa = new WhatsappController();
+        //     $request['message'] = "Anda berhasil di daftarkan atas nama pasien " . $antrian->nama . " dengan nomor antrean " . $antrian->nomorantrean . " telah selesai. " . $request->keterangan;
+        //     $request['number'] = $antrian->nohp;
+        //     $wa->send_message($request);
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
+        Alert::success('Pendaftaran Berhasil', 'Nomor Antrian ' . $antrian->nomorantrean . ' telah selesai');
+        $url = route('pendaftaran.rajal') . "?tanggalperiksa=" . $antrian->tanggalperiksa . "&lantai=" . $this->lantai . "&loket=" . $this->loket . "&jenispasien=" . $antrian->jenispasien;
+        return redirect()->to($url);
+    }
+    public function batalpendaftaran(Request $request)
+    {
+        $antrian = Antrian::where('kodebooking', $this->kodebooking)->first();
+        $antrian->update([
+            'taskid' => 99,
+            'status_api' => 0,
+            'keterangan' => 'Pasien dibatalkan di pendaftaran',
+            'user' => Auth::user()->id,
+        ]);
+        Alert::error('Pembatalan Berhasil', 'Nomor Antrian ' . $antrian->nomorantrean . ' telah dibatalkan');
+        $url = route('pendaftaran.rajal') . "?tanggalperiksa=" . $antrian->tanggalperiksa . "&lantai=" . $this->lantai . "&loket=" . $this->loket . "&jenispasien=" . $antrian->jenispasien;
+        return redirect()->to($url);
+    }
     public function mount(Request $request)
     {
         $this->kodebooking = $request->kodebooking;
         $this->lantai = $request->lantai;
         $this->loket = $request->loket;
         $this->antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
+        $this->jenispasien = $this->antrian->jenispasien;
     }
     public function render()
     {
