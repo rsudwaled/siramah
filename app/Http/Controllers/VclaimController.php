@@ -17,7 +17,6 @@ class VclaimController extends APIController
     public $consid =  "3431";
     public $secrekey = "7fI37884D3";
     public $userkey = "8c4bf16aee4629511617bd55de88b4fe";
-
     public function cekRujukanPeserta(Request $request)
     {
         $rujukans = null;
@@ -40,7 +39,6 @@ class VclaimController extends APIController
             return $base->sendError($res->metadata->message, 400);
         }
     }
-
     public function cekRujukanRSPeserta(Request $request)
     {
         $rujukans = null;

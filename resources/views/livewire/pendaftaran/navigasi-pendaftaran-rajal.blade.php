@@ -127,12 +127,16 @@
             @endif
         </ul>
         <x-slot name="footerSlot">
-            <a href="{{ route('pendaftaran.rajal') }}?tanggalperiksa={{ $antrian->tanggalperiksa }}">
+            <a
+                href="{{ route('pendaftaran.rajal') }}?tanggalperiksa={{ $antrian->tanggalperiksa }}&lantai={{ $this->lantai }}&loket={{ $this->loket }}&jenispasien={{ $this->jenispasien }}">
                 <x-adminlte-button class="btn-xs mb-1" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
             </a>
             @if ($antrian->taskid == 1 || $antrian->taskid == 2)
-                <x-adminlte-button wire:click='panggilPendaftaran' class="btn-xs mb-1" label="Panggil Pendaftaran"
+                <x-adminlte-button wire:click='panggilpendaftaran' class="btn-xs mb-1" label="Panggil Pendaftaran"
                     theme="primary" icon="fas fa-microphone" />
+                <x-adminlte-button wire:click='selesaipendaftaran'
+                    wire:confirm='Apakah anda yakin antrian ini telah selesai ?' label="Selesai Pendaftaran"
+                    class="btn-xs mb-1" icon="fas fa-check" theme="success" />
             @endif
             @if ($antrian->taskid == 2)
                 @if ($antrian?->kunjungan?->status)
@@ -141,7 +145,7 @@
                         class="btn-xs mb-1" icon="fas fa-check" theme="success" />
                 @endif
             @endif
-            <x-adminlte-button wire:click='batal'
+            <x-adminlte-button wire:click='batalpendaftaran'
                 wire:confirm='Apakah anda yakin ingin membatalkan antrian dan kunjungan ini ?' label="Batal"
                 class="btn-xs mb-1" icon="fas fa-times" theme="danger" />
             {{-- <a href="{{ route('batalantrian') }}?kodebooking={{ $antrian->kodebooking }}&keterangan=Dibatalkan dipendaftaran {{ Auth::user()->name }}"
