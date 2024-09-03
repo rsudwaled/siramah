@@ -735,10 +735,14 @@ Route::middleware('auth')->group(function () {
      Route::controller(App\Http\Controllers\LaporanRekamMedis\LaporanRekamMedisController::class)->prefix('laporan-rm')->name('laporan-rm.')->group(function () {
         Route::get('/laporan-rl-51', 'laporanRL51')->name('rl-51');
         Route::get('detail-kunjungan/laporan-rl51', 'detailLaporanRL51')->name('detail-laporan-rl51');
+        Route::get('/laporan-rl-52', 'LaporanRL52')->name('rl-52');
+        Route::get('detail-kunjungan/laporan-rl52', 'detailLaporanRL52')->name('detail-laporan-rl52');
         // laporan pasien rujukan fktp
         Route::get('/pasien-rujukan-fktp', 'pasienRujukanFktp')->name('pasien-rujukan');
         Route::get('/get-fktp', 'getFktp')->name('get-fktp');
         Route::get('/download-fktp', 'download')->name('download');
+        // laporan pasien rawat inap perruangan
+        Route::get('/pasien-ranap/peruangan', 'laporanRanapPeruangan')->name('pasien-ranap-peruangan');
     });
 
     // pencarian pasien

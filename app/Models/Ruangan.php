@@ -13,4 +13,9 @@ class Ruangan extends Model
     protected $guarded = ['id_ruangan'];
     //baru ditambahkan
     protected $primaryKey = 'id_ruangan';
+
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class, 'kode_unit',   'kode_unit');
+    }
 }

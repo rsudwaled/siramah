@@ -127,7 +127,7 @@
                                                         ? $pasienModel->kunjungans()->latest('tgl_masuk')->first()
                                                         : null;
                                                 @endphp
-                                                {{ $latest->tgl_masuk??'-' }} <br> ( {{$latest->prefix_kunjungan??'-'}})
+                                                {{ $latest->tgl_masuk??'-' }} <br> <strong>( {{$latest->prefix_kunjungan??'-'}})</strong>
                                             </td>
                                         </tr>
                                     @endforeach

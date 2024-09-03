@@ -129,28 +129,70 @@ class RanapController extends APIController
     {
         $start  = $request->start;
         $finish = $request->finish;
-
         // Buat query dasar dengan relasi yang dibutuhkan
-        $query  = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit'])
-                            ->whereIn('is_ranap_daftar', ['1', '2', '3']);
+        $query = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit'])
+        ->whereIn('is_ranap_daftar', ['1', '2', '3']);
+        if (
+            !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
+            !empty($request->cari_desa) || !empty($request->cari_kecamatan)
+        ){
+            $search = Pasien::query()
+                ->when($request->nik, function ($query, $nik) {
+                    $query->where('nik_bpjs', 'LIKE', '%' . $nik . '%');
+                })
+                ->when($request->nomorkartu, function ($query, $bpjsNumber) {
+                    $query->where('no_Bpjs', 'LIKE', '%' . $bpjsNumber . '%');
+                })
+                ->when($request->nama, function ($query, $name) {
+                    $query->where('nama_px', 'LIKE', '%' . $name . '%');
+                })
+                ->when($request->rm, function ($query, $mrn) {
+                    $query->where('no_rm', 'LIKE', '%' . $mrn . '%');
+                })
+                ->when($request->cari_desa, function ($query, $villageName) {
+                    $query->whereHas('lokasiDesa', function ($query) use ($villageName) {
+                        $query->where('name', 'LIKE', '%' . $villageName . '%');
+                    });
+                })
+                ->when($request->cari_kecamatan, function ($query, $districtName) {
+                    $query->whereHas('lokasiKecamatan', function ($query) use ($districtName) {
+                        $query->where('name', 'LIKE', '%' . $districtName . '%');
+                    });
+                });
 
-        if ($start && $finish) {
-            // Konversi tanggal ke format awal hari dan akhir hari
-            $startDate = Carbon::parse($start)->startOfDay();
-            $endDate = Carbon::parse($finish)->endOfDay();
+            if ($search->exists()) {
+                $pasien = $search->get()->pluck('no_rm')->toArray();
 
-            // Tambahkan kondisi whereBetween pada query
-            $query->whereBetween('tgl_masuk', [$startDate, $endDate]);
+            if (!empty($pasien)) {
+                    $kunjungan = $query->where('status_kunjungan', 1)
+                        ->whereIn('no_rm', $pasien)
+                        ->get();
+                } else {
+                    $kunjungan = collect(); // Return empty collection if no matching pasien found
+                }
+            } else {
+                if ($start && $finish) {
+                    $startDate = Carbon::parse($start)->startOfDay();
+                    $endDate = Carbon::parse($finish)->endOfDay();
+                    $query->whereBetween('tgl_masuk', [$startDate, $endDate]);
+                } elseif (empty($start) && empty($finish)) {
+                    $query->whereDate('tgl_masuk', now());
+                }
+
+                $kunjungan = $query->where('status_kunjungan', 1)->get();
+            }
+        }else{
+            if ($start && $finish) {
+                $startDate = Carbon::parse($start)->startOfDay();
+                $endDate = Carbon::parse($finish)->endOfDay();
+                $query->whereBetween('tgl_masuk', [$startDate, $endDate]);
+            } elseif (empty($start) && empty($finish)) {
+                $query->whereDate('tgl_masuk', now());
+            }
+
+            $kunjungan = $query->where('status_kunjungan', 1)->get();
         }
 
-        // Cek jika request tanggal dan unit kosong
-        if (empty($start) && empty($finish)) {
-            // Tambahkan kondisi untuk mengecek kunjungan hari ini
-            $query->whereDate('ts_kunjungan.tgl_masuk', now());
-        }
-
-        // Eksekusi query dan dapatkan hasilnya
-        $kunjungan = $query->get();
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 

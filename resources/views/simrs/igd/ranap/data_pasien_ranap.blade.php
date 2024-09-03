@@ -18,6 +18,102 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12">
+            <div class="card card-primary card-outline card-tabs">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form action="" method="get">
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="rm" label="NO RM" value="{{ $request->rm }}"
+                                            placeholder="Masukan Nomor RM ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="nama" label="NAMA PASIEN" value="{{ $request->nama }}"
+                                            placeholder="Masukan Nama Pasien ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="cari_desa" label="CARI BERDASARKAN DESA"
+                                            value="{{ $request->cari_desa }}"
+                                            placeholder="Masukan nama desa dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="cari_kecamatan" label="CARI BERDASARKAN KECAMATAN"
+                                            value="{{ $request->cari_kecamatan }}"
+                                            placeholder="Masukan nama kecamatan dengan lengkap...">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="primary" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-primary">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <x-adminlte-input name="nomorkartu" label="NOMOR KARTU"
+                                            value="{{ $request->nomorkartu }}" placeholder="Masukan Nomor Kartu BPJS ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                        <x-adminlte-input name="nik" label="NIK (NOMOR INDUK KEPENDUDUKAN)"
+                                            value="{{ $request->nik }}" placeholder="Masukan nomor NIK ....">
+                                            <x-slot name="appendSlot">
+                                                <x-adminlte-button theme="success" class="withLoad" type="submit"
+                                                    label="Cari!" />
+                                            </x-slot>
+                                            <x-slot name="prependSlot">
+                                                <div class="input-group-text text-success">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                            </x-slot>
+                                        </x-adminlte-input>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
             @if (session('success'))
                 {{-- <div class="alert alert-success">
                     {{ session('success') }}
@@ -54,8 +150,8 @@
                             </form>
                         </div>
                         <div class="col-lg-6 text-right">
-                            <a onClick="window.location.reload();" class="btn btn-sm btn-warning">
-                                <i class="fas fa-sync"></i> Refresh</a>
+                            <a href="{{ route('pasien.ranap') }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-sync"></i> Bersihkan Pencarian</a>
                         </div>
                     </div>
                     @php
@@ -87,7 +183,8 @@
                                 </td>
 
                                 <td>
-                                    <a href="{{ route('edit-pasien', ['rm' => $item->pasien->no_rm]) }}" target="__blank">
+                                    <a href="{{ route('edit-pasien', ['rm' => $item->pasien->no_rm]) }}"
+                                        target="__blank">
                                         <b>{{ $item->pasien->nama_px }}</b> <br>RM : {{ $item->pasien->no_rm }} <br>NIK :
                                         {{ $item->pasien->nik_bpjs }} <br>No Kartu : {{ $item->pasien->no_Bpjs }}
                                     </a>
@@ -102,7 +199,7 @@
                                     <b>
                                         {{ $item->pasien->no_rm }} | (RM PASIEN) <br>
                                         {{ $item->kode_kunjungan }} | ({{ $item->unit->nama_unit }}) <br>
-                                        {{ strtoupper($item->dokter->nama_paramedis) }}<br>
+                                        {{-- {{ strtoupper($item->dokter->nama_paramedis) }}<br> --}}
                                         @if (!empty($item->tgl_keluar))
                                             <b>PASIEN SUDAH KELUAR</b>
                                         @else
@@ -172,9 +269,9 @@
                                 <td>
 
                                     <x-adminlte-button type="button" data-rm="{{ $item->no_rm }}"
-                                        data-nama="{{ $item->pasien->nama_px }}" data-kunjungan="{{ $item->kode_kunjungan }}"
-                                        theme="danger" class="btn-xs btn-cancelVisit" id="btn-cancelVisit"
-                                        label="Batal Kunjungan" />
+                                        data-nama="{{ $item->pasien->nama_px }}"
+                                        data-kunjungan="{{ $item->kode_kunjungan }}" theme="danger"
+                                        class="btn-xs btn-cancelVisit" id="btn-cancelVisit" label="Batal Kunjungan" />
                                     <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $item->kode_kunjungan]) }}"
                                         class="btn btn-warning btn-xs btn-block btn-flat mt-2">Edit Ruangan</a>
 
@@ -231,80 +328,80 @@
         }
     </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Tangkap event klik pada tombol dengan ID 'btn-cancelVisit'
-        document.querySelectorAll('#btn-cancelVisit').forEach(button => {
-            button.addEventListener('click', function() {
-                // Ambil data dari atribut HTML
-                const rm = this.getAttribute('data-rm');
-                const kunjungan = this.getAttribute('data-kunjungan');
-                const nama = this.getAttribute('data-nama');
-                // Tampilkan SweetAlert
-                Swal.fire({
-                    title: `BATALKAN KUNJUNGAN A.N ${nama}`,
-                    input: 'textarea',
-                    inputLabel: 'Masukkan keterangan',
-                    inputPlaceholder: 'Masukkan alasan pembatalan',
-                    inputAttributes: {
-                        'aria-label': 'Masukkan alasan pembatalan',
-                        'required': true
-                    },
-                    showCancelButton: true,
-                    confirmButtonText: 'Kirim',
-                    cancelButtonText: 'Batal',
-                    showLoaderOnConfirm: true,
-                    preConfirm: (keterangan) => {
-                        if (!keterangan) {
-                            Swal.showValidationMessage('Keterangan wajib diisi!');
-                            return false;
-                        }
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tangkap event klik pada tombol dengan ID 'btn-cancelVisit'
+            document.querySelectorAll('#btn-cancelVisit').forEach(button => {
+                button.addEventListener('click', function() {
+                    // Ambil data dari atribut HTML
+                    const rm = this.getAttribute('data-rm');
+                    const kunjungan = this.getAttribute('data-kunjungan');
+                    const nama = this.getAttribute('data-nama');
+                    // Tampilkan SweetAlert
+                    Swal.fire({
+                        title: `BATALKAN KUNJUNGAN A.N ${nama}`,
+                        input: 'textarea',
+                        inputLabel: 'Masukkan keterangan',
+                        inputPlaceholder: 'Masukkan alasan pembatalan',
+                        inputAttributes: {
+                            'aria-label': 'Masukkan alasan pembatalan',
+                            'required': true
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Kirim',
+                        cancelButtonText: 'Batal',
+                        showLoaderOnConfirm: true,
+                        preConfirm: (keterangan) => {
+                            if (!keterangan) {
+                                Swal.showValidationMessage('Keterangan wajib diisi!');
+                                return false;
+                            }
 
-                        // Kirim data ke server menggunakan fetch atau metode lain
-                        return fetch('{{ route('update-batal.kunjungan') }}', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ganti dengan token CSRF Anda jika diperlukan
-                                },
-                                body: JSON.stringify({
-                                    rm,
-                                    kunjungan,
-                                    keterangan
+                            // Kirim data ke server menggunakan fetch atau metode lain
+                            return fetch('{{ route('update-batal.kunjungan') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}' // Ganti dengan token CSRF Anda jika diperlukan
+                                    },
+                                    body: JSON.stringify({
+                                        rm,
+                                        kunjungan,
+                                        keterangan
+                                    })
                                 })
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error(
-                                        'Network response was not ok.');
-                                }
-                                return response.json();
-                            })
-                            .then(result => {
-                                if (result.success) {
-                                    Swal.fire({
-                                        title: 'Berhasil!',
-                                        text: 'Kunjungan telah dibatalkan.',
-                                        icon: 'success'
-                                    }).then(() => {
-                                        // Segarkan halaman setelah menutup SweetAlert
-                                        location.reload();
-                                    });
-                                } else {
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(
+                                            'Network response was not ok.');
+                                    }
+                                    return response.json();
+                                })
+                                .then(result => {
+                                    if (result.success) {
+                                        Swal.fire({
+                                            title: 'Berhasil!',
+                                            text: 'Kunjungan telah dibatalkan.',
+                                            icon: 'success'
+                                        }).then(() => {
+                                            // Segarkan halaman setelah menutup SweetAlert
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire('Gagal!',
+                                            'Terjadi kesalahan saat membatalkan kunjungan.',
+                                            'error');
+                                    }
+                                })
+                                .catch(error => {
                                     Swal.fire('Gagal!',
                                         'Terjadi kesalahan saat membatalkan kunjungan.',
                                         'error');
-                                }
-                            })
-                            .catch(error => {
-                                Swal.fire('Gagal!',
-                                    'Terjadi kesalahan saat membatalkan kunjungan.',
-                                    'error');
-                            });
-                    }
+                                });
+                        }
+                    });
                 });
             });
         });
-    });
-</script>
+    </script>
 @endsection
