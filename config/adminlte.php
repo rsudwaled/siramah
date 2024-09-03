@@ -366,8 +366,6 @@ return [
                     'url'  => 'pendaftaran-rajal',
                     'active'  => ['pendaftaran-rajal', 'pendaftaran-rajal-proses'],
                     'shift'   => 'ml-2',
-                    'label' => 'proses',
-                    'label_color' => 'warning',
                     'can' => ['pendaftaran'],
                 ],
                 [

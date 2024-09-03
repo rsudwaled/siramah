@@ -231,10 +231,10 @@ Route::middleware('auth')->group(function () {
         Route::post('encounter_update', [EncounterController::class, 'encounter_update'])->name('encounter_update');
     });
     // pendaftaran
-    Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
-    // Route::get('antrianPendaftaran', PendaftaranRajal::class)->name('antrianPendaftaran');
-    Route::get('pendaftaran-rajal', [PendaftaranController::class, 'antrianPendaftaran'])->name('pendaftaran-rajal');
-    // Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
+    // Route::get('antrianPendaftaran', [PendaftaranController::class, 'antrianPendaftaran'])->name('antrianPendaftaran');
+    Route::get('antrianPendaftaran', PendaftaranRajal::class)->name('antrianPendaftaran');
+    // Route::get('pendaftaran-rajal', [PendaftaranController::class, 'antrianPendaftaran'])->name('pendaftaran-rajal');
+    Route::get('pendaftaran-rajal', PendaftaranRajal::class)->name('pendaftaran.rajal');
     Route::get('pendaftaran-rajal-proses', PendaftaranRajalProses::class)->name('pendaftaran.rajal.proses');
     Route::get('jadwalDokterAntrian', [JadwalDokterController::class, 'index'])->name('jadwalDokterAntrian');
     Route::post('daftarBridgingAntrian', [AntrianController::class, 'daftarBridgingAntrian'])->name('daftarBridgingAntrian');
@@ -733,8 +733,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/export/diagnosa-C00-C99', 'laporanc00Export')->name('laporan-export.C00');
     });
 
-     // Laporan Rekam Medis
-     Route::controller(App\Http\Controllers\LaporanRekamMedis\LaporanRekamMedisController::class)->prefix('laporan-rm')->name('laporan-rm.')->group(function () {
+    // Laporan Rekam Medis
+    Route::controller(App\Http\Controllers\LaporanRekamMedis\LaporanRekamMedisController::class)->prefix('laporan-rm')->name('laporan-rm.')->group(function () {
         Route::get('/laporan-rl-51', 'laporanRL51')->name('rl-51');
         Route::get('detail-kunjungan/laporan-rl51', 'detailLaporanRL51')->name('detail-laporan-rl51');
         Route::get('/laporan-rl-52', 'LaporanRL52')->name('rl-52');
