@@ -8,12 +8,13 @@
     <div class="col-md-3">
         <table class="table table-xs table-borderless">
             <tr>
-                <td>Antrian</td>
+                <td>No Antrian</td>
                 <td>:</td>
                 <th>
+                    {{ $antrian->angkaantrean }}
                     <span class="badge badge-{{ $antrian->sync_antrian ? 'success' : 'danger' }}"
                         title="{{ $antrian->sync_antrian ? 'Sudah' : 'Belum' }} Integrasi">
-                        {{ $antrian->nomorantrean }} / {{ $antrian->kodebooking }}
+                        {{ $antrian->kodebooking }}
                     </span>
                 </th>
             </tr>
