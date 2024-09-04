@@ -77,12 +77,12 @@ class PendaftaranRajal extends Component
                             'sound' => 'PLAY',
                         ]);
                 }
-                return flash('Panggilan Berhasil', 'success');
+                flash('Panggilan Berhasil', 'success');
+                $url = route('pendaftaran.rajal.proses') . "?kodebooking=" . $antrian->kodebooking . "&lantai=" . $this->lantai . "&loket=" . $this->loket;
+                return redirect()->to($url);
             } catch (\Throwable $th) {
                 return flash($th->getMessage(), 'danger');
             }
-            $url = route('pendaftaran.rajal.proses') . "?kodebooking=" . $antrian->kodebooking . "&lantai=" . $this->lantai . "&loket=" . $this->loket;
-            return redirect()->to($url);
         } else {
             return flash('Kodebooking tidak ditemukan', 'danger');
         }
