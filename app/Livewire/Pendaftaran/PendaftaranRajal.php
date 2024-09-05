@@ -118,7 +118,10 @@ class PendaftaranRajal extends Component
                 ->where('method', 'Offline')
                 ->where('jenispasien', 'LIKE', $this->jenispasien . '%')
                 ->where('lantaipendaftaran',  'LIKE', '%' . $this->lantai . '%')
-                // ->orderBy('taskid', 'asc')
+                ->where(function ($query) use ($search) {
+                    $query->where('namapoli', 'LIKE', $search)
+                        ->orWhere('namadokter', 'LIKE', $search);
+                })
                 ->get();
         }
         return view('livewire.pendaftaran.pendaftaran-rajal')

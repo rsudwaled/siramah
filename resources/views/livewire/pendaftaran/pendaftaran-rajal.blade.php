@@ -84,7 +84,7 @@
                     </x-adminlte-select>
                 </div>
                 <div class="col-md-4">
-                    <x-adminlte-input wire:model="search" name="search"
+                    <x-adminlte-input wire:model.live="search" name="search"
                         placeholder="Pencarian Berdasarkan Nama / No RM" igroup-size="sm">
                         <x-slot name="appendSlot">
                             <x-adminlte-button wire:click='caritanggal' theme="primary" label="Cari" />
@@ -101,7 +101,7 @@
                 <h1>Loading...</h1>
             </div>
             <div wire:loading.remove>
-                <table class="table table-bordered table-responsive-lg table-sm">
+                <table class="table table-bordered table-responsive table-sm text-nowrap">
                     <thead>
                         <tr>
                             <th>No</th>
