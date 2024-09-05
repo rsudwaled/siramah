@@ -74,6 +74,22 @@ class PendaftaranRajalProses extends Component
             flash('Nomor antrian ' . $antrian->nomorantrean . ' sudah mendapatkan pelayanan.', 'danger');
         }
     }
+    public function panggilmute()
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
+        if ($antrian->taskid <= 2) {
+            // update antrian
+            $antrian->taskid = 2;
+            $antrian->taskid2 = now();
+            $antrian->sync_panggil = 0;
+            $antrian->user1 = auth()->user()->id;
+            $antrian->update();
+            flash('Nomor antrian ' . $antrian->nomorantrean . ' dipanggil.', 'success');
+            $this->dispatch('refreshPage');
+        } else {
+            flash('Nomor antrian ' . $antrian->nomorantrean . ' sudah mendapatkan pelayanan.', 'danger');
+        }
+    }
     public function selesaipendaftaran(Request $request)
     {
         $antrian = Antrian::where('kodebooking', $this->kodebooking)->first();
@@ -123,6 +139,19 @@ class PendaftaranRajalProses extends Component
         ]);
         Alert::error('Pembatalan Berhasil', 'Nomor Antrian ' . $antrian->nomorantrean . ' telah dibatalkan');
         $url = route('pendaftaran.rajal') . "?tanggalperiksa=" . $antrian->tanggalperiksa . "&lantai=" . $this->lantai . "&loket=" . $this->loket . "&jenispasien=" . $antrian->jenispasien;
+        return redirect()->to($url);
+    }
+    public function resetpendaftaran()
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
+        // update antrian
+        $antrian->taskid = 2;
+        $antrian->taskid2 = now();
+        $antrian->sync_panggil = 0;
+        $antrian->user1 = auth()->user()->id;
+        $antrian->update();
+        Alert::success('Cancel Pembatalan Berhasil', 'Nomor Antrian ' . $antrian->nomorantrean . ' telah dikembalikan');
+        $url = route('pendaftaran.rajal.proses') . "?kodebooking=" . $antrian->kodebooking . "&lantai=" . $this->lantai . "&loket=" . $this->loket;
         return redirect()->to($url);
     }
     public function mount(Request $request)

@@ -102,6 +102,10 @@ class PendaftaranRajal extends Component
             return flash('Kodebooking tidak ditemukan', 'danger');
         }
     }
+    public function pencarian()
+    {
+        $this->search =  $this->search;
+    }
     public function mount(Request $request)
     {
         $this->tanggalperiksa = $request->tanggalperiksa;

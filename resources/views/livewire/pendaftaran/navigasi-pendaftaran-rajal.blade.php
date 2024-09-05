@@ -132,22 +132,31 @@
                 <x-adminlte-button class="btn-xs mb-1" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
             </a>
             @if ($antrian->taskid <= 2)
-                <x-adminlte-button wire:click='panggilpendaftaran' class="btn-xs mb-1" label="Panggil Pendaftaran"
-                    theme="primary" icon="fas fa-microphone" />
+                <x-adminlte-button wire:click='panggilpendaftaran' class="btn-xs mb-1" label="Panggil" theme="primary"
+                    icon="fas fa-microphone" title="Panggil Dengan Suara Panggilan" />
+                <x-adminlte-button wire:click='panggilmute' class="btn-xs mb-1" label="Panggil" theme="warning"
+                    icon="fas fa-microphone-slash" title="Panggil Tanpa Suara Panggilan" />
             @endif
             @if ($antrian->taskid == 2)
                 <x-adminlte-button wire:click='selesaipendaftaran'
-                    wire:confirm='Apakah anda yakin antrian ini telah selesai ?' label="Selesai Pendaftaran"
-                    class="btn-xs mb-1" icon="fas fa-check" theme="success" />
+                    wire:confirm='Apakah anda yakin antrian ini telah selesai ?' label="Selesai" class="btn-xs mb-1"
+                    icon="fas fa-check" theme="success" title="Selesai Pendaftaran" />
                 @if ($antrian?->kunjungan?->status)
                     <x-adminlte-button wire:click='selesaiPendaftaran'
-                        wire:confirm='Apakah anda yakin antrian ini telah selesai ?' label="Selesai Pendaftaran"
-                        class="btn-xs mb-1" icon="fas fa-check" theme="success" />
+                        wire:confirm='Apakah anda yakin antrian ini telah selesai ?' label="Selesai" class="btn-xs mb-1"
+                        icon="fas fa-check" theme="success" title="Selesai Pendaftaran" />
                 @endif
             @endif
-            <x-adminlte-button wire:click='batalpendaftaran'
-                wire:confirm='Apakah anda yakin ingin membatalkan antrian dan kunjungan ini ?' label="Batal"
-                class="btn-xs mb-1" icon="fas fa-times" theme="danger" />
+            @if ($antrian->taskid == 99)
+                <x-adminlte-button wire:click='resetpendaftaran'
+                    wire:confirm='Apakah anda yakin tidak jadi membatalkan antrian dan kunjungan ini ?' label="Reset"
+                    class="btn-xs mb-1" icon="fas fa-sync" theme="warning" title="Tidak Jadi Batal Antrian" />
+            @else
+                <x-adminlte-button wire:click='batalpendaftaran'
+                    wire:confirm='Apakah anda yakin ingin membatalkan antrian dan kunjungan ini ?' label="Batal"
+                    class="btn-xs mb-1" icon="fas fa-times" theme="danger" title="Batal Antrian" />
+            @endif
+
             {{-- <a href="{{ route('batalantrian') }}?kodebooking={{ $antrian->kodebooking }}&keterangan=Dibatalkan dipendaftaran {{ Auth::user()->name }}"
                 class="btn btn-sm btn-danger withLoad">
                 <i class="fas fa-times"></i> Batal

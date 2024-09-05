@@ -87,7 +87,7 @@
                     <x-adminlte-input wire:model.live="search" name="search"
                         placeholder="Pencarian Berdasarkan Nama / No RM" igroup-size="sm">
                         <x-slot name="appendSlot">
-                            <x-adminlte-button wire:click='caritanggal' theme="primary" label="Cari" />
+                            <x-adminlte-button wire:click='pencarian' theme="primary" label="Cari" />
                         </x-slot>
                         <x-slot name="prependSlot">
                             <div class="input-group-text text-primary">
