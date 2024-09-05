@@ -26,7 +26,8 @@
                             <dt class="col-sm-4">Lampiran</dt>
                             <dd class="col-sm-8">
                                 @if ($surat->lampiran)
-                                    <a class="btn btn-xs btn-primary" href="{{ $surat->lampiran->fileurl }}"
+                                    <a class="btn btn-xs btn-primary"
+                                        href="{{ str_replace('http://192.168.2.30/', 'http://sim.rsudwaled.id/', $surat->lampiran->fileurl) }}"
                                         target="_blank">Download Lampiran</a>
                                 @else
                                     <i>tidak ada lampiran</i>
