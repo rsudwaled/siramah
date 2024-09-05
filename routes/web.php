@@ -96,6 +96,7 @@ use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
 use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
+use App\Livewire\Poliklinik\AntrianPoliklinikProses;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
 use App\Livewire\Profil\ProfilIndex;
 use App\Livewire\Rekammedis\MonitoringAntrianRajal;
@@ -248,7 +249,8 @@ Route::middleware('auth')->group(function () {
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
     Route::get('antrian-poliklinik-rajal', AntrianPoliklinikRajal::class)->name('antrian.poliklinik.rajal');
-    Route::get('antrian-rajal-proses', AntrianPoliklinikRajal::class)->name('antrian.rajal.proses');
+    Route::get('antrian-poliklinik-proses', AntrianPoliklinikProses::class)->name('antrian.poliklinik.proses');
+
     Route::get('monitoringAntrianRajal', [AntrianController::class, 'monitoringAntrianRajal'])->name('monitoringAntrianRajal');
     Route::get('batalAntrian', [AntrianController::class, 'batalAntrian'])->name('batalAntrian');
     Route::get('panggilPoliklinik', [AntrianController::class, 'panggilPoliklinik'])->name('panggilPoliklinik');

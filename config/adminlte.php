@@ -370,12 +370,11 @@ return [
                 ],
                 [
                     'text' => 'Kunjungan Poliklinik',
-                    'icon'    => 'fas fa-user-plus',
+                    'icon'    => 'fas fa-clinic-medical',
                     'url'  => 'antrian-poliklinik-rajal',
-                    'active'  => ['antrian-poliklinik-rajal', 'antrian-poliklinik-rajal-proses'],
+                    'active'  => ['antrian-poliklinik-rajal', 'antrian-poliklinik-proses'],
                     'shift'   => 'ml-2',
-                    'label' => 'proses',
-                    'label_color' => 'warning',
+                    'can' => 'poliklinik',
                 ],
                 [
                     'text' => 'Antrian Perawat',

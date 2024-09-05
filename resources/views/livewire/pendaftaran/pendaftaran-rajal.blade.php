@@ -53,7 +53,7 @@
                                 <i class="fas fa-hospital"></i>
                             </div>
                         </x-slot>
-                        <option value>Pilih Loket</option>
+                        <option value>-- Pilih Loket --</option>
                         <option value="1">Loket 1</option>
                         <option value="2">Loket 2</option>
                         <option value="3">Loket 3</option>
