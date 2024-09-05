@@ -24,6 +24,25 @@
                 <th>{{ $antrian->tanggalperiksa }}</th>
             </tr>
             <tr>
+                <td>Pendaftaran</td>
+                <td>:</td>
+                <th>Lantai {{ $antrian->lantaipendaftaran }} Loket {{ $antrian->loket ?? $loket }}</th>
+            </tr>
+            <tr>
+                <td>Unit</td>
+                <td>:</td>
+                <th>{{ $antrian->namapoli }}</th>
+            </tr>
+            <tr>
+                <td>User</td>
+                <td>:</td>
+                <th>{{ Auth::user()->name }}</th>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-3">
+        <table class="table table-xs table-borderless">
+            <tr>
                 <td>RM</td>
                 <td>:</td>
                 <th>{{ $antrian->norm ? $antrian->norm : 'Belum Didaftarkan' }}</th>
@@ -48,6 +67,16 @@
                         Belum Kunjungan
                     @endif
                 </th>
+            </tr>
+            <tr>
+                <td>Np BPJS</td>
+                <td>:</td>
+                <th>{{ $antrian->nomorkartu ? $antrian->nomorkartu : 'Belum Didaftarkan' }}</th>
+            </tr>
+            <tr>
+                <td>NIK</td>
+                <td>:</td>
+                <th>{{ $antrian->nik ? $antrian->nik : 'Belum Didaftarkan' }}</th>
             </tr>
         </table>
     </div>
