@@ -14,5 +14,20 @@
         <div id="icare">
             @livewire('poliklinik.modal-icare', ['kunjungan' => $kunjungan, 'lazy' => true])
         </div>
+        <div id="riwayatkunjungan">
+            @livewire('poliklinik.modal-riwayat-kunjungan', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
+        <div id="sep">
+            @livewire('poliklinik.modal-sep', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
+        <div id="suratkontrol">
+            @livewire('poliklinik.modal-surat-kontrol', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
+        <div id="rujukanfktp">
+            @livewire('poliklinik.modal-rujukan-fktp', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
+        <div id="rujukanrs">
+            @livewire('poliklinik.modal-rujukan-rs', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
     </div>
 </div>
