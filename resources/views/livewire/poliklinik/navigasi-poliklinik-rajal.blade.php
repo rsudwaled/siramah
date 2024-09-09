@@ -52,37 +52,37 @@
             </li>
             <li class="nav-item">
                 <a href="#icare" class="nav-link">
-                    <i class="fas fa-users"></i> I-Care JKN
+                    <i class="fas fa-heart"></i> I-Care JKN
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#riwayatkunjungan" class="nav-link">
-                    <i class="fas fa-users"></i> Riwayat Kunjungan
+                    <i class="fas fa-file-medical"></i> Riwayat Kunjungan
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#sep" class="nav-link">
-                    <i class="fas fa-users"></i> SEP
+                    <i class="fas fa-file-medical"></i> SEP
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#suratkontrol" class="nav-link">
-                    <i class="fas fa-users"></i> Surat Kontrol
+                    <i class="fas fa-file-medical"></i> Surat Kontrol
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#rujukanfktp" class="nav-link">
-                    <i class="fas fa-users"></i> Rujukan FKTP
+                    <i class="fas fa-file-medical"></i> Rujukan FKTP
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#rujukanrs" class="nav-link">
-                    <i class="fas fa-users"></i> Rujukan Antar RS
+                    <i class="fas fa-file-medical"></i> Rujukan Antar RS
                 </a>
             </li>
         </ul>
         <x-slot name="footerSlot">
-            <a
+            <a class="withLoad"
                 href="{{ route('antrian.poliklinik.rajal') }}?tgl_masuk={{ $tgl_masuk }}&kode_unit={{ $kode_unit }}">
                 <x-adminlte-button class="btn-xs mb-1" label="Kembali" theme="danger" icon="fas fa-arrow-left" />
             </a>
