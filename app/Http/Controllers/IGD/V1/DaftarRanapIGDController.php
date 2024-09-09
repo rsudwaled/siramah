@@ -103,50 +103,9 @@ class DaftarRanapIGDController extends Controller
         $createKunjungan->no_sep            = $request->inject_sep??Null;
         $createKunjungan->no_spri           = $request->inject_spri??Null;
         $createKunjungan->save();
-        // if($createKunjungan->save())
-        // {
-        //     $ruangan->status_incharge = 1;
-        //     $ruangan->save();
 
-        //     if($createKunjungan->kode_penjamin != 'P01' || $createKunjungan->jp_daftar != 2)
-        //     {
-        //         $api = new VclaimController();
-        //         $request = new Request([
-        //             "nik"        => $pasien->nik_bpjs,
-        //             "tanggal"    => now()->format('Y-m-d'),
-        //         ]);
-        //         $data    = $api->peserta_nik($request);
-
-        //         $histories = new HistoriesIGDBPJS();
-        //         $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
-        //         $histories->noMR            = $pasien->no_rm;
-        //         $histories->noKartu         = trim($pasien->no_Bpjs)??Null;
-        //         $histories->ppkPelayanan    = '1018R001';
-        //         $histories->dpjpLayan       = $dokter->kode_dokter_jkn;
-        //         $histories->user            = Auth::user()->name;
-        //         $histories->noTelp          = $pasien->no_hp??$pasien->no_tlp;
-        //         $histories->tglSep          = now();
-        //         $histories->jnsPelayanan    = '1';
-        //         $histories->klsRawatHak     = $data->response->peserta->hakKelas->kode ?? null;
-        //         $histories->asalRujukan     = '2';
-        //         $histories->tglRujukan      = now();
-        //         $histories->noRujukan       = null;
-        //         $histories->ppkRujukan      = null;
-        //         $histories->diagAwal        = $request->diagAwal??NULL;
-        //         $histories->lakaLantas      = Null;
-        //         $histories->noLP            = Null;
-        //         $histories->tglKejadian     = Null;
-        //         $histories->keterangan      = Null;
-        //         $histories->kdPropinsi      = Null;
-        //         $histories->kdKabupaten     = Null;
-        //         $histories->kdKecamatan     = Null;
-        //         $histories->response        = Null;
-        //         $histories->is_bridging     = 0;
-        //         $histories->status_daftar   = 0;
-        //         $histories->unit            = $unit->kode_unit;
-        //         $histories->save();
-        //     }
-        // }
+        $ruangan->status_incharge = 1;
+        $ruangan->save();
         return redirect()->route('pasien.ranap')->with('success', 'Pasien dengan data! Nama: '.$pasien->nama_px.' | RM : '.$pasien->no_rm.' BERHASIL DISIMPAN KE PASIEN RAWAT INAP!!');
     }
 
