@@ -199,6 +199,7 @@
                                     <b>
                                         {{ $item->pasien->no_rm }} | (RM PASIEN) <br>
                                         {{ $item->kode_kunjungan }} | ({{ $item->unit->nama_unit }}) <br>
+                                        {{ $item->ref_kunjungan??'-' }} | (Ref Kunjungan) <br>
                                         {{-- {{ strtoupper($item->dokter->nama_paramedis) }}<br> --}}
                                         @if (!empty($item->tgl_keluar))
                                             <b>PASIEN SUDAH KELUAR</b>

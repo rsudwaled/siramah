@@ -47,8 +47,8 @@
                             <th>Tanggal</th>
                             <th>Poliklinik</th>
                             <th>Jumlah</th>
-                            <th>Tunggu Admisi</th>
-                            <th>Layan Admisi</th>
+                            {{-- <th>Tunggu Admisi</th> --}}
+                            {{-- <th>Layan Admisi</th> --}}
                             <th>Tunggu Dokter</th>
                             <th>Layan Dokter</th>
                             <th>Tunggu Farmasi</th>
@@ -62,8 +62,8 @@
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->namapoli }}</td>
                                 <td>{{ $item->jumlah_antrean }}</td>
-                                <td>{{ gmdate('H:i:s', $item->avg_waktu_task1) }}</td>
-                                <td>{{ gmdate('H:i:s', $item->avg_waktu_task2) }}</td>
+                                {{-- <td>{{ gmdate('H:i:s', $item->avg_waktu_task1) }}</td> --}}
+                                {{-- <td>{{ gmdate('H:i:s', $item->avg_waktu_task2) }}</td> --}}
                                 <td>{{ gmdate('H:i:s', $item->avg_waktu_task3) }}</td>
                                 <td>{{ gmdate('H:i:s', $item->avg_waktu_task4) }}</td>
                                 <td>{{ gmdate('H:i:s', $item->avg_waktu_task5) }}</td>

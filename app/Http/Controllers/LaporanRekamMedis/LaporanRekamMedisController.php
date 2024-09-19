@@ -30,17 +30,12 @@ class LaporanRekamMedisController extends Controller
 
             $kunjungans2 = Kunjungan::whereBetween('tgl_masuk', [$startdate, $enddate])
                 ->whereIn('status_kunjungan', [2, 3])
-                ->where(function ($query) {
-                    $query->where('counter', '>', 1)
-                        ->orWhereRaw('CAST(SUBSTR(no_rm, 1, 2) AS UNSIGNED) < 23');
-                })
+                ->whereNotIn('counter', [1])
                 ->groupBy('no_rm')
                 ->get();
 
-            $noRMs = $kunjungans2->pluck('no_rm');
             $kunjungans1= Kunjungan::with(['pasien'])
                 ->whereBetween('tgl_masuk', [$startdate, $enddate])
-                ->whereNotIn('no_rm', $noRMs)
                 ->whereIn('status_kunjungan', [2,3])
                 ->where('counter', 1)
                 ->where('counter','<=', 1)
@@ -99,24 +94,69 @@ class LaporanRekamMedisController extends Controller
         $enddate        = $request->enddate ?? null;
         $kunjungan      = [];
         $pengunjung      = [];
-        $totalKunjungan     = 0;
-        $totalPengunjung    = 0;
+        $jumlahKunjungan     = 0;
+        $jumlahPengunjung    = 0;
+        $results = [];
+
         if ($startdate && $enddate)
         {
-            $kunjungan = Kunjungan::whereBetween('tgl_masuk', [$startdate, $enddate])
-                    ->whereIn('status_kunjungan', [2,3])
-                    ->get();
+            $query = Kunjungan::with(['pasien','unit'])
+                ->whereBetween('tgl_masuk', [$startdate, $enddate])
+                ->whereIn('kode_unit',[
+                    '1004','1005','1006','1007',
+                    '1008','1009','1010','1011',
+                    '1012','1013','1014','1015',
+                    '1016','1017','1018','1019',
+                    '1022','1023','1024','1025',
+                    '1026','1027','1028','1029',
+                    '1030','1032','1033','1036',
+                ])
+            ->whereIn('status_kunjungan', [2,3]);
+            $kunjungan = $query->get();
+            $pengunjung = $query->groupBy('no_rm')->get();
+            $jumlahKunjungan = $kunjungan->count();
+            $jumlahPengunjung = $pengunjung->count();
 
-            $pengunjung= Kunjungan::selectRaw('no_rm, count(*) as visit_count')->whereBetween('tgl_masuk', [$startdate, $enddate])
-                    ->whereIn('status_kunjungan', [2,3])
-                    ->groupBy('no_rm')
-                    ->get();
-            $totalPengunjung = $pengunjung->count();
-            $totalKunjungan = $kunjungan->count();
+            $pengunjung = Kunjungan::with(['pasien','unit'])
+                ->whereBetween('tgl_masuk', [$startdate, $enddate])
+                ->whereIn('kode_unit',[
+                    '1004','1005','1006','1007',
+                    '1008','1009','1010','1011',
+                    '1012','1013','1014','1015',
+                    '1016','1017','1018','1019',
+                    '1022','1023','1024','1025',
+                    '1026','1027','1028','1029',
+                    '1030','1032','1033','1036',
+                ])
+                ->whereIn('status_kunjungan', [2,3])->get();
+
+
+            // Kelompokkan data berdasarkan prefix_kunjungan
+                foreach ($pengunjung as $people) {
+                    $prefix = $people->prefix_kunjungan;
+
+                    // Jika prefix belum ada dalam hasil, inisialisasi
+                    if (!isset($results[$prefix])) {
+                        $results[$prefix] = [
+                            'laki_laki' => 0,
+                            'perempuan' => 0,
+                            'total' => 0,
+                        ];
+                    }
+
+                    // Hitung jumlah laki-laki dan perempuan
+                    if ($people->pasien->jenis_kelamin == 'L') {
+                        $results[$prefix]['laki_laki']++;
+                    } elseif ($people->pasien->jenis_kelamin == 'P') {
+                        $results[$prefix]['perempuan']++;
+                    }
+                    // Update total
+                    $results[$prefix]['total']++;
+            }
         }
-
-        return view('simrs.rekammedis.laporan-rl.rl_5_2', compact('startdate','enddate','request','kunjungan','pengunjung','totalPengunjung','totalKunjungan'));
+        return view('simrs.rekammedis.laporan-rl.rl_5_2', compact('startdate','enddate','request','results','pengunjung','jumlahKunjungan','jumlahPengunjung'));
     }
+
 
     public function detailLaporanRL52(Request $request)
     {

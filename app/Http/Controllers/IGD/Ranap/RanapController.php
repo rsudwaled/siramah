@@ -129,6 +129,8 @@ class RanapController extends APIController
     {
         $start  = $request->start;
         $finish = $request->finish;
+        $cek =Kunjungan::whereNull('no_rm')->whereDate('tgl_masuk',now())->get();
+        // dd($cek);
         // Buat query dasar dengan relasi yang dibutuhkan
         $query = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit'])
         ->whereIn('is_ranap_daftar', ['1', '2', '3']);
@@ -192,7 +194,6 @@ class RanapController extends APIController
 
             $kunjungan = $query->where('status_kunjungan', 1)->get();
         }
-
         return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
     }
 
@@ -1118,12 +1119,12 @@ class RanapController extends APIController
 
     public function formRanapBayi($rm, $kunjungan)
     {
-        $cekKunjungan = Kunjungan::where('no_rm', $rm)->whereDate('tgl_masuk', now())->get();
-        if($cekKunjungan->count() > 0)
-        {
-            Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan!');
-            return redirect()->route('list-kunjungan.ugk');
-        }
+        // $cekKunjungan = Kunjungan::where('no_rm', $rm)->where('status_kunjungan', '!=', 1)->whereDate('tgl_masuk', now())->get();
+        // if($cekKunjungan->count() > 0)
+        // {
+        //     Alert::info('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $rm . ' sudah terdaftar dikunjungan!');
+        //     return redirect()->route('list-kunjungan.ugk');
+        // }
         $pasien         = Pasien::firstWhere('no_rm', $rm);
         $unit           = Unit::whereIn('kode_unit', [2004, 2013])->get();
         $penjamin       = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
@@ -1138,13 +1139,13 @@ class RanapController extends APIController
 
     public function ranapBayiStore(Request $request)
     {
-        $cekKunjungan = Kunjungan::where('no_rm', $request->noMR)->whereDate('tgl_masuk', now())->get();
+        $cekKunjungan = Kunjungan::where('no_rm', $request->noMR)->where('status_kunjungan','!=', '8')->whereDate('tgl_masuk', now())->get();
         if($cekKunjungan->count() > 0)
         {
             Alert::success('Pasien Sudah Daftar!!', 'pasien dg RM: ' . $request->noMR . ' sudah terdaftar dikunjungan!');
             return redirect()->route('pasien-bayi.cari');
         }
-
+        // dd($request->all());
         $request->validate(
             [
                 'tanggal_daftar'    => 'required',
@@ -1163,8 +1164,8 @@ class RanapController extends APIController
                 'dpjp'              => 'Anda harus memilih dokter dpjp !',
             ]);
 
-        $query_counter= Kunjungan::where('kode_kunjungan', $request->ref_kunjungan_ortu)->where('status_kunjungan', 1)->first();
-
+        // $query_counter= Kunjungan::where('kode_kunjungan', $request->ref_kunjungan_ortu)->where('status_kunjungan', 1)->first();
+        $query_counter= Kunjungan::where('kode_kunjungan', $request->ref_kunjungan_ortu)->first();
         $bpjsProses = $request->isBpjs==2?1:0;
         $penjamin   = $request->isBpjs == 0 ? $request->penjamin_id_umum:$request->penjamin_id_bpjs ;
         $ruangan    = Ruangan::where('id_ruangan', $request->idRuangan)->first();
