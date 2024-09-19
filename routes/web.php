@@ -329,7 +329,6 @@ Route::middleware('auth')->group(function () {
     Route::get('print_mppa', [RanapController::class, 'print_mppa'])->name('print_mppa');
     Route::post('simpan_mppb', [RanapController::class, 'simpan_mppb'])->name('simpan_mppb');
     Route::get('print_mppb', [RanapController::class, 'print_mppb'])->name('print_mppb');
-
     Route::post('simpan_asesmen_ranap_awal', [RanapController::class, 'simpan_asesmen_ranap_awal'])->name('simpan_asesmen_ranap_awal');
     Route::post('simpan_rencana_asuhan_terpadu', [RanapController::class, 'simpan_rencana_asuhan_terpadu'])->name('simpan_rencana_asuhan_terpadu');
     Route::get('print_asesmen_ranap_awal', [RanapController::class, 'print_asesmen_ranap_awal'])->name('print_asesmen_ranap_awal');
@@ -363,7 +362,7 @@ Route::middleware('auth')->group(function () {
     Route::get('bukakunjungan', [KunjunganController::class, 'bukakunjungan'])->name('bukakunjungan');
     Route::get('tutupkunjungan', [KunjunganController::class, 'tutupkunjungan'])->name('tutupkunjungan');
     Route::get('laporan_eklaim_ranap', [EklaimController::class, 'laporan_eklaim_ranap'])->name('laporan_eklaim_ranap');
-    Route::middleware(['can:antrian-bpjs'])->group(function () {
+    Route::middleware(['can:bpjs'])->group(function () {
         Route::get('bpjs/antrian/refpoliklinik', RefPoliklinik::class)->name('antrian.refpoliklinik')->lazy();
         Route::get('bpjs/antrian/refdokter', RefDokter::class)->name('antrian.refdokter')->lazy();
         Route::get('bpjs/antrian/refjadwaldokter', RefJadwalDokter::class)->name('antrian.refjadwaldokter')->lazy();

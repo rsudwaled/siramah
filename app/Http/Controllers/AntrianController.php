@@ -742,7 +742,8 @@ class AntrianController extends APIController
             }
         }
         return view('bpjs.antrian.antrian_per_kodebooking', compact([
-            'request', 'antrian'
+            'request',
+            'antrian'
         ]));
     }
     public function antrianBelumDilayani(Request $request)
@@ -885,7 +886,7 @@ class AntrianController extends APIController
             if ($antrian->taskid3) {
                 $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
             } else {
-                $request['waktu'] = Carbon::now()->subMinutes(rand(30, 45));
+                $request['waktu'] = now()->subMinutes(rand(30, 45));
                 $antrian->update([
                     'taskid3' =>  $request->waktu,
                     'user3' => auth()->user()->name,
@@ -1369,7 +1370,7 @@ class AntrianController extends APIController
         $cons_id =  $this->consid;
         $secretKey = $this->secrekey;
         $userkey = $this->userkey;
-        date_default_timezone_set('UTC');
+        date_default_timezone_set('Asia/Jakarta');
         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
         $signature = hash_hmac('sha256', $cons_id . "&" . $tStamp, $secretKey, true);
         $encodedSignature = base64_encode($signature);
