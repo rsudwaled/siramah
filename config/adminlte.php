@@ -1262,42 +1262,42 @@ return [
         [
             'text'    => 'Integrasi Antrian BPJS',
             'icon'    => 'fas fa-project-diagram',
-            'can' => 'antrian-bpjs',
+            'can' => 'bpjs',
             'submenu' => [
                 [
                     'text' => 'Poliklinik',
                     'icon'    => 'fas fa-clinic-medical',
                     'url'  => 'bpjs/antrian/refpoliklinik',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Dokter',
                     'icon'    => 'fas fa-user-md',
                     'url'  => 'bpjs/antrian/refdokter',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Jadwal Dokter',
                     'icon'    => 'fas fa-calendar-alt',
                     'url'  => 'bpjs/antrian/refjadwaldokter',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Poliklinik Fingerprint',
                     'icon'    => 'fas fa-clinic-medical',
                     'url'  => 'bpjs/antrian/refpoliklinik-fingerprint',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Peserta Fingerprint',
                     'icon'    => 'fas fa-fingerprint',
                     'url'  => 'bpjs/antrian/refpeserta-fingerprint',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 // [
                 //     'text' => 'Anjungan Antrian',
@@ -1316,21 +1316,21 @@ return [
                     'icon'    => 'fas fa-user-clock',
                     'url'  => 'bpjs/antrian/listtaskid',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Dasboard Tanggal',
                     'icon'    => 'fas fa-calendar-day',
                     'url'  => 'bpjs/antrian/dashboardtanggal',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Dashboard Bulan',
                     'icon'    => 'fas fa-calendar-week',
                     'url'  => 'bpjs/antrian/dashboardbulan',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 // [
                 //     'text' => 'Jadwal Operasi',
@@ -1344,7 +1344,7 @@ return [
                     'icon'    => 'fas fa-calendar-day',
                     'url'  => 'bpjs/antrian/antreantanggal',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Antrian Per Kodebooking',
@@ -1352,21 +1352,21 @@ return [
                     'url'  => 'bpjs/antrian/antreankodebooking/*',
                     'active'  => ['bpjs/antrian/antreankodebooking/*'],
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Antrian Belum  Dilayani',
                     'icon'    => 'fas fa-calendar-day',
                     'url'  => 'bpjs/antrian/antreanbelumlayani',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
                 [
                     'text' => 'Antrian Per Dokter',
                     'icon'    => 'fas fa-calendar-day',
                     'url'  => 'bpjs/antrian/antreandokter',
                     'shift'   => 'ml-2',
-                    'can' => 'antrian-bpjs',
+                    'can' => 'bpjs',
                 ],
 
             ],
@@ -1665,7 +1665,7 @@ return [
                 ],
             ],
         ],
-        'DatatablesPlugins' => [
+        'DatatablesPlugin' => [
             'active' => false,
             'files' => [
                 [
@@ -1710,26 +1710,26 @@ return [
                 ],
             ],
         ],
-        'DatatablesFixedColumns' => [
-            'active' => false,
-            'files' => [
-                // [
-                //     'type' => 'js',
-                //     'asset' => true,
-                //     'location' => 'vendor/datatables-plugins/fixedcolumns/js/fixedColumns.bootstrap4.min.js',
-                // ],
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/fixedcolumns/js/dataTables.fixedColumns.min.js',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => 'vendor/datatables-plugins/fixedcolumns/css/fixedColumns.bootstrap4.min.css',
-                ],
-            ],
-        ],
+        // 'DatatablesFixedColumns' => [
+        //     'active' => false,
+        //     'files' => [
+        //         // [
+        //         //     'type' => 'js',
+        //         //     'asset' => true,
+        //         //     'location' => 'vendor/datatables-plugins/fixedcolumns/js/fixedColumns.bootstrap4.min.js',
+        //         // ],
+        //         [
+        //             'type' => 'js',
+        //             'asset' => true,
+        //             'location' => 'vendor/datatables-plugins/fixedcolumns/js/dataTables.fixedColumns.min.js',
+        //         ],
+        //         [
+        //             'type' => 'css',
+        //             'asset' => true,
+        //             'location' => 'vendor/datatables-plugins/fixedcolumns/css/fixedColumns.bootstrap4.min.css',
+        //         ],
+        //     ],
+        // ],
         'Select2' => [
             'active' => false,
             'files' => [
