@@ -83,8 +83,7 @@ class FarmasiController extends APIController
                 $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
                 $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
-                $printer->text("SIP Dokter : " . $order->dokter->no_sip . " \n\n");
-
+                $printer->text("SIP Dokter : " . $order->dokter?->no_sip . " \n\n");
                 $printer->text("================================================\n");
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");
                 $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -212,8 +211,8 @@ class FarmasiController extends APIController
                 $printer->text("Diagnosa : " . $order->kunjungan->diagx   . " \n");
                 $printer->text("No SEP : " . $order->kunjungan->no_sep . " \n\n");
                 $printer->text("Poliklinik : " . $order->asal_unit->nama_unit . " \n");
-                $printer->text("Dokter : " . $order->dokter->nama_paramedis . " \n");
-                $printer->text("SIP : " . $order->dokter->sip_dr . " \n\n");
+                $printer->text("Dokter : " . $order->dokter?->nama_paramedis . " \n");
+                $printer->text("SIP : " . $order->dokter?->sip_dr . " \n\n");
 
                 $printer->text("================================================\n");
                 $printer->text("Nama Obat @ Jumlah                 Aturan Pakai\n");

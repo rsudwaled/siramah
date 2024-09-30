@@ -1370,7 +1370,7 @@ class AntrianController extends APIController
         $cons_id =  $this->consid;
         $secretKey = $this->secrekey;
         $userkey = $this->userkey;
-        date_default_timezone_set('Asia/Jakarta');
+        date_default_timezone_set('UTC');
         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
         $signature = hash_hmac('sha256', $cons_id . "&" . $tStamp, $secretKey, true);
         $encodedSignature = base64_encode($signature);

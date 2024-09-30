@@ -150,11 +150,11 @@ class DaftarIGDController extends Controller
         $knj_aktif   = Kunjungan::where('no_rm', $request->rm)
             ->where('status_kunjungan', 1)
             ->count();
-        $alasanmasuk = AlasanMasuk::orderBy('id', 'asc')->get();
-        $paramedis   = Paramedis::where('act', 1)->get();
-        $penjamin    = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
-        $penjaminbpjs = Penjamin::orderBy('id', 'asc')->get();
-        $tanggal     = now()->format('Y-m-d');
+        $alasanmasuk    = AlasanMasuk::orderBy('id', 'asc')->get();
+        $paramedis      = Paramedis::where('act', 1)->get();
+        $penjamin       = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
+        $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
+        $tanggal        = now()->format('Y-m-d');
         // cek status bpjs aktif atau tidak
 
         $url            = null;
