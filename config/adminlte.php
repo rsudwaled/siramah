@@ -189,9 +189,9 @@ return [
     'classes_body' => 'text-xs',
     'classes_brand' => '',
     'classes_brand_text' => '',
-    'classes_content_wrapper' => '',
-    'classes_content_header' => '',
-    'classes_content' => '',
+    'classes_content_wrapper' => 'text-xs',
+    'classes_content_header' => 'text-xs',
+    'classes_content' => 'text-xs',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
     'classes_topnav' => 'navbar-white navbar-light',
@@ -371,8 +371,8 @@ return [
                 [
                     'text' => 'Kunjungan Poliklinik',
                     'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'antrian-poliklinik-rajal',
-                    'active'  => ['antrian-poliklinik-rajal', 'antrian-poliklinik-proses'],
+                    'url'  => 'kunjungan-poliklinik',
+                    'active'  => ['kunjungan-poliklinik', 'kunjungan-poliklinik-pasien'],
                     'shift'   => 'ml-2',
                     'can' => 'poliklinik',
                 ],
@@ -423,8 +423,25 @@ return [
                     'icon'    => 'fas fa-chart-bar',
                     'url'  => 'monitoring-antrian-rajal',
                     'shift'   => 'ml-2',
-                    'label' => 'baru',
-                    'label_color' => 'success',
+                ],
+                [
+                    'text' => 'Monitoring Waktu Antrian',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'monitoring-waktu-antrian',
+                    'shift'   => 'ml-2',
+                ],
+            ]
+        ],
+        // PELAYANAN
+        [
+            'text'    => 'Pelayanan Operasi',
+            'icon'    => 'fas fa-clinic-medical',
+            'submenu' => [
+                [
+                    'text' => 'Kunjungan Operasi',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'kunjungan-operasi',
+                    'shift'   => 'ml-2',
                 ],
             ]
         ],

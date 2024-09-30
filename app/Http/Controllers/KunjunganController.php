@@ -84,7 +84,7 @@ class KunjunganController extends APIController
             $poli = Unit::where('KDPOLI', $request->kodepoli)->first();
             $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
                 ->where('kode_unit', $poli->kode_unit)
-                ->where('status_kunjungan',  "<=", 2)
+                ->where('status_kunjungan',  "!=", 8)
                 ->with(['dokter', 'unit', 'pasien', 'diagnosapoli', 'pasien.kecamatans', 'penjamin', 'surat_kontrol'])
                 ->get();
             $response = DB::connection('mysql2')->select("CALL SP_PANGGIL_PASIEN_RAWAT_JALAN_KUNJUNGAN('" . $poli->kode_unit . "','" . $request->tanggal . "')");
