@@ -961,6 +961,13 @@ return [
                             'shift'   => 'ml-3',
                             'can' => ['rekam-medis'],
                         ],
+                        [
+                            'text' => 'Kunjungan Poliklinik',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'laporan-rm\kunjungan\kunjungan-poliklinik',
+                            'shift'   => 'ml-3',
+                            'can' => ['rekam-medis'],
+                        ],
 
                     ]
                 ],
@@ -1233,6 +1240,7 @@ return [
                 [
                     'text' => 'Formulir RL 5',
                     'icon'    => 'fas fa-chart-bar',
+
                     'shift'   => 'ml-2',
                     'can' => ['k3rs', 'rekam-medis'],
                     'submenu' => [

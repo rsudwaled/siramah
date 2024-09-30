@@ -168,7 +168,7 @@ class PasienBayiController extends Controller
             }
             $pasien = Pasien::create([
                 'no_rm'             => $rm_bayi,
-                'no_Bpjs'           => '',
+                'no_Bpjs'           => '0000000000000000',
                 'nama_px'           => strtoupper( $ortubayi->nama_px.', BY NY '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
@@ -183,17 +183,17 @@ class PasienBayiController extends Controller
                 'kecamatan'         => $ortubayi->kecamatan==null?$ortubayi->kode_kecamatan:$ortubayi->kecamatan,
                 'desa'              => $ortubayi->desa==null?$ortubayi->kode_desa:$ortubayi->desa,
                 'alamat'            => $ortubayi->alamat,
-                'no_telp'           => '',
-                'no_hp'             => '',
+                'no_telp'           => '000000000000',
+                'no_hp'             => '000000000000',
                 'tgl_entry'         => Carbon::now(),
-                'nik_bpjs'          => '',
+                'nik_bpjs'          => '0000000000000000',
                 'update_date'       => Carbon::now(),
                 'update_by'         => Carbon::now(),
                 'kode_propinsi'     => $ortubayi->kode_propinsi,
                 'kode_kabupaten'    => $ortubayi->kode_kabupaten,
                 'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                 'kode_desa'         => $ortubayi->kode_desa,
-                'no_ktp'            => '',
+                'no_ktp'            => '0000000000000000',
                 'status_px'         => 1,
                 'pic'               => Auth::user()->id_simrs,
                 'user_create'       => Auth::user()->username,
@@ -258,7 +258,7 @@ class PasienBayiController extends Controller
                 }
                 Pasien::create([
                     'no_rm'             => $rm_bayi,
-                    'no_Bpjs'           => '',
+                    'no_Bpjs'           => '0000000000000000',
                     'nama_px'           => strtoupper($ortubayi->nama_px . ', BY NY ' . ($index + 1)),
                     'jenis_kelamin'     => $jk_bayi_kembar,
                     'tempat_lahir'      => 'CIREBON',
@@ -273,18 +273,18 @@ class PasienBayiController extends Controller
                     'kecamatan'         => $ortubayi->kecamatan==null?$ortubayi->kode_kecamatan:$ortubayi->kecamatan,
                     'desa'              => $ortubayi->desa==null?$ortubayi->kode_desa:$ortubayi->desa,
                     'alamat'            => $ortubayi->alamat,
-                    'no_telp'           => '',
+                    'no_telp'           => '000000000000',
                     'status_px'         => 1,
-                    'no_hp'             => '',
+                    'no_hp'             => '000000000000',
                     'tgl_entry'         => Carbon::now(),
-                    'nik_bpjs'          => '',
+                    'nik_bpjs'          => '0000000000000000',
                     'update_date'       => Carbon::now(),
                     'update_by'         => Carbon::now(),
                     'kode_propinsi'     => $ortubayi->kode_propinsi,
                     'kode_kabupaten'    => $ortubayi->kode_kabupaten,
                     'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                     'kode_desa'         => $ortubayi->kode_desa,
-                    'no_ktp'            => '',
+                    'no_ktp'            => '0000000000000000',
                     'pic'               => Auth::user()->id_simrs,
                     'user_create'       => Auth::user()->username,
                 ]);
@@ -366,7 +366,7 @@ class PasienBayiController extends Controller
         $tgl_lahir_bayi = Carbon::parse($request->tgl_lahir_bayi)->format('Y-m-d');
 
         $cekBayiKembar  = $request->check_kembar;
-        dd($cekBayiKembar);
+        // dd($cekBayiKembar);
         $bayi = new PasienBayiIGD();
         $bayi->nik_ortu             = $ortubayi->nik_bpjs;
         $bayi->no_bpjs_ortu         = $ortubayi->no_Bpjs;
@@ -399,7 +399,7 @@ class PasienBayiController extends Controller
             }
             Pasien::create([
                 'no_rm'             => $rm_bayi,
-                'no_Bpjs'           => '',
+                'no_Bpjs'           => '0000000000000000',
                 'nama_px'           => strtoupper( $ortubayi->nama_px.', BY NY '),
                 'jenis_kelamin'     => $request->jk_bayi,
                 'tempat_lahir'      => $request->tempat_lahir_bayi,
@@ -414,17 +414,17 @@ class PasienBayiController extends Controller
                 'kecamatan'         => $ortubayi->kecamatan==null?$ortubayi->kode_kecamatan:$ortubayi->kecamatan,
                 'desa'              => $ortubayi->desa==null?$ortubayi->kode_desa:$ortubayi->desa,
                 'alamat'            => $ortubayi->alamat,
-                'no_telp'           => '',
-                'no_hp'             => '',
+                'no_telp'           => '000000000000',
+                'no_hp'             => '000000000000',
                 'tgl_entry'         => Carbon::now(),
-                'nik_bpjs'          => '',
+                'nik_bpjs'          => '0000000000000000',
                 'update_date'       => Carbon::now(),
                 'update_by'         => Carbon::now(),
                 'kode_propinsi'     => $ortubayi->kode_propinsi,
                 'kode_kabupaten'    => $ortubayi->kode_kabupaten,
                 'kode_kecamatan'    => $ortubayi->kode_kecamatan,
                 'kode_desa'         => $ortubayi->kode_desa,
-                'no_ktp'            => '',
+                'no_ktp'            => '0000000000000000',
                 'pic'               => Auth::user()->id_simrs,
                 'user_create'       => Auth::user()->username,
                 'status_px'         => 1,

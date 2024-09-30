@@ -756,6 +756,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/download-fktp', 'download')->name('download');
         // laporan pasien rawat inap perruangan
         Route::get('/pasien-ranap/peruangan', 'laporanRanapPeruangan')->name('pasien-ranap-peruangan');
+
+         // Laporan kunjungan poliklinik
+        Route::controller(App\Http\Controllers\LaporanRekamMedis\KunjunganPoliklinikController::class)->prefix('kunjungan')->name('kunjungan.')->group(function () {
+        Route::get('/kunjungan-poliklinik', 'lapKunjunganPoli')->name('kunjungan-poliklinik');
+        Route::get('download/kunjungan-poliklinik', 'exportKunjunganPoli')->name('exportKunjunganPoli');
+        });
     });
 
     // pencarian pasien

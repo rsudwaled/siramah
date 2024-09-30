@@ -155,7 +155,7 @@
                             @if (isset($pasien))
                                 <div class="row">
                                     @php
-                                        $heads = ['Pasien', 'Aksi'];
+                                        $heads = ['Pasien','Riwayat' ,'Aksi'];
                                         $config['paging'] = false;
                                         $config['order'] = ['0', 'desc'];
                                         $config['info'] = false;
@@ -191,18 +191,34 @@
                                                             {{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}</small>
                                                     </a>
                                                 </td>
+                                                <td>
+                                                    @php
+                                                        $kunjunganTerakhir = $data
+                                                            ->kunjungans()
+                                                            ->latest('tgl_masuk')
+                                                            ->first();
+                                                    @endphp
+
+                                                    TGL:
+                                                    {{ $kunjunganTerakhir ? $kunjunganTerakhir->tgl_masuk : 'Belum ada kunjungan' }}
+                                                    <br>
+                                                    Diag:
+                                                    {{ $kunjunganTerakhir ? $kunjunganTerakhir->diagx : 'Belum ada data diagnosa' }}
+                                                    <br>
+                                                    Unit: {{ $kunjunganTerakhir ? $kunjunganTerakhir->prefix_kunjungan : 'Belum ada data diagnosa' }}
+                                                </td>
                                                 <td style="vertical-align: middle;">
                                                     <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         data-nama="{{ $data->nama_px }}"
                                                         data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-kontak="{{ $data->no_tlp == null ? $data->no_hp : $data->no_tlp }}"
-                                                        class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
+                                                        class="btn-xs btn-pilihPasien bg-purple btn-block" label="PILIH DATA" />
 
                                                     <x-adminlte-button type="button" data-nik="{{ $data->nik_bpjs }}"
                                                         data-nomorkartu="{{ $data->no_Bpjs }}"
                                                         data-rm="{{ $data->no_rm }}"
-                                                        class="btn-xs btn-cekBPJS bg-success" label="Cek Status BPJS" />
+                                                        class="btn-xs btn-cekBPJS bg-success btn-block" label="Cek Status BPJS" />
 
                                                     {{-- <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
                                                         class="btn-xs btn-cek-kunjunganuser bg-warning mt-1"

@@ -35,7 +35,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text">KUNJUNGAN</span>
                                     <span class="info-box-number">
-                                        <h4>{{$totalKunjungan??'0'}}</h4>
+                                        <h4>{{$jumlahKunjungan??0}}</h4>
                                     </span>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
                                 <div class="info-box-content">
                                     <span class="info-box-text">PENGUNJUNG</span>
                                     <span class="info-box-number">
-                                        <h4>{{$totalPengunjung??'0'}}</h4>
+                                        <h4>{{$jumlahPengunjung??0}}</h4>
                                     </span>
                                 </div>
                             </div>
@@ -57,26 +57,20 @@
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>No. RM</th>
-                            <th>Nama Pasien</th>
-                            <th>Kunjungan</th>
-                            <th>Detail</th>
+                            <th>Unit</th>
+                            <th>Laki-Laki</th>
+                            <th>Perempuan</th>
+                            <th>Jumlah</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pengunjung as $people)
+                        @foreach ($results as $prefix => $data)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $people->no_rm }}</td>
-                                <td>{{ $people->no_rm && $people->pasien ? $people->pasien->nama_px : '-' }}</td>
-                                <td>{{ 'visit: '.$people->visit_count }}</td>
-                                <td>
-                                    <button class="btn-sm btn-warning btn-detail"
-                                        data-no-rm="{{ $people->no_rm }}"
-                                        data-start="{{ $startdate}}"
-                                        data-end="{{ $enddate}}"
-                                        >Detail</button>
-                                </td>
+                                <td>{{ $prefix }}</td>
+                                <td>{{ $data['laki_laki'] }}</td>
+                                <td>{{ $data['perempuan'] }}</td>
+                                <td>{{ $data['total'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
