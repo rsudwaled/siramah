@@ -101,16 +101,13 @@
                                 <td>
                                     <x-adminlte-button wire:click="resync('{{ $antrian->kodebooking }}')"
                                         class="btn-xs" label="Refresh" theme="warning" icon="fas fa-sync" />
-
                                 </td>
                                 <td>{{ $antrian->taskid3 }}</td>
-                                <td></td>
                                 {{-- <td>{{ $antrian?->kunjungan?->tgl_masuk }}</td> --}}
-                                {{-- <td>{{ $antrian?->kunjungan?->assesmen_perawat?->tanggalassemen }}</td> --}}
+                                <td>{{ $antrian?->kunjungan?->assesmen_perawat?->tanggalassemen }}</td>
                                 <td>{{ $antrian->taskid4 }}</td>
                                 <td>{{ $antrian->taskid5 }}</td>
-                                <td></td>
-                                {{-- <td>{{ $antrian->kunjungan?->order_obat_header?->tgl_entry }}</td> --}}
+                                <td>{{ $antrian->kunjungan?->order_obat_header?->tgl_entry }}</td>
                                 <td>{{ $antrian->taskid7 }}</td>
                             </tr>
                         @endforeach

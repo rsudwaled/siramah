@@ -104,7 +104,7 @@ class MonitoringWaktuAntrian extends Component
                 ->where('method', '!=', 'Offline')
                 ->where('taskid', '!=', 99)
                 ->orderBy('taskid', 'desc')
-                // ->with(['kunjungan', 'kunjungan.assesmen_perawat'])
+                ->with(['kunjungan', 'kunjungan.assesmen_perawat', 'kunjungan.order_obat_header'])
                 // ->join('ts_kunjungan', 'jkn_antrian.kode_kunjungan', '=', 'ts_kunjungan.kode_kunjungan')
                 // ->orderBy('ts_kunjungan.tgl_masuk', 'desc')
                 // ->select('jkn_antrian.*') // Agar hanya data antrian yang diambil
@@ -112,9 +112,13 @@ class MonitoringWaktuAntrian extends Component
         }
         if ($this->sync) {
             $antrian = $this->antrians
-                ->where('sync_antrian',0)
+                ->where('sync_antrian', 0)
                 ->first();
-            $this->resync($antrian->kodebooking);
+            if ($antrian) {
+                $this->resync($antrian->kodebooking);
+            } else {
+                $this->tanggalperiksa = Carbon::parse($this->tanggalperiksa)->addDays(1)->format('Y-m-d');
+            }
         }
         return view('livewire.poliklinik.monitoring-waktu-antrian')->title('Monitoring Waktu Antrian');
     }
