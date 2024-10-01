@@ -1,9 +1,35 @@
 <div>
     <div class="col-md-12">
+        @if (isset($antrians))
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <x-adminlte-small-box title="{{ $antrians->count() }}" text="Total Antrian" theme="primary"
+                            icon="fas fa-user-injured" />
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <x-adminlte-small-box title="{{ $antrians->where('sync_antrian', '!=', 0)->count() }}"
+                            text="Sudah Syncron" theme="success" icon="fas fa-user-check" />
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <x-adminlte-small-box title="{{ $antrians->where('sync_antrian', 0)->count() }}"
+                            text="Belum Syncron" theme="danger" icon="fas fa-user-times" />
+                    </div>
+                    {{-- <div class="col-lg-3 col-6">
+                    <x-adminlte-small-box title="{{ $antrians_sync }}" text="Antrian Syncron" theme="success"
+                        icon="fas fa-user-injured" />
+                </div> --}}
+
+                </div>
+            </div>
+        @endif
         @if (flash()->message)
             <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }} !" dismissable>
                 {{ flash()->message }}
             </x-adminlte-alert>
+        @endif
+        @if ($sync)
+            <div wire:poll.5000ms></div>
         @endif
         <x-adminlte-card title="Monitoring Waktu Antrian" theme="secondary">
             <div class="row">
@@ -77,11 +103,14 @@
                                         class="btn-xs" label="Refresh" theme="warning" icon="fas fa-sync" />
 
                                 </td>
-                                <td>{{ $antrian?->kunjungan?->tgl_masuk }}</td>
-                                <td>{{ $antrian?->kunjungan?->assesmen_perawat?->tanggalassemen }}</td>
+                                <td>{{ $antrian->taskid3 }}</td>
+                                <td></td>
+                                {{-- <td>{{ $antrian?->kunjungan?->tgl_masuk }}</td> --}}
+                                {{-- <td>{{ $antrian?->kunjungan?->assesmen_perawat?->tanggalassemen }}</td> --}}
                                 <td>{{ $antrian->taskid4 }}</td>
                                 <td>{{ $antrian->taskid5 }}</td>
-                                <td>{{ $antrian->kunjungan?->order_obat_header?->tgl_entry }}</td>
+                                <td></td>
+                                {{-- <td>{{ $antrian->kunjungan?->order_obat_header?->tgl_entry }}</td> --}}
                                 <td>{{ $antrian->taskid7 }}</td>
                             </tr>
                         @endforeach
