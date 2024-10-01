@@ -149,37 +149,6 @@ class PasienIGDController extends Controller
         $rm_new ='0'.$cek_last_rm->rm_baru;
         $desa   = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
 
-        // $keluarga = KeluargaPasien::create([
-        //     'no_rm'             => $rm_new,
-        //     'nama_keluarga'     => strtoupper($request->nama_keluarga),
-            // 'hubungan_keluarga' => $request->hub_keluarga,
-            // 'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
-            // 'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
-            // 'input_date'        => Carbon::now(),
-            // 'Update_date'       => Carbon::now(),
-        // ]);
-        $conditions = [
-            'no_rm'         => $rm_new,
-            'nama_keluarga' => $request->nama_keluarga,
-        ];
-
-        // Data yang akan diperbarui atau dibuat
-        $dataKeluarga = [
-            'hubungan_keluarga' => $request->hub_keluarga,
-            'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
-            'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
-            'input_date'        => Carbon::now(),
-            'Update_date'       => Carbon::now(),
-        ];
-
-        // Gunakan updateOrCreate
-        $keluarga = KeluargaPasien::updateOrCreate($conditions, $dataKeluarga);
-        if(empty($keluarga))
-        {
-            Alert::warning('DATA KELUARGA KOSONG!', 'silahkan isi data keluarga pasien!');
-            return redirect()->route('pasien-baru.create');
-        }
-
         $pasien = Pasien::create([
             'no_rm'             => $rm_new,
             'no_Bpjs'           => $request->no_bpjs,
