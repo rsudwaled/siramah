@@ -13,6 +13,7 @@ class MonitoringWaktuAntrian extends Component
     public $antrians;
     public $sync = 0;
     public $tanggalperiksa, $kodepoli;
+    protected $listeners = ['antriansync'];
     public function onsync()
     {
         $this->sync = $this->sync ? 0 : 1;
@@ -70,22 +71,26 @@ class MonitoringWaktuAntrian extends Component
                     ]);
                 }
             }
-            $antrianx->update([
-                'sync_antrian' => now(),
-            ]);
             flash('Berhasil', 'success');
+            $antrianx->update([
+                'sync_antrian' => 1,
+            ]);
         } else {
+            $antrianx->update([
+                'sync_antrian' => 99,
+            ]);
             flash($res->metadata->message, 'danger');
         }
         if ($this->sync) {
             $this->dispatch('antriansync');
         }
     }
-    public function antriansync(Request $request)
+    public function antriansync()
     {
-        $antrian = Antrian::where('tanggalperiksa', $this->tanggalperiksa)
+        $request = new Request();
+        $antrian = Antrian::whereDate('tanggalperiksa', $this->tanggalperiksa)
             // ->where('kodepoli', $this->kodepoli)
-            ->where('sync_antrian',  null)
+            ->whereNotNull('sync_antrian')
             ->where('method', '!=', 'Offline')
             ->where('taskid', '!=', 99)
             ->first();

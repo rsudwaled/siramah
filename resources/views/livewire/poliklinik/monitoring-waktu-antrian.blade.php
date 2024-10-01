@@ -36,7 +36,7 @@
             <div wire:loading>
                 <h4>Loading...</h4>
             </div>
-            <table class="table table-bordered text-nowrap table-sm table-hover">
+            <table class="table table-bordered text-nowrap table-sm table-hover table-responsive">
                 <thead>
                     <tr>
                         <th>No</th>
