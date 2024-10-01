@@ -14,46 +14,47 @@ class MonitoringWaktuAntrian extends Component
     public $tanggalperiksa, $kodepoli;
     public function refresh($kodebooking, Request $request)
     {
-        $antrian = Antrian::firstWhere('kodebooking', $kodebooking);
-        dd($antrian);
+        $antrianx = Antrian::firstWhere('kodebooking', $kodebooking);
         $request['kodebooking'] = $kodebooking;
         $api =  new AntrianController();
         $res = $api->taskid_antrean($request);
         if ($res->metadata->code == 200) {
             foreach ($res->response as  $antrian) {
                 if ($antrian->taskid == 3) {
-                    $waktu = Carbon::parse($antrian->wakturs);
-                    $antrian->update([
+                    $waktu = Carbon::parse($antrian->wakturs)->format('Y-m-d H:i:s');
+                    $antrianx->update([
                         'taskid3' => $waktu,
                     ]);
                 }
                 if ($antrian->taskid == 4) {
-                    $waktu = Carbon::parse($antrian->wakturs);
-                    $antrian->update([
+                    $waktu = Carbon::parse($antrian->wakturs)->format('Y-m-d H:i:s');
+                    $antrianx->update([
                         'taskid4' => $waktu,
                     ]);
                 }
                 if ($antrian->taskid == 5) {
-                    $waktu = Carbon::parse($antrian->wakturs);
-                    $antrian->update([
+                    $waktu = Carbon::parse($antrian->wakturs)->format('Y-m-d H:i:s');
+                    $antrianx->update([
                         'taskid5' => $waktu,
                     ]);
                 }
                 if ($antrian->taskid == 6) {
-                    $waktu = Carbon::parse($antrian->wakturs);
-                    $antrian->update([
+                    $waktu = Carbon::parse($antrian->wakturs)->format('Y-m-d H:i:s');
+                    $antrianx->update([
                         'taskid6' => $waktu,
                     ]);
                 }
                 if ($antrian->taskid == 7) {
-                    $waktu = Carbon::parse($antrian->wakturs);
-                    $antrian->update([
+                    $waktu = Carbon::parse($antrian->wakturs)->format('Y-m-d H:i:s');
+                    $antrianx->update([
                         'taskid7' => $waktu,
                     ]);
                 }
             }
+            flash('Berhasil', 'success');
+        } else {
+            flash($res->metadata->message, 'danger');
         }
-        dd($waktu);
     }
     public function mount(Request $request)
     {
