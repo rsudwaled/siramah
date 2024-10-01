@@ -49,17 +49,18 @@ class AntrianController extends APIController
     }
     public function selesaiPoliklinik(Request $request)
     {
+        $now = now();
         $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 5;
-            $request['waktu'] = now();
+            $request['waktu'] = $now;
             $res = $this->update_antrean($request);
             Alert::success('Success', $res->metadata->code);
         }
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
-        $request['waktu'] = now();
+        $request['waktu'] = $now;
         $request['keterangan'] = "Selesai poliklinik";
         $antrian->update([
             'taskid' => $request->taskid,
@@ -166,16 +167,17 @@ class AntrianController extends APIController
     }
     public function racikFarmasi($kodebooking, Request $request)
     {
+        $now = now();
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 6;
-            $request['waktu'] = now();
+            $request['waktu'] = $now;
             $res = $this->update_antrean($request);
         }
         $antrian->update([
             'taskid' => 6,
-            'taskid6' => now(),
+            'taskid6' => $now,
             'keterangan' => "Proses peracikan obat",
             'user' => 'Sistem Siramah',
         ]);
@@ -184,16 +186,17 @@ class AntrianController extends APIController
     }
     public function selesaiFarmasi($kodebooking, Request $request)
     {
+        $now = now();
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 7;
-            $request['waktu'] = now();
+            $request['waktu'] =  $now;
             $res = $this->update_antrean($request);
         }
         $antrian->update([
             'taskid' => 7,
-            'taskid7' => now(),
+            'taskid7' =>  $now,
             'keterangan' => "Selesai peracikan obat",
             'user' => 'Sistem Siramah',
         ]);
@@ -879,6 +882,7 @@ class AntrianController extends APIController
     }
     public function panggilPoliklinik(Request $request)
     {
+        $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (env('BRIDGING_ANTRIAN_BPJS')) {
             $request['kodebooking'] = $antrian->kodebooking;
@@ -886,7 +890,7 @@ class AntrianController extends APIController
             if ($antrian->taskid3) {
                 $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
             } else {
-                $request['waktu'] = now()->subMinutes(rand(30, 45));
+                $request['waktu'] = $now;
                 $antrian->update([
                     'taskid3' =>  $request->waktu,
                     'user3' => auth()->user()->name,
@@ -895,12 +899,12 @@ class AntrianController extends APIController
             $res = $this->update_antrean($request);
             $request['kodebooking'] = $antrian->kodebooking;
             $request['taskid'] = 4;
-            $request['waktu'] = now();
+            $request['waktu'] = $now;
             $res = $this->update_antrean($request);
         }
         $antrian->update([
             'taskid' => 4,
-            'taskid4' =>  now(),
+            'taskid4' =>  $now,
             'sync_panggil' => 0,
             'status_api' => 0,
             'user3' => auth()->user()->name,
@@ -1370,7 +1374,7 @@ class AntrianController extends APIController
         $cons_id =  $this->consid;
         $secretKey = $this->secrekey;
         $userkey = $this->userkey;
-        date_default_timezone_set('Asia/Jakarta');
+        date_default_timezone_set('UTC');
         $tStamp = strval(time() - strtotime('1970-01-01 00:00:00'));
         $signature = hash_hmac('sha256', $cons_id . "&" . $tStamp, $secretKey, true);
         $encodedSignature = base64_encode($signature);
