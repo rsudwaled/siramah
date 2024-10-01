@@ -11,8 +11,27 @@ use Livewire\Component;
 class MonitoringWaktuAntrian extends Component
 {
     public $antrians;
+    public $sync = 0;
     public $tanggalperiksa, $kodepoli;
-    public function refresh($kodebooking, Request $request)
+    public function onsync()
+    {
+        $this->sync = $this->sync ? 0 : 1;
+    }
+    public function cari()
+    {
+        if ($this->tanggalperiksa) {
+            $this->antrians = Antrian::where('tanggalperiksa', $this->tanggalperiksa)
+                // ->where('kodepoli', $this->kodepoli)
+                ->where('method', '!=', 'Offline')
+                ->where('taskid', '!=', 99)
+                ->with(['kunjungan', 'kunjungan.assesmen_perawat'])
+                ->join('ts_kunjungan', 'jkn_antrian.kode_kunjungan', '=', 'ts_kunjungan.kode_kunjungan')
+                ->orderBy('ts_kunjungan.tgl_masuk', 'desc')
+                ->select('jkn_antrian.*') // Agar hanya data antrian yang diambil
+                ->get();
+        }
+    }
+    public function resync($kodebooking, Request $request)
     {
         $antrianx = Antrian::firstWhere('kodebooking', $kodebooking);
         $request['kodebooking'] = $kodebooking;
@@ -51,9 +70,29 @@ class MonitoringWaktuAntrian extends Component
                     ]);
                 }
             }
+            $antrianx->update([
+                'sync_antrian' => now(),
+            ]);
             flash('Berhasil', 'success');
         } else {
             flash($res->metadata->message, 'danger');
+        }
+        if ($this->sync) {
+            $this->dispatch('antriansync');
+        }
+    }
+    public function antriansync(Request $request)
+    {
+        $antrian = Antrian::where('tanggalperiksa', $this->tanggalperiksa)
+            // ->where('kodepoli', $this->kodepoli)
+            ->where('sync_antrian',  null)
+            ->where('method', '!=', 'Offline')
+            ->where('taskid', '!=', 99)
+            ->first();
+        if ($antrian) {
+            $this->resync($antrian->kodebooking, $request);
+        } else {
+            flash('Tidak ada antrian yang perlu disyncronkan', 'success');
         }
     }
     public function mount(Request $request)
@@ -62,17 +101,6 @@ class MonitoringWaktuAntrian extends Component
     }
     public function render()
     {
-        if ($this->tanggalperiksa) {
-            $this->antrians = Antrian::where('tanggalperiksa', $this->tanggalperiksa)
-                // ->where('kodepoli', $this->kodepoli)
-                ->where('method', '!=', 'Offline')
-                ->where('taskid', '!=', 99)
-                ->with(['kunjungan', 'kunjungan.assesmen_perawat'])
-                ->join('ts_kunjungan', 'jkn_antrian.kode_kunjungan', '=', 'ts_kunjungan.kode_kunjungan')
-                ->orderBy('ts_kunjungan.tgl_masuk', 'desc')
-                ->select('jkn_antrian.*') // Agar hanya data antrian yang diambil
-                ->get();
-        }
         return view('livewire.poliklinik.monitoring-waktu-antrian')->title('Monitoring Waktu Antrian');
     }
 }
