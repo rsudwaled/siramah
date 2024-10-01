@@ -139,25 +139,41 @@ class PasienIGDController extends Controller
                 'hub_keluarga'          =>'hubungan keluarga dengan pasien wajib dipilih',
             ]);
 
-        $tgl_lahir  = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
-        $same_address = $request->has('default_alamat_checkbox')??Null;
+        $tgl_lahir      = Carbon::parse($request->tgl_lahir)->format('Y-m-d');
+        $same_address   = $request->has('default_alamat_checkbox')??Null;
 
         $cek_last_rm = \DB::connection('mysql2')->table('mt_pasien')
                 ->selectRaw('MAX(no_rm) + 1 AS rm_baru')
                 ->whereRaw("LEFT(no_rm, 2) = '01'")
                 ->first();
         $rm_new ='0'.$cek_last_rm->rm_baru;
-        $desa           = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
+        $desa   = LokasiDesa::with('kecamatan')->where('id', $request->desa_pasien)->first();
 
-        $keluarga = KeluargaPasien::create([
-            'no_rm'             => $rm_new,
-            'nama_keluarga'     => strtoupper($request->nama_keluarga),
+        // $keluarga = KeluargaPasien::create([
+        //     'no_rm'             => $rm_new,
+        //     'nama_keluarga'     => strtoupper($request->nama_keluarga),
+            // 'hubungan_keluarga' => $request->hub_keluarga,
+            // 'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
+            // 'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
+            // 'input_date'        => Carbon::now(),
+            // 'Update_date'       => Carbon::now(),
+        // ]);
+        $conditions = [
+            'no_rm'         => $rm_new,
+            'nama_keluarga' => $request->nama_keluarga,
+        ];
+
+        // Data yang akan diperbarui atau dibuat
+        $dataKeluarga = [
             'hubungan_keluarga' => $request->hub_keluarga,
             'alamat_keluarga'   => !empty($same_address) ? $desa->name.' Kecamatan '.$desa->kecamatan->name.' - '. $desa->kecamatan->kabupatenKota->name.' - '. $desa->kecamatan->kabupatenKota->provinsi->name.' '.$request->alamat_lengkap_pasien : $request->alamat_lengkap_sodara,
             'tlp_keluarga'      => !empty($same_address) ? $request->no_telp : $request->kontak,
             'input_date'        => Carbon::now(),
             'Update_date'       => Carbon::now(),
-        ]);
+        ];
+
+        // Gunakan updateOrCreate
+        $keluarga = KeluargaPasien::updateOrCreate($conditions, $dataKeluarga);
         if(empty($keluarga))
         {
             Alert::warning('DATA KELUARGA KOSONG!', 'silahkan isi data keluarga pasien!');
