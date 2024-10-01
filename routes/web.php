@@ -91,6 +91,7 @@ use App\Livewire\Casemix\CasemixRajal;
 use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
+use App\Livewire\Operasi\KunjunganOperasi;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
@@ -98,11 +99,15 @@ use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Poliklinik\AntrianPoliklinikProses;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
+use App\Livewire\Poliklinik\KunjunganPoliklinik;
+use App\Livewire\Poliklinik\KunjunganPoliklinikPasien;
+use App\Livewire\Poliklinik\MonitoringWaktuAntrian;
 use App\Livewire\Profil\ProfilIndex;
 use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
+use App\Models\Kunjungan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -248,6 +253,8 @@ Route::middleware('auth')->group(function () {
     Route::get('antrianKasir', [AntrianController::class, 'antrianKasir'])->name('antrianKasir');
     // poliklinik
     Route::get('antrianPoliklinik', [AntrianController::class, 'antrianPoliklinik'])->name('antrianPoliklinik');
+    Route::get('kunjungan-poliklinik', KunjunganPoliklinik::class)->name('kunjungan.poliklinik');
+    Route::get('kunjungan-poliklinik-pasien', KunjunganPoliklinikPasien::class)->name('kunjungan.poliklinik.pasien');
     Route::get('antrian-poliklinik-rajal', AntrianPoliklinikRajal::class)->name('antrian.poliklinik.rajal');
     Route::get('antrian-poliklinik-proses', AntrianPoliklinikProses::class)->name('antrian.poliklinik.proses');
 
@@ -269,10 +276,13 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardTanggalAntrianPoliklinik', [AntrianController::class, 'dashboardTanggalAntrian'])->name('dashboardTanggalAntrianPoliklinik');
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
+    // operasi
+    Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
     Route::get('monitoring-antrian-rajal', MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
+    Route::get('monitoring-waktu-antrian', MonitoringWaktuAntrian::class)->name('monitoring-waktu-antrian');
     //  casemix
     Route::get('casemix-rajal', CasemixRajal::class)->name('casemix-rajal');
     Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');

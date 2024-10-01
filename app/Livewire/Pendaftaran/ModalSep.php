@@ -92,7 +92,7 @@ class ModalSep extends Component
                 $this->asalRujukan = $this->asalRujukan;
                 $this->noRujukan = $rujukan->noKunjungan;
                 $this->tglRujukan = $rujukan->tglKunjungan;
-                $this->ppkRujukan = $rujukan->peserta->provUmum->kdProvider;
+                $this->ppkRujukan = $rujukan->provPerujuk->kode;
                 flash($res->metadata->message, 'success');
             } else {
                 return flash($res->metadata->message, 'danger');

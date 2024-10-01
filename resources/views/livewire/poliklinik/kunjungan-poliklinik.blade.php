@@ -105,8 +105,9 @@
                                     </td>
                                     <td>
                                         <a class="withLoad"
-                                            href="{{ route('antrian.poliklinik.proses') }}?kode_kunjungan={{ $kunjungan->kode_kunjungan }}">
-                                            <x-adminlte-button class="btn-xs" theme="secondary" label="Lihat" />
+                                            href="{{ route('kunjungan.poliklinik.pasien') }}?kode_kunjungan={{ $kunjungan->kode_kunjungan }}">
+                                            <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-file-medical"
+                                                label="Lihat" />
                                         </a>
                                     </td>
                                     <td>{{ $kunjungan->alasan_masuk->alasan_masuk }}</td>
