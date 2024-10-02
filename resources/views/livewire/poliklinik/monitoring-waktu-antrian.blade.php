@@ -29,7 +29,7 @@
             </x-adminlte-alert>
         @endif
         @if ($sync)
-            <div wire:poll.5000ms></div>
+            <div wire:poll.3000ms></div>
         @endif
         <x-adminlte-card title="Monitoring Waktu Antrian" theme="secondary">
             <div class="row">
