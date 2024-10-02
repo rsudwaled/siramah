@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Poliklinik;
 
+use App\Exports\MonitoringWaktuAntrianExport;
 use App\Http\Controllers\AntrianController;
 use App\Models\Antrian;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MonitoringWaktuAntrian extends Component
 {
@@ -92,6 +94,16 @@ class MonitoringWaktuAntrian extends Component
     //         flash($th->getMessage(), 'success');
     //     }
     // }
+    public function export()
+    {
+        try {
+            $time = now()->format('Y-m-d');
+            return Excel::download(new MonitoringWaktuAntrianExport($this->tanggalperiksa), 'waktuantrian-' . $this->tanggalperiksa . '.xlsx');
+            flash('Export Obat successfully', 'success');
+        } catch (\Throwable $th) {
+            flash('Mohon maaf ' . $th->getMessage(), 'danger');
+        }
+    }
     public function mount(Request $request)
     {
         $this->tanggalperiksa = $request->tanggalperiksa ?? now()->format('Y-m-d');

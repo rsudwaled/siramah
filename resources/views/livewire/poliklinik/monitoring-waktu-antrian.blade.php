@@ -45,8 +45,11 @@
                     </x-adminlte-input>
                 </div>
                 <div class="col-md-6">
-                    <x-adminlte-button wire:click="onsync" class="btn-sm" label="{{ $sync ? 'Sync On' : 'Sync Off' }}"
-                        theme="{{ $sync ? 'success' : 'secondary' }}" icon="fas fa-sync" />
+                    <x-adminlte-button wire:click="onsync" class="btn-sm mb-2"
+                        label="{{ $sync ? 'Sync On' : 'Sync Off' }}" theme="{{ $sync ? 'success' : 'secondary' }}"
+                        icon="fas fa-sync" />
+                    <x-adminlte-button wire:click="export" class="btn-sm mb-2" label="Export"
+                        theme="primary" icon="fas fa-print" />
                 </div>
                 <div class="col-md-4">
                     <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / No RM" igroup-size="sm">
