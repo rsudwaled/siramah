@@ -9,7 +9,8 @@
     </title>
     <style>
         .unicode {
-            font-family: "DejaVu Sans";
+            font-family: "DejaVu Sans" !important;
+            font-weight: bold;
         }
 
         .text-left {

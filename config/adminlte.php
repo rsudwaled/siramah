@@ -438,9 +438,15 @@ return [
             'icon'    => 'fas fa-clinic-medical',
             'submenu' => [
                 [
-                    'text' => 'Kunjungan Operasi',
-                    'icon'    => 'fas fa-clinic-medical',
+                    'text' => 'Kunjungan Pasien',
+                    'icon'    => 'fas fa-user-injured',
                     'url'  => 'kunjungan-operasi',
+                    'shift'   => 'ml-2',
+                ],
+                [
+                    'text' => 'ERM Operasi',
+                    'icon'    => 'fas fa-clinic-medical',
+                    'url'  => 'erm-operasi',
                     'shift'   => 'ml-2',
                 ],
             ]
@@ -1574,28 +1580,19 @@ return [
                 ],
             ],
         ],
-        // USER ACCESS CONTROLL
+        ['header' => 'PENGATURAN'],
         [
-            'text'    => 'User Access Control',
-            'icon'    => 'fas fa-users-cog',
+            'text' => 'Role & Permission',
+            'icon'    => 'fas fa-user-shield',
+            'url'  => 'role-permission',
             'can' => 'admin',
-            'submenu' => [
-                [
-                    'text' => 'User',
-                    'icon'    => 'fas fa-users',
-                    'url'  => 'user',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                    'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
-                ],
-                [
-                    'text' => 'Role & Permission',
-                    'icon'    => 'fas fa-user-shield',
-                    'url'  => 'role-permission',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-            ],
+        ],
+        [
+            'text' => 'User',
+            'icon'    => 'fas fa-users',
+            'url'  => 'user',
+            'can' => 'admin',
+            'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
         ],
         [
             'text' => 'Profil',
