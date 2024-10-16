@@ -48,7 +48,6 @@ class JadwalOperasiController extends APIController
             'jadwals'
         ]));
     }
-
     public function jadwaloperasi_display()
     {
         $tanggalawal = Carbon::now()->format('Y-m-d');
@@ -58,7 +57,6 @@ class JadwalOperasiController extends APIController
             'jadwals'
         ]));
     }
-
     public function jadwal_operasi_rs(Request $request)
     {
         // checking request
