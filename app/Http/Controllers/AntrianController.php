@@ -925,7 +925,7 @@ class AntrianController extends APIController
 
     public function panggilBridgingPoliklinik(Request $request)
     {
-
+        dd('test');
         $request['taskid'] = 4;
         $request['keterangan'] = "Panggilan ke poliklinik yang anda pilih";
         $request['waktu'] = now()->timestamp * 1000;
@@ -973,6 +973,7 @@ class AntrianController extends APIController
     }
     public function lanjutFarmasi(Request $request)
     {
+        $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'non racikan';
@@ -983,7 +984,7 @@ class AntrianController extends APIController
         if ($res->metadata->code == 200) {
             $antrian->update([
                 'taskid' => 5,
-                'taskid5' => now(),
+                'taskid5' => $now,
                 'status_api' => 0,
                 'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
                 'user' => 'Sistem Siramah',
@@ -998,6 +999,7 @@ class AntrianController extends APIController
     }
     public function lanjutFarmasiRacikan(Request $request)
     {
+        $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'racikan';
@@ -1008,7 +1010,7 @@ class AntrianController extends APIController
         if ($res->metadata->code == 200) {
             $antrian->update([
                 'taskid' => 5,
-                'taskid5' => now(),
+                'taskid5' => $now,
                 'status_api' => 0,
                 'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
                 'user' => 'Sistem Siramah',
