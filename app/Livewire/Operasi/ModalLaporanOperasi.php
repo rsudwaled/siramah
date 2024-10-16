@@ -27,64 +27,62 @@ class ModalLaporanOperasi extends Component
         $this->kunjungan = $kunjungan;
         $laporan = LaporanOperasi::firstWhere('kode_kunjungan', $kunjungan->kode_kunjungan);
         $this->laporan = $laporan;
-        $this->kode = $laporan->kode;
-        $this->nomor = $laporan->nomor;
-        $this->ruang_operasi = $laporan->ruang_operasi;
-        $this->kamar_operasi = $laporan->kamar_operasi;
-        $this->cytoterencana = $laporan->cytoterencana;
-        $this->tanggal_operasi = $laporan->tanggal_operasi;
-        $this->jam_operasi_mulai = $laporan->jam_operasi_mulai;
-        $this->jam_operasi_selesai = $laporan->jam_operasi_selesai;
-        $lama_operasi = null;
-        if (
-            $laporan->jam_operasi_mulai && $laporan->jam_operasi_selesai
-            && $laporan->jam_operasi_mulai !== '0000-00-00 00:00:00'
-            && $laporan->jam_operasi_selesai !== '0000-00-00 00:00:00'
-        ) {
-            $start = Carbon::parse($laporan->jam_operasi_mulai);
-            $end = Carbon::parse($laporan->jam_operasi_selesai);
-            $diffInHours = $start->diffInHours($end); // Menghitung selisih dalam jam
-            $diffInMinutes = $start->diffInMinutes($end) % 60;
-            $lama_operasi = $diffInHours . " jam " . $diffInMinutes . " menit";
+        if ($laporan) {
+            $this->kode = $laporan->kode;
+            $this->nomor = $laporan->nomor;
+            $this->ruang_operasi = $laporan->ruang_operasi;
+            $this->kamar_operasi = $laporan->kamar_operasi;
+            $this->cytoterencana = $laporan->cytoterencana;
+            $this->tanggal_operasi = $laporan->tanggal_operasi;
+            $this->jam_operasi_mulai = $laporan->jam_operasi_mulai;
+            $this->jam_operasi_selesai = $laporan->jam_operasi_selesai;
+            $lama_operasi = null;
+            if (
+                $laporan->jam_operasi_mulai && $laporan->jam_operasi_selesai
+                && $laporan->jam_operasi_mulai !== '0000-00-00 00:00:00'
+                && $laporan->jam_operasi_selesai !== '0000-00-00 00:00:00'
+            ) {
+                $start = Carbon::parse($laporan->jam_operasi_mulai);
+                $end = Carbon::parse($laporan->jam_operasi_selesai);
+                $diffInHours = $start->diffInHours($end); // Menghitung selisih dalam jam
+                $diffInMinutes = $start->diffInMinutes($end) % 60;
+                $lama_operasi = $diffInHours . " jam " . $diffInMinutes . " menit";
+            }
+            $this->lama_operasi = $lama_operasi ?? "-";
+            $this->pembedah = $laporan->pembedah;
+            $this->asisten1 = $laporan->asisten1;
+            $this->asisten2 = $laporan->asisten2;
+            $this->perawat_instrumen = $laporan->perawat_instrumen;
+            $this->ahli_anastesi = $laporan->ahli_anastesi;
+            $this->jenis_anastesi = $laporan->jenis_anastesi;
+            $this->diagnosa_pra_bedah = $laporan->diagnosa_pra_bedah;
+            $this->indikasi_operasi = $laporan->indikasi_operasi;
+            $this->diagnosa_pasca_bedah = $laporan->diagnosa_pasca_bedah;
+            $this->jenis_operasi = $laporan->jenis_operasi;
+            $this->desinfekasi_kulit = $laporan->desinfekasi_kulit;
+            $this->jaringan_dieksisi = $laporan->jaringan_dieksisi;
+            $this->dikirim_lab = $laporan->dikirim_lab;
+            $this->jenis_bahan = $laporan->jenis_bahan;
+            $this->jenis_bahan = $laporan->jenis_bahan;
+            $this->pemeriksaan_laboratorium = $laporan->pemeriksaan_laboratorium;
+            $this->macam_sayatan = $laporan->macam_sayatan;
+            $this->posisi_penderita = $laporan->posisi_penderita;
+            $this->teknik_temuan_operasi = $laporan->teknik_temuan_operasi;
+            $this->bhp_khusus = $laporan->bhp_khusus;
+            $this->penggunaan_bhp_khusus = $laporan->penggunaan_bhp_khusus;
+            $this->komplikasi_operasi = $laporan->komplikasi_operasi;
+            $this->penjabaran_komplikasi = $laporan->penjabaran_komplikasi;
+            $this->pendarahan = $laporan->pendarahan;
+            $this->kontrol = $laporan->kontrol;
+            $this->puasa = $laporan->puasa;
+            $this->drain = $laporan->drain;
+            $this->infus = $laporan->infus;
+            $this->obat = $laporan->obat;
+            $this->ganti_balut = $laporan->ganti_balut;
+            $this->lainnya = $laporan->lainnya;
+            $this->tgl_laporan = $laporan->tgl_laporan;
+            $this->pembuat_laporan = $laporan->pembuat_laporan;
         }
-        $this->lama_operasi = $lama_operasi ?? "-";
-        //
-        $this->pembedah = $laporan->pembedah;
-        $this->asisten1 = $laporan->asisten1;
-        $this->asisten2 = $laporan->asisten2;
-        $this->perawat_instrumen = $laporan->perawat_instrumen;
-        $this->ahli_anastesi = $laporan->ahli_anastesi;
-        $this->jenis_anastesi = $laporan->jenis_anastesi;
-        //
-        $this->diagnosa_pra_bedah = $laporan->diagnosa_pra_bedah;
-        $this->indikasi_operasi = $laporan->indikasi_operasi;
-        $this->diagnosa_pasca_bedah = $laporan->diagnosa_pasca_bedah;
-        $this->jenis_operasi = $laporan->jenis_operasi;
-        $this->desinfekasi_kulit = $laporan->desinfekasi_kulit;
-        $this->jaringan_dieksisi = $laporan->jaringan_dieksisi;
-        $this->dikirim_lab = $laporan->dikirim_lab;
-        $this->jenis_bahan = $laporan->jenis_bahan;
-        $this->jenis_bahan = $laporan->jenis_bahan;
-        $this->pemeriksaan_laboratorium = $laporan->pemeriksaan_laboratorium;
-        $this->macam_sayatan = $laporan->macam_sayatan;
-        $this->posisi_penderita = $laporan->posisi_penderita;
-        $this->teknik_temuan_operasi = $laporan->teknik_temuan_operasi;
-        //
-        $this->bhp_khusus = $laporan->bhp_khusus;
-        $this->penggunaan_bhp_khusus = $laporan->penggunaan_bhp_khusus;
-        $this->komplikasi_operasi = $laporan->komplikasi_operasi;
-        $this->penjabaran_komplikasi = $laporan->penjabaran_komplikasi;
-        $this->pendarahan = $laporan->pendarahan;
-        //
-        $this->kontrol = $laporan->kontrol;
-        $this->puasa = $laporan->puasa;
-        $this->drain = $laporan->drain;
-        $this->infus = $laporan->infus;
-        $this->obat = $laporan->obat;
-        $this->ganti_balut = $laporan->ganti_balut;
-        $this->lainnya = $laporan->lainnya;
-        $this->tgl_laporan = $laporan->tgl_laporan;
-        $this->pembuat_laporan = $laporan->pembuat_laporan;
     }
     public function simpan()
     {

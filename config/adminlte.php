@@ -440,11 +440,11 @@ return [
                 [
                     'text' => 'Kunjungan Pasien',
                     'icon'    => 'fas fa-user-injured',
-                    'url'  => 'kunjungan-operasi',
+                    'url'  => 'kunjungan-pasien-operasi',
                     'shift'   => 'ml-2',
                 ],
                 [
-                    'text' => 'ERM Operasi',
+                    'text' => 'Kunjungan Operasi',
                     'icon'    => 'fas fa-clinic-medical',
                     'url'  => 'erm-operasi',
                     'shift'   => 'ml-2',

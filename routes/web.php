@@ -93,6 +93,8 @@ use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
 use App\Livewire\Operasi\ErmOperasi;
 use App\Livewire\Operasi\KunjunganOperasi;
+use App\Livewire\Operasi\KunjunganPasienOperasi;
+use App\Livewire\Operasi\LaporanPasienOperasi;
 use App\Livewire\Operasi\ModalLaporanOperasi;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
@@ -279,9 +281,12 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
     // operasi
-    Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
+    Route::get('kunjungan-pasien-operasi', KunjunganPasienOperasi::class)->name('kunjungan.pasien.operasi');
+    Route::get('laporan-pasien-operasi', LaporanPasienOperasi::class)->name('laporan.pasien.operasi');
     Route::get('erm-operasi', ErmOperasi::class)->name('erm.oprasi');
-    Route::get('laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('laporan.oprasi');
+
+    Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
+    Route::get('laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('laporan.operasi');
 
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
