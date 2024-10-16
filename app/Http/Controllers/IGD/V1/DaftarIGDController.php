@@ -331,7 +331,7 @@ class DaftarIGDController extends Controller
 
             $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
             $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
-            $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
+            // $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
             // create layanan header
             $createLH                       = new Layanan();
             $createLH->kode_layanan_header  = $kodelayanan;

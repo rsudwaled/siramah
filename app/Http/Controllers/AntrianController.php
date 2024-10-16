@@ -169,38 +169,43 @@ class AntrianController extends APIController
     {
         $now = now();
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 6;
-            $request['waktu'] = $now;
-            $res = $this->update_antrean($request);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 6;
+        $request['waktu'] = $now;
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code == 200) {
+            $antrian->update([
+                'taskid' => 6,
+                'taskid6' => $now,
+                'keterangan' => "Proses peracikan obat",
+                'user' => 'Sistem Siramah',
+
+            ]);
+            Alert::success('Berhasil ',  $res->metadata->message);
+        } else {
+            Alert::error('Error ',  $res->metadata->message);
         }
-        $antrian->update([
-            'taskid' => 6,
-            'taskid6' => $now,
-            'keterangan' => "Proses peracikan obat",
-            'user' => 'Sistem Siramah',
-        ]);
-        Alert::success('Success ',  'Terima resep obat atas nama ' . $antrian->nama . 'Silahkan menunggu proses peracikan obat');
         return redirect()->back();
     }
     public function selesaiFarmasi($kodebooking, Request $request)
     {
         $now = now();
         $antrian = Antrian::where('kodebooking', $kodebooking)->first();
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 7;
-            $request['waktu'] =  $now;
-            $res = $this->update_antrean($request);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 7;
+        $request['waktu'] =  $now;
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code == 200) {
+            $antrian->update([
+                'taskid' => 7,
+                'taskid7' =>  $now,
+                'keterangan' => "Selesai peracikan obat",
+                'user' => 'Sistem Siramah',
+            ]);
+            Alert::success('Berhasil ',  $res->metadata->message);
+        } else {
+            Alert::error('Error ',  $res->metadata->message);
         }
-        $antrian->update([
-            'taskid' => 7,
-            'taskid7' =>  $now,
-            'keterangan' => "Selesai peracikan obat",
-            'user' => 'Sistem Siramah',
-        ]);
-        Alert::success('Success ',  'Selesai resep obat atas nama ' . $antrian->nama);
         return redirect()->back();
     }
     public function daftarOnline(Request $request)
@@ -967,20 +972,23 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'non racikan';
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 5;
-            $request['waktu'] = now();
-            $res = $this->update_antrean($request);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 5;
+        $request['waktu'] = now();
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code) {
+            $antrian->update([
+                'taskid' => 5,
+                'taskid5' => now(),
+                'status_api' => 0,
+                'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
+                'user' => 'Sistem Siramah',
+            ]);
+
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        } else {
+            Alert::error('Error', $res->metadata->message);
         }
-        $antrian->update([
-            'taskid' => 5,
-            'taskid5' => now(),
-            'status_api' => 0,
-            'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
-            'user' => 'Sistem Siramah',
-        ]);
-        Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         // $api = new AntrianController();
         // $response = $api->ambil_antrian_farmasi($request);
         return redirect()->back();
@@ -990,20 +998,22 @@ class AntrianController extends APIController
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         $request['kodebooking'] = $antrian->kodebooking;
         $request['jenisresep'] = 'racikan';
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 5;
-            $request['waktu'] = now();
-            $res = $this->update_antrean($request);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 5;
+        $request['waktu'] = now();
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code) {
+            $antrian->update([
+                'taskid' => 5,
+                'taskid5' => now(),
+                'status_api' => 0,
+                'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
+                'user' => 'Sistem Siramah',
+            ]);
+            Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
+        } else {
+            Alert::error('Error', $res->metadata->message);
         }
-        $antrian->update([
-            'taskid' => 5,
-            'taskid5' => now(),
-            'status_api' => 0,
-            'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
-            'user' => 'Sistem Siramah',
-        ]);
-        Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         // $api = new AntrianController();
         // $response = $api->ambil_antrian_farmasi($request);
         return redirect()->back();
@@ -2294,6 +2304,7 @@ class AntrianController extends APIController
         if ($validator->fails()) {
             return $this->sendError($validator->errors()->first(), 400);
         }
+        $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             // check backdate
@@ -2563,7 +2574,7 @@ class AntrianController extends APIController
                             'counter' => $counter,
                             'no_rm' => $antrian->norm,
                             'kode_unit' => $unit->kode_unit,
-                            'tgl_masuk' => now(),
+                            'tgl_masuk' => $now,
                             'kode_paramedis' => $paramedis->kode_paramedis,
                             'status_kunjungan' => 8,
                             'prefix_kunjungan' => $unit->prefix_unit,
@@ -2575,7 +2586,7 @@ class AntrianController extends APIController
                             'no_sep' =>  $request->nomorsep,
                             'no_rujukan' => $antrian->nomorrujukan,
                             'diagx' =>   $request->catatan,
-                            'created_at' => now(),
+                            'created_at' => $now,
                             'keterangan2' => 'MESIN_2',
                         ]
                     );
@@ -2599,7 +2610,7 @@ class AntrianController extends APIController
                     $layananbaru = Layanan::create(
                         [
                             'kode_layanan_header' => $kodelayanan,
-                            'tgl_entry' => now(),
+                            'tgl_entry' => $now,
                             'kode_kunjungan' => $kunjungan->kode_kunjungan,
                             'kode_unit' => $unit->kode_unit,
                             'kode_tipe_transaksi' => $tipetransaksi,
@@ -2626,9 +2637,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifkarcis->tarif_rajal,
                             'grantotal_layanan' => $tarifkarcis->tarif_rajal,
                             'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
-                            'tgl_layanan_detail' =>   now(),
+                            'tgl_layanan_detail' =>   $now,
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>   now(),
+                            'tgl_layanan_detail_2' =>   $now,
                         ]
                     );
                     //  insert layanan detail admin
@@ -2647,9 +2658,9 @@ class AntrianController extends APIController
                             'total_layanan' => $tarifadm->tarif_rajal,
                             'grantotal_layanan' => $tarifadm->tarif_rajal,
                             'kode_dokter1' => 0,
-                            'tgl_layanan_detail' =>  now(),
+                            'tgl_layanan_detail' =>  $now,
                             'status_layanan_detail' => "OPN",
-                            'tgl_layanan_detail_2' =>  now(),
+                            'tgl_layanan_detail_2' =>  $now,
                         ]
                     );
                     //  update layanan header total tagihan
@@ -2698,14 +2709,14 @@ class AntrianController extends APIController
                 if (env('BRIDGING_ANTRIAN_BPJS')) {
                     $request['kodebooking'] = $antrian->kodebooking;
                     $request['taskid'] = 3;
-                    $request['waktu'] = now();
+                    $request['waktu'] = $now;
                     $res = $this->update_antrean($request);
                 }
                 $antrian->update([
                     "taskid" => $request->taskid,
                     "keterangan" => $request->keterangan,
-                    "taskid1" => now(),
-                    "taskid3" => now(),
+                    "taskid1" => $now,
+                    "taskid3" => $now,
                     "user1" => "Mesin Antrian",
                     "method" => "JKN Mobile",
                 ]);

@@ -183,7 +183,20 @@ class PasienIGDController extends Controller
             'pic'               => Auth::user()->id_simrs,
 
         ]);
-
+        $keluarga = [
+            'nama_keluarga' => $request->nama_keluarga,
+            'hubungan_keluarga' => $request->hub_keluarga,
+            'alamat_keluarga' => $pasien->alamat_lengkap_pasien,
+            'tlp_keluarga' => $pasien->no_hp??$pasien->no_telp,
+            'input_date' => Carbon::now(),
+            'Update_date' => Carbon::now(),
+        ];
+        if($pasien){
+            KeluargaPasien::updateOrCreate(
+                ['no_rm' => $pasien->no_rm], // Kondisi pencarian
+                $keluarga // Data yang ingin diupdate atau dibuat
+            );
+        }
         Alert::success('Yeay...!', 'anda berhasil menambahkan pasien baru!');
         return redirect()->route('daftar-igd.v1');
     }

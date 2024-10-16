@@ -994,6 +994,49 @@ return [
                     ]
                 ],
                 [
+                    'text'      => 'Penyakit Kasus Baru',
+                    'icon'      => 'fas fa-chart-bar',
+                    'shift'     => 'ml-2',
+                    'can'       => ['rekam-medis'],
+                    'submenu'   => [
+                        [
+                            'text'      => 'Menular (DM)',
+                            'icon'      => 'fas fa-disease',
+                            'url'       => '/laporan-rm/kasus-baru/menular-dm',
+                            'shift'     => 'ml-3',
+                            'can'       => ['rekam-medis'],
+                        ],
+                        [
+                            'text'      => 'HYPERTENSI (HT)',
+                            'icon'      => 'fas fa-disease',
+                            'url'       => '/laporan-rm/kasus-baru/hypertensi',
+                            'shift'     => 'ml-3',
+                            'can'       => ['rekam-medis'],
+                        ],
+                        [
+                            'text'      => 'PPOK',
+                            'icon'      => 'fas fa-disease',
+                            'url'       => '/laporan-rm/kasus-baru/ppok',
+                            'shift'     => 'ml-3',
+                            'can'       => ['rekam-medis'],
+                        ],
+                        [
+                            'text'      => 'Jantung',
+                            'icon'      => 'fas fa-disease',
+                            'url'       => '/laporan-rm/kasus-baru/jantung',
+                            'shift'     => 'ml-3',
+                            'can'       => ['rekam-medis'],
+                        ],
+                        [
+                            'text'      => 'Stroke',
+                            'icon'      => 'fas fa-disease',
+                            'url'       => '/laporan-rm/kasus-baru/stroke',
+                            'shift'     => 'ml-3',
+                            'can'       => ['rekam-medis'],
+                        ],
+                    ]
+                ],
+                [
                     'text' => 'Laporan Index',
                     'icon'    => 'fas fa-chart-bar',
                     'shift'   => 'ml-2',

@@ -28,39 +28,43 @@ class PPRIController extends Controller
         $alasanmasuk = AlasanMasuk::orderBy('id', 'asc')->get();
         $paramedis   = Paramedis::where('act', 1)->get();
         $penjamin    = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
-        $unit        = Unit::whereIn('kode_unit', ['4002','4008','4010','4011','3014','3002','3003','3007','3020'])->orderBy('id', 'asc')->get();
+        $unit        = Unit::whereIn('kode_unit', ['4002', '4008', '4010', '4011', '3014', '3002', '3003', '3007', '3020'])->orderBy('id', 'asc')->get();
         $tanggal     = now()->format('Y-m-d');
         return view('simrs.igd.ppri.index', compact(
-            'poli','alasanmasuk','paramedis','penjamin','unit','unit','tanggal'
+            'poli',
+            'alasanmasuk',
+            'paramedis',
+            'penjamin',
+            'unit',
+            'unit',
+            'tanggal'
         ));
     }
-    
+
     public function postPPRI(Request $request)
     {
-        $unit           = Unit::firstWhere('kode_unit','=','1044');
-        $penjamin_bpjs  = PenjaminSimrs::whereIn('kode_penjamin',['P07','P08','P09','P10','P011','P13','P14' ])->get();
-        $penjamin_lainnya  = PenjaminSimrs::whereIn('kode_penjamin',['P15','P16','P18','P19','P23','P24','P25','P26','P28','P30' ])->get();
+        $unit           = Unit::firstWhere('kode_unit', '=', '1044');
+        $penjamin_bpjs  = PenjaminSimrs::whereIn('kode_penjamin', ['P07', 'P08', 'P09', 'P10', 'P011', 'P13', 'P14'])->get();
+        $penjamin_lainnya  = PenjaminSimrs::whereIn('kode_penjamin', ['P15', 'P16', 'P18', 'P19', 'P23', 'P24', 'P25', 'P26', 'P28', 'P30'])->get();
         $codeToCheck = $request->penjamin_id;
         if ($penjamin_bpjs->contains('kode_penjamin', $codeToCheck)) {
             // jika terdapat pada penjamin bpjs maka bpjs =1 sama dengan true
             $bpjs = 1;
         } else {
-            if ($penjamin_lainnya->contains('kode_penjamin', $codeToCheck))
-            {
+            if ($penjamin_lainnya->contains('kode_penjamin', $codeToCheck)) {
                 // bukan penjamin bpjs
                 $bpjs = 3;
-            }else{
+            } else {
                 // penjamin pribadi
                 $bpjs = 0;
-            }   
+            }
         }
-        $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc');
-        $latestCounter  = $query->where('status_kunjungan','=', 2)->first();
+        $query          = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk', 'desc');
+        $latestCounter  = $query->where('status_kunjungan', '=', 2)->first();
 
-        $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk','desc')->where('status_kunjungan','=', 1)->get();
+        $data           = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk', 'desc')->where('status_kunjungan', '=', 1)->get();
         $pasien         = Pasien::where('no_rm', $request->rm)->first();
-        if(is_null($pasien->no_hp))
-        {
+        if (is_null($pasien->no_hp)) {
             $pasien->no_hp = $request->noTelp;
             $pasien->save();
         }
@@ -89,7 +93,7 @@ class PPRIController extends Controller
         $createKunjungan->kode_penjamin     = $request->penjamin_id;
         $createKunjungan->kelas             = 3;
         $createKunjungan->id_alasan_masuk   = $request->alasan_masuk_id;
-        $createKunjungan->perujuk           = $request->nama_perujuk??null;
+        $createKunjungan->perujuk           = $request->nama_perujuk ?? null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
         $createKunjungan->is_bpjs_proses    = 0;
@@ -105,8 +109,7 @@ class PPRIController extends Controller
             $jpPasien->is_bpjs      = $bpjs;
             $jpPasien->save();
 
-            if($bpjs == 1)
-            {
+            if ($bpjs == 1) {
                 $histories = new HistoriesIGDBPJS();
                 $histories->kode_kunjungan  = $createKunjungan->kode_kunjungan;
                 $histories->noMR            = $createKunjungan->no_rm;
@@ -117,19 +120,19 @@ class PPRIController extends Controller
                 $histories->noTelp          = $request->noTelp;
                 $histories->tglSep          = now();
                 $histories->jnsPelayanan    = '2';
-                $histories->klsRawatHak     = $request->kelasRawatHak??null;
+                $histories->klsRawatHak     = $request->kelasRawatHak ?? null;
                 $histories->asalRujukan     = '2';
                 $histories->tglRujukan      = now();
                 $histories->noRujukan       = null;
                 $histories->ppkRujukan      = null;
                 $histories->diagAwal        = null;
                 $histories->lakaLantas      = $request->lakaLantas == null ? 0 : $request->lakaLantas;
-                $histories->noLP            = $request->lakaLantas > 0 ? $request->noLP:null;
-                $histories->tglKejadian     = $request->lakaLantas > 0 ? $request->tglKejadian:null;
-                $histories->keterangan      = $request->lakaLantas > 0 ? $request->keterangan:null;
-                $histories->kdPropinsi      = $request->lakaLantas > 0 ? $request->provinsi:null;
-                $histories->kdKabupaten     = $request->lakaLantas > 0 ? $request->kabupaten:null;
-                $histories->kdKecamatan     = $request->lakaLantas > 0 ? $request->kecamatan:null;
+                $histories->noLP            = $request->lakaLantas > 0 ? $request->noLP : null;
+                $histories->tglKejadian     = $request->lakaLantas > 0 ? $request->tglKejadian : null;
+                $histories->keterangan      = $request->lakaLantas > 0 ? $request->keterangan : null;
+                $histories->kdPropinsi      = $request->lakaLantas > 0 ? $request->provinsi : null;
+                $histories->kdKabupaten     = $request->lakaLantas > 0 ? $request->kabupaten : null;
+                $histories->kdKecamatan     = $request->lakaLantas > 0 ? $request->kecamatan : null;
                 $histories->response        = null;
                 $histories->is_bridging     = 0;
                 $histories->status_daftar   = 0;
@@ -143,19 +146,17 @@ class PPRIController extends Controller
             }
 
             $tarif_karcis           = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis)->first();
-            $tarif_adm              = TarifLayananDetail::where('KODE_TARIF_DETAIL', $unit->kode_tarif_adm)->first();
-            $total_bayar_k_a        = $tarif_adm->TOTAL_TARIF_CURRENT + $tarif_karcis->TOTAL_TARIF_CURRENT;
+            $total_bayar_k_a        =  80000;
 
             $layanandet             = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first(); //DET230905000028
             $nomorlayanandetkarc    = substr($layanandet->id_layanan_detail, 9) + 1;
-            $nomorlayanandetadm     = substr($layanandet->id_layanan_detail, 9) + 2;
             // create layanan header
             $createLH                       = new Layanan();
             $createLH->kode_layanan_header  = $kodelayanan;
             $createLH->tgl_entry            = now();
             $createLH->kode_kunjungan       = $createKunjungan->kode_kunjungan;
             $createLH->kode_unit            = $unit->kode_unit;
-            $createLH->pic                  = Auth::user()->id;
+            $createLH->pic                  = Auth::user()->id??2;
             $createLH->status_pembayaran    = 'OPN';
             if ($unit->kelas_unit == 1) {
                 $createLH->kode_tipe_transaksi  = 1;
@@ -179,51 +180,30 @@ class PPRIController extends Controller
                     $createKarcis->id_layanan_detail        = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetkarc, 6, '0', STR_PAD_LEFT);
                     $createKarcis->kode_layanan_header      = $createLH->kode_layanan_header;
                     $createKarcis->kode_tarif_detail        = $unit->kode_tarif_karcis;
-                    $createKarcis->total_tarif              = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    $createKarcis->total_tarif              = 80000;
                     $createKarcis->jumlah_layanan           = 1;
-                    $createKarcis->total_layanan            = $tarif_karcis->TOTAL_TARIF_CURRENT;
-                    $createKarcis->grantotal_layanan        = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                    $createKarcis->total_layanan            = 80000;
+                    $createKarcis->grantotal_layanan        = 80000;
                     $createKarcis->status_layanan_detail    = 'OPN';
                     $createKarcis->tgl_layanan_detail       = now();
                     $createKarcis->tgl_layanan_detail_2     = now();
                     $createKarcis->row_id_header            = $createLH->id;
                     if ($request->penjamin_id == 'P01') {
-                        $createKarcis->tagihan_pribadi      = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createKarcis->tagihan_pribadi      = 80000;
                     } else {
-                        $createKarcis->tagihan_penjamin     = $tarif_karcis->TOTAL_TARIF_CURRENT;
+                        $createKarcis->tagihan_penjamin     = 80000;
                     }
                     if ($createKarcis->save()) {
-                        // create detail admin
-                        $createAdm                          = new LayananDetail();
-                        $createAdm->id_layanan_detail       = 'DET' . now()->format('ymd') . str_pad($nomorlayanandetadm, 6, '0', STR_PAD_LEFT);
-                        $createAdm->kode_layanan_header     = $createLH->kode_layanan_header;
-                        $createAdm->kode_tarif_detail       = $unit->kode_tarif_adm;
-                        $createAdm->total_tarif             = $tarif_adm->TOTAL_TARIF_CURRENT;
-                        $createAdm->jumlah_layanan          = 1;
-                        $createAdm->total_layanan           = $tarif_adm->TOTAL_TARIF_CURRENT;
-                        $createAdm->grantotal_layanan       = $tarif_adm->TOTAL_TARIF_CURRENT;
-                        $createAdm->status_layanan_detail   = 'OPN';
-                        $createAdm->tgl_layanan_detail      = now();
-                        $createAdm->tgl_layanan_detail_2    = now();
-                        $createAdm->row_id_header           = $createLH->id;
+
+                        $createKunjungan->status_kunjungan = 1;  //status 8 nanti update setelah header dan detail selesai jadi 1
+                        $createKunjungan->update();
+
                         if ($request->penjamin_id == 'P01') {
-                            $createAdm->tagihan_pribadi     = $tarif_adm->TOTAL_TARIF_CURRENT;
+                            $createLH->status_layanan       = 1;
                         } else {
-                            $createAdm->tagihan_penjamin    = $tarif_adm->TOTAL_TARIF_CURRENT;
+                            $createLH->status_layanan       = 2;
                         }
-
-                        if($createAdm->save())
-                        {
-                            $createKunjungan->status_kunjungan = 1;  //status 8 nanti update setelah header dan detail selesai jadi 1
-                            $createKunjungan->update();
-
-                            if ($request->penjamin_id == 'P01') {
-                                $createLH->status_layanan       = 1;
-                            } else {
-                                $createLH->status_layanan       = 2;
-                            }
-                            $createLH->update();
-                        }
+                        $createLH->update();
                     }
                 }
             }

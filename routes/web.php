@@ -762,6 +762,19 @@ Route::middleware('auth')->group(function () {
         Route::get('/kunjungan-poliklinik', 'lapKunjunganPoli')->name('kunjungan-poliklinik');
         Route::get('download/kunjungan-poliklinik', 'exportKunjunganPoli')->name('exportKunjunganPoli');
         });
+
+        Route::controller(App\Http\Controllers\LaporanRekamMedis\PenyakitKasusBaruController::class)->prefix('kasus-baru')->name('kasus-baru.')->group(function () {
+            Route::get('/menular-dm', 'menularDM')->name('menular-dm');
+            Route::get('download/menular-dm', 'downloadMenularDM')->name('download.menular-dm');
+            Route::get('/hypertensi', 'hypertensi')->name('hypertensi');
+            Route::get('download/hypertensi', 'downloadHypertensi')->name('download.hypertensi');
+            Route::get('/ppok', 'ppok')->name('ppok');
+            Route::get('download/ppok', 'downloadPpok')->name('download.ppok');
+            Route::get('/jantung', 'jantung')->name('jantung');
+            Route::get('download/jantung', 'downloadJantung')->name('download.jantung');
+            Route::get('/stroke', 'stroke')->name('stroke');
+            Route::get('download/stroke', 'downloadStroke')->name('download.stroke');
+        });
     });
 
     // pencarian pasien

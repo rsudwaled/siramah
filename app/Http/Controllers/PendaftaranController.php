@@ -267,6 +267,7 @@ class PendaftaranController extends APIController
             }
             $antrian->update([
                 'taskid' => $request->taskid,
+                'method' => "Anjungan Pelayanan Mandiri",
                 'taskid1' => now()->setTimezone('Asia/Jakarta'),
                 'taskid3' => now()->setTimezone('Asia/Jakarta'),
                 'status_api' => $request->status_api,
