@@ -11,6 +11,9 @@
         @include('livewire.operasi.modal-navigasi-erm-operasi')
     </div>
     <div class="col-md-9" style="overflow-y: auto ;max-height: 500px ;">
+        <div id="jadwalOperasi">
+            @livewire('operasi.modal-jadwal-operasi', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
         <div id="laporanOperasi">
             @livewire('operasi.modal-laporan-operasi', ['kunjungan' => $kunjungan, 'lazy' => true])
         </div>

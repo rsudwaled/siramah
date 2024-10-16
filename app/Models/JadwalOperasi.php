@@ -10,4 +10,6 @@ class JadwalOperasi extends Model
     use HasFactory;
     protected $connection = 'mysql4';
     protected $table = 'tabel_jadwal';
+    protected $guarded = ['id'];
+
 }

@@ -6,13 +6,18 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#laporanOperasi" class="nav-link">
-                <i class="fas fa-info-circle"></i> Tindakan Kedokteran
+            <a href="#jadwalOperasi" class="nav-link">
+                <i class="fas fa-calendar-alt"></i> Jadwal Operasi
             </a>
         </li>
         <li class="nav-item">
             <a href="#laporanOperasi" class="nav-link">
-                <i class="fas fa-info-circle"></i> Laporan Operasi
+                <i class="fas fa-file-medical"></i> Tindakan Kedokteran
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#laporanOperasi" class="nav-link">
+                <i class="fas fa-file-medical"></i> Laporan Operasi
             </a>
         </li>
         <x-slot name="footerSlot">

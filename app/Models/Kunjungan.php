@@ -95,6 +95,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(LaporanOperasi::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function jadwal_operasi()
+    {
+        return $this->hasOne(JadwalOperasi::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function layanan()
     {
         return $this->hasOne(Layanan::class, 'kode_kunjungan', 'kode_kunjungan');
