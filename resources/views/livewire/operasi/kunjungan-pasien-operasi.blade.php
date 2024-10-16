@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <x-adminlte-card title="Kunjungan Pasien Poliklinik" theme="secondary">
+        <x-adminlte-card title="Kunjungan Pasien" theme="secondary">
             <div class="row">
                 <div class="col-md-2">
                     <x-adminlte-select wire:model.change='jenispelayanan' name="jenispelayanan" igroup-size="sm">
@@ -55,6 +55,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Tgl Masuk</th>
+                                <th>Tgl Pulang</th>
                                 <th>No RM</th>
                                 <th>Nama Pasien</th>
                                 <th>No BPJS</th>
@@ -72,6 +73,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $kunjungan->tgl_masuk }}</td>
+                                    <td>{{ $kunjungan->tgl_keluar }}</td>
                                     <td>{{ $kunjungan->no_rm }}</td>
                                     <td>{{ $kunjungan->pasien->nama_px }}</td>
                                     <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
@@ -86,7 +88,7 @@
                                     <td>{{ $kunjungan->unit->nama_unit }}</td>
                                     <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
                                     <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
-                                    <td>{{ $kunjungan->sep }}</td>
+                                    <td>{{ $kunjungan->no_sep }}</td>
                                 </tr>
                             @endforeach
 
@@ -96,5 +98,4 @@
             </div>
         </x-adminlte-card>
     </div>
-
 </div>

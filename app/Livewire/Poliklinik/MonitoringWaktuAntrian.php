@@ -65,14 +65,17 @@ class MonitoringWaktuAntrian extends Component
                 $antrianx->update([
                     'sync_antrian' => 1,
                 ]);
+                $this->dispatch('bell-play');
             } else {
                 $antrianx->update([
                     'sync_antrian' => 99,
                 ]);
                 flash($res->metadata->message, 'danger');
+                $this->dispatch('error-sound');
             }
         } catch (\Throwable $th) {
             flash($th->getMessage(), 'danger');
+            $this->dispatch('error-sound');
         }
     }
     // public function antriansync()
@@ -107,6 +110,10 @@ class MonitoringWaktuAntrian extends Component
     public function mount(Request $request)
     {
         $this->tanggalperiksa = $request->tanggalperiksa ?? now()->format('Y-m-d');
+    }
+    public function bell()
+    {
+        $this->dispatch('bell-play');
     }
     public function render()
     {

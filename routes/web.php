@@ -91,7 +91,12 @@ use App\Livewire\Casemix\CasemixRajal;
 use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
+use App\Livewire\Operasi\ErmOperasi;
+use App\Livewire\Operasi\JadwalOperasiIndex;
 use App\Livewire\Operasi\KunjunganOperasi;
+use App\Livewire\Operasi\KunjunganPasienOperasi;
+use App\Livewire\Operasi\LaporanPasienOperasi;
+use App\Livewire\Operasi\ModalLaporanOperasi;
 use App\Livewire\Pendaftaran\AnjunganMandiri;
 use App\Livewire\Pendaftaran\AnjunganMandiriDaftar;
 use App\Livewire\Pendaftaran\PendaftaranRajal;
@@ -179,7 +184,7 @@ Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
     Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
-    Route::get('profil', ProfilIndex::class)->name('profil')->lazy();
+    Route::get('profil', ProfilIndex::class)->name('profil');
 
     // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
@@ -277,7 +282,11 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboardBulanAntrianPoliklinik', [AntrianController::class, 'dashboardBulanAntrian'])->name('dashboardBulanAntrianPoliklinik');
     Route::get('suratKontrolPrint/{suratkontrol}', [SuratKontrolController::class, 'suratKontrolPrint'])->name('suratKontrolPrint');
     // operasi
-    Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
+    Route::get('kunjungan-pasien-operasi', KunjunganPasienOperasi::class)->name('kunjungan.pasien.operasi');
+    Route::get('laporan-pasien-operasi', LaporanPasienOperasi::class)->name('laporan.pasien.operasi');
+    Route::get('erm-operasi', ErmOperasi::class)->name('erm.oprasi');
+    Route::get('print-laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('print.laporan.operasi');
+    Route::get('jadwal-operasi', JadwalOperasiIndex::class)->name('jadwal.oprasi');
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
@@ -757,10 +766,10 @@ Route::middleware('auth')->group(function () {
         // laporan pasien rawat inap perruangan
         Route::get('/pasien-ranap/peruangan', 'laporanRanapPeruangan')->name('pasien-ranap-peruangan');
 
-         // Laporan kunjungan poliklinik
+        // Laporan kunjungan poliklinik
         Route::controller(App\Http\Controllers\LaporanRekamMedis\KunjunganPoliklinikController::class)->prefix('kunjungan')->name('kunjungan.')->group(function () {
-        Route::get('/kunjungan-poliklinik', 'lapKunjunganPoli')->name('kunjungan-poliklinik');
-        Route::get('download/kunjungan-poliklinik', 'exportKunjunganPoli')->name('exportKunjunganPoli');
+            Route::get('/kunjungan-poliklinik', 'lapKunjunganPoli')->name('kunjungan-poliklinik');
+            Route::get('download/kunjungan-poliklinik', 'exportKunjunganPoli')->name('exportKunjunganPoli');
         });
 
         Route::controller(App\Http\Controllers\LaporanRekamMedis\PenyakitKasusBaruController::class)->prefix('kasus-baru')->name('kasus-baru.')->group(function () {

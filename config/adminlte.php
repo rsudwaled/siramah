@@ -438,9 +438,22 @@ return [
             'icon'    => 'fas fa-clinic-medical',
             'submenu' => [
                 [
-                    'text' => 'Kunjungan Operasi',
-                    'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'kunjungan-operasi',
+                    'text' => 'Kunjungan Pasien',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'kunjungan-pasien-operasi',
+                    'shift'   => 'ml-2',
+                ],
+                [
+                    'text' => 'Laporan Pasien Operasi',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'laporan-pasien-operasi',
+                    'active' => ['laporan-pasien-operasi', 'erm-operasi'],
+                    'shift'   => 'ml-2',
+                ],
+                [
+                    'text' => 'Jadwal Operasi',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'jadwal-operasi',
                     'shift'   => 'ml-2',
                 ],
             ]
@@ -1617,28 +1630,19 @@ return [
                 ],
             ],
         ],
-        // USER ACCESS CONTROLL
+        ['header' => 'PENGATURAN'],
         [
-            'text'    => 'User Access Control',
-            'icon'    => 'fas fa-users-cog',
+            'text' => 'Role & Permission',
+            'icon'    => 'fas fa-user-shield',
+            'url'  => 'role-permission',
             'can' => 'admin',
-            'submenu' => [
-                [
-                    'text' => 'User',
-                    'icon'    => 'fas fa-users',
-                    'url'  => 'user',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                    'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
-                ],
-                [
-                    'text' => 'Role & Permission',
-                    'icon'    => 'fas fa-user-shield',
-                    'url'  => 'role-permission',
-                    'shift'   => 'ml-2',
-                    'can' => 'admin',
-                ],
-            ],
+        ],
+        [
+            'text' => 'User',
+            'icon'    => 'fas fa-users',
+            'url'  => 'user',
+            'can' => 'admin',
+            'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
         ],
         [
             'text' => 'Profil',

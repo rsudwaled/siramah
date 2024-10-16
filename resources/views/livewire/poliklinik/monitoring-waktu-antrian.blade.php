@@ -48,8 +48,11 @@
                     <x-adminlte-button wire:click="onsync" class="btn-sm mb-2"
                         label="{{ $sync ? 'Sync On' : 'Sync Off' }}" theme="{{ $sync ? 'success' : 'secondary' }}"
                         icon="fas fa-sync" />
-                    <x-adminlte-button wire:click="export" class="btn-sm mb-2" label="Export"
-                        theme="primary" icon="fas fa-print" />
+                    <x-adminlte-button wire:click="export" class="btn-sm mb-2" label="Export" theme="primary"
+                        icon="fas fa-print" />
+                    <x-adminlte-button wire:click="bell" class="btn-sm mb-2" label="Bell" theme="warning"
+                        icon="fas fa-bell" />
+
                 </div>
                 <div class="col-md-4">
                     <x-adminlte-input name="search" placeholder="Pencarian Berdasarkan Nama / No RM" igroup-size="sm">
@@ -119,4 +122,18 @@
             </table>
         </x-adminlte-card>
     </div>
+    <audio id="bell" src="{{ asset('rekaman/bellring.mp3') }}" autoplay></audio>
+    <audio id="error" src="{{ asset('rekaman/error.mp3') }}"></audio>
+    @push('js')
+        <script>
+            document.addEventListener('livewire:init', () => {
+                Livewire.on('bell-play', (event) => {
+                    $('#bell').trigger('play');
+                });
+                Livewire.on('error-sound', (event) => {
+                    $('#error').trigger('play');
+                });
+            });
+        </script>
+    @endpush
 </div>
