@@ -75,22 +75,15 @@ class JadwalOperasiController extends APIController
         $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
-            $dokter = Paramedis::where('nama_paramedis', $jadwalop->nama_dokter)->first();
-            if (isset($dokter)) {
-                $unit = Unit::where('kode_unit', $dokter->unit)->first();
-            } else {
-                $unit['KDPOLI'] = 'UGD';
-            }
             $jadwals[] = [
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => $unit->KDPOLI ?? 'BED',
-                // "namapoli" => $jadwalop->ruangan_asal,
-                "namapoli" => 'BEDAH',
-                "terlaksana" => 0,
+                "kodepoli" => $jadwalop->kd_poli_bpjs ?? 'BED',
+                "namapoli" => $jadwalop->ruangan_asal ?? "BEDAH",
+                "terlaksana" => $jadwalop->status != 0 ? 1 : 0,
                 "nopeserta" => $jadwalop->nomor_bpjs == '' ?  '0000067026778' : $jadwalop->nomor_bpjs,
-                "lastupdate" => now()->timestamp * 1000,
+                "lastupdate" => Carbon::parse($jadwalop->updated_at)->timestamp * 1000,
             ];
         }
         $response = [
