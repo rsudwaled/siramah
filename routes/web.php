@@ -286,7 +286,7 @@ Route::middleware('auth')->group(function () {
     Route::get('erm-operasi', ErmOperasi::class)->name('erm.oprasi');
 
     Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
-    Route::get('laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('laporan.operasi');
+    Route::get('print-laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('print.laporan.operasi');
 
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');

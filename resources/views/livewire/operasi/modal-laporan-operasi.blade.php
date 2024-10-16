@@ -183,7 +183,7 @@
             <x-adminlte-button theme="success" icon="fas fa-save" class="btn-sm" label="Simpan" wire:click="simpan"
                 wire:confirm='Apakah anda yakin akan menyimpan data laporan operasi ?' />
             @if ($laporan)
-                <a href="{{ route('laporan.oprasi') }}?kode_kunjungan={{ $laporan->kode_kunjungan }}" target="_blank">
+                <a href="{{ route('print.laporan.operasi') }}?kode_kunjungan={{ $laporan->kode_kunjungan }}" target="_blank">
                     <x-adminlte-button theme="warning" icon="fas fa-print" class="btn-sm" label="Print Laporan" />
                 </a>
             @endif

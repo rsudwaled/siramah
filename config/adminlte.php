@@ -444,9 +444,10 @@ return [
                     'shift'   => 'ml-2',
                 ],
                 [
-                    'text' => 'Kunjungan Operasi',
-                    'icon'    => 'fas fa-clinic-medical',
-                    'url'  => 'erm-operasi',
+                    'text' => 'Laporan Pasien Operasi',
+                    'icon'    => 'fas fa-file-medical',
+                    'url'  => 'laporan-pasien-operasi',
+                    'active' => ['laporan-pasien-operasi', 'erm-operasi'],
                     'shift'   => 'ml-2',
                 ],
             ]
