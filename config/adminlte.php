@@ -450,6 +450,12 @@ return [
                     'active' => ['laporan-pasien-operasi', 'erm-operasi'],
                     'shift'   => 'ml-2',
                 ],
+                [
+                    'text' => 'Jadwal Operasi',
+                    'icon'    => 'fas fa-calendar-alt',
+                    'url'  => 'jadwal-operasi',
+                    'shift'   => 'ml-2',
+                ],
             ]
         ],
         [

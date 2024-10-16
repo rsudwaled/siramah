@@ -92,6 +92,7 @@ use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
 use App\Livewire\Operasi\ErmOperasi;
+use App\Livewire\Operasi\JadwalOperasiIndex;
 use App\Livewire\Operasi\KunjunganOperasi;
 use App\Livewire\Operasi\KunjunganPasienOperasi;
 use App\Livewire\Operasi\LaporanPasienOperasi;
@@ -284,10 +285,8 @@ Route::middleware('auth')->group(function () {
     Route::get('kunjungan-pasien-operasi', KunjunganPasienOperasi::class)->name('kunjungan.pasien.operasi');
     Route::get('laporan-pasien-operasi', LaporanPasienOperasi::class)->name('laporan.pasien.operasi');
     Route::get('erm-operasi', ErmOperasi::class)->name('erm.oprasi');
-
-    Route::get('kunjungan-operasi', KunjunganOperasi::class)->name('kunjungan.oprasi');
     Route::get('print-laporan-operasi', [ModalLaporanOperasi::class, 'laporan_print'])->name('print.laporan.operasi');
-
+    Route::get('jadwal-operasi', JadwalOperasiIndex::class)->name('jadwal.oprasi');
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
