@@ -51,23 +51,25 @@ class AntrianController extends APIController
     {
         $now = now();
         $antrian = Antrian::where('kodebooking', $request->kodebooking)->first();
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 5;
-            $request['waktu'] = $now;
-            $res = $this->update_antrean($request);
-            Alert::success('Success', $res->metadata->code);
-        }
         $request['kodebooking'] = $antrian->kodebooking;
         $request['taskid'] = 5;
         $request['waktu'] = $now;
-        $request['keterangan'] = "Selesai poliklinik";
-        $antrian->update([
-            'taskid' => $request->taskid,
-            'status_api' => 1,
-            'keterangan' => $request->keterangan,
-            'user' => 'Sistem Siramah',
-        ]);
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code == 200) {
+            $request['kodebooking'] = $antrian->kodebooking;
+            $request['taskid'] = 5;
+            $request['waktu'] = $now;
+            $request['keterangan'] = "Selesai poliklinik";
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'status_api' => 1,
+                'keterangan' => $request->keterangan,
+                'user' => 'Sistem Siramah',
+            ]);
+            Alert::success('Success', $res->metadata->message);
+        } else {
+            Alert::error('Error', $res->metadata->message);
+        }
         return redirect()->back();
     }
     public function displayantrianfarmasi($lantai)
@@ -406,7 +408,7 @@ class AntrianController extends APIController
         if ($res->metadata->code == 200) {
             return $base->sendResponse($res->response, 200);
         } else {
-            return $base->sendError($res->metadata->message, $res->metadata->code);
+            return $base->sendError($res->metadata->message);
         }
     }
     public function cekKodebooking(Request $request)
@@ -889,33 +891,35 @@ class AntrianController extends APIController
     {
         $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
-        if (env('BRIDGING_ANTRIAN_BPJS')) {
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 3;
-            if ($antrian->taskid3) {
-                $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
-            } else {
-                $request['waktu'] = $now;
-                $antrian->update([
-                    'taskid3' =>  $request->waktu,
-                    'user3' => auth()->user()->name,
-                ]);
-            }
-            $res = $this->update_antrean($request);
-            $request['kodebooking'] = $antrian->kodebooking;
-            $request['taskid'] = 4;
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 3;
+        if ($antrian->taskid3) {
+            $request['waktu'] = Carbon::createFromFormat('Y-m-d H:i:s', $antrian->taskid3, 'Asia/Jakarta');
+        } else {
             $request['waktu'] = $now;
-            $res = $this->update_antrean($request);
+            $antrian->update([
+                'taskid3' =>  $request->waktu,
+                'user3' => auth()->user()->name,
+            ]);
         }
-        $antrian->update([
-            'taskid' => 4,
-            'taskid4' =>  $now,
-            'sync_panggil' => 0,
-            'status_api' => 0,
-            'user3' => auth()->user()->name,
-            'keterangan' => "Panggilan ke poliklinik yang anda pilih",
-        ]);
-        Alert::success('Success', 'Panggil Pasien Berhasil');
+        $res = $this->update_antrean($request);
+        $request['kodebooking'] = $antrian->kodebooking;
+        $request['taskid'] = 4;
+        $request['waktu'] = $now;
+        $res = $this->update_antrean($request);
+        if ($res->metadata->code == 200) {
+            $antrian->update([
+                'taskid' => 4,
+                'taskid4' =>  $now,
+                'sync_panggil' => 0,
+                'status_api' => 0,
+                'user3' => auth()->user()->name,
+                'keterangan' => "Panggilan ke poliklinik yang anda pilih",
+            ]);
+            Alert::success('Success', 'Panggil Pasien Berhasil');
+        } else {
+            Alert::danger('Error', $res->metadata->message);
+        }
         return redirect()->back();
     }
 
@@ -976,7 +980,7 @@ class AntrianController extends APIController
         $request['taskid'] = 5;
         $request['waktu'] = now();
         $res = $this->update_antrean($request);
-        if ($res->metadata->code) {
+        if ($res->metadata->code == 200) {
             $antrian->update([
                 'taskid' => 5,
                 'taskid5' => now(),
@@ -984,7 +988,6 @@ class AntrianController extends APIController
                 'keterangan' => "Silahkan tunggu di farmasi untuk pengambilan obat.",
                 'user' => 'Sistem Siramah',
             ]);
-
             Alert::success('Success', 'Pasien Dilanjutkan Ke Farmasi');
         } else {
             Alert::error('Error', $res->metadata->message);
@@ -1002,7 +1005,7 @@ class AntrianController extends APIController
         $request['taskid'] = 5;
         $request['waktu'] = now();
         $res = $this->update_antrean($request);
-        if ($res->metadata->code) {
+        if ($res->metadata->code == 200) {
             $antrian->update([
                 'taskid' => 5,
                 'taskid5' => now(),
