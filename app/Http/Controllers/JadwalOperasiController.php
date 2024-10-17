@@ -69,7 +69,11 @@ class JadwalOperasiController extends APIController
         }
         $request['tanggalawal'] = Carbon::parse($request->tanggalawal)->startOfDay();
         $request['tanggalakhir'] = Carbon::parse($request->tanggalakhir)->endOfDay();
-        // end auth token
+
+        $wa = new WhatsappController();
+        $request['number'] = "089529909036";
+        $request['message'] = "get jadwal operasi " . now();
+        $res = $wa->send_message($request);
         $jadwalops = JadwalOperasi::whereBetween('tanggal', [$request->tanggalawal, $request->tanggalakhir])->get();
         $jadwals = [];
         foreach ($jadwalops as  $jadwalop) {
@@ -77,14 +81,14 @@ class JadwalOperasiController extends APIController
                 "kodebooking" => $jadwalop->no_book,
                 "tanggaloperasi" => Carbon::parse($jadwalop->tanggal)->format('Y-m-d'),
                 // "jenistindakan" => '-',
-                // "kodepoli" => "BED",
+                // "kodepoli" => "ANA",
                 // "namapoli" => "BEDAH",
                 "jenistindakan" => $jadwalop->jenis,
-                "kodepoli" => $jadwalop->kd_poli_bpjs == "" ? 'BED' : $jadwalop->kd_poli_bpjs,
-                "namapoli" => $jadwalop->ruangan_asal ?? "BEDAH",
-                "terlaksana" => $jadwalop->status != 0 ? 1 : 0,
-                "nopeserta" => $jadwalop->nomor_bpjs == '' ?  '0000067026778' : $jadwalop->nomor_bpjs,
-                "lastupdate" => Carbon::parse($jadwalop->updated_at)->timestamp * 1000,
+                "kodepoli" => $jadwalop->kd_poli_bpjs == "" ? 'ANA' : $jadwalop->kd_poli_bpjs,
+                "namapoli" => $jadwalop->ruangan_asal ?? "ANAK",
+                "terlaksana" => 0,
+                "nopeserta" => $jadwalop->nomor_bpjs == '' ?  "" : $jadwalop->nomor_bpjs,
+                "lastupdate" => Carbon::parse("2024-10-17 07:00:00")->timestamp * 1000,
             ];
         }
         $response = [
