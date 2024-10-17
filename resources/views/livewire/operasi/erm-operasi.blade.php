@@ -14,6 +14,9 @@
         <div id="jadwalOperasi">
             @livewire('operasi.modal-jadwal-operasi', ['kunjungan' => $kunjungan, 'lazy' => true])
         </div>
+        <div id="tindakanOperasi">
+            @livewire('operasi.modal-tindakan-operasi', ['kunjungan' => $kunjungan, 'lazy' => true])
+        </div>
         <div id="laporanOperasi">
             @livewire('operasi.modal-laporan-operasi', ['kunjungan' => $kunjungan, 'lazy' => true])
         </div>
