@@ -918,7 +918,7 @@ class AntrianController extends APIController
             ]);
             Alert::success('Success', 'Panggil Pasien Berhasil');
         } else {
-            Alert::danger('Error', $res->metadata->message);
+            Alert::error('Error', $res->metadata->message);
         }
         return redirect()->back();
     }
