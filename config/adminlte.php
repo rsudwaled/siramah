@@ -456,6 +456,12 @@ return [
                     'url'  => 'jadwal-operasi',
                     'shift'   => 'ml-2',
                 ],
+                [
+                    'text' => 'Display Jadwal Operasi',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'jadwaloperasi_display',
+                    'shift'   => 'ml-2',
+                ],
             ]
         ],
         [
