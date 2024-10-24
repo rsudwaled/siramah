@@ -907,7 +907,7 @@ class AntrianController extends APIController
         $request['taskid'] = 4;
         $request['waktu'] = $now;
         $res = $this->update_antrean($request);
-        if ($res->metadata->code == 200) {
+        if ($res->metadata->code == 200 || $res->metadata->message == "TaskId=4 sudah ada") {
             $antrian->update([
                 'taskid' => 4,
                 'taskid4' =>  $now,
@@ -981,7 +981,7 @@ class AntrianController extends APIController
         $request['taskid'] = 5;
         $request['waktu'] = now();
         $res = $this->update_antrean($request);
-        if ($res->metadata->code == 200) {
+        if ($res->metadata->code == 200 || $res->metadata->message == "TaskId=5 sudah ada") {
             $antrian->update([
                 'taskid' => 5,
                 'taskid5' => $now,
@@ -1007,7 +1007,7 @@ class AntrianController extends APIController
         $request['taskid'] = 5;
         $request['waktu'] = now();
         $res = $this->update_antrean($request);
-        if ($res->metadata->code == 200) {
+        if ($res->metadata->code == 200 || $res->metadata->message == "TaskId=5 sudah ada") {
             $antrian->update([
                 'taskid' => 5,
                 'taskid5' => $now,

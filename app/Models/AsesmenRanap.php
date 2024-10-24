@@ -9,7 +9,7 @@ class AsesmenRanap extends Model
 {
     use HasFactory;
     protected $connection = 'mysql2';
-    protected $table = 'erm_ranap_asesmen';
+    protected $table = 'erm_ranap_asesmen_keperawatan';
     protected $guarded = ['id'];
 
 }
