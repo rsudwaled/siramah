@@ -15,9 +15,10 @@ class MonitoringWaktuAntrianExport implements FromCollection, WithHeadings
     }
     public function collection()
     {
-        $antrians = Antrian::where('tanggalperiksa', $this->tanggalperiksa)
+        $antrians = Antrian::where('tanggalperiksa', 'LIKE', "%" . $this->tanggalperiksa . "%")
             ->where('method', '!=', 'Offline')
             ->where('taskid', '!=', 99)
+            ->where('taskid',  7)
             ->orderBy('taskid', 'desc')
             ->with(['kunjungan', 'kunjungan.assesmen_perawat', 'kunjungan.order_obat_header'])
             ->get();

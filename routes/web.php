@@ -108,6 +108,7 @@ use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
 use App\Livewire\Poliklinik\KunjunganPoliklinik;
 use App\Livewire\Poliklinik\KunjunganPoliklinikPasien;
 use App\Livewire\Poliklinik\MonitoringWaktuAntrian;
+use App\Livewire\Poliklinik\MonitoringWaktuAntrianBulan;
 use App\Livewire\Profil\ProfilIndex;
 use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
@@ -294,6 +295,7 @@ Route::middleware('auth')->group(function () {
     Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
     Route::get('monitoring-antrian-rajal', MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
     Route::get('monitoring-waktu-antrian', MonitoringWaktuAntrian::class)->name('monitoring-waktu-antrian');
+    Route::get('monitoring-waktu-antrian-bulan', MonitoringWaktuAntrianBulan::class)->name('monitoring-waktu-antrian-bulan');
     //  casemix
     Route::get('casemix-rajal', CasemixRajal::class)->name('casemix-rajal');
     Route::get('casemix-rajal-detail', CasemixRajalDetail::class)->name('casemix-rajal-detail');
