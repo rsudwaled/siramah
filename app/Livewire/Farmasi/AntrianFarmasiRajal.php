@@ -5,6 +5,7 @@ namespace App\Livewire\Farmasi;
 use App\Models\Kunjungan;
 use App\Models\OrderObatHeader;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Livewire\Component;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
@@ -56,8 +57,11 @@ class AntrianFarmasiRajal extends Component
         ]);
         flash('Berhasil panggil antrian', 'success');
     }
-    public function refreshComponent(){
-
+    public function refreshComponent() {}
+    public function mount(Request $request)
+    {
+        $this->tanggal = $request->tanggal ?? now()->format('Y-m-d');
+        $this->unit = $request->unit ?? 4008;
     }
     public function render()
     {
