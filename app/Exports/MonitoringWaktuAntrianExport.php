@@ -19,7 +19,7 @@ class MonitoringWaktuAntrianExport implements FromCollection, WithHeadings
             ->where('method', '!=', 'Offline')
             ->where('taskid', '!=', 99)
             ->where('taskid',  7)
-            ->orderBy('taskid', 'desc')
+            ->orderBy('tanggalperiksa', 'asc')
             ->with(['kunjungan', 'kunjungan.assesmen_perawat', 'kunjungan.order_obat_header'])
             ->get();
         $antrians = $antrians->map(function ($antrian) {

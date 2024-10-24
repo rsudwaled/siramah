@@ -25,7 +25,7 @@ class MonitoringWaktuAntrianBulan extends Component
                 ->where('method', '!=', 'Offline')
                 ->where('taskid', '!=', 99)
                 ->where('taskid',  7)
-                ->orderBy('taskid', 'desc')
+                ->orderBy('tanggalperiksa', 'asc')
                 ->with(['kunjungan', 'kunjungan.assesmen_perawat', 'kunjungan.order_obat_header'])
                 // ->join('ts_kunjungan', 'jkn_antrian.kode_kunjungan', '=', 'ts_kunjungan.kode_kunjungan')
                 // ->orderBy('ts_kunjungan.tgl_masuk', 'desc')
