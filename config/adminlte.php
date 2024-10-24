@@ -430,6 +430,12 @@ return [
                     'url'  => 'monitoring-waktu-antrian',
                     'shift'   => 'ml-2',
                 ],
+                [
+                    'text' => 'Monitoring Waktu Antrian',
+                    'icon'    => 'fas fa-chart-bar',
+                    'url'  => 'monitoring-waktu-antrian-bulan',
+                    'shift'   => 'ml-2',
+                ],
             ]
         ],
         // PELAYANAN

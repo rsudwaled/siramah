@@ -145,7 +145,7 @@
             </div>
             <div class="col-md-12">
                 <hr>
-                <h6>Intrusi Pasca Bedah</h6>
+                <h6>Intruksi Pasca Bedah</h6>
             </div>
             <div class="col-md-6">
                 <x-adminlte-input wire:model='kontrol' name="kontrol" label="Kontrol" fgroup-class="row"
