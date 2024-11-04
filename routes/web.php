@@ -105,6 +105,7 @@ use App\Livewire\Pendaftaran\PendaftaranRajalProses;
 use App\Livewire\Pendaftaran\PendaftranRajal;
 use App\Livewire\Poliklinik\AntrianPoliklinikProses;
 use App\Livewire\Poliklinik\AntrianPoliklinikRajal;
+use App\Livewire\Poliklinik\DashboardAntrianRajal;
 use App\Livewire\Poliklinik\KunjunganPoliklinik;
 use App\Livewire\Poliklinik\KunjunganPoliklinikPasien;
 use App\Livewire\Poliklinik\MonitoringWaktuAntrian;
@@ -293,6 +294,7 @@ Route::middleware('auth')->group(function () {
     //  rekammedis
     Route::get('rekam-medis-rajal', RekamMedisRajal::class)->name('rekam-medis-rajal');
     Route::get('rekam-medis-rajal-detail', RekamMedisRajalDetail::class)->name('rekam-medis-rajal-detail');
+    Route::get('dashboard-antrian-rajal', DashboardAntrianRajal::class)->name('dashboard.antrian.rajal');
     Route::get('monitoring-antrian-rajal', MonitoringAntrianRajal::class)->name('monitoring-antrian-rajal');
     Route::get('monitoring-waktu-antrian', MonitoringWaktuAntrian::class)->name('monitoring-waktu-antrian');
     Route::get('monitoring-waktu-antrian-bulan', MonitoringWaktuAntrianBulan::class)->name('monitoring-waktu-antrian-bulan');
@@ -399,7 +401,7 @@ Route::middleware('auth')->group(function () {
         Route::get('bpjs/antrian/antreanbelumlayani', AntreanBelumLayani::class)->name('antrian.antreanbelumlayani')->lazy();
         Route::get('bpjs/antrian/antreandokter', AntreanDokter::class)->name('antrian.antreandokter')->lazy();
     });
-    Route::middleware(['can:vclaim-bpjs'])->group(function () {
+    Route::middleware(['can:bpjs'])->group(function () {
         Route::get('bpjs/vclaim/monitoring-data-kunjungan', MonitoringDataKunjungan::class)->name('vclaim.monitoring.datakunjungan')->lazy();
         Route::get('bpjs/vclaim/monitoring-data-klaim', MonitoringDataKlaim::class)->name('vclaim.monitoring.dataklaim')->lazy();
         Route::get('bpjs/vclaim/monitoring-pelayanan-peserta', MonitoringPelayananPeserta::class)->name('vclaim.monitoring.pelayananpeserta')->lazy();

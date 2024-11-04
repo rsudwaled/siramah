@@ -6,6 +6,8 @@
             </x-adminlte-alert>
         </div>
     @endif
+    {{-- dd(collect($this->antrians)->sum('jumlah_antrean')); --}}
+
     <div class="col-md-12">
         <x-adminlte-card title="Table Referensi Dokter" theme="secondary">
             <div class="row">

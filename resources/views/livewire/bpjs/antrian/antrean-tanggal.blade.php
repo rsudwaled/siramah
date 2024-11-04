@@ -7,7 +7,31 @@
         </div>
     @endif
     <div class="col-md-12">
-        <x-adminlte-card title="Table Referensi Dokter" theme="secondary">
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <x-adminlte-small-box title="{{ count($antrians) }}" text="Total Antrian" theme="primary"
+                    icon="fas fa-user-injured" />
+            </div>
+            <div class="col-lg-3 col-6">
+                <x-adminlte-small-box title="{{ count(collect($this->antrians)->where('status', 'Selesai dilayani')) }}"
+                    text="Antrian Selesai" theme="success" icon="fas fa-user-injured" />
+            </div>
+            <div class="col-lg-3 col-6">
+                <x-adminlte-small-box title="{{ count(collect($this->antrians)->where('status', 'Belum dilayani')) }}"
+                    text="Antrian Belum Dilayani" theme="warning" icon="fas fa-user-injured" />
+            </div>
+            <div class="col-lg-3 col-6">
+                <x-adminlte-small-box title="{{ count(collect($this->antrians)->where('status', 'Sedang dilayani')) }}"
+                    text="Antrian Sedang Dilayani" theme="warning" icon="fas fa-user-injured" />
+            </div>
+            <div class="col-lg-3 col-6">
+                <x-adminlte-small-box title="{{ count(collect($this->antrians)->where('status', 'Batal')) }}"
+                    text="Antrian Batal" theme="danger" icon="fas fa-user-injured" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <x-adminlte-card title="Table Antrian Tanggal" theme="secondary">
             <div class="row">
                 <div class="col-md-3">
                     <x-adminlte-input wire:model="tanggal" type="date" name="tanggal" igroup-size="sm">
@@ -31,6 +55,7 @@
                 <table class="table text-nowrap table-sm table-hover table-bordered table-responsive-xl mb-3">
                     <thead>
                         <tr>
+                            <td>#</td>
                             <td>tanggal</td>
                             <td>noantrean</td>
                             <td>kodebooking</td>
@@ -50,6 +75,7 @@
                     <tbody>
                         @foreach ($antrians as $item)
                             <tr>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->noantrean }}</td>
                                 <td>{{ $item->kodebooking }}</td>

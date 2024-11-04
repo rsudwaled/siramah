@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 class AntreanTanggal extends Component
 {
     public $tanggal,  $antrians = [];
+    public function render()
+    {
+        return view('livewire.bpjs.antrian.antrean-tanggal')->title(
+            'Antrian Tanggal'
+        );
+    }
     public function cari()
     {
         $this->validate([
@@ -26,10 +32,5 @@ class AntreanTanggal extends Component
             flash($res->metadata->message, 'danger');
         }
     }
-    public function render()
-    {
-        return view('livewire.bpjs.antrian.antrean-tanggal')->title(
-            'Antrian Tanggal'
-        );
-    }
+
 }

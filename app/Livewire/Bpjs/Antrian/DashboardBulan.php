@@ -5,6 +5,7 @@ namespace App\Livewire\Bpjs\Antrian;
 use App\Http\Controllers\AntrianController;
 use Illuminate\Http\Request;
 use Livewire\Component;
+use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class DashboardBulan extends Component
 {
@@ -25,6 +26,7 @@ class DashboardBulan extends Component
         $res  = $api->dashboard_bulan($request);
         if ($res->metadata->code == 200) {
             $this->antrians = $res->response->list;
+            dd(collect($this->antrians)->sum('jumlah_antrean'));
             flash($res->metadata->message, 'success');
         } else {
             flash($res->metadata->message, 'danger');
