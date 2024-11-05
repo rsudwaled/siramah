@@ -2311,6 +2311,7 @@ class AntrianController extends APIController
         $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
+            // jam praktek
             $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
                 ->where('kodedokter', $antrian->kodedokter)
                 ->first();

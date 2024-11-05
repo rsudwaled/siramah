@@ -300,6 +300,15 @@ class PendaftaranController extends APIController
         $vclaim = new VclaimController();
         $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        // cek jam praktek
+        $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+            ->where('kodedokter', $antrian->kodedokter)
+            ->first();
+        $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
+        $jamcheckin = $jampraktek->subHour();
+        if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+            return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
+        }
         $request['noKartu'] = $antrian->nomorkartu;
         $request['tglSep'] = $antrian->tanggalperiksa;
         $request['ppkPelayanan'] = "1018R001";
