@@ -922,7 +922,6 @@ class AntrianController extends APIController
         }
         return redirect()->back();
     }
-
     public function panggilBridgingPoliklinik(Request $request)
     {
         dd('test');
@@ -1589,6 +1588,9 @@ class AntrianController extends APIController
                 "keterangan" => $request->keterangan,
             ]
         );
+        $wa = new WhatsappController();
+        $request['notif'] = 'Tambah antrian ' . $request->kodebookin . ' ' . $request->method;
+        $wa->send_notif($request);
         return $this->response_decrypt($response, $signature);
     }
     public function update_antrean(Request $request)
@@ -1722,8 +1724,8 @@ class AntrianController extends APIController
         $res = $this->update_antrean($request);
         // kirim notif
         $wa = new WhatsappController();
-        // $request['notif'] = $res->metadata->message . '-' . $res->metadata->code . " \n Panggil Antrian Bridging " . $antrian->nama . " di Poliklinik " . $antrian->namapoli;
-        // $wa->send_notif($request);
+        $request['notif'] = $res->metadata->message . '-' . $res->metadata->code . " \n Panggil Antrian Bridging " . $antrian->nama . " di Poliklinik " . $antrian->namapoli;
+        $wa->send_notif($request);
         if ($res->metadata->code == 200 || $res->metadata->code == 208) {
             $antrian->update([
                 'taskid' => 4
@@ -2169,14 +2171,14 @@ class AntrianController extends APIController
                     "nama" => $request->nama,
                 ]);
                 // kirim notif wa
-                // $wa = new WhatsappController();
-                // $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                // $request['number'] = $request->nohp;
-                // $wa->send_message($request);
+                $wa = new WhatsappController();
+                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+                $request['number'] = $request->nohp;
+                $wa->send_message($request);
                 // kirim notif
-                // $wa = new WhatsappController();
-                // $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
-                // $wa->send_notif($request);
+                $wa = new WhatsappController();
+                $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
+                $wa->send_notif($request);
                 if ($request->method == 'Bridging') {
                     $antrian->update([
                         'taskid' => 3,
@@ -2755,6 +2757,13 @@ class AntrianController extends APIController
                 $request['lantaipendaftaran'] = $antrian->lantaipendaftaran;
                 $print_karcis->print_karcis($request, $kunjungan);
                 // notif wa
+                $wa = new WhatsappController();
+                $notif = 'Checkin antrian: ';
+                // foreach ($request->all() as $key => $value) {
+                //     $notif .= "$key: $value; ";
+                // }
+                $request['notif'] = $notif;
+                $wa->send_notif($request);
                 // $wa = new WhatsappController();
                 // $request['message'] = "Antrian atas nama pasien " . $antrian->nama . " dengan kode booking " . $antrian->kodebooking . " telah melakukan checkin.\n\n" . $request->keterangan;
                 // $request['number'] = $antrian->nohp;
