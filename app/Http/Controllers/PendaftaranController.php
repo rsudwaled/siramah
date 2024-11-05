@@ -78,9 +78,19 @@ class PendaftaranController extends APIController
         $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if ($antrian) {
+            // backdate
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 Alert::error('Maaf', 'Tanggal periksa anda bukan hari ini.');
                 return redirect()->back();
+            }
+            // cek jam praktek
+            $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+                ->where('kodedokter', $antrian->kodedokter)
+                ->first();
+            $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
+            $jamcheckin = $jampraktek->subHour();
+            if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+                return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
             }
             $request['waktu'] = $now->timestamp * 1000;
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
