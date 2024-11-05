@@ -14,6 +14,31 @@ class PendaftaranRajal extends Component
     public $antrians = [];
     public $tanggalperiksa, $lantai, $loket, $jenispasien;
     public $search = '';
+    public function render()
+    {
+        $search = '%' . $this->search . '%';
+        if ($this->tanggalperiksa) {
+            $this->antrians = Antrian::whereDate('tanggalperiksa', $this->tanggalperiksa)
+                ->where('method', 'Offline')
+                ->where('jenispasien', 'LIKE', $this->jenispasien . '%')
+                ->where('lantaipendaftaran',  'LIKE', '%' . $this->lantai . '%')
+                ->where(function ($query) use ($search) {
+                    $query->where('namapoli', 'LIKE', $search)
+                        ->orWhere('namadokter', 'LIKE', $search);
+                })
+                ->get();
+        }
+        return view('livewire.pendaftaran.pendaftaran-rajal')
+            ->title('Pendaftaran Rawat Jalan');
+    }
+    public function mount(Request $request)
+    {
+        $this->tanggalperiksa = $request->tanggalperiksa;
+        $this->lantai = $request->lantai;
+        $this->loket = $request->loket;
+        $this->jenispasien = $request->jenispasien;
+        $this->search = $request->search;
+    }
     public function panggilpendaftaran()
     {
         $antrian = Antrian::where('taskid', 0)
@@ -105,30 +130,5 @@ class PendaftaranRajal extends Component
     public function pencarian()
     {
         $this->search =  $this->search;
-    }
-    public function mount(Request $request)
-    {
-        $this->tanggalperiksa = $request->tanggalperiksa;
-        $this->lantai = $request->lantai;
-        $this->loket = $request->loket;
-        $this->jenispasien = $request->jenispasien;
-        $this->search = $request->search;
-    }
-    public function render()
-    {
-        $search = '%' . $this->search . '%';
-        if ($this->tanggalperiksa) {
-            $this->antrians = Antrian::whereDate('tanggalperiksa', $this->tanggalperiksa)
-                ->where('method', 'Offline')
-                ->where('jenispasien', 'LIKE', $this->jenispasien . '%')
-                ->where('lantaipendaftaran',  'LIKE', '%' . $this->lantai . '%')
-                ->where(function ($query) use ($search) {
-                    $query->where('namapoli', 'LIKE', $search)
-                        ->orWhere('namadokter', 'LIKE', $search);
-                })
-                ->get();
-        }
-        return view('livewire.pendaftaran.pendaftaran-rajal')
-            ->title('Pendaftaran Rawat Jalan');
     }
 }

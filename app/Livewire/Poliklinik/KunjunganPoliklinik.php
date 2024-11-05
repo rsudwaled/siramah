@@ -13,13 +13,6 @@ class KunjunganPoliklinik extends Component
     public $kunjungans, $units;
     public $tgl_masuk, $kode_unit;
     public $search = '';
-    public function pencarian() {}
-    public function mount(Request $request)
-    {
-        $this->tgl_masuk = $request->tgl_masuk ?? now()->format('Y-m-d');
-        $this->kode_unit = $request->kode_unit;
-        $this->units = Unit::where('KDPOLI', '!=', null)->get();
-    }
     public function render()
     {
         $search = '%' . $this->search . '%';
@@ -27,10 +20,20 @@ class KunjunganPoliklinik extends Component
             $this->kunjungans = [];
             $this->kunjungans = Kunjungan::whereDate('tgl_masuk', $this->tgl_masuk)
                 ->where('kode_unit', $this->kode_unit)
+                ->whereHas('pasien', function ($query) {
+                    $query->where('nama_px', 'like', '%' . $this->search . '%');
+                })
                 ->with(['dokter', 'unit', 'penjamin_simrs', 'pasien', 'alasan_masuk', 'antrian', 'status'])
-                ->orderBy('tgl_masuk','asc')
+                ->orderBy('tgl_masuk', 'asc')
                 ->get();
         }
         return view('livewire.poliklinik.kunjungan-poliklinik')->title("Kunjungan Poliklinik");
+    }
+    public function pencarian() {}
+    public function mount(Request $request)
+    {
+        $this->tgl_masuk = $request->tgl_masuk ?? now()->format('Y-m-d');
+        $this->kode_unit = $request->kode_unit;
+        $this->units = Unit::where('KDPOLI', '!=', null)->get();
     }
 }

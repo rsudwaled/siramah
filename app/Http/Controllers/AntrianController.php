@@ -2300,7 +2300,6 @@ class AntrianController extends APIController
         } catch (\Throwable $th) {
             return $this->sendError("Printer mesin antrian mati", 500);
         }
-
         // checking request
         $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
@@ -2312,6 +2311,14 @@ class AntrianController extends APIController
         $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
+            $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+                ->where('kodedokter', $antrian->kodedokter)
+                ->first();
+            $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
+            $jamcheckin = $jampraktek->subHour();
+            if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+                return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
+            }
             // check backdate
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 return $this->sendError("Tanggal periksa bukan hari ini.", 400);

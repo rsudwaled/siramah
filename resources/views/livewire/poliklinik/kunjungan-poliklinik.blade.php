@@ -54,83 +54,77 @@
                 <h1>Loading...</h1>
             </div>
             <div wire:loading.remove>
-                <table class="table table-bordered table-responsive table-sm text-nowrap">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Tgl Masuk</th>
-                            <th>No RM</th>
-                            <th>Nama Pasien</th>
-                            <th>No BPJS</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                            <th>Alasan Masuk</th>
-                            <th>Unit</th>
-                            <th>Dokter</th>
-                            <th>Penjamin</th>
-                            <th>Kodebooking</th>
-                            <th>SEP</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if ($kunjungans)
-                            @foreach ($kunjungans as $kunjungan)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $kunjungan->tgl_masuk }}</td>
-                                    <td>{{ $kunjungan->no_rm }}</td>
-                                    <td>{{ $kunjungan->pasien->nama_px }}</td>
-                                    <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
-                                    <td>
-                                        @switch($kunjungan->status_kunjungan)
-                                            @case(1)
-                                                <span class="badge badge-warning">Open</span>
-                                            @break
+                <div class="table-responsive">
+                    <table class="table table-bordered  table-sm text-nowrap">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Tgl Masuk</th>
+                                <th>No RM</th>
+                                <th>Nama Pasien</th>
+                                <th>No BPJS</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                                <th>Alasan Masuk</th>
+                                <th>Unit</th>
+                                <th>Dokter</th>
+                                <th>Penjamin</th>
+                                <th>Kodebooking</th>
+                                <th>SEP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if ($kunjungans)
+                                @foreach ($kunjungans as $kunjungan)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $kunjungan->tgl_masuk }}</td>
+                                        <td>{{ $kunjungan->no_rm }}</td>
+                                        <td>{{ $kunjungan->pasien->nama_px }}</td>
+                                        <td>{{ $kunjungan->pasien->no_Bpjs }}</td>
+                                        <td>
+                                            @switch($kunjungan->status_kunjungan)
+                                                @case(1)
+                                                    <span class="badge badge-warning">Open</span>
+                                                @break
 
-                                            @case(2)
-                                                <span class="badge badge-success">Selesai</span>
-                                            @break
+                                                @case(2)
+                                                    <span class="badge badge-success">Selesai</span>
+                                                @break
 
-                                            @case(3)
-                                                <span class="badge badge-success">Sembuh</span>
-                                            @break
+                                                @case(3)
+                                                    <span class="badge badge-success">Sembuh</span>
+                                                @break
 
-                                            @case(8)
-                                                <span class="badge badge-danger">Batal</span>
-                                            @break
+                                                @case(8)
+                                                    <span class="badge badge-danger">Batal</span>
+                                                @break
 
-                                            @default
-                                                <span class="badge badge-secondary">{{ $kunjungan->status_kunjungan }}</span>
-                                        @endswitch
-                                    </td>
-                                    <td>
-                                        <a class="withLoad"
-                                            href="{{ route('kunjungan.poliklinik.pasien') }}?kode_kunjungan={{ $kunjungan->kode_kunjungan }}">
-                                            <x-adminlte-button class="btn-xs" theme="success" icon="fas fa-file-medical"
-                                                label="Lihat" />
-                                        </a>
-                                    </td>
-                                    <td>{{ $kunjungan->alasan_masuk->alasan_masuk }}</td>
-                                    <td>{{ $kunjungan->unit->nama_unit }}</td>
-                                    <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
-                                    <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
-                                    <td>{{ $kunjungan->antrian?->kodebooking ?? '-' }}</td>
-                                    <td>{{ $kunjungan->no_sep }}</td>
-                                </tr>
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
+                                                @default
+                                                    <span
+                                                        class="badge badge-secondary">{{ $kunjungan->status_kunjungan }}</span>
+                                            @endswitch
+                                        </td>
+                                        <td>
+                                            <a class="withLoad"
+                                                href="{{ route('kunjungan.poliklinik.pasien') }}?kode_kunjungan={{ $kunjungan->kode_kunjungan }}">
+                                                <x-adminlte-button class="btn-xs" theme="success"
+                                                    icon="fas fa-file-medical" label="Lihat" />
+                                            </a>
+                                        </td>
+                                        <td>{{ $kunjungan->alasan_masuk->alasan_masuk }}</td>
+                                        <td>{{ $kunjungan->unit->nama_unit }}</td>
+                                        <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
+                                        <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
+                                        <td>{{ $kunjungan->antrian?->kodebooking ?? '-' }}</td>
+                                        <td>{{ $kunjungan->no_sep }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </x-adminlte-card>
     </div>
 </div>
-<script>
-    document.addEventListener('livewire:load', function() {
-        alert('test');
-        // $('.select2').select2();
-        // Livewire.hook('message.processed', (message, component) => {
-        //     $('.select2').select2();
-        // });
-    });
-</script>

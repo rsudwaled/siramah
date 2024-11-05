@@ -101,112 +101,113 @@
                 <h1>Loading...</h1>
             </div>
             <div wire:loading.remove>
-                <table class="table table-bordered table-responsive table-sm text-nowrap">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Antrian</th>
-                            <th>Kodebooking</th>
-                            <th>No RM</th>
-                            <th>Nama Pasien</th>
-                            <th>No BPJS</th>
-                            <th>NIK</th>
-                            <th>Action</th>
-                            <th>Taskid</th>
-                            <th>Lantai</th>
-                            <th>Jenis Pasien</th>
-                            <th>Unit</th>
-                            <th>Dokter</th>
-                            <th>PIC</th>
-                            <th>Method</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($antrians as $item)
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm text-nowrap">
+                        <thead>
                             <tr>
-                                <td>{{ $item->angkaantrean }}</td>
-                                <td>{{ $item->nomorantrean }}</td>
-                                <td>{{ $item->kodebooking }}</td>
-                                <td>{{ $item->norm }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->nomorkartu }}</td>
-                                <td>{{ $item->nik }} </td>
-                                <td>
-                                    @if ($loket && $lantai)
-                                        @if ($item->taskid <= 2)
-                                            <a
-                                                href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
-                                                <x-adminlte-button class="btn-xs" label="Proses" theme="success"
-                                                    icon="fas fa-user-plus" />
-                                            </a>
-                                        @else
-                                            <a
-                                                href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
-                                                <x-adminlte-button class="btn-xs" label="Lihat" theme="secondary"
-                                                    icon="fas fa-user-plus" />
-                                            </a>
-                                        @endif
-                                    @else
-                                        <span class="text-danger">Pilih Loket & Lantai</span>
-                                    @endif
-
-                                </td>
-                                <td>
-                                    @switch($item->taskid)
-                                        @case(0)
-                                            <span class="badge badge-secondary">1. Menunggu Pendaftaran</span>
-                                        @break
-
-                                        @case(1)
-                                            <span class="badge badge-warning">1. Menunggu Pendaftaran</span>
-                                        @break
-
-                                        @case(2)
-                                            <span class="badge badge-primary">2. Proses Pendaftaran</span>
-                                        @break
-
-                                        @case(3)
-                                            <span class="badge badge-warning">3. Menunggu Poliklinik</span>
-                                        @break
-
-                                        @case(4)
-                                            <span class="badge badge-primary">4. Pelayanan Poliklinik</span>
-                                        @break
-
-                                        @case(5)
-                                            <span class="badge badge-warning">5. Tunggu Farmasi</span>
-                                        @break
-
-                                        @case(6)
-                                            <span class="badge badge-primary">6. Racik Obat</span>
-                                        @break
-
-                                        @case(7)
-                                            <span class="badge badge-success">7. Selesai</span>
-                                        @break
-
-                                        @case(99)
-                                            <span class="badge badge-danger">99. Batal</span>
-                                        @break
-
-                                        @default
-                                            {{ $item->taskid }}
-                                    @endswitch
-                                </td>
-                                <td>{{ $item->lantaipendaftaran }} </td>
-                                <td>{{ $item->jenispasien }} </td>
-                                <td>{{ $item->kunjungan->units->nama ?? $item->namapoli }} </td>
-                                <td>{{ $item->kunjungan->dokters->namadokter ?? $item->namadokter }}</td>
-                                <td>{{ $item->pic1->name ?? 'Belum Didaftarkan' }} </td>
-                                <td>{{ $item->method }} </td>
-                                <td>{{ $item->status }} </td>
+                                <th>No</th>
+                                <th>Antrian</th>
+                                <th>Kodebooking</th>
+                                <th>No RM</th>
+                                <th>Nama Pasien</th>
+                                <th>No BPJS</th>
+                                <th>NIK</th>
+                                <th>Action</th>
+                                <th>Taskid</th>
+                                <th>Lantai</th>
+                                <th>Jenis Pasien</th>
+                                <th>Unit</th>
+                                <th>Dokter</th>
+                                <th>PIC</th>
+                                <th>Method</th>
+                                <th>Status</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($antrians as $item)
+                                <tr>
+                                    <td>{{ $item->angkaantrean }}</td>
+                                    <td>{{ $item->nomorantrean }}</td>
+                                    <td>{{ $item->kodebooking }}</td>
+                                    <td>{{ $item->norm }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->nomorkartu }}</td>
+                                    <td>{{ $item->nik }} </td>
+                                    <td>
+                                        @if ($loket && $lantai)
+                                            @if ($item->taskid <= 2)
+                                                <a
+                                                    href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
+                                                    <x-adminlte-button class="btn-xs" label="Proses" theme="success"
+                                                        icon="fas fa-user-plus" />
+                                                </a>
+                                            @else
+                                                <a
+                                                    href="{{ route('pendaftaran.rajal.proses') }}?kodebooking={{ $item->kodebooking }}&lantai={{ $lantai }}&loket={{ $loket }}">
+                                                    <x-adminlte-button class="btn-xs" label="Lihat" theme="secondary"
+                                                        icon="fas fa-user-plus" />
+                                                </a>
+                                            @endif
+                                        @else
+                                            <span class="text-danger">Pilih Loket & Lantai</span>
+                                        @endif
 
+                                    </td>
+                                    <td>
+                                        @switch($item->taskid)
+                                            @case(0)
+                                                <span class="badge badge-secondary">1. Menunggu Pendaftaran</span>
+                                            @break
+
+                                            @case(1)
+                                                <span class="badge badge-warning">1. Menunggu Pendaftaran</span>
+                                            @break
+
+                                            @case(2)
+                                                <span class="badge badge-primary">2. Proses Pendaftaran</span>
+                                            @break
+
+                                            @case(3)
+                                                <span class="badge badge-warning">3. Menunggu Poliklinik</span>
+                                            @break
+
+                                            @case(4)
+                                                <span class="badge badge-primary">4. Pelayanan Poliklinik</span>
+                                            @break
+
+                                            @case(5)
+                                                <span class="badge badge-warning">5. Tunggu Farmasi</span>
+                                            @break
+
+                                            @case(6)
+                                                <span class="badge badge-primary">6. Racik Obat</span>
+                                            @break
+
+                                            @case(7)
+                                                <span class="badge badge-success">7. Selesai</span>
+                                            @break
+
+                                            @case(99)
+                                                <span class="badge badge-danger">99. Batal</span>
+                                            @break
+
+                                            @default
+                                                {{ $item->taskid }}
+                                        @endswitch
+                                    </td>
+                                    <td>{{ $item->lantaipendaftaran }} </td>
+                                    <td>{{ $item->jenispasien }} </td>
+                                    <td>{{ $item->kunjungan->units->nama ?? $item->namapoli }} </td>
+                                    <td>{{ $item->kunjungan->dokters->namadokter ?? $item->namadokter }}</td>
+                                    <td>{{ $item->pic1->name ?? 'Belum Didaftarkan' }} </td>
+                                    <td>{{ $item->method }} </td>
+                                    <td>{{ $item->status }} </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </x-adminlte-card>
     </div>
 </div>
