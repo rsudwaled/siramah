@@ -49,9 +49,9 @@
                 <a href="{{ route('test.cetak.karcis') }}">
                     <x-adminlte-button icon="fas fa-print" class="withLoad" theme="warning" label="Test Print" />
                 </a>
-                {{-- <a href="{{ route('anjungan.mandiri.pendaftaran') }}?jenispasien=JKN">
+                <a href="{{ route('anjungan.mandiri.pendaftaran') }}?jenispasien=JKN">
                     <x-adminlte-button icon="fas fa-print" class="withLoad" theme="warning" label="BPJS Pendaftaran" />
-                </a> --}}
+                </a>
             </x-slot>
         </x-adminlte-card>
     </div>
