@@ -1974,8 +1974,16 @@ class AntrianController extends APIController
         ];
         return $this->sendResponse($response, 200);
     }
+    // catatan
     public function ambil_antrian(Request $request) #ambil antrian api
     {
+        $wa = new WhatsappController();
+        $notif = 'Checkin antrian: ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        $request['notif'] = $notif;
+        $wa->send_notif($request);
         $validator = Validator::make($request->all(), [
             "nomorkartu" => "required|numeric|digits:13",
             "nik" => "required|numeric|digits:16",

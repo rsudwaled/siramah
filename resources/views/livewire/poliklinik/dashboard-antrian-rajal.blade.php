@@ -30,12 +30,12 @@
                     text="Antrian MJKN"
                     theme="primary" icon="fas fa-user-injured" />
             </div>
-            <div class="col-lg-3 col-6">
+            {{-- <div class="col-lg-3 col-6">
                 <x-adminlte-small-box
                     title="{{ count($antrians) ? $antrians->where('kode_kunjungan', '!=', null)->count() : '-' }}"
                     text="{{ count($antrians) ? $antrians->where('kode_kunjungan', null)->count() : '-' }} Antrian Tidak Kunjungan"
                     theme="primary" icon="fas fa-user-injured" />
-            </div>
+            </div> --}}
             {{-- @if (count($antrians))
                 <div class="col-lg-3 col-6">
                     @php
