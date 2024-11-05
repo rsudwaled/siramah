@@ -1638,9 +1638,9 @@ class AntrianController extends APIController
             ]);
         }
         // kirim notif
-        // $wa = new WhatsappController();
-        // $request['notif'] = 'Daftar antrian bridging ' . $request->kodebooking;
-        // $wa->send_notif($request);
+        $wa = new WhatsappController();
+        $request['notif'] = 'Daftar antrian bridging ' . $request->kodebooking . ' status ' . $response->metadata->message;
+        $wa->send_notif($request);
         return response()->json($response);
     }
     public function bridging_taskid_4(Request $request)
