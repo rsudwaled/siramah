@@ -1978,7 +1978,7 @@ class AntrianController extends APIController
     public function ambil_antrian(Request $request) #ambil antrian api
     {
         $wa = new WhatsappController();
-        $notif = 'Checkin antrian: ';
+        $notif = 'Ambil antrian: ';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";
         }
