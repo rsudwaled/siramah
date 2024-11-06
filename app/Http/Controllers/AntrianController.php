@@ -2309,7 +2309,7 @@ class AntrianController extends APIController
     }
     public function checkin_antrian(Request $request)
     {
-        $notif = 'Checkin Antrian BPJS : ';
+        $notif = 'Checkin Antrian BPJS : ip: ' . $request->ip() . ';';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";
         }
@@ -2317,7 +2317,7 @@ class AntrianController extends APIController
         // cek printer
         try {
             Log::notice('Checkin Printer ip : ' . $request->ip());
-             if ($request->ip() == "192.168.2.133") {
+            if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
@@ -3191,7 +3191,7 @@ class AntrianController extends APIController
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
-             if ($request->ip() == "192.168.2.133") {
+            if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
