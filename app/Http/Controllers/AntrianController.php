@@ -1932,7 +1932,7 @@ class AntrianController extends APIController
         $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
         // tidak ada dokter
         if (!isset($jadwal)) {
-            Log::warning("Tidak ada jadwal dokter dihari tersebut");
+            Log::warning("Status Antrian : poliklinik: " . $request->kodepoli . "; dokter: " . $request->kodedokter . "; Tidak ada jadwal dokter dihari tersebut");
             return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
         }
         if ($jadwal->libur == 1) {
