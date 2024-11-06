@@ -1899,9 +1899,9 @@ class AntrianController extends APIController
         // }
         // validator
         $notif = 'Status Antrian BPJS : ';
-        foreach ($request->all() as $key => $value) {
-            $notif .= "$key: $value; ";
-        }
+        // foreach ($request->all() as $key => $value) {
+        //     $notif .= "$key: $value; ";
+        // }
         Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
