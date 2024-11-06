@@ -2491,6 +2491,7 @@ class AntrianController extends APIController
                 return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
+            Log::warning($th->getMessage());
             return $this->sendError($th->getMessage(), 201);
         }
     }
@@ -2505,6 +2506,7 @@ class AntrianController extends APIController
             "kodebooking" => "required",
         ]);
         if ($validator->fails()) {
+            Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(),  400);
         }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
@@ -2538,6 +2540,7 @@ class AntrianController extends APIController
         }
         // antrian tidak ditermukan
         else {
+            Log::warning('Antrian tidak ditemukan');
             return $this->sendError('Antrian tidak ditemukan', 400);
         }
     }
@@ -2553,6 +2556,7 @@ class AntrianController extends APIController
             "keterangan" => "required",
         ]);
         if ($validator->fails()) {
+            Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 400);
         }
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
@@ -2569,10 +2573,12 @@ class AntrianController extends APIController
             // $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
             // $request['number'] = $antrian->nohp;
             // $wa->send_message($request);
+            Log::warning($response->metadata->message);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan
         else {
+            Log::warning('Antrian tidak ditemukan');
             return $this->sendError('Antrian tidak ditemukan',  200);
         }
     }
@@ -2599,6 +2605,7 @@ class AntrianController extends APIController
             $printer = new Printer($connector);
             $printer->close();
         } catch (\Throwable $th) {
+            Log::warning("Printer mesin antrian mati");
             return $this->sendError("Printer mesin antrian mati", 500);
         }
         // checking request
@@ -2607,6 +2614,7 @@ class AntrianController extends APIController
             "waktu" => "required",
         ]);
         if ($validator->fails()) {
+            Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 400);
         }
         $now = now();
@@ -2619,13 +2627,16 @@ class AntrianController extends APIController
             $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
             $jamcheckin = $jampraktek->subHour();
             if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+                Log::warning("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .");
                 return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
             }
             // check backdate
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+                Log::warning("Tanggal periksa bukan hari ini.");
                 return $this->sendError("Tanggal periksa bukan hari ini.", 400);
             }
             if ($antrian->taskid == 99) {
+                Log::warning("Antrian telah dibatalkan sebelumnya.");
                 return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
             }
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
@@ -2760,6 +2771,7 @@ class AntrianController extends APIController
                     }
                     // gagal get surat kontrol
                     else {
+                        Log::warning($suratkontrol->metadata->message);
                         return $this->sendError($suratkontrol->metadata->message,  400);
                     }
                 }
@@ -2817,6 +2829,7 @@ class AntrianController extends APIController
                     }
                     // gagal get rujukan
                     else {
+                        Log::warning($data->metadata->message);
                         return $this->sendError($data->metadata->message,  400);
                     }
                 }
@@ -2992,6 +3005,7 @@ class AntrianController extends APIController
             // print ulang
             if ($antrian->taskid == 3) {
                 $this->print_ulang($request);
+                Log::warning("Silahkan Ambil Print Ulang Antrian di Anjungan Pelayanan Mandiri");
                 return $this->sendError("Silahkan Ambil Print Ulang Antrian di Anjungan Pelayanan Mandiri",  201);
             }
             // update antrian kunjungan
@@ -3068,12 +3082,14 @@ class AntrianController extends APIController
                 // $request['number'] = $antrian->nohp;
                 // $wa->send_message($request);
             } catch (\Throwable $th) {
+                Log::warning("Error Update Antrian : " . $th->getMessage());
                 return $this->sendError("Error Update Antrian : " . $th->getMessage(), 201);
             }
             return $this->sendResponse("Ok", 200);
         }
         // jika antrian tidak ditemukan
         else {
+            Log::warning("Kode booking tidak ditemukan");
             return $this->sendError("Kode booking tidak ditemukan", 400);
         }
     }
