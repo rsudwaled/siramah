@@ -2025,10 +2025,10 @@ class AntrianController extends APIController
                 return $this->sendError("Tanggal periksa sudah terlewat", 201);
             }
             // check tanggal hanya 7 hari
-            if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
-                Log::warning("Antrian hanya dapat dibuat untuk 7 hari ke kedepan");
-                return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
-            }
+            // if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(7)) {
+            //     Log::warning("Antrian hanya dapat dibuat untuk 7 hari ke kedepan");
+            //     return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
+            // }
             // cek duplikasi nik antrian
             $antrian_nik = Antrian::where('tanggalperiksa', $request->tanggalperiksa)
                 ->where('nik', $request->nik)
@@ -2491,7 +2491,7 @@ class AntrianController extends APIController
                 return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
-            Log::warning($th->getMessage());
+            Log::warning('Ambil Antrian Bridging : ' . $th->getMessage());
             return $this->sendError($th->getMessage(), 201);
         }
     }

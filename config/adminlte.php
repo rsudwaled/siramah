@@ -1505,6 +1505,13 @@ return [
                     'can' => 'bpjs',
                 ],
                 [
+                    'text' => 'Monitoring Pelayanan Peserta',
+                    'icon' => 'fas fa-id-card',
+                    'url' => 'monitoringPelayananPeserta',
+                    'shift' => 'ml-2',
+                    'can' => 'bpjs',
+                ],
+                [
                     'text' => 'Data Klaim Jasa Raharja',
                     'icon' => 'fas fa-chart-bar',
                     'url' => 'bpjs/vclaim/monitoring-klaim-jasa-raharja',
