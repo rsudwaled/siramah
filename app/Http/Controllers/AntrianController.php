@@ -1861,6 +1861,11 @@ class AntrianController extends APIController
     // API SIMRS
     public function token(Request $request)
     {
+        $notif = 'Get Token Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $credentials = [
             'username' => $request->header('x-username'),
             'password' => $request->header('x-password')
@@ -1893,6 +1898,11 @@ class AntrianController extends APIController
         //     return $this->sendError("Unauthorized (Token Invalid)", 401);
         // }
         // validator
+        $notif = 'Status Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
             "kodedokter" => "required",
@@ -1977,13 +1987,11 @@ class AntrianController extends APIController
     // catatan
     public function ambil_antrian(Request $request) #ambil antrian api
     {
-        $wa = new WhatsappController();
-        $notif = 'Ambil antrian: ';
+        $notif = 'Ambiil Antrian BPJS : ';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";
         }
-        $request['notif'] = $notif;
-        $wa->send_notif($request);
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "nomorkartu" => "required|numeric|digits:13",
             "nik" => "required|numeric|digits:16",
@@ -2220,6 +2228,11 @@ class AntrianController extends APIController
     }
     public function sisa_antrian(Request $request)
     {
+        $notif = 'Sisa Antrian Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
@@ -2262,6 +2275,11 @@ class AntrianController extends APIController
     }
     public function batal_antrian(Request $request)
     {
+        $notif = 'Batal Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
             "keterangan" => "required",
@@ -2292,6 +2310,11 @@ class AntrianController extends APIController
     }
     public function checkin_antrian(Request $request)
     {
+        $notif = 'Checkin Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         // cek printer
         try {
             Log::notice('Checkin Printer ip : ' . $request->ip());
@@ -2812,6 +2835,11 @@ class AntrianController extends APIController
     }
     public function info_pasien_baru(Request $request)
     {
+        $notif = 'Info Pasien Baru Antrian BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         return $this->sendError("Anda belum memiliki No RM di RSUD Waled (Pasien Baru). Silahkan daftar secara offline.", 400);
         // // auth token
         // $auth = $this->auth_token($request);
@@ -2943,6 +2971,11 @@ class AntrianController extends APIController
     }
     public function ambil_antrian_farmasi(Request $request)
     {
+        $notif = 'Ambil Antrian Farmasi BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
@@ -2966,6 +2999,11 @@ class AntrianController extends APIController
     }
     public function status_antrian_farmasi(Request $request)
     {
+        $notif = 'Status Antrian Farmasi BPJS : ';
+        foreach ($request->all() as $key => $value) {
+            $notif .= "$key: $value; ";
+        }
+        Log::info($notif);
         $validator = Validator::make($request->all(), [
             "kodebooking" => "required",
         ]);
