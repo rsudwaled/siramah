@@ -543,7 +543,7 @@ class PendaftaranController extends APIController
     public function daftarBpjsOffline(Request $request)
     {
         try {
-            Log::notice('Antrian Printer ip : ' . $request->ip());
+            Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
@@ -586,7 +586,7 @@ class PendaftaranController extends APIController
         if ($response->metadata->code == 200) {
             // cek printer
             try {
-                Log::notice('Antrian Printer ip : ' . $request->ip());
+                Log::info('Antrian Printer ip : ' . $request->ip());
                 if ($request->ip() == "192.168.2.133") {
                     $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
                 } else if ($request->ip() == "192.168.2.51") {
@@ -614,7 +614,7 @@ class PendaftaranController extends APIController
     public function daftarUmumOffline(Request $request)
     {
         try {
-            Log::notice('Antrian Printer ip : ' . $request->ip());
+            Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
@@ -856,7 +856,7 @@ class PendaftaranController extends APIController
             Carbon::setLocale('id');
             date_default_timezone_set('Asia/Jakarta');
             $now = Carbon::now();
-            Log::notice('Antrian Printer ip : ' . $request->ip());
+            Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
@@ -979,7 +979,7 @@ class PendaftaranController extends APIController
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
-            Log::notice('Antrian Printer ip : ' . $request->ip());
+            Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
@@ -1036,7 +1036,7 @@ class PendaftaranController extends APIController
         $for_sep = ['POLIKLINIK', 'FARMASI', 'ARSIP'];
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
-            Log::notice('Antrian Printer ip : ' . $request->ip());
+            Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {

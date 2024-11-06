@@ -2557,7 +2557,7 @@ class AntrianController extends APIController
         Log::info($notif);
         // cek printer
         try {
-            Log::notice('Checkin Printer ip : ' . $request->ip());
+            Log::info('Checkin Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
                 $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.51") {
