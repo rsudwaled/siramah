@@ -1910,11 +1910,13 @@ class AntrianController extends APIController
             "jampraktek" => "required",
         ]);
         if ($validator->fails()) {
+            Log::warning('Status Antrian BPJS : ' . $validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 400);
         }
         // check tanggal backdate
         $request['tanggal'] = $request->tanggalperiksa;
         if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
+            Log::warning("Tanggal periksa sudah terlewat");
             return $this->sendError("Tanggal periksa sudah terlewat", 401);
         }
         // get jadwal poliklinik dari simrs
@@ -1923,15 +1925,18 @@ class AntrianController extends APIController
             ->get();
         // tidak ada jadwal
         if (!isset($jadwals)) {
+            Log::warning("Tidak ada jadwal poliklinik dihari tersebut");
             return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", 404);
         }
         // get jadwal dokter
         $jadwal = $jadwals->where('kodedokter', $request->kodedokter)->first();
         // tidak ada dokter
         if (!isset($jadwal)) {
+            Log::warning("Tidak ada jadwal dokter dihari tersebut");
             return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
         }
         if ($jadwal->libur == 1) {
+            Log::warning("Jadwal Dokter dihari tersebut sedang diliburkan.");
             return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
         }
         // get hitungan antrian
@@ -1944,6 +1949,7 @@ class AntrianController extends APIController
         // cek kapasitas pasien
         if ($request->method != 'Bridging') {
             if ($antrians >= $jadwal->kapasitaspasien) {
+                Log::warning("Kuota Dokter Telah Penuh");
                 return $this->sendError("Kuota Dokter Telah Penuh",  201);
             }
         }
@@ -2009,15 +2015,18 @@ class AntrianController extends APIController
             ]);
         }
         if ($validator->fails()) {
+            Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 201);
         }
         try {
             // check tanggal backdate
             if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
+                Log::warning("Tanggal periksa sudah terlewat");
                 return $this->sendError("Tanggal periksa sudah terlewat", 201);
             }
             // check tanggal hanya 7 hari
             if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
+                Log::warning("Antrian hanya dapat dibuat untuk 7 hari ke kedepan");
                 return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
             }
             // cek duplikasi nik antrian
@@ -2026,16 +2035,19 @@ class AntrianController extends APIController
                 ->where('taskid', '<=', 5)
                 ->first();
             if ($antrian_nik) {
+                Log::warning("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.");
                 return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
             }
             // cek pasien baru
             $request['pasienbaru'] = 0;
             $pasien = Pasien::where('no_Bpjs',  $request->nomorkartu)->first();
             if (empty($pasien)) {
+                Log::warning("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline");
                 return $this->sendError("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline",  201);
             }
             // cek no kartu sesuai tidak
             if ($pasien->nik_bpjs != $request->nik) {
+                Log::warning("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline");
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline",  201);
             }
             // Cek pasien kronis
@@ -2049,6 +2061,7 @@ class AntrianController extends APIController
                 if ($unit->KDPOLI ==  $request->kodepoli) {
                     // return $this->sendError(Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1));
                     if (Carbon::parse($request->tanggalperiksa)->endOfDay() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1)) {
+                        Log::warning("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.");
                         return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
                     }
                 }
@@ -2066,6 +2079,7 @@ class AntrianController extends APIController
                         $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
                         // cek surat kontrol orang lain
                         if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
+                            Log::warning("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda");
                             return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 201);
                         }
                         // cek surat tanggal kontrol
@@ -2073,6 +2087,7 @@ class AntrianController extends APIController
                         //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
+                        Log::warning($response->metadata->message,  $response->metadata->code);
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
                     }
                 }
@@ -2107,6 +2122,7 @@ class AntrianController extends APIController
                 $request['namadokter'] = $jadwal->namadokter;
             } else {
                 $message = $jadwal->metadata->message;
+                Log::warning('Mohon maaf , ' . $message);
                 return $this->sendError('Mohon maaf , ' . $message, 201);
             }
             // menghitung nomor antrian
@@ -2222,6 +2238,7 @@ class AntrianController extends APIController
             //     return $this->sendError($response->metadata->message, 201);
             // }
         } catch (\Throwable $th) {
+            Log::warning($th->getMessage());
             return $this->sendError($th->getMessage(), 201);
         }
     }
@@ -2250,15 +2267,18 @@ class AntrianController extends APIController
             ]);
         }
         if ($validator->fails()) {
+            Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 201);
         }
         try {
             // check tanggal backdate
             if (Carbon::parse($request->tanggalperiksa)->endOfDay()->isPast()) {
+                Log::warning("Tanggal periksa sudah terlewat");
                 return $this->sendError("Tanggal periksa sudah terlewat", 201);
             }
             // check tanggal hanya 7 hari
             if (Carbon::parse($request->tanggalperiksa) >  Carbon::now()->addDay(6)) {
+                Log::warning("Antrian hanya dapat dibuat untuk 7 hari ke kedepan");
                 return $this->sendError("Antrian hanya dapat dibuat untuk 7 hari ke kedepan", 201);
             }
             // cek duplikasi nik antrian
@@ -2267,16 +2287,19 @@ class AntrianController extends APIController
                 ->where('taskid', '<=', 5)
                 ->first();
             if ($antrian_nik) {
+                Log::warning("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.");
                 return $this->sendError("Terdapat Antrian (" . $antrian_nik->kodebooking . ") dengan nomor NIK yang sama pada tanggal tersebut yang belum selesai. Silahkan batalkan terlebih dahulu jika ingin mendaftarkan lagi.",  201);
             }
             // cek pasien baru
             $request['pasienbaru'] = 0;
             $pasien = Pasien::where('no_Bpjs',  $request->nomorkartu)->first();
             if (empty($pasien)) {
+                Log::warning("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline");
                 return $this->sendError("Nomor Kartu BPJS Pasien termasuk Pasien Baru di RSUD Waled. Silahkan daftar melalui pendaftaran offline",  201);
             }
             // cek no kartu sesuai tidak
             if ($pasien->nik_bpjs != $request->nik) {
+                Log::warning("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline");
                 return $this->sendError("NIK anda yang terdaftar di BPJS dengan Di RSUD Waled berbeda. Silahkan perbaiki melalui pendaftaran offline",  201);
             }
             // Cek pasien kronis
@@ -2290,6 +2313,7 @@ class AntrianController extends APIController
                 if ($unit->KDPOLI ==  $request->kodepoli) {
                     // return $this->sendError(Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1));
                     if (Carbon::parse($request->tanggalperiksa)->endOfDay() < Carbon::parse($kunjungan_kronis->tgl_masuk)->addMonth(1)) {
+                        Log::warning("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.");
                         return $this->sendError("Pada kunjungan sebelumnya di tanggal " . Carbon::parse($kunjungan_kronis->tgl_masuk)->translatedFormat('d F Y') . " anda termasuk pasien KRONIS. Sehingga bisa daftar lagi setelah 30 hari.",  201);
                     }
                 }
@@ -2307,6 +2331,7 @@ class AntrianController extends APIController
                         $request['nomorRujukan'] = $suratkontrol->sep->provPerujuk->noRujukan;
                         // cek surat kontrol orang lain
                         if ($request->nomorkartu != $suratkontrol->sep->peserta->noKartu) {
+                            Log::warning("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda");
                             return $this->sendError("Nomor Kartu di Surat Kontrol dengan Kartu BPJS berberda", 201);
                         }
                         // cek surat tanggal kontrol
@@ -2314,6 +2339,7 @@ class AntrianController extends APIController
                         //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
+                        Log::warning($response->metadata->message,  $response->metadata->code);
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
                     }
                 }
@@ -2348,6 +2374,7 @@ class AntrianController extends APIController
                 $request['namadokter'] = $jadwal->namadokter;
             } else {
                 $message = $jadwal->metadata->message;
+                Log::warning('Mohon maaf , ' . $message);
                 return $this->sendError('Mohon maaf , ' . $message, 201);
             }
             // menghitung nomor antrian
@@ -2460,6 +2487,7 @@ class AntrianController extends APIController
                 ];
                 return $this->sendResponse($response, 200);
             } else {
+                Log::warning($response->metadata->message);
                 return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
