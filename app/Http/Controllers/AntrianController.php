@@ -2487,7 +2487,7 @@ class AntrianController extends APIController
                 ];
                 return $this->sendResponse($response, 200);
             } else {
-                Log::warning('Ambil Antrian Bridging nama: ' . $request->nama . '; error: ' . $response->metadata->message);
+                Log::warning('Ambil Antrian Bridging nama: ' . $request->nama . '; user: ' . $request->user . '; error: ' . $response->metadata->message);
                 return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
