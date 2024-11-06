@@ -1936,7 +1936,7 @@ class AntrianController extends APIController
             return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
         }
         if ($jadwal->libur == 1) {
-            Log::warning("Jadwal Dokter dihari tersebut sedang diliburkan.");
+            Log::warning("Status Antrian : poliklinik: " . $request->kodepoli . "; dokter: " . $request->kodedokter . "; Jadwal Dokter dihari tersebut sedang diliburkan.");
             return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
         }
         // get hitungan antrian
