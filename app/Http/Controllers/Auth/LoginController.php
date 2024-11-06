@@ -57,6 +57,7 @@ class LoginController extends Controller
             Log::notice('Berhasil Login ' . $user->name . ', ' . $user->username);
             return redirect()->route('home');
         } else {
+            Log::alert('Gagal Login ' . $user->name . ', ' . $user->username);
             return redirect()->route('login')->withErrors('Username / Email dan Password Salah');
         }
     }
