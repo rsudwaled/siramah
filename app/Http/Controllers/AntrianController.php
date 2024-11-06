@@ -1986,7 +1986,7 @@ class AntrianController extends APIController
     }
     public function ambil_antrian(Request $request) #ambil antrian api
     {
-        $notif = 'Ambiil Antrian BPJS : ';
+        $notif = 'Ambil Antrian BPJS MJKN : ';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";
         }
@@ -2146,88 +2146,88 @@ class AntrianController extends APIController
             }
             $request['kodebooking'] = strtoupper(uniqid());
             //tambah antrian bpjs
-            $response = $this->tambah_antrean($request);
-            if ($response->metadata->code == 200) {
-                // tambah antrian database
-                $antrian = Antrian::create([
-                    "kodebooking" => $request->kodebooking,
-                    "nomorkartu" => $request->nomorkartu,
-                    "nik" => $request->nik,
-                    "nohp" => $request->nohp,
-                    "kodepoli" => $request->kodepoli,
-                    "norm" => $request->norm,
-                    "pasienbaru" => $request->pasienbaru,
-                    "tanggalperiksa" => $request->tanggalperiksa,
-                    "kodedokter" => $request->kodedokter,
-                    "jampraktek" => $request->jampraktek,
-                    "jeniskunjungan" => $request->jeniskunjungan,
-                    "nomorreferensi" => $request->nomorreferensi,
-                    "method" => $request->method,
-                    "nomorrujukan" => $request->nomorRujukan,
-                    "nomorsuratkontrol" => $request->noSuratKontrol,
-                    'nomorsep' => $request->nomorsep,
-                    "kode_kunjungan" => $request->kode_kunjungan,
-                    "jenispasien" => $request->jenispasien,
-                    "namapoli" => $request->namapoli,
-                    "namadokter" => $request->namadokter,
-                    "nomorantrean" => $request->nomorantrean,
-                    "angkaantrean" => $request->angkaantrean,
-                    "estimasidilayani" => $request->estimasidilayani,
-                    "sisakuotajkn" => $request->sisakuotajkn,
-                    "kuotajkn" => $request->kuotajkn,
-                    "sisakuotanonjkn" => $request->sisakuotanonjkn,
-                    "kuotanonjkn" => $request->kuotanonjkn,
-                    "keterangan" => $request->keterangan,
-                    "lokasi" => $request->lokasi,
-                    "lantaipendaftaran" => $request->lantaipendaftaran,
-                    "status_api" => 1,
-                    "taskid" => 0,
-                    "user" => "System Antrian",
-                    "nama" => $request->nama,
+            // $response = $this->tambah_antrean($request);
+            // if ($response->metadata->code == 200) {
+            // tambah antrian database
+            $antrian = Antrian::create([
+                "kodebooking" => $request->kodebooking,
+                "nomorkartu" => $request->nomorkartu,
+                "nik" => $request->nik,
+                "nohp" => $request->nohp,
+                "kodepoli" => $request->kodepoli,
+                "norm" => $request->norm,
+                "pasienbaru" => $request->pasienbaru,
+                "tanggalperiksa" => $request->tanggalperiksa,
+                "kodedokter" => $request->kodedokter,
+                "jampraktek" => $request->jampraktek,
+                "jeniskunjungan" => $request->jeniskunjungan,
+                "nomorreferensi" => $request->nomorreferensi,
+                "method" => $request->method,
+                "nomorrujukan" => $request->nomorRujukan,
+                "nomorsuratkontrol" => $request->noSuratKontrol,
+                'nomorsep' => $request->nomorsep,
+                "kode_kunjungan" => $request->kode_kunjungan,
+                "jenispasien" => $request->jenispasien,
+                "namapoli" => $request->namapoli,
+                "namadokter" => $request->namadokter,
+                "nomorantrean" => $request->nomorantrean,
+                "angkaantrean" => $request->angkaantrean,
+                "estimasidilayani" => $request->estimasidilayani,
+                "sisakuotajkn" => $request->sisakuotajkn,
+                "kuotajkn" => $request->kuotajkn,
+                "sisakuotanonjkn" => $request->sisakuotanonjkn,
+                "kuotanonjkn" => $request->kuotanonjkn,
+                "keterangan" => $request->keterangan,
+                "lokasi" => $request->lokasi,
+                "lantaipendaftaran" => $request->lantaipendaftaran,
+                "status_api" => 1,
+                "taskid" => 0,
+                "user" => "System Antrian",
+                "nama" => $request->nama,
+            ]);
+            // kirim notif wa
+            $wa = new WhatsappController();
+            $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
+            $request['number'] = $request->nohp;
+            $wa->send_message($request);
+            // kirim notif
+            $wa = new WhatsappController();
+            $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
+            $wa->send_notif($request);
+            if ($request->method == 'Bridging') {
+                $antrian->update([
+                    'taskid' => 3,
+                    'taskid1' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
+                    'taskid3' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
+                    'user1' => $request->user,
+                    'kode_kunjungan' => $request->kode_kunjungan,
                 ]);
-                // kirim notif wa
-                $wa = new WhatsappController();
-                $request['message'] = "*Antrian Berhasil di Daftarkan*\nAntrian anda berhasil didaftarkan melalui Layanan " . $request->method . " RSUD Waled dengan data sebagai berikut : \n\n*Kode Antrian :* " . $request->kodebooking .  "\n*Angka Antrian :* " . $request->angkaantrean .  "\n*Nomor Antrian :* " . $request->nomorantrean . "\n*Jenis Pasien :* " . $request->jenispasien .  "\n*Jenis Kunjungan :* " . $request->jeniskunjungan .  "\n\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli  . "\n*Dokter :* " . $request->namadokter  .  "\n*Jam Praktek :* " . $request->jampraktek  .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n\n*Keterangan :* " . $request->keterangan  .  "\nLink Kodebooking QR Code :\nhttps://siramah.rsudwaled.id/check_antrian?kodebooking=" . $request->kodebooking . "\n\nTerima kasih. Semoga sehat selalu.\nUntuk pertanyaan & pengaduan silahkan hubungi :\n*Humas RSUD Waled 08983311118*";
-                $request['number'] = $request->nohp;
-                $wa->send_message($request);
-                // kirim notif
-                $wa = new WhatsappController();
-                $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
-                $wa->send_notif($request);
-                if ($request->method == 'Bridging') {
-                    $antrian->update([
-                        'taskid' => 3,
-                        'taskid1' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
-                        'taskid3' => Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s'),
-                        'user1' => $request->user,
-                        'kode_kunjungan' => $request->kode_kunjungan,
-                    ]);
-                }
-                $response = [
-                    "nomorantrean" => $request->nomorantrean,
-                    "angkaantrean" => $request->angkaantrean,
-                    "kodebooking" => $request->kodebooking,
-                    "norm" =>  $request->norm,
-                    "namapoli" => $request->namapoli,
-                    "namadokter" => $request->namadokter,
-                    "estimasidilayani" => $request->estimasidilayani,
-                    "sisakuotajkn" => $request->sisakuotajkn,
-                    "kuotajkn" => $request->kuotajkn,
-                    "sisakuotanonjkn" => $request->sisakuotanonjkn,
-                    "kuotanonjkn" => $request->kuotanonjkn,
-                    "keterangan" => $request->keterangan,
-                ];
-                return $this->sendResponse($response, 200);
-            } else {
-                return $this->sendError($response->metadata->message, 201);
             }
+            $response = [
+                "nomorantrean" => $request->nomorantrean,
+                "angkaantrean" => $request->angkaantrean,
+                "kodebooking" => $request->kodebooking,
+                "norm" =>  $request->norm,
+                "namapoli" => $request->namapoli,
+                "namadokter" => $request->namadokter,
+                "estimasidilayani" => $request->estimasidilayani,
+                "sisakuotajkn" => $request->sisakuotajkn,
+                "kuotajkn" => $request->kuotajkn,
+                "sisakuotanonjkn" => $request->sisakuotanonjkn,
+                "kuotanonjkn" => $request->kuotanonjkn,
+                "keterangan" => $request->keterangan,
+            ];
+            return $this->sendResponse($response, 200);
+            // } else {
+            //     return $this->sendError($response->metadata->message, 201);
+            // }
         } catch (\Throwable $th) {
             return $this->sendError($th->getMessage(), 201);
         }
     }
     public function ambil_antrians(Request $request) #ambil antrian local
     {
-        $notif = 'Ambiil Antrian BPJS : ';
+        $notif = 'Ambil Antrian BPJS Bridging : ';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";
         }
