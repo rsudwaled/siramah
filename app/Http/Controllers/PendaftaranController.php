@@ -402,7 +402,7 @@ class PendaftaranController extends APIController
                             $request['tujuan'] =  $antrian->kodepoli; // get antrian
                             $request['eksekutif'] =  0;
                             // dpjp
-                            $request['tujuanKunj'] = "0";
+                            $request['tujuanKunj'] = "2";
                             $request['flagProcedure'] = "";
                             $request['kdPenunjang'] = "";
                             $request['assesmentPel'] = "2";
