@@ -2087,7 +2087,7 @@ class AntrianController extends APIController
                         //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
-                        Log::warning($response->metadata->message,  $response->metadata->code);
+                        Log::warning('Ambil Antrian MJKN' . $response->metadata->message,  $response->metadata->code);
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
                     }
                 }
@@ -2339,7 +2339,7 @@ class AntrianController extends APIController
                         //     return $this->sendError("Tanggal periksa tidak sesuai dengan surat kontrol. Silahkan pengajuan perubahan tanggal surat kontrol terlebih dahulu.", 201);
                         // }
                     } else {
-                        Log::warning($response->metadata->message,  $response->metadata->code);
+                        Log::warning('Surat Kontrol Ambil Antrins Briding ' . $response->metadata->message,  $response->metadata->code);
                         return $this->sendError($response->metadata->message,  $response->metadata->code);
                     }
                 }
@@ -2487,7 +2487,7 @@ class AntrianController extends APIController
                 ];
                 return $this->sendResponse($response, 200);
             } else {
-                Log::warning($response->metadata->message);
+                Log::warning('Ambil Antrian Bridging ' . $response->metadata->message);
                 return $this->sendError($response->metadata->message, 201);
             }
         } catch (\Throwable $th) {
@@ -2573,7 +2573,7 @@ class AntrianController extends APIController
             // $request['message'] = "Antrian anda atas nama pasien " . $antrian->nama . " dengan kodeboking " . $antrian->kodebooking . " telah dibatalkan dengan alasan " . $request['keterangan'] . "\n\nTerimakasih. Semoga sehat selalu.";
             // $request['number'] = $antrian->nohp;
             // $wa->send_message($request);
-            Log::warning($response->metadata->message);
+            Log::warning('Batal Antrain ' . $response->metadata->message);
             return $this->sendError($response->metadata->message, 200);
         }
         // antrian tidak ditemukan
@@ -2771,7 +2771,7 @@ class AntrianController extends APIController
                     }
                     // gagal get surat kontrol
                     else {
-                        Log::warning($suratkontrol->metadata->message);
+                        Log::warning('Checkin Surat Kontrol ' . $suratkontrol->metadata->message);
                         return $this->sendError($suratkontrol->metadata->message,  400);
                     }
                 }
@@ -2829,7 +2829,7 @@ class AntrianController extends APIController
                     }
                     // gagal get rujukan
                     else {
-                        Log::warning($data->metadata->message);
+                        Log::warning('Checkin Rujukan ' . $data->metadata->message);
                         return $this->sendError($data->metadata->message,  400);
                     }
                 }
