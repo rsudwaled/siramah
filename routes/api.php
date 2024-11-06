@@ -105,7 +105,8 @@ Route::prefix('antrian')->group(function () {
     // API SIMRS
     Route::get('token', [AntrianController::class, 'token'])->name('token');
     Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
-    Route::post('ambil_antrians ', [AntrianController::class, 'ambil_antrian'])->name('ambil_antrian');
+    Route::post('ambil_antrian ', [AntrianController::class, 'ambil_antrian']); #api mjkn
+    Route::post('ambil_antrians ', [AntrianController::class, 'ambil_antrians']); #local
     Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
     Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
     Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
