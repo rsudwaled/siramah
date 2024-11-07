@@ -590,6 +590,7 @@ return [
                 //     'can' => 'ranap',
                 // ],
 
+
             ],
         ],
         // IGD VERSI 1
@@ -669,10 +670,17 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
+                // [
+                //     'text' => 'Riwayat Pendaftaran byUser',
+                //     'icon'    => 'fas fa-user-plus',
+                //     'url'  => 'get-kunjungan/by-user',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
                 [
-                    'text' => 'Riwayat Pendaftaran byUser',
-                    'icon'    => 'fas fa-user-plus',
-                    'url'  => 'get-kunjungan/by-user',
+                    'text' => 'Bridging (Validasi)',
+                    'icon'    => 'fas fa-sync',
+                    'url'  => 'bridging-igd/ranap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],

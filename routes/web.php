@@ -63,6 +63,7 @@ use App\Http\Controllers\RM\DiagnosaPolaPenyakitController;
 use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AnjunganMandiriPendaftaran;
 use App\Livewire\Antrian\AntrianPendaftaran;
+use App\Http\Controllers\BridgingIgd\BridgingIgdController;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Antrian\DisplayJadwalRajal;
 use App\Livewire\Bagianumum\LaporanSuratMasuk;
@@ -677,6 +678,16 @@ Route::middleware('auth')->group(function () {
     Route::post('bridging/sep-igd', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'bridgingSEPIGD'])->name('bridging.sepigd');
     Route::delete('sep/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSEP'])->name('sep_ranap.delete');
     Route::delete('spri/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSPRI'])->name('spri_ranap.delete');
+
+     // Bridging Bpjd dari IGD versi baru
+    Route::prefix('bridging-igd')->name('bridging-igd.')->group(function () {
+        Route::get('/ranap', [BridgingIgdController::class, 'listRawatInap'])->name('list-ranap');
+        Route::post('/update-diagnosa', [BridgingIgdController::class, 'updateDiagKunjungan'])->name('update-diagnosa-kunjungan');
+        Route::post('/create-spri', [BridgingIgdController::class, 'createSpri'])->name('create-spri');
+        Route::delete('/delete-spri', [BridgingIgdController::class, 'deleteSPRI'])->name('delete-spri');
+        Route::post('/create-sep-ranap', [BridgingIgdController::class, 'createSEPRanap'])->name('create-sep-ranap');
+        Route::delete('/delete-sep-ranap', [BridgingIgdController::class, 'deleteSEPRanap'])->name('delete-sep-ranap');
+    });
 
     //RANAP 1 X 24 Jam
     Route::get('1x24jam/daftar-ranap', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'getRiwayatRanap'])->name('riwayat-ranap.daftar');

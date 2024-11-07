@@ -2606,7 +2606,7 @@ class AntrianController extends APIController
             $printer->close();
         } catch (\Throwable $th) {
             Log::warning("Printer mesin antrian mati");
-            return $this->sendError("Printer mesin antrian mati", 500);
+            return $this->sendError("Printer mesin antrian mati", 201);
         }
         // checking request
         $validator = Validator::make($request->all(), [
@@ -2615,7 +2615,7 @@ class AntrianController extends APIController
         ]);
         if ($validator->fails()) {
             Log::warning($validator->errors()->first());
-            return $this->sendError($validator->errors()->first(), 400);
+            return $this->sendError($validator->errors()->first(), 201);
         }
         $now = now();
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
@@ -2628,16 +2628,16 @@ class AntrianController extends APIController
             $jamcheckin = $jampraktek->subHour();
             if (!$now->greaterThanOrEqualTo($jamcheckin)) {
                 Log::warning("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .");
-                return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
+                return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 201);
             }
             // check backdate
             if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
                 Log::warning("Tanggal periksa bukan hari ini.");
-                return $this->sendError("Tanggal periksa bukan hari ini.", 400);
+                return $this->sendError("Tanggal periksa bukan hari ini.", 201);
             }
             if ($antrian->taskid == 99) {
                 Log::warning("Antrian telah dibatalkan sebelumnya.");
-                return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
+                return $this->sendError("Antrian telah dibatalkan sebelumnya.", 201);
             }
             $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
             $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
@@ -2721,7 +2721,7 @@ class AntrianController extends APIController
                             }
                             // gagal get rujukan
                             else {
-                                return $this->sendError($data->metadata->message,  400);
+                                return $this->sendError($data->metadata->message,  201);
                             }
                         } else {
                             $request['nomorkartu'] = $antrian->nomorkartu;
@@ -2772,7 +2772,7 @@ class AntrianController extends APIController
                     // gagal get surat kontrol
                     else {
                         Log::warning('Checkin Surat Kontrol ' . $suratkontrol->metadata->message);
-                        return $this->sendError($suratkontrol->metadata->message,  400);
+                        return $this->sendError($suratkontrol->metadata->message,  201);
                     }
                 }
                 // daftar pake rujukan
@@ -2830,7 +2830,7 @@ class AntrianController extends APIController
                     // gagal get rujukan
                     else {
                         Log::warning('Checkin Rujukan ' . $data->metadata->message);
-                        return $this->sendError($data->metadata->message,  400);
+                        return $this->sendError($data->metadata->message,  201);
                     }
                 }
                 // create sep
@@ -2851,7 +2851,7 @@ class AntrianController extends APIController
                     if (isset($antrian->nomorsep)) {
                     } else {
                         $requests["nomorsep"] = $antrian->nomorsep;
-                        return $this->sendError("Gagal Buat SEP : " . $sep->metadata->message,  400);
+                        return $this->sendError("Gagal Buat SEP : " . $sep->metadata->message,  201);
                     }
                 }
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
@@ -2997,7 +2997,7 @@ class AntrianController extends APIController
                         'tagihan_penjamin' => $totalpenjamin,
                     ]);
                 } catch (\Throwable $th) {
-                    return $this->sendError($th->getMessage(), 400);
+                    return $this->sendError($th->getMessage(), 201);
                 }
             } else {
                 $kunjungan = Kunjungan::where('kode_kunjungan', $antrian->kode_kunjungan)->first();
@@ -3090,7 +3090,7 @@ class AntrianController extends APIController
         // jika antrian tidak ditemukan
         else {
             Log::warning("Kode booking tidak ditemukan");
-            return $this->sendError("Kode booking tidak ditemukan", 400);
+            return $this->sendError("Kode booking tidak ditemukan", 201);
         }
     }
     public function panggil_dokter(Request $request)
