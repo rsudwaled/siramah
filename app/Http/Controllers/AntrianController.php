@@ -2137,7 +2137,7 @@ class AntrianController extends APIController
             $request['angkaantrean'] = $antrian_all + 1;
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
-            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
+            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(6 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
             $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
             $request['kuotajkn'] = $jadwal->kuotajkn;
@@ -2389,7 +2389,7 @@ class AntrianController extends APIController
             $request['angkaantrean'] = $antrian_all + 1;
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
-            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
+            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(6 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
             $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
             $request['kuotajkn'] = $jadwal->kuotajkn;
