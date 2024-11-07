@@ -1936,7 +1936,7 @@ class AntrianController extends APIController
             return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
         }
         if ($jadwal->libur == 1) {
-            Log::warning("Jadwal Dokter dihari tersebut sedang diliburkan.");
+            Log::warning("Status Antrian : poliklinik: " . $request->kodepoli . "; dokter: " . $request->kodedokter . "; Jadwal Dokter dihari tersebut sedang diliburkan.");
             return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
         }
         // get hitungan antrian
@@ -2137,7 +2137,7 @@ class AntrianController extends APIController
             $request['angkaantrean'] = $antrian_all + 1;
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
-            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
+            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(6 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
             $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
             $request['kuotajkn'] = $jadwal->kuotajkn;
@@ -2149,7 +2149,7 @@ class AntrianController extends APIController
             }
             // keterangan jika bridging
             else if ($request->method == 'Web') {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
             }
             // keterangan jika bridging
             else if ($request->method == 'Bridging') {
@@ -2157,7 +2157,7 @@ class AntrianController extends APIController
             }
             // keterangan jika jkn
             else {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
             $request['kodebooking'] = strtoupper(uniqid());
@@ -2389,7 +2389,7 @@ class AntrianController extends APIController
             $request['angkaantrean'] = $antrian_all + 1;
             //  menghitung estimasi dilayani
             $timestamp = $request->tanggalperiksa . ' ' . explode('-', $request->jampraktek)[0] . ':00';
-            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(10 * ($antrian_poli + 1));
+            $jadwal_estimasi = Carbon::createFromFormat('Y-m-d H:i:s', $timestamp, 'Asia/Jakarta')->addMinutes(6 * ($antrian_poli + 1));
             $request['estimasidilayani'] = $jadwal_estimasi->timestamp * 1000;
             $request['sisakuotajkn'] =  $jadwal->sisakuotajkn - 1;
             $request['kuotajkn'] = $jadwal->kuotajkn;
@@ -2401,7 +2401,7 @@ class AntrianController extends APIController
             }
             // keterangan jika bridging
             else if ($request->method == 'Web') {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
             }
             // keterangan jika bridging
             else if ($request->method == 'Bridging') {
@@ -2409,7 +2409,7 @@ class AntrianController extends APIController
             }
             // keterangan jika jkn
             else {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
             $request['kodebooking'] = strtoupper(uniqid());
