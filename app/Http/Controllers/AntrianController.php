@@ -2149,7 +2149,7 @@ class AntrianController extends APIController
             }
             // keterangan jika bridging
             else if ($request->method == 'Web') {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
             }
             // keterangan jika bridging
             else if ($request->method == 'Bridging') {
@@ -2157,7 +2157,7 @@ class AntrianController extends APIController
             }
             // keterangan jika jkn
             else {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
             $request['kodebooking'] = strtoupper(uniqid());
@@ -2401,7 +2401,7 @@ class AntrianController extends APIController
             }
             // keterangan jika bridging
             else if ($request->method == 'Web') {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
             }
             // keterangan jika bridging
             else if ($request->method == 'Bridging') {
@@ -2409,7 +2409,7 @@ class AntrianController extends APIController
             }
             // keterangan jika jkn
             else {
-                $request['keterangan'] = "Peserta harap 60 menit lebih awal dari jadwal untuk checkin dekat mesin antrian untuk mencetak tiket antrian.";
+                $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
             $request['kodebooking'] = strtoupper(uniqid());
