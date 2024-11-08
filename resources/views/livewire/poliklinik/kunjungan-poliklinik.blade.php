@@ -64,6 +64,7 @@
                                 <th>Nama Pasien</th>
                                 <th>No BPJS</th>
                                 <th>Status</th>
+                                <th>Taskid</th>
                                 <th>Action</th>
                                 <th>Alasan Masuk</th>
                                 <th>Unit</th>
@@ -105,6 +106,7 @@
                                                         class="badge badge-secondary">{{ $kunjungan->status_kunjungan }}</span>
                                             @endswitch
                                         </td>
+                                        <td>{{ $kunjungan->antrian?->taskid }}</td>
                                         <td>
                                             <a class="withLoad"
                                                 href="{{ route('kunjungan.poliklinik.pasien') }}?kode_kunjungan={{ $kunjungan->kode_kunjungan }}">

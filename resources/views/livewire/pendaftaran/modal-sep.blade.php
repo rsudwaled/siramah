@@ -79,10 +79,10 @@
             </table>
             <br>
         @endif
-        @if ($antrian->sep)
+        {{-- @if ($kunjungan->no_sep)
             <iframe src="{{ route('vclaim.sep_print') }}?noSep={{ $antrian->sep }}" width="100%" height="300"
                 frameborder="0"></iframe>
-        @endif
+        @endif --}}
         <x-slot name="footerSlot">
             <x-adminlte-button theme="success" icon="fas fa-plus" class="btn-sm" label="Buat SEP"
                 wire:click="openForm" />

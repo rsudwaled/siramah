@@ -397,8 +397,6 @@ return [
                     'icon'    => 'fas fa-pills',
                     'url'  => 'antrian-farmasi-rajal',
                     'shift'   => 'ml-2',
-                    'label' => 'proses',
-                    'label_color' => 'warning',
                 ],
                 [
                     'text' => 'Rekam Medis Rawat Jalan',
@@ -406,8 +404,6 @@ return [
                     'url'  => 'rekam-medis-rajal',
                     'active'  => ['rekam-medis-rajal', 'rekam-medis-rajal-detail'],
                     'shift'   => 'ml-2',
-                    'label' => 'baru',
-                    'label_color' => 'success',
                 ],
                 [
                     'text' => 'Casemix Rawat Jalan',
