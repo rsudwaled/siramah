@@ -86,6 +86,7 @@ use App\Livewire\Bpjs\Vclaim\MonitoringPelayananPeserta;
 use App\Livewire\Bpjs\Vclaim\Peserta;
 use App\Livewire\Bpjs\Vclaim\Referensi;
 use App\Livewire\Bpjs\Vclaim\Rujukan;
+use App\Livewire\Bpjs\Vclaim\RujukanKeluar;
 use App\Livewire\Bpjs\Vclaim\Sep;
 use App\Livewire\Bpjs\Vclaim\SuratKontrol;
 use App\Livewire\Casemix\CasemixRajal;
@@ -412,8 +413,10 @@ Route::middleware('auth')->group(function () {
         Route::get('bpjs/vclaim/surat-kontrol', SuratKontrol::class)->name('vclaim.suratkontrol')->lazy();
         Route::get('bpjs/vclaim/suratkontrol_print', [SuratKontrolController::class, 'suratkontrol_print'])->name('vclaim.suratkontrol_print');
         Route::get('bpjs/vclaim/rujukan', Rujukan::class)->name('vclaim.rujukan')->lazy();
+        Route::get('bpjs/vclaim/rujukan-keluar', RujukanKeluar::class)->name('vclaim.rujukan')->lazy();
         Route::get('bpjs/vclaim/sep', Sep::class)->name('vclaim.sep')->lazy();
         Route::get('bpjs/vclaim/sep_print', [SEPController::class, 'sep_print'])->name('vclaim.sep_print');
+        //    rujukan-keluar
     });
     // antrian bpjs
     // Route::get('statusAntrianBpjs', [AntrianController::class, 'statusAntrianBpjs'])->name('statusAntrianBpjs');
@@ -679,7 +682,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('sep/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSEP'])->name('sep_ranap.delete');
     Route::delete('spri/delete', [App\Http\Controllers\IGD\Ranap\RanapController::class, 'deleteSPRI'])->name('spri_ranap.delete');
 
-     // Bridging Bpjd dari IGD versi baru
+    // Bridging Bpjd dari IGD versi baru
     Route::prefix('bridging-igd')->name('bridging-igd.')->group(function () {
         Route::get('/ranap', [BridgingIgdController::class, 'listRawatInap'])->name('list-ranap');
         Route::post('/update-diagnosa', [BridgingIgdController::class, 'updateDiagKunjungan'])->name('update-diagnosa-kunjungan');

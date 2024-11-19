@@ -15,7 +15,7 @@
                 </th>
             </tr>
             <tr>
-                <td>Tgl Periksa</td>
+                <td>Tgl Masuk</td>
                 <td>:</td>
                 <th>{{ $kunjungan->tgl_masuk }}</th>
             </tr>
@@ -24,11 +24,16 @@
                 <td>:</td>
                 <th>{{ $kunjungan->unit?->nama_unit }}</th>
             </tr>
-            {{-- <tr>
-                <td>User</td>
+            <tr>
+                <td>Dokter</td>
                 <td>:</td>
-                <th>{{ Auth::user()->name }}</th>
-            </tr> --}}
+                <th>{{ $kunjungan->dokter?->nama_paramedis }}</th>
+            </tr>
+            <tr>
+                <td>Taskid</td>
+                <td>:</td>
+                <th>{{ $kunjungan->antrian?->taskid }}</th>
+            </tr>
         </table>
     </div>
     <div class="col-md-3">
@@ -90,32 +95,30 @@
         </table>
     </div>
     <div class="col-md-3">
-        {{-- <table class="table table-xs table-borderless">
+        <table class="table table-xs table-borderless">
             <tr>
                 <td>Pendaftaran</td>
                 <td>:</td>
-                <th>{{ $antrian->pic1 ? $antrian->pic1->name : 'Belum Didaftarkan' }}</th>
-            </tr>
-            <tr>
-                <td>Unit</td>
-                <td>:</td>
-                <th>{{ $antrian->kunjungan ? $antrian->kunjungan->units->nama : 'Belum Kunjungan' }}</th>
+                <th>{{ $kunjungan->pic1 }}</th>
             </tr>
             <tr>
                 <td>Perawat</td>
                 <td>:</td>
-                <th>{{ $antrian->pic2 ? $antrian->pic2->name : 'Belum Asesmen' }}</th>
+                <td></td>
+                {{-- <th>{{ $kunjungan->as }}</th> --}}
             </tr>
             <tr>
                 <td>Dokter</td>
                 <td>:</td>
-                <th>{{ $antrian->pic3 ? $antrian->pic3->name : 'Belum Asesmen' }}</th>
+                <td></td>
+                {{-- <th>{{ $kunjungan->as }}</th> --}}
             </tr>
             <tr>
                 <td>Farmasi</td>
                 <td>:</td>
-                <th>{{ $antrian->pic4 ? $antrian->pic4->name : 'Belum Resep Obat' }}</th>
+                <td></td>
+                {{-- <th>{{ $kunjungan->as }}</th> --}}
             </tr>
-        </table> --}}
+        </table>
     </div>
 </div>
