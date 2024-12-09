@@ -4,10 +4,12 @@
             <th>DIAG_UTAMA</th>
             <th>NAMA_DIAG</th>
             <th>NO_RM</th>
-            <th>nama_px</th>
+            <th>NAMA</th>
+            <th>NIK</th>
+            <th>TGL_LAHIR</th>
             <th>TGL_MASUK</th>
             <th>TGL_KELUAR</th>
-            <th>ket</th>
+            <th>KET</th>
             <th>KELAS</th>
             <th>KODEICD</th>
             <th>JKL</th>
@@ -16,7 +18,7 @@
             <th>DIAGNOSA_SEK</th>
             <th>OPERASI</th>
             <th>MATIKR48</th>
-            <th>alamat</th>
+            <th>ALAMAT</th>
             <th>U0_28HR</th>
             <th>ULB65TH</th>
             <th>U1_4TH</th>
@@ -35,6 +37,8 @@
             <td>{{$item->NAMA_DIAG}}</td>
             <td>{{$item->NO_RM}}</td>
             <td>{{$item->nama_px}}</td>
+            <td>{{ '`'.$item->NIK }}</td>
+            <td>{{Carbon\Carbon::parse($item->TGL_LAHIR)->format('d-m-Y')}} </td>
             <td>{{$item->TGL_MASUK}}</td>
             <td>{{$item->TGL_KELUAR}}</td>
             <td>{{$item->ket}}</td>

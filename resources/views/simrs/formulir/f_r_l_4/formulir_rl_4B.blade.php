@@ -149,6 +149,7 @@
                                             <td>{{$item->L_UMUR_15_24_TH == 0 ? '-' : $item->L_UMUR_15_24_TH}}</td>
                                             <td>{{$item->P_UMUR_15_24_TH == 0 ? '-' : $item->P_UMUR_15_24_TH}}</td>
                                             <td>{{$item->L_UMUR_25_44_TH == 0 ? '-' : $item->L_UMUR_25_44_TH}}</td>
+                                            {{-- <td>error!</td> --}}
                                             <td>{{$item->P_UMUR_25_44_TH == 0 ? '-' : $item->P_UMUR_25_44_TH}}</td>
                                             <td>{{$item->L_UMUR_45_64_TH == 0 ? '-' : $item->L_UMUR_45_64_TH}}</td>
                                             <td>{{$item->P_UMUR_45_64_TH == 0 ? '-' : $item->P_UMUR_45_64_TH}}</td>

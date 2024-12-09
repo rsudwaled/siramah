@@ -48,7 +48,7 @@
                                         {{ $kunjungan->pasien->nama_px }}
                                     </td>
                                     <td>{{ $kunjungan->unit->nama_unit }} <br>
-                                        {{ $kunjungan->ruanganRawat->nama_kamar . ' | Bed: ' . $kunjungan->ruanganRawat->no_bed }}
+                                        {{ $kunjungan->ruanganRawat ? $kunjungan->ruanganRawat->nama_kamar . ' | Bed: ' . $kunjungan->ruanganRawat->no_bed : 'Data ruangan tidak tersedia' }}
                                     </td>
                                     <td>{{ $kunjungan->status->status_kunjungan }}</td>
                                     <td>{{ $kunjungan->tgl_masuk }}</td>

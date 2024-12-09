@@ -250,6 +250,7 @@
         $('.cekKunjunganPoli').click(function(e) {
             $('#modalCekKunjunganPoli').modal('toggle');
         });
+
         $('.btn-cekKunjungan').click(function(e) {
             $('#modalCekKunjunganPoli').modal('hide');
             $('#modalCekKunjungan').modal('toggle');
@@ -370,24 +371,48 @@
     $(document).on('click', '.btn-tutupkunjungan', function() {
         var kode = $(this).data('kode');
         var tutupKunjungan = "{{ route('status.tutup-kunjungan') }}";
+
         Swal.fire({
             title: "YAKIN TUTUP KUNJUNGAN?",
             text: "Status kunjungan ini akan ditutup!",
             icon: "info",
+            html: `
+            <label for="reason">Pilih Alasan Penutupan:</label>
+            <select id="reason" class="swal2-select">
+                <option value="" disabled selected>Pilih alasan</option>
+                <option value="2">Kunjungan Selesai</option>
+                <option value="11">Batal Rawat</option>
+                <option value="8">Batal Periksa</option>
+            </select>
+        `,
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Tutup!",
             cancelButtonText: "Batal!",
+            preConfirm: () => {
+                const reason = document.getElementById('reason').value;
+                if (!reason) {
+                    Swal.showValidationMessage('Silakan pilih alasan!');
+                    return false;
+                }
+                return reason;
+            }
         }).then((result) => {
             if (result.isConfirmed) {
+                const reason = result.value; // Ambil nilai alasan yang dipilih
+
+                // Tampilkan loading overlay
                 $.LoadingOverlay("show");
+
+                // Lakukan request AJAX untuk menutup kunjungan
                 $.ajax({
                     type: 'PUT',
                     url: tutupKunjungan,
                     dataType: 'json',
                     data: {
                         kode: kode,
+                        reason: reason // Kirim alasan yang dipilih ke server
                     },
                     success: function(data) {
                         console.log(data);
@@ -395,7 +420,7 @@
                             title: "SUCCESS!",
                             text: 'Kunjungan Berhasil Di TUTUP',
                             icon: "info",
-                            confirmButtonText: "oke!",
+                            confirmButtonText: "Oke!"
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 location.reload();
@@ -405,7 +430,12 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        // Tampilkan pesan kesalahan jika perlu
+                        Swal.fire({
+                            title: "ERROR!",
+                            text: 'Terjadi kesalahan saat menutup kunjungan.',
+                            icon: "error"
+                        });
+                        $.LoadingOverlay("hide");
                     }
                 });
             }

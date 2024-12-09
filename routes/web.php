@@ -184,6 +184,17 @@ Route::get('panggilnomorfarmasi', [AntrianController::class, 'panggilnomorfarmas
 Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
 Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
 Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
+
+// Sep Downloader
+Route::controller( App\Http\Controllers\Casemix\SepDownloaderController::class)->prefix('sep-downloader')->name('simrs.sep-downloader.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/download-all', 'downloadAll')->name('downloadAll');
+    Route::get('/stream/{no_sep}/{id}', 'stream')->name('stream');
+    Route::get('/download-single', 'downloadSingle')->name('downloadSingle');
+    Route::get('/download/{id}', 'download')->name('download');
+});
+
+
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
@@ -687,6 +698,8 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete-spri', [BridgingIgdController::class, 'deleteSPRI'])->name('delete-spri');
         Route::post('/create-sep-ranap', [BridgingIgdController::class, 'createSEPRanap'])->name('create-sep-ranap');
         Route::delete('/delete-sep-ranap', [BridgingIgdController::class, 'deleteSEPRanap'])->name('delete-sep-ranap');
+
+        Route::get('/print-sep', [BridgingIgdController::class, 'sepPrint'])->name('sep-print');
     });
 
     //RANAP 1 X 24 Jam
@@ -735,8 +748,12 @@ Route::middleware('auth')->group(function () {
     // IGD VERSI 1
     Route::get('daftar/pasien-igd', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'index'])->name('daftar-igd.v1');
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
+    Route::post('simpan-versi2/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrianV2IgdIgk'])->name('v2.store-tanpa-noantrian');
+    Route::post('simpan-versi2/pasien-ranap', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrianV2Ranap'])->name('v2.store-tanpa-noantrian-ranap');
+    Route::post('simpan-versi2/pasien-penunjang', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrianV2Penunjang'])->name('v2.store-tanpa-noantrian-penunjang');
     Route::get('cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJS'])->name('cek-status.v1');
     Route::get('tanpa-daftar/cek-status/bpjs', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cekStatusBPJSTanpaDaftar'])->name('cek-status-bpjs.tanpa-daftar');
+    Route::get('cek-kunjungan/{no_rm}', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'getKunjunganPasien'])->name('cek-kunjungan-pasien-terpilih');
 
     // DAFTAR PENUNJANG
     Route::get('penujang/daftar', [App\Http\Controllers\IGD\Penunjang\DaftarPenunjangController::class, 'index'])->name('penunjang.index');
@@ -751,9 +768,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/copy-selected', 'copyTable')->name('copy_totable');
     });
+
+
     // Tracer User Pendaftaran
     Route::controller(App\Http\Controllers\IGD\TracerPendaftaran\TracerUserController::class)->prefix('tracer-pendaftaran')->name('simrs.tracer-pendaftaran.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/export-byuser', 'exportByUser')->name('export-byuser');
     });
 
     // Pendafataran Ranap IGD

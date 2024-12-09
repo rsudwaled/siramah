@@ -182,7 +182,7 @@
                                             <td id="no">{{ $item->Nmr }}</td>
                                             <td style="text-align: center" id="deskripsi">{{ $item->DESKRIPSI }}</td>
                                             <td>{{ $item->NO_RM }}</td>
-                                            <td style="text-align: left">{{ $item->NAMA_PASIEN }}</td>
+                                            <td style="text-align: left">{{ $item->NAMA_PASIEN }} <br>NIK: {{ $item->NIK }} <br>TGL: {{Carbon\Carbon::parse($item->TGL_LAHIR)->format('d-m-Y')}} </td>
                                             <td>{{ $item->KELAS }}</td>
                                             <td>{{ $item->KODEICD }}</td>
                                             <td>{{ $item->DIAGNOSA_SEK == null ? '-' : $item->DIAGNOSA_SEK }}</td>

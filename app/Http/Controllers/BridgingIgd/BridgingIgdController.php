@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers\BridgingIgd;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
 use App\Models\Pasien;
@@ -10,7 +12,7 @@ use App\Models\Spri;
 use App\Models\Icd10;
 use App\Models\HistoriesIGDBPJS;
 use Carbon\Carbon;
-
+use PDF;
 class BridgingIgdController extends APIController
 {
      // API FUNCTION
@@ -227,34 +229,40 @@ class BridgingIgdController extends APIController
     }
     public function createSEPRanap(Request $request)
     {
-        $histories  = HistoriesIGDBPJS::firstWhere('kode_kunjungan', $request->kunjungan);
-        $kunjungan  = Kunjungan::firstWhere('kode_kunjungan', $request->kunjungan);
-        $spri       = Spri::firstWhere('kunjungan', $request->kunjungan);
+        $url = env('VCLAIM_URL') . "Peserta/nokartu/" . $request->noKartu . "/tglSEP/" . $request->tglSep;
+        $signatureCekStatus         = $this->signature();
+        $responseCekStatus          = Http::withHeaders($signatureCekStatus)->get($url);
+        $resdescrtiptCekStatus      = $this->response_decrypt($responseCekStatus, $signatureCekStatus);
+
+        $kunjungan      = Kunjungan::firstWhere('kode_kunjungan', $request->kode_kunjungan);
+        $spri           = Spri::firstWhere('kunjungan', $request->kode_kunjungan);
+        $diagnosa_ts    = Icd10::where('diag', $request->diagAwal)->first();
+
         $url        = env('VCLAIM_URL') . 'SEP/2.0/insert';
         $signature  = $this->signature();
         $signature['Content-Type'] = 'application/x-www-form-urlencoded';
         $data = [
             'request' => [
                 't_sep' => [
-                    'noKartu'               => trim($histories->noKartu??$kunjungan->pasien->no_Bpjs),
-                    'tglSep'                => $histories->tglSep,
+                    'noKartu'               => trim($request->noKartu??$kunjungan->pasien->no_Bpjs),
+                    'tglSep'                => $request->tglSep,
                     'ppkPelayanan'          => '1018R001',
-                    'jnsPelayanan'          => $histories->jnsPelayanan,
+                    'jnsPelayanan'          => 1,
                     'klsRawat'      => [
-                        'klsRawatHak'       => $histories->klsRawatHak,
-                        'klsRawatNaik'      => $histories->klsRawatNaik??'',
-                        'pembiayaan'        => $histories->pembiayaan??'',
-                        'penanggungJawab'   => $histories->penanggungJawab??'',
+                        'klsRawatHak'       => $resdescrtiptCekStatus->response->peserta->hakKelas->kode ?? null,
+                        'klsRawatNaik'      => '',
+                        'pembiayaan'        => '',
+                        'penanggungJawab'   => '',
                     ],
-                    'noMR'                  => $histories->noMR,
+                    'noMR'                  => $request->noMR,
                     'rujukan'   => [
-                        'asalRujukan'       => $histories->asalRujukan == null?'':$histories->asalRujukan,
-                        'tglRujukan'        => $histories->tglRujukan,
+                        'asalRujukan'       => 2,
+                        'tglRujukan'        => $request->tglSep,
                         'noRujukan'         => $spri->noSPRI??'',
                         'ppkRujukan'        => '1018R001',
                     ],
                     'catatan'               => '',
-                    'diagAwal'              => $histories->diagAwal??Null,
+                    'diagAwal'              => $request->diagAwal??Null,
                     'poli'      => [
                         'tujuan'    => '',
                         'eksekutif' => '0',
@@ -266,18 +274,18 @@ class BridgingIgdController extends APIController
                         'katarak' => '0',
                     ],
                     'jaminan' => [
-                        'lakaLantas'        => $histories->lakaLantas == null? 0 : $histories->lakaLantas,
-                        'noLP'              => $histories->noLP == null ? '' : $histories->noLP,
+                        'lakaLantas'        => 0,
+                        'noLP'              => '',
                         'penjamin'          => [
-                            'tglKejadian'   => $histories->lakaLantas == null ? '' : $histories->tglKejadian,
-                            'keterangan'    => $histories->keterangan == null ? '' : $histories->keterangan,
+                            'tglKejadian'   => '',
+                            'keterangan'    => '',
                             'suplesi'       => [
                                 'suplesi'           => '0',
                                 'noSepSuplesi'      => '',
                                 'lokasiLaka'    => [
-                                    'kdPropinsi'    => $histories->kdPropinsi == null ? '' : $histories->kdPropinsi,
-                                    'kdKabupaten'   => $histories->kdKabupaten == null ? '' : $histories->kdKabupaten,
-                                    'kdKecamatan'   => $histories->kdKecamatan == null ? '' : $histories->kdKecamatan,
+                                    'kdPropinsi'    => '',
+                                    'kdKabupaten'   => '',
+                                    'kdKecamatan'   => '',
                                 ],
                             ],
                         ],
@@ -291,7 +299,7 @@ class BridgingIgdController extends APIController
                         'kodeDPJP'  => $spri->kodeDokter??'',
                     ],
                     'dpjpLayan' => '',
-                    'noTelp'    => $histories->noTelp,
+                    'noTelp'    => !empty($kunjungan->pasien->no_hp) ? $kunjungan->pasien->no_hp : (!empty($kunjungan->pasien->no_tlp) ? $kunjungan->pasien->no_tlp : '000000000000'),
                     'user'      => 'RSUD WALED',
                 ],
             ],
@@ -302,21 +310,48 @@ class BridgingIgdController extends APIController
             $resdescrtipt   = $this->response_decrypt($response, $signature);
             $sep            = $resdescrtipt->response->sep->noSep;
 
-            $histories->ppkRujukan       = '1018R001';
-            $histories->noRujukan       = $spri->noSPRI;
-            // $histories->diagAwal        = $kunjungan->diagx;
-            $histories->status_daftar   = 1;
-            $histories->is_bridging     = 1;
-            $histories->respon_nosep    = $sep;
-            $histories->save();
-
+            if ($diagnosa_ts) {
+                $kunjungan->diagx = $diagnosa_ts->diag . ' | ' . $diagnosa_ts->nama;
+            }
             $kunjungan->no_sep = $sep;
-            $kunjungan->save();
+            if($kunjungan->save())
+            {
+                HistoriesIGDBPJS::updateOrCreate(
+                    [
+                        'kode_kunjungan'  => $kunjungan->kode_kunjungan,
+                        'noMR'            => $kunjungan->pasien->no_rm,
+                        'jnsPelayanan'    => 1,
+                        'tglSep'          => now()->toDateString(),
+                    ],
+                    [
+                        'noKartu'         => trim($kunjungan->pasien->no_Bpjs) ?? null,
+                        'ppkPelayanan'    => '1018R001',
+                        'dpjpLayan'       => $spri->kodeDokter ?? null,
+                        'user'            => Auth::user()->name,
+                        'noTelp'          => !empty($kunjungan->pasien->no_hp) ? $kunjungan->pasien->no_hp : (!empty($kunjungan->pasien->no_tlp) ? $kunjungan->pasien->no_tlp : '000000000000'),
+                        'tglSep'          => now(),
+                        'jnsPelayanan'    => '1',
+                        'klsRawatHak'     => $resdescrtiptCekStatus->response->peserta->hakKelas->kode ?? null,
+                        'asalRujukan'     => '2',
+                        'tglRujukan'      => now(),
+                        'noRujukan'       => $spri->noSPRI??'',
+                        'ppkRujukan'      => '1018R001',
+                        'diagAwal'        => $request->diagAwal ?? null,
+                        'respon_nosep'  => $sep,
+                        'is_bridging'     => 1,
+                        'status_daftar'   => 1,
+                    ]
+                );
+            }
 
-            return response()->json(['data'=>$callback]);
+            return response()->json([
+                'metaData' => $callback->metaData
+            ]);
         }
         else{
-            return response()->json(['data'=>$callback]);
+            return response()->json([
+                'metaData' => $callback->metaData
+            ]);
         }
 
     }
@@ -342,5 +377,20 @@ class BridgingIgdController extends APIController
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);
         }
         return $response;
+    }
+
+    public function sepPrint(Request $request)
+    {
+        $vclaim     = new VclaimController();
+        $response   = $vclaim->sep_nomor($request);
+        $data = $response->response ?? null;
+        $user = Auth::user()->name;
+        $pasien = Pasien::where('no_rm', $data->peserta->noMr)->first();
+        $noHp = $pasien->no_hp??null;
+        $noTelp = $pasien->no_tlp??null;
+        // dd($request->all(), $response, $data, $noTelp, $noHp);
+        $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_ranap', ['data'=>$data,'user'=>$user,'noHp'=>$noHp,'noTelp'=>$noTelp]);
+        return $pdf->stream('cetak-sep-ranap.pdf');
+        // return view('simrs.igd.cetakan_igd.sep_ranap', compact('data'));
     }
 }

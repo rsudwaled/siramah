@@ -32,7 +32,7 @@
                                 <form action="" method="get">
                                     <div class="row">
                                         <div class="col-lg-12">
-                                            <x-adminlte-input name="cari_rm" label="NO RM" value="{{ $request->rm }}"
+                                            <x-adminlte-input name="cari_rm" label="NO RM" value="{{ $request->cari_rm }}"
                                                 placeholder="Masukan Nomor RM ....">
                                                 <x-slot name="appendSlot">
                                                     <x-adminlte-button theme="primary" class="withLoad" type="submit"
@@ -71,6 +71,9 @@
                     <div class="card card-outline card-primary">
                         <div class="card-body">
                             @if (isset($kunjungans))
+                                @php
+                                    $statusMenunggu = 0;
+                                @endphp
                                 <div class="row">
                                     @php
                                         $heads = ['Pasien', 'Alamat', 'Kunjungan', 'Penjamin', 'Aksi'];
@@ -114,9 +117,12 @@
                                                     Kode: {{ $data->kode_kunjungan }} <br>
                                                     Unit: {{ $data->unit->nama_unit ?? '-' }} <br><br>
                                                     @if ($data->is_ranap_daftar == 1)
-                                                        Jenis: <span class="badge badge-success">PASIEN RANAP</span>
+                                                        <button
+                                                            class="btn btn-sm {{ $data->status_kunjungan == 14 ? 'badge-warning' : 'badge-success' }}">JENIS:
+                                                            {{ $data->status_kunjungan == 14 ? 'MENUNGGU RUANGAN' : 'PASIEN RANAP' }}
+                                                        </button>
                                                     @else
-                                                        Jenis: <span class="badge badge-warning">PASIEN RAJAL</span>
+                                                        <button class="btn btn-sm btn-info">JENIS: PASIEN RAJAL</button>
                                                     @endif
                                                     <br>
                                                     Masuk : {{ $data->tgl_masuk }} <br><br>
@@ -127,22 +133,36 @@
                                                 <td>
                                                     {{ $data->penjamin_simrs->nama_penjamin }}
                                                 </td>
-                                                <td style="vertical-align: middle;">
-                                                    <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
-                                                        data-penjamin="{{ $data->kode_penjamin }}"
-                                                        data-kode="{{ $data->kode_kunjungan }}"
-                                                        data-nama="{{ $data->pasien->nama_px }}"
-                                                        data-nik="{{ $data->pasien->nik_bpjs }}"
-                                                        data-nomorkartu="{{ $data->pasien->no_Bpjs }}"
-                                                        data-kontak="{{ $data->pasien->no_tlp == null ? $data->pasien->no_hp : $data->pasien->no_tlp }}"
-                                                        class="btn-xs btn-pilihPasien bg-purple" label="PILIH DATA" />
-
-                                                    {{-- <x-adminlte-button type="button"
-                                                        data-nik="{{ $data->pasien->nik_bpjs }}"
-                                                        data-nomorkartu="{{ $data->pasien->no_Bpjs }}"
-                                                        data-rm="{{ $data->no_rm }}"
-                                                        class="btn-xs btn-cekBPJS bg-success" label="Cek BPJS" /> --}}
+                                                <td style="vertical-align: middle; width:20%;">
+                                                    @if ($data->status_kunjungan == 14)
+                                                        <blockquote>
+                                                            <p>pasien sudah didaftarkan ranap. <br>
+                                                                silahkan cari data di pasien ranap
+                                                                terdaftar dan edit ruangan sesuai dengan informasi yang
+                                                                didapatkan dari ruangan! atau klik tombol berikut: </p>
+                                                            <small>
+                                                                <a href="{{ route('simrs.pendaftaran-ranap-igd.edit-ruangan', ['kunjungan' => $data->kode_kunjungan]) }}"
+                                                                    class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-share"></i> Edit Ruangan</a>
+                                                            </small>
+                                                        </blockquote>
+                                                    @else
+                                                        <x-adminlte-button type="button" data-rm="{{ $data->no_rm }}"
+                                                            data-penjamin="{{ $data->kode_penjamin }}"
+                                                            data-kode="{{ $data->kode_kunjungan }}"
+                                                            data-nama="{{ $data->pasien->nama_px }}"
+                                                            data-nik="{{ $data->pasien->nik_bpjs }}"
+                                                            data-nomorkartu="{{ $data->pasien->no_Bpjs }}"
+                                                            data-kontak="{{ $data->pasien->no_tlp == null ? $data->pasien->no_hp : $data->pasien->no_tlp }}"
+                                                            class="btn-xs btn-pilihPasien bg-purple btn-block"
+                                                            label="PILIH DATA" />
+                                                    @endif
                                                 </td>
+                                                @php
+                                                    if ($data->status_kunjungan === 14) {
+                                                        $statusMenunggu += 1;
+                                                    }
+                                                @endphp
                                             </tr>
                                         @endforeach
                                     </x-adminlte-datatable>
@@ -151,6 +171,15 @@
                         </div>
                     </div>
                 </div>
+                @if ($statusMenunggu>0)
+                <div class="col-12">
+                    <div class="alert alert-warning alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> INFORMASI: BAHWA PASIEN TERSEBUT SUDAH DIDAFTARKAN RAWAT INAP DENGAN STATUS MENUNGGU INFORMASI RUANGAN!</h5>
+                        silahkan petugas pendaftaran mengedit kunjungan pasien rawat inap yang sudah terdaftar, dengan cara klik tombol Edit Ruangan (berwarna biru pada table diatas) sesuai dengan informasi yang didapatkan dari ruangan.
+                    </div>
+                </div>
+                @else
                 <div class="col-lg-12">
                     <div class="row">
                         @if ($errors->any())
@@ -164,8 +193,9 @@
                                         @endforeach
                                         <li>
                                             <strong>
-                                            JIKA MASIH BINGUNG SILAHKAN HUBUNGI: 085722797175 (KONSULTASI ERROR DENGAN IT)
-                                        </strong>
+                                                JIKA MASIH BINGUNG SILAHKAN HUBUNGI: 085722797175 (KONSULTASI ERROR DENGAN
+                                                IT)
+                                            </strong>
                                         </li>
                                     </ul>
                                 </div>
@@ -251,6 +281,20 @@
                                 <div class="card card-outline card-primary">
                                     <div class="card-body">
                                         <div class="row">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label for="Status Ranap">Status Ranap <i>(Belum Memiliki
+                                                            Ruangan)</i></label>
+                                                    <select name="status_persiapan" id="status_persiapan"
+                                                        class="form-control">
+                                                        <option value="0">Bukan Persiapan (Sudah Memiliki Ruangan)
+                                                        </option>
+                                                        <option value="1">Persiapan (Belum Memiliki Ruangan)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="rowDiv1">
                                             <div class="col-md-4">
                                                 <x-adminlte-select name="unitTerpilih" id="unitTerpilih" label="Ruangan">
                                                     @foreach ($unit as $item)
@@ -279,7 +323,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row" id="rowDiv2">
                                             <input type="hidden" id="id_ruangan" name="id_ruangan">
                                             <div class="col-md-4">
                                                 <x-adminlte-input name="ruangan" label="Ruangan" id="ruanganTerpilih"
@@ -304,6 +348,7 @@
                         </div>
                     </form>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -397,6 +442,15 @@
                 } else {
                     $("#bed_byruangan").empty();
                 }
+            });
+
+            $('#status_persiapan').on('change', function() {
+                const isPreparation = this.value === '1';
+                const rows = ['#rowDiv1', '#rowDiv2'];
+
+                rows.forEach(row => {
+                    $(row).toggle(!isPreparation);
+                });
             });
         });
 

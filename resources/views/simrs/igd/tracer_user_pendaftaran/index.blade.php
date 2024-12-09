@@ -12,9 +12,9 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 mb-3">
-            <form action="" method="get">
+            <form method="get">
                 <div class="row col-lg-12">
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <label for="tanggal">PIC Pendaftaran</label>
                         <div class="input-group">
                             <select name="user_pendaftaran" id="user_pendaftaran" class="form-control">
@@ -26,8 +26,8 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-7 row">
-                        <div class="col-md-6">
+                    <div class="col-md-9 row">
+                        <div class="col-md-4">
                             <label for="tanggal">Tanggal Awal</label>
                             <div class="input-group">
                                 <input id="new-event" type="date" name="start" class="form-control "
@@ -35,7 +35,7 @@
                                     placeholder="Tanggal Jaga">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <label for="tanggal">Tanggal Akhir</label>
                             <div class="input-group">
                                 <input id="new-event" type="date" name="end" class="form-control "
@@ -45,10 +45,13 @@
                                     <button id="add-new-event" type="submit" class="btn btn-primary btn-sm withLoad">CARI
                                         DATA</button>
                                 </div>
-                                <button type="submit"
+                                {{-- <button type="submit"
                                     onclick="javascript: form.action='{{ route('cek-pasien-pulang.export') }}';"
                                     target="_blank" class="btn btn-success btn-sm ml-2 float-right">Export
-                                    Excel</button>
+                                    Excel</button> --}}
+                                <button type="submit"
+                                    onclick="javascript: form.action='{{ route('simrs.tracer-pendaftaran.export-byuser') }}';"
+                                    target="_blank" class="btn btn-info btn-sm ml-2 float-right">Export by User</button>
                             </div>
                         </div>
                     </div>

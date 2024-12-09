@@ -5,6 +5,8 @@
             <td >DESKRIPSI</td>
             <td>NO_RM</td>
             <td >NAMA_PASIEN</td>
+            <td >NIK</td>
+            <td >TGL LAHIR</td>
             <td>KELAS</td>
             <td>KODEICD</td>
             <td>DIAGNOSA_SEK</td>
@@ -47,6 +49,8 @@
                 <td >{{$item->DESKRIPSI}}</td>
                 <td>{{$item->NO_RM}}</td>
                 <td >{{$item->NAMA_PASIEN}}</td>
+                <td>{{ '`'.$item->NIK }} </td>
+                <td>{{Carbon\Carbon::parse($item->TGL_LAHIR)->format('d-m-Y')}} </td>
                 <td>{{$item->KELAS}}</td>
                 <td>{{$item->KODEICD}}</td>
                 <td>{{$item->DIAGNOSA_SEK }}</td>

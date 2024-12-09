@@ -380,14 +380,14 @@ class KunjunganController extends Controller
 
     public function tutupKunjungan(Request $request)
     {
+        $alasan = ($request->reason == 2) ? 7 : ($request->reason == 11 ? 10 : 11);
         $updateStatus = Kunjungan::where('kode_kunjungan', $request->kode)->first();
-        $updateStatus->status_kunjungan =3;
-        $updateStatus->id_alasan_edit   =7;
+        $updateStatus->status_kunjungan =$request->reason;
+        $updateStatus->id_alasan_edit   =$alasan;
         $updateStatus->pic2             =Auth::user()->id_simrs??2;
         $updateStatus->updated_at       =now();
         $updateStatus->save();
         return response()->json(['status'=>$updateStatus]);
-
     }
     public function bukaKunjungan(Request $request)
     {

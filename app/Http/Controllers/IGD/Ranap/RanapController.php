@@ -132,8 +132,10 @@ class RanapController extends APIController
         $cek =Kunjungan::whereNull('no_rm')->whereDate('tgl_masuk',now())->get();
         // dd($cek);
         // Buat query dasar dengan relasi yang dibutuhkan
-        $query = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit'])
-        ->whereIn('is_ranap_daftar', ['1', '2', '3']);
+        $query = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit','unit'])
+        ->whereIn('is_ranap_daftar', ['1', '2', '3'])->whereIn('pic',[
+            '1387','69','1140','79','1055','77'
+        ]);
         if (
             !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
             !empty($request->cari_desa) || !empty($request->cari_kecamatan)
@@ -181,7 +183,7 @@ class RanapController extends APIController
                     $query->whereDate('tgl_masuk', now());
                 }
 
-                $kunjungan = $query->where('status_kunjungan', 1)->get();
+                $kunjungan = $query->whereIn('status_kunjungan', [1,14])->orderBy('status_kunjungan', 'desc')->get();
             }
         }else{
             if ($start && $finish) {
@@ -192,9 +194,10 @@ class RanapController extends APIController
                 $query->whereDate('tgl_masuk', now());
             }
 
-            $kunjungan = $query->where('status_kunjungan', 1)->get();
+            $kunjungan = $query->whereIn('status_kunjungan', [1,14])->orderBy('status_kunjungan', 'desc')->get();
         }
-        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan'));
+        $menunggu = $kunjungan->where('status_kunjungan', 14)->count();
+        return view('simrs.igd.ranap.data_pasien_ranap', compact('request','kunjungan','menunggu'));
     }
 
     public function detailPasienRanap($kunjungan)

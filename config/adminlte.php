@@ -607,52 +607,115 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 [
-                    'text' => 'Daftar Ranap',
-                    'icon'    => 'fas fa-procedures',
-                    'url'  => 'igd-ranap',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
-                [
-                    'text' => 'Daftar Pasien',
+                    'text' => 'PENDAFTARAN',
                     'icon'    => 'fas fa-chalkboard-teacher',
                     'url'  => 'daftar/pasien-igd',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
+                    'can' => ['pendaftaran-igd'],
                 ],
+
                 [
-                    'text' => 'Daftar Pasien Bayi',
-                    'icon'    => 'fas fa-baby',
-                    'url'  => 'list-kunjungan/kebidanan',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
-                [
-                    'text' => 'Daftar Penunjang',
+                    'text' => 'KUNJUNGAN PASIEN',
                     'icon'    => 'fas fa-chalkboard-teacher',
-                    'url'  => 'penujang/daftar',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
+                    'can' => ['pendaftaran-igd'],
+                    'submenu' => [
+                        [
+                            'text' => 'Kunjungan IGD',
+                            'url'  => 'daftar-kunjungan',
+                            'shift'   => 'ml-2',
+                            'can' => 'pendaftaran-igd',
+                        ],
+                        [
+                            'text' => 'Kunjungan Rawat Inap',
+                            'url'  => 'pasien-rawat-inap',
+                            'shift'   => 'ml-2',
+                            'can' => 'pendaftaran-igd',
+                        ],
+                        [
+                            'text' => 'Kunjungan Penunjang',
+                            'url'  => 'kunjungan-penunjang',
+                            'shift'   => 'ml-2',
+                            'can' => 'pendaftaran-igd',
+                        ],
+                    ]
                 ],
+                // [
+                //     'text' => 'Pendaftaran IGD',
+                //     'icon'    => 'fas fa-chalkboard-teacher',
+                //     'shift'   => 'ml-2',
+                //     'can' => ['pendaftaran-igd'],
+                //     'submenu' => [
+                //         [
+                //             'text' => 'Daftar Pasien',
+                //             'url'  => 'daftar/pasien-igd',
+                //             'shift'   => 'ml-2',
+                //             'can' => 'pendaftaran-igd',
+                //         ],
+                //         [
+                //             'text' => 'Kunjungan Pasien',
+                //             'url'  => 'daftar-kunjungan',
+                //             'shift'   => 'ml-2',
+                //             'can' => 'pendaftaran-igd',
+                //         ],
+
+                //     ]
+                // ],
+                // [
+                //     'text' => 'Pendaftaran Ranap',
+                //     'icon'    => 'fas fa-procedures',
+                //     'shift'   => 'ml-2',
+                //     'can' => ['pendaftaran-igd'],
+                //     'submenu' => [
+                //         [
+                //             'text' => 'Daftar Pasien',
+                //             'url'  => 'igd-ranap',
+                //             'shift'   => 'ml-2',
+                //             'can' => 'pendaftaran-igd',
+                //         ],
+                //         [
+                //             'text' => 'Pasien Ranap terdaftar',
+                //             'url'  => 'pasien-rawat-inap',
+                //             'shift'   => 'ml-2',
+                //             'can' => 'pendaftaran-igd',
+                //         ],
+                //     ]
+                // ],
+                // [
+                //     'text' => 'Pendaftaran Penunjang',
+                //     'icon'    => 'fas fa-chalkboard-teacher',
+                //     'shift'   => 'ml-2',
+                //     'can' => ['pendaftaran-igd'],
+                //     'submenu' => [
+                //         [
+                //             'text' => 'Daftar Pasien',
+                //             'url'  => 'penujang/daftar',
+                //             'shift'   => 'ml-2',
+                //             'can' => 'pendaftaran-igd',
+                //         ],
+
+                //     ]
+                // ],
                 [
-                    'text' => 'Kunjungan Pasien',
-                    'icon'    => 'fas fa-address-book',
-                    'url'  => 'daftar-kunjungan',
+                    'text' => 'Pendaftaran Bayi',
+                    'icon'    => 'fas fa-baby',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
+                    'can' => ['pendaftaran-igd'],
+                    'submenu' => [
+                        [
+                            'text' => 'Daftar Pasien',
+                            'url'  => 'list-kunjungan/kebidanan',
+                            'shift'   => 'ml-2',
+                            'can' => 'pendaftaran-igd',
+                        ],
+
+                    ]
                 ],
+
                 [
                     'text' => 'Pasien BPJS PROSES',
                     'icon'    => 'fas fa-thumbtack',
                     'url'  => 'pasien-bpjsproses/list-pasien',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
-
-                [
-                    'text' => 'List Pasien Ranap',
-                    'icon'    => 'fas fa-procedures',
-                    'url'  => 'pasien-rawat-inap',
                     'shift'   => 'ml-2',
                     'can' => 'pendaftaran-igd',
                 ],
@@ -671,19 +734,89 @@ return [
                     'can' => 'pendaftaran-igd',
                 ],
                 // [
-                //     'text' => 'Riwayat Pendaftaran byUser',
-                //     'icon'    => 'fas fa-user-plus',
-                //     'url'  => 'get-kunjungan/by-user',
+                //     'text' => 'Pencarian Pasien',
+                //     'icon'    => 'fas fa-search',
+                //     'url'  => 'pencarian\pasien-terdaftar',
                 //     'shift'   => 'ml-2',
                 //     'can' => 'pendaftaran-igd',
                 // ],
-                [
-                    'text' => 'Bridging (Validasi)',
-                    'icon'    => 'fas fa-sync',
-                    'url'  => 'bridging-igd/ranap',
-                    'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
-                ],
+                // [
+                //     'text' => 'Daftar Ranap',
+                //     'icon'    => 'fas fa-procedures',
+                //     'url'  => 'igd-ranap',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Daftar Pasien',
+                //     'icon'    => 'fas fa-chalkboard-teacher',
+                //     'url'  => 'daftar/pasien-igd',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Daftar Pasien Bayi',
+                //     'icon'    => 'fas fa-baby',
+                //     'url'  => 'list-kunjungan/kebidanan',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Daftar Penunjang',
+                //     'icon'    => 'fas fa-chalkboard-teacher',
+                //     'url'  => 'penujang/daftar',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Kunjungan Pasien',
+                //     'icon'    => 'fas fa-address-book',
+                //     'url'  => 'daftar-kunjungan',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Pasien BPJS PROSES',
+                //     'icon'    => 'fas fa-thumbtack',
+                //     'url'  => 'pasien-bpjsproses/list-pasien',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'List Pasien Ranap',
+                //     'icon'    => 'fas fa-procedures',
+                //     'url'  => 'pasien-rawat-inap',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Pasien Kecelakaan',
+                //     'icon'    => 'fas fa-ambulance',
+                //     'url'  => 'list/pasien-kecelakaan',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // [
+                //     'text' => 'Pasien Pulang',
+                //     'icon'    => 'fas fa-user-injured',
+                //     'url'  => 'cek-pasien-pulang',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
+                // // [
+                // //     'text' => 'Riwayat Pendaftaran byUser',
+                // //     'icon'    => 'fas fa-user-plus',
+                // //     'url'  => 'get-kunjungan/by-user',
+                // //     'shift'   => 'ml-2',
+                // //     'can' => 'pendaftaran-igd',
+                // // ],
+                // [
+                //     'text' => 'Bridging (Validasi)',
+                //     'icon'    => 'fas fa-sync',
+                //     'url'  => 'bridging-igd/ranap',
+                //     'shift'   => 'ml-2',
+                //     'can' => 'pendaftaran-igd',
+                // ],
 
             ],
         ],
@@ -869,6 +1002,13 @@ return [
             'text'    => 'Hasil & Laporan',
             'icon'    => 'fas fa-file',
             'submenu' => [
+                [
+                    'text' => 'SEP Downloader',
+                    'icon'    => 'fas fa-download',
+                    'url'  => 'sep-downloader',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
                 [
                     'text' => 'Hasil Laboratorium',
                     'icon'    => 'fas fa-vials',

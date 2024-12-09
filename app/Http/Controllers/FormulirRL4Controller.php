@@ -18,6 +18,7 @@ class FormulirRL4Controller extends Controller
             $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
             $laporanFM = collect($laporanFM);
         }
+        // dd($laporanFM);
         return view('simrs.formulir.f_r_l_4.formulir_rl_4A',compact('laporanFM','from','to','request'));
     }
 
@@ -44,7 +45,7 @@ class FormulirRL4Controller extends Controller
             $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RAJAL`('$from','$to')");
             $laporanFM = collect($laporanFM);
         }
-
+        // dd($laporanFM);
         return view('simrs.formulir.f_r_l_4.formulir_rl_4B',compact('laporanFM','from','to','request'));
     }
     public function FormulirRL4BK(Request $request)

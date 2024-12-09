@@ -115,7 +115,7 @@
                                             {{ $item->tgl_kunjungan }} | TANGGAL
                                         </td>
 
-                                        <td style="width: 20%;">{{ $item->tgl_kunjungan }}</td>
+                                        <td >{{ $item->tgl_kunjungan }}</td>
                                         <td style="width: 20%;">
                                             <strong>
                                                 - DIAGNOSA: {{ $item->diagx }}
@@ -160,7 +160,7 @@
                                                 </a>
                                             </small>
                                         </td>
-                                        <td style="width: 10%;">
+                                        <td style="width: 20%;">
                                             @if ($request->view == 'kunjungan_ranap')
                                                 @if ($item->id_status === 1)
                                                     @php
@@ -180,13 +180,18 @@
                                                     @endif
                                                 @endif
                                             @else
-                                                <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
+                                                {{-- <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                                     data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
                                                     data-nokartu="{{ $item->noKartu }}"
                                                     data-kunjungan="{{ $item->kunjungan }}"
                                                     data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
                                                     class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                                    label="Diagnosa" />
+                                                    label="Diagnosa" /> --}}
+                                                    <blockquote>
+                                                        <p>
+                                                            fitur update diagnosa dan bridging sep igd sedang dalam proses perbaikan. silahkan gunakan vclaim terlebih dahulu untuk pembuatan sep igd.
+                                                        </p>
+                                                    </blockquote>
                                             @endif
                                             <x-adminlte-button type="button" data-rm="{{ $item->rm }}"
                                                 data-nama="{{ $item->pasien }}" data-kunjungan="{{ $item->kunjungan }}"

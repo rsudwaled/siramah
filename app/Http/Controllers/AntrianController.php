@@ -2209,7 +2209,7 @@ class AntrianController extends APIController
             // kirim notif
             $wa = new WhatsappController();
             $request['notif'] = 'Antrian berhasil didaftarkan melalui ' . $request->method . "\n*Kodebooking :* " . $request->kodebooking . "\n*Nama :* " . $request->nama . "\n*Poliklinik :* " . $request->namapoli .  "\n*Tanggal Periksa :* " . $request->tanggalperiksa . "\n*Jenis Kunjungan :* " . $request->jeniskunjungan;
-            $wa->send_notif($request);
+            // $wa->send_notif($request);
             if ($request->method == 'Bridging') {
                 $antrian->update([
                     'taskid' => 3,

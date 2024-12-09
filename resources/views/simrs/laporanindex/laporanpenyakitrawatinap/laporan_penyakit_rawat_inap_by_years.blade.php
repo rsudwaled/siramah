@@ -154,7 +154,7 @@
                                             <td>{{$item->DIAG_UTAMA}}</td>
                                             <td>{{$item->NAMA_DIAG}}</td>
                                             <td>{{$item->NO_RM}}</td>
-                                            <td>{{$item->nama_px}}</td>
+                                            <td>{{ $item->nama_px }} <br>NIK: {{ $item->NIK }} <br>TGL: {{Carbon\Carbon::parse($item->TGL_LAHIR)->format('d-m-Y')}} </td>
                                             <td>{{$item->alamat}}</td>
                                             <td>{{$item->DIAGNOSA_SEK}}</td>
                                             <td>{{$item->KELAS}}</td>
