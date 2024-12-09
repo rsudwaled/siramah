@@ -79,21 +79,23 @@
                 </div>
             </div>
             <div style="overflow-y: auto ;max-height: 400px;">
-                <table class="table table-bordered table-responsive-lg table-sm">
+                <div class="table-responsive"></div>
+                <table class="table table-bordered table-sm table-hover text-nowrap">
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Tgl Entry</th>
                             <th>No RM</th>
                             <th>Nama Pasien</th>
+                            <th>Unit</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Tracer</th>
                             <th>Poliklinik</th>
                             <th>Dokter</th>
                             <th>Penjamin</th>
                             <th>SEP</th>
                             <th>Antrian</th>
-                            <th>Tracer</th>
+                            <th>Taskid</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -113,6 +115,13 @@
                                         @endif
                                     </td>
                                     <td>
+                                        @if ($item->status_order == 1)
+                                            <span class="badge badge-danger"> Belum Cetak</span>
+                                        @else
+                                            <span class="badge badge-success"> Sudah Cetak</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if ($item->panggil == 0)
                                             <x-adminlte-button wire:click="selesai('{{ $item->id }}')"
                                                 class="btn-xs" theme="success" label="Selesai" />
@@ -120,8 +129,8 @@
                                             <x-adminlte-button wire:click="panggil('{{ $item->id }}')"
                                                 class="btn-xs" theme="primary" label="Panggil" />
                                         @endif
-                                        <x-adminlte-button wire:click="cetak('{{ $item->id }}')" class="btn-xs" theme="warning"
-                                            label="Cetak" />
+                                        <x-adminlte-button wire:click="cetak('{{ $item->id }}')" class="btn-xs"
+                                            theme="warning" label="Cetak" />
                                         <x-adminlte-button wire:click='lihat' class="btn-xs" theme="secondary"
                                             label="Lihat" />
                                     </td>
@@ -132,12 +141,9 @@
                                         {{ $item->kunjungan->antrian->kodebooking ?? '-' }}
                                     </td>
                                     <td>
-                                        @if ($item->status_order == 1)
-                                            <span class="badge badge-danger"> Belum Cetak</span>
-                                        @else
-                                            <span class="badge badge-success"> Sudah Cetak</span>
-                                        @endif
+                                        {{ $item->kunjungan->antrian->taskid ?? '-' }}
                                     </td>
+
                                 </tr>
                             @endforeach
                         @endif

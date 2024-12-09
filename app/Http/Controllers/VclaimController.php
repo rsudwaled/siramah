@@ -247,7 +247,8 @@ class VclaimController extends APIController
             }
         }
         return view('bpjs.vclaim.monitoring_data_klaim_index', compact([
-            'request', 'klaim'
+            'request',
+            'klaim'
         ]));
     }
     public function monitoringPelayananPeserta(Request $request)
@@ -344,7 +345,8 @@ class VclaimController extends APIController
             }
         }
         return view('bpjs.vclaim.monitoring_klaim_jasaraharja_index', compact([
-            'request', 'klaim'
+            'request',
+            'klaim'
         ]));
     }
     // API VCLAIM
@@ -1077,6 +1079,21 @@ class VclaimController extends APIController
         $response = Http::withHeaders($signature)->get($url);
         return $this->response_decrypt($response, $signature);
     }
+    public function rujukan_keluar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "tglMulai" => "required",
+            "tglAkhir" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $url = $this->baseurl . "Rujukan/Keluar/List/tglMulai/" . $request->tglMulai . "/tglAkhir/" . $request->tglAkhir;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        return $this->response_decrypt($response, $signature);
+    }
+
     // SEP
     public function sep_insert(Request $request)
     {
