@@ -134,7 +134,7 @@ class RanapController extends APIController
         // Buat query dasar dengan relasi yang dibutuhkan
         $query = Kunjungan::with(['bpjsCheckHistories', 'pasien', 'unit','unit'])
         ->whereIn('is_ranap_daftar', ['1', '2', '3'])->whereIn('pic',[
-            '1387','69','1140','79','1055','77'
+            '1387','69','1140','79','1055','77','1278'
         ]);
         if (
             !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||

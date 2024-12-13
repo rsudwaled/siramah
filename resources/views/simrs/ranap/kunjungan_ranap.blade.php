@@ -10,17 +10,44 @@
                 <form action="">
                     <div class="row">
                         <div class="col-md-4">
-                            <x-adminlte-select2 fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
-                                igroup-class="col-8" name="kodeunit" label="Ruangan">
-                                @foreach ($units as $key => $item)
-                                    <option value="{{ $key }}"
-                                        {{ $key == $request->kodeunit ? 'selected' : null }}>
-                                        {{ $item }} ({{ $key }})
-                                    </option>
-                                @endforeach
-                                <option value="-">SEMUA RUANGAN (-)
-                                </option>
-                            </x-adminlte-select2>
+                            @php
+                                $user = Auth::user();
+                                $role = $user->roles->first()->name;
+                            @endphp
+                            @if ($role === 'Admin Super')
+                                <x-adminlte-select2 fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
+                                    igroup-class="col-8" name="kodeunit" label="Ruangan">
+                                    @foreach ($units as $key => $item)
+                                        <option value="{{ $key }}"
+                                            {{ $key == $request->kodeunit ? 'selected' : null }}>
+                                            {{ $item }} ({{ $key }})
+                                        </option>
+                                    @endforeach
+                                </x-adminlte-select2>
+                            @else
+                                @if ($role === 'Dokter')
+                                    <x-adminlte-select2 fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
+                                        igroup-class="col-8" name="kodeunit" label="Ruangan">
+                                        @foreach ($units as $key => $item)
+                                            <option value="{{ $key }}"
+                                                {{ $key == $request->kodeunit ? 'selected' : null }}>
+                                                {{ $item }} ({{ $key }})
+                                            </option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                @else
+                                    <x-adminlte-select2 fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
+                                        igroup-class="col-8" name="kodeunit" label="Ruangan" readonly>
+                                        @foreach ($units as $key => $item)
+                                            <option value="{{ $key }}"
+                                                {{ $key == Auth::user()->unit_user ? 'selected' : null }}>
+                                                {{ $item }} ({{ $key }})
+                                            </option>
+                                        @endforeach
+                                    </x-adminlte-select2>
+                                @endif
+                            @endif
+
                         </div>
                         <div class="col-md-6">
                             @php
@@ -90,75 +117,105 @@
                     hoverable compressed>
                     @if ($kunjungans)
                         @foreach ($kunjungans as $kunjungan)
-                            @if ($kunjungan->budget)
-                                @if ($kunjungan->tgl_keluar)
-                                    @if ($kunjungan->erm_ranap)
-                                        @switch($kunjungan->erm_ranap->status)
-                                            @case(1)
-                                                <tr class="table-secondary text-warning">
-                                                @break
+                            @php
+                                $statusClass = 'table-secondary';
+                                $statusTextColor = 'text-warning';
 
-                                                @case(2)
-                                                <tr class="table-secondary text-success">
-                                                @break
+                                // Determine the row color based on conditions
+                                if ($kunjungan->budget) {
+                                    if ($kunjungan->tgl_keluar) {
+                                        $statusClass = 'table-secondary';
+                                        $statusTextColor = $kunjungan->erm_ranap
+                                            ? ($kunjungan->erm_ranap->status == 1
+                                                ? 'text-warning'
+                                                : ($kunjungan->erm_ranap->status == 2
+                                                    ? 'text-success'
+                                                    : 'text-warning'))
+                                            : 'text-warning';
+                                    } else {
+                                        $statusClass = 'table-secondary';
+                                        $statusTextColor = 'text-dark';
+                                    }
+                                } else {
+                                    $statusClass = 'table-secondary';
+                                    $statusTextColor = 'text-danger';
+                                }
 
-                                                @default
-                                                <tr class="table-secondary text-warning">
-                                            @endswitch
-                                        @else
-                                        <tr class="table-secondary text-warning">
-                                    @endif
-                                @else
-                                    <tr class="table-secondary text-dark">
-                                @endif
-                            @else
-                                <tr class="table-secondary text-danger">
-                            @endif
-                            <td>{{ $kunjungan->tgl_masuk }}</td>
-                            <td>{{ $kunjungan->tgl_keluar }}
-                            </td>
-                            <td>
-                                {{ \Carbon\Carbon::parse($kunjungan->tgl_masuk)->startOfDay()->diffInDays(\Carbon\Carbon::parse($kunjungan->tgl_keluar)->endOfDay() ?? now()) }}
-                                Hari
-                            </td>
-                            <td>{{ $kunjungan->no_rm }}
-                            </td>
-                            <td>{{ $kunjungan->pasien->nama_px ?? '-' }}</td>
-                            <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
-                            <td>
-                                <a href="{{ route('pasienranapprofile') }}?kode={{ $kunjungan->kode_kunjungan }}"
-                                    class="btn btn-primary btn-xs withLoad"><i class="fas fa-file-medical"></i> ERM</a>
-                            </td>
-                            <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
-                                {{ $kunjungan->tagihan ? money($kunjungan->tagihan->total_biaya, 'IDR') : 'Rp 0' }}
-                            </td>
-                            <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
-                                {{ $kunjungan->budget ? money($kunjungan->budget->tarif_inacbg, 'IDR') : 'Rp 0' }}
-                            </td>
-                            <td
-                                class="{{ $kunjungan->tagihan && $kunjungan->budget ? ($kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : null) : null }}">
-                                @if ($kunjungan->tagihan && $kunjungan->budget)
-                                    @if ($kunjungan->tagihan->total_biaya && $kunjungan->budget->tarif_inacbg)
-                                        {{ round(($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) * 100) }}
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                @if ($kunjungan->status_kunjungan == 1)
-                                    <span class="badge badge-success">{{ $kunjungan->status_kunjungan }}.
-                                        {{ $kunjungan->status->status_kunjungan }}</span>
-                                @else
-                                    <span class="badge badge-danger">{{ $kunjungan->status_kunjungan }}.
-                                        {{ $kunjungan->status->status_kunjungan }}</span>
-                                @endif
-                            </td>
-                            <td>{{ $kunjungan->no_sep }}</td>
-                            <td>{{ $kunjungan->unit?->nama_unit }}</td>
-                            <td>{{ $kunjungan->dokter?->nama_paramedis }}</td>
-                            <td>{{ $kunjungan->penjamin_simrs?->nama_penjamin }}</td>
-                            <td>{{ $kunjungan->alasan_masuk?->alasan_masuk }}</td>
+                                // Calculate days difference
+                                $days = \Carbon\Carbon::parse($kunjungan->tgl_masuk)
+                                    ->startOfDay()
+                                    ->diffInDays(\Carbon\Carbon::parse($kunjungan->tgl_keluar)->endOfDay() ?? now());
+
+                                // Calculate percentage if tagihan and budget exist
+                                $percentage = null;
+                                if ($kunjungan->tagihan && $kunjungan->budget) {
+                                    $percentage =
+                                        $kunjungan->tagihan->total_biaya && $kunjungan->budget->tarif_inacbg
+                                            ? round(
+                                                ($kunjungan->tagihan->total_biaya / $kunjungan->budget->tarif_inacbg) *
+                                                    100,
+                                            )
+                                            : null;
+                                }
+
+                                // Determine tagihan and budget amounts
+                                $tagihanAmount = $kunjungan->tagihan
+                                    ? money($kunjungan->tagihan->total_biaya, 'IDR')
+                                    : 'Rp 0';
+                                $budgetAmount = $kunjungan->budget
+                                    ? money($kunjungan->budget->tarif_inacbg, 'IDR')
+                                    : 'Rp 0';
+                            @endphp
+
+                            <tr class="{{ $statusClass }} {{ $statusTextColor }}">
+                                <td>{{ $kunjungan->tgl_masuk }}</td>
+                                <td>{{ $kunjungan->tgl_keluar }}</td>
+                                <td>{{ $days }} Hari</td>
+                                <td>{{ $kunjungan->no_rm }}</td>
+                                <td>{{ $kunjungan->pasien->nama_px ?? '-' }}</td>
+                                <td>{{ $kunjungan->pasien->no_Bpjs ?? '-' }}</td>
+                                <td>
+                                    {{-- {{$role}} --}}
+                                    {{-- <a href="{{ route('dashboard.erm-ranap.dokters.dashboard', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                        class="btn btn-success btn-xs withLoad">
+                                        <i class="fas fa-file-medical"></i> ERM DOKTER
+                                    </a> --}}
+                                    <a href="{{ route('dashboard.erm-ranap.dashboard', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                        class="btn btn-success btn-xs withLoad">
+                                        <i class="fas fa-file-medical"></i> ERM RANAP
+                                    </a>
+                                    <a href="{{ route('resume-pemulangan.vbeta.resume-vbeta.cepat', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                        class="btn btn-secondary btn-xs withLoad">
+                                        <i class="fas fa-file-medical"></i> Resume
+                                    </a>
+                                    {{-- <a href="{{ route('pasienranapprofile', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                        class="btn btn-primary btn-xs withLoad">
+                                        <i class="fas fa-file-medical"></i> ERM
+                                    </a> --}}
+                                </td>
+                                <td
+                                    class="{{ $kunjungan->tagihan && $kunjungan->budget && $kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : '' }}">
+                                    {{ $tagihanAmount }}
+                                </td>
+                                <td
+                                    class="{{ $kunjungan->tagihan && $kunjungan->budget && $kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : '' }}">
+                                    {{ $budgetAmount }}
+                                </td>
+                                <td
+                                    class="{{ $kunjungan->tagihan && $kunjungan->budget && $kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : '' }}">
+                                    {{ $percentage ?? '-' }}
+                                </td>
+                                <td>
+                                    <span
+                                        class="badge {{ $kunjungan->status_kunjungan == 1 ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $kunjungan->status_kunjungan }}. {{ $kunjungan->status->status_kunjungan }}
+                                    </span>
+                                </td>
+                                <td>{{ $kunjungan->no_sep }}</td>
+                                <td>{{ $kunjungan->unit->nama_unit }}</td>
+                                <td>{{ $kunjungan->dokter->nama_paramedis }}</td>
+                                <td>{{ $kunjungan->penjamin_simrs->nama_penjamin }}</td>
+                                <td>{{ $kunjungan->alasan_masuk->alasan_masuk }}</td>
                             </tr>
                         @endforeach
                     @endif

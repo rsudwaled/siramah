@@ -13,6 +13,7 @@ use App\Models\Icd10;
 use App\Models\HistoriesIGDBPJS;
 use Carbon\Carbon;
 use PDF;
+
 class BridgingIgdController extends APIController
 {
      // API FUNCTION
@@ -392,5 +393,50 @@ class BridgingIgdController extends APIController
         $pdf = PDF::loadView('simrs.igd.cetakan_igd.sep_ranap', ['data'=>$data,'user'=>$user,'noHp'=>$noHp,'noTelp'=>$noTelp]);
         return $pdf->stream('cetak-sep-ranap.pdf');
         // return view('simrs.igd.cetakan_igd.sep_ranap', compact('data'));
+    }
+
+    public function getIcd10(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "keyword" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $url = env('VCLAIM_URL')  . "referensi/diagnosa/" . $request->keyword;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $callback = json_decode($response->body());
+        if ($callback->metaData->code == 200) {
+            $resdescrtipt   = $this->response_decrypt($response, $signature);
+            $dataDiagnosa = $resdescrtipt->response->diagnosa; 
+        }
+        return response()->json([
+            'metadata' => $callback->metaData,
+            'diagnosa' => $dataDiagnosa
+        ]);
+    }
+
+    public function getIcd9(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "procedure" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $url = env('VCLAIM_URL')  . "referensi/procedure/"  . $request->procedure;
+        $signature = $this->signature();
+        $response = Http::withHeaders($signature)->get($url);
+        $callback = json_decode($response->body());
+        if ($callback->metaData->code == 200) {
+            $resdescrtipt   = $this->response_decrypt($response, $signature);
+            $icd9 = $resdescrtipt->response->procedure; 
+        }
+        // dd($response, $callback, $resdescrtipt, $icd9);
+        return response()->json([
+            'metadata' => $callback->metaData,
+            'icd9' => $icd9
+        ]);
     }
 }
