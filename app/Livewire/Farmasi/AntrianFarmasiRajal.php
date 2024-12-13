@@ -15,54 +15,11 @@ class AntrianFarmasiRajal extends Component
     public $tanggal;
     public $search = "";
     public $unit;
+    public $formIcare;
     public $tracerstatus = 0;
     public $playAudio;
     public $orders;
     public $pasienpanggil;
-    // public function refreshComponent()
-    // {
-    //     $this->antrianresep = OrderObatHeader::where('taskid', 5)->where('status', 0)->first();
-    //     if ($this->antrianresep) {
-    //         $this->playAudio = true;
-    //         $this->dispatch('play-audio');
-    //     } else {
-    //         $this->playAudio = false;
-    //     }
-    // }
-    public function traceraktif()
-    {
-        $this->tracerstatus =  $this->tracerstatus  ? 0 : 1;
-    }
-    public function cetak($id)
-    {
-        $order = OrderObatHeader::find($id);
-        $order->update([
-            'status_order' => 1,
-        ]);
-        flash('Cetak ulang status antrian', 'success');
-    }
-    public function panggil($id)
-    {
-        $order = OrderObatHeader::find($id);
-        $order->update([
-            'panggil' => 1,
-        ]);
-        flash('Berhasil panggil antrian', 'success');
-    }
-    public function selesai($id)
-    {
-        $order = OrderObatHeader::find($id);
-        $order->update([
-            'panggil' => 1,
-        ]);
-        flash('Berhasil panggil antrian', 'success');
-    }
-    public function refreshComponent() {}
-    public function mount(Request $request)
-    {
-        $this->tanggal = $request->tanggal ?? now()->format('Y-m-d');
-        $this->unit = $request->unit ?? 4008;
-    }
     public function render()
     {
         $search = "%" . $this->search . "%";
@@ -200,5 +157,43 @@ class AntrianFarmasiRajal extends Component
             flash($th->getMessage(), 'danger');
         }
         return view('livewire.farmasi.antrian-farmasi-rajal')->title('Antrian Farmasi Rawat Jalan');
+    }
+    public function mount(Request $request)
+    {
+        $this->tanggal = $request->tanggal ?? now()->format('Y-m-d');
+        $this->unit = $request->unit ?? 4008;
+    }
+    public function traceraktif()
+    {
+        $this->tracerstatus =  $this->tracerstatus  ? 0 : 1;
+    }
+    public function cetak($id)
+    {
+        $order = OrderObatHeader::find($id);
+        $order->update([
+            'status_order' => 1,
+        ]);
+        flash('Cetak ulang status antrian', 'success');
+    }
+    public function panggil($id)
+    {
+        $order = OrderObatHeader::find($id);
+        $order->update([
+            'panggil' => 1,
+        ]);
+        flash('Berhasil panggil antrian', 'success');
+    }
+    public function selesai($id)
+    {
+        $order = OrderObatHeader::find($id);
+        $order->update([
+            'panggil' => 1,
+        ]);
+        flash('Berhasil panggil antrian', 'success');
+    }
+    public function refreshComponent() {}
+    public function lihat()
+    {
+        $this->formIcare = true;
     }
 }

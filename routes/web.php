@@ -234,6 +234,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('pasien', PasienController::class);
     Route::resource('kunjungan', KunjunganController::class);
     Route::resource('efilerm', FileRekamMedisController::class);
+    Route::resource('scanfilerm', FileRekamMedisController::class);
     Route::resource('antrian', AntrianController::class);
     Route::resource('suratkontrol', SuratKontrolController::class);
     Route::resource('obat', ObatController::class);

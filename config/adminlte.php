@@ -907,9 +907,15 @@ return [
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                     'url'  => 'efilerm',
-                    // 'active'  => ['efilerm', 'efilerm/create' ,'regex:@^antrian/poliklinik(\/[0-9]+)?+$@', 'regex:@^antrian/poliklinik(\/[0-9]+)?\/edit+$@',  'antrian/poliklinik/create'],
                     'active'  => ['efilerm', 'efilerm/create'],
-
+                ],
+                [
+                    'text' => 'Scan File RM',
+                    'icon'    => 'fas fa-diagnoses',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                    'url'  => 'scanfilerm',
+                    'active'  => ['efilerm', 'efilerm/create'],
                 ],
                 [
                     'text' => 'Tarif Layanan',
