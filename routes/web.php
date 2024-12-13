@@ -696,13 +696,20 @@ Route::middleware('auth')->group(function () {
     // Bridging Bpjd dari IGD versi baru
     Route::prefix('bridging-igd')->name('bridging-igd.')->group(function () {
         Route::get('/ranap', [BridgingIgdController::class, 'listRawatInap'])->name('list-ranap');
+        Route::get('/get-data-persiapan-bridging', [BridgingIgdController::class, 'getDataPersiapanBridging'])->name('get-data-persiapan-bridging');
         Route::post('/update-diagnosa', [BridgingIgdController::class, 'updateDiagKunjungan'])->name('update-diagnosa-kunjungan');
         Route::post('/create-spri', [BridgingIgdController::class, 'createSpri'])->name('create-spri');
         Route::delete('/delete-spri', [BridgingIgdController::class, 'deleteSPRI'])->name('delete-spri');
         Route::post('/create-sep-ranap', [BridgingIgdController::class, 'createSEPRanap'])->name('create-sep-ranap');
         Route::delete('/delete-sep-ranap', [BridgingIgdController::class, 'deleteSEPRanap'])->name('delete-sep-ranap');
-
+        // synch dari kunjungan ke table histories bpjs
+        Route::post('/sync/kunjungan-tohistoriesbpjs', [BridgingIgdController::class, 'sychKunjunganToHistoryBpjs'])->name('post-kunjungan-tohistories-ranap');
         Route::get('/print-sep', [BridgingIgdController::class, 'sepPrint'])->name('sep-print');
+        
+        // rawat inap erm
+        Route::get('/cari-sukon', [BridgingIgdController::class, 'cariSuratKontrol'])->name('cari-sukon');
+        Route::get('/get-icd10', [BridgingIgdController::class, 'getIcd10'])->name('get-icd10');
+        Route::get('/get-icd9', [BridgingIgdController::class, 'getIcd9'])->name('get-icd9');
     });
 
     //RANAP 1 X 24 Jam
@@ -830,4 +837,121 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\IGD\V1\PencarianPasienController::class)->prefix('pencarian')->name('data-pasien.')->group(function () {
         Route::get('/pasien-terdaftar', 'cariPasienTerdaftar')->name('cari-pasien-terdaftar');
     });
+
+    // ERM RAWAT INAP V1.1
+    Route::controller(App\Http\Controllers\ERMRANAP\RencanaAsuhanController::class)->prefix('rencana-asuhan')->name('rawat-inap.rencana-asuhan.')->group(function () {
+        Route::get('get-rencana-asuhan', 'getDataRencana')->name('get-rencana-asuhan');
+        Route::post('simpan_rencana_asuhan_terpadu', 'simpan_rencana_asuhan_terpadu')->name('simpan_rencana_asuhan_terpadu');
+        Route::get('edit-rencana-asuhan', 'getRencanaAsuhData')->name('edit-rencana-asuhan');
+        Route::post('hapus-rencana-asuhan', 'hapusRencanaAsuhan')->name('hapus_rencana_asuhan');
+    });
+
+    Route::controller(App\Http\Controllers\ERMRANAP\DashboardErmRanapController::class)->prefix('erm-ranap')->name('dashboard.erm-ranap.')->group(function () {
+        Route::get('dashboard', 'dashboardERMRanap')->name('dashboard');
+        Route::get('get-rincian-biaya', 'get_rincian_biaya')->name('rincian-biaya');
+        Route::get('/assesmen-awal-medis','assesmenAwalMedis')->name('assesmen-awal-medis');
+        Route::get('/edukasi','assesmenKebutuhanEdukasi')->name('assesmen-kebutuhan-edukasi');
+        Route::get('/konsultasi','konsultasi')->name('konsultasi');
+        Route::get('/anastesi','assesmenPraAnastesi')->name('assesmen-pra-anastesi');
+        Route::get('/tindakan','informasiTindakan')->name('informasi-tindakan');
+        Route::get('/catatan-mpp-a', 'catatanMPPA')->name('catatan-mpp-a');
+        Route::post('/simpan/catatan-mpp-a', 'catatanMPPAStore')->name('catatan-mpp-a.store');
+        Route::get('/catatan-mpp-b', 'catatanMPPB')->name('catatan-mpp-b');
+
+        Route::get('/get-berkas', 'getBerkasFile')->name('get-berkas-file');
+        
+        
+        // versi perbaikan view
+        Route::get('/riwayat/{kode_kunjungan}', 'getRiwayatDetails')->name('riwayat.details');
+        // dashboard versi 2
+        Route::controller(App\Http\Controllers\ERMRANAP\Dashboard\DashboardDokterController::class)->prefix('dokters')->name('dokters.')->group(function () {
+            Route::get('/dashboard-dokter', 'dashboardDokter')->name('dashboard');
+            Route::get('/get-penunjang-radiologi', 'getPenunjangRadiologi')->name('penunjang-radiologi');
+        });
+        
+        Route::controller(App\Http\Controllers\ERMRANAP\Dokter\AssesmenMedisController::class)->prefix('assesmen-medis')->name('assesmen-medis.')->group(function () {
+            Route::post('/assesmen-medis/store', 'storeAssesmen')->name('store-assesmen');
+            Route::get('cetakan/asesmen-awal-medis', 'printAsesmenRanapAwal')->name('cetakan-asesmen-awal-medis');
+        });
+        
+        Route::controller(App\Http\Controllers\ERMRANAP\Obat\RekonsiliasiObatController::class)->prefix('rekonsiliasi-obat')->name('rekonsiliasi-obat.')->group(function () {
+            Route::post('store/rekonsiliasi-obat', 'storeObat')->name('store-obat');
+            Route::put('update/rekonsiliasi-obat/{id}', 'updateObat')->name('update-obat');
+            Route::delete('delete/rekonsiliasi-obat/{id}', 'deleteObat')->name('delete-obat');
+        });
+
+        Route::controller(App\Http\Controllers\ERMRANAP\RencanaAsuhan\RencanaAsuhanController::class)->prefix('rencana-asuhan')->name('rencana-asuhan.')->group(function () {
+            Route::post('/rencana-asuhan/store', 'storeRencanaAsuhan')->name('store-rencana-asuhan');
+            Route::put('update/rencana-asuhan/{id}', 'updateRencana')->name('update-rencana');
+            Route::delete('delete/rencana-asuhan/{id}', 'deleteRencana')->name('delete-rencana');
+        });
+
+        Route::controller(App\Http\Controllers\ERMRANAP\Perkembangan\PerkembanganPasienController::class)->prefix('perkembangan-pasien')->name('perkembangan-pasien.')->group(function () {
+            Route::post('store/perkembangan-pasien', 'storePerkembangan')->name('store-perkembangan');
+            Route::get('get-data-perkembangan', 'getPerkembangan')->name('get-perkembangan');
+            Route::put('update/perkembangan-pasien/{id}', 'updatePerkembangan')->name('update-perkembangan');
+            Route::delete('delete/perkembangan-pasien/{id}', 'deletePerkembangan')->name('delete-perkembangan');
+            Route::post('konsultasi/store', 'storeKonsultasi')->name('store-konsultasi');
+            Route::get('get-data-konsultasi', 'getKonsultasiData')->name('get-konsultasi');
+            Route::get('cetakan/konsultasi', 'printKonsultasi')->name('cetakan-konsultasi');
+        });
+
+        Route::controller(App\Http\Controllers\ERMRANAP\Penunjang\PenunjangController::class)->prefix('penunjang')->name('penunjang.')->group(function () {
+            Route::get('/list-penujang', 'getPenunjang')->name('get-penunjang');
+            Route::get('/kpo-elektronik', 'kpoElektronik')->name('kpo-elektronik');
+            Route::get('/rekonsiliasi-obat', 'rekonsiliasiObat')->name('rekonsiliasi-obat');
+            Route::get('/rencana-asuhan-terpadu', 'rencanaAsuhanTerpadu')->name('rencana-asuhan-terpadu');
+            Route::get('/grouping', 'grouping')->name('grouping');
+            // get data riwayat pasien
+            Route::get('/riwayat-poliklinik', 'riwayatPoliklinik')->name('riwayat-poliklinik');
+        });
+        // pemulangan pasien
+        Route::controller(App\Http\Controllers\ERMRANAP\ResumePemulanganController::class)->prefix('resume-pemulangan')->name('resume-pemulangan.')->group(function () {
+            Route::get('/resume', 'viewResume')->name('resume');
+            Route::get('v1/resume', 'viewResumeCepat')->name('resume.cepat');
+            Route::post('/store-resume', 'storeResume')->name('store-resume');
+            Route::get('/print-resume', 'printResume')->name('print-resume');
+        });
+        Route::controller(App\Http\Controllers\ERMRANAP\SuratKontrolController::class)->prefix('surat-kontrol')->name('surat-kontrol.')->group(function () {
+            Route::get('/create', 'create')->name('create');
+        });
+
+        Route::controller(App\Http\Controllers\ERMRANAP\Perawat\RanapPerawatController::class)->prefix('perawat')->name('perawat.')->group(function () {
+            Route::get('/assesmen-awal-keperawatan', 'assesmenAwalKeperawatan')->name('assesmen-awal-keperawatan');
+            Route::get('/implementasi-evaluasi', 'implementasiEvaluasi')->name('implementasi-evaluasi');
+            Route::get('/lembar-edukasi', 'lembarEdukasi')->name('lembar-edukasi');
+            Route::get('/catatan-mpp-a', 'catatanMPPA')->name('catatan-mpp-a');
+            Route::get('/catatan-mpp-b', 'catatanMPPB')->name('catatan-mpp-b');
+            Route::get('/cppt-perawat','cpptPerawat')->name('cppt-perawat');
+            Route::get('/rencana-pemulangan-pasien', 'rencanaPemulanganPasien')->name('rencana-pemulangan-pasien');
+
+            Route::controller(App\Http\Controllers\ERMRANAP\Perawat\AsesmenPerawatController::class)->prefix('assesmen-awal')->name('assesmen-awal.')->group(function () {
+                Route::post('store/assesmen-awal', 'storeAsesmenPerawat')->name('store-assesmen');
+                Route::get('cetakan/asesmen-awal-keperawatan', 'printAsesmenAwalKeperawatan')->name('cetakan-asesmen-awal-keperawatan');
+            });
+            Route::controller(App\Http\Controllers\ERMRANAP\Perawat\ImplementasiEvaluasiController::class)->prefix('implementasi-evaluasi')->name('implementasi-evaluasi.')->group(function () {
+                Route::post('store', 'storeImplementasiEvaluasi')->name('store-implementasi-evaluasi');
+                Route::put('update/{id}', 'updateImplementasiEvaluasi')->name('update-implementasi-evaluasi');
+                Route::get('cetakan-implementasi-evaluasi', 'printImplementasiEvaluasi')->name('cetakan-implementasi-evaluasi');
+                Route::get('show-data-implementasi', 'showDataImplementasiEvaluasi')->name('showdata-implementasi-evaluasi');
+                Route::post('verifikasi', 'verifikasiImplementasiEvaluasi')->name('verifikasi-implementasi-evaluasi');
+            });
+
+            Route::controller(App\Http\Controllers\ERMRANAP\Perkembangan\PerkembanganPasienController::class)->prefix('cppt-perawat')->name('cppt-perawat.')->group(function () {
+                Route::post('store/perkembangan-pasien', 'storeCPPTPerawat')->name('store-perkembangan');
+                Route::put('update/perkembangan-pasien/{id}', 'updateCPPTPerawat')->name('update-perkembangan');
+                // Route::delete('delete/rencana-asuhan/{id}', 'deleteRencana')->name('delete-rencana');
+            });
+            
+        });
+    });
+
+    Route::controller(App\Http\Controllers\ERMRANAP\ResumePemulanganController::class)->prefix('resume-pemulangan.vbeta')->name('resume-pemulangan.vbeta.')->group(function () {
+        Route::get('v1beta/resume', 'viewResumeCepat')->name('resume-vbeta.cepat');
+        Route::post('/store-resume', 'storeResume')->name('store-resume');
+        Route::get('/print-resume', 'printResume')->name('print-resume');
+        Route::get('/get-icd', 'getIcd10Data')->name('get-icd10');
+        Route::get('/get-dokter-dpjp', 'getDokters')->name('get-dokter');
+    });
+    // End GIZI
 });
