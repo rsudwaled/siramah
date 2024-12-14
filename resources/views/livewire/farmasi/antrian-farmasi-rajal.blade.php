@@ -157,6 +157,28 @@
             @endif
         </x-adminlte-card>
     </div>
+    @if ($formIcare)
+        <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div class="bg-white rounded-lg shadow-lg w-1/3">
+                <!-- Header Modal -->
+                <div class="px-4 py-2 border-b">
+                    <h2 class="text-lg font-semibold">Modal Title</h2>
+                </div>
+
+                <!-- Isi Modal -->
+                <div class="p-4">
+                    <p>Isi konten modal di sini.</p>
+                </div>
+
+                <!-- Footer Modal -->
+                <div class="px-4 py-2 border-t text-right">
+                    <button wire:click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
     <audio id="myAudio" autoplay>
         <source src="{{ asset('rekaman/Airport_Bell.mp3') }}" type="audio/mp3">
         Your browser does not support the audio element.
