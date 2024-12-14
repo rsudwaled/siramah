@@ -11,7 +11,7 @@
                             PULANG</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " href="#hasil-resume" data-toggle="tab">Data</a>
+                        <a class="nav-link " href="#hasil-resume" data-toggle="tab">Data / PRINT</a>
                     </li>
                 </ul>
             </div>
@@ -1083,9 +1083,9 @@
                         <button type="submit" class="btn btn-success">Simpan</button>
                     </div>
                 @endif --}}
-                <div class="form-actions col-12 text-right">
+                {{-- <div class="form-actions col-12 text-right">
                     <button type="submit" class="btn btn-primary">Final Resume</button>
-                </div>
+                </div> --}}
                 <div class="form-actions col-12">
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </div>

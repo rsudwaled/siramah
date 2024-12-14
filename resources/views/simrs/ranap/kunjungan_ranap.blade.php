@@ -10,7 +10,7 @@
                 <form action="">
                     <div class="row">
                         <div class="col-md-4">
-                            @php
+                            {{-- @php
                                 $user = Auth::user();
                                 $role = $user->roles->first()->name;
                             @endphp
@@ -46,8 +46,16 @@
                                         @endforeach
                                     </x-adminlte-select2>
                                 @endif
-                            @endif
-
+                            @endif --}}
+                            <x-adminlte-select2 fgroup-class="row" label-class="text-right col-4" igroup-size="sm"
+                                    igroup-class="col-8" name="kodeunit" label="Ruangan">
+                                    @foreach ($units as $key => $item)
+                                        <option value="{{ $key }}"
+                                            {{ $key == $request->kodeunit ? 'selected' : null }}>
+                                            {{ $item }} ({{ $key }})
+                                        </option>
+                                    @endforeach
+                                </x-adminlte-select2>
                         </div>
                         <div class="col-md-6">
                             @php
@@ -180,18 +188,18 @@
                                         class="btn btn-success btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> ERM DOKTER
                                     </a> --}}
-                                    <a href="{{ route('dashboard.erm-ranap.dashboard', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                    {{-- <a href="{{ route('dashboard.erm-ranap.dashboard', ['kode' => $kunjungan->kode_kunjungan]) }}"
                                         class="btn btn-success btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> ERM RANAP
-                                    </a>
+                                    </a> --}}
                                     <a href="{{ route('resume-pemulangan.vbeta.resume-vbeta.cepat', ['kode' => $kunjungan->kode_kunjungan]) }}"
                                         class="btn btn-secondary btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> Resume
                                     </a>
-                                    {{-- <a href="{{ route('pasienranapprofile', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                    <a href="{{ route('pasienranapprofile', ['kode' => $kunjungan->kode_kunjungan]) }}"
                                         class="btn btn-primary btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> ERM
-                                    </a> --}}
+                                    </a>
                                 </td>
                                 <td
                                     class="{{ $kunjungan->tagihan && $kunjungan->budget && $kunjungan->tagihan->total_biaya > $kunjungan->budget->tarif_inacbg ? 'text-danger' : '' }}">

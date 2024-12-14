@@ -49,13 +49,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:70px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
                         <span style="font-size: 12px; font-weight: bold;">Riwayat Penyakit:</span> <br>
                         {{ $resume->riwayat_penyakit ?? '' }}
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:70px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
                         <span style="font-size: 12px; font-weight: bold;">Indikasi Rawat Inap:</span> <br>
                         {{ $resume->indikasi_ranap ?? '' }}
 
@@ -182,14 +182,19 @@
                                         style="width: 100%; height:50px; border-collapse: collapse; margin:0px; padding:0px;">
                                         <tr>
                                             @php
-                                                $diagutama = explode(' - ', $resume->diagnosa_utama);
+                                                // Pastikan diagnosa_utama tidak null dan memiliki format yang benar
+                                                if (!empty($resume->diagnosa_utama) && strpos($resume->diagnosa_utama, ' - ') !== false) {
+                                                    $diagutama = explode(' - ', $resume->diagnosa_utama);
+                                                } else {
+                                                    $diagutama = [null, null]; // Set default jika diagnosa tidak ada atau formatnya salah
+                                                }
                                             @endphp
                                             <td style="width: 20%; margin: 0; padding:2px;">Diagnosa Utama</td>
                                             <td style="margin: 0; padding:2px;">
-                                                {{$diagutama[1]}}
+                                                {{ $diagutama[1] ?? 'Tidak Diketahui' }}
                                             </td>
                                             <td style="margin: 0; padding:2px;">
-                                                {{$diagutama[0]}}
+                                                {{ $diagutama[0] ?? 'Tidak Diketahui' }}
                                             </td>
                                         </tr>
                                         <tr>

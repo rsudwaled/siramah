@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ERM-RANAP</title>
+    <title>ERM-RESUME PEMULANGAN</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -43,7 +43,7 @@
                     <!-- Left navbar links -->
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">DASHBOARD ERM RAWAT INAP</a>
+                            <a href="#" class="nav-link">DASHBOARD RESUME PEMULANGAN</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">PENGGUNA : {{ strtoupper(Auth::user()->username) }}</a>
@@ -106,9 +106,9 @@
                 theme: 'bootstrap4'
             })
         });
-        
+
     </script>
-    
+
 </body>
 
 </html>
