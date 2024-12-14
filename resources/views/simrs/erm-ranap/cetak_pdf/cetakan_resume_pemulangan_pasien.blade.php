@@ -72,7 +72,8 @@
                         <td colspan="3" style="margin: 0; padding:5px; height:40px;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr>
-                                    <td style="margin: 0; padding:2px; text-align:center;">Pemeriksaan SHK</td>
+                                    <td style="margin: 0; padding:2px; text-align:center;">Pemeriksaan SHK
+                                        {{ $umur }}</td>
                                     <td style="margin: 0; padding:2px; text-align:center;">APGAR SCORE</td>
                                 </tr>
                                 <tr>
@@ -163,7 +164,7 @@
                         <strong style="margin: 0.5rem 0;">Diagnosa Masuk</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
-                        {{ $resume->diagnosa_masuk ?? '-' }}
+                        {{$resume->diagnosa_masuk??''}}
                     </td>
                 </tr>
                 <tr>
@@ -180,11 +181,15 @@
                                     <table
                                         style="width: 100%; height:50px; border-collapse: collapse; margin:0px; padding:0px;">
                                         <tr>
+                                            @php
+                                                $diagutama = explode(' - ', $resume->diagnosa_utama);
+                                            @endphp
                                             <td style="width: 20%; margin: 0; padding:2px;">Diagnosa Utama</td>
                                             <td style="margin: 0; padding:2px;">
-                                                {{ $resume->diagnosa_utama ?? '-' }}
+                                                {{$diagutama[1]}}
                                             </td>
-                                            <td style="margin: 0; padding:2px;">{{ $resume->diagnosa_utama_icd10 ?? '' }}
+                                            <td style="margin: 0; padding:2px;">
+                                                {{$diagutama[0]}}
                                             </td>
                                         </tr>
                                         <tr>
@@ -383,42 +388,51 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
-                                <tr>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    <td style="border: 1px solid black; padding: 5px;">-</td>
-                                </tr>
+                                @if ($obatPulang)
+                                    @foreach ($obatPulang as $obat)
+                                        <tr>
+                                            <td style="border: 1px solid black; padding: 5px;">{{ $obat->nama_obat }}</td>
+                                            <td style="border: 1px solid black; padding: 5px;">{{ $obat->jumlah }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </td>

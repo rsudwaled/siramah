@@ -317,6 +317,11 @@ return [
             'url'         => 'home',
             'icon'        => 'fas fa-home',
         ],
+        [
+            'text'        => 'Resume Pemulangan',
+            'url'         => 'resume-pemulangan.vbeta/pasien-rawat-inap',
+            'icon'        => 'fas fa-file-signature',
+        ],
         // PELAYANAN
         [
             'text'    => 'Pelayanan Rawat Jalan',

@@ -28,6 +28,8 @@
                             @csrf
                             <input type="hidden" name="kode_kunjungan" value="{{ $kunjungan->kode_kunjungan }}">
                             <input type="hidden" name="counter" value="{{ $kunjungan->counter }}">
+                            <input type="hidden" name="diagnosa_utama_icd10_desc"
+                                value="{{ $resume->diagnosa_utama_icd10_desc ?? '' }}">
                             <div class="row">
                                 <div class="col-12 row">
                                     <div class="col-1">
@@ -64,7 +66,8 @@
                                             <label for="Nama Dokter">Nama Dokter</label>
                                             <select name="nama_dpjp" id="nama_dpjp" class="select2 form-control">
                                                 @if (!empty($resume->kode_dokter))
-                                                    <option value="{{ $resume->kode_dokter }}" selected>{{ $resume->dpjp }}</option>
+                                                    <option value="{{ $resume->kode_dokter }}" selected>{{ $resume->dpjp }}
+                                                    </option>
                                                 @else
                                                     <option value="">Pilih Nama Dokter</option>
                                                 @endif
@@ -75,7 +78,7 @@
                                         <div class="form-group">
                                             <label for="Tgl Cetak">Tgl Cetak</label>
                                             <input type="date" name="tgl_cetak"
-                                                value="{{ Carbon\Carbon::parse($resume->tgl_cetak)->format('Y-m-d') }}"
+                                                value="{{ \Carbon\Carbon::parse($resume->tgl_cetak ?? now())->format('Y-m-d') }}"
                                                 class="form-control">
                                         </div>
                                     </div>
@@ -189,7 +192,8 @@
                                                                     <tr>
                                                                         <td
                                                                             style="margin:2px; padding:2px; text-align:center;">
-                                                                            <strong>PEMERIKSAAN SHK</strong></td>
+                                                                            <strong>PEMERIKSAAN SHK</strong>
+                                                                        </td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td style="margin:0; padding:2px;">
@@ -505,6 +509,7 @@
                                                                                     <div class="col-12 row mt-2">
                                                                                         <div class="col-12">
 
+                                                                                            {{-- Tabel Diagnosa Sekunder --}}
                                                                                             @if (!empty($resume) && !empty($resume->diagnosa_sekunder))
                                                                                                 @php
                                                                                                     $sekunder = explode(
@@ -517,34 +522,37 @@
                                                                                                     );
                                                                                                 @endphp
 
-                                                                                                <!-- Input hidden untuk menyimpan data diagnostik sekunder -->
                                                                                                 <input type="hidden"
                                                                                                     name="diagnosa_sekunder_update"
                                                                                                     id="diagnosa_sekunder_update"
+                                                                                                    class="form-control col-12"
                                                                                                     value="{{ $sekunder_str }}">
 
                                                                                                 <table
-                                                                                                    class="table table-bordered">
+                                                                                                    class="table table-bordered"
+                                                                                                    id="sekunder-table">
                                                                                                     <thead>
                                                                                                         <tr>
                                                                                                             <th>Diagnosa
                                                                                                                 Yang Sudah
                                                                                                                 Dipilih</th>
                                                                                                             <th>Aksi</th>
-                                                                                                            <!-- Kolom aksi untuk menghapus diagnosa -->
                                                                                                         </tr>
                                                                                                     </thead>
                                                                                                     <tbody
                                                                                                         id="sekunder-table-body">
                                                                                                         @foreach ($sekunder as $index => $diagnosa)
                                                                                                             <tr
-                                                                                                                id="row-{{ $index }}">
-                                                                                                                <td>{{ $diagnosa }}
+                                                                                                                id="row-sekunder-{{ $index }}">
+                                                                                                                <td
+                                                                                                                    style="margin: 0; padding:2px; padding-left:10px;">
+                                                                                                                    {{ $diagnosa }}
                                                                                                                 </td>
-                                                                                                                <td>
+                                                                                                                <td
+                                                                                                                    style="margin: 0; padding:2px;">
                                                                                                                     <button
                                                                                                                         type="button"
-                                                                                                                        class="btn btn-danger"
+                                                                                                                        class="btn btn-xs btn-danger"
                                                                                                                         onclick="removeDiagnosa({{ $index }})">Hapus</button>
                                                                                                                 </td>
                                                                                                             </tr>
@@ -611,6 +619,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-12 row mt-1">
+                                                                {{-- Tabel Tindakan Operasi --}}
                                                                 @if (!empty($resume) && !empty($resume->tindakan_operasi))
                                                                     @php
                                                                         $tindakan = explode(
@@ -620,29 +629,27 @@
                                                                         $tindakan_str = implode('|', $tindakan);
                                                                     @endphp
 
-                                                                    <!-- Input hidden untuk menyimpan data diagnostik sekunder -->
                                                                     <input type="hidden" name="tindakan_operasi_update"
                                                                         id="tindakan_operasi_update"
                                                                         value="{{ $tindakan_str }}">
 
-                                                                    <table class="table table-bordered">
+                                                                    <table class="table table-bordered"
+                                                                        id="tindakan-table">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Tindakan
-                                                                                    Yang Sudah
-                                                                                    Dipilih</th>
+                                                                                <th>Tindakan Yang Sudah Dipilih</th>
                                                                                 <th>Aksi</th>
-                                                                                <!-- Kolom aksi untuk menghapus diagnosa -->
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody id="tindakan-table-body">
                                                                             @foreach ($tindakan as $index => $operasi)
-                                                                                <tr id="row-{{ $index }}">
-                                                                                    <td>{{ $operasi }}
-                                                                                    </td>
-                                                                                    <td>
+                                                                                <tr id="row-tindakan-{{ $index }}">
+                                                                                    <td
+                                                                                        style="margin: 0; padding:2px; padding-left:10px;">
+                                                                                        {{ $operasi }}</td>
+                                                                                    <td style="margin: 0; padding:2px;">
                                                                                         <button type="button"
-                                                                                            class="btn btn-danger"
+                                                                                            class="btn btn-xs btn-danger"
                                                                                             onclick="removeTindakanOperasi({{ $index }})">Hapus</button>
                                                                                     </td>
                                                                                 </tr>
@@ -721,6 +728,7 @@
                                             </div>
                                             <div class="col-12 row mt-2">
                                                 <div class="col-12">
+                                                    {{-- Tabel Tindakan Prosedur --}}
                                                     @if (!empty($resume) && !empty($resume->tindakan_prosedure))
                                                         @php
                                                             $tindakanProsedure = explode(
@@ -729,23 +737,26 @@
                                                             );
                                                             $prosedure_str = implode('|', $tindakanProsedure);
                                                         @endphp
+
                                                         <input type="hidden" name="tindakan_prosedure_update"
                                                             id="tindakan_prosedure_update" value="{{ $prosedure_str }}">
-                                                        <table class="table table-bordered">
+
+                                                        <table class="table table-bordered" id="prosedure-table">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>Tindakan Operasi Yang Sudah Dipilih
-                                                                    </th>
+                                                                    <th>Tindakan Prosedure Yang Sudah Dipilih</th>
                                                                     <th>Aksi</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="tindakan-prosedure-table-body">
-                                                                @foreach ($tindakanProsedure as $prosedure)
-                                                                    <tr id="row-{{ $index }}">
-                                                                        <td>{{ $prosedure }}
-                                                                        </td>
-                                                                        <td>
-                                                                            <button type="button" class="btn btn-danger"
+                                                                @foreach ($tindakanProsedure as $index => $prosedure)
+                                                                    <tr id="row-prosedure-{{ $index }}">
+                                                                        <td
+                                                                            style="margin: 0; padding:2px; padding-left:10px;">
+                                                                            {{ $prosedure }}</td>
+                                                                        <td style="margin: 0; padding:2px;">
+                                                                            <button type="button"
+                                                                                class="btn btn-xs btn-danger"
                                                                                 onclick="removeTindakanProsedure({{ $index }})">Hapus</button>
                                                                         </td>
                                                                     </tr>
@@ -822,26 +833,59 @@
                                     </tr>
                                     <tr>
                                         <td colspan="3">
-                                            <table style="width: 100%;">
-                                                <th>Nama Obat</th>
-                                                <th>Jumlah</th>
-                                                <th>Dosis</th>
-                                                <th>Frekuensi</th>
-                                                <th>Cara Pemberian</th>
-                                                <tr>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                </tr>
+                                            @php
+                                                // Pastikan resume ditemukan sebelum mencoba akses propertinya
+                                                if ($resume) {
+                                                    $obatPulang = App\Models\ErmRanapResumeObatPulang::where(
+                                                        'id_resume',
+                                                        $resume->id,
+                                                    )->get();
+                                                } else {
+                                                    $obatPulang = collect(); // Jika resume tidak ditemukan, gunakan koleksi kosong
+                                                }
+                                            @endphp
+
+                                            <table class="table table-bordered" id="obat-pulang-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nama Obat</th>
+                                                        <th>Jumlah</th>
+                                                        <th><button type="button" class="btn btn-sm btn-primary"
+                                                                onclick="addRowObatPulang()">Tambah Row</button></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (count($obatPulang) > 0)
+                                                        @foreach ($obatPulang as $obat)
+                                                            <tr>
+                                                                <td><input type="text" class="form-control"
+                                                                        name="nama_obat[]"
+                                                                        value="{{ $obat->nama_obat }}"></td>
+                                                                <td><input type="text" class="form-control"
+                                                                        name="jumlah[]" value="{{ $obat->jumlah }}"></td>
+                                                                <td><button type="button" class="btn btn-sm btn-danger"
+                                                                        onclick="removeRowObatPulang(this)">Hapus</button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td><input type="text" class="form-control"
+                                                                    name="nama_obat[]"></td>
+                                                            <td><input type="text" class="form-control"
+                                                                    name="jumlah[]">
+                                                            </td>
+                                                            <td><button type="button" class="btn btn-sm btn-danger"
+                                                                    onclick="removeRowObatPulang(this)">Hapus</button></td>
+                                                        </tr>
+                                                    @endif
+                                                </tbody>
                                             </table>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="3">
                                             @php
-                                                // Memeriksa apakah $resume dan $resume->cara_keluar ada
                                                 $caraKeluar =
                                                     isset($resume) && isset($resume->cara_keluar)
                                                         ? json_decode($resume->cara_keluar, true)
@@ -1030,8 +1074,19 @@
                     </div>
                 </div>
 
-                <!-- Form Actions -->
-                <div class="form-actions">
+                {{-- @if ($resume)
+                    <div class="form-actions col-12 text-right">
+                        <button type="submit" class="btn btn-primary">Final Resume</button>
+                    </div>
+                @else
+                    <div class="form-actions col-12">
+                        <button type="submit" class="btn btn-success">Simpan</button>
+                    </div>
+                @endif --}}
+                <div class="form-actions col-12 text-right">
+                    <button type="submit" class="btn btn-primary">Final Resume</button>
+                </div>
+                <div class="form-actions col-12">
                     <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
                 </form>
@@ -1410,8 +1465,10 @@
 
                     // Looping melalui data dan menambahkan opsi untuk setiap dokter
                     $.each(data, function(index, dokter) {
-                        var selected = dokter.kode_paramedis == selectedValue ? 'selected' : ''; // Menentukan apakah dokter ini dipilih
-                        select.append('<option value="' + dokter.kode_paramedis + '" ' + selected + '>' + dokter.nama_paramedis + '</option>');
+                        var selected = dokter.kode_paramedis == selectedValue ? 'selected' :
+                            ''; // Menentukan apakah dokter ini dipilih
+                        select.append('<option value="' + dokter.kode_paramedis + '" ' +
+                            selected + '>' + dokter.nama_paramedis + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
@@ -1420,36 +1477,6 @@
                 }
             });
         });
-
-
-
-        function removeDiagnosa(index) {
-            var sekunderData = document.getElementById('diagnosa_sekunder_update').value;
-            var sekunderArray = sekunderData.split(',');
-            sekunderArray.splice(index, 1);
-            document.getElementById('diagnosa_sekunder_update').value = sekunderArray.join(',');
-            document.getElementById('row-' + index).remove();
-        }
-
-        function removeTindakanOperasi(index) {
-            var operasiData = document.getElementById('tindakan_operasi_update').value;
-            var operasiArray = operasiData.split(',');
-            operasiArray.splice(index, 1);
-            document.getElementById('tindakan_operasi_update').value = operasiArray.join(',');
-            document.getElementById('row-' + index).remove();
-        }
-
-        function removeTindakanProsedure(index) {
-            // Ambil data dari input hidden
-            var prosedureData = document.getElementById('tindakan_prosedure_update').value;
-            var prosedureArray = prosedureData.split(',');
-            // Hapus elemen yang dipilih
-            prosedureArray.splice(index, 1);
-            // Update input hidden dengan data yang sudah diubah
-            document.getElementById('tindakan_prosedure_update').value = prosedureArray.join(',');
-            // Hapus baris tabel yang sesuai
-            document.getElementById('row-' + index).remove();
-        }
 
         function updateTotal() {
             // Ambil nilai untuk baris "1 Menit"
@@ -1491,6 +1518,80 @@
             if (parseFloat(inputElement.value) < 0) {
                 inputElement.value = 0; // Set nilai ke 0 jika input negatif
             }
+        }
+    </script>
+    <script>
+        // Fungsi untuk menghapus diagnosa sekunder
+        function removeDiagnosa(index) {
+            var row = document.getElementById("row-sekunder-" + index);
+            row.parentNode.removeChild(row); // Menghapus baris dari tabel
+
+            var sekunderStr = document.getElementById("diagnosa_sekunder_update").value;
+            var sekunderArray = sekunderStr.split("|");
+            sekunderArray.splice(index, 1); // Menghapus elemen berdasarkan index
+
+            document.getElementById("diagnosa_sekunder_update").value = sekunderArray.join("|");
+            adjustRowIds('sekunder'); // Memperbarui ID baris setelah penghapusan
+        }
+
+        // Fungsi untuk menyesuaikan ID baris setelah penghapusan
+        function adjustRowIds(type) {
+            var rows = document.querySelectorAll(`#${type}-table-body tr`);
+            rows.forEach((row, index) => {
+                row.id = `row-${type}-${index}`; // Menyesuaikan ID baris
+                row.querySelector('button').setAttribute('onclick',
+                    `remove${capitalizeFirstLetter(type)}(${index})`);
+            });
+        }
+
+        // Fungsi untuk kapitalisasi huruf pertama pada string
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Fungsi untuk menghapus tindakan operasi
+        function removeTindakanOperasi(index) {
+            var operasiData = document.getElementById('tindakan_operasi_update').value;
+            var operasiArray = operasiData.split('|');
+            operasiArray.splice(index, 1); // Menghapus elemen berdasarkan index
+
+            document.getElementById('tindakan_operasi_update').value = operasiArray.join('|');
+            document.getElementById('row-tindakan-' + index).remove();
+        }
+
+        // Fungsi untuk menghapus tindakan prosedur
+        function removeTindakanProsedure(index) {
+            var prosedureData = document.getElementById('tindakan_prosedure_update').value;
+            var prosedureArray = prosedureData.split('|');
+            prosedureArray.splice(index, 1); // Menghapus elemen berdasarkan index
+
+            document.getElementById('tindakan_prosedure_update').value = prosedureArray.join('|');
+            document.getElementById('row-prosedure-' + index).remove();
+        }
+    </script>
+    <script>
+        function addRowObatPulang() {
+            const table = document.getElementById("obat-pulang-table").getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(table.rows.length);
+
+            // Membuat kolom untuk Nama Obat
+            const cell1 = newRow.insertCell(0);
+            cell1.innerHTML = '<input type="text" class="form-control" name="nama_obat[]">';
+
+            // Membuat kolom untuk Jumlah
+            const cell2 = newRow.insertCell(1);
+            cell2.innerHTML = '<input type="text" class="form-control" name="jumlah[]">';
+
+            // Membuat kolom untuk tombol Hapus
+            const cell3 = newRow.insertCell(2);
+            cell3.innerHTML =
+                '<button type="button" class="btn btn-sm btn-danger" onclick="removeRowObatPulang(this)">Hapus</button>';
+        }
+
+        // Fungsi untuk menghapus baris
+        function removeRowObatPulang(button) {
+            const row = button.closest("tr");
+            row.remove();
         }
     </script>
 @endsection

@@ -952,6 +952,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/print-resume', 'printResume')->name('print-resume');
         Route::get('/get-icd', 'getIcd10Data')->name('get-icd10');
         Route::get('/get-dokter-dpjp', 'getDokters')->name('get-dokter');
+        Route::get('/pasien-rawat-inap', 'pasienRanap')->name('list-pasien-ranap');
+        Route::get('/send-final', 'sendResume')->name('send-final');
     });
     // End GIZI
 });

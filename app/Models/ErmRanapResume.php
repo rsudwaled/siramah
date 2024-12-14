@@ -35,6 +35,7 @@ class ErmRanapResume extends Model
         'diagnosa_masuk',
         'diagnosa_utama',
         'diagnosa_utama_icd10',
+        'diagnosa_utama_icd10_desc',
         'diagnosa_sekunder',
         'komplikasi',
         'tindakan_operasi',
@@ -78,6 +79,9 @@ class ErmRanapResume extends Model
         'tgl_cetak',                 
         'dpjp',
         'kode_dokter',
+        'status_resume',
+        'revisi_resume',
+        'user'
     ];
 
     public function kunjungan()
