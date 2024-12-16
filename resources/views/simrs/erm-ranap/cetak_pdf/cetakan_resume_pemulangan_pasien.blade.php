@@ -43,26 +43,26 @@
                             {{ $resume->grafida ?? '.......' }} minggu</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:70px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
                         <span style="font-size: 12px; font-weight: bold;">Ringkasan Perawatan:</span> <br>
                         {{ $resume->ringkasan_perawatan ?? '' }}
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:30px;">
                         <span style="font-size: 12px; font-weight: bold;">Riwayat Penyakit:</span> <br>
                         {{ $resume->riwayat_penyakit ?? '' }}
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:30px;">
                         <span style="font-size: 12px; font-weight: bold;">Indikasi Rawat Inap:</span> <br>
                         {{ $resume->indikasi_ranap ?? '' }}
 
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:70px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
                         <span style="font-size: 12px; font-weight: bold;">Pemeriksaan Fisik:</span> <br>
                         {{ $resume->pemeriksaan_fisik ?? '' }}
                     </td>
@@ -191,37 +191,25 @@
                                             @endphp
                                             <td style="width: 20%; margin: 0; padding:2px;">Diagnosa Utama</td>
                                             <td style="margin: 0; padding:2px;">
-                                                {{ $diagutama[1] ?? 'Tidak Diketahui' }}
+                                                {{-- {{ $diagutama[1] ?? 'Tidak Diketahui' }} --}}
+                                                {{ $resume->diagnosa_utama_dokter ?? 'Tidak Diketahui' }}
                                             </td>
                                             <td style="margin: 0; padding:2px;">
-                                                {{ $diagutama[0] ?? 'Tidak Diketahui' }}
+                                                Tidak Diketahui
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Diagnosa Sekunder</td>
                                             <td style="margin: 0; padding:2px; height:100px;">
                                                 @php
-                                                    $sekunder = explode('|', $resume->diagnosa_sekunder);
+                                                    $sekunder = explode('|', $resume->diagnosa_sekunder_dokter);
                                                 @endphp
                                                 @foreach ($sekunder as $diagSekunder)
-                                                    @php
-                                                        $parts = explode(' - ', $diagSekunder);
-                                                        $description = isset($parts[1]) ? $parts[1] : '';
-                                                    @endphp
-                                                    . {{ $description }} <br>
+                                                    . {{ $diagSekunder }} <br>
                                                 @endforeach
                                             </td>
                                             <td style="margin: 0; padding:2px;">
-                                                @php
-                                                    $sekunder = explode('|', $resume->diagnosa_sekunder);
-                                                @endphp
-                                                @foreach ($sekunder as $diagSekunder)
-                                                    @php
-                                                        $parts = explode(' - ', $diagSekunder);
-                                                        $code = isset($parts[0]) ? $parts[0] : '';
-                                                    @endphp
-                                                    . {{ $code }} <br>
-                                                @endforeach
+                                                -
                                             </td>
                                         </tr>
                                         <tr>
@@ -237,19 +225,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px;">
+                    <td style="margin: 0; padding:3px; height:40px;">
                         <strong style="margin: 0.5rem 0;">Tindakan Operasi</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
                         @php
-                            $operasi = explode('|', $resume->tindakan_operasi);
+                            $operasi = explode('|', $resume->tindakan_operasi_dokter);
                         @endphp
                         @foreach ($operasi as $tindakanOperasi)
-                            @php
-                                $parts = explode(' - ', $tindakanOperasi);
-                                $description = isset($parts[1]) ? $parts[1] : '';
-                            @endphp
-                            . {{ $description }} <br>
+                            . {{ $tindakanOperasi }} <br>
                         @endforeach
                     </td>
                 </tr>
@@ -282,19 +266,15 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px;">
+                    <td style="margin: 0; padding:3px; height:70px;">
                         <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
                         @php
-                            $prosedure = explode('|', $resume->tindakan_prosedure);
+                            $prosedure = explode('|', $resume->tindakan_prosedure_dokter);
                         @endphp
                         @foreach ($prosedure as $tindakanProsedure)
-                            @php
-                                $parts = explode(' - ', $tindakanProsedure);
-                                $description = isset($parts[1]) ? $parts[1] : '';
-                            @endphp
-                            . {{ $description }} <br>
+                            . {{ $tindakanProsedure }} <br>
                         @endforeach
                         {{-- {{ $resume->tindakan_prosedure ?? '' }} --}}
                     </td>
@@ -363,21 +343,8 @@
                         </div>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-        {{-- batas page 3 --}}
-        <div class="col-12 mt-1">
-            @include('simrs.erm-ranap.template_print.pdf_kop_surat_resume_pemulangan')
-        </div>
-        <table class="table table-bordered" style="width: 100%; font-size:11px;">
-            <tbody>
-                <tr style="background-color: #ffc107; margin:0;">
-                    <td colspan="3" class="text-center" style="margin: 0; padding:5px;">
-                        <b>RESUME PEMULANGAN</b><br>
-                    </td>
-                </tr>
                 <tr>
-                    <td colspan="3" style="height: 260px; padding: 2px; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="height: 350px; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <thead>
@@ -442,6 +409,21 @@
                         </table>
                     </td>
                 </tr>
+            </tbody>
+        </table>
+        {{-- batas page 3 --}}
+        <div class="col-12 mt-1">
+            <div class="col-12 mb-10" style="font-size: 11px; text-align:right; color:rgb(243, 249, 255)"><strong>RM.15.01-R/Rev.02/19</strong></div>
+            @include('simrs.erm-ranap.template_print.pdf_kop_surat_resume_pemulangan')
+        </div>
+        <table class="table table-bordered" style="width: 100%; font-size:11px;">
+            <tbody>
+                <tr style="background-color: #ffc107; margin:0;">
+                    <td colspan="3" class="text-center" style="margin: 0; padding:5px;">
+                        <b>RESUME PEMULANGAN</b><br>
+                    </td>
+                </tr>
+
                 <tr>
                     <td colspan="3" style="margin:0px; padding:2px;">
                         Cara Keluar:

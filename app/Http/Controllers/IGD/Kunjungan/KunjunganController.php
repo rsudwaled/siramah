@@ -344,6 +344,7 @@ class KunjunganController extends Controller
 
     public function insertSepKunjungan(Request $request)
     {
+        // dd($request->all());
         $diagnosa_ts                = Icd10::where('diag', $request->diagnosa_sepinsert)->first();
         $sep_insert                 = Kunjungan::where('kode_kunjungan', $request->kode_insert_sep)->first();
         $sep_insert->no_sep         = $request->insert_no_sep;

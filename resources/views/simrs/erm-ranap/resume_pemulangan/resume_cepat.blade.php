@@ -162,6 +162,17 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="form-group">
+                                                                <label for="rawat_intensif">Rawat Intensif:</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control"
+                                                                        value="{{ $resume->rawat_intensif ?? '' }}"
+                                                                        name="rawat_intensif" id="rawat_intensif">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">Hari</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </td>
                                                         <td>
                                                             <div class="form-group">
@@ -465,27 +476,10 @@
                                                                                     Diagnosa Utama</td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <div class="col-12 row">
-                                                                                        <div class="col-8">
-                                                                                            <input type="text"
-                                                                                                name="cari_icd10utama"
-                                                                                                id="cari_icd10utama"
-                                                                                                class="form-control">
-                                                                                        </div>
-                                                                                        <div class="col-4">
-                                                                                            <button type="button"
-                                                                                                class="btn btn-md btn-primary"
-                                                                                                id="btn-cari-icd10">Cari</button>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-12 row mt-1">
-                                                                                        <div class="col-12">
-                                                                                            <input type="text"
-                                                                                                name="diagnosa_utama"
-                                                                                                id="diagnosa_utama"
-                                                                                                class="form-control"
-                                                                                                value="{{ $resume->diagnosa_utama ?? '' }}"
-                                                                                                readonly>
-                                                                                        </div>
+                                                                                        <input type="text"
+                                                                                            name="diagnosa_utama_dokter"
+                                                                                            id="diagnosa_utama_dokter"
+                                                                                            class="form-control">
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
@@ -493,92 +487,76 @@
                                                                                 <td style=" padding: 10px;">
                                                                                     Diagnosa Sekunder</td>
                                                                                 <td style=" padding: 10px;">
-                                                                                    <div class="col-12 row mt-1">
-                                                                                        <div class="col-8">
-                                                                                            <input type="text"
-                                                                                                name="cari_icd10sekunder"
-                                                                                                id="cari_icd10sekunder"
-                                                                                                class="form-control">
-                                                                                        </div>
-                                                                                        <div class="col-4">
-                                                                                            <button type="button"
-                                                                                                class="btn btn-md btn-primary"
-                                                                                                id="btn-cari-icd10sekunder">Cari</button>
-                                                                                        </div>
+                                                                                    <div class="col-12 row">
+                                                                                        <table class="table table-bordered"
+                                                                                            id="diagsekunder-dokter-table">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th>Diagnosa</th>
+                                                                                                    <th><button
+                                                                                                            type="button"
+                                                                                                            class="btn btn-sm btn-primary"
+                                                                                                            onclick="addRowDiagSekunderDokter()">Tambah
+                                                                                                            Row</button>
+                                                                                                    </th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+
+                                                                                            </tbody>
+                                                                                        </table>
                                                                                     </div>
-                                                                                    <div class="col-12 row mt-2">
-                                                                                        <div class="col-12">
+                                                                                    <div class="col-12 row">
+                                                                                        @if (!empty($resume) && !empty($resume->diagnosa_sekunder_dokter))
+                                                                                            @php
+                                                                                                $sekunder = explode(
+                                                                                                    '|',
+                                                                                                    $resume->diagnosa_sekunder_dokter,
+                                                                                                );
+                                                                                                $sekunder_str = implode(
+                                                                                                    '|',
+                                                                                                    $sekunder,
+                                                                                                );
+                                                                                            @endphp
 
-                                                                                            {{-- Tabel Diagnosa Sekunder --}}
-                                                                                            @if (!empty($resume) && !empty($resume->diagnosa_sekunder))
-                                                                                                @php
-                                                                                                    $sekunder = explode(
-                                                                                                        '|',
-                                                                                                        $resume->diagnosa_sekunder,
-                                                                                                    );
-                                                                                                    $sekunder_str = implode(
-                                                                                                        '|',
-                                                                                                        $sekunder,
-                                                                                                    );
-                                                                                                @endphp
+                                                                                            <input type="hidden"
+                                                                                                name="diagnosa_sekunder_update"
+                                                                                                id="diagnosa_sekunder_update"
+                                                                                                class="form-control col-12"
+                                                                                                value="{{ $sekunder_str }}">
 
-                                                                                                <input type="hidden"
-                                                                                                    name="diagnosa_sekunder_update"
-                                                                                                    id="diagnosa_sekunder_update"
-                                                                                                    class="form-control col-12"
-                                                                                                    value="{{ $sekunder_str }}">
-
-                                                                                                <table
-                                                                                                    class="table table-bordered"
-                                                                                                    id="sekunder-table">
-                                                                                                    <thead>
-                                                                                                        <tr>
-                                                                                                            <th>Diagnosa
-                                                                                                                Yang Sudah
-                                                                                                                Dipilih</th>
-                                                                                                            <th>Aksi</th>
-                                                                                                        </tr>
-                                                                                                    </thead>
-                                                                                                    <tbody
-                                                                                                        id="sekunder-table-body">
-                                                                                                        @foreach ($sekunder as $index => $diagnosa)
-                                                                                                            <tr
-                                                                                                                id="row-sekunder-{{ $index }}">
-                                                                                                                <td
-                                                                                                                    style="margin: 0; padding:2px; padding-left:10px;">
-                                                                                                                    {{ $diagnosa }}
-                                                                                                                </td>
-                                                                                                                <td
-                                                                                                                    style="margin: 0; padding:2px;">
-                                                                                                                    <button
-                                                                                                                        type="button"
-                                                                                                                        class="btn btn-xs btn-danger"
-                                                                                                                        onclick="removeDiagnosa({{ $index }})">Hapus</button>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        @endforeach
-                                                                                                    </tbody>
-                                                                                                </table>
-                                                                                            @endif
                                                                                             <table
                                                                                                 class="table table-bordered"
-                                                                                                id="selectedDiagnosaTable">
+                                                                                                id="sekunder-table">
                                                                                                 <thead>
                                                                                                     <tr>
-                                                                                                        <th>Nama
-                                                                                                            Diagnosa
-                                                                                                        </th>
-                                                                                                        <th>Kode ICD-10
-                                                                                                        </th>
+                                                                                                        <th>Diagnosa
+                                                                                                            Yang Sudah
+                                                                                                            Dipilih</th>
                                                                                                         <th>Aksi</th>
                                                                                                     </tr>
                                                                                                 </thead>
-                                                                                                <tbody></tbody>
+                                                                                                <tbody
+                                                                                                    id="sekunder-table-body">
+                                                                                                    @foreach ($sekunder as $index => $diagnosa)
+                                                                                                        <tr
+                                                                                                            id="row-sekunder-{{ $index }}">
+                                                                                                            <td
+                                                                                                                style="margin: 0; padding:2px; padding-left:10px;">
+                                                                                                                {{ $diagnosa }}
+                                                                                                            </td>
+                                                                                                            <td
+                                                                                                                style="margin: 0; padding:2px;">
+                                                                                                                <button
+                                                                                                                    type="button"
+                                                                                                                    class="btn btn-xs btn-danger"
+                                                                                                                    onclick="removeDiagnosa({{ $index }})">Hapus</button>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    @endforeach
+                                                                                                </tbody>
                                                                                             </table>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div id="hiddenDiagnosaData">
-                                                                                        <!-- Di sini kita akan menambahkan input tersembunyi untuk data diagnosa -->
+                                                                                        @endif
                                                                                     </div>
                                                                                 </td>
                                                                             </tr>
@@ -607,24 +585,29 @@
                                                             <strong style="margin: 0.5rem 0;">Tindakan Operasi</strong>
                                                         </td>
                                                         <td colspan="2">
-                                                            <div class="col-12 row mt-1">
-                                                                <div class="col-8">
-                                                                    <input type="text" name="cari_icd9_tindakanoperasi"
-                                                                        id="cari_icd9_tindakanoperasi"
-                                                                        class="form-control">
-                                                                </div>
-                                                                <div class="col-4">
-                                                                    <button type="button" class="btn btn-md btn-primary"
-                                                                        id="btn-cari-icd9tindakan-operasi">Cari</button>
-                                                                </div>
+                                                            <div class="col-12 row">
+                                                                <table class="table table-bordered"
+                                                                    id="tindakanoperasi-dokter-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Nama Tindakan</th>
+                                                                            <th><button type="button"
+                                                                                    class="btn btn-sm btn-primary"
+                                                                                    onclick="addRowTindakanOperasiDokter()">Tambah
+                                                                                    Row</button>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    </tbody>
+                                                                </table>
                                                             </div>
-                                                            <div class="col-12 row mt-1">
-                                                                {{-- Tabel Tindakan Operasi --}}
-                                                                @if (!empty($resume) && !empty($resume->tindakan_operasi))
+                                                            <div class="col-12 row">
+                                                                @if (!empty($resume) && !empty($resume->tindakan_operasi_dokter))
                                                                     @php
                                                                         $tindakan = explode(
                                                                             '|',
-                                                                            $resume->tindakan_operasi,
+                                                                            $resume->tindakan_operasi_dokter,
                                                                         );
                                                                         $tindakan_str = implode('|', $tindakan);
                                                                     @endphp
@@ -658,446 +641,433 @@
                                                                     </table>
                                                                 @endif
                                                             </div>
-                                                            <table class="table table-bordered"
-                                                                id="selectedTindakanOperasiTable">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Nama Diagnosa</th>
-                                                                        <th>Kode ICD-9</th>
-                                                                        <th>Aksi</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                </tbody>
-                                                            </table>
-                                        </div>
-                                    </div>
-                                    <div id="hiddenTindakanData">
-                                        <!-- Di sini kita akan menambahkan input tersembunyi untuk data diagnosa -->
-                                    </div>
-                                    </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width: 38%;">
-                                            <div class="form-group">
-                                                <label for="tgl_operasi">Tgl Operasi:</label>
-                                                <input type="date" name="tgl_operasi" id="tgl_operasi"
-                                                    value="{{ $resume->tgl_operasi ?? '' }}" class="form-control">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="waktu_mulai_operasi">Waktu Mulai:</label>
-                                                <input type="time" name="waktu_mulai_operasi"
-                                                    value="{{ $resume->waktu_operasi_mulai ?? '' }}"
-                                                    id="waktu_mulai_operasi" class="form-control">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                                <label for="waktu_selesai_operasi">Waktu Selesai:</label>
-                                                <input type="time" name="waktu_selesai_operasi"
-                                                    value="{{ $resume->waktu_operasi_selesai ?? '' }}"
-                                                    id="waktu_selesai_operasi" class="form-control">
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong style="margin: 0.5rem 0;">Sebab Kematian</strong>
-                                        </td>
-                                        <td colspan="2">
-                                            <textarea name="sebab_kematian" id="sebab_kematian" rows="5" class="form-control"
-                                                style="width: 100%; resize: vertical; font-size:12px;">{{ $resume->sebab_kematian ?? '' }}</textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
-                                        </td>
-                                        <td colspan="2">
-                                            <div class="col-12 row mt-1">
-                                                <div class="col-8">
-                                                    <input type="text" name="cari_icd9_tindakanprosedure"
-                                                        id="cari_icd9_tindakanprosedure" class="form-control">
-                                                </div>
-                                                <div class="col-4">
-                                                    <button type="button" class="btn btn-md btn-primary"
-                                                        id="btn-cari-icd9tindakan-prosedure">Cari</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 row mt-2">
-                                                <div class="col-12">
-                                                    {{-- Tabel Tindakan Prosedur --}}
-                                                    @if (!empty($resume) && !empty($resume->tindakan_prosedure))
-                                                        @php
-                                                            $tindakanProsedure = explode(
-                                                                '|',
-                                                                $resume->tindakan_prosedure,
-                                                            );
-                                                            $prosedure_str = implode('|', $tindakanProsedure);
-                                                        @endphp
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 38%;">
+                                                            <div class="form-group">
+                                                                <label for="tgl_operasi">Tgl Operasi:</label>
+                                                                <input type="date" name="tgl_operasi" id="tgl_operasi"
+                                                                    value="{{ $resume->tgl_operasi ?? '' }}"
+                                                                    class="form-control">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <label for="waktu_mulai_operasi">Waktu Mulai:</label>
+                                                                <input type="time" name="waktu_mulai_operasi"
+                                                                    value="{{ $resume->waktu_operasi_mulai ?? '' }}"
+                                                                    id="waktu_mulai_operasi" class="form-control">
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <label for="waktu_selesai_operasi">Waktu Selesai:</label>
+                                                                <input type="time" name="waktu_selesai_operasi"
+                                                                    value="{{ $resume->waktu_operasi_selesai ?? '' }}"
+                                                                    id="waktu_selesai_operasi" class="form-control">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong style="margin: 0.5rem 0;">Sebab Kematian</strong>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <textarea name="sebab_kematian" id="sebab_kematian" rows="5" class="form-control"
+                                                                style="width: 100%; resize: vertical; font-size:12px;">{{ $resume->sebab_kematian ?? '' }}</textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
+                                                        </td>
+                                                        <td colspan="2">
+                                                            <div class="col-12 row">
+                                                                <table class="table table-bordered"
+                                                                    id="tindakanprosedure-dokter-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Nama Tindakan/Prosedure</th>
+                                                                            <th><button type="button"
+                                                                                    class="btn btn-sm btn-primary"
+                                                                                    onclick="addRowTindakanProsedureDokter()">Tambah
+                                                                                    Row</button>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <div class="col-12 row">
+                                                                @if (!empty($resume) && !empty($resume->tindakan_prosedure_dokter))
+                                                                    @php
+                                                                        $tindakanProsedure = explode(
+                                                                            '|',
+                                                                            $resume->tindakan_prosedure_dokter,
+                                                                        );
+                                                                        $prosedure_str = implode(
+                                                                            '|',
+                                                                            $tindakanProsedure,
+                                                                        );
+                                                                    @endphp
 
-                                                        <input type="hidden" name="tindakan_prosedure_update"
-                                                            id="tindakan_prosedure_update" value="{{ $prosedure_str }}">
+                                                                    <input type="hidden" name="tindakan_prosedure_update"
+                                                                        id="tindakan_prosedure_update"
+                                                                        value="{{ $prosedure_str }}">
 
-                                                        <table class="table table-bordered" id="prosedure-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Tindakan Prosedure Yang Sudah Dipilih</th>
-                                                                    <th>Aksi</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="tindakan-prosedure-table-body">
-                                                                @foreach ($tindakanProsedure as $index => $prosedure)
-                                                                    <tr id="row-prosedure-{{ $index }}">
-                                                                        <td
-                                                                            style="margin: 0; padding:2px; padding-left:10px;">
-                                                                            {{ $prosedure }}</td>
-                                                                        <td style="margin: 0; padding:2px;">
-                                                                            <button type="button"
-                                                                                class="btn btn-xs btn-danger"
-                                                                                onclick="removeTindakanProsedure({{ $index }})">Hapus</button>
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforeach
-                                                            </tbody>
-                                                        </table>
-                                                    @endif
-                                                    <table class="table table-bordered"
-                                                        id="selectedTindakanProsedureTable">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Nama Diagnosa</th>
-                                                                <th>Kode ICD-9</th>
-                                                                <th>Aksi</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div id="hiddenTindakanProsedureData">
-                                                <!-- Di sini kita akan menambahkan input tersembunyi untuk data diagnosa -->
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" style="text-align: center;">
-                                            <strong style="margin: 0.5rem 0;">Pengobatan Selama
-                                                Dirawat</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            @if ($riwayatObat->isNotEmpty())
-                                                @php
-                                                    // Membagi data menjadi kelompok per 10 baris
-                                                    $chunks = $riwayatObat->chunk(10);
-                                                @endphp
-                                                <div class="col-12 row">
-                                                    @foreach ($chunks as $chunk)
-                                                        <div class="col-3 mb-1">
-                                                            <table style="width: 100%; font-size:10px;">
+                                                                    <table class="table table-bordered"
+                                                                        id="prosedure-table">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Tindakan Prosedure Yang Sudah Dipilih
+                                                                                </th>
+                                                                                <th>Aksi</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="tindakan-prosedure-table-body">
+                                                                            @foreach ($tindakanProsedure as $index => $prosedure)
+                                                                                <tr
+                                                                                    id="row-prosedure-{{ $index }}">
+                                                                                    <td
+                                                                                        style="margin: 0; padding:2px; padding-left:10px;">
+                                                                                        {{ $prosedure }}</td>
+                                                                                    <td style="margin: 0; padding:2px;">
+                                                                                        <button type="button"
+                                                                                            class="btn btn-xs btn-danger"
+                                                                                            onclick="removeTindakanProsedure({{ $index }})">Hapus</button>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endforeach
+                                                                        </tbody>
+                                                                    </table>
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="text-align: center;">
+                                                            <strong style="margin: 0.5rem 0;">Pengobatan Selama
+                                                                Dirawat</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            @if ($riwayatObat->isNotEmpty())
+                                                                @php
+                                                                    // Membagi data menjadi kelompok per 10 baris
+                                                                    $chunks = $riwayatObat->chunk(10);
+                                                                @endphp
+                                                                <div class="col-12 row">
+                                                                    @foreach ($chunks as $chunk)
+                                                                        <div class="col-3 mb-1">
+                                                                            <table style="width: 100%; font-size:10px;">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Nama Obat</th>
+                                                                                        <th>Jumlah</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    @foreach ($chunk as $obat)
+                                                                                        <tr>
+                                                                                            <td>{{ $obat['nama_barang'] }}
+                                                                                            </td>
+                                                                                            <td>{{ $obat['qty'] }}</td>
+                                                                                        </tr>
+                                                                                    @endforeach
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @else
+                                                                <div class="col-12 text-center">
+                                                                    Data tidak ditemukan.
+                                                                </div>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="text-align: center;">
+                                                            <strong style="margin: 0.5rem 0;">Obat Untuk Pulang</strong>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            @php
+                                                                // Pastikan resume ditemukan sebelum mencoba akses propertinya
+                                                                if ($resume) {
+                                                                    $obatPulang = App\Models\ErmRanapResumeObatPulang::where(
+                                                                        'id_resume',
+                                                                        $resume->id,
+                                                                    )->get();
+                                                                } else {
+                                                                    $obatPulang = collect(); // Jika resume tidak ditemukan, gunakan koleksi kosong
+                                                                }
+                                                            @endphp
+
+                                                            <table class="table table-bordered" id="obat-pulang-table">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Nama Obat</th>
                                                                         <th>Jumlah</th>
+                                                                        <th><button type="button"
+                                                                                class="btn btn-sm btn-primary"
+                                                                                onclick="addRowObatPulang()">Tambah
+                                                                                Row</button></th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
-                                                                    @foreach ($chunk as $obat)
-                                                                        <tr>
-                                                                            <td>{{ $obat['nama_barang'] }}
-                                                                            </td>
-                                                                            <td>{{ $obat['qty'] }}</td>
-                                                                        </tr>
-                                                                    @endforeach
+                                                                    @if (count($obatPulang) > 0)
+                                                                        @foreach ($obatPulang as $obat)
+                                                                            <tr>
+                                                                                <td><input type="text"
+                                                                                        class="form-control"
+                                                                                        name="nama_obat[]"
+                                                                                        value="{{ $obat->nama_obat }}">
+                                                                                </td>
+                                                                                <td><input type="text"
+                                                                                        class="form-control"
+                                                                                        name="jumlah[]"
+                                                                                        value="{{ $obat->jumlah }}">
+                                                                                </td>
+                                                                                <td><button type="button"
+                                                                                        class="btn btn-sm btn-danger"
+                                                                                        onclick="removeRowObatPulang(this)">Hapus</button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    @else
+                                                                    @endif
                                                                 </tbody>
                                                             </table>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @else
-                                                <div class="col-12 text-center">
-                                                    Data tidak ditemukan.
-                                                </div>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3" style="text-align: center;">
-                                            <strong style="margin: 0.5rem 0;">Obat Untuk Pulang</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            @php
-                                                // Pastikan resume ditemukan sebelum mencoba akses propertinya
-                                                if ($resume) {
-                                                    $obatPulang = App\Models\ErmRanapResumeObatPulang::where(
-                                                        'id_resume',
-                                                        $resume->id,
-                                                    )->get();
-                                                } else {
-                                                    $obatPulang = collect(); // Jika resume tidak ditemukan, gunakan koleksi kosong
-                                                }
-                                            @endphp
-
-                                            <table class="table table-bordered" id="obat-pulang-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nama Obat</th>
-                                                        <th>Jumlah</th>
-                                                        <th><button type="button" class="btn btn-sm btn-primary"
-                                                                onclick="addRowObatPulang()">Tambah Row</button></th>
+                                                        </td>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @if (count($obatPulang) > 0)
-                                                        @foreach ($obatPulang as $obat)
-                                                            <tr>
-                                                                <td><input type="text" class="form-control"
-                                                                        name="nama_obat[]"
-                                                                        value="{{ $obat->nama_obat }}"></td>
-                                                                <td><input type="text" class="form-control"
-                                                                        name="jumlah[]" value="{{ $obat->jumlah }}"></td>
-                                                                <td><button type="button" class="btn btn-sm btn-danger"
-                                                                        onclick="removeRowObatPulang(this)">Hapus</button>
-                                                                </td>
-                                                            </tr>
-                                                        @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td><input type="text" class="form-control"
-                                                                    name="nama_obat[]"></td>
-                                                            <td><input type="text" class="form-control"
-                                                                    name="jumlah[]">
-                                                            </td>
-                                                            <td><button type="button" class="btn btn-sm btn-danger"
-                                                                    onclick="removeRowObatPulang(this)">Hapus</button></td>
-                                                        </tr>
-                                                    @endif
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            @php
+                                                                $caraKeluar =
+                                                                    isset($resume) && isset($resume->cara_keluar)
+                                                                        ? json_decode($resume->cara_keluar, true)
+                                                                        : null;
+                                                            @endphp
+                                                            <div class="col-12 row">
+                                                                <div class="col-1"><strong style="margin: 0.5rem 0;">Cara
+                                                                        Keluar: </strong> </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <input type="checkbox" name="sembuh_perbaikan"
+                                                                            {{ isset($caraKeluar['sembuh_perbaikan']) && $caraKeluar['sembuh_perbaikan'] == 'on' ? 'checked' : '' }}>
+                                                                        <label
+                                                                            for="sembuh_perbaikan">Sembuh/Perbaikan</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'pindah_rs' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="pindah_rs"
+                                                                            {{ isset($caraKeluar['pindah_rs']) && $caraKeluar['pindah_rs'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="pindah_rs">Pindah RS</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'pulang_paksa' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="pulang_paksa"
+                                                                            {{ isset($caraKeluar['pulang_paksa']) && $caraKeluar['pulang_paksa'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="pulang_paksa">Pulang Paksa</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'meninggal' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="meninggal"
+                                                                            {{ isset($caraKeluar['meninggal']) && $caraKeluar['meninggal'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="meninggal">Meninggal</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <!-- Mengisi input text dengan nilai dari cara_keluar_lainnya, jika ada -->
+                                                                    <input type="text" name="cara_keluar_lainnya"
+                                                                        class="form-control col-12"
+                                                                        value="{{ $caraKeluar['cara_lainya'] ?? '' }}">
+                                                                </div>
+                                                            </div>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <div class="col-12 row">
+                                                                <div class="col-3"
+                                                                    style="border-right: 1px solid rgb(198, 198, 198)">
+                                                                    Konsisi Pulang : <br>
+                                                                    <textarea style="font-size: 12px;" name="kondisi_pulang" id="kondisi_pulang" cols="30" rows="4"
+                                                                        class="form-control">{{ $resume->kondisi_pulang ?? '' }}</textarea>
+                                                                </div>
+                                                                <div class="col-3"
+                                                                    style="border-right: 1px solid rgb(198, 198, 198)">
+                                                                    Keadaan Umum : <br>
+                                                                    <textarea style="font-size: 12px;" name="keadaan_umum" id="keadaan_umum" cols="30" rows="4"
+                                                                        class="form-control">{{ $resume->keadaan_umum ?? '' }}</textarea>
+                                                                </div>
+                                                                <div class="col-2"
+                                                                    style="border-right: 1px solid rgb(198, 198, 198)">
+                                                                    Kesadaran : <br>
+                                                                    <textarea style="font-size: 12px;" name="kesadaran" id="kesadaran" cols="30" rows="4"
+                                                                        class="form-control">{{ $resume->kesadaran ?? '' }}</textarea>
+                                                                </div>
+                                                                <div class="col-2"
+                                                                    style="border-right: 1px solid rgb(198, 198, 198)">
+                                                                    Tekanan Darah : <br>
+                                                                    <textarea style="font-size: 12px;" name="tekanan_darah" id="tekanan_darah" cols="30" rows="4"
+                                                                        class="form-control">{{ $resume->tekanan_darah ?? '' }}</textarea>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    Nadi : <br>
+                                                                    <textarea style="font-size: 12px;" name="nadi" id="nadi" cols="30" rows="4"
+                                                                        class="form-control">{{ $resume->nadi ?? '' }}</textarea>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            @php
+                                                                // Memeriksa apakah $resume dan $resume->pengobatan_dilanjutkan ada
+                                                                $pengobatan =
+                                                                    isset($resume) &&
+                                                                    isset($resume->pengobatan_dilanjutkan)
+                                                                        ? json_decode(
+                                                                            $resume->pengobatan_dilanjutkan,
+                                                                            true,
+                                                                        )
+                                                                        : null;
+                                                            @endphp
+                                                            <div class="col-12 row">
+                                                                <div class="col-1"><strong
+                                                                        style="margin: 0.5rem 0;">Pengobatan
+                                                                        Dilanjutkan:</strong></div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'poliklinik_rswaled' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="poliklinik_rswaled"
+                                                                            {{ isset($pengobatan['poliklinik_rswaled']) && $pengobatan['poliklinik_rswaled'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="poliklinik_rswaled">Poliklinik RS
+                                                                            Waled</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'rs_lain' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="rs_lain"
+                                                                            {{ isset($pengobatan['rs_lain']) && $pengobatan['rs_lain'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="rs_lain">RS Lain</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'puskesmas' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="puskesmas"
+                                                                            {{ isset($pengobatan['puskesmas']) && $pengobatan['puskesmas'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="puskesmas">Puskesmas</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-2">
+                                                                    <div class="form-group">
+                                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'dokter_praktek' ada dan nilainya 'on' -->
+                                                                        <input type="checkbox" name="dokter_praktek"
+                                                                            {{ isset($pengobatan['dokter_praktek']) && $pengobatan['dokter_praktek'] == 'on' ? 'checked' : '' }}>
+                                                                        <label for="dokter_praktek">Dokter Praktek</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-3">
+                                                                    <input type="text"
+                                                                        name="pengobatan_lanjutan_lainnya"
+                                                                        class="form-control col-12"
+                                                                        value="{{ $pengobatan['lainnya'] ?? '' }}">
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <div class="col-12 row">
+                                                                <div class="col-2">
+                                                                    <strong style="margin: 0.5rem 0;">Instruksi
+                                                                        Pulang</strong>
+                                                                </div>
+                                                                <div class="col-10">
+                                                                    <table style="width: 100%">
+                                                                        <tr>
+                                                                            <td> Kontrol</td>
+                                                                            <td> Tgl: <input type="date"
+                                                                                    class="form-control"
+                                                                                    value="{{ $resume->tgl_kontrol ?? '' }}"
+                                                                                    name="tgl_kontrol">
+                                                                            </td>
+                                                                            <td> Di: <input type="text"
+                                                                                    class="form-control"
+                                                                                    style="font-size: 12px;"
+                                                                                    value="{{ $resume->lokasi_kontrol ?? '' }}"
+                                                                                    name="lokasi_kontrol"></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td> Diet</td>
+                                                                            <td colspan="2">
+                                                                                <textarea style="font-size: 12px;" name="diet" id="diet" cols="30" rows="4"
+                                                                                    class="form-control">{{ $resume->diet ?? '' }}</textarea>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td> Latihan</td>
+                                                                            <td colspan="2">
+                                                                                <textarea style="font-size: 12px;" name="latihan" id="latihan" cols="30" rows="4"
+                                                                                    class="form-control">{{ $resume->latihan ?? '' }}</textarea>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="3">
+                                                                                Segera kembali ke Rumah Sakit, langsung ke
+                                                                                Gawat
+                                                                                Darurat, bila terjadi: <br>
+                                                                                <textarea style="font-size: 12px;" name="keterangan_kembali" id="keterangan_kembali" cols="30" rows="4"
+                                                                                    class="form-control">{{ $resume->keterangan_kembali ?? '' }}</textarea>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            @php
-                                                $caraKeluar =
-                                                    isset($resume) && isset($resume->cara_keluar)
-                                                        ? json_decode($resume->cara_keluar, true)
-                                                        : null;
-                                            @endphp
-                                            <div class="col-12 row">
-                                                <div class="col-1"><strong style="margin: 0.5rem 0;">Cara
-                                                        Keluar: </strong> </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <input type="checkbox" name="sembuh_perbaikan"
-                                                            {{ isset($caraKeluar['sembuh_perbaikan']) && $caraKeluar['sembuh_perbaikan'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="sembuh_perbaikan">Sembuh/Perbaikan</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'pindah_rs' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="pindah_rs"
-                                                            {{ isset($caraKeluar['pindah_rs']) && $caraKeluar['pindah_rs'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="pindah_rs">Pindah RS</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'pulang_paksa' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="pulang_paksa"
-                                                            {{ isset($caraKeluar['pulang_paksa']) && $caraKeluar['pulang_paksa'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="pulang_paksa">Pulang Paksa</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'meninggal' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="meninggal"
-                                                            {{ isset($caraKeluar['meninggal']) && $caraKeluar['meninggal'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="meninggal">Meninggal</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <!-- Mengisi input text dengan nilai dari cara_keluar_lainnya, jika ada -->
-                                                    <input type="text" name="cara_keluar_lainnya"
-                                                        class="form-control col-12"
-                                                        value="{{ $caraKeluar['cara_lainya'] ?? '' }}">
-                                                </div>
-                                            </div>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="col-12 row">
-                                                <div class="col-3" style="border-right: 1px solid rgb(198, 198, 198)">
-                                                    Konsisi Pulang : <br>
-                                                    <textarea style="font-size: 12px;" name="kondisi_pulang" id="kondisi_pulang" cols="30" rows="4"
-                                                        class="form-control">{{ $resume->kondisi_pulang ?? '' }}</textarea>
-                                                </div>
-                                                <div class="col-3" style="border-right: 1px solid rgb(198, 198, 198)">
-                                                    Keadaan Umum : <br>
-                                                    <textarea style="font-size: 12px;" name="keadaan_umum" id="keadaan_umum" cols="30" rows="4"
-                                                        class="form-control">{{ $resume->keadaan_umum ?? '' }}</textarea>
-                                                </div>
-                                                <div class="col-2" style="border-right: 1px solid rgb(198, 198, 198)">
-                                                    Kesadaran : <br>
-                                                    <textarea style="font-size: 12px;" name="kesadaran" id="kesadaran" cols="30" rows="4"
-                                                        class="form-control">{{ $resume->kesadaran ?? '' }}</textarea>
-                                                </div>
-                                                <div class="col-2" style="border-right: 1px solid rgb(198, 198, 198)">
-                                                    Tekanan Darah : <br>
-                                                    <textarea style="font-size: 12px;" name="tekanan_darah" id="tekanan_darah" cols="30" rows="4"
-                                                        class="form-control">{{ $resume->tekanan_darah ?? '' }}</textarea>
-                                                </div>
-                                                <div class="col-2">
-                                                    Nadi : <br>
-                                                    <textarea style="font-size: 12px;" name="nadi" id="nadi" cols="30" rows="4"
-                                                        class="form-control">{{ $resume->nadi ?? '' }}</textarea>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            @php
-                                                // Memeriksa apakah $resume dan $resume->pengobatan_dilanjutkan ada
-                                                $pengobatan =
-                                                    isset($resume) && isset($resume->pengobatan_dilanjutkan)
-                                                        ? json_decode($resume->pengobatan_dilanjutkan, true)
-                                                        : null;
-                                            @endphp
-                                            <div class="col-12 row">
-                                                <div class="col-1"><strong style="margin: 0.5rem 0;">Pengobatan
-                                                        Dilanjutkan:</strong></div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'poliklinik_rswaled' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="poliklinik_rswaled"
-                                                            {{ isset($pengobatan['poliklinik_rswaled']) && $pengobatan['poliklinik_rswaled'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="poliklinik_rswaled">Poliklinik RS
-                                                            Waled</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'rs_lain' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="rs_lain"
-                                                            {{ isset($pengobatan['rs_lain']) && $pengobatan['rs_lain'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="rs_lain">RS Lain</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'puskesmas' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="puskesmas"
-                                                            {{ isset($pengobatan['puskesmas']) && $pengobatan['puskesmas'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="puskesmas">Puskesmas</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <!-- Menambahkan kondisi untuk mengecek apakah 'dokter_praktek' ada dan nilainya 'on' -->
-                                                        <input type="checkbox" name="dokter_praktek"
-                                                            {{ isset($pengobatan['dokter_praktek']) && $pengobatan['dokter_praktek'] == 'on' ? 'checked' : '' }}>
-                                                        <label for="dokter_praktek">Dokter Praktek</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-3">
-                                                    <input type="text" name="pengobatan_lanjutan_lainnya"
-                                                        class="form-control col-12"
-                                                        value="{{ $pengobatan['lainnya'] ?? '' }}">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3">
-                                            <div class="col-12 row">
-                                                <div class="col-2">
-                                                    <strong style="margin: 0.5rem 0;">Instruksi
-                                                        Pulang</strong>
-                                                </div>
-                                                <div class="col-10">
-                                                    <table style="width: 100%">
-                                                        <tr>
-                                                            <td> Kontrol</td>
-                                                            <td> Tgl: <input type="date" class="form-control"
-                                                                    value="{{ $resume->tgl_kontrol ?? '' }}"
-                                                                    name="tgl_kontrol">
-                                                            </td>
-                                                            <td> Di: <input type="text" class="form-control"
-                                                                    style="font-size: 12px;"
-                                                                    value="{{ $resume->lokasi_kontrol ?? '' }}"
-                                                                    name="lokasi_kontrol"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td> Diet</td>
-                                                            <td colspan="2">
-                                                                <textarea style="font-size: 12px;" name="diet" id="diet" cols="30" rows="4"
-                                                                    class="form-control">{{ $resume->diet ?? '' }}</textarea>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td> Latihan</td>
-                                                            <td colspan="2">
-                                                                <textarea style="font-size: 12px;" name="latihan" id="latihan" cols="30" rows="4"
-                                                                    class="form-control">{{ $resume->latihan ?? '' }}</textarea>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colspan="3">
-                                                                Segera kembali ke Rumah Sakit, langsung ke
-                                                                Gawat
-                                                                Darurat, bila terjadi: <br>
-                                                                <textarea style="font-size: 12px;" name="keterangan_kembali" id="keterangan_kembali" cols="30" rows="4"
-                                                                    class="form-control">{{ $resume->keterangan_kembali ?? '' }}</textarea>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                    </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                    </div>
-                </div>
 
-                {{-- @if ($resume)
-                    <div class="form-actions col-12 text-right">
-                        <button type="submit" class="btn btn-primary">Final Resume</button>
+                            @if ($resume->status_resume == 1)
+                                <button type="submit"
+                                    onclick="javascript: form.action='{{ route('resume-pemulangan.vbeta.send-final') }}';"
+                                    target="_blank" class="btn btn-primary btn-sm ml-2 float-right">Final Resume</button>
+                            @else
+                                <div class="form-actions col-12">
+                                    <button type="submit" class="btn btn-success">Simpan</button>
+                                </div>
+                            @endif
+                        </form>
                     </div>
-                @else
-                    <div class="form-actions col-12">
-                        <button type="submit" class="btn btn-success">Simpan</button>
+                    <div class="tab-pane " id="hasil-resume">
+                        <iframe
+                            src="{{ route('resume-pemulangan.vbeta.print-resume') }}?kode={{ $kunjungan->kode_kunjungan }}"
+                            width="100%" height="700px" frameborder="0"></iframe>
                     </div>
-                @endif --}}
-                {{-- <div class="form-actions col-12 text-right">
-                    <button type="submit" class="btn btn-primary">Final Resume</button>
-                </div> --}}
-                <div class="form-actions col-12">
-                    <button type="submit" class="btn btn-success">Simpan</button>
                 </div>
-                </form>
-            </div>
-            <div class="tab-pane " id="hasil-resume">
-                <iframe src="{{ route('resume-pemulangan.vbeta.print-resume') }}?kode={{ $kunjungan->kode_kunjungan }}"
-                    width="100%" height="700px" frameborder="0"></iframe>
             </div>
         </div>
-    </div>
-    </div>
     </div>
     <!-- Modal untuk menampilkan data -->
     <div class="modal" id="modalkodeicd10" tabindex="-1" role="dialog" aria-labelledby="modalkodeicd10Label"
@@ -1518,6 +1488,116 @@
             if (parseFloat(inputElement.value) < 0) {
                 inputElement.value = 0; // Set nilai ke 0 jika input negatif
             }
+        }
+    </script>
+    <script>
+        // Fungsi untuk menghitung lama rawat dalam hari
+        function hitungLamaRawat() {
+            // Ambil nilai tgl_masuk dan tgl_keluar
+            const tglMasuk = document.getElementById('tgl_masuk').value;
+            const tglKeluar = document.getElementById('tgl_keluar').value;
+
+            // Pastikan kedua tanggal ada (tidak kosong)
+            if (tglMasuk && tglKeluar) {
+                // Ubah tanggal menjadi objek Date
+                const tanggalMasuk = new Date(tglMasuk);
+                const tanggalKeluar = new Date(tglKeluar);
+
+                // Hitung selisih waktu dalam milidetik
+                const selisihWaktu = tanggalKeluar - tanggalMasuk;
+
+                // Jika tanggal keluar lebih besar dari tanggal masuk, hitung hari
+                if (selisihWaktu >= 0) {
+                    const lamaRawat = Math.floor(selisihWaktu / (1000 * 60 * 60 * 24)) +
+                    1; // +1 karena termasuk hari pertama
+                    document.getElementById('lama_rawat').value = lamaRawat;
+                } else {
+                    // Jika tanggal keluar lebih kecil dari tanggal masuk, kosongkan input lama_rawat
+                    document.getElementById('lama_rawat').value = '';
+                }
+            }
+        }
+
+        // Tambahkan event listener untuk menghitung saat perubahan di tanggal masuk atau keluar
+        document.getElementById('tgl_masuk').addEventListener('input', hitungLamaRawat);
+        document.getElementById('tgl_keluar').addEventListener('input', hitungLamaRawat);
+
+        // Jika sudah ada nilai pada tanggal masuk dan keluar (misalnya dari database), hitung lama rawat saat load halaman
+        document.addEventListener('DOMContentLoaded', hitungLamaRawat);
+    </script>
+    <script>
+        // Fungsi untuk menambah baris baru
+        function addRowDiagSekunderDokter() {
+            // Mendapatkan referensi ke tbody
+            const tbody = document.querySelector('#diagsekunder-dokter-table tbody');
+
+            // Membuat baris baru
+            const newRow = document.createElement('tr');
+
+            // Menambahkan input dan tombol hapus ke baris baru
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="diag_sekunder_dokter[]"></td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRowDiagSekunderDokter(this)">Hapus</button></td>
+            `;
+
+            // Menambahkan baris baru ke tbody
+            tbody.appendChild(newRow);
+        }
+
+        // Fungsi untuk menghapus baris
+        function removeRowDiagSekunderDokter(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
+    <script>
+        // Fungsi untuk menambah baris baru
+        function addRowTindakanOperasiDokter() {
+            // Mendapatkan referensi ke tbody
+            const tbody = document.querySelector('#tindakanoperasi-dokter-table tbody');
+
+            // Membuat baris baru
+            const newRow = document.createElement('tr');
+
+            // Menambahkan input dan tombol hapus ke baris baru
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="tindakan_operasi_dokter[]"></td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRowTindakanOperasiDokter(this)">Hapus</button></td>
+            `;
+
+            // Menambahkan baris baru ke tbody
+            tbody.appendChild(newRow);
+        }
+
+        // Fungsi untuk menghapus baris
+        function removeRowTindakanOperasiDokter(button) {
+            const row = button.closest('tr');
+            row.remove();
+        }
+    </script>
+    <script>
+        // Fungsi untuk menambah baris baru
+        function addRowTindakanProsedureDokter() {
+            // Mendapatkan referensi ke tbody
+            const tbody = document.querySelector('#tindakanprosedure-dokter-table tbody');
+
+            // Membuat baris baru
+            const newRow = document.createElement('tr');
+
+            // Menambahkan input dan tombol hapus ke baris baru
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="tindakan_prosedure_dokter[]"></td>
+                <td><button type="button" class="btn btn-sm btn-danger" onclick="removeRowTindakanProsedureDokter(this)">Hapus</button></td>
+            `;
+
+            // Menambahkan baris baru ke tbody
+            tbody.appendChild(newRow);
+        }
+
+        // Fungsi untuk menghapus baris
+        function removeRowTindakanProsedureDokter(button) {
+            const row = button.closest('tr');
+            row.remove();
         }
     </script>
     <script>

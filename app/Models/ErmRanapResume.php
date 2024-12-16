@@ -23,6 +23,7 @@ class ErmRanapResume extends Model
         'jam_keluar',
         'ruang_rawat_keluar',
         'lama_rawat',
+        'rawat_intensif',
         'bb_bayi_lahir',
         'ringkasan_perawatan',
         'riwayat_penyakit',
@@ -33,16 +34,20 @@ class ErmRanapResume extends Model
         'penunjang_lainnya',
         'hasil_konsultasi',
         'diagnosa_masuk',
+        'diagnosa_utama_dokter',
         'diagnosa_utama',
         'diagnosa_utama_icd10',
         'diagnosa_utama_icd10_desc',
         'diagnosa_sekunder',
+        'diagnosa_sekunder_dokter',
         'komplikasi',
+        'tindakan_operasi_dokter',
         'tindakan_operasi',
         'tgl_operasi',
         'waktu_operasi_mulai',
         'waktu_operasi_selesai',
         'sebab_kematian',
+        'tindakan_prosedure_dokter',
         'tindakan_prosedure',
         'id_pengobatan_selama_rawat',
         'id_obat_untuk_pulang',
@@ -76,13 +81,14 @@ class ErmRanapResume extends Model
         'diambil_dari_tumit',
         'diambil_dari_vena',
         'tgl_pengambilan_shk',
-        'tgl_cetak',                 
+        'tgl_cetak',
         'dpjp',
         'kode_dokter',
         'status_resume',
         'revisi_resume',
         'user'
     ];
+
 
     public function kunjungan()
     {
