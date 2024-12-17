@@ -36,7 +36,8 @@
                 </tr>
                 <tr>
                     <td style="margin: 0; padding:5px;">
-                        Rawat Intensif: {{ $resume->rawat_intensif ?? '' }} Hari || Lama Rawat: {{ $resume->lama_rawat ?? '' }} Hari
+                        Rawat Intensif: {{ $resume->rawat_intensif ?? '-' }} Hari |
+                        Lama Rawat: {{ $resume->lama_rawat ?? '-' }} Hari
                     </td>
                     <td style="margin: 0; padding:5px;" colspan="2">
                         Berat Badan Bayi Lahir < 1 Bulan: {{ $resume->bb_bayi_lahir ?? '.......' }} Kg || Grafida :
@@ -62,7 +63,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:auto;">
                         <span style="font-size: 12px; font-weight: bold;">Pemeriksaan Fisik:</span> <br>
                         {{ $resume->pemeriksaan_fisik ?? '' }}
                     </td>
@@ -164,7 +165,7 @@
                         <strong style="margin: 0.5rem 0;">Diagnosa Masuk</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
-                        {{$resume->diagnosa_masuk??''}}
+                        {{ $resume->diagnosa_masuk ?? '' }}
                     </td>
                 </tr>
                 <tr>
@@ -183,7 +184,10 @@
                                         <tr>
                                             @php
                                                 // Pastikan diagnosa_utama tidak null dan memiliki format yang benar
-                                                if (!empty($resume->diagnosa_utama) && strpos($resume->diagnosa_utama, ' - ') !== false) {
+                                                if (
+                                                    !empty($resume->diagnosa_utama) &&
+                                                    strpos($resume->diagnosa_utama, ' - ') !== false
+                                                ) {
                                                     $diagutama = explode(' - ', $resume->diagnosa_utama);
                                                 } else {
                                                     $diagutama = [null, null]; // Set default jika diagnosa tidak ada atau formatnya salah
@@ -192,10 +196,10 @@
                                             <td style="width: 20%; margin: 0; padding:2px;">Diagnosa Utama</td>
                                             <td style="margin: 0; padding:2px;">
                                                 {{-- {{ $diagutama[1] ?? 'Tidak Diketahui' }} --}}
-                                                {{ $resume->diagnosa_utama_dokter ?? 'Tidak Diketahui' }}
+                                                {{ $resume->diagnosa_utama_dokter ?? '' }}
                                             </td>
                                             <td style="margin: 0; padding:2px;">
-                                                Tidak Diketahui
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -209,7 +213,7 @@
                                                 @endforeach
                                             </td>
                                             <td style="margin: 0; padding:2px;">
-                                                -
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -225,7 +229,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px; height:40px;">
+                    <td style="margin: 0; padding:3px; height:auto;">
                         <strong style="margin: 0.5rem 0;">Tindakan Operasi</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
@@ -266,7 +270,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px; height:70px;">
+                    <td style="margin: 0; padding:3px; height:auto;">
                         <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
                     </td>
                     <td colspan="2" style="margin: 0; padding:3px;">
@@ -286,14 +290,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="height: 650px; padding: 0; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="height: auto; padding: 0; width: 100%; box-sizing: border-box;">
                         <div class="col-12">
                             @if ($riwayatObat->isNotEmpty())
-                                @php
+                                {{-- @php
                                     // Mengelompokkan data menjadi chunk berisi 10 item
                                     $chunks = $riwayatObat->chunk(10);
-                                @endphp
-                                <div style="page-break-inside: avoid; height: 650px;">
+                                @endphp --}}
+                                {{-- <div style="page-break-inside: avoid; height: auto;">
                                     @foreach ($chunks as $index => $chunk)
                                         <div
                                             style="width: 32%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
@@ -334,6 +338,11 @@
                                             <!-- Ini memastikan tabel berikutnya berada di bawah -->
                                         @endif
                                     @endforeach
+                                </div> --}}
+                                <div class="col-12" style="margin: 4px;">
+                                    @foreach ($riwayatObat as $data)
+                                        {{ $data['nama_barang'] }} {{ 'JML:'.$data['qty'] }} |
+                                    @endforeach
                                 </div>
                             @else
                                 <div style="text-align: center;">
@@ -344,7 +353,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="height: 350px; padding: 2px; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="height: auto; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <thead>
@@ -412,17 +421,17 @@
             </tbody>
         </table>
         {{-- batas page 3 --}}
-        <div class="col-12 mt-1">
+        {{-- <div class="col-12 mt-1">
             <div class="col-12 mb-10" style="font-size: 11px; text-align:right; color:rgb(243, 249, 255)"><strong>RM.15.01-R/Rev.02/19</strong></div>
             @include('simrs.erm-ranap.template_print.pdf_kop_surat_resume_pemulangan')
-        </div>
+        </div> --}}
         <table class="table table-bordered" style="width: 100%; font-size:11px;">
             <tbody>
-                <tr style="background-color: #ffc107; margin:0;">
+                {{-- <tr style="background-color: #ffc107; margin:0;">
                     <td colspan="3" class="text-center" style="margin: 0; padding:5px;">
                         <b>RESUME PEMULANGAN</b><br>
                     </td>
-                </tr>
+                </tr> --}}
 
                 <tr>
                     <td colspan="3" style="margin:0px; padding:2px;">
@@ -502,18 +511,26 @@
                 <tr>
                     <td colspan="3">
                         <table style="border: none; width: 100%; border-collapse: collapse; margin:0px;" id="table-ttd">
-                            <tr style="border: none; margin:0px;">
-                                <td style="width: 50%; text-align: center; border: none; margin:0px;">Pasien / Keluarga
-                                    Pasien <br> Yang Menerima Penjelasan</td>
+                            {{-- <tr style="border: none; margin:0px;">
+                                <td style="width: 50%; text-align: center; border-bottom: none; margin:0px;">Pasien / Keluarga
+                                    </td>
                                 <td style="width: 50%; text-align: center; border: none; margin:0px;">Waled,
-                                    {{ Carbon\Carbon::parse($resume->tgl_cetak)->format('m-d-Y') ?? '.... 20..' }} <br>
-                                    Dokter Penanggung Jawab Pelayanan (DPJP)</td>
-                            </tr>
+                                    </td>
+                            </tr> --}}
                             <tr style="border: none;">
-                                <td style="padding-top: 80px; text-align: center; border: none;">
-                                    ..............................................</td>
-                                <td style="padding-top: 80px; text-align: center; border: none;">
-                                    {{ $resume->dpjp ?? '..............................................' }}</td>
+                                <td style=" text-align: center; border: none;">
+                                    Pasien <br> Yang Menerima Penjelasan <br>
+                                    <br><br><br><br><br><br>
+                                    <span style="margin-top:80px;">..............................................</span>
+                                </td>
+                                <td style=" text-align: center; border: none;">
+                                    Waled, {{ Carbon\Carbon::parse($resume->tgl_cetak)->format('m-d-Y') ?? '.... 20..' }}
+                                    <br>
+                                    Dokter Penanggung Jawab Pelayanan (DPJP) <br>
+                                    <br><br><br><br><br><br>
+                                    <span
+                                        style="margin-top:80px;">{{ $resume->dpjp ?? '..............................................' }}</span>
+                                </td>
                             </tr>
                         </table>
                     </td>

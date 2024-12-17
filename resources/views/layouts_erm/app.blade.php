@@ -49,8 +49,8 @@
                             <a href="#" class="nav-link">PENGGUNA : {{ strtoupper(Auth::user()->username) }}</a>
                         </li>
                         <li class="nav-item">
-                            {{-- <a href="{{route('kunjunganranap')}}" class="nav-link">KEMBALI</a> --}}
-                            <a href="{{route('resume-pemulangan.vbeta.list-pasien-ranap')}}" class="nav-link">KEMBALI</a>
+                            <a href="{{route('kunjunganranap')}}" class="nav-link">KEMBALI</a>
+                            {{-- <a href="{{route('resume-pemulangan.vbeta.list-pasien-ranap')}}" class="nav-link">KEMBALI</a> --}}
                         </li>
 
                     </ul>

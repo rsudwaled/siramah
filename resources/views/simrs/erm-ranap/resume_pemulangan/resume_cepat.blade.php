@@ -479,6 +479,7 @@
                                                                                         <input type="text"
                                                                                             name="diagnosa_utama_dokter"
                                                                                             id="diagnosa_utama_dokter"
+                                                                                            value="{{$resume->diagnosa_utama_dokter??''}}"
                                                                                             class="form-control">
                                                                                     </div>
                                                                                 </td>
@@ -1049,15 +1050,15 @@
                                 </div>
                             </div>
 
-                            @if ($resume->status_resume == 1)
+                            {{-- @if ($resume->status_resume == 1)
                                 <button type="submit"
                                     onclick="javascript: form.action='{{ route('resume-pemulangan.vbeta.send-final') }}';"
                                     target="_blank" class="btn btn-primary btn-sm ml-2 float-right">Final Resume</button>
-                            @else
+                            @else --}}
                                 <div class="form-actions col-12">
                                     <button type="submit" class="btn btn-success">Simpan</button>
                                 </div>
-                            @endif
+                            {{-- @endif --}}
                         </form>
                     </div>
                     <div class="tab-pane " id="hasil-resume">
@@ -1490,7 +1491,7 @@
             }
         }
     </script>
-    <script>
+    {{-- <script>
         // Fungsi untuk menghitung lama rawat dalam hari
         function hitungLamaRawat() {
             // Ambil nilai tgl_masuk dan tgl_keluar
@@ -1524,7 +1525,7 @@
 
         // Jika sudah ada nilai pada tanggal masuk dan keluar (misalnya dari database), hitung lama rawat saat load halaman
         document.addEventListener('DOMContentLoaded', hitungLamaRawat);
-    </script>
+    </script> --}}
     <script>
         // Fungsi untuk menambah baris baru
         function addRowDiagSekunderDokter() {

@@ -706,7 +706,7 @@ Route::middleware('auth')->group(function () {
         // synch dari kunjungan ke table histories bpjs
         Route::post('/sync/kunjungan-tohistoriesbpjs', [BridgingIgdController::class, 'sychKunjunganToHistoryBpjs'])->name('post-kunjungan-tohistories-ranap');
         Route::get('/print-sep', [BridgingIgdController::class, 'sepPrint'])->name('sep-print');
-        
+
         // rawat inap erm
         Route::get('/cari-sukon', [BridgingIgdController::class, 'cariSuratKontrol'])->name('cari-sukon');
         Route::get('/get-icd10', [BridgingIgdController::class, 'getIcd10'])->name('get-icd10');
@@ -757,6 +757,7 @@ Route::middleware('auth')->group(function () {
     Route::get('detail/pasien-proses/{kunjungan}', [App\Http\Controllers\IGD\BPJSPROSES\BpjsProsesController::class, 'detailPasienBPJSPROSES'])->name('pasien-bpjs-proses.detail');
 
     // IGD VERSI 1
+    Route::get('cari-pasien/pasien-lama', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'cariPasienLama'])->name('cari-pasien-lama');
     Route::get('daftar/pasien-igd', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'index'])->name('daftar-igd.v1');
     Route::post('simpan/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrian'])->name('v1.store-tanpa-noantrian');
     Route::post('simpan-versi2/pasien-tanpa-nomor', [App\Http\Controllers\IGD\V1\DaftarIGDController::class, 'storeTanpaNoAntrianV2IgdIgk'])->name('v2.store-tanpa-noantrian');
@@ -872,8 +873,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/catatan-mpp-b', 'catatanMPPB')->name('catatan-mpp-b');
 
         Route::get('/get-berkas', 'getBerkasFile')->name('get-berkas-file');
-        
-        
+
+
         // versi perbaikan view
         Route::get('/riwayat/{kode_kunjungan}', 'getRiwayatDetails')->name('riwayat.details');
         // dashboard versi 2
@@ -881,12 +882,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/dashboard-dokter', 'dashboardDokter')->name('dashboard');
             Route::get('/get-penunjang-radiologi', 'getPenunjangRadiologi')->name('penunjang-radiologi');
         });
-        
+
         Route::controller(App\Http\Controllers\ERMRANAP\Dokter\AssesmenMedisController::class)->prefix('assesmen-medis')->name('assesmen-medis.')->group(function () {
             Route::post('/assesmen-medis/store', 'storeAssesmen')->name('store-assesmen');
             Route::get('cetakan/asesmen-awal-medis', 'printAsesmenRanapAwal')->name('cetakan-asesmen-awal-medis');
         });
-        
+
         Route::controller(App\Http\Controllers\ERMRANAP\Obat\RekonsiliasiObatController::class)->prefix('rekonsiliasi-obat')->name('rekonsiliasi-obat.')->group(function () {
             Route::post('store/rekonsiliasi-obat', 'storeObat')->name('store-obat');
             Route::put('update/rekonsiliasi-obat/{id}', 'updateObat')->name('update-obat');
@@ -955,7 +956,7 @@ Route::middleware('auth')->group(function () {
                 Route::put('update/perkembangan-pasien/{id}', 'updateCPPTPerawat')->name('update-perkembangan');
                 // Route::delete('delete/rencana-asuhan/{id}', 'deleteRencana')->name('delete-rencana');
             });
-            
+
         });
     });
 
