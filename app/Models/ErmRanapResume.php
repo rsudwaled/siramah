@@ -10,6 +10,7 @@ class ErmRanapResume extends Model
     use HasFactory;
     protected $connection = 'mysql2';
     protected $table = 'erm_ranap_resume_pemulangan_pasien';
+    protected $guarded = ['id'];
     protected $fillable = [
         'kode_kunjungan',
         'counter',
@@ -23,6 +24,7 @@ class ErmRanapResume extends Model
         'jam_keluar',
         'ruang_rawat_keluar',
         'lama_rawat',
+        'rawat_intensif',
         'bb_bayi_lahir',
         'ringkasan_perawatan',
         'riwayat_penyakit',
@@ -33,16 +35,20 @@ class ErmRanapResume extends Model
         'penunjang_lainnya',
         'hasil_konsultasi',
         'diagnosa_masuk',
+        'diagnosa_utama_dokter',
         'diagnosa_utama',
         'diagnosa_utama_icd10',
         'diagnosa_utama_icd10_desc',
         'diagnosa_sekunder',
+        'diagnosa_sekunder_dokter',
         'komplikasi',
+        'tindakan_operasi_dokter',
         'tindakan_operasi',
         'tgl_operasi',
         'waktu_operasi_mulai',
         'waktu_operasi_selesai',
         'sebab_kematian',
+        'tindakan_prosedure_dokter',
         'tindakan_prosedure',
         'id_pengobatan_selama_rawat',
         'id_obat_untuk_pulang',
@@ -81,7 +87,9 @@ class ErmRanapResume extends Model
         'kode_dokter',
         'status_resume',
         'revisi_resume',
-        'user'
+        'verify_resume',
+        'user_verify',
+        'user',
     ];
 
     public function kunjungan()
@@ -99,5 +107,17 @@ class ErmRanapResume extends Model
     public function ttdkeluarga()
     {
         return $this->hasOne(TtdDokter::class,  'id', 'ttd_keluarga');
+    }
+    public function tindakanOperasiCodes()
+    {
+        return $this->hasMany(ErmRanapResumeTindakanOperasiCode::class, 'id_resume', 'id');
+    }
+    public function tindakanProsedureCodes()
+    {
+        return $this->hasMany(ErmRanapResumeTindakanProsedureCode::class, 'id_resume', 'id');
+    }
+    public function diagnosaSekunder()
+    {
+        return $this->hasMany(ErmRanapResumeDiagSekunder::class, 'id_resume', 'id');
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\Kunjungan;
+use App\Models\ErmRanapPengajuanPembukaanFormResume;
 use App\Models\ErmRanapResumeDiagSekunder;
 use App\Models\ErmRanapResumeObatPulang;
 use App\Models\ErmRanapResume;
@@ -87,6 +88,10 @@ class ResumePemulanganController extends Controller
             $statusBayi = 'Tanggal lahir tidak tersedia';
         }
         $resume         = ErmRanapResume::where('kode_kunjungan', $request->kode)->first();
+        if($resume && $resume->status_resume == 1)
+        {
+            return view('simrs.erm-ranap.resume_pemulangan.resume_cepat_final', compact('resume','kunjungan'));
+        }
         $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "','".$kunjungan->kode_unit."')");
         $riwayatObat    = collect($riwayatObat);
         $riwayatObat    = $riwayatObat->groupBy('nama_barang')->map(function($items) {
@@ -104,16 +109,19 @@ class ResumePemulanganController extends Controller
             return back()->with('error', 'Nama DPJP harus diisi!');
         }
         $dokter = Paramedis::where('kode_paramedis', $request->nama_dpjp)->first();
+        
         $diagnosaUpdate         = $request->diagnosa_sekunder_update;
-        $diagnosaSekunder       = !empty($request->diagnosa_sekunder) && is_array($request->diagnosa_sekunder)? implode('|', $request->diagnosa_sekunder): Null; 
-        $diagnosaSekunderFinal  = implode('|', array_filter([$diagnosaUpdate, $diagnosaSekunder]));
+        $diagnosaSekunder       = !empty($request->diag_sekunder_dokter) && is_array($request->diag_sekunder_dokter)? implode('|', $request->diag_sekunder_dokter): Null; 
+        $diagSekunderFinal      = implode('|', array_filter([$diagnosaUpdate, $diagnosaSekunder]));
+        
         $operasiUpdate          = $request->tindakan_operasi_update;
-        $tindakanOperasi        = !empty($request->tindakan_operasi) && is_array($request->tindakan_operasi)? implode('|', $request->tindakan_operasi): Null; 
-        $operasiFinal           = implode('|', array_filter([$operasiUpdate, $tindakanOperasi]));
+        $tindakanOperasi        = !empty($request->tindakan_operasi_dokter) && is_array($request->tindakan_operasi_dokter)? implode('|', $request->tindakan_operasi_dokter): Null;
+        $operasiFinal           = implode('|', array_filter([$operasiUpdate, $tindakanOperasi])); 
+        
         $prosedureUpdate        = $request->tindakan_prosedure_update;
-        $tindakanProsedure      = !empty($request->tindakan_prosedure) && is_array($request->tindakan_prosedure)? implode('|', $request->tindakan_prosedure): Null; 
-        $prosedureFinal         = implode('|', array_filter([$prosedureUpdate, $tindakanProsedure]));
-        // dd($request->all());
+        $tindakanProsedure      = !empty($request->tindakan_prosedure_dokter) && is_array($request->tindakan_prosedure_dokter)? implode('|', $request->tindakan_prosedure_dokter): Null;
+        $prosedureFinal         = implode('|', array_filter([$prosedureUpdate, $tindakanProsedure])); 
+        
         $data = [
             'kode_kunjungan'            => $request->kode_kunjungan,
             'counter'                   => $request->counter,
@@ -137,17 +145,24 @@ class ResumePemulanganController extends Controller
             'penunjang_lainnya'         => $request->penunjang_lainya,
             'hasil_konsultasi'          => $request->hasil_konsultasi,
             'diagnosa_masuk'            => $request->diagnosa_masuk,
+            //diagnosa_dokter    
+            'diagnosa_utama_dokter'     => $request->diagnosa_utama_dokter,
+            // akses casemix
             'diagnosa_utama'            => $request->diagnosa_utama,
-            'diagnosa_sekunder'         => $diagnosaSekunderFinal,
+            // 'diagnosa_sekunder'         => $diagSekunderFinal,
+            'diagnosa_sekunder_dokter'  => $diagSekunderFinal??null,
+
             'komplikasi'                => $request->komplikasi,
-            'tindakan_operasi'          => $operasiFinal,
+            // 'tindakan_operasi'          => $operasiFinal,
+            'tindakan_operasi_dokter'   => $operasiFinal??null,
+
             'tgl_operasi'               => $request->tgl_operasi,
             'waktu_operasi_mulai'       => $request->waktu_mulai_operasi,
             'waktu_operasi_selesai'     => $request->waktu_selesai_operasi,
             'sebab_kematian'            => $request->sebab_kematian,
-            'tindakan_prosedure'        => $prosedureFinal,
-            // 'id_pengobatan_selama_rawat'=> 1,
-            // 'id_obat_untuk_pulang'      => Null,
+            // 'tindakan_prosedure'        => $prosedureFinal,
+            'tindakan_prosedure_dokter' => $prosedureFinal??Null,
+        
             'cara_keluar'               => json_encode([ 
                 'sembuh_perbaikan'  => $request->sembuh_perbaikan??0,
                 'pindah_rs'         => $request->pindah_rs??0,
@@ -195,84 +210,17 @@ class ResumePemulanganController extends Controller
             'dpjp'                      => $dokter->nama_paramedis,
             'user'                      => Auth::user()->username ?? 'anonim',
         ];
+        
         $resume = ErmRanapResume::updateOrCreate(
             ['kode_kunjungan' => $request->kode_kunjungan],  // Kondisi pencarian
             $data  // Data yang akan diupdate atau disimpan
         );
-        
+    
         $kunjungan_counter = $resume->kode_kunjungan.'|'.$resume->counter;
-        if(empty($resume->id_diagnosa_sekunder))
-        {
-            $diagSekunderList = ErmRanapResumeDiagSekunder::where('kunjungan_counter', $kunjungan_counter)->get();
-            if(count($diagSekunderList) == 0)
-            {
-                $requestDiagSkeunder = explode('|', $resume->diagnosa_sekunder);
-                foreach ($requestDiagSkeunder as $key => $diagSekun) {
-                    $parts = explode(' - ', $diagSekun);
-                    $code = isset($parts[0]) ? $parts[0] : '';
-                    $description = isset($parts[1]) ? $parts[1] : '';
-                    ErmRanapResumeDiagSekunder::create([
-                        'kode'              =>$code,
-                        'diagnosa'          =>$description,
-                        'rm'                =>$resume->rm,
-                        'kunjungan_counter' =>$kunjungan_counter,
-                        'id_resume'     =>$resume->id,
-                    ]);
-                }
-            }else{
-                $requestDiagSekunder = explode('|', $resume->diagnosa_sekunder); // Mengambil data kode dari request
-
-                // Membuat array untuk menyimpan semua kode yang ada dalam request
-                $requestCodes = [];
-                
-                foreach ($requestDiagSekunder as $diagSekun) {
-                    $parts = explode(' - ', $diagSekun);  // Memecah berdasarkan " - " untuk mendapatkan kode dan deskripsi
-                    $code = isset($parts[0]) ? $parts[0] : ''; // Mendapatkan kode
-                    $description = isset($parts[1]) ? $parts[1] : ''; // Mendapatkan deskripsi
-                
-                    // Menyimpan kode dalam array
-                    $requestCodes[] = $code;
-                }
-                
-                // Mengambil data yang ada di database berdasarkan kunjungan_counter (sesuaikan jika perlu)
-                $diagSekunderList = ErmRanapResumeDiagSekunder::where('kunjungan_counter', $kunjungan_counter)->get();
-                
-                // Hapus data yang tidak ada di request terbaru
-                foreach ($diagSekunderList as $diagSekun) {
-                    // Jika kode dari database tidak ada dalam array requestCodes, hapus data tersebut
-                    if (!in_array($diagSekun->kode, $requestCodes)) {
-                        $diagSekun->delete();  // Menghapus data dari database
-                    }
-                }
-                
-                // Menambahkan data baru yang tidak ada di database
-                foreach ($requestDiagSekunder as $diagSekun) {
-                    $parts = explode(' - ', $diagSekun);
-                    $code = isset($parts[0]) ? $parts[0] : '';
-                    $description = isset($parts[1]) ? $parts[1] : '';
-                
-                    // Cek apakah kode sudah ada di database
-                    $existing = $diagSekunderList->firstWhere('kode', $code);
-                
-                    if (!$existing) {
-                        // Jika kode tidak ada di database, tambahkan data baru
-                        ErmRanapResumeDiagSekunder::create([
-                            'kode' => $code,
-                            'diagnosa' => $description,
-                            'rm'                =>$resume->rm,
-                            'kunjungan_counter' => $kunjungan_counter,
-                            'id_resume'     =>$resume->id,
-                        ]);
-                    }
-                }
-            }
-        }
-        
         $existingObatPulang = ErmRanapResumeObatPulang::where('id_resume', $resume->id)->get();
         // Buat atau update obat berdasarkan data yang diterima dari form
         foreach ($request->nama_obat as $key => $namaObat) {
             $jumlah = $request->jumlah[$key];
-    
             // Cari apakah obat sudah ada dalam database
             $existingObat = ErmRanapResumeObatPulang::where('id_resume', $resume->id)
                                                     ->where('nama_obat', $namaObat)
@@ -353,7 +301,19 @@ class ResumePemulanganController extends Controller
         $finalResume = ErmRanapResume::where('kode_kunjungan', $request->kode_kunjungan)->first();
         $finalResume->status_resume = 1;
         $finalResume->save();
-        return back();
+        return back()->with('success', 'Resume Pemulangan Berhasil dikirim dalam bentuk final!');
+    }
+
+    public function postPengajuanPembukaanFormResume(Request $request)
+    {
+        // dd($request->all());
+        ErmRanapPengajuanPembukaanFormResume::create([
+            'id_resume'     => $request->id_resume,
+            'keterangan'    => $request->keterangan,
+            'pemohon'       => Auth::user()->username,
+            'status_aproval'=> 0,
+        ]);
+        return back()->with('success', 'Pengajuan Pembukaan Resume Berhasil dikirim!');
     }
 
     public function getDokters(Request $request)

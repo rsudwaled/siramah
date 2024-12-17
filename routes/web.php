@@ -832,8 +832,20 @@ Route::middleware('auth')->group(function () {
             Route::get('/stroke', 'stroke')->name('stroke');
             Route::get('download/stroke', 'downloadStroke')->name('download.stroke');
         });
+
+        Route::controller(App\Http\Controllers\LaporanRekamMedis\PembukaanFormResumeController::class)->prefix('pembukaan-form-resume')->name('pembukaan-form-resume.')->group(function () {
+            Route::get('/data-pengajuan', 'pengajuan')->name('pengajuan');
+        });
     });
 
+    // Casemix
+    Route::controller(App\Http\Controllers\Casemix\DataResumePemulanganController::class)->prefix('casemix-resume')->name('casemix-resume.')->group(function () {
+        Route::get('/data-resume', 'resumePemulangan')->name('data.resume');
+        Route::get('pengajuan-pembukaan/data-resume', 'pembukaanAksesResume')->name('pengajuan-pembukaan.resume');
+        Route::get('verify-resume', 'verifyResume')->name('verify.resume');
+        Route::get('/coder-diagnosa-resume/{kode}', 'coderView')->name('coder.diagnosa');
+        Route::post('/coder-diagnosa-resume/store', 'coderStoreDiagnosa')->name('coder-diagnosa.store');
+    });
     // pencarian pasien
     Route::controller(App\Http\Controllers\IGD\V1\PencarianPasienController::class)->prefix('pencarian')->name('data-pasien.')->group(function () {
         Route::get('/pasien-terdaftar', 'cariPasienTerdaftar')->name('cari-pasien-terdaftar');
@@ -954,7 +966,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/get-icd', 'getIcd10Data')->name('get-icd10');
         Route::get('/get-dokter-dpjp', 'getDokters')->name('get-dokter');
         Route::get('/pasien-rawat-inap', 'pasienRanap')->name('list-pasien-ranap');
-        Route::get('/send-final', 'sendResume')->name('send-final');
+        Route::post('/send-final', 'sendResume')->name('send-final');
+        Route::post('/post-pengajuan-pembukaan-resume', 'postPengajuanPembukaanFormResume')->name('post.pengajuan-pembukaan-resume');
     });
     // End GIZI
 });

@@ -825,20 +825,20 @@ return [
             'text'      => 'Tracer Pendaftaran',
             'icon'      => 'fas fa-user-astronaut',
             'url'       => 'tracer-pendaftaran',
-            'can'       => 'tracer-pendaftaran-igd',
+            'can'       => 'rekam-medis',
         ],
-        // KEUANGAN
+        // Casemix
         [
-            'text'    => 'Aplikasi Keuangan',
+            'text'    => 'Akses Casemix',
             'icon'    => 'fas fa-file-invoice-dollar',
-            'can' => 'pendaftaran-igd',
+            'can' => 'casemix',
             'submenu' => [
                 [
-                    'text' => 'Data',
+                    'text' => 'Data Resume',
                     'icon'    => 'fas fa-receipt',
-                    'url'  => 'keuangan',
+                    'url'  => 'casemix-resume/data-resume',
                     'shift'   => 'ml-2',
-                    'can' => 'pendaftaran-igd',
+                    'can' => 'casemix',
                 ],
 
             ],
@@ -1124,6 +1124,13 @@ return [
                     'text' => 'Lap. Diag C00-C99',
                     'icon'    => 'fas fa-user-injured',
                     'url'  => 'laporan-rm/diagnosa-C00-C99',
+                    'shift'   => 'ml-2',
+                    'can' => 'rekam-medis',
+                ],
+                [
+                    'text' => 'Pengajuan Akses Resume',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'laporan-rm\pembukaan-form-resume\data-pengajuan',
                     'shift'   => 'ml-2',
                     'can' => 'rekam-medis',
                 ],

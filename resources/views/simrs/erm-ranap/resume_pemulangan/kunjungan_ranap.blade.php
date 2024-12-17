@@ -119,7 +119,7 @@
                         @foreach ($kunjungans as $kunjungan)
                             @php
                                 $statusClass = 'table-secondary';
-                                $statusTextColor = 'text-warning';
+                                $statusTextColor = 'text-success';
 
                                 // Determine the row color based on conditions
                                 if ($kunjungan->budget) {
@@ -127,11 +127,11 @@
                                         $statusClass = 'table-secondary';
                                         $statusTextColor = $kunjungan->erm_ranap
                                             ? ($kunjungan->erm_ranap->status == 1
-                                                ? 'text-warning'
+                                                ? 'text-success'
                                                 : ($kunjungan->erm_ranap->status == 2
                                                     ? 'text-success'
-                                                    : 'text-warning'))
-                                            : 'text-warning';
+                                                    : 'text-success'))
+                                            : 'text-success';
                                     } else {
                                         $statusClass = 'table-secondary';
                                         $statusTextColor = 'text-dark';
