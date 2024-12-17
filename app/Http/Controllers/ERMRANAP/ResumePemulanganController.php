@@ -61,7 +61,7 @@ class ResumePemulanganController extends Controller
     {
         $kunjungan = Kunjungan::where('kode_kunjungan', $request->kode)->first();
         $pasien = $kunjungan->pasien;
-        
+
         return view('simrs.erm-ranap.resume_pemulangan.resume', compact('kunjungan','pasien'));
     }
 
@@ -73,13 +73,13 @@ class ResumePemulanganController extends Controller
             try {
                 // Parsing tanggal lahir pasien
                 $tanggalLahir = Carbon::parse($pasien->tgl_lahir);
-                
+
                 // Mendapatkan usia pasien dalam hari
                 $umur = $tanggalLahir->diffInDays(Carbon::now());
-                
+
                 // Menentukan apakah pasien adalah bayi (umur antara 0 hingga 30 hari)
                 $statusBayi = ($umur <= 30) ? 'Bayi' : 'Bukan Bayi';
-        
+
             } catch (\Exception $e) {
                 // Jika terjadi kesalahan parsing tanggal
                 $statusBayi = 'Tanggal lahir tidak valid';
@@ -102,26 +102,26 @@ class ResumePemulanganController extends Controller
         });
         return view('simrs.erm-ranap.resume_pemulangan.resume_cepat', compact('kunjungan','pasien','riwayatObat','resume','umur'));
     }
-    
+
     public function storeResume(Request $request)
     {
         if (empty($request->nama_dpjp)) {
             return back()->with('error', 'Nama DPJP harus diisi!');
         }
         $dokter = Paramedis::where('kode_paramedis', $request->nama_dpjp)->first();
-        
+
         $diagnosaUpdate         = $request->diagnosa_sekunder_update;
-        $diagnosaSekunder       = !empty($request->diag_sekunder_dokter) && is_array($request->diag_sekunder_dokter)? implode('|', $request->diag_sekunder_dokter): Null; 
+        $diagnosaSekunder       = !empty($request->diag_sekunder_dokter) && is_array($request->diag_sekunder_dokter)? implode('|', $request->diag_sekunder_dokter): Null;
         $diagSekunderFinal      = implode('|', array_filter([$diagnosaUpdate, $diagnosaSekunder]));
-        
+
         $operasiUpdate          = $request->tindakan_operasi_update;
         $tindakanOperasi        = !empty($request->tindakan_operasi_dokter) && is_array($request->tindakan_operasi_dokter)? implode('|', $request->tindakan_operasi_dokter): Null;
-        $operasiFinal           = implode('|', array_filter([$operasiUpdate, $tindakanOperasi])); 
-        
+        $operasiFinal           = implode('|', array_filter([$operasiUpdate, $tindakanOperasi]));
+
         $prosedureUpdate        = $request->tindakan_prosedure_update;
         $tindakanProsedure      = !empty($request->tindakan_prosedure_dokter) && is_array($request->tindakan_prosedure_dokter)? implode('|', $request->tindakan_prosedure_dokter): Null;
-        $prosedureFinal         = implode('|', array_filter([$prosedureUpdate, $tindakanProsedure])); 
-        
+        $prosedureFinal         = implode('|', array_filter([$prosedureUpdate, $tindakanProsedure]));
+
         $data = [
             'kode_kunjungan'            => $request->kode_kunjungan,
             'counter'                   => $request->counter,
@@ -162,8 +162,8 @@ class ResumePemulanganController extends Controller
             'sebab_kematian'            => $request->sebab_kematian,
             // 'tindakan_prosedure'        => $prosedureFinal,
             'tindakan_prosedure_dokter' => $prosedureFinal??Null,
-        
-            'cara_keluar'               => json_encode([ 
+
+            'cara_keluar'               => json_encode([
                 'sembuh_perbaikan'  => $request->sembuh_perbaikan??0,
                 'pindah_rs'         => $request->pindah_rs??0,
                 'pulang_paksa'      => $request->pulang_paksa??0,
@@ -175,7 +175,7 @@ class ResumePemulanganController extends Controller
             'kesadaran'                 => $request->kesadaran,
             'tekanan_darah'             => $request->tekanan_darah,
             'nadi'                      => $request->nadi,
-            'pengobatan_dilanjutkan'    => json_encode([ 
+            'pengobatan_dilanjutkan'    => json_encode([
                 'poliklinik_rswaled' => $request->poliklinik_rswaled,
                 'rs_lain'            => $request->rs_lain,
                 'dokter_praktek'     => $request->dokter_praktek,
@@ -210,12 +210,10 @@ class ResumePemulanganController extends Controller
             'dpjp'                      => $dokter->nama_paramedis,
             'user'                      => Auth::user()->username ?? 'anonim',
         ];
-        
         $resume = ErmRanapResume::updateOrCreate(
             ['kode_kunjungan' => $request->kode_kunjungan],  // Kondisi pencarian
             $data  // Data yang akan diupdate atau disimpan
         );
-    
         $kunjungan_counter = $resume->kode_kunjungan.'|'.$resume->counter;
         $existingObatPulang = ErmRanapResumeObatPulang::where('id_resume', $resume->id)->get();
         // Buat atau update obat berdasarkan data yang diterima dari form
@@ -243,7 +241,7 @@ class ResumePemulanganController extends Controller
         // Menghapus obat yang ada di database tetapi tidak ada di request
         // Cek nama obat yang ada di request
         $namaObatRequest = $request->nama_obat;
-    
+
         foreach ($existingObatPulang as $obat) {
             // Jika nama obat tidak ada pada request, hapus obat tersebut
             if (!in_array($obat->nama_obat, $namaObatRequest)) {
@@ -252,7 +250,7 @@ class ResumePemulanganController extends Controller
         }
         return back();
     }
-    
+
     public function printResume(Request $request)
     {
         $kunjungan      = Kunjungan::where('kode_kunjungan', $request->kode)->first();
@@ -268,13 +266,13 @@ class ResumePemulanganController extends Controller
             try {
                 // Parsing tanggal lahir pasien
                 $tanggalLahir = Carbon::parse($pasien->tgl_lahir);
-                
+
                 // Mendapatkan usia pasien dalam hari
                 $umur = $tanggalLahir->diffInDays(Carbon::now());
-                
+
                 // Menentukan apakah pasien adalah bayi (umur antara 0 hingga 30 hari)
                 $statusBayi = ($umur <= 30) ? 'Bayi' : 'Bukan Bayi';
-        
+
             } catch (\Exception $e) {
                 // Jika terjadi kesalahan parsing tanggal
                 $statusBayi = 'Tanggal lahir tidak valid';
@@ -320,7 +318,7 @@ class ResumePemulanganController extends Controller
     {
         $dokters = Paramedis::where('act', 1)
                     ->get(['kode_paramedis', 'nama_paramedis']);
- 
+
         return response()->json($dokters);
     }
 

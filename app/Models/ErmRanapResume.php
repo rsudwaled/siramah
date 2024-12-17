@@ -82,7 +82,7 @@ class ErmRanapResume extends Model
         'diambil_dari_tumit',
         'diambil_dari_vena',
         'tgl_pengambilan_shk',
-        'tgl_cetak',                 
+        'tgl_cetak',
         'dpjp',
         'kode_dokter',
         'status_resume',
@@ -91,6 +91,7 @@ class ErmRanapResume extends Model
         'user_verify',
         'user',
     ];
+
 
     public function kunjungan()
     {

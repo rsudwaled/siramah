@@ -344,7 +344,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="height: 370px; padding: 2px; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="height: 350px; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <thead>
