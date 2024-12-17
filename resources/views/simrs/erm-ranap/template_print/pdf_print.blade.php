@@ -81,10 +81,16 @@
             font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
         }
 
-        @page {
+        /* @page {
             margin: 0px;
-        }
+        } */
 
+        @page {
+            size: 215mm 330mm;  /* Ukuran kertas F4 */
+            margin-left: 8mm;        /* Margin kertas */
+            margin-right: 1mm;        /* Margin kertas */
+            margin-top: 1mm;        /* Margin kertas */
+        }
         body {
             margin: 20px;
         }

@@ -214,37 +214,41 @@ class ResumePemulanganController extends Controller
         $kunjungan_counter = $resume->kode_kunjungan.'|'.$resume->counter;
         $existingObatPulang = ErmRanapResumeObatPulang::where('id_resume', $resume->id)->get();
         // Buat atau update obat berdasarkan data yang diterima dari form
-        foreach ($request->nama_obat as $key => $namaObat) {
-            $jumlah = $request->jumlah[$key];
-            // Cari apakah obat sudah ada dalam database
-            $existingObat = ErmRanapResumeObatPulang::where('id_resume', $resume->id)
-                                                    ->where('nama_obat', $namaObat)
-                                                    ->first();
-            if ($existingObat) {
-                // Jika obat sudah ada, update jumlahnya
-                $existingObat->jumlah = $jumlah;
-                $existingObat->save();
-            } else {
-                // Jika obat belum ada, buat data baru
-                $obat = new ErmRanapResumeObatPulang();
-                $obat->nama_obat = $namaObat;
-                $obat->rm = $resume->rm;
-                $obat->kunjungan_counter = $kunjungan_counter;
-                $obat->id_resume = $resume->id;
-                $obat->jumlah = $jumlah;
-                $obat->save();
+        if (is_array($request->nama_obat) && count($request->nama_obat) > 0)
+        {
+            foreach ($request->nama_obat as $key => $namaObat) {
+                $jumlah = $request->jumlah[$key];
+                // Cari apakah obat sudah ada dalam database
+                $existingObat = ErmRanapResumeObatPulang::where('id_resume', $resume->id)
+                                                        ->where('nama_obat', $namaObat)
+                                                        ->first();
+                if ($existingObat) {
+                    // Jika obat sudah ada, update jumlahnya
+                    $existingObat->jumlah = $jumlah;
+                    $existingObat->save();
+                } else {
+                    // Jika obat belum ada, buat data baru
+                    $obat = new ErmRanapResumeObatPulang();
+                    $obat->nama_obat = $namaObat;
+                    $obat->rm = $resume->rm;
+                    $obat->kunjungan_counter = $kunjungan_counter;
+                    $obat->id_resume = $resume->id;
+                    $obat->jumlah = $jumlah;
+                    $obat->save();
+                }
             }
-        }
-        // Menghapus obat yang ada di database tetapi tidak ada di request
-        // Cek nama obat yang ada di request
-        $namaObatRequest = $request->nama_obat;
+            // Menghapus obat yang ada di database tetapi tidak ada di request
+            // Cek nama obat yang ada di request
+            $namaObatRequest = $request->nama_obat;
 
-        foreach ($existingObatPulang as $obat) {
-            // Jika nama obat tidak ada pada request, hapus obat tersebut
-            if (!in_array($obat->nama_obat, $namaObatRequest)) {
-                $obat->delete();
+            foreach ($existingObatPulang as $obat) {
+                // Jika nama obat tidak ada pada request, hapus obat tersebut
+                if (!in_array($obat->nama_obat, $namaObatRequest)) {
+                    $obat->delete();
+                }
             }
         }
+
         return back();
     }
 
@@ -287,7 +291,7 @@ class ResumePemulanganController extends Controller
         });
         $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
         // return view('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien');
-        $pdf->setPaper('A4', 'portrait');
+        $pdf->setPaper('F4', 'portrait');
         return $pdf->stream('pdf_resume_pemulangan.pdf');
     }
 

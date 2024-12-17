@@ -22,6 +22,55 @@
     </style>
     <div class="row" style="margin-top: 10px;">
         <div class="col-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Cari Pasien</h3>
+
+                  <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="col-lg-12">
+                    <form id="form-cari-pasien-lama" method="get">
+                        <div class="col-lg-12 row">
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label for="Cari Nama Pasien">Cari Nama Pasien</label>
+                                    <input type="text" class="form-control" name="cari_nama_pasien" id="cari_nama_pasien">
+                                </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="form-group">
+                                    <label for="Cari Alamat Pasien">Cari Alamat Pasien</label>
+                                    <input type="text" class="form-control" name="cari_alamat_pasien" id="cari_alamat_pasien">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <button type="submit" class="btn btn-md btn-primary mt-4">Cari Pasien</button>
+                            </div>
+                        </div>
+                      </form>
+                  </div>
+                  <div class="col-12 mt-3">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Tanggal Lahir</th>
+                                <th>Riwayat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result-tbody">
+                            <!-- Data akan ditampilkan di sini -->
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-body">
                     <div class="col-lg-12">
@@ -580,5 +629,44 @@
         function batalPilih() {
             $(".ruanganCheck").remove();
         }
+    </script>
+    {{-- ajax cari pasien lama --}}
+    <script>
+        $(document).ready(function () {
+            $('#form-cari-pasien-lama').on('submit', function (e) {
+                e.preventDefault(); // Menghentikan form dari reload halaman
+
+                var namaPasien = $('#cari_nama_pasien').val();
+                var alamatPasien = $('#cari_alamat_pasien').val();
+
+                // Kirim data ke server menggunakan AJAX
+                $.ajax({
+                    url: '{{route('cari-pasien-lama')}}',
+                    type: 'GET',
+                    data: {
+                        cari_nama_pasien: namaPasien,
+                        cari_alamat_pasien: alamatPasien
+                    },
+                    success: function (response) {
+                        var resultHtml = '';
+                        if (response.length > 0) {
+                            response.forEach(function (pasien) {
+                                var riwayatKunjunganHtml = pasien.kunjungans.map(function(kunjungans) {
+                                    return '<table><tbody><tr style="margin:0px; padding:2px;"><td>Masuk: '+kunjungans.tgl_masuk+'</td><td>Unit: '+kunjungans.prefix_kunjungan+'</td><td>Keluar: '+kunjungans.tgl_keluar+'</td></tr></tbody></table>'
+                                });
+
+                                resultHtml += '<tr><td>RM: '+pasien.no_rm+'<br>NAMA :'+pasien.nama_px+'<br>Alamat: '+pasien.lokasi_desa.name+','+pasien.lokasi_kecamatan.name+'-'+pasien.lokasi_kabupaten.name+'<br></td><td>Tgl Lahir:'+pasien.tgl_lahir+'<br>Jenis Kelamin:'+pasien.jenis_kelamin+'</td><td>'+riwayatKunjunganHtml+'</td></tr>';
+                            });
+                        } else {
+                            resultHtml = '<p>Data tidak ditemukan.</p>';
+                        }
+                        $('#result-tbody').html(resultHtml); // Menampilkan hasil ke dalam div#result
+                    },
+                    error: function () {
+                        alert('Terjadi kesalahan');
+                    }
+                });
+            });
+        });
     </script>
 @endsection

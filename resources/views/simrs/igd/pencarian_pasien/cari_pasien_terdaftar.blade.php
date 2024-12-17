@@ -24,7 +24,7 @@
                                 <form action="" method="get">
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <x-adminlte-input name="rm" label="NO RM" value="{{ $request->rm }}"
+                                            {{-- <x-adminlte-input name="rm" label="NO RM" value="{{ $request->rm }}"
                                                 placeholder="Masukan Nomor RM ....">
                                                 <x-slot name="appendSlot">
                                                     <x-adminlte-button theme="primary" class="withLoad" type="submit"
@@ -35,7 +35,7 @@
                                                         <i class="fas fa-search"></i>
                                                     </div>
                                                 </x-slot>
-                                            </x-adminlte-input>
+                                            </x-adminlte-input> --}}
                                             <x-adminlte-input name="nama" label="NAMA PASIEN"
                                                 value="{{ $request->nama }}" placeholder="Masukan Nama Pasien ....">
                                                 <x-slot name="appendSlot">
@@ -63,7 +63,7 @@
                                                     </div>
                                                 </x-slot>
                                             </x-adminlte-input>
-                                            <x-adminlte-input name="cari_kecamatan" label="CARI BERDASARKAN KECAMATAN"
+                                            {{-- <x-adminlte-input name="cari_kecamatan" label="CARI BERDASARKAN KECAMATAN"
                                                 value="{{ $request->cari_kecamatan }}"
                                                 placeholder="Masukan nama kecamatan dengan lengkap...">
                                                 <x-slot name="appendSlot">
@@ -75,7 +75,7 @@
                                                         <i class="fas fa-search"></i>
                                                     </div>
                                                 </x-slot>
-                                            </x-adminlte-input>
+                                            </x-adminlte-input> --}}
                                         </div>
                                     </div>
                                 </form>

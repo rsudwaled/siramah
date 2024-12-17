@@ -108,74 +108,22 @@ class DaftarIGDController extends Controller
         return json_decode(json_encode($response));
     }
 
-
-    // public function index(Request $request)
-    // {
-    //     $ketCariAlamat      = null;
-    //     $search = Pasien::query()
-    //         ->when($request->nik, function ($query, $nik) {
-    //             $query->where('nik_bpjs', 'LIKE', '%' . $nik . '%');
-    //         })
-    //         ->when($request->nomorkartu, function ($query, $bpjsNumber) {
-    //             $query->where('no_Bpjs', 'LIKE', '%' . $bpjsNumber . '%');
-    //         })
-    //         ->when($request->nama, function ($query, $name) {
-    //             $query->where('nama_px', 'LIKE', '%' . $name . '%');
-    //         })
-    //         ->when($request->rm, function ($query, $mrn) {
-    //             $query->where('no_rm', 'LIKE', '%' . $mrn . '%');
-    //         })
-    //         ->when($request->cari_desa, function ($query) use ($request) {
-    //             $villageName = $request->cari_desa;
-    //             $query->whereHas('lokasiDesa', function ($query) use ($villageName) {
-    //                 $query->where('name', 'LIKE', '%' . $villageName . '%');
-    //             });
-    //         })
-    //         ->when($request->cari_kecamatan, function ($query) use ($request) {
-    //             $villageName = $request->cari_kecamatan;
-    //             $query->whereHas('lokasiKecamatan', function ($query) use ($villageName) {
-    //                 $query->where('name', 'LIKE', '%' . $villageName . '%');
-    //             });
-    //         });
-    //     if (
-    //         !empty($request->nik) || !empty($request->nomorkartu) || !empty($request->rm) || !empty($request->nama) ||
-    //         !empty($request->cari_desa) || !empty($request->cari_kecamatan)
-    //     ) {
-    //         $pasien = $search->get();
-    //     } else {
-    //         $pasien = $search->orderBy('tgl_entry', 'desc')->take(4)->get();
-    //     }
-
-    //     $kunjungan   = Kunjungan::where('no_rm', $request->rm)->orderBy('tgl_masuk', 'desc')->take(2)->get();
-    //     $knj_aktif   = Kunjungan::where('no_rm', $request->rm)
-    //         ->where('status_kunjungan', 1)
-    //         ->count();
-    //     $alasanmasuk    = AlasanMasuk::orderBy('id', 'asc')->get();
-    //     $paramedis      = Paramedis::where('act', 1)->get();
-    //     $penjamin       = PenjaminSimrs::orderBy('kode_penjamin', 'asc')->get();
-    //     $penjaminbpjs   = Penjamin::orderBy('id', 'asc')->get();
-    //     $tanggal        = now()->format('Y-m-d');
-    //     // cek status bpjs aktif atau tidak
-
-    //     $url            = null;
-    //     $signature      = null;
-    //     $response       = null;
-    //     $resdescrtipt   = null;
-    //     if (!empty($pasien->nik_bpjs)) {
-    //         $url            = env('VCLAIM_URL') . "Peserta/nik/" . $pasien->nik_bpjs . "/tglSEP/" . $tanggal;
-    //         $signature      = $this->signature();
-    //         $response       = Http::withHeaders($signature)->get($url);
-    //         $resdescrtipt   = $this->response_decrypt($response, $signature);
-    //     }
-
-    //     $antrian_triase = AntrianPasienIGD::with('isTriase')
-    //         ->whereDate('tgl', now())
-    //         ->where('status', 1)
-    //         ->where('kode_kunjungan', null)
-    //         ->orderBy('tgl', 'desc')
-    //         ->get();
-    //     return view('simrs.igd.daftar.index', compact('ketCariAlamat', 'antrian_triase', 'pasien', 'request', 'penjaminbpjs', 'paramedis', 'alasanmasuk', 'paramedis', 'penjamin', 'kunjungan', 'knj_aktif', 'resdescrtipt'));
-    // }
+    public function cariPasienLama(Request $request)
+    {
+        $search = Pasien::query()
+            ->when($request->cari_nama_pasien, function ($query, $name) {
+                $query->where('nama_px', 'LIKE', '%' . $name . '%');
+            })
+            ->when($request->cari_alamat_pasien, function ($query) use ($request) {
+                $villageName = $request->cari_alamat_pasien;
+                $query->whereHas('lokasiDesa', function ($query) use ($villageName) {
+                    $query->where('name', 'LIKE', '%' . $villageName . '%');
+                });
+            });
+        $pasien = $search->with(['kunjungans','lokasiDesa','lokasiKecamatan','lokasiKabupaten','lokasiProvinsi'])->get();
+        // dd($pasien);
+        return response()->json($pasien);
+    }
 
     public function index(Request $request)
     {
