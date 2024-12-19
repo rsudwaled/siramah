@@ -194,7 +194,7 @@
                                     </a> --}}
                                     <a href="{{ route('resume-pemulangan.vbeta.resume-vbeta.cepat', ['kode' => $kunjungan->kode_kunjungan]) }}"
                                         class="btn btn-secondary btn-xs withLoad">
-                                        <i class="fas fa-file-medical"></i> Resume {{$kunjungan->resume()->exists() ? 'ada' : 'belum'}}
+                                        <i class="fas fa-file-medical"></i> Resume {{$kunjungan->resume()->exists() ? ' (ada resume) ' : ' (belum)'}}
                                     </a>
                                     <a href="{{ route('pasienranapprofile', ['kode' => $kunjungan->kode_kunjungan]) }}"
                                         class="btn btn-primary btn-xs withLoad">
