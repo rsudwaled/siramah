@@ -55,9 +55,9 @@
                             <th>Ruang Rawat</th>
                             <th>Status Pulang</th>
                             <th>Penjamin</th>
-                            <th>Status Resume</th>
+                            <th>Resume</th>
                             <th>Verify</th>
-                            <th>Aksi</th>
+                            <th style="width: 17%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

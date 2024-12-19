@@ -20,7 +20,7 @@
                         Jam Masuk: {{ $resume->jam_masuk ?? '' }} WIB
                     </td>
                     <td style="margin: 0; padding:5px;">
-                        Ruang Rawat: {{ $resume->ruang_rawat_masuk ?? '' }}
+                        Ruang Rawat: {{ strtoupper($resume->ruang_rawat_masuk ?? '') }}
                     </td>
                 </tr>
                 <tr>
@@ -31,20 +31,20 @@
                         Jam Keluar: {{ $resume->jam_keluar ?? '' }} WIB
                     </td>
                     <td style="margin: 0; padding:5px;">
-                        Ruang Rawat: {{ $resume->ruang_rawat_keluar ?? '' }}
+                        Ruang Rawat: {{ strtoupper($resume->ruang_rawat_keluar ?? '') }}
                     </td>
                 </tr>
                 <tr>
                     <td style="margin: 0; padding:5px;">
-                        Rawat Intensif: {{ $resume->rawat_intensif ?? '-' }} Hari |
+                        Rawat Intensif: {{ $resume->rawat_intensif ?? '-' }} Hari <br>
                         Lama Rawat: {{ $resume->lama_rawat ?? '-' }} Hari
                     </td>
-                    <td style="margin: 0; padding:5px;" colspan="2">
-                        Berat Badan Bayi Lahir < 1 Bulan: {{ $resume->bb_bayi_lahir ?? '.......' }} Kg || Grafida :
-                            {{ $resume->grafida ?? '.......' }} minggu</td>
+                    <td style="margin: 0; padding:5px;">
+                        Berat Badan Bayi Lahir < 1 Bulan: {{ $resume->bb_bayi_lahir ?? '.......' }} Kg </td>
+                    <td style="margin: 0; padding:5px;">Gravida :{{ $resume->grafida ?? '.......' }} minggu</td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:50px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:auto;">
                         <span style="font-size: 12px; font-weight: bold;">Ringkasan Perawatan:</span> <br>
                         {{ $resume->ringkasan_perawatan ?? '' }}
                     </td>
@@ -175,7 +175,7 @@
                                 <td
                                     style="border:none; width: 10px; display: flex; justify-content: center; align-items: center; height:128px;">
                                     <div style="transform: rotate(90deg); white-space: nowrap; font-size: 12px;">
-                                        <span>DIAGNOSA SEKUNDER</span>
+                                        <span>DIAGNOSA KELUAR</span>
                                     </div>
                                 </td>
                                 <td style="height: 30px; margin:0px; padding:2px;">
@@ -183,7 +183,6 @@
                                         style="width: 100%; height:50px; border-collapse: collapse; margin:0px; padding:0px;">
                                         <tr>
                                             @php
-                                                // Pastikan diagnosa_utama tidak null dan memiliki format yang benar
                                                 if (
                                                     !empty($resume->diagnosa_utama) &&
                                                     strpos($resume->diagnosa_utama, ' - ') !== false
@@ -193,27 +192,42 @@
                                                     $diagutama = [null, null]; // Set default jika diagnosa tidak ada atau formatnya salah
                                                 }
                                             @endphp
-                                            <td style="width: 20%; margin: 0; padding:2px;">Diagnosa Utama</td>
+                                            <td style="width: 20%; margin: 0; padding:2px; width:135px;">Diagnosa Utama</td>
                                             <td style="margin: 0; padding:2px;">
                                                 {{-- {{ $diagutama[1] ?? 'Tidak Diketahui' }} --}}
                                                 {{ $resume->diagnosa_utama_dokter ?? '' }}
                                             </td>
                                             <td style="margin: 0; padding:2px;">
+                                                Kode ICD X:
+                                                @php
+                                                    $codeDiagUtama = !empty($resume->diagnosa_utama)
+                                                        ? explode(' - ', $resume->diagnosa_utama)
+                                                        : null;
+                                                @endphp
 
+                                                @if ($codeDiagUtama && isset($codeDiagUtama[0]))
+                                                    {{ $codeDiagUtama[0] }}
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Diagnosa Sekunder</td>
+                                            <td style="margin: 0; padding:2px;">Diagnosa Sekunder</td>
                                             <td style="margin: 0; padding:2px; height:100px;">
                                                 @php
                                                     $sekunder = explode('|', $resume->diagnosa_sekunder_dokter);
+                                                    $coderIcd = $resume->diagnosaSekunder ?? null;
                                                 @endphp
                                                 @foreach ($sekunder as $diagSekunder)
                                                     . {{ $diagSekunder }} <br>
                                                 @endforeach
                                             </td>
-                                            <td style="margin: 0; padding:2px;">
-
+                                            <td style="margin: 0; padding:2px; width:180px;">
+                                                Kode ICD X: <br>
+                                                @if (!empty($coderIcd))
+                                                    @foreach ($coderIcd as $icd)
+                                                        -{{ $icd->kode_diagnosa }} <br>
+                                                    @endforeach
+                                                @endif
                                             </td>
                                         </tr>
                                         <tr>
@@ -229,16 +243,25 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px; height:auto;">
+                    <td style="margin: 0; padding:3px; height:auto; width:183px;">
                         <strong style="margin: 0.5rem 0;">Tindakan Operasi</strong>
                     </td>
-                    <td colspan="2" style="margin: 0; padding:3px;">
+                    <td style="margin: 0; padding:3px;">
                         @php
                             $operasi = explode('|', $resume->tindakan_operasi_dokter);
+                            $codeOperasi = $resume->tindakanOperasiCodes ?? null;
                         @endphp
                         @foreach ($operasi as $tindakanOperasi)
                             . {{ $tindakanOperasi }} <br>
                         @endforeach
+                    </td>
+                    <td style="margin: 0; padding:3px; width:180px;">
+                        ICD9 CM: <br>
+                        @if (!empty($codeOperasi))
+                            @foreach ($codeOperasi as $icd)
+                                -{{ $icd->kode_tindakan }} <br>
+                            @endforeach
+                        @endif
                     </td>
                 </tr>
                 <tr>
@@ -270,37 +293,50 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="margin: 0; padding:3px; height:auto;">
+                    <td style="margin: 0; padding:3px; height:auto;" colspan="2">
                         <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
                     </td>
+                    <td style="margin: 0; padding:3px;">
+                        ICD9 CM:
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="2" style="margin: 0; padding:3px;">
                         @php
                             $prosedure = explode('|', $resume->tindakan_prosedure_dokter);
+                            $codeProsedure = $resume->tindakanProsedureCodes ?? null;
                         @endphp
                         @foreach ($prosedure as $tindakanProsedure)
-                            . {{ $tindakanProsedure }} <br>
+                            . <span style="padding-top:5px;">{{ $tindakanProsedure }}</span><br>
                         @endforeach
-                        {{-- {{ $resume->tindakan_prosedure ?? '' }} --}}
+                    </td>
+                    <td style="margin: 0; padding:3px;">
+                        @if (!empty($codeProsedure))
+                            @foreach ($codeProsedure as $icd)
+                                -<span style="padding-top:5px;">{{ $icd->kode_procedure }}</span><br>
+                            @endforeach
+                        @endif
                     </td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td colspan="3" style="text-align: center;">
-                        <strong style="margin: 0.5rem 0;">Pengobatan Selama
-                            Dirawat</strong>
+                        <strong style="margin: 0.5rem 0;">Pengobatan Selama Dirawat</strong>
                     </td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <td colspan="3" style="height: auto; padding: 0; width: 100%; box-sizing: border-box;">
+                        <div class="col-12" style="text-align: center; padding-top:4px; padding-bottom:5px;">
+                            <strong style="margin: 0.5rem 0;">Pengobatan Selama Dirawat</strong>
+                        </div>
                         <div class="col-12">
                             @if ($riwayatObat->isNotEmpty())
-                                {{-- @php
-                                    // Mengelompokkan data menjadi chunk berisi 10 item
+                                @php
                                     $chunks = $riwayatObat->chunk(10);
-                                @endphp --}}
-                                {{-- <div style="page-break-inside: avoid; height: auto;">
+                                @endphp
+                                    <div style="page-break-inside: avoid; height: 400px;">
                                     @foreach ($chunks as $index => $chunk)
                                         <div
-                                            style="width: 32%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
+                                            style="width: 48%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
                                             <table
                                                 style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box; font-size:10px;">
                                                 <thead>
@@ -314,10 +350,23 @@
                                                         <th
                                                             style="border: 1px solid black; padding: 5px; vertical-align: middle;">
                                                             Jumlah</th>
+                                                        <th
+                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                            Dosis</th>
+                                                        <th
+                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                            Aturan Pakai</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($chunk as $obat)
+                                                    @php
+                                                        // Memisahkan aturan pakai berdasarkan tanda "|"
+                                                        $aturanPakai = isset($obat['aturan_pakai']) ? explode('|', $obat['aturan_pakai']) : ['N/A', 'N/A'];
+                                                        // Memastikan ada dua bagian: dosis dan waktu
+                                                        $dosis = trim($aturanPakai[0] ?? 'N/A');
+                                                        $waktu = trim($aturanPakai[1] ?? 'N/A');
+                                                    @endphp
                                                         <tr>
                                                             <td
                                                                 style="border: 1px solid black; padding: 5px; vertical-align: middle;">
@@ -327,23 +376,60 @@
                                                             <td
                                                                 style="border: 1px solid black; padding: 5px; vertical-align: middle;">
                                                                 {{ $obat['qty'] }}</td>
+                                                            <td
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                </td>
+                                                            <td
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                {{$dosis}} | {{ $waktu }}</td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
                                         <!-- Tambahkan clear setelah setiap 3 tabel -->
-                                        @if (($index + 1) % 3 == 0)
+                                        @if (($index + 1) % 2 == 0)
                                             <div style="clear: both;"></div>
                                             <!-- Ini memastikan tabel berikutnya berada di bawah -->
                                         @endif
                                     @endforeach
-                                </div> --}}
-                                <div class="col-12" style="margin: 4px;">
-                                    @foreach ($riwayatObat as $data)
-                                        {{ $data['nama_barang'] }} {{ 'JML:'.$data['qty'] }} |
-                                    @endforeach
                                 </div>
+
+                                {{-- <div style="page-break-inside: avoid; height: 400px;">
+                                    @foreach ($chunks as $index => $chunk)
+                                        <div
+                                            style="width: 32%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
+                                            <ul style="width: 100%;">
+                                                @foreach ($chunk as $obat)
+                                                    <li>{{ $obat['nama_barang'] }} (JML: {{ $obat['qty'] }})</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        @if (($index + 1) % 2 == 0)
+                                            <div style="clear: both;"></div>
+                                        @endif
+                                    @endforeach
+                                </div> --}}
+                                {{-- <div class="col-12" style="margin: 4px;">
+                                    @foreach ($riwayatObat as $data)
+                                        {{ $data['nama_barang'] }} {{ 'JML:' . $data['qty'] }} |
+                                    @endforeach
+                                </div> --}}
+                                {{-- <div style="page-break-inside: avoid;">
+                                    @foreach ($chunks as $index => $chunk)
+                                        <div
+                                            style="width: 50%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid; min-height: 100px;">
+                                            <ul style="width: 100%;">
+                                                @foreach ($chunk as $obat)
+                                                    <li>{{ $obat['nama_barang'] }} (Qty: {{ $obat['qty'] }})</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        @if (($index + 1) % 2 == 0)
+                                            <div style="clear: both;"></div>
+                                        @endif
+                                    @endforeach
+                                </div> --}}
                             @else
                                 <div style="text-align: center;">
                                     Data tidak ditemukan.
@@ -358,58 +444,98 @@
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <thead>
                                 <tr>
-                                    <th colspan="2">
+                                    <th colspan="5">
                                         <strong style="margin: 0.5rem 0;">Obat Untuk Pulang</strong>
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th style="border: 1px solid black; padding: 5px; text-align: left; width:80%;">
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:50%;">
                                         Nama Obat</th>
-                                    <th style="border: 1px solid black; padding: 5px; text-align: left;">Jumlah</th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:5%;">JUMLAH</th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Dosis</th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Frekuensi
+                                    </th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Cara
+                                        Pemberian</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if ($obatPulang)
                                     @foreach ($obatPulang as $obat)
                                         <tr>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $obat->nama_obat }}</td>
-                                            <td style="border: 1px solid black; padding: 5px;">{{ $obat->jumlah }}</td>
+                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                {{ $obat->nama_obat }}</td>
+                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                {{ $obat->jumlah }}</td>
+                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                {{ $obat->dosis ?? '' }}</td>
+                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                {{ $obat->frekuensi ?? '' }}</td>
+                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                {{ $obat->cara_pemberian ?? '' }}</td>
                                         </tr>
                                     @endforeach
                                 @else
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                     </tr>
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                     </tr>
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
                                     </tr>
                                     <tr>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
                                     </tr>
                                     <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                         <td style="border: 1px solid black; padding: 5px;">-</td>
                                     </tr>
@@ -454,7 +580,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="height: 100px; padding: 2px; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="height: auto; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <tr>

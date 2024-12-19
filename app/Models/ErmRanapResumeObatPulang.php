@@ -16,6 +16,9 @@ class ErmRanapResumeObatPulang extends Model
         'rm',
         'nama_obat',
         'jumlah',
+        'dosis',
+        'frekuensi',
+        'cara_pemberian',
         'id_resume',
     ];
 

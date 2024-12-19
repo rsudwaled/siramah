@@ -30,7 +30,7 @@ class DataResumePemulanganController extends Controller
             // Menggunakan Carbon untuk memformat tanggal dengan waktu mulai dari 00:00:00 sampai 23:59:59
             $tglAwal = \Carbon\Carbon::parse($request->tgl_awal)->startOfDay();
             $tglAkhir = \Carbon\Carbon::parse($request->tgl_akhir)->endOfDay();
-            
+
             $query->whereBetween('tgl_keluar', [$tglAwal, $tglAkhir]);
         }
 
@@ -42,13 +42,13 @@ class DataResumePemulanganController extends Controller
         // Eksekusi query
         $kunjungan = $query->get();
 
-        
+
         $unit = Unit::where('kelas_unit', 2)->whereNotIn('kode_unit',['2021'])->where('act', 1)->orderBy('nama_unit','asc')->get();
         return view('simrs.casemix.resume_pemulangan.index', compact('kunjungan','unit','request'));
     }
     public function verifyResume(Request $request)
     {
-        
+
        $request->validate([
         'kode_kunjungan' => 'required',
         ]);
@@ -85,10 +85,10 @@ class DataResumePemulanganController extends Controller
         $resume = ErmRanapResume::where('kode_kunjungan', $kode)->first();
         return view('simrs.casemix.resume_pemulangan.coder_diagnosa', compact('resume'));
     }
-    
+
     public function coderStoreDiagnosa(Request $request)
     {
-        
+
         $id_resume          = $request->id_resume;
         $kode               = $request->kode;
         $rm                 = $request->rm;
@@ -109,12 +109,12 @@ class DataResumePemulanganController extends Controller
                     $kodeDiagnosa = $parts[0]; // Bagian pertama adalah kode (misal: D64)
                     $keterangan = $parts[1]; // Bagian kedua adalah keterangan (misal: Other anaemias)
                     ErmRanapResumeDiagSekunder::updateOrCreate(
-                        [   
-                            'kunjungan_counter' => $kunjungan_counter, 
+                        [
+                            'kunjungan_counter' => $kunjungan_counter,
                             'id_resume'         => $id_resume, // ID resume
                             'kode_diagnosa'     => $kodeDiagnosa, // Kode diagnosa
                         ],
-                        [   
+                        [
                             'id_resume'         => $id_resume, // Nomor rekam medis
                             'kode'              => $kode, // Nomor rekam medis
                             'rm'                => $rm, // Nomor rekam medis
@@ -139,18 +139,18 @@ class DataResumePemulanganController extends Controller
                     $kodeTindakan = $parts[0]; // Bagian pertama adalah kode (misal: D64)
                     $keterangan = $parts[1]; // Bagian kedua adalah keterangan (misal: Other anaemias)
                     ErmRanapResumeTindakanOperasiCode::updateOrCreate(
-                        [   
-                            'kunjungan_counter' => $kunjungan_counter, 
+                        [
+                            'kunjungan_counter' => $kunjungan_counter,
                             'id_resume'         => $id_resume, // ID resume
                             'kode_tindakan'     => $kodeTindakan, // Kode diagnosa
                         ],
-                        [   
-                            'id_resume'         => $id_resume, 
-                            'kode'              => $kode, 
-                            'rm'                => $rm, 
+                        [
+                            'id_resume'         => $id_resume,
+                            'kode'              => $kode,
+                            'rm'                => $rm,
                             'kunjungan_counter' => $kunjungan_counter,
-                            'kode_tindakan'     => $kodeTindakan, 
-                            'nama_tindakan'     => $keterangan, 
+                            'kode_tindakan'     => $kodeTindakan,
+                            'nama_tindakan'     => $keterangan,
                             'user'              => Auth::user()->username,
                         ]
                     );
@@ -168,18 +168,18 @@ class DataResumePemulanganController extends Controller
                     $kodeProsedure = $parts[0]; // Bagian pertama adalah kode (misal: D64)
                     $keterangan = $parts[1]; // Bagian kedua adalah keterangan (misal: Other anaemias)
                     ErmRanapResumeTindakanProsedureCode::updateOrCreate(
-                        [   
-                            'kunjungan_counter' => $kunjungan_counter, 
+                        [
+                            'kunjungan_counter' => $kunjungan_counter,
                             'id_resume'         => $id_resume, // ID resume
                             'kode_procedure'     => $kodeProsedure, // Kode diagnosa
                         ],
-                        [   
-                            'id_resume'         => $id_resume, 
-                            'kode'              => $kode, 
-                            'rm'                => $rm, 
+                        [
+                            'id_resume'         => $id_resume,
+                            'kode'              => $kode,
+                            'rm'                => $rm,
                             'kunjungan_counter' => $kunjungan_counter,
-                            'kode_procedure'    => $kodeProsedure, 
-                            'nama_procedure'    => $keterangan, 
+                            'kode_procedure'    => $kodeProsedure,
+                            'nama_procedure'    => $keterangan,
                             'user'              => Auth::user()->username,
                         ]
                     );

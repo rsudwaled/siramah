@@ -479,7 +479,7 @@
                                                                                         <input type="text"
                                                                                             name="diagnosa_utama_dokter"
                                                                                             id="diagnosa_utama_dokter"
-                                                                                            value="{{$resume->diagnosa_utama_dokter??''}}"
+                                                                                            value="{{ $resume->diagnosa_utama_dokter ?? '' }}"
                                                                                             class="form-control">
                                                                                     </div>
                                                                                 </td>
@@ -813,7 +813,10 @@
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Nama Obat</th>
-                                                                        <th>Jumlah</th>
+                                                                        <th style="width: 10%;">Jumlah</th>
+                                                                        <th>Dosis</th>
+                                                                        <th>Frekuensi</th>
+                                                                        <th>Cara Pemberian</th>
                                                                         <th><button type="button"
                                                                                 class="btn btn-sm btn-primary"
                                                                                 onclick="addRowObatPulang()">Tambah
@@ -832,7 +835,22 @@
                                                                                 <td><input type="text"
                                                                                         class="form-control"
                                                                                         name="jumlah[]"
-                                                                                        value="{{ $obat->jumlah }}">
+                                                                                        value="{{ $obat->jumlah ?? 0 }}">
+                                                                                </td>
+                                                                                <td><input type="text"
+                                                                                        class="form-control"
+                                                                                        name="dosis[]"
+                                                                                        value="{{ $obat->dosis ?? '' }}">
+                                                                                </td>
+                                                                                <td><input type="text"
+                                                                                        class="form-control"
+                                                                                        name="frekuensi[]"
+                                                                                        value="{{ $obat->frekuensi ?? '' }}">
+                                                                                </td>
+                                                                                <td><input type="text"
+                                                                                        class="form-control"
+                                                                                        name="cara_pemberian[]"
+                                                                                        value="{{ $obat->cara_pemberian ?? '' }}">
                                                                                 </td>
                                                                                 <td><button type="button"
                                                                                         class="btn btn-sm btn-danger"
@@ -1055,9 +1073,9 @@
                                     onclick="javascript: form.action='{{ route('resume-pemulangan.vbeta.send-final') }}';"
                                     target="_blank" class="btn btn-primary btn-sm ml-2 float-right">Final Resume</button>
                             @else --}}
-                                <div class="form-actions col-12">
-                                    <button type="submit" class="btn btn-success">Simpan</button>
-                                </div>
+                            <div class="form-actions col-12">
+                                <button type="submit" class="btn btn-success">Simpan</button>
+                            </div>
                             {{-- @endif --}}
                         </form>
                     </div>
@@ -1651,6 +1669,7 @@
         }
     </script>
     <script>
+        // Fungsi untuk menambah baris baru
         function addRowObatPulang() {
             const table = document.getElementById("obat-pulang-table").getElementsByTagName('tbody')[0];
             const newRow = table.insertRow(table.rows.length);
@@ -1663,16 +1682,28 @@
             const cell2 = newRow.insertCell(1);
             cell2.innerHTML = '<input type="text" class="form-control" name="jumlah[]">';
 
-            // Membuat kolom untuk tombol Hapus
+            // Membuat kolom untuk Dosis
             const cell3 = newRow.insertCell(2);
-            cell3.innerHTML =
+            cell3.innerHTML = '<input type="text" class="form-control" name="dosis[]">';
+
+            // Membuat kolom untuk Frekuensi
+            const cell4 = newRow.insertCell(3);
+            cell4.innerHTML = '<input type="text" class="form-control" name="frekuensi[]">';
+
+            // Membuat kolom untuk Cara Pemberian
+            const cell5 = newRow.insertCell(4);
+            cell5.innerHTML = '<input type="text" class="form-control" name="cara_pemberian[]">';
+
+            // Membuat kolom untuk tombol Hapus
+            const cell6 = newRow.insertCell(5);
+            cell6.innerHTML =
                 '<button type="button" class="btn btn-sm btn-danger" onclick="removeRowObatPulang(this)">Hapus</button>';
         }
 
         // Fungsi untuk menghapus baris
         function removeRowObatPulang(button) {
-            const row = button.closest("tr");
-            row.remove();
+            const row = button.closest("tr"); // Menemukan elemen <tr> yang terkait dengan tombol
+            row.remove(); // Menghapus baris dari tabel
         }
     </script>
 @endsection

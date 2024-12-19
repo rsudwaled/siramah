@@ -145,7 +145,7 @@ class ResumePemulanganController extends Controller
             'penunjang_lainnya'         => $request->penunjang_lainya,
             'hasil_konsultasi'          => $request->hasil_konsultasi,
             'diagnosa_masuk'            => $request->diagnosa_masuk,
-            //diagnosa_dokter    
+            //diagnosa_dokter
             'diagnosa_utama_dokter'     => $request->diagnosa_utama_dokter,
             // akses casemix
             'diagnosa_utama'            => $request->diagnosa_utama,
@@ -220,7 +220,10 @@ class ResumePemulanganController extends Controller
         if (is_array($request->nama_obat) && count($request->nama_obat) > 0)
         {
             foreach ($request->nama_obat as $key => $namaObat) {
-                $jumlah = $request->jumlah[$key];
+                $jumlah         = $request->jumlah[$key];
+                $dosis          = $request->dosis[$key];
+                $frekuensi      = $request->frekuensi[$key];
+                $caraPemberian  = $request->cara_pemberian[$key];
                 // Cari apakah obat sudah ada dalam database
                 $existingObat = ErmRanapResumeObatPulang::where('id_resume', $resume->id)
                                                         ->where('nama_obat', $namaObat)
@@ -228,15 +231,21 @@ class ResumePemulanganController extends Controller
                 if ($existingObat) {
                     // Jika obat sudah ada, update jumlahnya
                     $existingObat->jumlah = $jumlah;
+                    $existingObat->dosis                = $dosis;
+                    $existingObat->frekuensi            = $frekuensi;
+                    $existingObat->cara_pemberian       = $caraPemberian;
                     $existingObat->save();
                 } else {
                     // Jika obat belum ada, buat data baru
                     $obat = new ErmRanapResumeObatPulang();
-                    $obat->nama_obat = $namaObat;
-                    $obat->rm = $resume->rm;
-                    $obat->kunjungan_counter = $kunjungan_counter;
-                    $obat->id_resume = $resume->id;
-                    $obat->jumlah = $jumlah;
+                    $obat->nama_obat            = $namaObat;
+                    $obat->rm                   = $resume->rm;
+                    $obat->kunjungan_counter    = $kunjungan_counter;
+                    $obat->id_resume            = $resume->id;
+                    $obat->jumlah               = $jumlah;
+                    $obat->dosis                = $dosis;
+                    $obat->frekuensi            = $frekuensi;
+                    $obat->cara_pemberian       = $caraPemberian;
                     $obat->save();
                 }
             }
@@ -288,7 +297,8 @@ class ResumePemulanganController extends Controller
         $riwayatObat    = collect($riwayatObat);
         $riwayatObat    = $riwayatObat->groupBy('nama_barang')->map(function($items) {
             return [
-                'nama_barang' => $items->first()->nama_barang,  // Ambil nama obat dari salah satu item
+                'nama_barang' => $items->first()->nama_barang,
+                'aturan_pakai' => $items->first()->aturan_pakai,
                 'qty' => $items->sum('qty')  // Jumlahkan qty dari semua obat dengan nama yang sama
             ];
         });
