@@ -50,13 +50,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:30px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:auto;">
                         <span style="font-size: 12px; font-weight: bold;">Riwayat Penyakit:</span> <br>
                         {{ $resume->riwayat_penyakit ?? '' }}
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="margin: 0; padding:5px; height:30px;">
+                    <td colspan="3" style="margin: 0; padding:5px; height:auto;">
                         <span style="font-size: 12px; font-weight: bold;">Indikasi Rawat Inap:</span> <br>
                         {{ $resume->indikasi_ranap ?? '' }}
 
@@ -318,118 +318,63 @@
                         @endif
                     </td>
                 </tr>
-                {{-- <tr>
-                    <td colspan="3" style="text-align: center;">
-                        <strong style="margin: 0.5rem 0;">Pengobatan Selama Dirawat</strong>
-                    </td>
-                </tr> --}}
                 <tr>
-                    <td colspan="3" style="height: auto; padding: 0; width: 100%; box-sizing: border-box;">
-                        <div class="col-12" style="text-align: center; padding-top:4px; padding-bottom:5px;">
-                            <strong style="margin: 0.5rem 0;">Pengobatan Selama Dirawat</strong>
+                    <td colspan="3" style="padding: 0; width: 100%; box-sizing: border-box;">
+                        <div class="col-12" style="text-align: center; padding-top: 4px; padding-bottom: 5px; margin: 0.5rem 0;">
+                            <strong>Pengobatan Selama Dirawat</strong>
                         </div>
-                        <div class="col-12">
+                        <div>
                             @if ($riwayatObat->isNotEmpty())
                                 @php
-                                    $chunks = $riwayatObat->chunk(10);
+                                    $chunks = $riwayatObat->chunk(10);  // Membagi data menjadi potongan-potongan per 10 item
                                 @endphp
-                                    <div style="page-break-inside: avoid; height: 400px;">
+                                <div style="page-break-inside: avoid;">
                                     @foreach ($chunks as $index => $chunk)
-                                        <div
-                                            style="width: 48%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
-                                            <table
-                                                style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box; font-size:10px;">
+                                        <div style="height: auto; width: 48%; margin-right: 1%; margin-bottom: 10px; display: inline-block; vertical-align: top; box-sizing: border-box; page-break-inside: avoid;">
+                                            <table style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box; font-size: 10px;">
                                                 <thead>
                                                     <tr>
-                                                        <th
-                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                            No</th>
-                                                        <th
-                                                            style="border: 1px solid black; padding: 5px; text-align: left;">
-                                                            Nama Obat</th>
-                                                        <th
-                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                            Jumlah</th>
-                                                        <th
-                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                            Dosis</th>
-                                                        <th
-                                                            style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                            Aturan Pakai</th>
+                                                        <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">No</th>
+                                                        <th style="border: 1px solid black; padding: 5px; text-align: left;">Nama Obat</th>
+                                                        <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Jumlah</th>
+                                                        <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Dosis</th>
+                                                        <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Aturan Pakai</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @foreach ($chunk as $obat)
-                                                    @php
-                                                        // Memisahkan aturan pakai berdasarkan tanda "|"
-                                                        $aturanPakai = isset($obat['aturan_pakai']) ? explode('|', $obat['aturan_pakai']) : ['N/A', 'N/A'];
-                                                        // Memastikan ada dua bagian: dosis dan waktu
-                                                        $dosis = trim($aturanPakai[0] ?? 'N/A');
-                                                        $waktu = trim($aturanPakai[1] ?? 'N/A');
-                                                    @endphp
+                                                        @php
+                                                            $aturanPakai = isset($obat['aturan_pakai']) ? explode('|', $obat['aturan_pakai']) : ['N/A', 'N/A'];
+                                                            $dosis = trim($aturanPakai[0] ?? 'N/A');
+                                                            $waktu = trim($aturanPakai[1] ?? 'N/A');
+                                                        @endphp
                                                         <tr>
-                                                            <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                                {{ $loop->iteration }}</td>
+                                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                {{ $loop->iteration }}
+                                                            </td>
                                                             <td style="border: 1px solid black; padding: 5px;">
-                                                                {{ $obat['nama_barang'] }}</td>
-                                                            <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                                {{ $obat['qty'] }}</td>
-                                                            <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                                </td>
-                                                            <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
-                                                                {{$dosis}} | {{ $waktu }}</td>
+                                                                {{ $obat['nama_barang'] }}
+                                                            </td>
+                                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                {{ $obat['qty'] }}
+                                                            </td>
+                                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                               
+                                                            </td>
+                                                            <td style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                {{$obat['aturan_pakai']}}
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>
                                             </table>
                                         </div>
-                                        <!-- Tambahkan clear setelah setiap 3 tabel -->
+        
                                         @if (($index + 1) % 2 == 0)
                                             <div style="clear: both;"></div>
-                                            <!-- Ini memastikan tabel berikutnya berada di bawah -->
                                         @endif
                                     @endforeach
                                 </div>
-
-                                {{-- <div style="page-break-inside: avoid; height: 400px;">
-                                    @foreach ($chunks as $index => $chunk)
-                                        <div
-                                            style="width: 32%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid;">
-                                            <ul style="width: 100%;">
-                                                @foreach ($chunk as $obat)
-                                                    <li>{{ $obat['nama_barang'] }} (JML: {{ $obat['qty'] }})</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        @if (($index + 1) % 2 == 0)
-                                            <div style="clear: both;"></div>
-                                        @endif
-                                    @endforeach
-                                </div> --}}
-                                {{-- <div class="col-12" style="margin: 4px;">
-                                    @foreach ($riwayatObat as $data)
-                                        {{ $data['nama_barang'] }} {{ 'JML:' . $data['qty'] }} |
-                                    @endforeach
-                                </div> --}}
-                                {{-- <div style="page-break-inside: avoid;">
-                                    @foreach ($chunks as $index => $chunk)
-                                        <div
-                                            style="width: 50%; float: left; margin-right: 1%; margin-bottom: 10px; box-sizing: border-box; page-break-inside: avoid; min-height: 100px;">
-                                            <ul style="width: 100%;">
-                                                @foreach ($chunk as $obat)
-                                                    <li>{{ $obat['nama_barang'] }} (Qty: {{ $obat['qty'] }})</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        @if (($index + 1) % 2 == 0)
-                                            <div style="clear: both;"></div>
-                                        @endif
-                                    @endforeach
-                                </div> --}}
                             @else
                                 <div style="text-align: center;">
                                     Data tidak ditemukan.
@@ -438,6 +383,7 @@
                         </div>
                     </td>
                 </tr>
+                
                 <tr>
                     <td colspan="3" style="height: auto; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table
@@ -449,11 +395,14 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:50%;">
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:40%;">
                                         Nama Obat</th>
-                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:5%;">JUMLAH</th>
-                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Dosis</th>
-                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Frekuensi
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:5%;">
+                                        JUMLAH</th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:15%;">
+                                        Dosis</th>
+                                    <th style="border: 1px solid black; padding: 5px; vertical-align: middle; width:8%;">
+                                        Frekuensi
                                     </th>
                                     <th style="border: 1px solid black; padding: 5px; vertical-align: middle;">Cara
                                         Pemberian</th>
@@ -477,67 +426,11 @@
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
-                                        <td style="border: 1px solid black; padding: 5px;">-</td>
+                                        <td style="border: 1px solid black; padding: 3px;">-</td>
+                                        <td style="border: 1px solid black; padding: 3px;">-</td>
+                                        <td style="border: 1px solid black; padding: 3px;">-</td>
+                                        <td style="border: 1px solid black; padding: 3px;">-</td>
+                                        <td style="border: 1px solid black; padding: 3px;">-</td>
                                     </tr>
                                 @endif
                             </tbody>

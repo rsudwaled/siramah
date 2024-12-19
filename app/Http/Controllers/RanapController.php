@@ -44,7 +44,7 @@ class RanapController extends APIController
                     ->where('tgl_keluar', '>=', $request->tgl_akhir)
                     ->orWhere('status_kunjungan', 1)
                     ->whereRelation('unit', 'kelas_unit', '=', 2)
-                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status', 'erm_ranap', 'penjamin_simrs', 'alasan_masuk', 'dokter'])
+                    ->with(['pasien', 'budget', 'tagihan', 'unit', 'status', 'erm_ranap', 'penjamin_simrs', 'alasan_masuk', 'dokter','resume'])
                     ->get();
             } else {
                 $kunjungans = Kunjungan::where('kode_unit', $request->kodeunit)
