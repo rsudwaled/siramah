@@ -1,5 +1,5 @@
 @extends('simrs.erm-ranap.template_print.pdf_print')
-@section('title', 'Resume Pemulangan Pasien')
+@section('title', 'RINGKASAN PASIEN PULANG')
 
 @section('content')
 
@@ -9,7 +9,7 @@
             <tbody>
                 <tr style="background-color: #ffc107; margin:0;">
                     <td colspan="3" class="text-center" style="margin: 0; padding:5px;">
-                        <b>RESUME PEMULANGAN</b><br>
+                        <b>RINGKASAN PASIEN PULANG</b><br>
                     </td>
                 </tr>
                 <tr>
@@ -92,7 +92,7 @@
                                                 ? 'diambil_dari_tumit'
                                                 : 'diambil_dari_vena')
                                             : '-' }}
-                                        ||
+                                        <br>
                                         Tgl Pengambilan : {{ $resume->tgl_pengambilan_shk ?? '-' }}
                                     </td>
                                     <td style="margin: 0; padding:2px;">
@@ -319,7 +319,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="padding: 0; width: 100%; box-sizing: border-box;">
+                    <td colspan="3" style="padding: 0; width: 100%; box-sizing: border-box; ">
                         <div class="col-12"
                             style="text-align: center; padding-top: 4px; padding-bottom: 5px; margin: 0.5rem 0;">
                             <strong>Pengobatan Selama Dirawat</strong>
@@ -334,7 +334,7 @@
                                         <div
                                             style="height: auto; width: 48%; margin-right: 1%; margin-bottom: 10px; display: inline-block; vertical-align: top; box-sizing: border-box; page-break-inside: avoid;">
                                             <table
-                                                style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box; font-size: 10px;">
+                                                style="font-size:10px; width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box; font-size: 10px;">
                                                 <thead>
                                                     <tr>
                                                         <th
@@ -365,22 +365,22 @@
                                                         @endphp
                                                         <tr>
                                                             <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle; font-size:9px;">
                                                                 {{ $loop->iteration }}
                                                             </td>
-                                                            <td style="border: 1px solid black; padding: 5px;">
+                                                            <td style="border: 1px solid black; padding: 5px; font-size:9px;">
                                                                 {{ $obat['nama_barang'] }}
                                                             </td>
                                                             <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle; font-size:9px;">
                                                                 {{ $obat['qty'] }}
                                                             </td>
                                                             <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle; font-size:9px;">
 
                                                             </td>
                                                             <td
-                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle;">
+                                                                style="border: 1px solid black; padding: 5px; vertical-align: middle; font-size:9px;">
                                                                 {{ $obat['aturan_pakai'] }}
                                                             </td>
                                                         </tr>
@@ -496,11 +496,11 @@
                         <table
                             style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
                             <tr>
-                                <td>Kondisi Pulang: <br>{{ $resume->kondisi_pulang ?? '' }}</td>
-                                <td>Keadaan Umum: <br>{{ $resume->keadaan_umum ?? '' }}</td>
-                                <td>Kesadaran: <br>{{ $resume->kesadaran ?? '' }}</td>
-                                <td>Tekanan Darah: <br>{{ $resume->tekanan_darah ?? '' }}</td>
-                                <td>Nadi: <br>{{ $resume->nadi ?? '' }}</td>
+                                <td  style="margin: 0; padding:2px;">Kondisi Pulang: <br>{{ $resume->kondisi_pulang ?? '' }}</td>
+                                <td  style="margin: 0; padding:2px;">Keadaan Umum: <br>{{ $resume->keadaan_umum ?? '' }}</td>
+                                <td style="margin: 0; padding:2px;">Kesadaran: <br>{{ $resume->kesadaran ?? '' }}</td>
+                                <td style="margin: 0; padding:2px;">Tekanan Darah: <br>{{ $resume->tekanan_darah ?? '' }}</td>
+                                <td style="margin: 0; padding:2px;">Nadi: <br>{{ $resume->nadi ?? '' }}</td>
                             </tr>
                         </table>
                     </td>
@@ -514,8 +514,8 @@
                             $pengobatan_terpilih = array_keys($pengobatan_terpilih);
                             $keterangan_lain = $pengobatan_dilanjutkan['lainnya'] ?? null;
                         @endphp
-                        @if (count($cara_keluar_terpilih) > 0)
-                            @foreach ($cara_keluar_terpilih as $key)
+                        @if (count($pengobatan_terpilih) > 0)
+                            @foreach ($pengobatan_terpilih as $key)
                                 {{ ucfirst(str_replace('_', ' ', $key)) }}
                             @endforeach
                         @elseif($keterangan_lain)
@@ -526,28 +526,28 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="3" style="height: auto; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table style="width: 100%;  border-collapse: collapse;">
                             <tr>
-                                <td rowspan="4">Instruksi Pulang</td>
-                                <td>Kontrol Tanggal : {{ $resume->tgl_kontrol ?? '-' }} || Di :
+                                <td rowspan="4">Instruksi Pulang : <br> {{$resume->ket_intruksi_pulang??''}}</td>
+                                <td  style="margin: 0; padding:2px;">Kontrol Tanggal : {{ $resume->tgl_kontrol ?? '-' }} || Di :
                                     {{ $resume->lokasi_kontrol }}</td>
                             </tr>
                             <tr>
-                                <td>Diet : {{ $resume->diet ?? '' }} </td>
+                                <td style="margin: 0; padding:2px;">Diet : {{ $resume->diet ?? '' }} </td>
                             </tr>
                             <tr>
-                                <td>Latihan: {{ $resume->latihan ?? '' }} </td>
+                                <td style="margin: 0; padding:2px;">Latihan: {{ $resume->latihan ?? '' }} </td>
                             </tr>
                             <tr>
-                                <td>Segera kembali ke Rumah Sakit, langsung ke Gawat Darurat, bila terjadi:
+                                <td style="margin: 0; padding:2px;">Segera kembali ke Rumah Sakit, langsung ke Gawat Darurat, bila terjadi:
                                     {{ $resume->keterangan_kembali }}</td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3">
+                    <td colspan="3" style="height: auto; padding: 2px; width: 100%; box-sizing: border-box;">
                         <table style="border: none; width: 100%; border-collapse: collapse; margin:0px;" id="table-ttd">
                             {{-- <tr style="border: none; margin:0px;">
                                 <td style="width: 50%; text-align: center; border-bottom: none; margin:0px;">Pasien / Keluarga

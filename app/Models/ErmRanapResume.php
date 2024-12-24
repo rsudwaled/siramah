@@ -64,6 +64,7 @@ class ErmRanapResume extends Model
         'diet',
         'latihan',
         'keterangan_kembali',
+        'ket_intruksi_pulang',
         'a_1menit',
         'ap_1menit',
         'apg_1menit',

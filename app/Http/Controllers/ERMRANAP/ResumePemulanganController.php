@@ -92,7 +92,8 @@ class ResumePemulanganController extends Controller
         {
             return view('simrs.erm-ranap.resume_pemulangan.resume_cepat_final', compact('resume','kunjungan'));
         }
-        $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "','".$kunjungan->kode_unit."')");
+        // $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "','".$kunjungan->kode_unit."')");
+        $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "')");
         $riwayatObat    = collect($riwayatObat);
         $riwayatObat    = $riwayatObat->groupBy('nama_barang')->map(function($items) {
             return [
@@ -134,6 +135,7 @@ class ResumePemulanganController extends Controller
             'tgl_keluar'                => $request->tgl_keluar,
             'jam_keluar'                => $request->waktu_keluar,
             'ruang_rawat_keluar'        => $request->ruang_rawat_keluar,
+            'rawat_intensif'            => $request->rawat_intensif,
             'lama_rawat'                => $request->lama_rawat,
             'bb_bayi_lahir'             => $request->bb_bayi_lahir,
             'ringkasan_perawatan'       => $request->ringkasan_perawatan,
@@ -186,6 +188,7 @@ class ResumePemulanganController extends Controller
             'diet'                      => $request->diet,
             'latihan'                   => $request->latihan,
             'keterangan_kembali'        => $request->keterangan_kembali,
+            'ket_intruksi_pulang'       => $request->ket_intruksi_pulang??null,
             'a_1menit'                  => $request->a_1menit??null,
             'ap_1menit'                 => $request->ap_1menit??null,
             'apg_1menit'                => $request->apg_1menit??null,
@@ -204,7 +207,7 @@ class ResumePemulanganController extends Controller
             'diambil_dari_tumit'        => $request->diambil_dari_tumit??null,
             'diambil_dari_vena'         => $request->diambil_dari_vena??null,
             'tgl_pengambilan_shk'       => $request->tgl_pengambilan_shk??null,
-            'tgl_pengambilan_shk'       => $request->nama_dpjp,
+            // 'tgl_pengambilan_shk'       => $request->nama_dpjp,
             'tgl_cetak'                 => $request->tgl_cetak??null,
             'kode_dokter'               => $dokter->kode_paramedis,
             'dpjp'                      => $dokter->nama_paramedis,
@@ -293,7 +296,8 @@ class ResumePemulanganController extends Controller
         } else {
             $statusBayi = 'Tanggal lahir tidak tersedia';
         }
-        $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "','".$kunjungan->kode_unit."')");
+        // $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "','".$kunjungan->kode_unit."')");
+        $riwayatObat    = \DB::connection('mysql2')->select("CALL SP_HISTORY_RESEP_PASIEN_PERKUNJUNGAN_hadid('" . $kunjungan->no_rm . "','" . $kunjungan->counter . "')");
         $riwayatObat    = collect($riwayatObat);
         $riwayatObat    = $riwayatObat->groupBy('nama_barang')->map(function($items) {
             return [

@@ -127,7 +127,7 @@
                         @foreach ($kunjungans as $kunjungan)
                             @php
                                 $statusClass = 'table-secondary';
-                                $statusTextColor = 'text-warning';
+                                $statusTextColor = 'text-Secondary';
 
                                 // Determine the row color based on conditions
                                 if ($kunjungan->budget) {
@@ -135,11 +135,11 @@
                                         $statusClass = 'table-secondary';
                                         $statusTextColor = $kunjungan->erm_ranap
                                             ? ($kunjungan->erm_ranap->status == 1
-                                                ? 'text-warning'
+                                                ? 'text-secondary'
                                                 : ($kunjungan->erm_ranap->status == 2
                                                     ? 'text-success'
-                                                    : 'text-warning'))
-                                            : 'text-warning';
+                                                    : 'text-secondary'))
+                                            : 'text-secondary';
                                     } else {
                                         $statusClass = 'table-secondary';
                                         $statusTextColor = 'text-dark';
@@ -231,7 +231,7 @@
                 <br>
                 Catatan : <br>
                 - Baris Berwana Merah : belum groupping <br>
-                - Baris Berwana Kuning : pasien sudah pulang tapi belum diisi erm resume<br>
+                - Baris Berwana Abu-abu : pasien sudah pulang tapi belum diisi erm resume<br>
                 - Baris Berwana Hijau : pasien sudah pulang dan resumenya sudah diisi<br>
             </x-adminlte-card>
         </div>

@@ -189,8 +189,8 @@
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <label for="grafida">
-                                                                Grafida:</label>
+                                                            <label for="Gravida">
+                                                                Gravida:</label>
                                                             <div class="input-group">
                                                                 <input type="text" class="form-control" name="grafida"
                                                                     value="{{ $resume->grafida ?? '' }}" id="grafida">
@@ -290,8 +290,7 @@
                                                     <tr>
                                                         <td><strong>Pemeriksaan Fisik</strong></td>
                                                         <td colspan="2">
-                                                            <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5"
-                                                                class="form-control">{{ $resume->pemeriksaan_fisik ?? '' }}</textarea>
+                                                            <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5" class="form-control">@if(!empty($resume->pemeriksaan_fisik)){{ $resume->pemeriksaan_fisik }}@else T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}@endif</textarea>
                                                         </td>
                                                     </tr>
                                                     @if ($umur == 0 || $umur < 30)
@@ -1017,6 +1016,7 @@
                                                                 <div class="col-2">
                                                                     <strong style="margin: 0.5rem 0;">Instruksi
                                                                         Pulang</strong>
+                                                                    <textarea name="ket_intruksi_pulang" id="ket_intruksi_pulang" style="font-size: 12px;" cols="30" rows="15" class="form-control">{{$resume->ket_intruksi_pulang??''}}</textarea>
                                                                 </div>
                                                                 <div class="col-10">
                                                                     <table style="width: 100%">
