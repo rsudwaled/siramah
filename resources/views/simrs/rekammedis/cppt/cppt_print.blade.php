@@ -317,7 +317,7 @@
                     </tr>
                     <tr>
                         <td>Tindak Lanjut</td>
-                        <td id="td_right">{{ $data->TINDAK_LANJUT }}</td>
+                        <td id="td_right">{{ $data->TINDAK_LANJUT }} || {{$data->keterangan_tindak_lanjut}}</td>
                     </tr>
                 </table>
             </td>

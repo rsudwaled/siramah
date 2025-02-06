@@ -2584,6 +2584,7 @@ class AntrianController extends APIController
     }
     public function checkin_antrian(Request $request)
     {
+
         $notif = 'Checkin Antrian BPJS : ip: ' . $request->ip() . ';';
         foreach ($request->all() as $key => $value) {
             $notif .= "$key: $value; ";

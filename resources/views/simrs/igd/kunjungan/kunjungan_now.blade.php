@@ -15,7 +15,7 @@
                     <ul class="nav nav-tabs">
                         <li class="nav-item">
                             <a href="{{ url('daftar-kunjungan') }}"
-                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? '' : (Request::get('view') == 'kunjungan_ranap'?'':'active') }}">
+                                class="nav-link {{ Request::get('view') == 'kunjungan_sep_berhasil' ? '' : (Request::get('view') == 'kunjungan_ranap' ? '' : 'active') }}">
                                 SEMUA KUNJUNGAN&nbsp;
                                 <span class="badge badge-primary">0</span>
                             </a>
@@ -115,7 +115,7 @@
                                             {{ $item->tgl_kunjungan }} | TANGGAL
                                         </td>
 
-                                        <td >{{ $item->tgl_kunjungan }}</td>
+                                        <td>{{ $item->tgl_kunjungan }}</td>
                                         <td style="width: 20%;">
                                             <strong>
                                                 - DIAGNOSA: {{ $item->diagx }}
@@ -180,18 +180,21 @@
                                                     @endif
                                                 @endif
                                             @else
-                                                {{-- <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
+
+                                                <x-adminlte-button type="button" data-nama="{{ $item->pasien }}"
                                                     data-nik="{{ $item->nik }}" data-rm="{{ $item->rm }}"
                                                     data-nokartu="{{ $item->noKartu }}"
                                                     data-kunjungan="{{ $item->kunjungan }}"
                                                     data-jpdaftar="{{ $item->jp_daftar }}" theme="primary"
                                                     class="btn-xs btn-diagnosa show-formdiagnosa mt-1" id="btn-diagnosa"
-                                                    label="Diagnosa" /> --}}
-                                                    <blockquote>
-                                                        <p>
-                                                            fitur update diagnosa dan bridging sep igd sedang dalam proses perbaikan. silahkan gunakan vclaim terlebih dahulu untuk pembuatan sep igd.
-                                                        </p>
-                                                    </blockquote>
+                                                    label="Diagnosa" />
+                                                {{-- <blockquote>
+                                                    <p>
+                                                        fitur update diagnosa dan bridging sep igd sedang dalam proses
+                                                        perbaikan. silahkan gunakan vclaim terlebih dahulu untuk pembuatan
+                                                        sep igd.
+                                                    </p>
+                                                </blockquote> --}}
                                             @endif
                                             <x-adminlte-button type="button" data-rm="{{ $item->rm }}"
                                                 data-nama="{{ $item->pasien }}" data-kunjungan="{{ $item->kunjungan }}"

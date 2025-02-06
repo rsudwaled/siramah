@@ -111,14 +111,16 @@ class DaftarIGDController extends Controller
     public function cariPasienLama(Request $request)
     {
         $search = Pasien::query()
+            ->when($request->cari_rm_pasien, function ($query, $rm) {
+                $query->where('no_rm', 'LIKE', '%' . $rm . '%');
+            })
             ->when($request->cari_nama_pasien, function ($query, $name) {
                 $query->where('nama_px', 'LIKE', '%' . $name . '%');
             })
             ->when($request->cari_alamat_pasien, function ($query) use ($request) {
-                $villageName = $request->cari_alamat_pasien;
-                $query->whereHas('lokasiDesa', function ($query) use ($villageName) {
-                    $query->where('name', 'LIKE', '%' . $villageName . '%');
-                });
+                $address = $request->cari_alamat_pasien;
+                // Filter langsung pada kolom alamat pasien
+                $query->where('alamat', 'LIKE', '%' . $address . '%');
             });
         $pasien = $search->with(['kunjungans','lokasiDesa','lokasiKecamatan','lokasiKabupaten','lokasiProvinsi'])->get();
         // dd($pasien);
@@ -167,7 +169,7 @@ class DaftarIGDController extends Controller
         $penjamin    = PenjaminSimrs::get();
         $penjaminbpjs = Penjamin::orderBy('id', 'asc')->get();
         $tanggal     = now()->format('Y-m-d');
-        $unitPenunjang = Unit::whereIn('kode_unit', ['4002','4008','4010','4011','3014','3002','3003','3007','3020'])->orderBy('id', 'asc')->get();
+        $unitPenunjang = Unit::whereIn('kode_unit', ['4002','4008','4010','4011','3014','3002','3003','3007','3020','3011'])->orderBy('id', 'asc')->get();
         $unitRanap     = Unit::where('kelas_unit', 2)->get();
         $antrian_triase = AntrianPasienIGD::with('isTriase')
             ->whereDate('tgl', now())
@@ -493,6 +495,7 @@ class DaftarIGDController extends Controller
         $createKunjungan->perujuk           = $request->nama_perujuk ?? null;
         $createKunjungan->is_ranap_daftar   = 0;
         $createKunjungan->form_send_by      = 0;
+        $createKunjungan->lakalantas        = $request->status_laka??0;
         $createKunjungan->is_bpjs_proses    = $statusBpjsProses;
         $createKunjungan->jp_daftar         = ($statusPenjamin == 2)? 2 : ($statusPenjamin == 0 ? 0 : 1);
         $createKunjungan->pic2              = Auth::user()->id;
@@ -794,7 +797,7 @@ class DaftarIGDController extends Controller
             $code           = $resdescrtipt->metadata->code;
 
             $pasien         = Pasien::where('no_rm', $request->rm)->first();
-            if (empty($pasien->no_Bpjs)) {
+            if (empty($pasien->no_Bpjs) && $pasien) {
                 $pasien->no_Bpjs = $resdescrtipt->response->peserta->noKartu;
                 $pasien->save();
             }

@@ -24,56 +24,99 @@
         <div class="col-12">
             <div class="card card-primary">
                 <div class="card-header">
-                  <h3 class="card-title">Cari Pasien</h3>
+                    <h3 class="card-title">Cari Pasien Lama & Riwayat Kunjungannya</h3>
 
-                  <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
-                    </button>
-                  </div>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="card-body">
-                  <div class="col-lg-12">
-                    <form id="form-cari-pasien-lama" method="get">
-                        <div class="col-lg-12 row">
-                            <div class="col-lg-3">
-                                <div class="form-group">
-                                    <label for="Cari Nama Pasien">Cari Nama Pasien</label>
-                                    <input type="text" class="form-control" name="cari_nama_pasien" id="cari_nama_pasien">
-                                </div>
-                            </div>
-                            <div class="col-lg-7">
-                                <div class="form-group">
-                                    <label for="Cari Alamat Pasien">Cari Alamat Pasien</label>
-                                    <input type="text" class="form-control" name="cari_alamat_pasien" id="cari_alamat_pasien">
-                                </div>
-                            </div>
-                            <div class="col-lg-2">
-                                <button type="submit" class="btn btn-md btn-primary mt-4">Cari Pasien</button>
-                            </div>
+                    <div class="col-lg-12">
+                        <div class="btn btn-block text-left mb-2 bg-gray-dark  disabled color-palette alert-dismissible"
+                            style="font-size: 12px;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-ban"></i> INFORMASI PENTING!</h5>
+                            <ul>
+                                <li>
+                                    jika ingin <strong>mencari pasien lama dari 2010 sampai 2023</strong> maka gunakan
+                                    pencarian
+                                    berikut untuk melihat riwayat dari pasien lama <strong>( LAMANYA PAKE BANGET INIMAH YAH
+                                        INGET
+                                        )</strong> !!!
+                                </li>
+                                <li>
+                                    jika data tidak ditemukan maka gunakan pencarian pasien dari 2023 sampai sekarang pada
+                                    pencarian
+                                    dibawah yang lebih lengkap pencariannya.
+                                </li>
+                            </ul>
                         </div>
-                      </form>
-                  </div>
-                  <div class="col-12 mt-3">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nama</th>
-                                <th>Tanggal Lahir</th>
-                                <th>Riwayat</th>
-                            </tr>
-                        </thead>
-                        <tbody id="result-tbody">
-                            <!-- Data akan ditampilkan di sini -->
-                        </tbody>
-                    </table>
-                  </div>
+                        <form id="form-cari-pasien-lama" method="get">
+                            <div class="col-lg-12 row">
+                                {{-- <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label for="Cari RM Pasien">RM Pasien</label>
+                                        <input type="text" class="form-control" name="cari_rm_pasien"
+                                            id="cari_rm_pasien">
+                                    </div>
+                                </div> --}}
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label for="Cari Nama Pasien">Nama Pasien</label>
+                                        <input type="text" class="form-control" name="cari_nama_pasien"
+                                            id="cari_nama_pasien">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label for="Cari Alamat Pasien">Alamat Pasien</label>
+                                        <input type="text" class="form-control" name="cari_alamat_pasien"
+                                            id="cari_alamat_pasien">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <button type="submit" class="btn btn-md btn-primary mt-4">Cari Pasien</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12 mt-3">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nama</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Riwayat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="result-tbody">
+                                <!-- Data akan ditampilkan di sini -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-              </div>
+            </div>
         </div>
         <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-body">
                     <div class="col-lg-12">
+                        <div class="btn btn-block text-left mb-2 bg-gray disabled color-palette alert-dismissible"
+                            style="font-size: 12px;">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-ban"></i> INFORMASI SANGAT PENTING!</h5>
+                            <ul>
+                                <li> jika <strong>pencarian pasien 1 sampai 2 tahun terakhir</strong> gunakan pencarian
+                                    dibawah ini
+                                    yah.
+                                </li>
+                                <li>pencarian disini juga berfungsi untuk mendaftarkan pasien</li>
+                                <li>jika pencarian tidak ditemukan, tolong cek dulu pada inputan no rm, nama pasien, nama
+                                    desa, nama kecamatan, nomor kartu dan NIK barangkali data terisi dan tidak singkron
+                                    dengan yang di cari</li>
+                            </ul>
+                        </div>
                         <form action="" method="get">
                             <div class="row">
                                 <div class="col-lg-4">
@@ -168,8 +211,8 @@
                                                 <strong>
                                                     {{ $data->nama_px }}
                                                 </strong>
-                                                <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}" target="_blank"
-                                                    rel="noopener noreferrer"
+                                                <a href="{{ route('edit-pasien', ['rm' => $data->no_rm]) }}"
+                                                    target="_blank" rel="noopener noreferrer"
                                                     class="btn btn-light btn-xs col-4 float-right"><i
                                                         class="far fa-user"></i> <strong>Edit Pasien</strong></a>
                                                 <br>
@@ -207,11 +250,16 @@
                                                     Diag: -
                                                 </small>
                                             @endif
+                                            <small style="font-size: 12px;">
+                                                TERDAFTAR SEJAK:
+                                                {{ Carbon\Carbon::parse($data->tgl_entry)->timezone('Asia/Jakarta')->format('d-m-Y H:i:s') }}
+                                                WIB<br>
+                                            </small>
                                             <button type="button"
                                                 class="btn btn-default btn-xs btn-pilihPasien bg-purple btn-block"
                                                 data-rm="{{ $data->no_rm }}" data-nama="{{ $data->nama_px }}"
                                                 data-nik="{{ $data->nik_bpjs }}" data-nomorkartu="{{ $data->no_Bpjs }}"
-                                                data-kontak="{{ $data->no_telp ?? $data->no_hp }}">
+                                                data-kontak="{{ $data->no_tlp ?? $data->no_hp }}">
                                                 DAFTAR </button>
 
                                         </div>
@@ -242,16 +290,33 @@
                                 <label for="RM PASIEN">RM PASIEN</label>
                                 <input type="text" class="form-control" name="rm_terpilih" id="rm_terpilih" readonly>
                             </div>
-                            <x-adminlte-input name="nama_pasien" id="nama_pasien" label="NAMA" type="text" readonly
-                                disable-feedback />
                         </div>
                         <div class="col-3">
                             <div class="form-group">
                                 <label for="exampleInputBorderWidth2">NIK
                                     <code id="note_nik">(mohon nik WAJIB DIISI)</code></label>
-                                <input type="number" name="nik_bpjs" id="nik_bpjs" class="form-control"
+                                <input type="number" name="nik_bpjs" id="nik_bpjs" class="form-control nik_bpjs"
                                     value="0000000000000000">
                             </div>
+                        </div>
+                        <div class="col-3">
+                            <x-adminlte-input name="noTelp" id="noTelp" type="number" value="000000000000"
+                                label="No Telpon" />
+                        </div>
+                        <div class="col-3">
+                            <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
+                                @foreach ($alasanmasuk as $item)
+                                    <option value="{{ $item->id }}">
+                                        {{ strtoupper($item->alasan_masuk) }}</option>
+                                @endforeach
+                            </x-adminlte-select>
+                        </div>
+
+                        <div class="col-3">
+                            <x-adminlte-input name="nama_pasien" id="nama_pasien" label="NAMA" type="text" readonly
+                                disable-feedback />
+                        </div>
+                        <div class="col-3">
                             <div class="form-group">
                                 <label for="exampleInputBorderWidth2">NO KARTU
                                     <code id="note_nik">
@@ -263,21 +328,13 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <x-adminlte-input name="noTelp" id="noTelp" type="number" value="000000000000"
-                                label="No Telpon" />
                             @php
                                 $config = ['format' => 'YYYY-MM-DD'];
                             @endphp
                             <x-adminlte-input-date name="tanggal" value="{{ Carbon\Carbon::now()->format('Y-m-d') }}"
                                 label="Tanggal" :config="$config" />
                         </div>
-                        <div class="col-3">
-                            <x-adminlte-select name="alasan_masuk_id" label="Alasan Masuk">
-                                @foreach ($alasanmasuk as $item)
-                                    <option value="{{ $item->id }}">
-                                        {{ strtoupper($item->alasan_masuk) }}</option>
-                                @endforeach
-                            </x-adminlte-select>
+                        <div class="col-2">
                             <x-adminlte-select id="tujuanDaftar" name="tujuan_daftar" label="Tujuan Daftar"
                                 onchange="updateButton()">
                                 <option value="igd">IGD</option>
@@ -286,6 +343,11 @@
                                 <option value="penunjang">PENUNJANG</option>
                             </x-adminlte-select>
                         </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn-secondary btn-md mt-4 btnCekStatusBpjsFormDaftar"
+                                style="font-size: 12px;">CEK BPJS</button>
+                        </div>
+
                         <div class="col-12">
                             <blockquote class="quote-danger">
                                 <p>
@@ -333,6 +395,114 @@
 @section('plugins.Sweetalert2', true)
 @section('plugins.Select2', true)
 @section('js')
+<script>
+    $('.btnCekStatusBpjsFormDaftar').on('click', function() {
+        var cek_nik_bpjs = document.getElementById('nik_bpjs').value;
+        var cek_nomorkartu_bpjs = document.getElementById('no_bpjs').value;
+        // var cekStatusBPJS = "{{ route('cek-status.v1') }}";
+        var cekStatusBPJS = "{{ route('cek-status-bpjs.tanpa-daftar') }}";
+        var urlDaftarPasienBaru = "{{ route('pasien-baru.create_frombpjs') }}";
+
+        // Menampilkan konfirmasi sebelum memulai cek status BPJS
+        Swal.fire({
+            title: "CEK STATUS BPJS?",
+            text: "Silahkan pilih tombol cek status!",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Cek Status!",
+            cancelButtonText: "Batal!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.LoadingOverlay("show");
+
+                // Melakukan permintaan Ajax untuk mengecek status BPJS
+                $.ajax({
+                    type: 'GET',
+                    url: cekStatusBPJS,
+                    dataType: 'json',
+                    data: {
+                        cek_nomorkartu: cek_nomorkartu_bpjs,
+                        cek_nik: cek_nik_bpjs,
+                    },
+                    success: function(data) {
+                        $.LoadingOverlay("hide");
+
+                        if (data.code == 200) {
+                            // Menampilkan konfirmasi sukses setelah berhasil cek status BPJS
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: "btn btn-success m-2",
+                                    cancelButton: "btn btn-danger m-2"
+                                },
+                                buttonsStyling: false
+                            });
+
+                            swalWithBootstrapButtons.fire({
+                                title: "Success!",
+                                html: `${data.pasien}<br>RM: ${data.rm}<br>No Kartu: ${data.noKartu}<br>NIK: ${data.nik}<br>Status: ${data.keterangan} <br>JENIS : ${data.jenisPeserta} - ${data.kelas}`,
+                                icon: "success",
+                                padding: "3em",
+                                showCancelButton: true,
+                                confirmButtonText: "Daftar Pasien Baru!",
+                                cancelButtonText: "Tutup!",
+                                reverseButtons: false
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Pastikan URL pendaftaran tidak menyebabkan pemanggilan kembali
+                                    $.ajax({
+                                        type: 'GET',
+                                        url: urlDaftarPasienBaru,
+                                        dataType: 'json',
+                                        data: {
+                                            NoKartu: data.nomorkartu,
+                                            Nik: data.nik,
+                                            Nama: data.pasien,
+                                        },
+                                        success: function(response) {
+                                            console.info(response.code);
+
+                                            // Redirect hanya sekali, pastikan redirectUrl sudah benar
+                                            if (response.code === 200) {
+                                                window.location.href =
+                                                    "{{ url('redirect-url') }}"; // Pastikan URL redirect tepat
+                                            }
+                                        },
+                                    });
+                                }
+                            });
+
+                        } else {
+                            // Menampilkan pesan info jika status BPJS tidak valid
+                            Swal.fire({
+                                title: "INFO!",
+                                text: data.keterangan + ' ( KODE : ' + data
+                                    .jenisPeserta + ')',
+                                icon: "info",
+                                confirmButtonText: "oke!",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    location
+                                .reload(); // Hanya reload jika benar-benar perlu
+                                }
+                            });
+                        }
+                    },
+                    error: function() {
+                        $.LoadingOverlay("hide");
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Terjadi kesalahan pada sistem. Silakan coba lagi.",
+                            icon: "error",
+                            confirmButtonText: "Tutup",
+                        });
+                    }
+                });
+            }
+        });
+    });
+</script>
     <script>
         document.getElementById('tujuanDaftar').addEventListener('change', function() {
             // Ambil nilai yang dipilih
@@ -464,7 +634,9 @@
                                     kunjungan.kode_kunjungan);
                                 let buttonAction =
                                     ''; // Variabel untuk menyimpan tombol yang akan ditampilkan
-                                if ((kunjungan.status_kunjungan == 14 && (kunjungan.kode_unit != '1002' && kunjungan.kode_unit != '1023' || kunjungan.kode_unit == '0000'))){
+                                if ((kunjungan.status_kunjungan == 14 && (kunjungan.kode_unit !=
+                                        '1002' && kunjungan.kode_unit != '1023' || kunjungan
+                                        .kode_unit == '0000'))) {
                                     buttonAction = `
                                             <blockquote>
                                                 <p>Pasien sudah didaftarkan ranap pada tanggal: <br> <strong>${kunjungan.tgl_masuk} WIB</strong>. <br>
@@ -476,7 +648,10 @@
                                                 </small>
                                             </blockquote>
                                         `;
-                                } else if ((kunjungan.status_kunjungan == 1 && (kunjungan.kode_unit == '1002' || kunjungan.kode_unit == '1023'))|| (kunjungan.status_kunjungan == 1 && (kunjungan.kode_unit != '1002' || kunjungan.kode_unit != '1023'))) {
+                                } else if ((kunjungan.status_kunjungan == 1 && (kunjungan.kode_unit ==
+                                        '1002' || kunjungan.kode_unit == '1023')) || (kunjungan
+                                        .status_kunjungan == 1 && (kunjungan.kode_unit != '1002' ||
+                                            kunjungan.kode_unit != '1023'))) {
                                     // If status_kunjungan is 1 and kode_unit is '1002' or '1023'
                                     buttonAction = `
                                             <x-adminlte-button type="button"
@@ -632,40 +807,88 @@
     </script>
     {{-- ajax cari pasien lama --}}
     <script>
-        $(document).ready(function () {
-            $('#form-cari-pasien-lama').on('submit', function (e) {
+        $(document).ready(function() {
+            $('#form-cari-pasien-lama').on('submit', function(e) {
                 e.preventDefault(); // Menghentikan form dari reload halaman
 
+                var rmPasien = $('#cari_rm_pasien').val();
                 var namaPasien = $('#cari_nama_pasien').val();
                 var alamatPasien = $('#cari_alamat_pasien').val();
 
                 // Kirim data ke server menggunakan AJAX
                 $.ajax({
-                    url: '{{route('cari-pasien-lama')}}',
+                    url: '{{ route('cari-pasien-lama') }}',
                     type: 'GET',
                     data: {
+                        cari_rm_pasien: rmPasien,
                         cari_nama_pasien: namaPasien,
                         cari_alamat_pasien: alamatPasien
                     },
-                    success: function (response) {
+                    success: function(response) {
                         var resultHtml = '';
                         if (response.length > 0) {
-                            response.forEach(function (pasien) {
-                                var riwayatKunjunganHtml = pasien.kunjungans.map(function(kunjungans) {
-                                    return '<table><tbody><tr style="margin:0px; padding:2px;"><td>Masuk: '+kunjungans.tgl_masuk+'</td><td>Unit: '+kunjungans.prefix_kunjungan+'</td><td>Keluar: '+kunjungans.tgl_keluar+'</td></tr></tbody></table>'
-                                });
+                            response.forEach(function(pasien) {
+                                // Pengecekan relasi dan nilai fallback jika tidak ada
+                                var desaName = pasien.lokasi_desa ? pasien.lokasi_desa
+                                    .name : 'Desa Tidak Diketahui';
+                                var kecamatanName = pasien.lokasi_kecamatan ? pasien
+                                    .lokasi_kecamatan.name :
+                                    'Kecamatan Tidak Diketahui';
+                                var kabupatenName = pasien.lokasi_kabupaten ? pasien
+                                    .lokasi_kabupaten.name :
+                                    'Kabupaten Tidak Diketahui';
 
-                                resultHtml += '<tr><td>RM: '+pasien.no_rm+'<br>NAMA :'+pasien.nama_px+'<br>Alamat: '+pasien.lokasi_desa.name+','+pasien.lokasi_kecamatan.name+'-'+pasien.lokasi_kabupaten.name+'<br></td><td>Tgl Lahir:'+pasien.tgl_lahir+'<br>Jenis Kelamin:'+pasien.jenis_kelamin+'</td><td>'+riwayatKunjunganHtml+'</td></tr>';
+                                // Riwayat kunjungan dengan membalik urutan array kunjungan
+                                var riwayatKunjunganHtml = pasien.kunjungans.reverse()
+                                    .map(function(kunjungans) {
+                                        return `
+                        <table style="border:1px solid #ddd; margin: 5px 0;">
+                            <thead>
+                                <tr style="background-color: #f4f4f4;">
+                                    <th>MASUK</th>
+                                    <th>TUJUAN</th>
+                                    <th>KELUAR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${kunjungans.tgl_masuk}</td>
+                                    <td>${kunjungans.prefix_kunjungan}</td>
+                                    <td>${kunjungans.tgl_keluar}</td>
+                                </tr>
+                            </tbody>
+                        </table>`;
+                                    }).join(''); // Menyambungkan array menjadi string
+
+                                // Membuat HTML untuk pasien
+                                resultHtml += `
+                    <tr>
+                        <td>
+                            RM: ${pasien.no_rm}<br>
+                            NAMA: ${pasien.nama_px}<br>
+                            Alamat: ${pasien.alamat}<br>
+                            Alamat Berdasarkan Kode: ${desaName}, ${kecamatanName} - ${kabupatenName}<br>
+                        </td>
+                        <td>
+                            Tgl Lahir: ${pasien.tgl_lahir}<br>
+                            Jenis Kelamin: ${pasien.jenis_kelamin}
+                        </td>
+                        <td>
+                            ${riwayatKunjunganHtml}
+                        </td>
+                    </tr>`;
                             });
                         } else {
                             resultHtml = '<p>Data tidak ditemukan.</p>';
                         }
-                        $('#result-tbody').html(resultHtml); // Menampilkan hasil ke dalam div#result
+                        $('#result-tbody').html(
+                            resultHtml); // Menampilkan hasil ke dalam div#result
                     },
-                    error: function () {
+                    error: function() {
                         alert('Terjadi kesalahan');
                     }
                 });
+
             });
         });
     </script>

@@ -306,7 +306,13 @@ class ResumePemulanganController extends Controller
                 'qty' => $items->sum('qty')  // Jumlahkan qty dari semua obat dengan nama yang sama
             ];
         });
-        $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
+        $unit = $kunjungan->kode_unit;
+        if($unit =='2020')
+        {
+            $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien_hcu', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
+        }else{
+            $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
+        }
         // return view('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien');
         $pdf->setPaper('F4', 'portrait');
         return $pdf->stream('pdf_resume_pemulangan.pdf');

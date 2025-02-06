@@ -603,7 +603,7 @@
                             <div>
                                 @if ($riwayatObat->isNotEmpty())
                                     @php
-                                        $chunks = $riwayatObat->chunk(10); // Membagi data menjadi potongan-potongan per 10 item
+                                        $chunks = $riwayatObat->chunk(15); // Membagi data menjadi potongan-potongan per 10 item
                                     @endphp
                                     <div style="page-break-inside: avoid;">
                                         @foreach ($chunks as $index => $chunk)
@@ -762,9 +762,9 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3" style="height: auto; padding: 1px; width: 100%; box-sizing: border-box; ">
+                        <td colspan="3" style="height: auto;  width: 100%; box-sizing: border-box; ">
                             <table
-                                style="width: 100%; border-collapse: collapse; margin: 0; padding: 2px; border: 1px solid black; box-sizing: border-box;">
+                                style="width: 100%; border-collapse: collapse; margin: 0; border: 1px solid black; box-sizing: border-box;">
                                 <tr>
                                     <td style="margin: 0; padding:1px; boder:1px solid black;">Kondisi Pulang:
                                         <br>{{ $resume->kondisi_pulang ?? '' }}
@@ -816,7 +816,7 @@
                                     <td rowspan="4" style="border:1px solid black;">Instruksi Pulang : <br>
                                         {{ $resume->ket_intruksi_pulang ?? '' }}</td>
                                     <td style="margin: 0; padding:1px; border:1px solid black;">Kontrol Tanggal :
-                                        {{ $resume->tgl_kontrol ? \Carbon\Carbon::parse($resume->tgl_kontrol)->format('d-m-Y') :'-' }} || Di :
+                                        {{ $resume->tgl_kontrol ?? '-' }} || Di :
                                         {{ $resume->lokasi_kontrol }}</td>
                                 </tr>
                                 <tr>
@@ -845,7 +845,7 @@
                                         Pasien <br> Yang Menerima Penjelasan <br>
                                         <br><br><br><br><br><br>
                                         <span
-                                            style="margin-top:40px;">..............................................</span>
+                                            style="margin-top:30px;">..............................................</span>
                                     </td>
                                     <td style=" text-align: center; border: none;">
                                         Waled,
@@ -858,7 +858,7 @@
                                         Dokter Penanggung Jawab Pelayanan (DPJP) <br>
                                         <br><br><br><br><br><br>
                                         <span
-                                            style="margin-top:40px;">{{ $resume->dpjp ?? '..............................................' }}</span>
+                                            style="margin-top:30px;">{{ $resume->dpjp ?? '..............................................' }}</span>
                                     </td>
                                 </tr>
                             </table>

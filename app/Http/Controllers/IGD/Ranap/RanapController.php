@@ -1064,6 +1064,7 @@ class RanapController extends APIController
 
             $kunjungan          = Kunjungan::where('no_sep', $request->noSep)->first();
             $kunjungan->no_sep  = NULL;
+            $kunjungan->diagx   = NULL;
             $kunjungan->save();
         } else {
             Alert::error('Error', 'Error ' . $response->metadata->code . ' ' . $response->metadata->message);

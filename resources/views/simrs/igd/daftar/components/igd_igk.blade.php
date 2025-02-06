@@ -26,6 +26,15 @@
         </div>
         <div class="col-2">
             <div class="form-group">
+                <label for="">Status Pasien Kecelakaan?</label>
+                <select name="status_laka" class="form-control" id="status_laka">
+                    <option value="0" selected>Bukan</option>
+                    <option value="1">Iya</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="form-group">
                 <label for="exampleInputBorderWidth2">Nama Perujuk</label>
                 <input type="text" name="nama_perujuk" class="form-control" id="nama_perujuk">
             </div>
@@ -33,19 +42,19 @@
         <div class="col-2">
             <div class="form-group">
                 <label for="Jenis Pasien">Jenis Pasien</label>
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="isBpjs" value="0" checked="">
                         <label class="form-check-label">PASIEN UMUM</label>
                     </div>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="isBpjs" value="1">
                         <label class="form-check-label">PASIEN BPJS</label>
                     </div>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-7">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="isBpjs" value="2">
                         <label class="form-check-label">BPJS PROSES</label>
@@ -53,7 +62,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-2">
             <div class="form-group" id="penjamin_pribadi">
                 <label for="PENJAMIN PRIBADI">PENJAMIN PRIBADI</label>
                 <input type="text" value="P01" placeholder="PRIBADI" class="form-control" readonly>
@@ -64,10 +73,6 @@
                         <option value="{{ $item->kode_penjamin }}">
                             {{ $item->nama_penjamin }}</option>
                     @endforeach
-                    {{-- @foreach ($penjaminbpjs as $item)
-                        <option value="{{ $item->kode_penjamin_simrs }}">
-                            {{ $item->nama_penjamin_bpjs }}</option>
-                    @endforeach --}}
                 </x-adminlte-select2>
             </div>
         </div>

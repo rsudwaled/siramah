@@ -293,7 +293,7 @@
                                                             <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5" class="form-control">@if(!empty($resume->pemeriksaan_fisik)){{ $resume->pemeriksaan_fisik }}@else T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}@endif</textarea>
                                                         </td>
                                                     </tr>
-                                                    @if ($umur == 0 || $umur < 30)
+                                                    @if ($umur == 0 || $umur < 30 || $kunjungan->kode_unit =='2006' || $kunjungan->kode_unit == '2005')
                                                         <tr>
                                                             <td colspan="3">
                                                                 <table style="width: 100%; height: 100%; border:none;">
