@@ -77,6 +77,7 @@
                         <th>Pasien</th>
                         <th>No BPJS</th>
                         <th>Poliklinik</th>
+                        <th>Dokter</th>
                         <th>Status</th>
                         <th>Action</th>
                         <th>Checkin</th>
@@ -85,11 +86,18 @@
                         <th>Selesai Dokter</th>
                         <th>Penyiapan Resep</th>
                         <th>Obat Diserahkan</th>
+                        <th>Waktu Pelayanan</th>
                     </tr>
                 </thead>
                 <tbody>
                     @if ($antrians)
                         @foreach ($antrians as $antrian)
+                            @php
+                                $start = \Carbon\Carbon::parse($antrian->taskid3);
+                                $end = \Carbon\Carbon::parse($antrian->taskid7); // Asumsikan ada field waktu_antrian
+                                $diff = $start->diff($end);
+                                $diffFormatted = $diff->format('%H:%I:%S');
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $antrian->tanggalperiksa }}</td>
@@ -97,6 +105,7 @@
                                 <td>{{ $antrian->nama }}</td>
                                 <td>{{ $antrian->nomorkartu }}</td>
                                 <td>{{ $antrian->namapoli }}</td>
+                                <td>{{ $antrian->kunjungan->dokter->nama_paramedis ?? '-' }}</td>
                                 <td>
                                     @if ($antrian->sync_antrian)
                                         <span class="badge badge-success">Sudah</span>
@@ -115,6 +124,7 @@
                                 <td>{{ $antrian->taskid5 }}</td>
                                 <td>{{ $antrian->kunjungan?->order_obat_header?->tgl_entry }}</td>
                                 <td>{{ $antrian->taskid7 }}</td>
+                                <td>{{ $diffFormatted }}</td>
                             </tr>
                         @endforeach
                     @endif
