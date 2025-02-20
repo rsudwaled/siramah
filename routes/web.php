@@ -592,6 +592,7 @@ Route::middleware('auth')->group(function () {
     // Laporan Index
     Route::controller(App\Http\Controllers\LaporanIndex\IndexDokterController::class)->prefix('index-dokter')->name('laporanindex.index_dokter.')->group(function () {
         Route::get('/', 'index')->name('index');
+        Route::get('/export', 'export')->name('export');
     });
 
     // Start Gizi
@@ -846,6 +847,13 @@ Route::middleware('auth')->group(function () {
         Route::get('verify-resume', 'verifyResume')->name('verify.resume');
         Route::get('/coder-diagnosa-resume/{kode}', 'coderView')->name('coder.diagnosa');
         Route::post('/coder-diagnosa-resume/store', 'coderStoreDiagnosa')->name('coder-diagnosa.store');
+    });
+
+    // Casemix Cari SEP
+    Route::controller(App\Http\Controllers\Casemix\CariSepController::class)->prefix('casemix-cari-sep')->name('casemix-cari-sep.')->group(function () {
+        Route::get('/', 'viewCariSep')->name('index');
+        Route::get('/get-sep', 'getSep')->name('get-sep');
+        Route::get('/download', 'getSepDownload')->name('get-sep-download');
     });
     // pencarian pasien
     Route::controller(App\Http\Controllers\IGD\V1\PencarianPasienController::class)->prefix('pencarian')->name('data-pasien.')->group(function () {

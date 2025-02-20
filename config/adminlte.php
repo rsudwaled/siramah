@@ -831,7 +831,7 @@ return [
         [
             'text'    => 'Akses Casemix',
             'icon'    => 'fas fa-file-invoice-dollar',
-            'can' => 'casemix',
+            // 'can' => 'casemix',
             'submenu' => [
                 [
                     'text' => 'Data Resume',
@@ -839,6 +839,13 @@ return [
                     'url'  => 'casemix-resume/data-resume',
                     'shift'   => 'ml-2',
                     'can' => 'casemix',
+                ],
+                [
+                    'text' => 'Cari SEP',
+                    'icon'    => 'fas fa-receipt',
+                    'url'  => 'casemix-cari-sep',
+                    'shift'   => 'ml-2',
+                    // 'can' => 'casemix',
                 ],
 
             ],

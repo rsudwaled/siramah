@@ -366,14 +366,14 @@
                             <table style="width: 100%; border-collapse: collapse; border:none;">
                                 <tr style="border:1px solid black">
                                     <td
-                                        style="border:none; border-right:1px solid black; width: 5px; display: flex; justify-content: center; align-items: center; height:150px; padding:5px;">
-                                        <div style="transform: rotate(90deg); white-space: nowrap; font-size: 12px;">
+                                        style="border:none; border-right:1px solid black; width: 5px; display: flex; justify-content: center; align-items: center; height:100px; padding:5px;">
+                                        <div style="transform: rotate(90deg); white-space: nowrap; font-size: 10px;">
                                             <span>DIAGNOSA KELUAR</span>
                                         </div>
                                     </td>
                                     <td style="height: auto; margin:0px; padding:2px;">
                                         <table
-                                            style="width: 100%; height:50px; border-collapse: collapse; margin:0px; padding:0px;">
+                                            style="width: 100%; height:20px; border-collapse: collapse; margin:0px; padding:0px;">
                                             <tr>
                                                 @php
                                                     if (
@@ -412,7 +412,7 @@
                                                     style="text-align: left; vertical-align: top; margin: 0; padding:2px;border-left:1px solid black; border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black;">
                                                     Diagnosa Sekunder</td>
                                                 <td
-                                                    style="text-align: left; vertical-align: top; margin: 0; padding:2px; height:100px; border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black;">
+                                                    style="text-align: left; vertical-align: top; margin: 0; padding:2px; height:50px; border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black;">
                                                     @php
                                                         $sekunder =
                                                             isset($resume) && isset($resume->diagnosa_sekunder_dokter)
