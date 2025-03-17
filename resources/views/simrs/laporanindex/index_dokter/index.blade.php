@@ -39,7 +39,9 @@
                             <x-adminlte-select2 name="kode_paramedis" required id="kode_paramedis" label="Kode Tarif">
                                 <option value=" "> -Semua Kode-</option>
                                 @foreach ($paramedis as $kode)
-                                    <option value="{{ $kode->kode_paramedis }}">{{ $kode->kode_paramedis }} |
+                                    <option value="{{ $kode->kode_paramedis }}"
+                                        {{ $request->kode_paramedis == $kode->kode_paramedis ? 'selected' : '' }}>
+                                        {{ $kode->kode_paramedis }} |
                                         {{ $kode->nama_paramedis }}</option>
                                 @endforeach
                             </x-adminlte-select2>
@@ -48,9 +50,10 @@
                     <x-adminlte-button type="submit" class="withLoad float-right btn btn-sm" theme="primary"
                         label="Lihat Laporan" />
                     @if (isset($findReport))
-                        <x-adminlte-button label="Excel" class="bg-purple float-right btn btn-sm" id="export" />
-                        <button class="btn btn-success float-right btn btn-sm" onclick="printDiv('printMe')">Print <i
-                                class="fas fa-print"></i></button>
+                        <button type="button" onclick="submitForm()"
+                            class="btn btn-success float-right btn-sm btn-export mr-2">
+                            Export
+                        </button>
                     @endif
 
                 </form>
@@ -69,51 +72,86 @@
                             <hr width="100%" hight="20px" class="m-1 " color="black" size="50px" />
                         </div>
                         <div class="row invoice-info p-3">
-                            <div class="row">
-                                <dt class="col-sm-4 m-0">Judul</dt>
-                                <dd class="col-sm-8 m-0"> :
-                                    <b> LAPORAN INDEX OPERASI</b>
-                                </dd>
-                                <dt class="col-sm-4 m-0">Periode</dt>
-                                <dd class="col-sm-8 m-0"> :
-                                    <b> TAHUN</b>
-                                </dd>
+                            <div class="col-12 row">
+                                <div class="col-10"><b>Dokter: {{ $dokterFind->nama_paramedis }}</b></div>
+                                <div class="col-2"><b>Bulan : {{ $bulanSelesai }} Tahun : {{ $tahunSelesai }}</b></div>
                             </div>
                         </div>
-                        <div class="col-12 table-responsive table-laporan">
+                        <div class="col-12 table-responsive" style="max-height: 400px; overflow-y: auto;">
                             <table class="table table-sm" id="table-laporan">
                                 <thead>
                                     <tr>
-                                    <tr>
-                                        <th rowspan="4" style="vertical-align : middle;text-align:left;" id="no">
-                                            NO URUT</th>
-                                        <th rowspan="4" style="vertical-align : middle;text-align:left;" id="no">
-                                            NO RM</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:left;">
+                                            NO</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:left;">
+                                            No RM</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:left;">
+                                            PASIEN</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:left;">
+                                            POLIKLINIK</th>
                                     </tr>
                                     <tr>
-                                        <th colspan="7"
-                                            style="border-top:1px solid #dee2e6; vertical-align : middle;text-align:center;">
-                                            Kelompok Umur</th>
-                                        <th colspan="2" style="vertical-align : middle;text-align:left;">JENIS KELAMIN</th>
-                                    </tr>
-                                    <tr>
-                                        <th>< 1</th>
-                                        <th>1 - 4TH</th>
-                                        <th>5 - 14TH</th>
-                                        <th>15 - 24TH</th>
-                                        <th>25 - 44TH</th>
-                                        <th>45 - 64TH</th>
-                                        <th> > 65TH</th>
-                                    </tr>
-                                    <tr>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">URJ</th>
-                                        <th>L</th>
-                                        <th>P</th>
-                                    </tr>
+                                        <th>28H (L)</th>
+                                        <th>28H (P)</th>
+                                        <th>
+                                            < 1TH(L)</th>
+                                        <th>
+                                            < 1TH(P)</th>
+                                        <th> 1-5 (L)</th>
+                                        <th> 1-5 (P)</th>
+                                        <th> 5-14 (L)</th>
+                                        <th> 5-14 (P)</th>
+                                        <th> 15-24 (L)</th>
+                                        <th> 15-24 (P)</th>
+                                        <th> 25-44 (L)</th>
+                                        <th> 25-44 (P)</th>
+                                        <th> 45-64 (L)</th>
+                                        <th> 45-64 (P)</th>
+                                        <th> > 65 (L)</th>
+                                        <th> > 65 (P)</th>
+                                        <th rowspan="2"> Kunjungan</th>
+                                        <th rowspan="2"> Diagnosa</th>
+                                        <th rowspan="2"> Ket</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($findReport as $report)
+                                        <tr>
+                                            <td style="vertical-align : middle;text-align:left;">
+                                                {{ $loop->iteration }}</td>
+                                            <td style="vertical-align : middle;text-align:left;">
+                                                {{ $report->no_rm }}
+                                            </td>
+                                            <td style="vertical-align : middle;text-align:left;">
+                                                {{ $report->nama_px }}
+                                            </td>
+                                            <td style="vertical-align : middle;text-align:left;">
+                                                {{ $report->nama_unit ?? '-' }}
+                                            </td>
+                                            <td>{{ $report->age_group == '0_28HL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '0_28HP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == 'kurang_1TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == 'kurang_1TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '1_5TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '1_5TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '5_14TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '5_14TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '15_24TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '15_24TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '25_44TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '25_44TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '45_64TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == '45_64TP' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == 'lebih_65TL' ? '1' : '-' }}</td>
+                                            <td>{{ $report->age_group == 'lebih_65TP' ? '1' : '-' }}</td>
 
+                                            <td> In: {{ \Carbon\Carbon::parse($report->tgl_masuk)->format('d-m-Y') }} <br>
+                                                Out: {{ \Carbon\Carbon::parse($report->tgl_keluar)->format('d-m-Y') }}</td>
+                                            <td> utama: {{ $report->diag_utama_desc ?? '-' }} <br> Sekunder:
+                                                {{ $report->diag_sekunder1_desc ?? '-' }} </td>
+                                            <td> -</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -129,141 +167,11 @@
 @section('plugins.DatatablesPlugins', true)
 @section('plugins.TempusDominusBs4', true)
 @section('js')
-    <script>
-        function printDiv(divName) {
-            var printContents = document.getElementById(divName).innerHTML;
-            window.print(printContents);
-        }
-        $(document).on('click', '#export', function(e) {
-            $.LoadingOverlay("show");
-            var data = $('#formFilter').serialize();
-            var url = "{{ route('laporan-rawa-inapByYear.export') }}?" + data;
-            window.location = url;
-            // $.get(url, function() {
-            //     setInterval(() => {
-            //         $.LoadingOverlay("hide");
-            //     }, 5000);
-            // })
-
-            $.ajax({
-                data: data,
-                url: url,
-                type: "GET",
-                success: function(data) {
-                    setInterval(() => {
-                        $.LoadingOverlay("hide");
-                    }, 7000);
-                },
-            }).then(function() {
-                // setTimeout('#export', 30000);
-                setInterval(() => {
-                    $.LoadingOverlay("hide");
-                }, 2000);
-            });
-
-        })
-    </script>
-@endsection
-@section('css')
-    <style type="text/css" media="print">
-        @media print {
-            @page {
-                size: Letter landscape;
-            }
-        }
-
-        hr {
-            color: #333333 !important;
-            border: 1px solid #333333 !important;
-            line-height: 1.5;
-        }
-
-        .table-laporan {
-            font-size: 7px;
-            margin-left: -5px;
-        }
-
-        .table-laporan #golumr {
-            font-size: 4px;
-        }
-
-        .table-laporan #terapi {
-            width: 100px;
-        }
-
-        #hide_div {
-            display: none;
-        }
-    </style>
-@section('css')
-    <style type="text/css" media="print">
-        @media print {
-            @page {
-                size: Legal landscape;
-            }
-        }
-
-        hr {
-            color: #333333 !important;
-            border: 1px solid #333333 !important;
-            line-height: 1.5;
-        }
-
-        .table-laporan {
-            font-size: 9px;
-            margin-left: -5px;
-        }
-
-        .table-laporan #golumr {
-            font-size: 6px;
-        }
-
-        .table-laporan #alamat {
-            width: 80px;
-        }
-
-        .table-laporan #terapi {
-            width: 90px;
-        }
-
-        .table-laporan #hide_print {
-            display: none;
-        }
-
-        .table-laporan #show_print {
-            display: block;
-        }
-
-        .table-laporan #terapi {
-            width: 45px;
-        }
-
-        .table-laporan #deskripsi {
-            width: 40px;
-        }
-
-        .table-laporan #alamat {
-            width: 40px;
-        }
-
-        .table-laporan #no {
-            width: 10px;
-        }
-
-        #hide_div {
-            display: none;
-        }
-    </style>
-    <style>
-        #golumr {
-            font-size: 7px;
-        }
-
-        #show_print {
-            display: none;
-        }
-    </style>
-
-@endsection
+<script>
+    function submitForm() {
+        document.getElementById('formFilter').action = '{{ route('laporanindex.index_dokter.export') }}';
+        document.getElementById('formFilter').submit();
+    }
+</script>
 
 @endsection

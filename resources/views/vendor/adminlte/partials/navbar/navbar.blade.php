@@ -27,7 +27,7 @@
             </li>
             {{-- @can(['Admin Super']) --}}
             <li class="nav-item d-none d-sm-inline-block mr-1">
-                <button class="btn btn-sm bg-info" id="check-connection">Connection</button>
+                <a href="{{route('casemix-cari-sep.index')}}" class="btn btn-sm bg-info">CEK SEP</a>
             </li>
             {{-- @endcan --}}
         @else
