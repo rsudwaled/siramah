@@ -19,7 +19,8 @@ use Illuminate\Support\Facades\Redirect;
 
 class InacbgController extends APIController
 {
-    public $key_eclaim = "3230f0fd49b6a2dc56ba3ea779004e44298717a914354b4a0be1014da9c88da4";
+    // public $key_eclaim = "3230f0fd49b6a2dc56ba3ea779004e44298717a914354b4a0be1014da9c88da4"; #210
+    public $key_eclaim = "5cea9a3faee6c8c7d030b50874227b5ec9a5bd4f3c1589616ed00b6260703d53"; #172.165.162.11
 
     public function search_diagnosis(Request $request)
     {
@@ -1090,7 +1091,8 @@ class InacbgController extends APIController
         $header = array("Content-Type: application/x-www-form-urlencoded");
         // url server aplikasi E-Klaim,
         // silakan disesuaikan instalasi masing-masing
-        $url = "http://192.168.2.210/E-Klaim/ws.php";
+        // $url = "http://192.168.2.210/E-Klaim/ws.php";
+        $url = "http://172.165.162.88/E-Klaim/ws.php";
         // setup curl
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

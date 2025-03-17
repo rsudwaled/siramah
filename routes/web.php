@@ -93,6 +93,7 @@ use App\Livewire\Casemix\CasemixRajal;
 use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
+use App\Livewire\Inacbg\PrintClaim;
 use App\Livewire\Operasi\ErmOperasi;
 use App\Livewire\Operasi\JadwalOperasiIndex;
 use App\Livewire\Operasi\KunjunganOperasi;
@@ -187,7 +188,7 @@ Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-ra
 Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
 
 // Sep Downloader
-Route::controller( App\Http\Controllers\Casemix\SepDownloaderController::class)->prefix('sep-downloader')->name('simrs.sep-downloader.')->group(function () {
+Route::controller(App\Http\Controllers\Casemix\SepDownloaderController::class)->prefix('sep-downloader')->name('simrs.sep-downloader.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/download-all', 'downloadAll')->name('downloadAll');
     Route::get('/stream/{no_sep}/{id}', 'stream')->name('stream');
@@ -240,6 +241,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('obat', ObatController::class);
     Route::resource('kpo', KPOController::class);
     // Route::resource('vclaim', VclaimController::class);
+    Route::prefix('inacbg')->group(function () {
+        Route::get('print_claim', PrintClaim::class)->name('print_klaim');
+    });
+    Route::get('bpjs/antrian/refpoliklinik', RefPoliklinik::class)->name('antrian.refpoliklinik')->lazy();
 
     Route::prefix('satusehat')->group(function () {
         Route::get('token_generate', [SatuSehatController::class, 'token_generate'])->name('token_generate');
@@ -863,11 +868,11 @@ Route::middleware('auth')->group(function () {
     Route::controller(App\Http\Controllers\ERMRANAP\DashboardErmRanapController::class)->prefix('erm-ranap')->name('dashboard.erm-ranap.')->group(function () {
         Route::get('dashboard', 'dashboardERMRanap')->name('dashboard');
         Route::get('get-rincian-biaya', 'get_rincian_biaya')->name('rincian-biaya');
-        Route::get('/assesmen-awal-medis','assesmenAwalMedis')->name('assesmen-awal-medis');
-        Route::get('/edukasi','assesmenKebutuhanEdukasi')->name('assesmen-kebutuhan-edukasi');
-        Route::get('/konsultasi','konsultasi')->name('konsultasi');
-        Route::get('/anastesi','assesmenPraAnastesi')->name('assesmen-pra-anastesi');
-        Route::get('/tindakan','informasiTindakan')->name('informasi-tindakan');
+        Route::get('/assesmen-awal-medis', 'assesmenAwalMedis')->name('assesmen-awal-medis');
+        Route::get('/edukasi', 'assesmenKebutuhanEdukasi')->name('assesmen-kebutuhan-edukasi');
+        Route::get('/konsultasi', 'konsultasi')->name('konsultasi');
+        Route::get('/anastesi', 'assesmenPraAnastesi')->name('assesmen-pra-anastesi');
+        Route::get('/tindakan', 'informasiTindakan')->name('informasi-tindakan');
         Route::get('/catatan-mpp-a', 'catatanMPPA')->name('catatan-mpp-a');
         Route::post('/simpan/catatan-mpp-a', 'catatanMPPAStore')->name('catatan-mpp-a.store');
         Route::get('/catatan-mpp-b', 'catatanMPPB')->name('catatan-mpp-b');
@@ -936,7 +941,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/lembar-edukasi', 'lembarEdukasi')->name('lembar-edukasi');
             Route::get('/catatan-mpp-a', 'catatanMPPA')->name('catatan-mpp-a');
             Route::get('/catatan-mpp-b', 'catatanMPPB')->name('catatan-mpp-b');
-            Route::get('/cppt-perawat','cpptPerawat')->name('cppt-perawat');
+            Route::get('/cppt-perawat', 'cpptPerawat')->name('cppt-perawat');
             Route::get('/rencana-pemulangan-pasien', 'rencanaPemulanganPasien')->name('rencana-pemulangan-pasien');
 
             Route::controller(App\Http\Controllers\ERMRANAP\Perawat\AsesmenPerawatController::class)->prefix('assesmen-awal')->name('assesmen-awal.')->group(function () {
@@ -956,7 +961,6 @@ Route::middleware('auth')->group(function () {
                 Route::put('update/perkembangan-pasien/{id}', 'updateCPPTPerawat')->name('update-perkembangan');
                 // Route::delete('delete/rencana-asuhan/{id}', 'deleteRencana')->name('delete-rencana');
             });
-
         });
     });
 

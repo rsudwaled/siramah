@@ -1788,6 +1788,21 @@ return [
                 ],
             ],
         ],
+        // INACBG SEHAT
+        [
+            'text'    => 'Integrasi INACBG',
+            'icon'    => 'fas fa-project-diagram',
+            // 'can' => ['inacbg'],
+            'submenu' => [
+                [
+                    'text' => 'Print Claim',
+                    'icon'    => 'fas fa-user-injured',
+                    'url'  => 'inacbg/print_claim',
+                    'shift'   => 'ml-2',
+                    // 'can' => ['inacbg'],
+                ],
+            ],
+        ],
         // MODUL TESTING
         [
             'text'    => 'Pengaturan & Testing',
@@ -1824,6 +1839,7 @@ return [
                 ],
             ],
         ],
+
         ['header' => 'PENGATURAN'],
         [
             'text' => 'Role & Permission',
