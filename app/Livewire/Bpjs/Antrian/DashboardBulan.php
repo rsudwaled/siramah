@@ -26,7 +26,7 @@ class DashboardBulan extends Component
         $res  = $api->dashboard_bulan($request);
         if ($res->metadata->code == 200) {
             $this->antrians = $res->response->list;
-            dd(collect($this->antrians)->sum('jumlah_antrean'));
+            // dd(collect($this->antrians)->sum('jumlah_antrean'));
             flash($res->metadata->message, 'success');
         } else {
             flash($res->metadata->message, 'danger');
