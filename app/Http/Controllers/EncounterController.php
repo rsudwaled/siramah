@@ -17,7 +17,7 @@ class EncounterController extends SatuSehatController
 {
     public function encounter(Request $request)
     {
-        $units = Unit::whereIn('kelas_unit', ['1'])
+        $units = Unit::whereIn('kelas_unit', ['1','3'])
             ->orderBy('nama_unit', 'asc')
             ->pluck('nama_unit', 'kode_unit');
         $kunjungans = null;
@@ -25,7 +25,6 @@ class EncounterController extends SatuSehatController
             if ($request->kodeunit == '-') {
                 $kunjungans = Kunjungan::whereDate('tgl_masuk', $request->tanggalperiksa)
                     ->where('status_kunjungan', "!=", 8)
-                    ->whereRelation('unit', 'kelas_unit', '=', 1)
                     ->where('kode_unit', "!=", 1002)
                     ->where('kode_unit', "!=", 1023)
                     ->with(['diagnosapoli', 'diagnosaicd', 'unit', 'dokter', 'pasien'])
