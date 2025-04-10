@@ -385,7 +385,9 @@ class KunjunganController extends Controller
         $updateStatus->status_kunjungan =$request->reason;
         $updateStatus->id_alasan_edit   =$alasan;
         $updateStatus->pic2             =Auth::user()->id_simrs??2;
+        $updateStatus->tgl_keluar       =now();
         $updateStatus->updated_at       =now();
+        $updateStatus->catatan          =Auth::user()->name.'-'.$updateStatus->tgl_keluar;
         $updateStatus->save();
         return response()->json(['status'=>$updateStatus]);
     }
@@ -395,6 +397,8 @@ class KunjunganController extends Controller
         $updateStatus->status_kunjungan =1;
         $updateStatus->id_alasan_edit   =8;
         $updateStatus->pic2             =Auth::user()->id_simrs??2;
+        $updateStatus->tgl_keluar       =NULL;
+        $updateStatus->catatan          =Auth::user()->name.'- updated: '.$updateStatus->tgl_keluar;
         $updateStatus->save();
         return response()->json(['status'=>$updateStatus]);
 

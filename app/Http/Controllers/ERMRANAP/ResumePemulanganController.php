@@ -311,7 +311,7 @@ class ResumePemulanganController extends Controller
         {
             $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien_hcu', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
         }else{
-            $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
+            $pdf    = Pdf::loadView('simrs.erm-ranap.cetak_pdf.resume_pasien.view_resume', compact('kunjungan','resume', 'riwayatObat','umur','obatPulang'));
         }
         // return view('simrs.erm-ranap.cetak_pdf.cetakan_resume_pemulangan_pasien');
         $pdf->setPaper('F4', 'portrait');

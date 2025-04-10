@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-2"><b>Tahun</b></div>
-                                    <div class="col-sm-5"><b>: 2023</b></div>
+                                    <div class="col-sm-5"><b>: {{$yearsFrom == $yearsTo ? $yearsFrom : $yearsFrom . ' - ' . $yearsTo}}</b></div>
                                 </div>
                             </div>
                         </div>

@@ -290,10 +290,22 @@
                                                     <tr>
                                                         <td><strong>Pemeriksaan Fisik</strong></td>
                                                         <td colspan="2">
-                                                            <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5" class="form-control">@if(!empty($resume->pemeriksaan_fisik)){{ $resume->pemeriksaan_fisik }}@else T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}@endif</textarea>
+                                                            <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5"
+                                                                class="form-control">
+@if (!empty($resume->pemeriksaan_fisik))
+{{ $resume->pemeriksaan_fisik }}
+@else
+T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
+@endif
+</textarea>
                                                         </td>
                                                     </tr>
-                                                    @if ($umur == 0 || $umur < 30 || $kunjungan->kode_unit =='2006' || $kunjungan->kode_unit == '2005')
+                                                    @if (
+                                                        $umur == 0 ||
+                                                            $umur < 30 ||
+                                                            $kunjungan->kode_unit == '2006' ||
+                                                            $kunjungan->kode_unit == '2005' ||
+                                                            $kunjungan->kode_unit == '2004')
                                                         <tr>
                                                             <td colspan="3">
                                                                 <table style="width: 100%; height: 100%; border:none;">
@@ -771,11 +783,14 @@
                                                                                 </thead>
                                                                                 <tbody>
                                                                                     @foreach ($chunk as $obat)
-                                                                                        <tr>
-                                                                                            <td>{{ $obat['nama_barang'] }}
-                                                                                            </td>
-                                                                                            <td>{{ $obat['qty'] }}</td>
-                                                                                        </tr>
+                                                                                        @if ($obat['qty'] > '0')
+                                                                                            <tr>
+                                                                                                <td>{{ $obat['nama_barang'] }}
+                                                                                                </td>
+                                                                                                <td>{{ $obat['qty'] }}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        @endif
                                                                                     @endforeach
                                                                                 </tbody>
                                                                             </table>
@@ -1016,7 +1031,8 @@
                                                                 <div class="col-2">
                                                                     <strong style="margin: 0.5rem 0;">Instruksi
                                                                         Pulang</strong>
-                                                                    <textarea name="ket_intruksi_pulang" id="ket_intruksi_pulang" style="font-size: 12px;" cols="30" rows="15" class="form-control">{{$resume->ket_intruksi_pulang??''}}</textarea>
+                                                                    <textarea name="ket_intruksi_pulang" id="ket_intruksi_pulang" style="font-size: 12px;" cols="30"
+                                                                        rows="15" class="form-control">{{ $resume->ket_intruksi_pulang ?? '' }}</textarea>
                                                                 </div>
                                                                 <div class="col-10">
                                                                     <table style="width: 100%">

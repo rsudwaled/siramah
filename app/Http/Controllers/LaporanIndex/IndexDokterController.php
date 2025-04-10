@@ -103,11 +103,6 @@ class IndexDokterController extends Controller
         return view('simrs.laporanindex.index_dokter.index', compact('paramedis', 'findReport', 'from', 'to','request','tahunMulai','tahunSelesai','bulanMulai','bulanSelesai','dokterFind'));
     }
 
-
-    // public function export(Request $request)
-    // {
-    //     return Excel::download(new LaporanIndexDokterExport($request), 'laporan_index_dokter.xlsx');
-    // }
     public function export(Request $request)
     {
          // Ambil input dari request

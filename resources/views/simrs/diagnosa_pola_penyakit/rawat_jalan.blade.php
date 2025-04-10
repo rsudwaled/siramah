@@ -47,7 +47,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <x-adminlte-select name="data_umur" label="Pilih Data">
-                                            <option value="" {{$request->data_umur==null?'selected':''}} >SEMUA UMUR</option>
+                                            <option value="all" {{$request->data_umur==null?'selected':''}} >SEMUA UMUR</option>
                                             <option value="k1" {{$request->data_umur=='k1'?'selected':''}} >< 1 TAHUN</option>
                                             <option value="umr1_4" {{$request->data_umur=='umr1_4'?'selected':''}}>1 - 4 TAHUN</option>
                                             <option value="umr5_14"  {{$request->data_umur=='umr5_14'?'selected':''}}>5 - 14 TAHUN</option>
