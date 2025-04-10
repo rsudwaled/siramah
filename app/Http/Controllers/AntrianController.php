@@ -1861,11 +1861,6 @@ class AntrianController extends APIController
     // API SIMRS
     public function token(Request $request)
     {
-        $notif = 'Get Token Antrian BPJS : ';
-        foreach ($request->all() as $key => $value) {
-            $notif .= "$key: $value; ";
-        }
-        Log::info($notif);
         $credentials = [
             'username' => $request->header('x-username'),
             'password' => $request->header('x-password')
@@ -1874,6 +1869,8 @@ class AntrianController extends APIController
             $user = $request->user();
             $token = $user->createToken('YourAppName')->plainTextToken;
             $data['token'] =  $token;
+            $notif = 'Get Token Antrian BPJS : ' . $data['token'];
+            Log::info($notif);
             return $this->sendResponse($data, 200);
         } else {
             return $this->sendError("Unauthorized (Username dan Password Salah)", 401);
@@ -1898,11 +1895,7 @@ class AntrianController extends APIController
         //     return $this->sendError("Unauthorized (Token Invalid)", 401);
         // }
         // validator
-        $notif = 'Status Antrian BPJS : ';
-        // foreach ($request->all() as $key => $value) {
-        //     $notif .= "$key: $value; ";
-        // }
-        Log::info($notif);
+
         $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
             "kodedokter" => "required",
@@ -1988,6 +1981,8 @@ class AntrianController extends APIController
             "kuotanonjkn" =>  round($jadwal->kapasitaspasien * 20 / 100),
             "keterangan" => "Informasi antrian poliklinik",
         ];
+        $notif = 'Status Antrian BPJS : ' . $jadwal->namadokter;
+        Log::info($notif);
         return $this->sendResponse($response, 200);
     }
     public function ambil_antrian(Request $request) #ambil antrian api
