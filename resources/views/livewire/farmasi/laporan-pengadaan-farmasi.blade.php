@@ -8,6 +8,17 @@
         <x-adminlte-card title="Laporan Pengadaan Farmasi" theme="primary">
             <div class="row">
                 <div class="col-md-3">
+                    <x-adminlte-select wire:model="formatfilter" igroup-size="sm" name="tipe">
+                        <x-slot name="prependSlot">
+                            <x-adminlte-button label="Tipe Barang" class="text-bold" />
+                        </x-slot>
+                        <option value="">SEMUA TIPE BARANG</option>
+                        @foreach ($tipeBarang as $x)
+                            <option value="{{ $x->kode_tipe }}">{{ $x->nama_tipe }}</option>
+                        @endforeach
+                    </x-adminlte-select>
+                </div>
+                <div class="col-md-3">
                     <x-adminlte-input wire:model="tanggalAwal" type="date" name="tanggalAwal" igroup-size="sm">
                         <x-slot name="prependSlot">
                             <x-adminlte-button label="Tgl Awal" class="text-bold" />
@@ -24,6 +35,7 @@
                         </x-slot>
                     </x-adminlte-input>
                 </div>
+
                 <div class="col-md-3">
                     <x-adminlte-button wire:click='export'
                         wire:confirm='Apakah anda yakin akan mendownload file user saat ini ? ' class="btn-sm mb-2"

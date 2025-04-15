@@ -2,12 +2,14 @@
 
 namespace App\Livewire\Farmasi;
 
+use App\Models\TipeBarang;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class LaporanPengadaanFarmasi extends Component
 {
-    public $tanggalAwal, $tanggalAkhir;
+    public $tanggalAwal, $tanggalAkhir,  $tipe;
+    public $tipeBarang;
     public $obats = [];
     public function cari()
     {
@@ -26,5 +28,9 @@ class LaporanPengadaanFarmasi extends Component
             $this->obats = $response;
         }
         return view('livewire.farmasi.laporan-pengadaan-farmasi');
+    }
+    public function mount()
+    {
+        $this->tipeBarang = TipeBarang::all();
     }
 }
