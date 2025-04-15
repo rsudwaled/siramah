@@ -827,6 +827,18 @@ return [
             'url'       => 'tracer-pendaftaran',
             'can'       => 'rekam-medis',
         ],
+        [
+            'text'    => 'Farmasi',
+            'icon'    => 'fas fa-clinic-medical',
+            'submenu' => [
+                [
+                    'text' => 'Laporan Pengadaan Farmasi',
+                    'icon'    => 'fas fa-pills',
+                    'url'  => 'laporan-pengadaan-farmasi',
+                    'shift'   => 'ml-2',
+                ],
+            ]
+        ],
         // Casemix
         [
             'text'    => 'Akses Casemix',

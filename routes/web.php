@@ -93,6 +93,7 @@ use App\Livewire\Casemix\CasemixRajal;
 use App\Livewire\Casemix\CasemixRajalDetail;
 use App\Livewire\Farmasi\AntrianFarmasiRajal;
 use App\Livewire\Farmasi\DisplayAntrianFarmasi;
+use App\Livewire\Farmasi\LaporanPengadaanFarmasi;
 use App\Livewire\Inacbg\PrintClaim;
 use App\Livewire\Operasi\ErmOperasi;
 use App\Livewire\Operasi\JadwalOperasiIndex;
@@ -387,6 +388,7 @@ Route::middleware('auth')->group(function () {
     // farmasi
     Route::get('antrianFarmasi', [AntrianController::class, 'antrianFarmasi'])->name('antrianFarmasi');
     Route::get('antrian-farmasi-rajal', AntrianFarmasiRajal::class)->name('antrian.farmasi.rajal');
+    Route::get('laporan-pengadaan-farmasi', LaporanPengadaanFarmasi::class)->name('laporan.pengadaan.farmasi')->lazy();
     Route::get('getAntrianFarmasi', [AntrianController::class, 'getAntrianFarmasi'])->name('getAntrianFarmasi');
     Route::get('racikFarmasi/{kodebooking}', [AntrianController::class, 'racikFarmasi'])->name('racikFarmasi');
     Route::get('selesaiFarmasi/{kodebooking}', [AntrianController::class, 'selesaiFarmasi'])->name('selesaiFarmasi');

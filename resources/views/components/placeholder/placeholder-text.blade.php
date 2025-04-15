@@ -1,23 +1,11 @@
-<div>
-    <div class="card" aria-hidden="true">
-        <div class="card-header">
-            Loading...
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <p class="card-text placeholder-glow col-6"></p>
-                <p class="card-text placeholder-glow col-7"></p>
-                <p class="card-text placeholder-glow col-4"></p>
-                <p class="card-text placeholder-glow col-4"></p>
-                <p class="card-text placeholder-glow col-6"></p>
-                <p class="card-text placeholder-glow col-8"></p>
-                <br>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button  class="btn btn-sm btn-primary" >Loading Button...</button>
-        </div>
-    </div>
+<div class="row">
+    <p class="card-text placeholder-glow col-6"></p>
+    <p class="card-text placeholder-glow col-7"></p>
+    <p class="card-text placeholder-glow col-4"></p>
+    <p class="card-text placeholder-glow col-4"></p>
+    <p class="card-text placeholder-glow col-6"></p>
+    <p class="card-text placeholder-glow col-8"></p>
+    <br>
 </div>
 @push('css')
     <style>

@@ -9,7 +9,7 @@
 @section('title', $title ?? config('app.name'))
 
 @section('content_header')
-    <h1>{{ $title ?? config('app.name') }}</h1>
+    <div></div>
 @stop
 
 @section('content')
