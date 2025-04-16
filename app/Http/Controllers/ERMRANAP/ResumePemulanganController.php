@@ -77,8 +77,10 @@ class ResumePemulanganController extends Controller
                 // Mendapatkan usia pasien dalam hari
                 $umur = $tanggalLahir->diffInDays(Carbon::now());
 
-                // Menentukan apakah pasien adalah bayi (umur antara 0 hingga 30 hari)
-                $statusBayi = ($umur <= 30) ? 'Bayi' : 'Bukan Bayi';
+                // Menentukan apakah pasien adalah bayi (umur antara 0 hingga 60 hari)
+                $BAYI_MAKSIMAL_HARI = 60;
+                $statusBayi = ($umur <= $BAYI_MAKSIMAL_HARI) ? 'Bayi' : 'Bukan Bayi';
+
 
             } catch (\Exception $e) {
                 // Jika terjadi kesalahan parsing tanggal

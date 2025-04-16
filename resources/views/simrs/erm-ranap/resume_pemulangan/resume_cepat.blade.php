@@ -302,7 +302,7 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                     </tr>
                                                     @if (
                                                         $umur == 0 ||
-                                                            $umur < 30 ||
+                                                            $umur <= 60 ||
                                                             $kunjungan->kode_unit == '2006' ||
                                                             $kunjungan->kode_unit == '2005' ||
                                                             $kunjungan->kode_unit == '2004')

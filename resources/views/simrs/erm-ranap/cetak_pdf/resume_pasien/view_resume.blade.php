@@ -173,7 +173,7 @@
                             @endforeach
                         </td>
                     </tr>
-                    @if ($umur == 0 || $umur < 30 || $resume->pemeriksaan_shk_ya =='on' || $resume->pemeriksaan_shk_tidak=='on')
+                    @if ($umur == 0 || $umur <= 60 || $resume->pemeriksaan_shk_ya =='on' || $resume->pemeriksaan_shk_tidak=='on')
                         <tr>
                             <td colspan="3"
                                 style="margin: 0; padding:2px; height:40px; border-bottom: 1px solid black; border-top: 1px solid black;">
