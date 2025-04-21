@@ -7,6 +7,7 @@ use App\Models\TipeBarang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -295,7 +296,20 @@ class FarmasiController extends APIController
 
     public function getTipeBarang()
     {
-        $tipeBarang = TipeBarang::all();
-        return $this->sendResponse($tipeBarang, 200);
+        $data = TipeBarang::all();
+        return $this->sendResponse($data, 200);
+    }
+    public function getLaporanPengadaanObat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "tanggalAwal" => "required",
+            "tanggalAkhir" => "required",
+            "tipeBarang" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 400);
+        }
+        $data = collect(DB::connection('mysql2')->select("CALL SP_DASAR_PENGADAAN_FARMASI('" . $request->tanggalAwal . "','" . $request->tanggalAkhir . "','','" . $request->tipeBarang . "')"));
+        return $this->sendResponse($data, 200);
     }
 }
