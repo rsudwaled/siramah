@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderObatHeader;
+use App\Models\TipeBarang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -290,5 +291,11 @@ class FarmasiController extends APIController
         } else {
             # code...
         }
+    }
+
+    public function getTipeBarang()
+    {
+        $tipeBarang = TipeBarang::all();
+        return $this->sendResponse($tipeBarang, 200);
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\DisposisiController;
+use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
@@ -25,6 +26,10 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+Route::prefix('farmasi')->group(function () {
+    Route::get('getTipeBarang', [FarmasiController::class, 'getTipeBarang'])->name('getTipeBarang');
+});
 
 // VCLAIM
 Route::prefix('vclaim')->group(function () {
