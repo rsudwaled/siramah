@@ -27,9 +27,11 @@
                         <td>Tgl Lahir</td>
                         <td>:</td>
                         <td>
-                            <b>{{ \Carbon\Carbon::parse($kunjungan->pasien->tgl_lahir)->format('d, F Y') }}
-                                ({{ \Carbon\Carbon::parse($kunjungan->pasien->tgl_lahir)->diffInYears($kunjungan->tgl_masuk) }}
-                                tahun)</b>
+                            <b>
+                                {{ \Carbon\Carbon::parse($kunjungan->pasien->tgl_lahir)->format('d, F Y') }}
+                            </b>
+                            {{-- ({{ \Carbon\Carbon::parse($kunjungan->pasien->tgl_lahir)->diffInYears($kunjungan->tgl_masuk) }}
+                            tahun) --}}
                         </td>
                     </tr>
                     <tr>
