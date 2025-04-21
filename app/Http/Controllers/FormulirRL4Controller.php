@@ -5,26 +5,95 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\LaporanRLEmpatSatuVersi6;
+use App\Exports\LaporanRLEmpatDuaVersi6;
+use App\Exports\LaporanRLEmpatTigaVersi6;
+use App\Models\Kunjungan;
+use DB;
 
 class FormulirRL4Controller extends Controller
 {
-    public function FormulirRL4A(Request $request)
+    public function FormulirRL41Versi6(Request $request)
     {
 
-        $from       = $request->dari;
-        $to         = $request->sampai;
-        $yearsFrom  = Carbon::parse($request->dari)->format('Y');
-        $yearsTo    = Carbon::parse($request->sampai)->format('Y');
-        $laporanFM  = null;
+        $from = $request->dari;
+        $to = $request->sampai;
+        $laporanFM = null;
 
         if ($from && $to) {
             $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
             $laporanFM = collect($laporanFM);
         }
-        // dd($laporanFM);
-        return view('simrs.formulir.f_r_l_4.formulir_rl_4A',compact('laporanFM','from','to','request','yearsFrom','yearsTo'));
+
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_1_versi_6',compact('laporanFM','from','to','request'));
     }
 
+    public function FormulirRL42Versi6(Request $request)
+    {
+
+        $from = $request->dari;
+        $to = $request->sampai;
+        $laporanFM = null;
+
+        if ($from && $to) {
+            $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
+            $laporanFM = collect($laporanFM);
+        }
+
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_2_versi_6',compact('laporanFM','from','to','request'));
+    }
+
+    public function FormulirRL43Versi6(Request $request)
+    {
+
+        $from = $request->dari;
+        $to = $request->sampai;
+        $laporanFM = null;
+
+        if ($from && $to) {
+            $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
+            $laporanFM = collect($laporanFM);
+        }
+
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_3_versi_6',compact('laporanFM','from','to','request'));
+    }
+
+    public function FormulirRL41Export(Request $request)
+    {
+        if($request->dari == null && $request->sampai == null )
+        {
+            Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
+            return back();
+        }
+
+        $namaFile = 'Laporan Rl 4.1 Versi 6.xlsx';
+        return Excel::download(new LaporanRLEmpatSatuVersi6($request), $namaFile);
+    }
+
+    public function FormulirRL42Export(Request $request)
+    {
+        if($request->dari == null && $request->sampai == null )
+        {
+            Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
+            return back();
+        }
+
+        $namaFile = 'Laporan Rl 4.2 Versi 6.xlsx';
+        return Excel::download(new LaporanRLEmpatDuaVersi6($request), $namaFile);
+    }
+
+    public function FormulirRL43Export(Request $request)
+    {
+        if($request->dari == null && $request->sampai == null )
+        {
+            Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
+            return back();
+        }
+
+        $namaFile = 'Laporan Rl 4.3 Versi 6.xlsx';
+        return Excel::download(new LaporanRLEmpatTigaVersi6($request), $namaFile);
+    }
     public function FormulirRL4AK(Request $request)
     {
         $from       = $request->dari;
