@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('farmasi')->group(function () {
     Route::get('getTipeBarang', [FarmasiController::class, 'getTipeBarang'])->name('getTipeBarang');
+    Route::post('getLaporanPengadaanObat', [FarmasiController::class, 'getLaporanPengadaanObat'])->name('getLaporanPengadaanObat');
 });
 
 // VCLAIM
