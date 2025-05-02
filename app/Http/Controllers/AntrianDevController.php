@@ -35,12 +35,12 @@ use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-class AntrianController extends APIController
+class AntrianDevController extends APIController
 {
-    public $baseurl = "https://apijkn.bpjs-kesehatan.go.id/antreanrs/";
-    public $consid =  "3431";
-    public $secrekey = "7fI37884D3";
-    public $userkey = "5271959daceceef0379cfbf6b9b10de3";
+    public $baseurl = "https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev/";
+    public $consid =  "8761";
+    public $secrekey = "5hTEA8A088";
+    public $userkey = "43b7eeb0f3f8e1935b5a41677432e41c";
 
     public function edit($id)
     {
@@ -1895,7 +1895,6 @@ class AntrianController extends APIController
         //     return $this->sendError("Unauthorized (Token Invalid)", 401);
         // }
         // validator
-
         $validator = Validator::make($request->all(), [
             "kodepoli" => "required",
             "kodedokter" => "required",

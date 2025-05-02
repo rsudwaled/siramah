@@ -536,9 +536,10 @@ Route::middleware('auth')->group(function () {
     Route::get('FormulirRL4B', [FormulirRL4Controller::class, 'FormulirRL4B'])->name('frl-4-B.get');
     Route::get('FormulirRL4BK', [FormulirRL4Controller::class, 'FormulirRL4BK'])->name('frl-4-BK.get');
     // formulir RL 5
-    Route::get('FormulirRL5_1', [FormulirRL5Controller::class, 'FormulirRL5_1'])->name('frl-5-1.get');
-    Route::get('FormulirRL5_2', [FormulirRL5Controller::class, 'FormulirRL5_2'])->name('frl-5-2.get');
-    Route::get('FormulirRL5_3', [FormulirRL5Controller::class, 'FormulirRL5_3'])->name('frl-5-3.get');
+    Route::get('FormulirRL5_1/versi-6', [FormulirRL5Controller::class, 'FormulirRL5_1Versi6'])->name('frl-5-1.get');
+    Route::get('export/FormulirRL5_1', [FormulirRL5Controller::class, 'FormulirRL5_1Export'])->name('frl-5-1.export');
+    Route::get('FormulirRL5_2/versi-6', [FormulirRL5Controller::class, 'FormulirRL5_2Versi6'])->name('frl-5-2.get');
+    Route::get('FormulirRL5_3/versi-6', [FormulirRL5Controller::class, 'FormulirRL5_3Versi6'])->name('frl-5-3.get');
     // Route::get('FormulirRL5_3_Perunit', [FormulirRL5Controller::class, 'FormulirRL5_3Perunit'])->name('frl-53perunit.get');
     Route::post('FormulirRL5_3/DaftarPenyakitRawatInap', [FormulirRL5Controller::class, 'FormulirRL5_3P'])->name('get-rl-5-3-d');
     Route::get('FormulirRL5_4', [FormulirRL5Controller::class, 'FormulirRL5_4'])->name('frl-5_4.get');

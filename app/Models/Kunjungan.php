@@ -75,6 +75,10 @@ class Kunjungan extends Model
     {
         return $this->hasOne(DiagnosaICD::class, 'kode_kunjungan', 'kode_kunjungan');
     }
+    public function laporanDiagnosa()
+    {
+        return $this->hasMany(DiagnosaICD::class, 'kode_kunjungan', 'kode_kunjungan');
+    }
     public function dokter()
     {
         return $this->belongsTo(Paramedis::class, 'kode_paramedis', 'kode_paramedis');

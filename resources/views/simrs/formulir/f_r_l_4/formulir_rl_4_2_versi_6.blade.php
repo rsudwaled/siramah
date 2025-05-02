@@ -46,14 +46,12 @@
                                         <x-adminlte-button type="submit" class="withLoad btn btn-sm m-1 bg-primary"
                                             id="ranap" label="Lihat Data" />
                                         {{-- <x-adminlte-button label="Morbiditas Ranap K" class="float-right btn btn-sm m-1 bg-primary"  id="ranap_k" /> --}}
-                                        @if (isset($laporanFM))
-                                            <button class="btn btn-success btn btn-sm m-1"
-                                                onclick="printDiv('printMe')">Print <i class="fas fa-print"></i></button>
+                                        @if (isset($data))
+                                            <x-adminlte-button type="submit" label="EXPORT DATA"
+                                                class="bg-purple btn btn-sm m-1" target="_blank"
+                                                onclick="javascript: form.action='{{ route('frl-4-2.export') }}';" />
                                         @endif
 
-                                        <x-adminlte-button type="submit" label="Excel" class="bg-purple btn btn-sm m-1"
-                                            target="_blank"
-                                            onclick="javascript: form.action='{{ route('frl-4-2.export') }}';" />
                                     </div>
                                 </div>
                             </div>

@@ -19,14 +19,21 @@ class FormulirRL4Controller extends Controller
 
         $from = $request->dari;
         $to = $request->sampai;
-        $laporanFM = null;
+        $data = null;
 
         if ($from && $to) {
-            $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
-            $laporanFM = collect($laporanFM);
+           $data = Kunjungan::select('kode_kunjungan', 'counter', 'no_rm', 'tgl_masuk', 'tgl_keluar', 'status_kunjungan', 'diagx', 'id_alasan_pulang')
+           ->with([
+               'laporanDiagnosa',
+               'pasien:no_rm,jenis_kelamin,tgl_lahir'
+           ])
+           ->whereDate('tgl_masuk', '>=', $from)
+           ->whereDate('tgl_keluar', '<=', $to)
+           ->whereNotIn('status_kunjungan', ['1', '8', '9', '11'])
+           ->get();
         }
 
-       return view('simrs.formulir.f_r_l_4.formulir_rl_4_1_versi_6',compact('laporanFM','from','to','request'));
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_1_versi_6',compact('data','from','to','request'));
     }
 
     public function FormulirRL42Versi6(Request $request)
@@ -34,14 +41,21 @@ class FormulirRL4Controller extends Controller
 
         $from = $request->dari;
         $to = $request->sampai;
-        $laporanFM = null;
+        $data = null;
 
         if ($from && $to) {
-            $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
-            $laporanFM = collect($laporanFM);
+            $data = Kunjungan::select('kode_kunjungan', 'counter', 'no_rm', 'tgl_masuk', 'tgl_keluar', 'status_kunjungan', 'diagx', 'id_alasan_pulang')
+           ->with([
+               'laporanDiagnosa',
+               'pasien:no_rm,jenis_kelamin,tgl_lahir'
+           ])
+           ->whereDate('tgl_masuk', '>=', $from)
+           ->whereDate('tgl_keluar', '<=', $to)
+           ->whereNotIn('status_kunjungan', ['1', '8', '9', '11'])
+           ->get();
         }
 
-       return view('simrs.formulir.f_r_l_4.formulir_rl_4_2_versi_6',compact('laporanFM','from','to','request'));
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_2_versi_6',compact('data','from','to','request'));
     }
 
     public function FormulirRL43Versi6(Request $request)
@@ -49,14 +63,21 @@ class FormulirRL4Controller extends Controller
 
         $from = $request->dari;
         $to = $request->sampai;
-        $laporanFM = null;
+        $data = null;
 
         if ($from && $to) {
-            $laporanFM = \DB::connection('mysql2')->select("CALL `SP_LAPORAN_DIAGNOSA_MORBIDITAS_RANAP`('$from','$to')");
-            $laporanFM = collect($laporanFM);
+            $data = Kunjungan::select('kode_kunjungan', 'counter', 'no_rm', 'tgl_masuk', 'tgl_keluar', 'status_kunjungan', 'diagx', 'id_alasan_pulang')
+            ->with([
+                'laporanDiagnosa',
+                'pasien:no_rm,jenis_kelamin,tgl_lahir'
+            ])
+            ->whereDate('tgl_masuk', '>=', $from)
+            ->whereDate('tgl_keluar', '<=', $to)
+            ->whereNotIn('status_kunjungan', ['1', '8', '9', '11'])
+            ->get();
         }
 
-       return view('simrs.formulir.f_r_l_4.formulir_rl_4_3_versi_6',compact('laporanFM','from','to','request'));
+       return view('simrs.formulir.f_r_l_4.formulir_rl_4_3_versi_6',compact('data','from','to','request'));
     }
 
     public function FormulirRL41Export(Request $request)
@@ -67,7 +88,9 @@ class FormulirRL4Controller extends Controller
             return back();
         }
 
-        $namaFile = 'Laporan Rl 4.1 Versi 6.xlsx';
+        $start = Carbon::parse($request->dari)->format('d-m-Y');
+        $finish = Carbon::parse($request->sampai)->format('d-m-Y');
+        $namaFile = $start.'_'.$finish.' Laporan Rl 4.1 Versi 6.xlsx';
         return Excel::download(new LaporanRLEmpatSatuVersi6($request), $namaFile);
     }
 
@@ -78,8 +101,9 @@ class FormulirRL4Controller extends Controller
             Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
             return back();
         }
-
-        $namaFile = 'Laporan Rl 4.2 Versi 6.xlsx';
+        $start = Carbon::parse($request->dari)->format('d-m-Y');
+        $finish = Carbon::parse($request->sampai)->format('d-m-Y');
+        $namaFile = $start.'_'.$finish.' Laporan Rl 4.2 Versi 6.xlsx';
         return Excel::download(new LaporanRLEmpatDuaVersi6($request), $namaFile);
     }
 
@@ -90,8 +114,9 @@ class FormulirRL4Controller extends Controller
             Alert::error('EXPORT ERROR!', 'untuk export data, dimohon untuk memilih data umur terlebih dahulu.');
             return back();
         }
-
-        $namaFile = 'Laporan Rl 4.3 Versi 6.xlsx';
+        $start = Carbon::parse($request->dari)->format('d-m-Y');
+        $finish = Carbon::parse($request->sampai)->format('d-m-Y');
+        $namaFile = $start.'_'.$finish.' Laporan Rl 4.3 Versi 6.xlsx';
         return Excel::download(new LaporanRLEmpatTigaVersi6($request), $namaFile);
     }
     public function FormulirRL4AK(Request $request)

@@ -189,7 +189,7 @@
         $(document).on('click', '#ranap', function(e) {
             $.LoadingOverlay("show");
             var data = $('#formFilter').serialize();
-            var url = "{{ route('frl-4-A.get') }}?" + data;
+            var url = "{{ route('frl-4-1-versi6.get') }}?" + data;
             window.location = url;
             $.ajax({
                     data: data,
