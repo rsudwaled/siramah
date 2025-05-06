@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
-use App\Http\Controllers\AntrianDevController;
+use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\InacbgController;
@@ -94,31 +94,31 @@ Route::prefix('vclaim')->group(function () {
 // ANTRIAN
 Route::prefix('antrian')->group(function () {
     // API BPJS
-    Route::get('ref_poli', [AntrianDevController::class, 'ref_poli'])->name('ref_poli');
-    Route::get('ref_dokter', [AntrianDevController::class, 'ref_dokter'])->name('ref_dokter');
-    Route::get('ref_jadwal_dokter', [AntrianDevController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
-    Route::get('ref_poli_fingerprint', [AntrianDevController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
-    Route::get('ref_pasien_fingerprint', [AntrianDevController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
-    Route::post('update_jadwal_dokter', [AntrianDevController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
-    Route::post('tambah_antrean', [AntrianDevController::class, 'tambah_antrean'])->name('tambah_antrean');
-    Route::post('tambah_antrean_farmasi', [AntrianDevController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
-    Route::post('update_antrean', [AntrianDevController::class, 'update_antrean'])->name('update_antrean');
-    Route::post('batal_antrean', [AntrianDevController::class, 'batal_antrean'])->name('batal_antrean');
-    Route::post('taskid_antrean', [AntrianDevController::class, 'taskid_antrean'])->name('taskid_antrean');
-    Route::get('dashboard_tanggal', [AntrianDevController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
-    Route::get('dashboard_bulan', [AntrianDevController::class, 'dashboard_bulan'])->name('dashboard_bulan');
-    Route::get('antrian_tanggal', [AntrianDevController::class, 'antrian_tanggal'])->name('antrian_tanggal');
-    Route::get('antrian_kodebooking', [AntrianDevController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
-    Route::get('antrian_pendaftaran', [AntrianDevController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
-    Route::get('antrian_poliklinik', [AntrianDevController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
+    Route::get('ref_poli', [AntrianController::class, 'ref_poli'])->name('ref_poli');
+    Route::get('ref_dokter', [AntrianController::class, 'ref_dokter'])->name('ref_dokter');
+    Route::get('ref_jadwal_dokter', [AntrianController::class, 'ref_jadwal_dokter'])->name('ref_jadwal_dokter');
+    Route::get('ref_poli_fingerprint', [AntrianController::class, 'ref_poli_fingerprint'])->name('ref_poli_fingerprint');
+    Route::get('ref_pasien_fingerprint', [AntrianController::class, 'ref_pasien_fingerprint'])->name('ref_pasien_fingerprint');
+    Route::post('update_jadwal_dokter', [AntrianController::class, 'update_jadwal_dokter'])->name('update_jadwal_dokter');
+    Route::post('tambah_antrean', [AntrianController::class, 'tambah_antrean'])->name('tambah_antrean');
+    Route::post('tambah_antrean_farmasi', [AntrianController::class, 'tambah_antrean_farmasi'])->name('tambah_antrean_farmasi');
+    Route::post('update_antrean', [AntrianController::class, 'update_antrean'])->name('update_antrean');
+    Route::post('batal_antrean', [AntrianController::class, 'batal_antrean'])->name('batal_antrean');
+    Route::post('taskid_antrean', [AntrianController::class, 'taskid_antrean'])->name('taskid_antrean');
+    Route::get('dashboard_tanggal', [AntrianController::class, 'dashboard_tanggal'])->name('dashboard_tanggal');
+    Route::get('dashboard_bulan', [AntrianController::class, 'dashboard_bulan'])->name('dashboard_bulan');
+    Route::get('antrian_tanggal', [AntrianController::class, 'antrian_tanggal'])->name('antrian_tanggal');
+    Route::get('antrian_kodebooking', [AntrianController::class, 'antrian_kodebooking'])->name('antrian_kodebooking');
+    Route::get('antrian_pendaftaran', [AntrianController::class, 'antrian_pendaftaran'])->name('antrian_pendaftaran');
+    Route::get('antrian_poliklinik', [AntrianController::class, 'antrian_poliklinik'])->name('antrian_poliklinik');
     // API SIMRS
     Route::post('ambil_antrians ', [AntrianController::class, 'ambil_antrians']); #local
-    Route::get('token', [AntrianDevController::class, 'token'])->name('token');
-    Route::post('status_antrian', [AntrianDevController::class, 'status_antrian'])->name('status_antrian');
-    Route::post('ambil_antrian ', [AntrianDevController::class, 'ambil_antrian']); #api mjkn
-    Route::post('sisa_antrian', [AntrianDevController::class, 'sisa_antrian'])->name('sisa_antrian');
-    Route::post('batal_antrian', [AntrianDevController::class, 'batal_antrian'])->name('batal_antrian');
-    Route::post('checkin_antrian', [AntrianDevController::class, 'checkin_antrian'])->name('checkin_antrian');
+    Route::get('token', [AntrianController::class, 'token'])->name('token');
+    Route::post('status_antrian', [AntrianController::class, 'status_antrian'])->name('status_antrian');
+    Route::post('ambil_antrian ', [AntrianController::class, 'ambil_antrian']); #api mjkn
+    Route::post('sisa_antrian', [AntrianController::class, 'sisa_antrian'])->name('sisa_antrian');
+    Route::post('batal_antrian', [AntrianController::class, 'batal_antrian'])->name('batal_antrian');
+    Route::post('checkin_antrian', [AntrianController::class, 'checkin_antrian'])->name('checkin_antrian');
     Route::post('info_pasien_baru', [AntrianController::class, 'info_pasien_baru'])->name('info_pasien_baru');
     Route::post('jadwal_operasi_rs', [JadwalOperasiController::class, 'jadwal_operasi_rs'])->name('jadwal_operasi_rs');
     Route::post('jadwal_operasi_pasien', [JadwalOperasiController::class, 'jadwal_operasi_pasien'])->name('jadwal_operasi_pasien');
