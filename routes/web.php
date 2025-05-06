@@ -297,7 +297,7 @@ Route::middleware('auth')->group(function () {
     Route::get('kunjunganrajal', [AntrianController::class, 'kunjunganrajal'])->name('kunjunganrajal');
     Route::get('ermrajal', [AntrianController::class, 'ermrajal'])->name('ermrajal');
     Route::get('icare', [IcareController::class, 'icare'])->name('icare');
-    Route::get('get_kunjungan_rajal', [AntrianController::class, 'get_kunjungan_rajal'])->name('get_kunjungan_rajal');
+    Route::get('get_kunjungan_rajal', [AntrianContrlaporanKunjunganPoliklinikoller::class, 'get_kunjungan_rajal'])->name('get_kunjungan_rajal');
     Route::get('jadwalDokterPoliklinik', [JadwalDokterController::class, 'jadwalDokterPoliklinik'])->name('jadwalDokterPoliklinik');
     Route::get('laporanAntrianPoliklinik', [AntrianController::class, 'laporanAntrianPoliklinik'])->name('laporanAntrianPoliklinik');
     Route::get('laporanKunjunganPoliklinik', [KunjunganController::class, 'laporanKunjunganPoliklinik'])->name('laporanKunjunganPoliklinik');

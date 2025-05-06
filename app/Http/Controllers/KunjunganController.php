@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class KunjunganController extends APIController
@@ -275,5 +276,38 @@ class KunjunganController extends APIController
             Alert::error('Gagal', $response->metadata->message);
         }
         return redirect()->back();
+    }
+    public function data_kunjungan_rajal(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "tanggal" => "required",
+            "unit" => "required",
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors()->first(), 201);
+        }
+        $data = Kunjungan::whereDate('tgl_masuk', $request->tanggal)
+            ->where('kode_unit', $request->unit)
+            ->with('pasien','unit','dokter')
+            ->get()
+            ->map(function ($kunjungan) {
+                return [
+                    'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    'counter' => $kunjungan->counter,
+                    'tgl_masuk' => $kunjungan->tgl_masuk,
+                    'tgl_keluar' => $kunjungan->tgl_keluar,
+
+                    'no_rm' => $kunjungan->no_rm,
+                    'nama_px' => $kunjungan->pasien->nama_px,
+
+                    'kode_unit' => $kunjungan->kode_unit,
+                    'nama_unit' => $kunjungan->unit->nama_unit,
+
+                    'kode_paramedis' => $kunjungan->kode_paramedis,
+                    'nama_paramedis' => $kunjungan->dokter->nama_paramedis,
+                ];
+            });
+
+        return $this->sendResponse($data, 200);
     }
 }
