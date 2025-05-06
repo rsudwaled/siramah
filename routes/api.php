@@ -6,10 +6,12 @@ use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\InacbgController;
 use App\Http\Controllers\JadwalDokterController;
 use App\Http\Controllers\JadwalOperasiController;
+use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\SuratKontrolController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VclaimController;
 use App\Http\Controllers\WhatsappController;
 use App\Models\JadwalDokter;
@@ -136,6 +138,10 @@ Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name
 Route::get('poliklinik_by_hari', [JadwalDokterController::class, 'poliklinik_by_hari'])->name('poliklinik_by_hari');
 Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
 Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('disposisi');
+
+Route::post('data_unit_rajal', [UnitController::class, 'data_unit_rajal']);
+Route::post('data_kunjungan_rajal', [KunjunganController::class, 'data_kunjungan_rajal']);
+
 
 
 // Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
