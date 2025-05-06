@@ -1463,9 +1463,23 @@ return [
                     'can' => ['k3rs', 'rekam-medis'],
                     'submenu' => [
                         [
-                            'text' => 'RL4A Rawat Inap',
+                            'text' => 'RL4.1 Versi 6',
                             'icon'    => 'fas fa-disease',
-                            'url'  => 'FormulirRL4A',
+                            'url'  => 'FormulirRL4-1/versi-6',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'RL4.2 Versi 6',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4-2/versi-6',
+                            'shift'   => 'ml-3',
+                            'can' => ['k3rs', 'rekam-medis'],
+                        ],
+                        [
+                            'text' => 'RL4.3 Versi 6',
+                            'icon'    => 'fas fa-disease',
+                            'url'  => 'FormulirRL4-3/versi-6',
                             'shift'   => 'ml-3',
                             'can' => ['k3rs', 'rekam-medis'],
                         ],

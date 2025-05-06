@@ -526,7 +526,12 @@ Route::middleware('auth')->group(function () {
     Route::get('FormulirRL3_14', [FormulirRL3Controller::class, 'FormulirRL3_14'])->name('frl-3-14.get');
     Route::get('FormulirRL3_15', [FormulirRL3Controller::class, 'FormulirRL3_15'])->name('frl-3-15.get');
     // formulir RL 4
-    Route::get('FormulirRL4A', [FormulirRL4Controller::class, 'FormulirRL4A'])->name('frl-4-A.get');
+    Route::get('FormulirRL4-1/versi-6', [FormulirRL4Controller::class, 'FormulirRL41Versi6'])->name('frl-4-1-versi6.get');
+    Route::get('FormulirRL4-2/versi-6', [FormulirRL4Controller::class, 'FormulirRL42Versi6'])->name('frl-4-2-versi6.get');
+    Route::get('FormulirRL4-3/versi-6', [FormulirRL4Controller::class, 'FormulirRL43Versi6'])->name('frl-4-3-versi6.get');
+    Route::get('export/FormulirRL41', [FormulirRL4Controller::class, 'FormulirRL41Export'])->name('frl-4-1.export');
+    Route::get('export/FormulirRL42', [FormulirRL4Controller::class, 'FormulirRL42Export'])->name('frl-4-2.export');
+    Route::get('export/FormulirRL43', [FormulirRL4Controller::class, 'FormulirRL43Export'])->name('frl-4-3.export');
     Route::get('FormulirRL4AK', [FormulirRL4Controller::class, 'FormulirRL4AK'])->name('frl-4-AK.get');
     Route::get('FormulirRL4B', [FormulirRL4Controller::class, 'FormulirRL4B'])->name('frl-4-B.get');
     Route::get('FormulirRL4BK', [FormulirRL4Controller::class, 'FormulirRL4BK'])->name('frl-4-BK.get');
