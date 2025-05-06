@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\AntrianController;
-use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\FarmasiController;
 use App\Http\Controllers\InacbgController;
