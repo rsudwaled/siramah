@@ -195,9 +195,9 @@ class SuratKontrol extends Component
             'tanggalAkhir' => 'required',
         ]);
         $request = new Request([
-            'formatfilter' => $this->formatfilter,
-            'tglawal' => $this->tanggalAwal,
-            'tglakhir' => $this->tanggalAkhir,
+            'formatFilter' => $this->formatfilter,
+            'tanggalMulai' => $this->tanggalAwal,
+            'tanggalAkhir' => $this->tanggalAkhir,
         ]);
         $api = new VclaimController();
         $res  = $api->suratkontrol_tanggal($request);

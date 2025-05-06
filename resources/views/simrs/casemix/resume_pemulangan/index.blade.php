@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-12">
             <x-adminlte-card title="Data Resume Rawat Inap" theme="primary" collapsible>
-                <form method="get">
+                {{-- <form method="get">
                     <div class="row">
                         <div class="col-3">
                             <div class="form-group">
@@ -28,17 +28,66 @@
                             <div class="form-group">
                                 <label for="Ruangan">Ruangan</label>
                                 <select name="ruangan" id="ruangan" class="form-control">
+                                    <option value="all" selected>-Semua Ruangan-</option>
                                     @foreach ($unit as $dataUnit)
                                         <option value="{{ $dataUnit->kode_unit }}"
                                             {{ old('ruangan', $request->ruangan) == $dataUnit->kode_unit ? 'selected' : '' }}>
-                                            {{ $dataUnit->kode_unit }}| {{ $dataUnit->nama_unit }}
+                                            {{ $dataUnit->nama_unit }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-2">
-                            <button class="btn btn-md btn-primary mt-4">Tampilkan</button>
+                            <button class="btn btn-md btn-primary mt-4">Search</button>
+                        </div>
+                    </div>
+                </form> --}}
+                <form method="get">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="Tanggal Awal">Tanggal Awal</label>
+                                <input type="date" class="form-control" name="tgl_awal"
+                                    value="{{ old('tgl_awal', $request->tgl_awal ?? now()->format('Y-m-d')) }}">
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-group">
+                                <label for="Tanggal Akhir">Tanggal Akhir</label>
+                                <input type="date" class="form-control" name="tgl_akhir"
+                                    value="{{ old('tgl_akhir', $request->tgl_akhir ?? now()->format('Y-m-d')) }}">
+                            </div>
+                        </div>
+                        <div class="col-4 row">
+                            <div class="form-group col-8">
+                                <label for="Ruangan">Ruangan</label>
+                                <select name="ruangan" id="ruangan" class="form-control">
+                                    <option value="all" selected>-Semua Ruangan-</option>
+                                    @foreach ($unit as $dataUnit)
+                                        <option value="{{ $dataUnit->kode_unit }}"
+                                            {{ old('ruangan', $request->ruangan) == $dataUnit->kode_unit ? 'selected' : '' }}>
+                                            {{ $dataUnit->nama_unit }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <button class="btn btn-md btn-primary mt-4">Tampilkan</button>
+                            </div>
+                        </div>
+                        <div class="col-4 pl-2">
+                            <div class="form-group">
+                                <label for="cari_sep">
+                                    Cari SEP
+                                </label>
+                                <div class="input-group">
+                                    <input id="cari_sep" name="cari_sep" class="form-control" value="{{$searchSep??null}}"
+                                        placeholder="Pencarian SEP">
+                                    <div class="input-group-append"><button type="submit" class="btn btn-success withLoad">
+                                            Cari! </button></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

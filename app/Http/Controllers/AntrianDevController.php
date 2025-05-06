@@ -37,10 +37,10 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AntrianDevController extends APIController
 {
-    public $baseurl = "https://apijkn-dev.bpjs-kesehatan.go.id/vclaim-rest-dev/";
+    public $baseurl = "https://apijkn-dev.bpjs-kesehatan.go.id/antreanrs_dev/";
     public $consid =  "8761";
     public $secrekey = "5hTEA8A088";
-    public $userkey = "43b7eeb0f3f8e1935b5a41677432e41c";
+    public $userkey = "3e43ed3b53f04d6ab6983fd26a37dce6";
 
     public function edit($id)
     {

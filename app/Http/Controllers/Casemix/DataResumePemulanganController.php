@@ -18,25 +18,37 @@ class DataResumePemulanganController extends Controller
 {
     public function resumePemulangan(Request $request)
     {
+        $searchSep = $request->cari_sep??null;
         $query = Kunjungan::query()->with(['pasien', 'resume', 'alasan_pulang', 'penjamin_simrs']);
 
-        // Filter berdasarkan ruangan jika ada
-        if ($request->ruangan) {
-            $query->where('kode_unit', $request->ruangan);
+        if($searchSep)
+        {
+            $query->where('no_sep', $request->cari_sep);
         }
+        else{
 
-        // Filter berdasarkan rentang tanggal jika ada
-        if ($request->tgl_awal && $request->tgl_akhir) {
-            // Menggunakan Carbon untuk memformat tanggal dengan waktu mulai dari 00:00:00 sampai 23:59:59
-            $tglAwal = \Carbon\Carbon::parse($request->tgl_awal)->startOfDay();
-            $tglAkhir = \Carbon\Carbon::parse($request->tgl_akhir)->endOfDay();
+            // Filter berdasarkan ruangan jika ada
+            if($request->ruangan==='all')
+            {
+                $query->where('kode_unit', 'like', '%20%');
+            }else{
+                $query->where('kode_unit', $request->ruangan);
+            }
 
-            $query->whereBetween('tgl_keluar', [$tglAwal, $tglAkhir]);
-        }
+            // Filter berdasarkan rentang tanggal jika ada
+            if ($request->tgl_awal && $request->tgl_akhir) {
+                // Menggunakan Carbon untuk memformat tanggal dengan waktu mulai dari 00:00:00 sampai 23:59:59
+                $tglAwal = \Carbon\Carbon::parse($request->tgl_awal)->startOfDay();
+                $tglAkhir = \Carbon\Carbon::parse($request->tgl_akhir)->endOfDay();
 
-        // Jika tidak ada filter tanggal dan ruangan, ambil data yang relevan berdasarkan tanggal sekarang
-        if (!$request->ruangan && !$request->tgl_awal && !$request->tgl_akhir) {
-            $query->whereBetween('tgl_keluar', [now(), now()]);
+                $query->whereBetween('tgl_keluar', [$tglAwal, $tglAkhir]);
+            }
+
+            // Jika tidak ada filter tanggal dan ruangan, ambil data yang relevan berdasarkan tanggal sekarang
+            if (!$request->ruangan && !$request->tgl_awal && !$request->tgl_akhir) {
+                $query->whereBetween('tgl_keluar', [now(), now()]);
+            }
+
         }
 
         // Eksekusi query
@@ -44,7 +56,7 @@ class DataResumePemulanganController extends Controller
 
 
         $unit = Unit::where('kelas_unit', 2)->whereNotIn('kode_unit',['2021'])->where('act', 1)->orderBy('nama_unit','asc')->get();
-        return view('simrs.casemix.resume_pemulangan.index', compact('kunjungan','unit','request'));
+        return view('simrs.casemix.resume_pemulangan.index', compact('kunjungan','unit','request','searchSep'));
     }
     public function verifyResume(Request $request)
     {
