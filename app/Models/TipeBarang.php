@@ -11,4 +11,7 @@ class TipeBarang extends Model
     protected $connection = 'mysql2';
     protected $table = 'mt_tipe_barang';
     protected $guarded = ["kode_tipe"];
+    protected $primaryKey = 'kode_tipe';
+    public $incrementing = false;
+    public $timestamps = false;
 }

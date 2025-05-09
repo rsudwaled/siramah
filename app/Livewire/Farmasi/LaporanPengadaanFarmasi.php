@@ -24,7 +24,7 @@ class LaporanPengadaanFarmasi extends Component
     public function render()
     {
         if ($this->tanggalAkhir && $this->tanggalAwal) {
-            $response = collect(DB::connection('mysql2')->select("CALL SP_DASAR_PENGADAAN_FARMASI('" . $this->tanggalAwal . "','" . $this->tanggalAkhir . "','','')"));
+            $response = collect(DB::connection('mysql2')->select("CALL SP_DASAR_PENGADAAN_FARMASI('" . $this->tanggalAwal . "','" . $this->tanggalAkhir . "','','" . $this->tipe . "')"));
             $this->obats = $response;
         }
         return view('livewire.farmasi.laporan-pengadaan-farmasi');

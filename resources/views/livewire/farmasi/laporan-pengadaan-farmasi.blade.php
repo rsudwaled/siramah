@@ -8,7 +8,7 @@
         <x-adminlte-card title="Laporan Pengadaan Farmasi" theme="primary">
             <div class="row">
                 <div class="col-md-3">
-                    <x-adminlte-select wire:model="formatfilter" igroup-size="sm" name="tipe">
+                    <x-adminlte-select wire:model="tipe" igroup-size="sm" name="tipe">
                         <x-slot name="prependSlot">
                             <x-adminlte-button label="Tipe Barang" class="text-bold" />
                         </x-slot>
