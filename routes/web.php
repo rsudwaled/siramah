@@ -144,15 +144,13 @@ Route::post('bukutamu', [BukuTamuController::class, 'store'])->name('bukutamu_st
 // layanan umum
 Route::get('jadwaloperasi_info', [JadwalOperasiController::class, 'jadwaloperasi_info'])->name('jadwaloperasi_info');
 Route::get('jadwaloperasi_display', [JadwalOperasiController::class, 'jadwaloperasi_display'])->name('jadwaloperasi_display');
-// mesin antrian
+// anjungan antrian
 Route::get('mesinantrian', [PendaftaranController::class, 'mesinantrian'])->name('mesinantrian');
 Route::get('testmesinantrian', [PendaftaranController::class, 'testmesinantrian'])->name('testmesinantrian');
 Route::get('ambil_antrian_offline_bpjs', [PendaftaranController::class, 'ambil_antrian_offline_bpjs'])->name('ambil_antrian_offline_bpjs');
 Route::get('ambil_antrian_offline_umum', [PendaftaranController::class, 'ambil_antrian_offline_umum'])->name('ambil_antrian_offline_umum');
 Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_antrian'])->name('print_karcis_antrian');
-
-
-
+// anjungan mandiri
 Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri');
 Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
 Route::get('anjungan-mandiri-pendaftaran', AnjunganMandiriPendaftaran::class)->name('anjungan.mandiri.pendaftaran');
@@ -160,7 +158,6 @@ Route::get('anjungan-cetak-karcis-umum', [AnjunganMandiri::class, 'cetakKarcisUm
 Route::get('anjungan-cetak-karcis-bpjs', [AnjunganMandiri::class, 'cetakKarcisBpjs'])->name('anjungan.cetak.karcis.bpjs');
 Route::get('test-cetak-karcis', [AnjunganMandiri::class, 'testCetakKarcis'])->name('test.cetak.karcis');
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jadwal.rajal');
-
 Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
 // Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
@@ -177,17 +174,13 @@ Route::get('displayAntrianPoliklinik', [PoliklinikController::class, 'displayAnt
 Route::get('getdisplayAntrianPoliklinik', [PoliklinikController::class, 'getdisplayAntrianPoliklinik'])->name('getdisplayAntrianPoliklinik');
 Route::get('updatePanggilanDisplayAntrian', [PoliklinikController::class, 'updatePanggilanDisplayAntrian'])->name('updatePanggilanDisplayAntrian');
 Route::get('displayantrianklinik/{lantai}', DisplayAntrianKlinik::class)->name('displayantrianklinik');
-
 Route::get('displayantrianfarmasi/{lantai}', [AntrianController::class, 'displayantrianfarmasi'])->name('displayantrianfarmasi');
 Route::get('displaynomorfarmasi/{lantai}', [AntrianController::class, 'displaynomorfarmasi'])->name('displaynomorfarmasi');
 Route::get('panggilnomorfarmasi', [AntrianController::class, 'panggilnomorfarmasi'])->name('panggilnomorfarmasi');
-
-
 // cppt
 Route::get('cppt', [CPPTController::class, 'getCPPT'])->name('cppt.get');
 Route::get('cppt_print', [CPPTController::class, 'getCPPTPrint'])->name('cppt-rajal-print.get');
 Route::get('cppt_print_anestesi', [CPPTController::class, 'getCPPTPrintAnestesi'])->name('cppt-anestesi-print.get');
-
 // Sep Downloader
 Route::controller(App\Http\Controllers\Casemix\SepDownloaderController::class)->prefix('sep-downloader')->name('simrs.sep-downloader.')->group(function () {
     Route::get('/', 'index')->name('index');
@@ -196,8 +189,6 @@ Route::controller(App\Http\Controllers\Casemix\SepDownloaderController::class)->
     Route::get('/download-single', 'downloadSingle')->name('downloadSingle');
     Route::get('/download/{id}', 'download')->name('download');
 });
-
-
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok

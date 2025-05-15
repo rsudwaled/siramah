@@ -45,7 +45,7 @@ Route::prefix('vclaim')->group(function () {
     Route::get('peserta_nomorkartu', [VclaimController::class, 'peserta_nomorkartu'])->name('peserta_nomorkartu');
     Route::get('peserta_nik', [VclaimController::class, 'peserta_nik'])->name('peserta_nik');
     // REFERENSI
-    Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa'])->name('ref_diagnosa');
+    Route::get('ref_diagnosa', [VclaimController::class, 'ref_diagnosa']);
     Route::get('ref_poliklinik', [VclaimController::class, 'ref_poliklinik'])->name('ref_poliklinik');
     Route::get('ref_faskes', [VclaimController::class, 'ref_faskes'])->name('ref_faskes');
     Route::get('ref_dpjp', [VclaimController::class, 'ref_dpjp'])->name('ref_dpjp');
@@ -138,16 +138,13 @@ Route::get('cekKodebooking', [AntrianController::class, 'cekKodebooking'])->name
 Route::get('poliklinik_by_hari', [JadwalDokterController::class, 'poliklinik_by_hari'])->name('poliklinik_by_hari');
 Route::get('jadwal_by_hari', [JadwalDokterController::class, 'jadwal_by_hari'])->name('jadwal_by_hari');
 Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('disposisi');
-
 Route::post('data_unit_rajal', [UnitController::class, 'data_unit_rajal']);
 Route::post('data_kunjungan_rajal', [KunjunganController::class, 'data_kunjungan_rajal']);
 
-
-
+Route::get('eklaim/sep/{sep}', [InacbgController::class, 'get_biaya_sep']);
 // Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 // Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
-
 // API SIMRS
 Route::prefix('wa')->group(function () {
     Route::post('webhooka', [WhatsappController::class, 'webhook']);
