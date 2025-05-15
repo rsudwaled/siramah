@@ -13,6 +13,7 @@ use App\Http\Controllers\PoliklinikController;
 use App\Http\Controllers\SuratKontrolController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\VclaimController;
+use App\Http\Controllers\VindaController;
 use App\Http\Controllers\WhatsappController;
 use App\Models\JadwalDokter;
 use Illuminate\Http\Request;
@@ -141,7 +142,7 @@ Route::get('disposisi', [DisposisiController::class, 'disposisi'])->name('dispos
 Route::post('data_unit_rajal', [UnitController::class, 'data_unit_rajal']);
 Route::post('data_kunjungan_rajal', [KunjunganController::class, 'data_kunjungan_rajal']);
 
-Route::get('eklaim/sep/{sep}', [InacbgController::class, 'get_biaya_sep']);
+Route::get('eklaim/sep/{sep}', [VindaController::class, 'get_biaya_sep']);
 // Route::get('cekRujukanPeserta', [VclaimController::class, 'cekRujukanPeserta'])->name('api.cekRujukanPeserta');
 // Route::get('cekRujukanRSPeserta', [VclaimController::class, 'cekRujukanRSPeserta'])->name('api.cekRujukanRSPeserta');
 // Route::get('cekSuratKontrolPeserta', [VclaimController::class, 'cekSuratKontrolPeserta'])->name('api.cekSuratKontrolPeserta');
