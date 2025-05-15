@@ -89,7 +89,19 @@ class ResumePemulanganController extends Controller
         } else {
             $statusBayi = 'Tanggal lahir tidak tersedia';
         }
-        $resume         = ErmRanapResume::where('kode_kunjungan', $request->kode)->first();
+        // $resume         = ErmRanapResume::where('kode_kunjungan', $request->kode)->first();
+        // terbaru
+        $rm_counter = $pasien->no_rm.'|'.$kunjungan->counter;
+        $resumeList = ErmRanapResume::where('rm_counter', $rm_counter)
+            ->orderByDesc('id') // Urut dari ID terbesar (terbaru)
+            ->take(2)
+            ->get();
+
+        $resume = $resumeList->first();        // ✅ Resume terbaru
+        $resumeSebelumnya = $resumeList->count() > 1
+            ? $resumeList->last()                      // ✅ Resume sebelum terbaru
+            : null;
+
         if($resume && $resume->status_resume == 1)
         {
             return view('simrs.erm-ranap.resume_pemulangan.resume_cepat_final', compact('resume','kunjungan'));
@@ -103,7 +115,7 @@ class ResumePemulanganController extends Controller
                 'qty' => $items->sum('qty')  // Jumlahkan qty dari semua obat dengan nama yang sama
             ];
         });
-        return view('simrs.erm-ranap.resume_pemulangan.resume_cepat', compact('kunjungan','pasien','riwayatObat','resume','umur'));
+        return view('simrs.erm-ranap.resume_pemulangan.resume_cepat', compact('kunjungan','pasien','riwayatObat','resume','resumeSebelumnya','umur'));
     }
 
     public function storeResume(Request $request)
@@ -125,10 +137,109 @@ class ResumePemulanganController extends Controller
         $tindakanProsedure      = !empty($request->tindakan_prosedure_dokter) && is_array($request->tindakan_prosedure_dokter)? implode('|', $request->tindakan_prosedure_dokter): Null;
         $prosedureFinal         = implode('|', array_filter([$prosedureUpdate, $tindakanProsedure]));
 
+        // $data = [
+        //     'kode_kunjungan'            => $request->kode_kunjungan,
+        //     'counter'                   => $request->counter,
+        //     'rm'                        => $request->rm_pasien,
+        //     'rm_counter'                => $request->rm_pasien.'|'.$request->counter,
+        //     'tgl_evaluasi'              => $request->tgl_evaluasi,
+        //     'waktu_evaluasi'            => $request->waktu_evaluasi,
+        //     'tgl_masuk'                 => $request->tgl_masuk,
+        //     'jam_masuk'                 => $request->waktu_masuk,
+        //     'ruang_rawat_masuk'         => $request->ruang_rawat_masuk,
+        //     'tgl_keluar'                => $request->tgl_keluar,
+        //     'jam_keluar'                => $request->waktu_keluar,
+        //     'ruang_rawat_keluar'        => $request->ruang_rawat_keluar,
+        //     'rawat_intensif'            => $request->rawat_intensif,
+        //     'lama_rawat'                => $request->lama_rawat,
+        //     'bb_bayi_lahir'             => $request->bb_bayi_lahir,
+        //     'ringkasan_perawatan'       => $request->ringkasan_perawatan,
+        //     'riwayat_penyakit'          => $request->riwayat_penyakit,
+        //     'indikasi_ranap'            => $request->indikasi_rawat_inap,
+        //     'pemeriksaan_fisik'         => $request->pemeriksaan_fisik,
+        //     'penunjang_lab'             => $request->penunjang_laboratorium,
+        //     'penunjang_radiologi'       => $request->penunjang_radiologi,
+        //     'penunjang_lainnya'         => $request->penunjang_lainya,
+        //     'hasil_konsultasi'          => $request->hasil_konsultasi,
+        //     'diagnosa_masuk'            => $request->diagnosa_masuk,
+        //     //diagnosa_dokter
+        //     'diagnosa_utama_dokter'     => $request->diagnosa_utama_dokter,
+        //     // akses casemix
+        //     'diagnosa_utama'            => $request->diagnosa_utama,
+        //     // 'diagnosa_sekunder'         => $diagSekunderFinal,
+        //     'diagnosa_sekunder_dokter'  => $diagSekunderFinal??null,
+
+        //     'komplikasi'                => $request->komplikasi,
+        //     // 'tindakan_operasi'          => $operasiFinal,
+        //     'tindakan_operasi_dokter'   => $operasiFinal??null,
+
+        //     'tgl_operasi'               => $request->tgl_operasi,
+        //     'waktu_operasi_mulai'       => $request->waktu_mulai_operasi,
+        //     'waktu_operasi_selesai'     => $request->waktu_selesai_operasi,
+        //     'sebab_kematian'            => $request->sebab_kematian,
+        //     // 'tindakan_prosedure'        => $prosedureFinal,
+        //     'tindakan_prosedure_dokter' => $prosedureFinal??Null,
+
+        //     'cara_keluar'               => json_encode([
+        //         'sembuh_perbaikan'  => $request->sembuh_perbaikan??0,
+        //         'pindah_rs'         => $request->pindah_rs??0,
+        //         'pulang_paksa'      => $request->pulang_paksa??0,
+        //         'meninggal'         => $request->meninggal??0,
+        //         'cara_lainya'       => $request->cara_keluar_lainnya??null,
+        //     ]),
+        //     'kondisi_pulang'            => $request->kondisi_pulang,
+        //     'keadaan_umum'              => $request->keadaan_umum,
+        //     'kesadaran'                 => $request->kesadaran,
+        //     'tekanan_darah'             => $request->tekanan_darah,
+        //     'nadi'                      => $request->nadi,
+        //     'pengobatan_dilanjutkan'    => json_encode([
+        //         'poliklinik_rswaled' => $request->poliklinik_rswaled,
+        //         'rs_lain'            => $request->rs_lain,
+        //         'dokter_praktek'     => $request->dokter_praktek,
+        //         'lainnya'            => $request->pengobatan_lanjutan_lainnya,
+        //     ]),
+        //     'tgl_kontrol'               => $request->tgl_kontrol,
+        //     'lokasi_kontrol'            => $request->lokasi_kontrol,
+        //     'diet'                      => $request->diet,
+        //     'latihan'                   => $request->latihan,
+        //     'keterangan_kembali'        => $request->keterangan_kembali,
+        //     'ket_intruksi_pulang'       => $request->ket_intruksi_pulang??null,
+        //     'a_1menit'                  => $request->a_1menit??null,
+        //     'ap_1menit'                 => $request->ap_1menit??null,
+        //     'apg_1menit'                => $request->apg_1menit??null,
+        //     'apga_1menit'               => $request->apga_1menit??null,
+        //     'apgar_1menit'              => $request->apgar_1menit??null,
+        //     'total_apgar_1menit'        => $request->total_apgar_1menit??null,
+        //     'a_5menit'                  => $request->a_5menit??null,
+        //     'ap_5menit'                 => $request->ap_5menit??null,
+        //     'apg_5menit'                => $request->apg_5menit??null,
+        //     'apga_5menit'               => $request->apga_5menit??null,
+        //     'apgar_5menit'              => $request->apgar_5menit??null,
+        //     'total_apgar_5menit'        => $request->total_apgar_5menit??null,
+        //     'grafida'                   => $request->grafida??null,
+        //     'pemeriksaan_shk_ya'        => $request->pemeriksaan_shk_ya??null,
+        //     'pemeriksaan_shk_tidak'     => $request->pemeriksaan_shk_tidak??null,
+        //     'diambil_dari_tumit'        => $request->diambil_dari_tumit??null,
+        //     'diambil_dari_vena'         => $request->diambil_dari_vena??null,
+        //     'tgl_pengambilan_shk'       => $request->tgl_pengambilan_shk??null,
+        //     // 'tgl_pengambilan_shk'       => $request->nama_dpjp,
+        //     'tgl_cetak'                 => $request->tgl_cetak??null,
+        //     'kode_dokter'               => $dokter->kode_paramedis,
+        //     'dpjp'                      => $dokter->nama_paramedis,
+        //     'user'                      => Auth::user()->username ?? 'anonim',
+        // ];
+
+        // $resume = ErmRanapResume::updateOrCreate(
+        //     ['kode_kunjungan' => $request->kode_kunjungan],  // Kondisi pencarian
+        //     $data  // Data yang akan diupdate atau disimpan
+        // );
+        $rm_counter = $request->rm_pasien.'|'.$request->counter;
+
         $data = [
             'kode_kunjungan'            => $request->kode_kunjungan,
             'counter'                   => $request->counter,
             'rm'                        => $request->rm_pasien,
+            'rm_counter'                => $rm_counter,
             'tgl_evaluasi'              => $request->tgl_evaluasi,
             'waktu_evaluasi'            => $request->waktu_evaluasi,
             'tgl_masuk'                 => $request->tgl_masuk,
@@ -209,16 +320,20 @@ class ResumePemulanganController extends Controller
             'diambil_dari_tumit'        => $request->diambil_dari_tumit??null,
             'diambil_dari_vena'         => $request->diambil_dari_vena??null,
             'tgl_pengambilan_shk'       => $request->tgl_pengambilan_shk??null,
-            // 'tgl_pengambilan_shk'       => $request->nama_dpjp,
             'tgl_cetak'                 => $request->tgl_cetak??null,
             'kode_dokter'               => $dokter->kode_paramedis,
             'dpjp'                      => $dokter->nama_paramedis,
             'user'                      => Auth::user()->username ?? 'anonim',
         ];
+
         $resume = ErmRanapResume::updateOrCreate(
-            ['kode_kunjungan' => $request->kode_kunjungan],  // Kondisi pencarian
+            [
+                // 'rm_counter'     => $rm_counter,
+                'kode_kunjungan' => $request->kode_kunjungan,
+            ],
             $data  // Data yang akan diupdate atau disimpan
         );
+
         $kunjungan_counter = $resume->kode_kunjungan.'|'.$resume->counter;
         $existingObatPulang = ErmRanapResumeObatPulang::where('id_resume', $resume->id)->get();
         // Buat atau update obat berdasarkan data yang diterima dari form
@@ -272,7 +387,10 @@ class ResumePemulanganController extends Controller
     public function printResume(Request $request)
     {
         $kunjungan      = Kunjungan::where('kode_kunjungan', $request->kode)->first();
-        $resume         = ErmRanapResume::where('kode_kunjungan', $request->kode)->first();
+        $rm_counter     = $kunjungan->no_rm.'|'.$kunjungan->counter;
+        $resume         = ErmRanapResume::where('rm_counter', $rm_counter)
+            ->orderBy('id', 'desc') // atau 'id' jika tidak ada 'created_at'
+            ->first();
         if($resume)
         {
             $obatPulang     = ErmRanapResumeObatPulang::where('id_resume', $resume->id)->get();
@@ -348,4 +466,24 @@ class ResumePemulanganController extends Controller
         return response()->json($dokters);
     }
 
+     public function statusPublishCasemix(Request $request, $id)
+    {
+        // Validasi jika diperlukan
+        $request->validate([
+            'status' => 'required|string',
+        ]);
+
+        // Ambil data berdasarkan ID
+        $resume = ErmRanapResume::findOrFail($id);
+        // dd($resume);
+        // Update status
+        $resume->is_status_casemix = 1; // misalnya 'published'
+        $resume->save();
+
+        // Beri response
+        return response()->json([
+            'message' => 'Status berhasil diperbarui',
+            'data' => $resume
+        ]);
+    }
 }

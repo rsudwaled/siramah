@@ -267,28 +267,56 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Ringkasan Perawatan</strong></td>
+                                                        <td>
+                                                            <strong>Ringkasan Perawatan</strong>
+                                                            <p>
+                                                                <b><u><i>Ringkasan Perawatan Ruangan Sebelumnya:</i></u></b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->ringkasan_perawatan ?? '-' }}
+                                                            </p>
+                                                        </td>
                                                         <td colspan="2">
                                                             <textarea style="font-size:12px;" name="ringkasan_perawatan" id="ringkasan_perawatan" rows="5"
                                                                 class="form-control">{{ $resume->ringkasan_perawatan ?? '' }}</textarea>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Riwayat Penyakit</strong></td>
+                                                        <td>
+                                                            <strong>Riwayat Penyakit</strong>
+                                                            <p>
+                                                                <b><u><i>Riwayat Penyakit Ruangan Sebelumnya:</i></u></b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->riwayat_penyakit ?? '-' }}
+                                                            </p>
+                                                        </td>
                                                         <td colspan="2">
                                                             <textarea style="font-size:12px;" name="riwayat_penyakit" id="riwayat_penyakit" rows="5"
                                                                 class="form-control">{{ $resume->riwayat_penyakit ?? '' }}</textarea>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Indikasi Rawat Inap</strong></td>
+                                                        <td>
+                                                            <strong>Indikasi Rawat Inap</strong>
+                                                            <p>
+                                                                <b><u><i>Indikasi Rawat Inap Ruangan Sebelumnya:</i></u></b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->indikasi_ranap ?? '-' }}
+                                                            </p>
+                                                        </td>
                                                         <td colspan="2">
                                                             <textarea style="font-size:12px;" name="indikasi_rawat_inap" id="indikasi_rawat_inap" rows="5"
                                                                 class="form-control">{{ $resume->indikasi_ranap ?? '' }}</textarea>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td><strong>Pemeriksaan Fisik</strong></td>
+                                                        <td>
+                                                            <strong>Pemeriksaan Fisik</strong>
+                                                            <p>
+                                                                <b><u><i>Pemeriksaan Fisik Ruangan Sebelumnya:</i></u></b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->pemeriksaan_fisik ?? '-' }}
+                                                            </p>
+                                                        </td>
                                                         <td colspan="2">
                                                             <textarea style="font-size:12px;" name="pemeriksaan_fisik" id="pemeriksaan_fisik" rows="5"
                                                                 class="form-control">
@@ -422,7 +450,20 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             style="width: 100%; height: 100%; border:none;">
                                                                             <tr>
                                                                                 <td style="width: 36%; padding: 10px;">
-                                                                                    Laboratorium</td>
+                                                                                    Laboratorium
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Laboratorium Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        <br>
+                                                                                        {{ $resumeSebelumnya->penunjang_laboratorium ?? '-' }}
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <textarea name="penunjang_laboratorium" id="penunjang_laboratorium" rows="5" class="form-control"
                                                                                         style="width: 100%; resize: vertical; font-size:12px;">{{ $resume->penunjang_lab ?? '' }}</textarea>
@@ -430,7 +471,20 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style=" padding: 10px;">
-                                                                                    Radiologi</td>
+                                                                                    Radiologi
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Radiologi Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        <br>
+                                                                                        {{ $resumeSebelumnya->penunjang_radiologi ?? '-' }}
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <textarea name="penunjang_radiologi" id="penunjang_radiologi" rows="5" class="form-control"
                                                                                         style="width: 100%; resize: vertical; font-size:12px;">{{ $resume->penunjang_radiologi ?? '' }}</textarea>
@@ -438,7 +492,21 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style=" padding: 10px;">
-                                                                                    Penunjang Lainnya</td>
+                                                                                    Penunjang Lainnya
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Penunjang Lainnya
+                                                                                                    Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        <br>
+                                                                                        {{ $resumeSebelumnya->penunjang_lainya ?? '-' }}
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <textarea name="penunjang_lainya" id="penunjang_lainya" rows="5" class="form-control"
                                                                                         style="width: 100%; resize: vertical; font-size:12px;">{{ $resume->penunjang_lainnya ?? '' }}</textarea>
@@ -453,6 +521,18 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                     <tr>
                                                         <td>
                                                             <strong style="margin: 0.5rem 0;">Hasil Konsultasi</strong>
+                                                            <p>
+                                                                <b>
+                                                                    <u>
+                                                                        <i>
+                                                                            Hasil Konsultasi Ruangan
+                                                                            Sebelumnya:
+                                                                        </i>
+                                                                    </u>
+                                                                </b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->hasil_konsultasi ?? '-' }}
+                                                            </p>
                                                         </td>
                                                         <td colspan="2">
                                                             <textarea name="hasil_konsultasi" id="hasil_konsultasi" rows="5" class="form-control"
@@ -462,6 +542,18 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                     <tr>
                                                         <td>
                                                             <strong style="margin: 0.5rem 0;">Diagnosa Masuk</strong>
+                                                            <p>
+                                                                <b>
+                                                                    <u>
+                                                                        <i>
+                                                                            Diagnosa Masuk Ruangan
+                                                                            Sebelumnya:
+                                                                        </i>
+                                                                    </u>
+                                                                </b>
+                                                                <br>
+                                                                {{ $resumeSebelumnya->diagnosa_masuk ?? '-' }}
+                                                            </p>
                                                         </td>
                                                         <td colspan="2">
                                                             <textarea name="diagnosa_masuk" id="diagnosa_masuk" rows="5" class="form-control"
@@ -484,7 +576,20 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             style="width: 100%; height: 100%; border:none;">
                                                                             <tr>
                                                                                 <td style="width: 36%; padding: 10px;">
-                                                                                    Diagnosa Utama</td>
+                                                                                    Diagnosa Utama
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Diagnosa Utama Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        <br>
+                                                                                        {{ $resumeSebelumnya->diagnosa_utama_dokter ?? '-' }}
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <div class="col-12 row">
                                                                                         <input type="text"
@@ -497,7 +602,29 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style=" padding: 10px;">
-                                                                                    Diagnosa Sekunder</td>
+                                                                                    Diagnosa Sekunder
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Diagnosa Sekunder
+                                                                                                    Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        @if (!empty($resumeSebelumnya->diagnosa_sekunder_dokter))
+                                                                                            <ul>
+                                                                                                @foreach (explode('|', $resumeSebelumnya->diagnosa_sekunder_dokter) as $item)
+                                                                                                    <li>{{ trim($item) }}
+                                                                                                    </li>
+                                                                                                @endforeach
+                                                                                            </ul>
+                                                                                        @else
+                                                                                            -
+                                                                                        @endif
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <div class="col-12 row">
                                                                                         <table class="table table-bordered"
@@ -574,7 +701,20 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                                             </tr>
                                                                             <tr>
                                                                                 <td style=" padding: 10px;">
-                                                                                    Komplikasi</td>
+                                                                                    Komplikasi
+                                                                                    <p>
+                                                                                        <b>
+                                                                                            <u>
+                                                                                                <i>
+                                                                                                    Komplikasi Ruangan
+                                                                                                    Sebelumnya:
+                                                                                                </i>
+                                                                                            </u>
+                                                                                        </b>
+                                                                                        <br>
+                                                                                        {{ $resumeSebelumnya->komplikasi ?? '-' }}
+                                                                                    </p>
+                                                                                </td>
                                                                                 <td style=" padding: 10px;">
                                                                                     <div class="col-12">
                                                                                         <input type="text"
@@ -595,6 +735,27 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                     <tr>
                                                         <td>
                                                             <strong style="margin: 0.5rem 0;">Tindakan Operasi</strong>
+                                                            <p>
+                                                                <b>
+                                                                    <u>
+                                                                        <i>
+                                                                            Tindakan Operasi Ruangan
+                                                                            Sebelumnya:
+                                                                        </i>
+                                                                    </u>
+                                                                </b>
+                                                                <br>
+                                                                @if (!empty($resumeSebelumnya->tindakan_operasi_dokter))
+                                                                    <ul>
+                                                                        @foreach (explode('|', $resumeSebelumnya->tindakan_operasi_dokter) as $item)
+                                                                            <li>{{ trim($item) }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                @else
+                                                                    -
+                                                                @endif
+
+                                                            </p>
                                                         </td>
                                                         <td colspan="2">
                                                             <div class="col-12 row">
@@ -693,6 +854,25 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                                                     <tr>
                                                         <td>
                                                             <strong style="margin: 0.5rem 0;">Tindakan / Prosedure</strong>
+                                                            <p>
+                                                                <b>
+                                                                    <u>
+                                                                        <i>
+                                                                            Tindakan Prosedure Ruangan
+                                                                            Sebelumnya:
+                                                                        </i>
+                                                                    </u>
+                                                                </b>
+                                                                @if (!empty($resumeSebelumnya->tindakan_prosedure_dokter))
+                                                                    <ul>
+                                                                        @foreach (explode('|', $resumeSebelumnya->tindakan_prosedure_dokter) as $item)
+                                                                            <li>{{ trim($item) }}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                @else
+                                                                    -
+                                                                @endif
+                                                            </p>
                                                         </td>
                                                         <td colspan="2">
                                                             <div class="col-12 row">
@@ -1091,6 +1271,26 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
                             @else --}}
                             <div class="form-actions col-12">
                                 <button type="submit" class="btn btn-success">Simpan</button>
+                                @if (isset($resume) && (empty($resume->is_status_casemix) || $resume->is_status_casemix == '0'))
+                                    <button type="button" class="btn bg-purple isCasemix float-right"
+                                        data-id="{{ $resume->id }}"
+                                        data-url="{{ route('resume-pemulangan.vbeta.publish-casemix', ['id' => $resume->id]) }}">
+                                        Publish ke Casemix
+                                    </button>
+                                @elseif (isset($resume) && $resume->is_status_casemix != '0')
+                                    <p class="float-right text-success">
+                                        <b>
+                                            KET: RESUME SUDAH DI PUBLISH KE CASEMIX
+                                        </b>
+                                    </p>
+                                @else
+                                    <p class="float-right text-danger">
+                                        <b>
+                                            KET: DATA RESUME TIDAK TERSEDIA/BELUM DIISI
+                                        </b>
+                                    </p>
+                                @endif
+
                             </div>
                             {{-- @endif --}}
                         </form>
@@ -1721,5 +1921,30 @@ T:{{ "\n" }}N:{{ "\n" }}S:{{ "\n" }}R:{{ "\n" }}
             const row = button.closest("tr"); // Menemukan elemen <tr> yang terkait dengan tombol
             row.remove(); // Menghapus baris dari tabel
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.isCasemix').click(function() {
+                let button = $(this);
+                let itemId = button.data('id');
+                let url = button.data('url'); // Gunakan URL dari Blade
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: 'published'
+                    },
+                    success: function(response) {
+                        alert('Status updated successfully!');
+                        location.reload();
+                    },
+                    error: function() {
+                        alert('Error updating status.');
+                    }
+                });
+            });
+        });
     </script>
 @endsection

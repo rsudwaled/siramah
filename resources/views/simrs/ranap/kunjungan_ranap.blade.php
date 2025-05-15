@@ -192,7 +192,7 @@
                                         class="btn btn-success btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> ERM RANAP
                                     </a> --}}
-                                    <a href="{{ route('resume-pemulangan.vbeta.resume-vbeta.cepat', ['kode' => $kunjungan->kode_kunjungan]) }}"
+                                    <a href="{{ route('resume-pemulangan.vbeta.resume-vbeta.cepat', ['kode'=>$kunjungan->kode_kunjungan,'counter' => $kunjungan->counter,'rm'=>$kunjungan->no_rm]) }}"
                                         class="btn btn-secondary btn-xs withLoad">
                                         <i class="fas fa-file-medical"></i> Resume {{$kunjungan->resume()->exists() ? ' (ada resume) ' : ' (belum)'}}
                                     </a>

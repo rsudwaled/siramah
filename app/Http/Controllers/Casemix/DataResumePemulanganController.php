@@ -23,7 +23,7 @@ class DataResumePemulanganController extends Controller
 
         if($searchSep)
         {
-            $query->where('no_sep', $request->cari_sep);
+            $query->where('no_sep', $request->cari_sep)->where('status_kunjungan', 2)->whereNotNull('tgl_keluar');
         }
         else{
 
@@ -52,7 +52,7 @@ class DataResumePemulanganController extends Controller
         }
 
         // Eksekusi query
-        $kunjungan = $query->get();
+        $kunjungan = $query->where('status_kunjungan', 2)->get();
 
 
         $unit = Unit::where('kelas_unit', 2)->whereNotIn('kode_unit',['2021'])->where('act', 1)->orderBy('nama_unit','asc')->get();

@@ -15,6 +15,7 @@ class ErmRanapResume extends Model
         'kode_kunjungan',
         'counter',
         'rm',
+        'rm_counter',
         'tgl_evaluasi',
         'waktu_evaluasi',
         'tgl_masuk',

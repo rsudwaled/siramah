@@ -989,6 +989,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pasien-rawat-inap', 'pasienRanap')->name('list-pasien-ranap');
         Route::post('/send-final', 'sendResume')->name('send-final');
         Route::post('/post-pengajuan-pembukaan-resume', 'postPengajuanPembukaanFormResume')->name('post.pengajuan-pembukaan-resume');
+         Route::post('/update-status-casemix/{id}', 'statusPublishCasemix')->name('publish-casemix');
     });
     // End GIZI
 });
