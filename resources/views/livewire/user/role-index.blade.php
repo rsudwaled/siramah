@@ -81,10 +81,10 @@
                             <td>{{ $item->users_count }}</td>
                             <td>
                                 <a href="#editRole">
-                                    <x-adminlte-button label="Edit" class="btn-xs" icon="fas fa-edit"
+                                    <x-adminlte-button title="Edit" class="btn-xs" icon="fas fa-edit"
                                         wire:click="edit({{ $item->id }})" theme="warning" />
                                 </a>
-                                <x-adminlte-button label="Hapus" class="btn-xs" icon="fas fa-trash"
+                                <x-adminlte-button title="Hapus" class="btn-xs" icon="fas fa-trash"
                                     wire:click="destroy({{ $item->id }})"
                                     wire:confirm="Apakah anda yakin ingin menghapus Role {{ $item->name }} ?"
                                     theme="danger" />
