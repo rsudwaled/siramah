@@ -119,6 +119,7 @@ use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
+use App\Livewire\User\UserIndex;
 use App\Models\Kunjungan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -189,19 +190,18 @@ Route::controller(App\Http\Controllers\Casemix\SepDownloaderController::class)->
     Route::get('/download-single', 'downloadSingle')->name('downloadSingle');
     Route::get('/download/{id}', 'download')->name('download');
 });
-// auth
-Route::middleware('auth')->group(function () {
-    Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
-    Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
-    Route::get('profil', ProfilIndex::class)->name('profil');
-
-    // settingan umum
+  // settingan umum
     // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
     // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
     // Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
+// auth
+Route::middleware('auth')->group(function () {
+    Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
+    Route::get('profil', ProfilIndex::class)->name('profil');
+    Route::middleware(['can:admin'])->get('user', UserIndex::class)->name('user');
+    Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
     // admin
     Route::middleware('permission:admin')->group(function () {
-        Route::resource('user', UserController::class);
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('pasienexport', [UserController::class, 'pasienexport'])->name('pasienexport');
         Route::post('userimport', [UserController::class, 'userimport'])->name('userimport');
@@ -980,7 +980,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/pasien-rawat-inap', 'pasienRanap')->name('list-pasien-ranap');
         Route::post('/send-final', 'sendResume')->name('send-final');
         Route::post('/post-pengajuan-pembukaan-resume', 'postPengajuanPembukaanFormResume')->name('post.pengajuan-pembukaan-resume');
-         Route::post('/update-status-casemix/{id}', 'statusPublishCasemix')->name('publish-casemix');
+        Route::post('/update-status-casemix/{id}', 'statusPublishCasemix')->name('publish-casemix');
     });
     // End GIZI
 });

@@ -27,6 +27,7 @@ class UserImport implements ToCollection, WithHeadingRow
                     'avatar_original' => $row['avatar_original'],
                     'email_verified_at' => Auth::user()->id,
                     'user_verify' => now(),
+                    'pic' => auth()->user()->name,
                 ]
             );
         }

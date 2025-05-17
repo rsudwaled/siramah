@@ -26,8 +26,10 @@ class UserExport implements FromCollection, WithHeadings
             'avatar_original',
             'email_verified_at',
             'user_verify',
+            'pic',
             'created_at',
             'updated_at',
+            'deleted_at',
         ];
     }
 }
