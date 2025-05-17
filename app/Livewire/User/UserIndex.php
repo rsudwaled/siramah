@@ -28,6 +28,7 @@ class UserIndex extends Component
     public $formImport = 0;
     public $fileImport;
 
+
     public function export()
     {
         try {
@@ -122,6 +123,15 @@ class UserIndex extends Component
         $this->roles = Role::pluck('name', 'id');
         $this->reset(['userId', 'name', 'username', 'phone', 'email', 'role', 'password']);
         $this->form =  $this->form ? false : true;
+    }
+    public function sort($field)
+    {
+        if ($this->sortBy === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortDirection = 'asc';
+        }
+        $this->sortBy = $field;
     }
     public function render()
     {
