@@ -190,23 +190,22 @@ Route::controller(App\Http\Controllers\Casemix\SepDownloaderController::class)->
     Route::get('/download-single', 'downloadSingle')->name('downloadSingle');
     Route::get('/download/{id}', 'download')->name('download');
 });
-  // settingan umum
-    // Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
-    // Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
-    // Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
+// settingan umum
+// Route::get('get_city', [LaravotLocationController::class, 'get_city'])->name('get_city');
+// Route::get('get_district', [LaravotLocationController::class, 'get_district'])->name('get_district');
+// Route::get('get_village', [LaravotLocationController::class, 'get_village'])->name('get_village');
 // auth
 Route::middleware('auth')->group(function () {
     Route::get('home', [HomeController::class, 'index'])->name('home'); #ok
     Route::get('profil', ProfilIndex::class)->name('profil');
     Route::middleware(['can:admin'])->get('user', UserIndex::class)->name('user');
+    Route::middleware(['can:admin'])->get('role-permission', RolePermission::class)->name('role.permission');
+
     Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
     // admin
     Route::middleware('permission:admin')->group(function () {
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('pasienexport', [UserController::class, 'pasienexport'])->name('pasienexport');
-        Route::post('userimport', [UserController::class, 'userimport'])->name('userimport');
-        Route::get('userexport', [UserController::class, 'userexport'])->name('userexport');
-        Route::get('role-permission', RolePermission::class)->name('role.permission');
         Route::get('rekammedis/rajal', RekamMedisRajal::class)->name('rekammedis.rajal');
         Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
         Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
