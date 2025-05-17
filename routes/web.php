@@ -120,6 +120,7 @@ use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\Rekammedis\RekamMedisRajalDetail;
 use App\Livewire\User\RolePermission;
 use App\Livewire\User\UserIndex;
+use App\Livewire\Wa\WhatsappIndex;
 use App\Models\Kunjungan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -200,6 +201,10 @@ Route::middleware('auth')->group(function () {
     Route::get('profil', ProfilIndex::class)->name('profil');
     Route::middleware(['can:admin'])->get('user', UserIndex::class)->name('user');
     Route::middleware(['can:admin'])->get('role-permission', RolePermission::class)->name('role.permission');
+    Route::middleware(['can:admin'])->get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
+    Route::middleware(['can:admin'])->get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
+    Route::middleware(['can:admin'])->get('testThermalPrinter', [ThermalPrintController::class, 'cekPrinter'])->name('testThermalPrinter');
+    Route::middleware(['can:admin'])->get('whatsapp', WhatsappIndex::class)->name('whatsapp');
 
     Route::get('check-db-connection', [HomeController::class, 'checkConnection'])->name('cek-connection'); #ok
     // admin
@@ -207,10 +212,6 @@ Route::middleware('auth')->group(function () {
         Route::get('user_verifikasi/{user}', [UserController::class, 'user_verifikasi'])->name('user_verifikasi');
         Route::get('pasienexport', [UserController::class, 'pasienexport'])->name('pasienexport');
         Route::get('rekammedis/rajal', RekamMedisRajal::class)->name('rekammedis.rajal');
-        Route::get('cekBarQRCode', [BarcodeController::class, 'cekBarQRCode'])->name('cekBarQRCode');
-        Route::get('cekThermalPrinter', [ThermalPrintController::class, 'cekThermalPrinter'])->name('cekThermalPrinter');
-        Route::get('testThermalPrinter', [ThermalPrintController::class, 'testThermalPrinter'])->name('testThermalPrinter');
-        Route::get('whatsapp', [WhatsappController::class, 'whatsapp'])->name('whatsapp');
     });
     Route::resource('poliklinik', PoliklinikController::class);
     Route::resource('unit', UnitController::class);

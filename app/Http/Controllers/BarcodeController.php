@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Picqer\Barcode\BarcodeGeneratorJPG;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
@@ -16,11 +17,10 @@ class BarcodeController extends Controller
             $request['barcode'] = $uniqid;
         }
         $generator = new BarcodeGeneratorJPG();
-        // dd(asset('rsudwaled_icon_qrcode.png'));
+        Storage::put('barcode_test.jpg', $generator->getBarcode($request->barcode, $generator::TYPE_CODE_128, 3, 100));
+        // file_put_contents('storage/barcode_test.png', $generator->getBarcode($request->barcode, $generator::TYPE_CODE_128,  3, 100,));
         // QrCode::backgroundColor(225, 250, 255)->size(250)->format('png')->generate($request->barcode, "storage/qrcode_test.png");
-        QrCode::backgroundColor(225, 250, 255)->size(250)->format('png')->generate($request->barcode, "public/storage/qrcode_test.png");
-        file_put_contents('public/storage/barcode_test.png', $generator->getBarcode($request->barcode, $generator::TYPE_CODE_128,  3, 100,));
-
+        QrCode::backgroundColor(225, 250, 255)->size(250)->format('png')->generate($request->barcode, "storage/qrcode_test.png");
         return view('admin.bar_qr_scanner', compact([
             'request',
         ]));

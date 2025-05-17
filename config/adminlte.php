@@ -1859,27 +1859,40 @@ return [
         ],
         // MODUL TESTING
         [
-            'text'    => 'Pengaturan & Testing',
+            'text'    => 'Pengaturan',
             'icon'    => 'fas fa-cogs',
-            'can' => 'admin',
             'submenu' => [
                 [
-                    'text' => 'Bar & QR Code Scanner',
+                    'text' => 'Role & Permission',
+                    'icon'    => 'fas fa-user-shield',
+                    'url'  => 'role-permission',
+                    'shift'   => 'ml-2',
+                    'can' => 'admin',
+                ],
+                [
+                    'text' => 'Data User',
+                    'icon'    => 'fas fa-users',
+                    'url'  => 'user',
+                    'can' => 'admin',
+                    'shift'   => 'ml-2',
+                ],
+                [
+                    'text' => 'Pengaturan Bar & QR Code',
                     'icon'    => 'fas fa-qrcode',
                     'url'  => 'cekBarQRCode',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
                 [
-                    'text' => 'Thermal Printer',
+                    'text' => 'Pengaturan Thermal Printer',
                     'icon'    => 'fas fa-print',
                     'url'  => 'cekThermalPrinter',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
                 ],
                 [
-                    'text' => 'WhatsApp API',
-                    'icon'    => 'fas fa-phone',
+                    'text' => 'Pengaturan WhatsApp',
+                    'icon'    => 'fab fa-whatsapp',
                     'url'  => 'whatsapp',
                     'shift'   => 'ml-2',
                     'can' => 'admin',
@@ -1892,21 +1905,6 @@ return [
                     'can' => 'admin',
                 ],
             ],
-        ],
-
-        ['header' => 'PENGATURAN'],
-        [
-            'text' => 'Role & Permission',
-            'icon'    => 'fas fa-user-shield',
-            'url'  => 'role-permission',
-            'can' => 'admin',
-        ],
-        [
-            'text' => 'User',
-            'icon'    => 'fas fa-users',
-            'url'  => 'user',
-            'can' => 'admin',
-            'active'  => ['user', 'user/create', 'regex:@^user(\/[0-9]+)?+$@', 'regex:@^user(\/[0-9]+)?\/edit+$@',],
         ],
         [
             'text' => 'Profil',
