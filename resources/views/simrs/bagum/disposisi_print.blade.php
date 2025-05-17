@@ -299,7 +299,7 @@
                                                     @endif
                                                     <br>
                                                     <u>
-                                                        <b>dr. H. Moh. Thoyib, MARS</b>
+                                                        <b>dr. Hj. Dwi Sudarni, MARS</b>
                                                     </u>
                                                     <br>
                                                 </div>
