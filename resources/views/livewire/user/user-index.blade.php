@@ -79,7 +79,12 @@
             <table class="table text-nowrap table-sm table-hover table-bordered table-responsive-xl mb-3">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th wire:click="sort('id')">#
+                            @if ($sortBy == 'id')
+                                <i class="fas fa-sort-alpha-{{ $sortDirection == 'asc' ? 'down' : 'up' }}"
+                                    style="float: right;"></i>
+                            @endif
+                        </th>
                         <th wire:click="sort('name')">Nama
                             @if ($sortBy == 'name')
                                 <i class="fas fa-sort-alpha-{{ $sortDirection == 'asc' ? 'down' : 'up' }}"
