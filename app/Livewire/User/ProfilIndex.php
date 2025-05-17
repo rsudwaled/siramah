@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Livewire\Profil;
+namespace App\Livewire\User;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
 
@@ -11,6 +12,11 @@ class ProfilIndex extends Component
 {
     public $user;
     public $id, $name, $email, $phone, $username, $password;
+    public function render()
+    {
+        return view('livewire.user.profil-index')
+            ->title('Profil');
+    }
     public function save()
     {
         $user = Auth::user();
@@ -22,7 +28,8 @@ class ProfilIndex extends Component
             $user->password = bcrypt($this->password);
         }
         $user->save();
-        flash('User updated successfully!', 'success');
+        Log::notice('User ' . auth()->user()->name . ' telah memperbaharui profil');
+        return flash('User updated successfully!', 'success');
     }
     public function mount()
     {
@@ -33,15 +40,5 @@ class ProfilIndex extends Component
         $this->email = $user->email;
         $this->phone = $user->phone;
         $this->username = $user->username;
-    }
-    public function placeholder()
-    {
-        return view('components.placeholder.placeholder-text')
-            ->title('Profil');
-    }
-    public function render()
-    {
-        return view('livewire.profil.profil-index')
-            ->title('Profil');
     }
 }

@@ -114,7 +114,7 @@ use App\Livewire\Poliklinik\KunjunganPoliklinik;
 use App\Livewire\Poliklinik\KunjunganPoliklinikPasien;
 use App\Livewire\Poliklinik\MonitoringWaktuAntrian;
 use App\Livewire\Poliklinik\MonitoringWaktuAntrianBulan;
-use App\Livewire\Profil\ProfilIndex;
+use App\Livewire\User\ProfilIndex;
 use App\Livewire\Rekammedis\MonitoringAntrianRajal;
 use App\Livewire\Rekammedis\RekamMedisRajal;
 use App\Livewire\Rekammedis\RekamMedisRajalDetail;

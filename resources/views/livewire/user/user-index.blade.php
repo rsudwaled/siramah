@@ -100,6 +100,7 @@
                                     style="float: right;"></i>
                             @endif
                         </th>
+                        <th>Action</th>
                         <th>PIC</th>
                         <th wire:click="sort('email_verified_at')">Verify
                             @if ($sortBy == 'email_verified_at')
@@ -113,7 +114,6 @@
                                     style="float: right;"></i>
                             @endif
                         </th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,12 +129,9 @@
                                     {{ $role->name }}
                                 @endforeach
                             </td>
-                            <td>{{ $user->pic }}</td>
-                            <td>{{ $user->email_verified_at }}</td>
-                            <td>{{ $user->updated_at }}</td>
-                            <td>
+                                   <td>
                                 <x-adminlte-button class="btn-xs" wire:click="edit('{{ $user->id }}')"
-                                    label="Edit" theme="warning" icon="fas fa-edit" />
+                                    theme="warning" icon="fas fa-edit" />
                                 <x-adminlte-button wire:click="verifikasi('{{ $user->id }}')"
                                     wire:confirm="Apakah anda yakin ingin memverifikasi user {{ $user->name }} ?"
                                     class="btn-xs" title="Verifikasi Email"
@@ -144,6 +141,9 @@
                                     wire:confirm="Apakah anda yakin ingin menghapus user {{ $user->name }} ?"
                                     class="btn-xs" title="Hapus User" theme="danger" icon="fas fa-trash" />
                             </td>
+                            <td>{{ $user->pic }}</td>
+                            <td>{{ $user->email_verified_at }}</td>
+                            <td>{{ $user->updated_at }}</td>
                         </tr>
                     @endforeach
                 </tbody>
