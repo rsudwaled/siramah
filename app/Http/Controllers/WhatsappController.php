@@ -129,7 +129,7 @@ class WhatsappController extends Controller
                 Log::info('Whatsapp Message: ' . $request->message);
             }
             WhatsappLog::create([
-                'status' => $request->status,
+                'status' => $request->status . ' : ' . $request->message,
                 'type' => $request->type,
                 'username' => $request->username,
             ]);
