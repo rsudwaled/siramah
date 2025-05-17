@@ -133,6 +133,10 @@ class UserIndex extends Component
         }
         $this->sortBy = $field;
     }
+    public function mount()
+    {
+        $this->roles = Role::pluck('name', 'id');
+    }
     public function render()
     {
         $search = '%' . $this->search . '%';
