@@ -138,6 +138,11 @@ class WhatsappController extends Controller
                 'message' => 'success ' . $request->status,
             ]);
         } else {
+            WhatsappLog::create([
+                'status' => 'Username Gagal ' . $request->username,
+                'type' => 'message',
+                'username' => $request->username,
+            ]);
             Log::warning('Error Username Whatsapp : ' . $request->username);
         }
     }
