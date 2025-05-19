@@ -547,7 +547,7 @@ class PendaftaranController extends APIController
         try {
             Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -590,7 +590,7 @@ class PendaftaranController extends APIController
             try {
                 Log::info('Antrian Printer ip : ' . $request->ip());
                 if ($request->ip() == "192.168.2.133") {
-                    $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                    $printer = "smb://192.168.2.133/Printer Receipt";
                 } else if ($request->ip() == "192.168.2.51") {
                     $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
                 } else if ($request->ip() == "192.168.2.218") {
@@ -618,7 +618,7 @@ class PendaftaranController extends APIController
         try {
             Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -860,7 +860,7 @@ class PendaftaranController extends APIController
             $now = Carbon::now();
             Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -907,7 +907,7 @@ class PendaftaranController extends APIController
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
         if ($request->ip() == "192.168.2.133") {
-            $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+            $printer = "smb://192.168.2.133/Printer Receipt";
         } else if ($request->ip() == "192.168.2.51") {
             $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
         } else if ($request->ip() == "192.168.2.218") {
@@ -983,7 +983,7 @@ class PendaftaranController extends APIController
         foreach ($for_sep as  $value) {
             Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -1040,7 +1040,7 @@ class PendaftaranController extends APIController
         foreach ($for_sep as  $value) {
             Log::info('Antrian Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
