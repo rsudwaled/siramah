@@ -1589,7 +1589,7 @@ class AntrianController extends APIController
             ]
         );
         $wa = new WhatsappController();
-        $request['notif'] = 'Tambah antrian ' . $request->kodebookin . ' ' . $request->method;
+        $request['notif'] = 'Tambah antrian farmasi ' . $request->kodebookin . ' ' . $request->method;
         $wa->send_notif($request);
         return $this->response_decrypt($response, $signature);
     }

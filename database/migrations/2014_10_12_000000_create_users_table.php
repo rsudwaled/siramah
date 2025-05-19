@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('id_simrs')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

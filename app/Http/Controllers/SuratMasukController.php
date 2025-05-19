@@ -71,9 +71,9 @@ class SuratMasukController extends Controller
         ]);
         // notif wa
         $wa = new WhatsappController();
-        $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nhttp://sim.rsudwaled.id:80/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
-        $request['number'] = "6287742641933@c.us"; #direktur
-        $wa->send_message($request);
+        // $request['message'] = "Telah diinput surat masuk oleh *" . Auth::user()->name .  "*\n\n*No Surat :* " . $request->no_surat . "\n*Asal Surat :* " . $request->asal_surat . "\n*Perihal :* " . $request->perihal . "\n\nSilahkan untuk mengeceknya dan men-disposisikan dapat diakses dengan link berikut. \nhttp://sim.rsudwaled.id:80/siramah/disposisi/" . $surat->id_surat_masuk . "/edit";
+        // $request['number'] = "6287742641933@c.us"; #direktur
+        // $wa->send_message($request);
         $request['number'] = "6289529909036@c.us"; #marwan
         $wa->send_message($request);
         $request['number'] = "6281214192200@c.us"; #lilis
