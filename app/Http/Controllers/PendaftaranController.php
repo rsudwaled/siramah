@@ -8,12 +8,14 @@ use App\Models\Kunjungan;
 use App\Models\Layanan;
 use App\Models\LayananDetail;
 use App\Models\Paramedis;
+use App\Models\Pasien;
 use App\Models\Penjamin;
 use App\Models\Poliklinik;
 use App\Models\TarifLayananDetail;
 use App\Models\Tracer;
 use App\Models\Transaksi;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,7 @@ use Illuminate\Support\Facades\Validator;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
 use RealRashid\SweetAlert\Facades\Alert;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class PendaftaranController extends APIController
 {
@@ -514,6 +517,8 @@ class PendaftaranController extends APIController
                     return $this->sendError($data->metadata->message,  400);
                 }
             }
+            $pasienx = Pasien::where('no_bpjs', $antrian->nomorkartu)->first();
+            $request['noMR'] = $pasienx->no_rm;
             $res = $vclaim->sep_insert($request);
             // berhasil buat sep
             if ($res->metadata->code == 200) {
@@ -542,6 +547,491 @@ class PendaftaranController extends APIController
             return redirect()->back();
         }
     }
+    function checkinPendaftaran(Request $request)
+    {
+        $vclaim = new VclaimController();
+        $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        // cek jam praktek
+        $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+            ->where('kodedokter', $antrian->kodedokter)
+            ->first();
+        $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
+        $jamcheckin = $jampraktek->subHour();
+        if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+            Alert::error("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .");
+            return redirect()->back();
+        }
+        $request['noKartu'] = $antrian->nomorkartu;
+        $request['tglSep'] = $antrian->tanggalperiksa;
+        $request['ppkPelayanan'] = "1018R001";
+        $request['jnsPelayanan'] = "2";
+        $request['klsRawatHak'] = "3";
+        $request['asalRujukan'] = "1";
+        $request['tglRujukan'] =  $now;
+        $request['noMR'] = $antrian->norm;
+        // check backdate
+        if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+            return $this->sendError("Tanggal periksa bukan hari ini.", 400);
+        }
+        if ($antrian->taskid == 99) {
+            return $this->sendError("Antrian telah dibatalkan sebelumnya.", 400);
+        }
+        // get jadwal poliklinik dari simrs
+        $jadwals = JadwalDokter::where("hari",  Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+            ->where("kodesubspesialis", $antrian->kodepoli)
+            ->get();
+        // tidak ada jadwal
+        if (!isset($jadwals)) {
+            return $this->sendError("Tidak ada jadwal poliklinik dihari tersebut", 404);
+        }
+        // get jadwal dokter
+        $jadwal = $jadwals->where('kodedokter', $antrian->kodedokter)->first();
+        // tidak ada dokter
+        if (!isset($jadwal)) {
+            return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
+        }
+        if ($jadwal->libur == 1) {
+            return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
+        }
+        if (empty($antrian->nomorsep)) {
+            // daftar pake surat kontrol
+            if ($antrian->jeniskunjungan == 3) {
+                $request['nomorreferensi'] = $antrian->nomorsuratkontrol;
+                $request['noSuratKontrol'] = $antrian->nomorsuratkontrol;
+                $request['noTelp'] = $antrian->nohp;
+                $request['user'] = "Mesin Antrian";
+                $suratkontrol = $vclaim->suratkontrol_nomor($request);
+                // berhasil get surat kontrol
+                if ($suratkontrol->metadata->code == 200) {
+                    $suratkontrol = $suratkontrol;
+                    $request['nomorsuratkontrol'] = $antrian->nomorsuratkontrol;
+                    if ($suratkontrol->response->sep->jnsPelayanan == "Rawat Jalan") {
+                        $request['nomorrujukan'] = $suratkontrol->response->sep->provPerujuk->noRujukan;
+                        $request['jeniskunjungan_print'] = 'KONTROL';
+                        $request['nomorreferensi'] = $antrian->nomorrujukan;
+                        $data = $vclaim->rujukan_nomor($request);
+                        if ($data->metadata->code != 200) {
+                            $data = $vclaim->rujukan_rs_nomor($request);
+                        }
+                        // berhasil get rujukan
+                        if ($data->metadata->code == 200) {
+                            $data = $data;
+                            $rujukan = $data->response->rujukan;
+                            $peserta = $rujukan->peserta;
+                            $diganosa = $rujukan->diagnosa;
+                            $tujuan = $rujukan->poliRujukan;
+                            $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                            $request['kodepenjamin'] = 'P14';
+                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            // tujuan rujukan
+                            // ppkPelayanan
+                            $request['ppkPelayanan'] = "1018R001";
+                            $request['jnsPelayanan'] = "2";
+                            // peserta
+                            $request['klsRawatHak'] = $peserta->hakKelas->kode; // get peserta
+                            $request['klsRawatNaik'] = ""; // get peserta
+                            // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
+                            // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
+                            // asal rujukan
+                            $request['asalRujukan'] = $data->response->asalFaskes; // get surat kontrol
+                            $request['tglRujukan'] = $rujukan->tglKunjungan; // get surat kontrol
+                            $request['noRujukan'] =   $rujukan->noKunjungan; // get surat kontrol
+                            $request['ppkRujukan'] = $rujukan->provPerujuk->kode; // get surat kontrol
+                            // diagnosa
+                            $request['catatan'] =  $diganosa->nama; // get surat kontrol
+                            $request['diagAwal'] =  $diganosa->kode; // get surat kontrol
+                            // poli tujuan
+                            $request['tujuan'] =  $antrian->kodepoli; // get antrian
+                            $request['eksekutif'] =  0;
+                            // dpjp
+                            $request['tujuanKunj'] = "2";
+                            $request['flagProcedure'] = "";
+                            $request['kdPenunjang'] = "";
+                            $request['assesmentPel'] = "2";
+                            $request['noSurat'] = $request->nomorsuratkontrol; // get antrian
+                            $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
+                            $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
+                        }
+                        // gagal get rujukan
+                        else {
+                            return $this->sendError($data->metadata->message,  400);
+                        }
+                    } else {
+                        $request['nomorkartu'] = $antrian->nomorkartu;
+                        $request['tanggal'] = $antrian->tanggalperiksa;
+                        $data = $vclaim->peserta_nomorkartu($request);
+                        // berhasil get rujukan
+                        if ($data->metadata->code == 200) {
+                            $data = $data;
+                            $peserta = $data->response->peserta;
+                            $diagnosa = $suratkontrol->response->sep->diagnosa;
+                            $asalRujukan = $suratkontrol->response->sep->provPerujuk->asalRujukan;
+                            $tglRujukan = $suratkontrol->response->sep->provPerujuk->tglRujukan;
+                            $noRujukan = $suratkontrol->response->sep->noSep;
+                            $ppkRujukan = $suratkontrol->response->sep->provPerujuk->kdProviderPerujuk;
+                            $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            $request['kodepenjamin'] = 'P14';
+                            // tujuan rujukan
+                            $request['ppkPelayanan'] = "1018R001";
+                            $request['jnsPelayanan'] = "2";
+                            // peserta
+                            $request['klsRawatHak'] = $peserta->hakKelas->kode; // get peserta
+                            $request['klsRawatNaik'] = ""; // get peserta
+                            // $request['pembiayaan'] = $peserta->jenisPeserta->kode;
+                            // $request['penanggungJawab'] =  $peserta->jenisPeserta->keterangan;
+                            // asal rujukan
+                            $request['asalRujukan'] = $asalRujukan; // get surat kontrol
+                            $request['tglRujukan'] = $tglRujukan; // get surat kontrol
+                            $request['noRujukan'] =   $noRujukan; // get surat kontrol
+                            $request['ppkRujukan'] = $ppkRujukan; // get surat kontrol
+                            // diagnosa
+                            $request['catatan'] =  $diagnosa; // get surat kontrol
+                            $request['diagAwal'] = str_replace(" ", "", explode('-', $diagnosa)[0]);
+                            // poli tujuan
+                            $request['tujuan'] =  $antrian->kodepoli; // get antrian
+                            $request['eksekutif'] =  0;
+                            // dpjp
+                            $request['tujuanKunj'] = "0";
+                            $request['flagProcedure'] = "";
+                            $request['kdPenunjang'] = "";
+                            $request['assesmentPel'] = "";
+                            $request['noSurat'] = $request->nomorsuratkontrol; // get antrian
+                            $request['kodeDPJP'] = $suratkontrol->response->kodeDokter;
+                            $request['dpjpLayan'] =  $suratkontrol->response->kodeDokter;
+                        }
+                    }
+                }
+                // gagal get surat kontrol
+                else {
+                    return $this->sendError($suratkontrol->metadata->message,  400);
+                }
+            }
+            // daftar pake rujukan
+            else {
+                $request['nomorrujukan'] = $antrian->nomorreferensi;
+                $request['nomorreferensi'] = $antrian->nomorreferensi;
+                if ($antrian->jeniskunjungan == 4) {
+                    $data = $vclaim->rujukan_rs_nomor($request);
+                } else  if ($antrian->jeniskunjungan == 1) {
+                    $data = $vclaim->rujukan_nomor($request);
+                }
+                // berhasil get rujukan
+                if ($data->metadata->code == 200) {
+                    $data = $data;
+                    $rujukan = $data->response->rujukan;
+                    $peserta = $rujukan->peserta;
+                    $diganosa = $rujukan->diagnosa;
+                    $tujuan = $rujukan->poliRujukan;
+                    // peserta
+                    $request['noMR'] = $peserta->mr->noMR;
+                    $request['klsRawatHak'] = $peserta->hakKelas->kode;
+                    $request['klsRawatNaik'] = "";
+                    // asal rujukan
+                    $request['asalRujukan'] = $data->response->asalFaskes;
+                    $request['tglRujukan'] = $rujukan->tglKunjungan;
+                    $request['noRujukan'] =   $request->nomorreferensi;
+                    $request['ppkRujukan'] = $rujukan->provPerujuk->kode;
+                    // diagnosa
+                    $request['catatan'] =  $diganosa->nama;
+                    $request['diagAwal'] =  $diganosa->kode;
+                    // poli tujuan
+                    $request['tujuan'] =  $antrian->kodepoli;
+                    $request['eksekutif'] =  0;
+                    // dpjp
+                    $request['tujuanKunj'] = "0";
+                    $request['flagProcedure'] = "";
+                    $request['kdPenunjang'] = "";
+                    $request['assesmentPel'] = "";
+                    // $request['noSurat'] = "";
+                    $request['kodeDPJP'] = "";
+                    $request['dpjpLayan'] = $antrian->kodedokter;
+                    $request['noTelp'] = $antrian->nohp;
+                    $request['user'] = "Mesin Antrian";
+                }
+                // gagal get rujukan
+                else {
+                    return $this->sendError($data->metadata->message,  400);
+                }
+            }
+            $pasienx = Pasien::where('no_bpjs', $antrian->nomorkartu)->first();
+            $request['noMR'] = $pasienx->no_rm;
+            $res = $vclaim->sep_insert($request);
+            // berhasil buat sep
+            if ($res->metadata->code == 200) {
+                // update antrian res
+                $sep = $res->response->sep;
+                $request["nomorsep"] = $sep->noSep;
+                $antrian->update([
+                    "nomorsep" => $request->nomorsep
+                ]);
+            }
+            // gagal buat sep
+            else {
+                Alert::error('Maaf', $res->metadata->message);
+                return redirect()->back();
+            }
+        }
+        // antrian
+        $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+        if ($antrian) {
+            // backdate
+            if (!Carbon::parse($antrian->tanggalperiksa)->isToday()) {
+                Alert::error('Maaf', 'Tanggal periksa anda bukan hari ini.');
+                return redirect()->back();
+            }
+            // cek jam praktek
+            $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
+                ->where('kodedokter', $antrian->kodedokter)
+                ->first();
+            $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
+            $jamcheckin = $jampraktek->subHour();
+            if (!$now->greaterThanOrEqualTo($jamcheckin)) {
+                return $this->sendError("Mohon maaf checkin hanya bisa dilakukan 1 jam sebelum jam praktek (" . $jadwal->jadwal . ") .", 400);
+            }
+            $request['waktu'] = $now->timestamp * 1000;
+            $unit = Unit::firstWhere('KDPOLI', $antrian->kodepoli);
+            $paramedis = Paramedis::firstWhere('kode_dokter_jkn', $antrian->kodedokter);
+            $tarifkarcis = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_karcis);
+            $tarifadm = TarifLayananDetail::firstWhere('KODE_TARIF_DETAIL', $unit->kode_tarif_adm);
+            if ($antrian->jenispasien == "JKN") {
+                $request['taskid'] = 3;
+                $request['status_api'] = 1;
+                $request['jenispasien'] = "JKN";
+                $jkunjungan = [1 => 'RUJUKAN FKTP', 3 => 'KONTROL', 4 =>  'RUJUKAN ANTAR-RS'];
+                $request['jeniskunjungan_print'] = $jkunjungan[$antrian->jeniskunjungan];
+                $request['keterangan'] = "Untuk pasien peserta JKN silahkan dapat langsung menunggu ke POLIKINIK " . $antrian->namapoli;
+                $vclaim = new VclaimController();
+                $request["nomorkartu"] = $antrian->nomorkartu;
+                $request["tanggal"] = $antrian->tanggalperiksa;
+                $peserta = $vclaim->peserta_nomorkartu($request);
+                $peserta = $peserta->response->peserta;
+                // $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                $request['kodepenjamin'] = 'P14'; // get peserta
+
+                // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
+                $tipetransaksi = 2;
+                $statuslayanan = 2;
+                // rj jkn masuk ke tagihan penjamin
+                $tagihanpenjamin_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpenjamin_adm = $tarifadm->tarif_rajal;
+                $totalpenjamin =  $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
+                $tagihanpribadi_karcis = 0;
+                $tagihanpribadi_adm = 0;
+                $totalpribadi =  0;
+            } else {
+                $request['taskid'] = 3;
+                $request['status_api'] = 0;
+                $request['kodepenjamin'] = "P01";
+                $request['jenispasien'] = "NON-JKN";
+                $request['jeniskunjungan_print'] = 'KUNJUNGAN UMUM';
+                $request['keterangan'] = "Untuk pasien peserta NON-JKN silahkan lakukan pembayaran terlebih dahulu di Loket Pembayaran samping BJB";
+                // rj umum tipe transaki 1 status layanan 1 status layanan detail opn
+                $tipetransaksi = 1;
+                $statuslayanan = 1;
+                // rj umum masuk ke tagihan pribadi
+                $tagihanpenjamin_karcis = 0;
+                $tagihanpenjamin_adm = 0;
+                $totalpenjamin =  0;
+                $tagihanpribadi_karcis = $tarifkarcis->tarif_rajal;
+                $tagihanpribadi_adm = $tarifadm->tarif_rajal;
+                $request['tarifkarcis'] =  $tarifkarcis->tarif_rajal;
+                $request['tarifadm'] =  $tarifadm->tarif_rajal;
+                $totalpribadi = $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal;
+            }
+            if ($antrian->kode_kunjungan == null) {
+                try {
+                    // insert kunjungan, layanan header dan detail
+                    // hitung counter kunjungan
+                    $counterx = Kunjungan::where('no_rm', $antrian->norm)->orderBy('counter', 'DESC')->first();
+                    if (empty($counterx)) {
+                        $counter = 1;
+                    } else {
+                        $counter = $counterx->counter + 1;
+                    }
+                    $kodelayanan = collect(DB::connection('mysql2')->select('CALL GET_NOMOR_LAYANAN_HEADER(' . $unit->kode_unit . ')'))->first()->no_trx_layanan;
+                    if ($kodelayanan == null) {
+                        //   get transaksi sebelumnya
+                        $trx_lama = Transaksi::where('unit', $unit->kode_unit)
+                            ->whereBetween('tgl', [Carbon::now()->startOfDay(), [Carbon::now()->endOfDay()]])
+                            ->count();
+                        // get kode layanan
+                        $kodelayanan = $unit->prefix_unit . now()->format('y') . now()->format('m') . now()->format('d')  . str_pad($trx_lama + 1, 6, '0', STR_PAD_LEFT);
+                        //  insert transaksi
+                        $trx_baru = Transaksi::create([
+                            'tgl' => now()->format('Y-m-d'),
+                            'no_trx_layanan' => $kodelayanan,
+                            'unit' => $unit->kode_unit,
+                        ]);
+                    }
+                    // insert ts kunjungan status 8
+                    $kunjungan  = Kunjungan::create(
+                        [
+                            'counter' => $counter,
+                            'no_rm' => $antrian->norm,
+                            'kode_unit' => $unit->kode_unit,
+                            'tgl_masuk' => $now,
+                            'kode_paramedis' => $paramedis->kode_paramedis,
+                            'status_kunjungan' => 8,
+                            'prefix_kunjungan' => $unit->prefix_unit,
+                            'kode_penjamin' => $request->kodepenjamin,
+                            'pic' => 1319,
+                            'id_alasan_masuk' => 1,
+                            'kelas' => 3,
+                            'hak_kelas' => $request->klsRawatHak,
+                            'no_sep' =>  $request->nomorsep,
+                            'no_rujukan' => $antrian->nomorrujukan,
+                            'diagx' =>   $request->catatan,
+                            'created_at' => $now,
+                            'keterangan2' => 'MESIN_2',
+                        ]
+                    );
+                    $kunjungan = Kunjungan::where('no_rm', $antrian->norm)->where('counter', $counter)->first();
+                    $antrian->update([
+                        'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                    ]);
+                    //  insert layanan header
+                    $layananbaru = Layanan::create(
+                        [
+                            'kode_layanan_header' => $kodelayanan,
+                            'tgl_entry' => $now,
+                            'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                            'kode_unit' => $unit->kode_unit,
+                            'kode_tipe_transaksi' => $tipetransaksi,
+                            'status_layanan' => $statuslayanan,
+                            'pic' => '1319',
+                            'keterangan' => 'Layanan header melalui antrian sistem',
+                        ]
+                    );
+                    //  insert layanan header dan detail karcis admin konsul 25 + 5 = 30
+                    //  DET tahun bulan `tanggal b`aru urutan 6 digit kanan
+                    //  insert layanan detail karcis
+                    $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first();
+                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1;
+                    $karcis = LayananDetail::create(
+                        [
+                            'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
+                            'row_id_header' => $layananbaru->id,
+                            'kode_layanan_header' => $layananbaru->kode_layanan_header,
+                            'kode_tarif_detail' => $tarifkarcis->KODE_TARIF_DETAIL,
+                            'total_tarif' => $tarifkarcis->tarif_rajal,
+                            'jumlah_layanan' => 1,
+                            'tagihan_pribadi' => $tagihanpribadi_karcis,
+                            'tagihan_penjamin' => $tagihanpenjamin_karcis,
+                            'total_layanan' => $tarifkarcis->tarif_rajal,
+                            'grantotal_layanan' => $tarifkarcis->tarif_rajal,
+                            'kode_dokter1' => $paramedis->kode_paramedis, // ambil dari mt paramdeis
+                            'tgl_layanan_detail' =>  $now,
+                            'status_layanan_detail' => "OPN",
+                            'tgl_layanan_detail_2' =>  $now,
+                        ]
+                    );
+                    //  insert layanan detail admin
+                    $layanandet = LayananDetail::orderBy('tgl_layanan_detail', 'DESC')->first();
+                    $nomorlayanandet = substr($layanandet->id_layanan_detail, 9) + 1 + 1;
+                    $adm = LayananDetail::create(
+                        [
+                            'id_layanan_detail' => "DET" . $now->format('y') . $now->format('m') . $now->format('d')  . $nomorlayanandet,
+                            'row_id_header' => $layananbaru->id,
+                            'kode_layanan_header' => $layananbaru->kode_layanan_header,
+                            'kode_tarif_detail' => $tarifadm->KODE_TARIF_DETAIL,
+                            'total_tarif' => $tarifadm->tarif_rajal,
+                            'jumlah_layanan' => 1,
+                            'tagihan_pribadi' =>  $tagihanpribadi_adm,
+                            'tagihan_penjamin' =>  $tagihanpenjamin_adm,
+                            'total_layanan' => $tarifadm->tarif_rajal,
+                            'grantotal_layanan' => $tarifadm->tarif_rajal,
+                            'kode_dokter1' => 0,
+                            'tgl_layanan_detail' =>  $now,
+                            'status_layanan_detail' => "OPN",
+                            'tgl_layanan_detail_2' =>  $now,
+                        ]
+                    );
+                    //  update layanan header total tagihan
+                    $layananbaru->update([
+                        'total_layanan' => $tarifkarcis->tarif_rajal + $tarifadm->tarif_rajal,
+                        'tagihan_pribadi' => $totalpribadi,
+                        'tagihan_penjamin' => $totalpenjamin,
+                    ]);
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    dd($th);
+                }
+            }
+            $kunjungan = Kunjungan::firstWhere('kode_kunjungan', $antrian->kode_kunjungan);
+            if ($kunjungan) {
+                $kunjungan->update([
+                    'status_kunjungan' => 1,
+                    'no_sep' => $antrian->nomorsep,
+                ]);
+            }
+            if (env('BRIDGING_ANTRIAN_BPJS')) {
+                $request['kodebooking'] = $antrian->kodebooking;
+                $request['taskid'] = 3;
+                $request['waktu'] = now();
+                $api = new AntrianController();
+                $res = $api->update_antrean($request);
+            }
+            $antrian->update([
+                'taskid' => $request->taskid,
+                'method' => "Anjungan Pelayanan Mandiri",
+                'taskid1' => now()->setTimezone('Asia/Jakarta'),
+                'taskid3' => now()->setTimezone('Asia/Jakarta'),
+                'status_api' => $request->status_api,
+                'keterangan' =>  $request->keterangan,
+            ]);
+            $api = new AntrianController();
+            // $res = $api->update_antrean($request);
+            // insert tracer tc_tracer_header
+            $tracerbaru = Tracer::updateOrCreate([
+                'kode_kunjungan' => $kunjungan->kode_kunjungan,
+                'tgl_tracer' => $now->format('Y-m-d'),
+                'id_status_tracer' => 1,
+                'cek_tracer' => "N",
+            ]);
+            // if ($res->metadata->code == 200) {
+            //     Alert::success('Success', 'OK');
+            // } else {
+            //     Alert::error('Error', $res->metadata->message);
+            // }
+            Alert::success('Success', 'OK');
+            // $this->print_karcis($request, $kunjungan);
+            return redirect()->back();
+        } else {
+            Alert::error('Error', "Antrian Tidak Ditemukan");
+            return redirect()->back();
+        }
+    }
+    function cetakSEPAntrian(Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+
+        $vclaim = new VclaimController();
+        $request['noSep'] = $antrian->nomorsep;
+        $res = $vclaim->sep_nomor($request);
+        if ($res->metadata->code == 200) {
+            $sep = $res->response;
+            $peserta = $sep->peserta;
+            $request['nomorkartu'] = $peserta->noKartu;
+            $request['tanggal'] = $sep->tglSep;
+            $res = $vclaim->peserta_nomorkartu($request);
+            if ($res->metadata->code == 200) {
+                $peserta = $res->response->peserta;
+            }
+            $qrurl = QrCode::format('png')->size(150)->generate($peserta->noKartu);
+            $qrpasien = "data:image/png;base64," . base64_encode($qrurl);
+            $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
+            $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
+            // return view('print.pdf_sep', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            $pdf = Pdf::loadView('print.pdf_sep', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            return $pdf->stream($sep->noSep . '.pdf');
+        }
+    }
+
+
     public function daftarBpjsOffline(Request $request)
     {
         try {
@@ -876,16 +1366,16 @@ class PendaftaranController extends APIController
             $printer->setEmphasis(false);
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->text("Angka Antrian Pendaftaran :\n");
-            $printer->setTextSize(3, 3);
-            $printer->text($antrian->angkaantrean . "\n");
-            $printer->setTextSize(1, 1);
+            // $printer->text("Angka Antrian Pendaftaran :\n");
+            // $printer->setTextSize(3, 3);
+            // $printer->text($antrian->angkaantrean . "\n");
+            // $printer->setTextSize(1, 1);
             $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
             $printer->text("Lokasi Pendaftaran Lantai " . $request->lantaipendaftaran . " \n");
             $printer->text("================================================\n");
             $printer->setJustification(Printer::JUSTIFY_LEFT);
             $printer->text("Jenis Kunj. : " . $request->method . ' ' . $request->jenispasien . "\n");
-            $printer->text("No. Antrian Poli : " . $antrian->nomorantrean . "\n");
+            // $printer->text("No. Antrian Poli : " . $antrian->nomorantrean . "\n");
             $printer->text("Poliklinik : " . $antrian->namapoli . "\n");
             $printer->text("Dokter : " . $antrian->namadokter . "\n");
             $printer->text("Jam, Tanggal : " . $request->jampraktek . ', ' . Carbon::parse($request->tanggalperiksa)->format('d M Y') . "\n");
@@ -955,17 +1445,17 @@ class PendaftaranController extends APIController
         $printer->text("Kode Booking : " . $antrian->kodebooking . "\n");
         $printer->text("Kode Kunjungan : " . $kunjungan->kode_kunjungan . "\n");
         // $printer->qrCode($request->kodebooking, Printer::QR_ECLEVEL_L, 10, Printer::QR_MODEL_2);
-        $printer->text("================================================\n");
-        $printer->text("Nomor Antrian Poliklinik :\n");
-        $printer->setTextSize(2, 2);
-        $printer->text($antrian->nomorantrean . "\n");
-        $printer->setTextSize(1, 1);
+        // $printer->text("================================================\n");
+        // $printer->text("Nomor Antrian Poliklinik :\n");
+        // $printer->setTextSize(2, 2);
+        // $printer->text($antrian->nomorantrean . "\n");
+        // $printer->setTextSize(1, 1);
         $printer->text("Lokasi Poliklinik Lantai " . $antrian->lokasi . " \n");
-        $printer->text("================================================\n");
-        $printer->text("Angka Antrian :\n");
-        $printer->setTextSize(2, 2);
-        $printer->text($antrian->angkaantrean . "\n");
-        $printer->setTextSize(1, 1);
+        // $printer->text("================================================\n");
+        // $printer->text("Angka Antrian :\n");
+        // $printer->setTextSize(2, 2);
+        // $printer->text($antrian->angkaantrean . "\n");
+        // $printer->setTextSize(1, 1);
         $printer->text("Lokasi Pendaftaran Lantai " . $antrian->lantaipendaftaran . " \n");
         $printer->text("================================================\n");
         $printer->setJustification(Printer::JUSTIFY_LEFT);

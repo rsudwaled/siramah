@@ -152,10 +152,21 @@
                             @if ($antrian->jenispasien == 'JKN')
                                 <a href="{{ route('checkinCetakSEP') }}?kodebooking={{ $request->kodebooking }}"
                                     class="btn btn-warning withLoad"><i class="fas fa-print"></i> Cetak SEP BPJS</a>
+
                                 @if ($antrian->nomorsep)
                                     <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
                                         class="btn btn-success withLoad"><i class="fas fa-print"></i>
                                         Cetak Karcis</a>
+                                @endif
+                                <a href="{{ route('checkinPendaftaran') }}?kodebooking={{ $request->kodebooking }}"
+                                    class="btn btn-secondary withLoad"><i class="fas fa-print"></i> Checkin
+                                    Pendaftaran</a>
+                                @if (!$antrian->nomorsep)
+                                @else
+                                    <x-adminlte-button
+                                        onclick="window.open('{{ route('cetakSEPAntrian') }}?kodebooking={{ $request->kodebooking }}', 'window name', 'window settings');"
+                                        theme="warning" icon="fas fa-print" label="Cetak SEP Antrian"
+                                        data-kodebooking="{{ $request->kodebooking }}" />
                                 @endif
                             @else
                                 <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
@@ -241,6 +252,12 @@
     </script>
     {{-- withLoad --}}
     <script>
+        $('.cetakSEP').click(function() {
+            var kodebooking = $(this).data('kodebooking');
+            var url = "{{ route('cetakSEPAntrian') }}?kodebooking=" + kodebooking;
+            window.open(url, 'window name', 'window settings');
+            return false;
+        });
         $(function() {
             $(".withLoad").click(function() {
                 $.LoadingOverlay("show");

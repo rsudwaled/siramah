@@ -152,7 +152,7 @@ class PasienIGDController extends Controller
         $pasien = Pasien::create([
             'no_rm'             => $rm_new,
             'no_Bpjs'           => $request->no_bpjs,
-            'nama_px'           => strtoupper($request->nama_pasien_baru),
+            'nama_px'           => strtoupper(str_replace("'", "`", $request->nama_pasien_baru)),
             'jenis_kelamin'     => $request->jk,
             'tempat_lahir'      => strtoupper($request->tempat_lahir),
             'tgl_lahir'         => $tgl_lahir,

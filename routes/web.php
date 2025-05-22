@@ -163,6 +163,8 @@ Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jad
 Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
 // Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
 Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
+Route::get('checkinPendaftaran', [PendaftaranController::class, 'checkinPendaftaran'])->name('checkinPendaftaran');
+Route::get('cetakSEPAntrian', [PendaftaranController::class, 'cetakSEPAntrian'])->name('cetakSEPAntrian');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
 Route::get('checkinKarcisAntrian', [PendaftaranController::class, 'checkinKarcisAntrian'])->name('checkinKarcisAntrian');
