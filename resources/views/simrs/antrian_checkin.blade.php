@@ -167,6 +167,10 @@
                                         onclick="window.open('{{ route('cetakSEPAntrian') }}?kodebooking={{ $request->kodebooking }}', 'window name', 'window settings');"
                                         theme="warning" icon="fas fa-print" label="Cetak SEP Antrian"
                                         data-kodebooking="{{ $request->kodebooking }}" />
+                                    <x-adminlte-button
+                                        onclick="window.open('{{ route('cetakAntrianOnline') }}?kodebooking={{ $request->kodebooking }}', 'window name', 'window settings');"
+                                        theme="warning" icon="fas fa-print"
+                                        data-kodebooking="{{ $request->kodebooking }}" />
                                 @endif
                             @else
                                 <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"

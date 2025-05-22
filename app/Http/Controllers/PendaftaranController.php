@@ -1030,6 +1030,31 @@ class PendaftaranController extends APIController
             return $pdf->stream($sep->noSep . '.pdf');
         }
     }
+    function cetakAntrianOnline(Request $request)
+    {
+        $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
+
+        $vclaim = new VclaimController();
+        $request['noSep'] = $antrian->nomorsep;
+        $res = $vclaim->sep_nomor($request);
+        if ($res->metadata->code == 200) {
+            $sep = $res->response;
+            $peserta = $sep->peserta;
+            $request['nomorkartu'] = $peserta->noKartu;
+            $request['tanggal'] = $sep->tglSep;
+            $res = $vclaim->peserta_nomorkartu($request);
+            if ($res->metadata->code == 200) {
+                $peserta = $res->response->peserta;
+            }
+            $qrurl = QrCode::format('png')->size(150)->generate($peserta->noKartu);
+            $qrpasien = "data:image/png;base64," . base64_encode($qrurl);
+            $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
+            $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
+            // return view('print.pdf_karcis_online', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            $pdf = Pdf::loadView('print.pdf_karcis_online', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            return $pdf->stream($sep->noSep . '.pdf');
+        }
+    }
 
 
     public function daftarBpjsOffline(Request $request)

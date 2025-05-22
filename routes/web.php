@@ -165,6 +165,7 @@ Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetak
 Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
 Route::get('checkinPendaftaran', [PendaftaranController::class, 'checkinPendaftaran'])->name('checkinPendaftaran');
 Route::get('cetakSEPAntrian', [PendaftaranController::class, 'cetakSEPAntrian'])->name('cetakSEPAntrian');
+Route::get('cetakAntrianOnline', [PendaftaranController::class, 'cetakAntrianOnline'])->name('cetakAntrianOnline');
 Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
 Route::get('checkinKarcisAntrian', [PendaftaranController::class, 'checkinKarcisAntrian'])->name('checkinKarcisAntrian');
