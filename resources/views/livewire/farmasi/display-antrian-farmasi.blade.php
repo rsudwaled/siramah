@@ -29,6 +29,19 @@
             </div>
             <div class="col-md-4">
                 <div class="card">
+                    <div class="card-header bg-blue">
+                        <div class="text-center">
+                            ANTRIAN DIPANGGIL FARMASI
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h1><span id="nomorpanggil" style="font-size: 140px"></span></h1>
+                            <h4><span id="namapanggil">-</span></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
                     <div class="card-header bg-primary">
                         <h4>DAFTAR ANTRIAN FARMASI</h4>
                     </div>
@@ -59,66 +72,18 @@
             <div class="col-md-8">
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="row">
-                            {{-- <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-header bg-blue">
-                                        <div class="text-center">
-                                            <h4>TOTAL ANTRIAN RESEP</h4>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="text-center">
-                                            <h1>234</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card">
-                                    <div class="card-header bg-blue">
-                                        <div class="text-center">
-                                            <h4>TOTAL ANTRIAN RESEP</h4>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="text-center">
-                                            <h1>234</h1>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4"></div> --}}
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header bg-blue">
-                                        <div class="text-center">
-                                            ANTRIAN DIPANGGIL FARMASI
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="text-center">
-                                            <h1><span id="nomorpanggil" style="font-size: 140px"></span></h1>
-                                            <h4><span id="namapanggil">-</span< /h4>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                     </div>
                     <div class="col-md-6">
-                        <x-adminlte-card body-class="p-1">
-                            <video width="100%" height="100%" controls autoplay muted loop>
-                                <source src="{{ asset('bpjs/Video Sosialisasi Program Rehab 30sec.mp4') }}"
-                                    type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </x-adminlte-card>
 
                     </div>
                     <div class="col-md-12">
-                        <x-adminlte-card body-class="p-1 m-0">
+                        <x-adminlte-card body-class="p-1">
+                            <video id="videoPlayer" width="100%" height="100%" controls autoplay muted>
+                                <source id="videoSource" src="{{ asset('bpjs/6.mp4') }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </x-adminlte-card>
+                        {{-- <x-adminlte-card body-class="p-1 m-0">
                             <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                                 <ol class="carousel-indicators">
                                     <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -154,7 +119,7 @@
                                     <span class="sr-only">Next</span>
                                 </a>
                             </div>
-                        </x-adminlte-card>
+                        </x-adminlte-card> --}}
                     </div>
                 </div>
             </div>
@@ -330,5 +295,39 @@
                 }
             }
         }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Daftar video (ganti dengan asset() sesuai kebutuhan)
+            const videos = [
+                "{{ asset('bpjs/0.mp4') }}",
+                "{{ asset('bpjs/video/1.mp4') }}",
+                "{{ asset('bpjs/video/2.mp4') }}",
+                "{{ asset('bpjs/video/3.mp4') }}",
+                "{{ asset('bpjs/video/4.mp4') }}",
+                "{{ asset('bpjs/video/5.mp4') }}",
+                "{{ asset('bpjs/6.mp4') }}",
+                "{{ asset('bpjs/video/7.mp4') }}",
+                "{{ asset('bpjs/video/8.mp4') }}",
+                "{{ asset('bpjs/video/9.mp4') }}",
+                "{{ asset('bpjs/video/10.mp4') }}",
+                "{{ asset('bpjs/video/11.mp4') }}",
+                "{{ asset('bpjs/video/12.mp4') }}",
+                "{{ asset('bpjs/video/13.mp4') }}",
+                "{{ asset('bpjs/video/14.mp4') }}",
+                "{{ asset('bpjs/video/15.mp4') }}",
+                "{{ asset('bpjs/video/16.mp4') }}",
+            ];
+            let currentVideo = 0;
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+
+            videoPlayer.onended = function() {
+                currentVideo = (currentVideo + 1) % videos.length; // Loop ke awal jika sudah habis
+                videoSource.src = videos[currentVideo];
+                videoPlayer.load();
+                videoPlayer.play();
+            };
+        });
     </script>
 @stop

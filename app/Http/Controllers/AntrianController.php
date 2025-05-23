@@ -2622,6 +2622,13 @@ class AntrianController extends APIController
             $jadwal = JadwalDokter::where('hari', Carbon::parse($antrian->tanggalperiksa)->dayOfWeek)
                 ->where('kodedokter', $antrian->kodedokter)
                 ->first();
+            // get jadwal dokter
+            if (!isset($jadwal)) {
+                return $this->sendError("Tidak ada jadwal dokter dihari tersebut",  404);
+            }
+            if ($jadwal->libur == 1) {
+                return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
+            }
             $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
             $jamcheckin = $jampraktek->subHour();
             if (!$now->greaterThanOrEqualTo($jamcheckin)) {
