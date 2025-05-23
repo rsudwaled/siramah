@@ -10,7 +10,7 @@
             </td>
             <td width="30%" style="vertical-align: bottom;">
                 <b>SURAT ELEGIBILITAS PESERTA</b><br>
-                <b>KLINIK UTAMA KITA SEHAT</b><br>
+                <b>RSUD WALED KABUPATEN CIREBON</b><br>
             </td>
             <td width="50%" style="vertical-align: bottom;">
                 <b>E-SEP NO. {{ $sep->noSep }}</b><br>
