@@ -113,9 +113,9 @@ class PendaftaranController extends APIController
                 $request["tanggal"] = $antrian->tanggalperiksa;
                 $peserta = $vclaim->peserta_nomorkartu($request);
                 $peserta = $peserta->response->peserta;
-                // $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
-                $request['kodepenjamin'] = 'P14'; // get peserta
+                $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                // $request['kodepenjamin'] = 'P14'; // get peserta
 
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
@@ -384,8 +384,8 @@ class PendaftaranController extends APIController
                             $diganosa = $rujukan->diagnosa;
                             $tujuan = $rujukan->poliRujukan;
                             $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                            $request['kodepenjamin'] = 'P14';
-                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            // $request['kodepenjamin'] = 'P14';
                             // tujuan rujukan
                             // ppkPelayanan
                             $request['ppkPelayanan'] = "1018R001";
@@ -433,8 +433,8 @@ class PendaftaranController extends APIController
                             $noRujukan = $suratkontrol->response->sep->noSep;
                             $ppkRujukan = $suratkontrol->response->sep->provPerujuk->kdProviderPerujuk;
                             $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
-                            $request['kodepenjamin'] = 'P14';
+                            $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            // $request['kodepenjamin'] = 'P14';
                             // tujuan rujukan
                             $request['ppkPelayanan'] = "1018R001";
                             $request['jnsPelayanan'] = "2";
@@ -622,8 +622,8 @@ class PendaftaranController extends APIController
                             $diganosa = $rujukan->diagnosa;
                             $tujuan = $rujukan->poliRujukan;
                             $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                            $request['kodepenjamin'] = 'P14';
-                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            // $request['kodepenjamin'] = 'P14';
                             // tujuan rujukan
                             // ppkPelayanan
                             $request['ppkPelayanan'] = "1018R001";
@@ -671,8 +671,8 @@ class PendaftaranController extends APIController
                             $noRujukan = $suratkontrol->response->sep->noSep;
                             $ppkRujukan = $suratkontrol->response->sep->provPerujuk->kdProviderPerujuk;
                             $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                            // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
-                            $request['kodepenjamin'] = 'P14';
+                            $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                            // $request['kodepenjamin'] = 'P14';
                             // tujuan rujukan
                             $request['ppkPelayanan'] = "1018R001";
                             $request['jnsPelayanan'] = "2";
@@ -808,9 +808,9 @@ class PendaftaranController extends APIController
                 $request["tanggal"] = $antrian->tanggalperiksa;
                 $peserta = $vclaim->peserta_nomorkartu($request);
                 $peserta = $peserta->response->peserta;
-                // $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
-                // $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
-                $request['kodepenjamin'] = 'P14'; // get peserta
+                $penjamin = Penjamin::where('nama_penjamin_bpjs', $peserta->jenisPeserta->keterangan)->first(); // get peserta
+                $request['kodepenjamin'] = $penjamin->kode_penjamin_simrs; // get peserta
+                // $request['kodepenjamin'] = 'P14'; // get peserta
 
                 // rj jkn tipe transaki 2 status layanan 2 status layanan detail opn
                 $tipetransaksi = 2;
