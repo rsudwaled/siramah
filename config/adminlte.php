@@ -322,12 +322,9 @@ return [
         //     'url'         => 'resume-pemulangan.vbeta/pasien-rawat-inap',
         //     'icon'        => 'fas fa-file-signature',
         // ],
-        // PELAYANAN
         [
-            'text'    => 'Pelayanan Rawat Jalan',
-            'icon'    => 'fas fa-clinic-medical',
-            'label' => 'proses',
-            'label_color' => 'warning',
+            'text'    => 'Antrian',
+            'icon'    => 'fas fa-users',
             'submenu' => [
                 [
                     'text' => 'Anjungan Mandiri',
@@ -365,6 +362,14 @@ return [
                     'shift'   => 'ml-2',
                     'can' =>  ['bpjs', 'pendaftaran'],
                 ],
+            ]
+        ],
+        // RAJAL
+        [
+            'text'    => 'Pelayanan Rawat Jalan',
+            'icon'    => 'fas fa-clinic-medical',
+            'label_color' => 'warning',
+            'submenu' => [
                 [
                     'text' => 'Pendaftaran Rawat Jalan',
                     'icon'    => 'fas fa-user-plus',

@@ -1667,7 +1667,7 @@ class AntrianController extends APIController
                 $request->all()
             );
         } else {
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             $antrian = Antrian::updateOrCreate(
                 [
                     'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -2151,7 +2151,7 @@ class AntrianController extends APIController
                 $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             //tambah antrian bpjs
             // $response = $this->tambah_antrean($request);
             // if ($response->metadata->code == 200) {
@@ -2415,7 +2415,7 @@ class AntrianController extends APIController
                 $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             //tambah antrian bpjs
             $response = $this->tambah_antrean($request);
             if ($response->metadata->code == 200) {
@@ -2606,7 +2606,7 @@ class AntrianController extends APIController
         try {
             Log::info('Checkin Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -2630,7 +2630,7 @@ class AntrianController extends APIController
             Log::warning($validator->errors()->first());
             return $this->sendError($validator->errors()->first(), 201);
         }
-        $now = now();
+        $now = Carbon::parse(DB::connection('mysql2')->select('select sysdate() as time')[0]->time);
         $antrian = Antrian::firstWhere('kodebooking', $request->kodebooking);
         if (isset($antrian)) {
             // jam praktek
@@ -2644,6 +2644,7 @@ class AntrianController extends APIController
             if ($jadwal->libur == 1) {
                 return $this->sendError("Jadwal Dokter dihari tersebut sedang diliburkan.",  403);
             }
+            // 1 jam sebelum praktek
             $jampraktek = Carbon::parse(explode('-', $jadwal->jadwal)[0]);
             $jamcheckin = $jampraktek->subHour();
             if (!$now->greaterThanOrEqualTo($jamcheckin)) {
@@ -2854,6 +2855,8 @@ class AntrianController extends APIController
                     }
                 }
                 // create sep
+                $pasienx = Pasien::where('no_bpjs', $antrian->nomorkartu)->first();
+                $request['noMR'] = $pasienx->no_rm;
                 $sep = $vclaim->sep_insert($request);
                 // berhasil buat sep
                 if ($sep->metadata->code == 200) {
@@ -3352,11 +3355,11 @@ class AntrianController extends APIController
         date_default_timezone_set('Asia/Jakarta');
         $now = Carbon::now();
         if ($request->ip() == "192.168.2.133") {
-            $printer = env('PRINTER_CHECKIN');
+            $printer = "smb://192.168.2.133/Printer Receipt";
         } else if ($request->ip() == "192.168.2.51") {
-            $printer = env('PRINTER_CHECKIN2');
+            $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
         } else if ($request->ip() == "192.168.2.218") {
-            $printer = env('PRINTER_CHECKIN_MJKN');
+            $printer = "smb://192.168.2.218/EPSON TM-T82X Receipt";
         } else {
             $printer = "smb://192.168.2.58/EPSON TM-T82X Receipt";
         }
@@ -3497,7 +3500,7 @@ class AntrianController extends APIController
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {

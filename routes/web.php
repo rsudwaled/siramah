@@ -64,6 +64,7 @@ use App\Http\Controllers\SatuSehatController;
 use App\Livewire\Antrian\AnjunganMandiriPendaftaran;
 use App\Livewire\Antrian\AntrianPendaftaran;
 use App\Http\Controllers\BridgingIgd\BridgingIgdController;
+use App\Livewire\Antrian\AnjunganCheckin;
 use App\Livewire\Antrian\DisplayAntrianKlinik;
 use App\Livewire\Antrian\DisplayJadwalRajal;
 use App\Livewire\Bagianumum\LaporanSuratMasuk;
@@ -154,19 +155,20 @@ Route::get('ambil_antrian_offline_umum', [PendaftaranController::class, 'ambil_a
 Route::get('print_karcis_antrian', [PendaftaranController::class, 'print_karcis_antrian'])->name('print_karcis_antrian');
 // anjungan mandiri
 Route::get('anjungan-mandiri', AnjunganMandiri::class)->name('anjungan.mandiri');
+Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
 Route::get('anjungan-mandiri-daftar', AnjunganMandiriDaftar::class)->name('anjungan.mandiri.daftar');
 Route::get('anjungan-mandiri-pendaftaran', AnjunganMandiriPendaftaran::class)->name('anjungan.mandiri.pendaftaran');
+Route::get('checkinAntrian', AnjunganCheckin::class)->name('checkinAntrian');
+Route::get('anjungan-checkin', AnjunganCheckin::class)->name('anjungan.checkin');
 Route::get('anjungan-cetak-karcis-umum', [AnjunganMandiri::class, 'cetakKarcisUmum'])->name('anjungan.cetak.karcis.umum');
 Route::get('anjungan-cetak-karcis-bpjs', [AnjunganMandiri::class, 'cetakKarcisBpjs'])->name('anjungan.cetak.karcis.bpjs');
 Route::get('test-cetak-karcis', [AnjunganMandiri::class, 'testCetakKarcis'])->name('test.cetak.karcis');
+
 Route::get('display-jadwal-rajal', DisplayJadwalRajal::class)->name('display.jadwal.rajal');
 Route::get('karcis-antrian/{kodebooking}', [AnjunganMandiriDaftar::class, 'cetakUlang'])->name('karcis.antrian');
-// Route::get('antrianConsole', [PendaftaranController::class, 'antrianConsole'])->name('antrianConsole');
-Route::get('antrianConsole', AnjunganMandiri::class)->name('antrianConsole');
 Route::get('checkinPendaftaran', [PendaftaranController::class, 'checkinPendaftaran'])->name('checkinPendaftaran');
 Route::get('cetakSEPAntrian', [PendaftaranController::class, 'cetakSEPAntrian'])->name('cetakSEPAntrian');
 Route::get('cetakAntrianOnline', [PendaftaranController::class, 'cetakAntrianOnline'])->name('cetakAntrianOnline');
-Route::get('checkinAntrian', [PendaftaranController::class, 'checkinAntrian'])->name('checkinAntrian');
 Route::get('checkinCetakSEP', [PendaftaranController::class, 'checkinCetakSEP'])->name('checkinCetakSEP');
 Route::get('checkinKarcisAntrian', [PendaftaranController::class, 'checkinKarcisAntrian'])->name('checkinKarcisAntrian');
 Route::get('daftarBpjsOffline', [PendaftaranController::class, 'daftarBpjsOffline'])->name('daftarBpjsOffline');

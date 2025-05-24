@@ -1,30 +1,7 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <header class="bg-green text-white p-2">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <img src="{{ asset('vendor/adminlte/dist/img/logo rsudwaled bulet.png') }}" height="90"
-                                    alt="">
-                                <div class="col">
-                                    <h1>RSUD Waled</h1>
-                                    <h4>Rumah Sakit Umum Daerah Waled</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <h4>Anjungan Pelayanan Mandiri</h4>
-                            <h6>{{ \Carbon\Carbon::now() }}</h6>
-                        </div>
-                    </div>
-                </div>
-            </header>
-        </div>
-    </div>
+<div class="row p-1">
+    <x-header-anjungan-antrian />
     <div class="col-md-7">
-        <x-adminlte-card title="Pendafataran Mandiri Pasien BPJS" class="m-2" theme="primary">
+        <x-adminlte-card title="Pendafataran Mandiri Pasien BPJS" theme="success">
             <h4>Silahkan lengkapi form berikut :</h4>
             @if (flash()->message)
                 <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }}">
@@ -167,7 +144,7 @@
         </x-adminlte-card>
     </div>
     <div class="col-md-5">
-        <x-adminlte-card title="Cara Pendafataran Melalui MJKN" class="m-2" theme="primary">
+        <x-adminlte-card title="Cara Pendafataran Melalui MJKN" theme="success">
             <div class="text-center">
                 <img src="{{ asset('portalbpjs.jpg') }}" width="40%" alt="">
                 <br>

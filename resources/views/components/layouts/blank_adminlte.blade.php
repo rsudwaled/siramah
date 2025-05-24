@@ -8,7 +8,6 @@
 @section('plugins.Datatables', true)
 
 @section('adminlte_css')
-    @livewireStyles
     <style>
         body {
             background-color: yellow;
@@ -29,7 +28,7 @@
                     $.LoadingOverlay("show", {
                         text: "Mencari kodebooking " + sCode + "..."
                     });
-                    var url = "{{ route('checkinAntrian') }}?kodebooking=" + sCode;
+                    var url = "{{ route('anjungan.checkin') }}?kodebooking=" + sCode;
                     window.location.href = url;
                     // $.LoadingOverlay("show", {
                     //     text: "Printing..."
