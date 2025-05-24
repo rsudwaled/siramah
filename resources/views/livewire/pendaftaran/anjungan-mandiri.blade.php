@@ -1,7 +1,7 @@
-<div class="row">
+<div class="row p-1">
     <x-header-anjungan-antrian />
     <div class="col-md-6">
-        <x-adminlte-card title="Menu Anjungan Pelayanan Mandiri" class="m-2" theme="success">
+        <x-adminlte-card title="Menu Anjungan Pelayanan Mandiri" theme="success">
             <a href="{{ route('anjungan.mandiri.daftar') }}?jenispasien=JKN">
                 <x-adminlte-card class="m-2 withLoad" body-class="bg-success">
                     <h1>AMBIL ANTRIAN BPJS</h1>
@@ -33,7 +33,7 @@
         </x-adminlte-card>
     </div>
     <div class="col-md-6">
-        <x-adminlte-card title="Checkin Melalui MJKN" class="m-2" theme="success">
+        <x-adminlte-card title="Checkin Melalui MJKN" theme="success">
             <div class="text-center">
                 <img src="{{ asset('portalbpjs.jpg') }}" width="50%" alt="">
                 <br>
