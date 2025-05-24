@@ -180,12 +180,6 @@
                             <br>
                             <img src="{{ $qrpasien }}" width="50px">
                         </td>
-                        <td style="padding-left: 30px">
-                            <b> Petugas<br>
-                            </b>
-                            <br>
-                            <img src="{{ $qrpetugas }}" width="50px">
-                        </td>
                     </tr>
                 </table>
             </td>
