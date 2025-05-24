@@ -1667,7 +1667,7 @@ class AntrianController extends APIController
                 $request->all()
             );
         } else {
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             $antrian = Antrian::updateOrCreate(
                 [
                     'kode_kunjungan' => $kunjungan->kode_kunjungan,
@@ -2151,7 +2151,7 @@ class AntrianController extends APIController
                 $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             //tambah antrian bpjs
             // $response = $this->tambah_antrean($request);
             // if ($response->metadata->code == 200) {
@@ -2415,7 +2415,7 @@ class AntrianController extends APIController
                 $request['keterangan'] = "Silahkan checkin dan fingerpinrt/face-recognition pasien 1 jam sebelum jam praktek dokter (" . $request->jampraktek . ")";
                 $request['method'] = "JKN Mobile";
             }
-            $request['kodebooking'] = Carbon::parse($request->tanggalperiksa)->format('ymd') . strtoupper(substr(bin2hex(random_bytes(3)), 0, 3));
+            $request['kodebooking'] = strtoupper(substr(bin2hex(random_bytes(3)), 0, 3)) . Carbon::parse($request->tanggalperiksa)->format('ymd');
             //tambah antrian bpjs
             $response = $this->tambah_antrean($request);
             if ($response->metadata->code == 200) {
