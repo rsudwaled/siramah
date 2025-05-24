@@ -322,11 +322,52 @@ return [
         //     'url'         => 'resume-pemulangan.vbeta/pasien-rawat-inap',
         //     'icon'        => 'fas fa-file-signature',
         // ],
-        // PELAYANAN
+        [
+            'text'    => 'Antrian',
+            'icon'    => 'fas fa-users',
+            'submenu' => [
+                [
+                    'text' => 'Anjungan Mandiri',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'anjungan-mandiri',
+                    'active'  => ['anjungan-mandiri'],
+                    'shift'   => 'ml-2',
+                    'can' => ['pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 2',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianklinik/2',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Antrian Lt 3',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianklinik/3',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Farmasi Lt 2',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'displayantrianfarmasi/2',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+                [
+                    'text' => 'Display Jadwal Rajal',
+                    'icon'    => 'fas fa-desktop',
+                    'url'  => 'display-jadwal-rajal',
+                    'shift'   => 'ml-2',
+                    'can' =>  ['bpjs', 'pendaftaran'],
+                ],
+            ]
+        ],
+        // RAJAL
         [
             'text'    => 'Pelayanan Rawat Jalan',
             'icon'    => 'fas fa-clinic-medical',
-            'label' => 'proses',
             'label_color' => 'warning',
             'submenu' => [
                 [

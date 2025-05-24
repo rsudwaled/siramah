@@ -29,7 +29,7 @@
                         <label>Status = <span id="status">-</span></label>
                     </div>
                     <x-slot name="footerSlot">
-                        <a href="{{ route('antrianConsole') }}" class="btn btn-danger withLoad"><i
+                        <a href="{{ route('anjungan.mandiri') }}" class="btn btn-danger withLoad"><i
                                 class="fas fa-arrow-left"></i>
                             Mesin
                             Antrian</a>
