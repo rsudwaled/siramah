@@ -1,30 +1,7 @@
-<div class="row">
+<div class="row p-1">
+    <x-header-anjungan-antrian />
     <div class="col-md-12">
-        <div class="card">
-            <header class="bg-green text-white p-2">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="row">
-                                <img src="{{ asset('vendor/adminlte/dist/img/logo rsudwaled bulet.png') }}" height="90"
-                                    alt="">
-                                <div class="col">
-                                    <h1>RSUD Waled</h1>
-                                    <h4>Rumah Sakit Umum Daerah Waled</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-md-end">
-                            <h4>Anjungan Pelayanan Mandiri</h4>
-                            <h6>{{ \Carbon\Carbon::now() }}</h6>
-                        </div>
-                    </div>
-                </div>
-            </header>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <x-adminlte-card title="Pendafataran Pasien {{ $jenispasien }}" class="m-2" theme="primary">
+        <x-adminlte-card title="Pendafataran Pasien {{ $jenispasien }}"  theme="success">
             <div wire:loading.remove>
                 @if (flash()->message)
                     <x-adminlte-alert theme="{{ flash()->class }}" title="{{ flash()->class }}">

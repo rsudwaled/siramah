@@ -228,4 +228,22 @@
             </x-adminlte-card>
         @endif
     </div>
+    @if ($formHp)
+        <x-modal title="Update Nomor Telepon" icon="fas fa-phone" theme="dark">
+            <form>
+                <x-adminlte-input wire:model="nama" fgroup-class="row" label-class="text-left col-4"
+                    igroup-class="col-8" igroup-size="sm" name="nama" label="Nama" readonly />
+                <x-adminlte-input wire:model="nomorkartu" fgroup-class="row" label-class="text-left col-4"
+                    igroup-class="col-8" igroup-size="sm" name="nama" label="No BPJS" readonly />
+                <x-adminlte-input wire:model="nohp" fgroup-class="row" label-class="text-left col-4"
+                    igroup-class="col-8" igroup-size="sm" name="nohp" label="No HP" />
+            </form>
+            <x-slot name="footerSlot">
+                <x-adminlte-button class="btn-sm" wire:click='simpanNohp' class="btn-sm" icon="fas fa-save"
+                    theme="success" label="Simpan" />
+                <x-adminlte-button theme="danger" wire:click='openFormHp' class="btn-sm" icon="fas fa-times"
+                    label="Tutup" data-dismiss="modal" />
+            </x-slot>
+        </x-modal>
+    @endif
 </div>
