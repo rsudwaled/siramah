@@ -19,7 +19,6 @@ class AnjunganCheckin extends Component
     public $kodebooking;
     public $antrian;
 
-
     public function checkinCetakSEP(Request $request)
     {
         $api = new AntrianController();
