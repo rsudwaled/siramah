@@ -18,6 +18,7 @@ class AnjunganCheckin extends Component
 {
     public $kodebooking;
     public $antrian;
+    public $kunjungan;
 
     public function checkinCetakSEP(Request $request)
     {
@@ -36,6 +37,7 @@ class AnjunganCheckin extends Component
         if (!empty($request->kodebooking)) {
             $this->kodebooking = $request->kodebooking;
             $this->antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
+            $this->kunjungan = $this->antrian->kunjungan;
             if (!$this->antrian) {
                 return flash("Mohon maaf, kodebooking antrian tidak ditemukan", 'danger');
             }
