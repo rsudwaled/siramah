@@ -8,7 +8,6 @@
 @section('plugins.Datatables', true)
 
 @section('adminlte_css')
-    @livewireStyles
     <style>
         body {
             background-color: yellow;
