@@ -1023,10 +1023,10 @@ class PendaftaranController extends APIController
             }
             $qrurl = QrCode::format('png')->size(150)->generate($peserta->noKartu);
             $qrpasien = "data:image/png;base64," . base64_encode($qrurl);
-            $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
-            $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
+            // $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
+            // $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
             // return view('print.pdf_sep', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
-            $pdf = Pdf::loadView('print.pdf_sep', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            $pdf = Pdf::loadView('print.pdf_sep', compact('sep', 'peserta', 'qrpasien'));
             return $pdf->stream($sep->noSep . '.pdf');
         }
     }
@@ -1048,10 +1048,10 @@ class PendaftaranController extends APIController
             }
             $qrurl = QrCode::format('png')->size(150)->generate($peserta->noKartu);
             $qrpasien = "data:image/png;base64," . base64_encode($qrurl);
-            $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
-            $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
+            // $qrurl = QrCode::format('png')->size(150)->generate(auth()->user()->name);
+            // $qrpetugas = "data:image/png;base64," . base64_encode($qrurl);
             // return view('print.pdf_karcis_online', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
-            $pdf = Pdf::loadView('print.pdf_karcis_online', compact('sep', 'peserta', 'qrpasien', 'qrpetugas'));
+            $pdf = Pdf::loadView('print.pdf_karcis_online', compact('sep', 'peserta', 'qrpasien'));
             return $pdf->stream($sep->noSep . '.pdf');
         }
     }
