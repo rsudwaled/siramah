@@ -116,35 +116,52 @@
                     </x-adminlte-alert>
                 @endif
                 @isset($kunjungan->layanan)
-                    <div class="row">
+                    <div class="row mb-2">
                         <div class="col-md-5">
-                            <dl class="row">
-                                <dt class="col-sm-4">Kunjungan</dt>
-                                <dd class="col-sm-8">: {{ $kunjungan->kode_kunjungan ?? '-' }}</dd>
-                                <dt class="col-sm-4">Layanan</dt>
-                                <dd class="col-sm-8">: {{ $kunjungan->layanan->kode_layanan_header }}</dd>
-                                <dt class="col-sm-4">Penjamin</dt>
-                                <dd class="col-sm-8">:
-                                    {{ $kunjungan->penjamin_simrs ? $kunjungan->penjamin_simrs->nama_penjamin : '-' }}
-                                </dd>
-
-                            </dl>
+                            <table>
+                                <tr>
+                                    <th>Kode Kunjungan</th>
+                                    <td>:</td>
+                                    <td>{{ $kunjungan->kode_kunjungan ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Kode Layanan</th>
+                                    <td>:</td>
+                                    <td>{{ $kunjungan->layanan->nama_layanan_header ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Penjamin</th>
+                                    <td>:</td>
+                                    <td>{{ $kunjungan->penjamin_simrs ? $kunjungan->penjamin_simrs->nama_penjamin : '-' }}
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="col-md-7">
-                            <dl class="row">
-                                <dt class="col-sm-4">No SEP</dt>
-                                <dd class="col-sm-8">: {{ $kunjungan->no_sep ?? '-' }}</dd>
-                                <dt class="col-sm-4">Status</dt>
-                                <dd class="col-sm-8">:
-                                    {{ $kunjungan->status ? $kunjungan->status->status_kunjungan : '-' }}</dd>
-                                <dt class="col-sm-4">Tracer</dt>
-                                <dd class="col-sm-8">:
-                                    @if ($kunjungan->tracer)
-                                        {{ $kunjungan->tracer->id_tracer_header }} /
-                                        {{ $kunjungan->tracer->cek_tracer }}
-                                    @endif
-                                </dd>
-                            </dl>
+                            <table>
+                                <tr>
+                                    <th>Nomor SEP</th>
+                                    <td>:</td>
+                                    <td>{{ $kunjungan->no_sep ?? '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Status Kunjungan</th>
+                                    <td>:</td>
+                                    <td>{{ $kunjungan->status ? $kunjungan->status->status_kunjungan : '-' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tracer</th>
+                                    <td>:</td>
+                                    <td>
+                                        @if ($kunjungan->tracer)
+                                            {{ $kunjungan->tracer->id_tracer_header }} /
+                                            {{ $kunjungan->tracer->cek_tracer }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                     <table class="table-bordered col-md-12">
@@ -184,35 +201,29 @@
                 @endisset
                 <x-slot name="footerSlot">
                     @if ($antrian->jenispasien == 'JKN')
-                        <x-adminlte-button wire:click='checkinCetakSEP' theme="warning" icon="fas fa-print" label="Checkin Antrian" />
-
+                        <x-adminlte-button wire:click='checkinCetakSEP' theme="warning" icon="fas fa-print"
+                            label="Checkin Antrian" />
                         {{-- @if ($antrian->nomorsep)
-                            <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
+                            <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $kodebooking }}"
                                 class="btn btn-success withLoad"><i class="fas fa-print"></i>
                                 Cetak Karcis</a>
-                        @endif
-                        <a href="{{ route('checkinPendaftaran') }}?kodebooking={{ $request->kodebooking }}"
-                            class="btn btn-secondary withLoad"><i class="fas fa-print"></i> Checkin
-                            Pendaftaran</a>
-                        @if (!$antrian->nomorsep)
-                        @else
-                            <x-adminlte-button
-                                onclick="window.open('{{ route('cetakSEPAntrian') }}?kodebooking={{ $request->kodebooking }}', 'window name', 'window settings');"
-                                theme="warning" icon="fas fa-print" label="Cetak SEP Antrian"
-                                data-kodebooking="{{ $request->kodebooking }}" />
-                            <x-adminlte-button
-                                onclick="window.open('{{ route('cetakAntrianOnline') }}?kodebooking={{ $request->kodebooking }}', 'window name', 'window settings');"
-                                theme="warning" icon="fas fa-print" data-kodebooking="{{ $request->kodebooking }}" />
                         @endif --}}
+                        <a href="{{ route('checkinPendaftaran') }}?kodebooking={{ $kodebooking }}"
+                            class="btn btn-secondary"><i class="fas fa-print"></i> Checkin
+                            Pendaftaran</a>
+                        <x-adminlte-button
+                            onclick="window.open('{{ route('cetakSEPAntrian') }}?kodebooking={{ $kodebooking }}', 'window name', 'window settings');"
+                            theme="secondary" icon="fas fa-print" label="Cetak Pendaftaran"
+                            data-kodebooking="{{ $kodebooking }}" />
+                        <x-adminlte-button
+                            onclick="window.open('{{ route('cetakAntrianOnline') }}?kodebooking={{ $kodebooking }}', 'window name', 'window settings');"
+                            theme="secondary" icon="fas fa-print" data-kodebooking="{{ $kodebooking }}" />
                     @else
                         <x-adminlte-button theme="warning" icon="fas fa-print" label="Cetak Antrian" />
-                        {{-- <a href="{{ route('checkinKarcisAntrian') }}?kodebooking={{ $request->kodebooking }}"
-                            class="btn btn-success withLoad"><i class="fas fa-print"></i>
-                            Cetak Karcis</a> --}}
                     @endif
-                    {{-- <a target="_blank" href="http://192.168.2.45/simrs/cetaklabel/{{ $antrian->norm }}"
+                    <a target="_blank" href="http://192.168.2.45/simrs/cetaklabel/{{ $antrian->norm }}"
                         class="btn btn-primary"><i class="fas fa-print"></i>
-                        Cetak Label</a> --}}
+                        Cetak Label</a>
                 </x-slot>
             </x-adminlte-card>
         @endif
