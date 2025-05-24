@@ -2606,7 +2606,7 @@ class AntrianController extends APIController
         try {
             Log::info('Checkin Printer ip : ' . $request->ip());
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {
@@ -3497,7 +3497,7 @@ class AntrianController extends APIController
         // $for_sep = ['PERCOBAAN'];
         foreach ($for_sep as  $value) {
             if ($request->ip() == "192.168.2.133") {
-                $printer = "smb://192.168.2.133/EPSON TM-T82X Receipt";
+                $printer = "smb://192.168.2.133/Printer Receipt";
             } else if ($request->ip() == "192.168.2.51") {
                 $printer = "smb://192.168.2.51/EPSON TM-T82X Receipt";
             } else if ($request->ip() == "192.168.2.218") {

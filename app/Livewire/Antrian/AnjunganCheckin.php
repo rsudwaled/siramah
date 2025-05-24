@@ -32,14 +32,14 @@ class AnjunganCheckin extends Component
             return flash("Mohon maaf, " . $res->metadata->message, 'danger');
         }
     }
-
-
     public function mount(Request $request)
     {
-        $this->kodebooking = $request->kodebooking;
-        $this->antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
-        if (!$this->antrian) {
-            return flash("Mohon maaf, kodebooking antrian tidak ditemukan", 'danger');
+        if (!empty($request->kodebooking)) {
+            $this->kodebooking = $request->kodebooking;
+            $this->antrian = Antrian::firstWhere('kodebooking', $this->kodebooking);
+            if (!$this->antrian) {
+                return flash("Mohon maaf, kodebooking antrian tidak ditemukan", 'danger');
+            }
         }
     }
     public function render()
